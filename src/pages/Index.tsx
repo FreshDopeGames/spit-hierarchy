@@ -1,13 +1,14 @@
-
 import { useState } from "react";
-import { Search, TrendingUp, Star, Users, Music, Award } from "lucide-react";
+import { Search, TrendingUp, Star, Users, Music, Award, LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useAuth } from "@/hooks/useAuth";
 
 const Index = () => {
   const [searchTerm, setSearchTerm] = useState("");
+  const { user, signOut } = useAuth();
 
   const categories = [
     { 
@@ -110,9 +111,22 @@ const Index = () => {
               <a href="#" className="text-gray-300 hover:text-purple-400 transition-colors">Categories</a>
               <a href="#" className="text-gray-300 hover:text-purple-400 transition-colors">Community</a>
             </nav>
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-              Join Rankings
-            </Button>
+            <div className="flex items-center space-x-4">
+              {user && (
+                <span className="text-gray-300 text-sm">
+                  Welcome, {user.email}
+                </span>
+              )}
+              <Button 
+                onClick={signOut}
+                variant="outline" 
+                size="sm"
+                className="border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Sign Out
+              </Button>
+            </div>
           </div>
         </div>
       </header>

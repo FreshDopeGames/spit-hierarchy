@@ -9,7 +9,111 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      member_stats: {
+        Row: {
+          badges: Json | null
+          consecutive_voting_days: number | null
+          created_at: string | null
+          id: string
+          last_vote_date: string | null
+          ranking_lists_created: number | null
+          status: Database["public"]["Enums"]["member_status"] | null
+          total_comments: number | null
+          total_upvotes: number | null
+          total_votes: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          badges?: Json | null
+          consecutive_voting_days?: number | null
+          created_at?: string | null
+          id: string
+          last_vote_date?: string | null
+          ranking_lists_created?: number | null
+          status?: Database["public"]["Enums"]["member_status"] | null
+          total_comments?: number | null
+          total_upvotes?: number | null
+          total_votes?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          badges?: Json | null
+          consecutive_voting_days?: number | null
+          created_at?: string | null
+          id?: string
+          last_vote_date?: string | null
+          ranking_lists_created?: number | null
+          status?: Database["public"]["Enums"]["member_status"] | null
+          total_comments?: number | null
+          total_upvotes?: number | null
+          total_votes?: number | null
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          bio: string | null
+          birthdate: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          location: string | null
+          social_links: Json | null
+          updated_at: string | null
+          username: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio?: string | null
+          birthdate?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          location?: string | null
+          social_links?: Json | null
+          updated_at?: string | null
+          username: string
+        }
+        Update: {
+          avatar_url?: string | null
+          bio?: string | null
+          birthdate?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          location?: string | null
+          social_links?: Json | null
+          updated_at?: string | null
+          username?: string
+        }
+        Relationships: []
+      }
+      user_top_rappers: {
+        Row: {
+          created_at: string | null
+          id: string
+          position: number | null
+          rapper_name: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          position?: number | null
+          rapper_name: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          position?: number | null
+          rapper_name?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +122,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      member_status: "bronze" | "silver" | "gold" | "platinum" | "diamond"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +237,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      member_status: ["bronze", "silver", "gold", "platinum", "diamond"],
+    },
   },
 } as const
