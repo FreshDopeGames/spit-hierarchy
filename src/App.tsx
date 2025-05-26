@@ -24,17 +24,17 @@ const App = () => (
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/analytics" element={
-              <AuthGuard>
+              <AuthGuard requireAuth={true}>
                 <Analytics />
               </AuthGuard>
             } />
             <Route path="/admin" element={
-              <AuthGuard>
+              <AuthGuard requireAuth={true} adminOnly={true}>
                 <Admin />
               </AuthGuard>
             } />
             <Route path="/" element={
-              <AuthGuard>
+              <AuthGuard requireAuth={false}>
                 <Index />
               </AuthGuard>
             } />

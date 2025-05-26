@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, Settings, BarChart3 } from "lucide-react";
+import { Music, Settings, BarChart3, LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
@@ -26,7 +26,8 @@ const Index = () => {
           </div>
           
           <div className="flex items-center space-x-4">
-            {user && (
+            {user ? (
+              // Authenticated user navigation
               <>
                 <Link to="/analytics">
                   <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
@@ -34,6 +35,7 @@ const Index = () => {
                     Analytics
                   </Button>
                 </Link>
+                {/* Admin button - we'll implement role checking later */}
                 <Link to="/admin">
                   <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
                     <Settings className="w-4 h-4 mr-2" />
@@ -44,6 +46,17 @@ const Index = () => {
                 <Button onClick={signOut} variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
                   Sign Out
                 </Button>
+              </>
+            ) : (
+              // Guest user navigation
+              <>
+                <span className="text-gray-400">Browsing as Guest</span>
+                <Link to="/auth">
+                  <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Sign In / Join
+                  </Button>
+                </Link>
               </>
             )}
           </div>
@@ -60,6 +73,15 @@ const Index = () => {
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
             Discover the latest in hip-hop culture, vote for your favorite artists, and stay connected with the community that shapes the future of rap.
           </p>
+          {!user && (
+            <div className="mt-6">
+              <Link to="/auth">
+                <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                  Join the Community
+                </Button>
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Featured Blog Posts Carousel */}
@@ -70,6 +92,23 @@ const Index = () => {
 
         {/* Stats Overview */}
         <StatsOverview />
+
+        {/* Guest user call-to-action */}
+        {!user && (
+          <div className="mt-12 text-center bg-black/40 border border-purple-500/20 rounded-lg p-8">
+            <h3 className="text-2xl font-bold text-white mb-4">
+              Ready to Make Your Voice Heard?
+            </h3>
+            <p className="text-gray-300 mb-6">
+              Join thousands of hip-hop fans voting on their favorite artists, accessing exclusive analytics, and shaping the culture.
+            </p>
+            <Link to="/auth">
+              <Button size="lg" className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                Sign Up Now - It's Free
+              </Button>
+            </Link>
+          </div>
+        )}
       </main>
     </div>
   );
