@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -92,7 +91,7 @@ const Auth = () => {
         if (data.user) {
           toast({
             title: "Account created!",
-            description: "Welcome to Rap Rankings! You can now start voting and engaging with the community.",
+            description: "Welcome to Spit Hierarchy! You can now start voting and engaging with the community.",
           });
           window.location.href = '/';
         }
@@ -118,7 +117,7 @@ const Auth = () => {
               <Music className="w-5 h-5 text-white" />
             </div>
             <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Rap Rankings
+              Spit Hierarchy
             </h1>
           </div>
           <CardTitle className="text-white">
