@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, Settings } from "lucide-react";
+import { Music, Settings, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
@@ -28,6 +28,12 @@ const Index = () => {
           <div className="flex items-center space-x-4">
             {user && (
               <>
+                <Link to="/analytics">
+                  <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
+                    <BarChart3 className="w-4 h-4 mr-2" />
+                    Analytics
+                  </Button>
+                </Link>
                 <Link to="/admin">
                   <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
                     <Settings className="w-4 h-4 mr-2" />

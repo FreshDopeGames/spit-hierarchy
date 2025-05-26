@@ -201,7 +201,21 @@ export type Database = {
             foreignKeyName: "votes_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
+            referencedRelation: "category_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
             referencedRelation: "voting_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
           {
@@ -239,7 +253,42 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      category_voting_analytics: {
+        Row: {
+          average_rating: number | null
+          description: string | null
+          id: string | null
+          name: string | null
+          total_votes: number | null
+          unique_rappers: number | null
+          unique_voters: number | null
+        }
+        Relationships: []
+      }
+      rapper_voting_analytics: {
+        Row: {
+          average_rating: number | null
+          id: string | null
+          name: string | null
+          total_votes: number | null
+          unique_voters: number | null
+          votes_last_30_days: number | null
+          votes_last_7_days: number | null
+        }
+        Relationships: []
+      }
+      user_voting_stats: {
+        Row: {
+          average_rating_given: number | null
+          categories_used: number | null
+          first_vote_date: string | null
+          last_vote_date: string | null
+          total_votes: number | null
+          unique_rappers_voted: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       [_ in never]: never
