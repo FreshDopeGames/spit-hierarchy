@@ -1,11 +1,13 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, ArrowLeft, BarChart3, User } from "lucide-react";
+import { Music, ArrowLeft, BarChart3, User, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserVotingDashboard from "@/components/analytics/UserVotingDashboard";
 import VotingAnalytics from "@/components/analytics/VotingAnalytics";
+import VotingTrends from "@/components/analytics/VotingTrends";
+import TopVoters from "@/components/analytics/TopVoters";
 
 const Analytics = () => {
   const { user, signOut } = useAuth();
@@ -53,7 +55,7 @@ const Analytics = () => {
         </div>
 
         <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="grid w-full max-w-md grid-cols-2 bg-black/40 border border-purple-500/20">
+          <TabsList className="grid w-full max-w-lg grid-cols-3 bg-black/40 border border-purple-500/20">
             <TabsTrigger 
               value="personal" 
               className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
@@ -68,6 +70,13 @@ const Analytics = () => {
               <BarChart3 className="w-4 h-4 mr-2" />
               Platform Stats
             </TabsTrigger>
+            <TabsTrigger 
+              value="trends" 
+              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            >
+              <TrendingUp className="w-4 h-4 mr-2" />
+              Trends & Rankings
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="personal" className="mt-6">
@@ -76,6 +85,13 @@ const Analytics = () => {
 
           <TabsContent value="platform" className="mt-6">
             <VotingAnalytics />
+          </TabsContent>
+
+          <TabsContent value="trends" className="mt-6">
+            <div className="space-y-6">
+              <VotingTrends />
+              <TopVoters />
+            </div>
           </TabsContent>
         </Tabs>
       </main>
