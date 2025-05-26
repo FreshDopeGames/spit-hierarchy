@@ -2,14 +2,13 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, TrendingUp, Users, Award } from "lucide-react";
-import RapperGrid from "@/components/RapperGrid";
-import CategorySelector from "@/components/CategorySelector";
+import { Music } from "lucide-react";
+import BlogCarousel from "@/components/BlogCarousel";
+import TopRappersGrid from "@/components/TopRappersGrid";
 import StatsOverview from "@/components/StatsOverview";
 
 const Index = () => {
   const { user, signOut } = useAuth();
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
@@ -41,29 +40,23 @@ const Index = () => {
       {/* Main Content */}
       <main className="max-w-7xl mx-auto p-6">
         {/* Hero Section */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-12">
           <h2 className="text-4xl font-bold text-white mb-4">
-            Vote for the Greatest Rappers of All Time
+            The Ultimate Hip-Hop Community
           </h2>
           <p className="text-gray-300 text-lg max-w-2xl mx-auto">
-            Join the community and help rank the most influential artists in hip-hop history. 
-            Rate rappers across different categories and see how the community votes.
+            Discover the latest in hip-hop culture, vote for your favorite artists, and stay connected with the community that shapes the future of rap.
           </p>
         </div>
 
+        {/* Featured Blog Posts Carousel */}
+        <BlogCarousel />
+
+        {/* Top 5 Rappers Grid */}
+        <TopRappersGrid />
+
         {/* Stats Overview */}
         <StatsOverview />
-
-        {/* Category Filter */}
-        <div className="mb-8">
-          <CategorySelector 
-            selectedCategory={selectedCategory}
-            onCategoryChange={setSelectedCategory}
-          />
-        </div>
-
-        {/* Rapper Grid */}
-        <RapperGrid selectedCategory={selectedCategory} />
       </main>
     </div>
   );
