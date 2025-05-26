@@ -90,6 +90,60 @@ export type Database = {
         }
         Relationships: []
       }
+      rappers: {
+        Row: {
+          average_rating: number | null
+          bio: string | null
+          birth_year: number | null
+          created_at: string
+          id: string
+          image_url: string | null
+          instagram_handle: string | null
+          name: string
+          origin: string | null
+          real_name: string | null
+          spotify_id: string | null
+          total_votes: number | null
+          twitter_handle: string | null
+          updated_at: string
+          verified: boolean | null
+        }
+        Insert: {
+          average_rating?: number | null
+          bio?: string | null
+          birth_year?: number | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          instagram_handle?: string | null
+          name: string
+          origin?: string | null
+          real_name?: string | null
+          spotify_id?: string | null
+          total_votes?: number | null
+          twitter_handle?: string | null
+          updated_at?: string
+          verified?: boolean | null
+        }
+        Update: {
+          average_rating?: number | null
+          bio?: string | null
+          birth_year?: number | null
+          created_at?: string
+          id?: string
+          image_url?: string | null
+          instagram_handle?: string | null
+          name?: string
+          origin?: string | null
+          real_name?: string | null
+          spotify_id?: string | null
+          total_votes?: number | null
+          twitter_handle?: string | null
+          updated_at?: string
+          verified?: boolean | null
+        }
+        Relationships: []
+      }
       user_top_rappers: {
         Row: {
           created_at: string | null
@@ -111,6 +165,75 @@ export type Database = {
           position?: number | null
           rapper_name?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      votes: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          rapper_id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          rapper_id: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          rapper_id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "voting_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      voting_categories: {
+        Row: {
+          active: boolean | null
+          created_at: string
+          description: string | null
+          id: string
+          name: string
+        }
+        Insert: {
+          active?: boolean | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name: string
+        }
+        Update: {
+          active?: boolean | null
+          created_at?: string
+          description?: string | null
+          id?: string
+          name?: string
         }
         Relationships: []
       }
