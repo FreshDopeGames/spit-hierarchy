@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Calendar, Verified } from "lucide-react";
+import { Star, MapPin, Calendar, Verified, Music } from "lucide-react";
 import VoteModal from "./VoteModal";
 import { Tables } from "@/integrations/supabase/types";
 
