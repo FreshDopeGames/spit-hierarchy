@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
+import { Trophy } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -62,38 +63,91 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
     );
   }
 
+  // Separate Overall from other categories
+  const overallCategory = categoryRatings?.find(cat => cat.name === "Overall");
+  const otherCategories = categoryRatings?.filter(cat => cat.name !== "Overall") || [];
+  
+  // Calculate the average of all other attributes (excluding Overall)
+  const attributesWithVotes = otherCategories.filter(cat => cat.totalVotes > 0);
+  const calculatedOverall = attributesWithVotes.length > 0
+    ? attributesWithVotes.reduce((sum, cat) => sum + cat.averageRating, 0) / attributesWithVotes.length
+    : 0;
+  
+  // Use the calculated average or the actual Overall votes if they exist
+  const displayOverall = overallCategory && overallCategory.totalVotes > 0 
+    ? overallCategory.averageRating 
+    : calculatedOverall;
+  
+  const overallPercentage = (displayOverall / 10) * 100;
+  const overallScaled = Math.round((displayOverall / 10) * 100);
+  
   return (
     <Card className="bg-black/40 border-purple-500/20">
       <CardHeader>
         <CardTitle className="text-white">Attribute Ratings</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
-        {categoryRatings?.map((category) => {
-          const percentage = (category.averageRating / 10) * 100;
-          const scaledRating = Math.round((category.averageRating / 10) * 100);
-          
-          return (
-            <div key={category.id} className="space-y-2">
-              <div className="flex justify-between items-center">
-                <span className="text-sm font-medium text-gray-300">
-                  {category.name}
+      <CardContent className="space-y-6">
+        {/* Overall Rating - Prominent Display */}
+        <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-lg p-4">
+          <div className="flex items-center gap-2 mb-3">
+            <Trophy className="w-5 h-5 text-yellow-500" />
+            <span className="text-lg font-bold text-white">Overall Rating</span>
+          </div>
+          <div className="space-y-3">
+            <div className="flex justify-between items-center">
+              <span className="text-sm text-gray-300">
+                {overallCategory && overallCategory.totalVotes > 0 
+                  ? "Voted Overall Rating" 
+                  : "Calculated from all attributes"}
+              </span>
+              <div className="text-right">
+                <span className="text-white font-bold text-2xl">
+                  {overallScaled}/100
                 </span>
-                <div className="text-right">
-                  <span className="text-white font-bold text-lg">
-                    {scaledRating}/100
-                  </span>
-                  <span className="text-gray-400 text-sm ml-2">
-                    ({category.totalVotes} votes)
-                  </span>
-                </div>
+                <span className="text-gray-400 text-sm ml-2">
+                  ({overallCategory?.totalVotes || 0} direct votes)
+                </span>
               </div>
-              <Progress 
-                value={percentage} 
-                className="h-3 bg-gray-800"
-              />
             </div>
-          );
-        })}
+            <Progress 
+              value={overallPercentage} 
+              className="h-4 bg-gray-800"
+            />
+          </div>
+        </div>
+
+        {/* Individual Attributes */}
+        <div className="space-y-4">
+          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+            Individual Attributes
+          </h3>
+          {otherCategories.map((category) => {
+            const percentage = (category.averageRating / 10) * 100;
+            const scaledRating = Math.round((category.averageRating / 10) * 100);
+            
+            return (
+              <div key={category.id} className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-sm font-medium text-gray-300">
+                    {category.name}
+                  </span>
+                  <div className="text-right">
+                    <span className="text-white font-bold text-lg">
+                      {scaledRating}/100
+                    </span>
+                    <span className="text-gray-400 text-sm ml-2">
+                      ({category.totalVotes} votes)
+                    </span>
+                  </div>
+                </div>
+                <Progress 
+                  value={percentage} 
+                  className="h-3 bg-gray-800"
+                />
+              </div>
+            );
+          })}
+        </div>
       </CardContent>
     </Card>
   );
