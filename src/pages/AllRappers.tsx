@@ -1,5 +1,4 @@
-
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -17,11 +16,22 @@ type Rapper = Tables<"rappers">;
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchInput, setSearchInput] = useState(""); // Input value for immediate UI updates
+  const [searchTerm, setSearchTerm] = useState(""); // Debounced value for API calls
   const [locationFilter, setLocationFilter] = useState("");
   const [loadedCount, setLoadedCount] = useState(50);
   
   const itemsPerPage = 50;
+
+  // Debounce search input with 2 second delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSearchTerm(searchInput);
+      setLoadedCount(50); // Reset to initial load when search changes
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [searchInput]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, loadedCount],
@@ -74,9 +84,8 @@ const AllRappers = () => {
     setLoadedCount(50);
   };
 
-  const handleSearch = (value: string) => {
-    setSearchTerm(value);
-    setLoadedCount(50);
+  const handleSearchInput = (value: string) => {
+    setSearchInput(value);
   };
 
   const handleLocationFilter = (value: string) => {
@@ -168,10 +177,15 @@ const AllRappers = () => {
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
                 placeholder="Search rappers..."
-                value={searchTerm}
-                onChange={(e) => handleSearch(e.target.value)}
+                value={searchInput}
+                onChange={(e) => handleSearchInput(e.target.value)}
                 className="pl-10 bg-black/60 border-purple-500/30 text-white placeholder-gray-400"
               />
+              {searchInput !== searchTerm && (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <Loader2 className="w-4 h-4 text-purple-400 animate-spin" />
+                </div>
+              )}
             </div>
 
             {/* Location Filter */}
