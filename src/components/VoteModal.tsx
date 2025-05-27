@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -111,6 +110,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
       });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       queryClient.invalidateQueries({ queryKey: ["user-vote"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings"] });
       onClose();
     },
     onError: (error: any) => {
@@ -135,12 +135,13 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     voteMutation.mutate({ rating: rating[0], categoryId });
   };
 
-  // Update rating when existing vote is loaded
   React.useEffect(() => {
     if (existingVote) {
       setRating([existingVote.rating]);
     }
   }, [existingVote]);
+
+  const selectedCategoryData = categories?.find(cat => cat.id === categoryId);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -190,11 +191,11 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           {/* Category Selection */}
           <div className="space-y-2">
             <Label htmlFor="category" className="text-gray-300">
-              Voting Category
+              Attribute Category
             </Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
               <SelectTrigger className="bg-black/50 border-purple-500/30">
-                <SelectValue placeholder="Select a category..." />
+                <SelectValue placeholder="Select an attribute to rate..." />
               </SelectTrigger>
               <SelectContent className="bg-black border-purple-500/30">
                 {categories?.map((category) => (
@@ -204,12 +205,18 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                 ))}
               </SelectContent>
             </Select>
+            {selectedCategoryData && (
+              <p className="text-sm text-gray-400">{selectedCategoryData.description}</p>
+            )}
           </div>
 
           {/* Rating Slider */}
           <div className="space-y-4">
             <Label className="text-gray-300">
               Your Rating: <span className="text-white font-bold text-lg">{rating[0]}/10</span>
+              <span className="text-gray-400 text-sm ml-2">
+                (≈ {Math.round((rating[0] / 10) * 100)}/100)
+              </span>
             </Label>
             <div className="px-2">
               <Slider

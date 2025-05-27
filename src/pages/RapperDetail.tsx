@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +11,7 @@ import CommentBubble from "@/components/CommentBubble";
 import RapperHeader from "@/components/rapper/RapperHeader";
 import RapperBio from "@/components/rapper/RapperBio";
 import RapperStats from "@/components/rapper/RapperStats";
+import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -20,7 +20,7 @@ const RapperDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
   const [showVoteModal, setShowVoteModal] = useState(false);
-  const [selectedCategory] = useState("overall");
+  const [selectedCategory] = useState("");
 
   const { data: rapper, isLoading } = useQuery({
     queryKey: ["rapper", id],
@@ -91,6 +91,11 @@ const RapperDetail = () => {
 
         {/* Bio Section */}
         <RapperBio rapper={rapper} />
+
+        {/* Attribute Stats - New sports-style stats */}
+        <div className="mb-8">
+          <RapperAttributeStats rapper={rapper} />
+        </div>
 
         {/* Community Stats */}
         <RapperStats rapper={rapper} />

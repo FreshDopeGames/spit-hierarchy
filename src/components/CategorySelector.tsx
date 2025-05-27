@@ -38,7 +38,7 @@ const CategorySelector = ({ selectedCategory, onCategoryChange }: CategorySelect
     <div className="space-y-4">
       <div className="flex items-center gap-2">
         <Award className="w-5 h-5 text-purple-400" />
-        <h3 className="text-lg font-semibold text-white">Voting Categories</h3>
+        <h3 className="text-lg font-semibold text-white">Rapper Attributes</h3>
       </div>
       
       <div className="flex flex-wrap gap-2">
@@ -50,7 +50,7 @@ const CategorySelector = ({ selectedCategory, onCategoryChange }: CategorySelect
             : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
           }
         >
-          All Categories
+          All Attributes
         </Button>
         
         {categories?.map((category) => (
