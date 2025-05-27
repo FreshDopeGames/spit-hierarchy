@@ -10,6 +10,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Admin from "./pages/Admin";
 import Analytics from "./pages/Analytics";
+import RapperDetail from "./pages/RapperDetail";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,6 +32,11 @@ const App = () => (
             <Route path="/admin" element={
               <AuthGuard requireAuth={true} adminOnly={true}>
                 <Admin />
+              </AuthGuard>
+            } />
+            <Route path="/rapper/:id" element={
+              <AuthGuard requireAuth={false}>
+                <RapperDetail />
               </AuthGuard>
             } />
             <Route path="/" element={

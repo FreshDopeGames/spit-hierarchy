@@ -6,6 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Star, MapPin, Calendar, Verified, Music } from "lucide-react";
+import { Link } from "react-router-dom";
 import VoteModal from "./VoteModal";
 import { Tables } from "@/integrations/supabase/types";
 
@@ -94,7 +95,7 @@ const RapperGrid = ({ selectedCategory }: RapperGridProps) => {
       {/* Rapper Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
         {rappers?.map((rapper, index) => (
-          <Card key={rapper.id} className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:transform hover:scale-105">
+          <Card key={rapper.id} className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:transform hover:scale-105 group">
             <CardContent className="p-6">
               {/* Ranking Badge */}
               {sortBy === "rating" && (
@@ -103,15 +104,19 @@ const RapperGrid = ({ selectedCategory }: RapperGridProps) => {
                 </div>
               )}
 
-              {/* Rapper Image Placeholder */}
-              <div className="w-full h-48 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg mb-4 flex items-center justify-center">
-                <Music className="w-16 h-16 text-white/70" />
-              </div>
+              {/* Rapper Image Placeholder - Make it clickable */}
+              <Link to={`/rapper/${rapper.id}`}>
+                <div className="w-full h-48 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg mb-4 flex items-center justify-center cursor-pointer group-hover:from-purple-500 group-hover:to-blue-500 transition-colors">
+                  <Music className="w-16 h-16 text-white/70" />
+                </div>
+              </Link>
 
               {/* Rapper Info */}
               <div className="space-y-3">
                 <div className="flex items-start justify-between">
-                  <h3 className="text-white font-bold text-lg leading-tight">{rapper.name}</h3>
+                  <Link to={`/rapper/${rapper.id}`}>
+                    <h3 className="text-white font-bold text-lg leading-tight hover:text-purple-300 transition-colors cursor-pointer">{rapper.name}</h3>
+                  </Link>
                   {rapper.verified && (
                     <Verified className="w-5 h-5 text-blue-500 flex-shrink-0" />
                   )}
