@@ -21,7 +21,7 @@ const RankingBadge = ({ position }: RankingBadgeProps) => {
   };
 
   return (
-    <div className={`absolute -top-2 -left-2 bg-gradient-to-r ${getRankBadgeColor(position)} text-white text-sm font-bold rounded-full w-10 h-10 flex items-center justify-center z-10`}>
+    <div className={`absolute -top-3 -right-3 bg-gradient-to-r ${getRankBadgeColor(position)} text-white text-sm font-bold rounded-full w-10 h-10 flex items-center justify-center z-10`}>
       {getRankIcon(position) || `#${position}`}
     </div>
   );
