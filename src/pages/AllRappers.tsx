@@ -16,7 +16,8 @@ const AllRappers = () => {
   const [searchInput, setSearchInput] = useState(""); // Input value for immediate UI updates
   const [searchTerm, setSearchTerm] = useState(""); // Debounced value for API calls
   const [locationFilter, setLocationFilter] = useState("");
-  const [loadedCount, setLoadedCount] = useState(20);
+  const [allRappers, setAllRappers] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(0);
   
   const itemsPerPage = 20;
 
@@ -24,14 +25,15 @@ const AllRappers = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(searchInput);
-      setLoadedCount(20); // Reset to initial load when search changes
+      setCurrentPage(0); // Reset to first page when search changes
+      setAllRappers([]); // Clear existing rappers
     }, 2000);
 
     return () => clearTimeout(timer);
   }, [searchInput]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
-    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, loadedCount],
+    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, currentPage],
     queryFn: async () => {
       let query = supabase
         .from("rappers")
@@ -58,27 +60,43 @@ const AllRappers = () => {
         query = query.order("origin", { ascending: sortOrder === "asc", nullsFirst: false });
       }
 
-      // Apply limit for "Load More" functionality
-      const { data, error, count } = await query.limit(loadedCount);
+      // Apply pagination - only fetch the current page
+      const { data, error, count } = await query
+        .range(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage - 1);
       
       if (error) throw error;
       
       return {
         rappers: data || [],
         total: count || 0,
-        hasMore: (count || 0) > loadedCount
+        hasMore: (count || 0) > (currentPage + 1) * itemsPerPage
       };
     }
   });
 
+  // Update allRappers when new data comes in
+  useEffect(() => {
+    if (rappersData?.rappers) {
+      if (currentPage === 0) {
+        // First page or reset - replace all rappers
+        setAllRappers(rappersData.rappers);
+      } else {
+        // Subsequent pages - append to existing rappers
+        setAllRappers(prev => [...prev, ...rappersData.rappers]);
+      }
+    }
+  }, [rappersData, currentPage]);
+
   const handleSortChange = (value: string) => {
     setSortBy(value);
-    setLoadedCount(20); // Reset to initial load when sorting changes
+    setCurrentPage(0);
+    setAllRappers([]);
   };
 
   const handleOrderChange = (value: string) => {
     setSortOrder(value);
-    setLoadedCount(20);
+    setCurrentPage(0);
+    setAllRappers([]);
   };
 
   const handleSearchInput = (value: string) => {
@@ -87,14 +105,15 @@ const AllRappers = () => {
 
   const handleLocationFilter = (value: string) => {
     setLocationFilter(value);
-    setLoadedCount(20);
+    setCurrentPage(0);
+    setAllRappers([]);
   };
 
   const handleLoadMore = () => {
-    setLoadedCount(prev => prev + itemsPerPage);
+    setCurrentPage(prev => prev + 1);
   };
 
-  if (isLoading) {
+  if (isLoading && currentPage === 0) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
         <div className="max-w-7xl mx-auto">
@@ -114,7 +133,6 @@ const AllRappers = () => {
     );
   }
 
-  const rappers = rappersData?.rappers || [];
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
 
@@ -131,7 +149,7 @@ const AllRappers = () => {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-white">All Rappers</h1>
-            <p className="text-gray-300">{total} rappers total • Showing {rappers.length}</p>
+            <p className="text-gray-300">{total} rappers total • Showing {allRappers.length}</p>
           </div>
         </div>
 
@@ -149,15 +167,14 @@ const AllRappers = () => {
         />
 
         {/* Rappers Grid with Ads */}
-        {rappers.length === 0 ? (
+        {allRappers.length === 0 && !isLoading ? (
           <AllRappersEmptyState />
         ) : (
           <AllRappersGrid
-            rappers={rappers}
+            rappers={allRappers}
             total={total}
             hasMore={hasMore}
             isFetching={isFetching}
-            loadedCount={loadedCount}
             itemsPerPage={itemsPerPage}
             onLoadMore={handleLoadMore}
           />

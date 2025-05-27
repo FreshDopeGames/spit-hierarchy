@@ -1,5 +1,5 @@
 
-import React, { useRef } from "react";
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,7 +15,6 @@ interface AllRappersGridProps {
   total: number;
   hasMore: boolean;
   isFetching: boolean;
-  loadedCount: number;
   itemsPerPage: number;
   onLoadMore: () => void;
 }
@@ -25,20 +24,9 @@ const AllRappersGrid = ({
   total,
   hasMore,
   isFetching,
-  loadedCount,
   itemsPerPage,
   onLoadMore,
 }: AllRappersGridProps) => {
-  const scrollAnchorRef = useRef<HTMLDivElement>(null);
-
-  const handleLoadMore = () => {
-    // Store current scroll position before loading more
-    if (scrollAnchorRef.current) {
-      scrollAnchorRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
-    }
-    
-    onLoadMore();
-  };
 
   // Split rappers into chunks to insert ads between sections
   const rappersWithAds = [];
@@ -132,14 +120,11 @@ const AllRappersGrid = ({
         </div>
       ))}
 
-      {/* Scroll anchor for maintaining position */}
-      {hasMore && <div ref={scrollAnchorRef} className="h-0" />}
-
       {/* Load More Button */}
       {hasMore && (
         <div className="flex justify-center">
           <Button
-            onClick={handleLoadMore}
+            onClick={onLoadMore}
             disabled={isFetching}
             className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 text-lg"
           >
