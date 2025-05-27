@@ -29,53 +29,55 @@ const AllRappersFilters = ({
   onOrderChange,
 }: AllRappersFiltersProps) => {
   return (
-    <div className="bg-black/40 border border-purple-500/20 rounded-lg p-6 mb-8">
+    <div className="bg-black/60 border-2 border-hip-hop-gold/30 rounded-lg p-6 mb-8 backdrop-blur-sm shadow-lg">
+      <h3 className="text-hip-hop-gold font-street text-lg mb-4 text-center">Filter & Sort The Culture</h3>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Search */}
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-hip-hop-gold w-4 h-4" />
           <Input
-            placeholder="Search rappers..."
+            placeholder="Search the culture..."
             value={searchInput}
             onChange={(e) => onSearchInput(e.target.value)}
-            className="pl-10 bg-black/60 border-purple-500/30 text-white placeholder-gray-400"
+            className="pl-10 bg-black/80 border-hip-hop-electric-blue/50 text-white placeholder-gray-400 focus:border-hip-hop-gold focus:ring-hip-hop-gold/30"
           />
           {searchInput !== searchTerm && (
             <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-              <Loader2 className="w-4 h-4 text-purple-400 animate-spin" />
+              <Loader2 className="w-4 h-4 text-hip-hop-gold animate-spin" />
             </div>
           )}
         </div>
 
         {/* Location Filter */}
         <Input
-          placeholder="Filter by location..."
+          placeholder="Filter by city/state..."
           value={locationFilter}
           onChange={(e) => onLocationFilter(e.target.value)}
-          className="bg-black/60 border-purple-500/30 text-white placeholder-gray-400"
+          className="bg-black/80 border-hip-hop-electric-blue/50 text-white placeholder-gray-400 focus:border-hip-hop-gold focus:ring-hip-hop-gold/30"
         />
 
         {/* Sort By */}
         <Select value={sortBy} onValueChange={onSortChange}>
-          <SelectTrigger className="bg-black/60 border-purple-500/30 text-white">
+          <SelectTrigger className="bg-black/80 border-hip-hop-electric-blue/50 text-white focus:border-hip-hop-gold focus:ring-hip-hop-gold/30">
             <SelectValue placeholder="Sort by" />
           </SelectTrigger>
-          <SelectContent className="bg-black/90 border-purple-500/30 text-white">
-            <SelectItem value="name">Name</SelectItem>
-            <SelectItem value="rating">Rating</SelectItem>
-            <SelectItem value="votes">Vote Count</SelectItem>
-            <SelectItem value="origin">Location</SelectItem>
+          <SelectContent className="bg-black/95 border-hip-hop-gold/50 text-white backdrop-blur-sm">
+            <SelectItem value="name" className="focus:bg-hip-hop-gold/20 focus:text-hip-hop-gold">Name</SelectItem>
+            <SelectItem value="rating" className="focus:bg-hip-hop-gold/20 focus:text-hip-hop-gold">Rating</SelectItem>
+            <SelectItem value="votes" className="focus:bg-hip-hop-gold/20 focus:text-hip-hop-gold">Vote Count</SelectItem>
+            <SelectItem value="origin" className="focus:bg-hip-hop-gold/20 focus:text-hip-hop-gold">Location</SelectItem>
           </SelectContent>
         </Select>
 
         {/* Sort Order */}
         <Select value={sortOrder} onValueChange={onOrderChange}>
-          <SelectTrigger className="bg-black/60 border-purple-500/30 text-white">
+          <SelectTrigger className="bg-black/80 border-hip-hop-electric-blue/50 text-white focus:border-hip-hop-gold focus:ring-hip-hop-gold/30">
             <SelectValue placeholder="Order" />
           </SelectTrigger>
-          <SelectContent className="bg-black/90 border-purple-500/30 text-white">
-            <SelectItem value="asc">Ascending</SelectItem>
-            <SelectItem value="desc">Descending</SelectItem>
+          <SelectContent className="bg-black/95 border-hip-hop-gold/50 text-white backdrop-blur-sm">
+            <SelectItem value="asc" className="focus:bg-hip-hop-gold/20 focus:text-hip-hop-gold">Ascending</SelectItem>
+            <SelectItem value="desc" className="focus:bg-hip-hop-gold/20 focus:text-hip-hop-gold">Descending</SelectItem>
           </SelectContent>
         </Select>
       </div>

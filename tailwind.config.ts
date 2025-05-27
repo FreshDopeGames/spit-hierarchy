@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,7 +62,21 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Hip-hop themed colors
+				'hip-hop': {
+					'gold': '#FFD700',
+					'platinum': '#E5E4E2',
+					'bronze': '#CD7F32',
+					'neon-green': '#39FF14',
+					'electric-blue': '#007FFF',
+					'hot-pink': '#FF69B4'
 				}
+			},
+			fontFamily: {
+				'graffiti': ['Creepster', 'cursive'],
+				'street': ['Righteous', 'sans-serif'],
+				'bold': ['Bungee', 'sans-serif'],
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -84,11 +99,29 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'glow-pulse': {
+					'0%, 100%': { 
+						boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)' 
+					},
+					'50%': { 
+						boxShadow: '0 0 40px rgba(147, 51, 234, 0.8)' 
+					}
+				},
+				'text-glow': {
+					'0%, 100%': { 
+						textShadow: '0 0 10px rgba(255, 215, 0, 0.8)' 
+					},
+					'50%': { 
+						textShadow: '0 0 20px rgba(255, 215, 0, 1)' 
+					}
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
+				'text-glow': 'text-glow 2s ease-in-out infinite'
 			}
 		}
 	},

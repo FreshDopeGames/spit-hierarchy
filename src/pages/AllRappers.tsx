@@ -122,12 +122,15 @@ const AllRappers = () => {
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-4 mb-8">
             <Link to="/">
-              <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
+              <Button variant="outline" className="border-hip-hop-gold/50 text-hip-hop-gold hover:bg-hip-hop-gold/20 font-street">
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Back to Home
               </Button>
             </Link>
-            <h1 className="text-3xl font-bold text-white">All Rappers</h1>
+            <div>
+              <h1 className="text-4xl font-graffiti text-hip-hop-gold animate-text-glow">All Rappers</h1>
+              <p className="text-hip-hop-platinum font-street">Loading the culture...</p>
+            </div>
           </div>
           
           <AllRappersLoadingSkeleton />
@@ -142,17 +145,20 @@ const AllRappers = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
       <div className="max-w-7xl mx-auto">
-        {/* Header */}
+        {/* Enhanced Header */}
         <div className="flex items-center gap-4 mb-8">
           <Link to="/">
-            <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
+            <Button variant="outline" className="border-hip-hop-gold/50 text-hip-hop-gold hover:bg-hip-hop-gold/20 font-street transition-all duration-300">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
           </Link>
           <div>
-            <h1 className="text-3xl font-bold text-white">All Rappers</h1>
-            <p className="text-gray-300">{total} rappers total • Showing {allRappers.length}</p>
+            <h1 className="text-4xl font-graffiti text-hip-hop-gold animate-text-glow mb-2">All Rappers</h1>
+            <p className="text-hip-hop-platinum font-street text-lg">
+              {total} artists in the culture • Showing {allRappers.length}
+            </p>
+            <div className="w-24 h-1 bg-gradient-to-r from-hip-hop-gold to-hip-hop-electric-blue mt-2"></div>
           </div>
         </div>
 
