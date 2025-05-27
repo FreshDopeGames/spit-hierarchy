@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import RankingBadge from "./RankingBadge";
 import RapperStats from "./RapperStats";
+import HotBadge from "./analytics/HotBadge";
+import { useIsHotRapper } from "@/hooks/useHotRappers";
 
 type Rapper = Tables<"rappers">;
 
@@ -14,12 +16,21 @@ interface RapperCardProps {
 }
 
 const RapperCard = ({ rapper, position }: RapperCardProps) => {
+  const { isHot, voteVelocity } = useIsHotRapper(rapper.id);
+
   return (
     <div className="relative">
       <Link to={`/rapper/${rapper.id}`}>
         <Card className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:transform hover:scale-105 relative cursor-pointer">
           <CardContent className="p-6">
             <RankingBadge position={position} />
+
+            {/* Hot Badge */}
+            {isHot && (
+              <div className="absolute top-2 right-2 z-10">
+                <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
+              </div>
+            )}
 
             {/* Special effects for #1 */}
             {position === 1 && (

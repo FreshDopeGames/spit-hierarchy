@@ -249,36 +249,47 @@ const Rankings = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              {selectedRankingData.rappers.map((rapper) => (
-                <div 
-                  key={rapper.rank}
-                  className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg hover:bg-gray-800/50 transition-colors"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">#{rapper.rank}</span>
+              {selectedRankingData.rappers.map((rapper) => {
+                // For demo purposes, we'll show some rappers as "hot" based on their rank
+                const isHot = rapper.rank <= 2; // Top 2 rappers are "hot" for demo
+                const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
+                
+                return (
+                  <div 
+                    key={rapper.rank}
+                    className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg hover:bg-gray-800/50 transition-colors relative"
+                  >
+                    <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                      <span className="text-white font-bold text-lg">#{rapper.rank}</span>
+                    </div>
+                    
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2">
+                        <h3 className="text-white font-semibold text-lg">{rapper.name}</h3>
+                        {isHot && (
+                          <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
+                        )}
+                      </div>
+                      <p className="text-gray-300">{rapper.reason}</p>
+                    </div>
+                    
+                    <div className="flex items-center gap-3">
+                      <VoteButton
+                        onVote={() => handleVote(rapper.name)}
+                        onVoteWithNote={(note) => handleVoteWithNote(rapper.name, note)}
+                        disabled={!user}
+                      />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="text-purple-300 hover:text-white"
+                      >
+                        View Profile
+                      </Button>
+                    </div>
                   </div>
-                  
-                  <div className="flex-1">
-                    <h3 className="text-white font-semibold text-lg">{rapper.name}</h3>
-                    <p className="text-gray-300">{rapper.reason}</p>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <VoteButton
-                      onVote={() => handleVote(rapper.name)}
-                      onVoteWithNote={(note) => handleVoteWithNote(rapper.name, note)}
-                      disabled={!user}
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-purple-300 hover:text-white"
-                    >
-                      View Profile
-                    </Button>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </CardContent>
           </Card>
         </main>
