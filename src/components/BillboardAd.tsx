@@ -29,17 +29,20 @@ const BillboardAd = ({
   return (
     <div className={`w-full my-8 ${className}`}>
       <div className="text-center mb-2">
-        <span className="text-xs text-gray-500 uppercase tracking-wider">Advertisement</span>
+        <span className="text-xs text-rap-smoke uppercase tracking-wider font-street">Advertisement</span>
       </div>
       
       <Card 
-        className="bg-gradient-to-r from-gray-800 to-gray-900 border-gray-700 hover:border-gray-600 transition-all duration-300 cursor-pointer"
+        className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 cursor-pointer relative overflow-hidden group"
         onClick={handleAdClick}
       >
+        {/* Rap culture accent bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+        
         <CardContent className="p-6">
           <div className="flex flex-col md:flex-row items-center gap-4">
             {/* Ad Image/Placeholder */}
-            <div className="w-full md:w-32 h-24 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg flex items-center justify-center flex-shrink-0">
+            <div className="w-full md:w-32 h-24 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-lg flex items-center justify-center flex-shrink-0 group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-all duration-300">
               {imageUrl ? (
                 <img 
                   src={imageUrl} 
@@ -47,16 +50,16 @@ const BillboardAd = ({
                   className="w-full h-full object-cover rounded-lg"
                 />
               ) : (
-                <ExternalLink className="w-8 h-8 text-white/70" />
+                <ExternalLink className="w-8 h-8 text-rap-platinum/70" />
               )}
             </div>
 
             {/* Ad Content */}
             <div className="flex-1 text-center md:text-left">
-              <h3 className="text-white font-bold text-lg mb-2">{title}</h3>
-              <p className="text-gray-300 text-sm mb-3">{description}</p>
+              <h3 className="text-rap-platinum font-graffiti font-bold text-lg mb-2 group-hover:text-rap-silver transition-colors">{title}</h3>
+              <p className="text-rap-smoke text-sm mb-3 font-street">{description}</p>
               
-              <div className="inline-flex items-center gap-2 bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+              <div className="inline-flex items-center gap-2 bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light text-rap-platinum px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 font-street border border-rap-silver/20 shadow-lg shadow-rap-burgundy/30">
                 {ctaText}
                 <ExternalLink className="w-4 h-4" />
               </div>
