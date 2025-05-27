@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Calendar, Verified, Music, Loader2, Mic2 } from "lucide-react";
+import { Star, MapPin, Calendar, Verified, Mic2, Loader2, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import BillboardAd from "@/components/BillboardAd";
@@ -62,12 +62,21 @@ const AllRappersGrid = ({
                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
                     
                     <CardContent className="p-6">
-                      {/* Rapper Image Placeholder with vinyl record theme */}
-                      <div className="w-full h-32 bg-vinyl rounded-lg mb-4 flex items-center justify-center relative group-hover:animate-vinyl-spin transition-all duration-300">
-                        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon via-transparent to-rap-carbon/50 rounded-lg"></div>
-                        <Mic2 className="w-12 h-12 text-rap-silver/70 group-hover:text-rap-platinum transition-colors relative z-10" />
-                        {/* Center hole */}
-                        <div className="absolute w-6 h-6 bg-rap-carbon rounded-full top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-20"></div>
+                      {/* Rapper on stage placeholder image */}
+                      <div className="w-full h-32 bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300">
+                        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-transparent to-rap-carbon/50 rounded-lg"></div>
+                        
+                        {/* Stage spotlight effect */}
+                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-rap-silver/30 to-transparent rounded-full blur-sm"></div>
+                        
+                        {/* Rapper silhouette with microphone */}
+                        <div className="relative z-10 flex flex-col items-center">
+                          <Mic2 className="w-8 h-8 text-rap-silver/70 group-hover:text-rap-platinum transition-colors mb-1" />
+                          <Users className="w-4 h-4 text-rap-silver/50 group-hover:text-rap-platinum/70 transition-colors" />
+                        </div>
+                        
+                        {/* Stage floor effect */}
+                        <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-rap-carbon to-transparent rounded-b-lg"></div>
                       </div>
 
                       {/* Rapper Info */}
