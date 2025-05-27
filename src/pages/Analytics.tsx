@@ -1,7 +1,7 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network } from "lucide-react";
+import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserVotingDashboard from "@/components/analytics/UserVotingDashboard";
@@ -9,6 +9,7 @@ import VotingAnalytics from "@/components/analytics/VotingAnalytics";
 import VotingTrends from "@/components/analytics/VotingTrends";
 import TopVoters from "@/components/analytics/TopVoters";
 import RapperNetworkGraph from "@/components/analytics/RapperNetworkGraph";
+import AstrologicalRankings from "@/components/analytics/AstrologicalRankings";
 
 const Analytics = () => {
   const { user, signOut } = useAuth();
@@ -56,7 +57,7 @@ const Analytics = () => {
         </div>
 
         <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="grid w-full max-w-2xl grid-cols-4 bg-black/40 border border-purple-500/20">
+          <TabsList className="grid w-full max-w-3xl grid-cols-5 bg-black/40 border border-purple-500/20">
             <TabsTrigger 
               value="personal" 
               className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
@@ -85,6 +86,13 @@ const Analytics = () => {
               <Network className="w-4 h-4 mr-2" />
               Network
             </TabsTrigger>
+            <TabsTrigger 
+              value="astrology" 
+              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            >
+              <Star className="w-4 h-4 mr-2" />
+              Astrology
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="personal" className="mt-6">
@@ -104,6 +112,10 @@ const Analytics = () => {
 
           <TabsContent value="network" className="mt-6">
             <RapperNetworkGraph />
+          </TabsContent>
+
+          <TabsContent value="astrology" className="mt-6">
+            <AstrologicalRankings />
           </TabsContent>
         </Tabs>
       </main>

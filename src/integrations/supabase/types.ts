@@ -94,6 +94,8 @@ export type Database = {
         Row: {
           average_rating: number | null
           bio: string | null
+          birth_day: number | null
+          birth_month: number | null
           birth_year: number | null
           created_at: string
           id: string
@@ -111,6 +113,8 @@ export type Database = {
         Insert: {
           average_rating?: number | null
           bio?: string | null
+          birth_day?: number | null
+          birth_month?: number | null
           birth_year?: number | null
           created_at?: string
           id?: string
@@ -128,6 +132,8 @@ export type Database = {
         Update: {
           average_rating?: number | null
           bio?: string | null
+          birth_day?: number | null
+          birth_month?: number | null
           birth_year?: number | null
           created_at?: string
           id?: string
