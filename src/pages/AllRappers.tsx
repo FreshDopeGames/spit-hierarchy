@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -19,15 +20,15 @@ const AllRappers = () => {
   const [searchInput, setSearchInput] = useState(""); // Input value for immediate UI updates
   const [searchTerm, setSearchTerm] = useState(""); // Debounced value for API calls
   const [locationFilter, setLocationFilter] = useState("");
-  const [loadedCount, setLoadedCount] = useState(50);
+  const [loadedCount, setLoadedCount] = useState(20);
   
-  const itemsPerPage = 50;
+  const itemsPerPage = 20;
 
   // Debounce search input with 2 second delay
   useEffect(() => {
     const timer = setTimeout(() => {
       setSearchTerm(searchInput);
-      setLoadedCount(50); // Reset to initial load when search changes
+      setLoadedCount(20); // Reset to initial load when search changes
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -76,12 +77,12 @@ const AllRappers = () => {
 
   const handleSortChange = (value: string) => {
     setSortBy(value);
-    setLoadedCount(50); // Reset to initial load when sorting changes
+    setLoadedCount(20); // Reset to initial load when sorting changes
   };
 
   const handleOrderChange = (value: string) => {
     setSortOrder(value);
-    setLoadedCount(50);
+    setLoadedCount(20);
   };
 
   const handleSearchInput = (value: string) => {
@@ -90,7 +91,7 @@ const AllRappers = () => {
 
   const handleLocationFilter = (value: string) => {
     setLocationFilter(value);
-    setLoadedCount(50);
+    setLoadedCount(20);
   };
 
   const handleLoadMore = () => {
