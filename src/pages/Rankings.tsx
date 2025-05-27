@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,7 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Plus, ArrowLeft, Trophy, Star, Users, Calendar, Edit, Trash2, Eye, Award } from "lucide-react";
 import CommentBubble from "@/components/CommentBubble";
+import VoteButton from "@/components/VoteButton";
 import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/components/ui/use-toast";
 
 // Mock data for official rankings
 const officialRankings = [
@@ -128,6 +129,7 @@ const userRankings = [
 
 const Rankings = () => {
   const { user } = useAuth();
+  const { toast } = useToast();
   const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "my-rankings" | "popular">("all");
 
@@ -140,6 +142,38 @@ const Rankings = () => {
     if (filter === "popular") return ranking.likes > 200;
     return true;
   });
+
+  const handleVote = (rapperName: string) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to vote for rappers.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Vote submitted!",
+      description: `Your vote for ${rapperName} has been recorded.`,
+    });
+  };
+
+  const handleVoteWithNote = (rapperName: string, note: string) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to vote for rappers.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Vote with note submitted!",
+      description: `Your vote for ${rapperName} with note has been recorded.`,
+    });
+  };
 
   if (selectedRanking && selectedRankingData) {
     return (
@@ -229,7 +263,12 @@ const Rankings = () => {
                     <p className="text-gray-300">{rapper.reason}</p>
                   </div>
                   
-                  {user && (
+                  <div className="flex items-center gap-3">
+                    <VoteButton
+                      onVote={() => handleVote(rapper.name)}
+                      onVoteWithNote={(note) => handleVoteWithNote(rapper.name, note)}
+                      disabled={!user}
+                    />
                     <Button
                       variant="ghost"
                       size="sm"
@@ -237,7 +276,7 @@ const Rankings = () => {
                     >
                       View Profile
                     </Button>
-                  )}
+                  </div>
                 </div>
               ))}
             </CardContent>

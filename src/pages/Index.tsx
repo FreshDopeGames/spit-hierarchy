@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, Settings, BarChart3, LogIn } from "lucide-react";
+import { Music, Settings, BarChart3, LogIn, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
@@ -26,6 +26,12 @@ const Index = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <Link to="/rankings">
+              <Button variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
+                <Trophy className="w-4 h-4 mr-2" />
+                Rankings
+              </Button>
+            </Link>
             {user ? (
               // Authenticated user navigation
               <>
