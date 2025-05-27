@@ -1,13 +1,14 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, ArrowLeft, BarChart3, User, TrendingUp } from "lucide-react";
+import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserVotingDashboard from "@/components/analytics/UserVotingDashboard";
 import VotingAnalytics from "@/components/analytics/VotingAnalytics";
 import VotingTrends from "@/components/analytics/VotingTrends";
 import TopVoters from "@/components/analytics/TopVoters";
+import RapperNetworkGraph from "@/components/analytics/RapperNetworkGraph";
 
 const Analytics = () => {
   const { user, signOut } = useAuth();
@@ -55,27 +56,34 @@ const Analytics = () => {
         </div>
 
         <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="grid w-full max-w-lg grid-cols-3 bg-black/40 border border-purple-500/20">
+          <TabsList className="grid w-full max-w-2xl grid-cols-4 bg-black/40 border border-purple-500/20">
             <TabsTrigger 
               value="personal" 
               className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <User className="w-4 h-4 mr-2" />
-              Personal Stats
+              Personal
             </TabsTrigger>
             <TabsTrigger 
               value="platform" 
               className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <BarChart3 className="w-4 h-4 mr-2" />
-              Platform Stats
+              Platform
             </TabsTrigger>
             <TabsTrigger 
               value="trends" 
               className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
             >
               <TrendingUp className="w-4 h-4 mr-2" />
-              Trends & Rankings
+              Trends
+            </TabsTrigger>
+            <TabsTrigger 
+              value="network" 
+              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+            >
+              <Network className="w-4 h-4 mr-2" />
+              Network
             </TabsTrigger>
           </TabsList>
 
@@ -92,6 +100,10 @@ const Analytics = () => {
               <VotingTrends />
               <TopVoters />
             </div>
+          </TabsContent>
+
+          <TabsContent value="network" className="mt-6">
+            <RapperNetworkGraph />
           </TabsContent>
         </Tabs>
       </main>
