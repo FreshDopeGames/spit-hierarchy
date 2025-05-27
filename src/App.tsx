@@ -10,6 +10,7 @@ import RapperDetail from "./pages/RapperDetail";
 import BlogDetail from "./pages/BlogDetail";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
+import AllRappers from "./pages/AllRappers";
 import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
@@ -26,6 +27,7 @@ function App() {
             <Route path="/rapper/:id" element={<RapperDetail />} />
             <Route path="/blog/:id" element={<BlogDetail />} />
             <Route path="/profile" element={<UserProfile />} />
+            <Route path="/all-rappers" element={<AllRappers />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </div>

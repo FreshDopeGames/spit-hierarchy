@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -261,12 +262,14 @@ const TopRappersGrid = () => {
 
       {/* View All Button */}
       <div className="text-center mt-8">
-        <Button 
-          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
-          size="lg"
-        >
-          View All Rankings
-        </Button>
+        <Link to="/all-rappers">
+          <Button 
+            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+            size="lg"
+          >
+            View All Rappers
+          </Button>
+        </Link>
       </div>
     </div>
   );
