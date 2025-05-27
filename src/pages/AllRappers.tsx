@@ -1,14 +1,11 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
 import AllRappersFilters from "@/components/AllRappersFilters";
 import AllRappersGrid from "@/components/AllRappersGrid";
 import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
+import InternalPageHeader from "@/components/InternalPageHeader";
 
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
@@ -118,21 +115,12 @@ const AllRappers = () => {
 
   if (isLoading && currentPage === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon p-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex items-center gap-4 mb-8">
-            <Link to="/">
-              <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-street">
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Back to Home
-              </Button>
-            </Link>
-            <div>
-              <h1 className="text-4xl font-graffiti text-rap-silver animate-text-glow">All Artists</h1>
-              <p className="text-rap-platinum font-street">Loading the culture...</p>
-            </div>
-          </div>
-          
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+        <InternalPageHeader 
+          title="All Artists" 
+          subtitle="Loading the culture..." 
+        />
+        <div className="pt-20 max-w-7xl mx-auto p-6">
           <AllRappersLoadingSkeleton />
         </div>
       </div>
@@ -143,23 +131,16 @@ const AllRappers = () => {
   const hasMore = rappersData?.hasMore || false;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon p-6">
-      <div className="max-w-7xl mx-auto">
-        {/* Enhanced Header with rap culture theme */}
-        <div className="flex items-center gap-4 mb-8">
-          <Link to="/">
-            <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-street transition-all duration-300">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-          <div>
-            <h1 className="text-4xl font-graffiti text-rap-silver animate-text-glow mb-2">The Lyricist Collective</h1>
-            <p className="text-rap-platinum font-street text-lg">
-              {total} wordsmith legends • Showcasing {allRappers.length}
-            </p>
-            <div className="w-32 h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver mt-2 rounded-full"></div>
-          </div>
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <InternalPageHeader 
+        title="The Lyricist Collective" 
+        subtitle={`${total} wordsmith legends • Showcasing ${allRappers.length}`}
+      />
+      
+      <div className="pt-20 max-w-7xl mx-auto p-6">
+        {/* Enhanced stats display */}
+        <div className="mb-8">
+          <div className="w-32 h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver rounded-full"></div>
         </div>
 
         {/* Filters and Search */}
