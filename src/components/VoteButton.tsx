@@ -15,9 +15,18 @@ interface VoteButtonProps {
   onVoteWithNote: (note: string) => void;
   disabled?: boolean;
   className?: string;
+  rapperId?: string;
+  rankingId?: string;
 }
 
-const VoteButton = ({ onVote, onVoteWithNote, disabled = false, className = "" }: VoteButtonProps) => {
+const VoteButton = ({ 
+  onVote, 
+  onVoteWithNote, 
+  disabled = false, 
+  className = "",
+  rapperId,
+  rankingId
+}: VoteButtonProps) => {
   const [showNoteModal, setShowNoteModal] = useState(false);
 
   const handleVoteWithNote = (note: string) => {
@@ -63,6 +72,8 @@ const VoteButton = ({ onVote, onVoteWithNote, disabled = false, className = "" }
         isOpen={showNoteModal}
         onClose={() => setShowNoteModal(false)}
         onSubmit={handleVoteWithNote}
+        rapperId={rapperId}
+        rankingId={rankingId}
       />
     </>
   );

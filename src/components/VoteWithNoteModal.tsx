@@ -1,5 +1,8 @@
 
 import React, { useState } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import {
   Dialog,
   DialogContent,
@@ -10,18 +13,71 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowUp } from "lucide-react";
+import { useToast } from "@/components/ui/use-toast";
 
 interface VoteWithNoteModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (note: string) => void;
+  rapperId?: string;
+  rankingId?: string;
 }
 
-const VoteWithNoteModal = ({ isOpen, onClose, onSubmit }: VoteWithNoteModalProps) => {
+const VoteWithNoteModal = ({ isOpen, onClose, onSubmit, rapperId, rankingId }: VoteWithNoteModalProps) => {
   const [note, setNote] = useState("");
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
 
-  const handleSubmit = () => {
-    onSubmit(note.trim());
+  const saveVoteNoteMutation = useMutation({
+    mutationFn: async ({ note, rapperId, rankingId }: { note: string; rapperId: string; rankingId: string }) => {
+      if (!user) throw new Error("Must be logged in to save vote notes");
+
+      const { data, error } = await supabase
+        .from("vote_notes")
+        .insert({
+          user_id: user.id,
+          rapper_id: rapperId,
+          ranking_id: rankingId,
+          note: note.trim()
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["vote-notes"] });
+      toast({
+        title: "Vote note saved!",
+        description: "Your vote and note have been recorded.",
+      });
+    },
+    onError: (error: any) => {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to save vote note",
+        variant: "destructive",
+      });
+    }
+  });
+
+  const handleSubmit = async () => {
+    const trimmedNote = note.trim();
+    
+    // Call the original onSubmit for the vote
+    onSubmit(trimmedNote);
+    
+    // Save the note to database if we have the required info and note is not empty
+    if (user && rapperId && rankingId && trimmedNote) {
+      await saveVoteNoteMutation.mutateAsync({
+        note: trimmedNote,
+        rapperId,
+        rankingId
+      });
+    }
+    
     setNote("");
   };
 
@@ -67,10 +123,11 @@ const VoteWithNoteModal = ({ isOpen, onClose, onSubmit }: VoteWithNoteModalProps
             </Button>
             <Button
               onClick={handleSubmit}
+              disabled={saveVoteNoteMutation.isPending}
               className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
             >
               <ArrowUp className="w-4 h-4 mr-2" />
-              Submit Vote
+              {saveVoteNoteMutation.isPending ? "Submitting..." : "Submit Vote"}
             </Button>
           </div>
         </div>

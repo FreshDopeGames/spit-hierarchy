@@ -1,68 +1,38 @@
 
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { AuthProvider } from "@/hooks/useAuth";
-import AuthGuard from "@/components/AuthGuard";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
-import Admin from "./pages/Admin";
+import Rankings from "./pages/Rankings";
 import Analytics from "./pages/Analytics";
+import Admin from "./pages/Admin";
 import RapperDetail from "./pages/RapperDetail";
 import BlogDetail from "./pages/BlogDetail";
-import Rankings from "./pages/Rankings";
 import NotFound from "./pages/NotFound";
+import UserProfile from "./pages/UserProfile";
+import { AuthProvider } from "./hooks/useAuth";
 
-const queryClient = new QueryClient();
-
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <AuthProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
+function App() {
+  return (
+    <AuthProvider>
+      <Router>
+        <div className="min-h-screen">
           <Routes>
+            <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
-            <Route path="/analytics" element={
-              <AuthGuard requireAuth={true}>
-                <Analytics />
-              </AuthGuard>
-            } />
-            <Route path="/admin" element={
-              <AuthGuard requireAuth={true} adminOnly={true}>
-                <Admin />
-              </AuthGuard>
-            } />
-            <Route path="/rankings" element={
-              <AuthGuard requireAuth={false}>
-                <Rankings />
-              </AuthGuard>
-            } />
-            <Route path="/rapper/:id" element={
-              <AuthGuard requireAuth={false}>
-                <RapperDetail />
-              </AuthGuard>
-            } />
-            <Route path="/blog/:id" element={
-              <AuthGuard requireAuth={false}>
-                <BlogDetail />
-              </AuthGuard>
-            } />
-            <Route path="/" element={
-              <AuthGuard requireAuth={false}>
-                <Index />
-              </AuthGuard>
-            } />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="/rankings" element={<Rankings />} />
+            <Route path="/analytics" element={<Analytics />} />
+            <Route path="/admin" element={<Admin />} />
+            <Route path="/rapper/:id" element={<RapperDetail />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path="/profile" element={<UserProfile />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
-        </BrowserRouter>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+        </div>
+        <Toaster />
+      </Router>
+    </AuthProvider>
+  );
+}
 
 export default App;
