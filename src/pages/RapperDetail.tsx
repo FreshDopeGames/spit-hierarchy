@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -7,7 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Star, MapPin, Calendar, Verified, Music, Instagram, Twitter, Spotify } from "lucide-react";
+import { ArrowLeft, Star, MapPin, Calendar, Verified, Music, Instagram, Twitter } from "lucide-react";
 import VoteModal from "@/components/VoteModal";
 import CommentBubble from "@/components/CommentBubble";
 import { Tables } from "@/integrations/supabase/types";
@@ -156,7 +155,7 @@ const RapperDetail = () => {
                   )}
                   {rapper.spotify_id && (
                     <Button variant="outline" size="sm" className="border-purple-500/30 text-purple-300">
-                      <Spotify className="w-4 h-4 mr-2" />
+                      <Music className="w-4 h-4 mr-2" />
                       Spotify
                     </Button>
                   )}
