@@ -25,11 +25,14 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
 
   return (
     <>
-      <Card className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-all duration-300 hover:transform hover:scale-105 group relative">
+      <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden">
+        {/* Rap culture accent bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+        
         <CardContent className="p-6">
           {/* Ranking Badge */}
           {sortBy === "rating" && (
-            <div className="absolute -top-2 -left-2 bg-gradient-to-r from-yellow-500 to-orange-500 text-black text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center">
+            <div className="absolute -top-2 -left-2 bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-mogra">
               #{index + 1}
             </div>
           )}
@@ -43,8 +46,8 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
 
           {/* Rapper Image Placeholder - Make it clickable */}
           <Link to={`/rapper/${rapper.id}`}>
-            <div className="w-full h-48 bg-gradient-to-br from-purple-600 to-blue-600 rounded-lg mb-4 flex items-center justify-center cursor-pointer group-hover:from-purple-500 group-hover:to-blue-500 transition-colors">
-              <Music className="w-16 h-16 text-white/70" />
+            <div className="w-full h-48 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-lg mb-4 flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors">
+              <Music className="w-16 h-16 text-rap-platinum/70" />
             </div>
           </Link>
 
@@ -52,26 +55,26 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           <div className="space-y-3">
             <div className="flex items-start justify-between">
               <Link to={`/rapper/${rapper.id}`}>
-                <h3 className="text-white font-bold text-lg leading-tight hover:text-purple-300 transition-colors cursor-pointer">{rapper.name}</h3>
+                <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-silver transition-colors cursor-pointer font-mogra">{rapper.name}</h3>
               </Link>
               {rapper.verified && (
-                <Verified className="w-5 h-5 text-blue-500 flex-shrink-0" />
+                <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
               )}
             </div>
 
             {rapper.real_name && (
-              <p className="text-gray-400 text-sm">{rapper.real_name}</p>
+              <p className="text-rap-smoke text-sm font-kaushan">{rapper.real_name}</p>
             )}
 
             <div className="flex flex-wrap gap-2 text-xs">
               {rapper.origin && (
-                <div className="flex items-center gap-1 text-gray-300">
+                <div className="flex items-center gap-1 text-rap-platinum font-kaushan">
                   <MapPin className="w-3 h-3" />
                   <span>{rapper.origin}</span>
                 </div>
               )}
               {rapper.birth_year && (
-                <div className="flex items-center gap-1 text-gray-300">
+                <div className="flex items-center gap-1 text-rap-platinum font-kaushan">
                   <Calendar className="w-3 h-3" />
                   <span>{rapper.birth_year}</span>
                 </div>
@@ -81,19 +84,19 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             {/* Stats */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 text-yellow-500" />
-                <span className="text-white font-semibold">
+                <Star className="w-4 h-4 text-rap-gold" />
+                <span className="text-rap-platinum font-semibold font-ceviche">
                   {rapper.average_rating || "—"}
                 </span>
               </div>
-              <Badge variant="secondary" className="bg-purple-600/20 text-purple-300">
+              <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 font-kaushan">
                 {rapper.total_votes || 0} votes
               </Badge>
             </div>
 
             {/* Bio Preview */}
             {rapper.bio && (
-              <p className="text-gray-400 text-sm line-clamp-2">
+              <p className="text-rap-smoke text-sm line-clamp-2 font-kaushan">
                 {rapper.bio}
               </p>
             )}
@@ -101,7 +104,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             {/* Vote Button */}
             <Button
               onClick={() => setSelectedRapper(rapper)}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              className="w-full bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light text-rap-platinum font-mogra"
             >
               Vote & Rate
             </Button>

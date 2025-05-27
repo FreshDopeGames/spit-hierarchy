@@ -41,7 +41,7 @@ const VoteButton = ({
         <Button
           onClick={onVote}
           disabled={disabled}
-          className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light rounded-r-none border-r border-rap-gold/20 font-kaushan shadow-lg shadow-rap-burgundy/30"
+          className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light rounded-r-none border-r border-rap-gold/20 font-mogra shadow-lg shadow-rap-burgundy/30 text-rap-platinum"
         >
           <ArrowUp className="w-4 h-4 mr-2" />
           Vote
@@ -52,15 +52,15 @@ const VoteButton = ({
           <DropdownMenuTrigger asChild>
             <Button
               disabled={disabled}
-              className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light rounded-l-none border-l border-rap-gold/20 px-2 shadow-lg shadow-rap-burgundy/30"
+              className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light rounded-l-none border-l border-rap-gold/20 px-2 shadow-lg shadow-rap-burgundy/30 text-rap-platinum"
             >
               <ChevronDown className="w-4 h-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-carbon-fiber border-rap-gold/30 text-rap-silver">
+          <DropdownMenuContent className="bg-carbon-fiber border-rap-gold/30 text-rap-silver z-50">
             <DropdownMenuItem
               onClick={() => setShowNoteModal(true)}
-              className="hover:bg-rap-burgundy/20 cursor-pointer font-kaushan"
+              className="hover:bg-rap-burgundy/20 cursor-pointer font-kaushan text-rap-platinum hover:text-rap-silver"
             >
               Vote with Note
             </DropdownMenuItem>

@@ -23,7 +23,7 @@ const InternalPageHeader = ({
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={backLink}>
-            <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan">
+            <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-mogra">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {backText}
             </Button>
@@ -33,7 +33,7 @@ const InternalPageHeader = ({
             <img 
               src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
               alt="Spit Hierarchy Logo" 
-              className="w-10 h-10 object-contain"
+              className="w-10 h-10 object-contain animate-glow-pulse"
             />
             <div>
               <h1 className="text-2xl font-mogra text-rap-silver animate-text-glow">{title}</h1>

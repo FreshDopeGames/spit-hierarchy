@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Music, Trophy, User, BarChart3, Settings, Info } from "lucide-react";
@@ -12,7 +13,7 @@ const Footer = () => {
             <img 
               src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
               alt="Spit Hierarchy Logo" 
-              className="w-12 h-12 object-contain"
+              className="w-12 h-12 object-contain animate-glow-pulse"
             />
             <div>
               <h3 className="font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent text-2xl">

@@ -34,9 +34,9 @@ const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsS
     <div className="mb-12">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Award className="w-6 h-6 text-yellow-500" />
-          <h2 className="text-3xl font-bold text-white">Official Rankings</h2>
-          <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+          <Award className="w-6 h-6 text-rap-gold" />
+          <h2 className="text-3xl font-bold text-rap-platinum font-mogra">Official Rankings</h2>
+          <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
             Curated Topics
           </Badge>
         </div>
@@ -44,7 +44,7 @@ const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsS
         <Link to="/official-rankings">
           <Button 
             variant="outline" 
-            className="border-yellow-500/30 text-yellow-300 hover:bg-yellow-600/20 hover:text-yellow-200"
+            className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20 hover:text-rap-gold-light font-kaushan"
           >
             See All Official Rankings
           </Button>

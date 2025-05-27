@@ -82,25 +82,25 @@ const AllRappersGrid = ({
                       {/* Rapper Info */}
                       <div className="space-y-3">
                         <div className="flex items-start justify-between">
-                          <h3 className="text-rap-platinum font-graffiti font-bold text-lg leading-tight group-hover:text-rap-silver transition-colors">{rapper.name}</h3>
+                          <h3 className="text-rap-platinum font-mogra font-bold text-lg leading-tight group-hover:text-rap-silver transition-colors">{rapper.name}</h3>
                           {rapper.verified && (
                             <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
                           )}
                         </div>
 
                         {rapper.real_name && (
-                          <p className="text-rap-smoke text-sm font-medium font-street">{rapper.real_name}</p>
+                          <p className="text-rap-smoke text-sm font-medium font-kaushan">{rapper.real_name}</p>
                         )}
 
                         <div className="flex flex-wrap gap-2 text-xs">
                           {rapper.origin && (
-                            <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-street">
+                            <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
                               <MapPin className="w-3 h-3" />
                               <span>{rapper.origin}</span>
                             </div>
                           )}
                           {rapper.birth_year && (
-                            <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-street">
+                            <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
                               <Calendar className="w-3 h-3" />
                               <span>{rapper.birth_year}</span>
                             </div>
@@ -110,12 +110,12 @@ const AllRappersGrid = ({
                         {/* Stats with enhanced styling */}
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-1 bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-3 py-1 rounded-full border border-rap-silver/20">
-                            <Star className="w-4 h-4 text-rap-silver" />
-                            <span className="text-rap-platinum font-bold font-rap">
+                            <Star className="w-4 h-4 text-rap-gold" />
+                            <span className="text-rap-platinum font-bold font-ceviche">
                               {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
                             </span>
                           </div>
-                          <Badge variant="secondary" className="bg-gradient-to-r from-rap-forest/40 to-rap-burgundy/40 text-rap-platinum border-rap-silver/30 font-street">
+                          <Badge variant="secondary" className="bg-gradient-to-r from-rap-forest/40 to-rap-burgundy/40 text-rap-platinum border-rap-silver/30 font-kaushan">
                             {rapper.total_votes || 0} votes
                           </Badge>
                         </div>
@@ -141,15 +141,15 @@ const AllRappersGrid = ({
           <Button
             onClick={onLoadMore}
             disabled={isFetching}
-            className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light text-rap-platinum font-bold px-8 py-3 text-lg border-2 border-rap-silver/50 hover:border-rap-silver shadow-lg hover:shadow-rap-burgundy/30 transition-all duration-300 font-graffiti"
+            className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light text-rap-platinum font-bold px-8 py-3 text-lg border-2 border-rap-silver/50 hover:border-rap-silver shadow-lg hover:shadow-rap-burgundy/30 transition-all duration-300 font-mogra"
           >
             {isFetching ? (
               <>
                 <Loader2 className="w-5 h-5 mr-2 animate-spin" />
-                <span className="font-street">Loading More...</span>
+                <span className="font-kaushan">Loading More...</span>
               </>
             ) : (
-              <span className="font-street">Load More Artists ({total - rappers.length} remaining)</span>
+              <span className="font-kaushan">Load More Artists ({total - rappers.length} remaining)</span>
             )}
           </Button>
         </div>
