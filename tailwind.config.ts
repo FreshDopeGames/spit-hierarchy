@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 export default {
@@ -68,9 +67,12 @@ export default {
 					'burgundy': '#800020',
 					'burgundy-light': '#A0002A',
 					'burgundy-dark': '#600018',
-					'forest': '#355E3B',
-					'forest-light': '#4A7C59',
-					'forest-dark': '#2B4C32',
+					'forest': '#4CAF50',
+					'forest-light': '#66BB6A',
+					'forest-dark': '#388E3C',
+					'gold': '#FFD700',
+					'gold-light': '#FFED4A',
+					'gold-dark': '#F1C40F',
 					'carbon': '#1C1C1C',
 					'carbon-light': '#2A2A2A',
 					'silver': '#C0C0C0',

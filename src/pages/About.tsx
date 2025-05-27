@@ -1,6 +1,7 @@
 
 import React from "react";
 import InternalPageHeader from "@/components/InternalPageHeader";
+import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -38,7 +39,7 @@ const About = () => {
         </div>
 
         {/* What We Do */}
-        <Card className="bg-carbon-fiber border-rap-burgundy/50">
+        <Card className="bg-carbon-fiber border-rap-gold/50">
           <CardHeader>
             <CardTitle className="text-rap-silver font-ceviche text-2xl flex items-center">
               <Music className="w-6 h-6 mr-3 text-rap-forest" />
@@ -61,7 +62,7 @@ const About = () => {
 
         {/* Features Grid */}
         <div className="grid md:grid-cols-2 gap-6">
-          <Card className="bg-carbon-fiber border-rap-burgundy/50">
+          <Card className="bg-carbon-fiber border-rap-gold/50">
             <CardHeader>
               <CardTitle className="text-rap-silver font-mogra flex items-center">
                 <Vote className="w-5 h-5 mr-3 text-rap-forest" />
@@ -76,7 +77,7 @@ const About = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-carbon-fiber border-rap-burgundy/50">
+          <Card className="bg-carbon-fiber border-rap-gold/50">
             <CardHeader>
               <CardTitle className="text-rap-silver font-mogra flex items-center">
                 <Trophy className="w-5 h-5 mr-3 text-rap-forest" />
@@ -91,7 +92,7 @@ const About = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-carbon-fiber border-rap-burgundy/50">
+          <Card className="bg-carbon-fiber border-rap-gold/50">
             <CardHeader>
               <CardTitle className="text-rap-silver font-mogra flex items-center">
                 <Users className="w-5 h-5 mr-3 text-rap-forest" />
@@ -106,7 +107,7 @@ const About = () => {
             </CardContent>
           </Card>
 
-          <Card className="bg-carbon-fiber border-rap-burgundy/50">
+          <Card className="bg-carbon-fiber border-rap-gold/50">
             <CardHeader>
               <CardTitle className="text-rap-silver font-mogra flex items-center">
                 <BarChart3 className="w-5 h-5 mr-3 text-rap-forest" />
@@ -123,7 +124,7 @@ const About = () => {
         </div>
 
         {/* How It Works */}
-        <Card className="bg-carbon-fiber border-rap-burgundy/50">
+        <Card className="bg-carbon-fiber border-rap-gold/50">
           <CardHeader>
             <CardTitle className="text-rap-silver font-ceviche text-2xl">
               How It Works
@@ -188,6 +189,8 @@ const About = () => {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };
