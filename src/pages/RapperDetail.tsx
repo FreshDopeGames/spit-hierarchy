@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -12,6 +13,39 @@ import CommentBubble from "@/components/CommentBubble";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
+
+const getZodiacSign = (month: number | null, day: number | null): string => {
+  if (!month || !day) return '';
+  
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'Aries ♈';
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'Taurus ♉';
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'Gemini ♊';
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'Cancer ♋';
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'Leo ♌';
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'Virgo ♍';
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'Libra ♎';
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'Scorpio ♏';
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'Sagittarius ♐';
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'Capricorn ♑';
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'Aquarius ♒';
+  if ((month === 2 && day >= 19) || (month === 3 && day <= 20)) return 'Pisces ♓';
+  
+  return '';
+};
+
+const formatBirthdate = (year: number | null, month: number | null, day: number | null): string => {
+  if (!month || !day) return '';
+  
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const monthName = monthNames[month - 1];
+  const yearText = year ? `, ${year}` : '';
+  
+  return `${monthName} ${day}${yearText}`;
+};
 
 const RapperDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -72,6 +106,9 @@ const RapperDetail = () => {
     );
   }
 
+  const zodiacSign = getZodiacSign(rapper.birth_month, rapper.birth_day);
+  const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
       <div className="max-w-4xl mx-auto p-6">
@@ -121,9 +158,14 @@ const RapperDetail = () => {
                   <Badge variant="secondary" className="bg-blue-600/20 text-blue-300 px-4 py-2">
                     {rapper.total_votes || 0} votes
                   </Badge>
+                  {zodiacSign && (
+                    <Badge variant="secondary" className="bg-purple-600/20 text-purple-300 px-4 py-2">
+                      {zodiacSign}
+                    </Badge>
+                  )}
                 </div>
 
-                {/* Location & Birth Year */}
+                {/* Location, Birth Info & Zodiac */}
                 <div className="flex flex-wrap gap-4 text-gray-300">
                   {rapper.origin && (
                     <div className="flex items-center gap-2">
@@ -131,10 +173,10 @@ const RapperDetail = () => {
                       <span>{rapper.origin}</span>
                     </div>
                   )}
-                  {rapper.birth_year && (
+                  {birthdate && (
                     <div className="flex items-center gap-2">
                       <Calendar className="w-4 h-4" />
-                      <span>{rapper.birth_year}</span>
+                      <span>{birthdate}</span>
                     </div>
                   )}
                 </div>
