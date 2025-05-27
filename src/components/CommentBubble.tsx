@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { MessageCircle, X, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,10 +12,23 @@ interface CommentBubbleProps {
 
 const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [shouldAnimate, setShouldAnimate] = useState(false);
   const { user } = useAuth();
 
   // Mock comment count for now - will be replaced with real data later
   const commentCount = 12;
+
+  // Animation effect - hop every 10 seconds when collapsed
+  useEffect(() => {
+    if (isExpanded) return;
+
+    const interval = setInterval(() => {
+      setShouldAnimate(true);
+      setTimeout(() => setShouldAnimate(false), 600); // Animation duration
+    }, 10000); // Every 10 seconds
+
+    return () => clearInterval(interval);
+  }, [isExpanded]);
 
   const getContentTypeLabel = () => {
     switch (contentType) {
@@ -33,7 +46,9 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
         <div className="fixed bottom-6 right-6 z-50">
           <Button
             onClick={() => setIsExpanded(true)}
-            className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-full h-14 px-6 shadow-lg"
+            className={`bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 rounded-full h-14 px-6 shadow-lg transition-transform duration-300 ${
+              shouldAnimate ? 'animate-bounce' : ''
+            }`}
           >
             <MessageCircle className="w-5 h-5 mr-2" />
             <span className="font-semibold">{commentCount}</span>
