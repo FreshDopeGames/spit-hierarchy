@@ -7,23 +7,23 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Star, MapPin, Calendar, Verified, Music, ArrowLeft, Search } from "lucide-react";
+import { Star, MapPin, Calendar, Verified, Music, ArrowLeft, Search, Loader2 } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
 
 const AllRappers = () => {
-  const [page, setPage] = useState(1);
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchTerm, setSearchTerm] = useState("");
   const [locationFilter, setLocationFilter] = useState("");
+  const [loadedCount, setLoadedCount] = useState(50);
   
   const itemsPerPage = 50;
 
-  const { data: rappersData, isLoading } = useQuery({
-    queryKey: ["all-rappers", page, sortBy, sortOrder, searchTerm, locationFilter],
+  const { data: rappersData, isLoading, isFetching } = useQuery({
+    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, loadedCount],
     queryFn: async () => {
       let query = supabase
         .from("rappers")
@@ -50,40 +50,41 @@ const AllRappers = () => {
         query = query.order("origin", { ascending: sortOrder === "asc", nullsFirst: false });
       }
 
-      // Apply pagination
-      const from = (page - 1) * itemsPerPage;
-      const to = from + itemsPerPage - 1;
-      
-      const { data, error, count } = await query.range(from, to);
+      // Apply limit for "Load More" functionality
+      const { data, error, count } = await query.limit(loadedCount);
       
       if (error) throw error;
       
       return {
         rappers: data || [],
         total: count || 0,
-        totalPages: Math.ceil((count || 0) / itemsPerPage)
+        hasMore: (count || 0) > loadedCount
       };
     }
   });
 
   const handleSortChange = (value: string) => {
     setSortBy(value);
-    setPage(1); // Reset to first page when sorting changes
+    setLoadedCount(50); // Reset to initial load when sorting changes
   };
 
   const handleOrderChange = (value: string) => {
     setSortOrder(value);
-    setPage(1);
+    setLoadedCount(50);
   };
 
   const handleSearch = (value: string) => {
     setSearchTerm(value);
-    setPage(1);
+    setLoadedCount(50);
   };
 
   const handleLocationFilter = (value: string) => {
     setLocationFilter(value);
-    setPage(1);
+    setLoadedCount(50);
+  };
+
+  const handleLoadMore = () => {
+    setLoadedCount(prev => prev + itemsPerPage);
   };
 
   if (isLoading) {
@@ -117,8 +118,8 @@ const AllRappers = () => {
   }
 
   const rappers = rappersData?.rappers || [];
-  const totalPages = rappersData?.totalPages || 0;
   const total = rappersData?.total || 0;
+  const hasMore = rappersData?.hasMore || false;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6">
@@ -133,7 +134,7 @@ const AllRappers = () => {
           </Link>
           <div>
             <h1 className="text-3xl font-bold text-white">All Rappers</h1>
-            <p className="text-gray-300">{total} rappers total</p>
+            <p className="text-gray-300">{total} rappers total • Showing {rappers.length}</p>
           </div>
         </div>
 
@@ -253,29 +254,22 @@ const AllRappers = () => {
               ))}
             </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
-              <div className="flex justify-center items-center gap-4">
+            {/* Load More Button */}
+            {hasMore && (
+              <div className="flex justify-center">
                 <Button
-                  onClick={() => setPage(Math.max(1, page - 1))}
-                  disabled={page === 1}
-                  variant="outline"
-                  className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+                  onClick={handleLoadMore}
+                  disabled={isFetching}
+                  className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 text-white px-8 py-3 text-lg"
                 >
-                  Previous
-                </Button>
-                
-                <span className="text-white">
-                  Page {page} of {totalPages}
-                </span>
-                
-                <Button
-                  onClick={() => setPage(Math.min(totalPages, page + 1))}
-                  disabled={page === totalPages}
-                  variant="outline"
-                  className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
-                >
-                  Next
+                  {isFetching ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Loading More...
+                    </>
+                  ) : (
+                    `Load More Rappers (${total - rappers.length} remaining)`
+                  )}
                 </Button>
               </div>
             )}
