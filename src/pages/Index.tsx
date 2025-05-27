@@ -40,20 +40,20 @@ const Index = () => {
               }`} />
             </div>
             <div className="flex flex-col">
-              <h1 className={`font-graffiti bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent transition-all duration-300 ${
+              <h1 className={`font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent transition-all duration-300 ${
                 isScrolled ? 'text-lg' : 'text-2xl'
               }`}>
                 Spit Hierarchy
               </h1>
               {!isScrolled && (
-                <span className="text-xs text-rap-smoke font-street">Where Bars Meet Rankings</span>
+                <span className="text-xs text-rap-smoke font-kaushan">Where Bars Meet Rankings</span>
               )}
             </div>
           </div>
           
           <div className="flex items-center space-x-4">
             <Link to="/all-rappers">
-              <Button variant="outline" className={`border-rap-forest/50 text-rap-forest hover:bg-rap-forest/20 font-street transition-all duration-300 ${
+              <Button variant="outline" className={`border-rap-forest/50 text-rap-forest hover:bg-rap-forest/20 font-kaushan transition-all duration-300 ${
                 isScrolled ? 'text-xs px-2 py-1' : ''
               }`}>
                 <Music className="w-4 h-4 mr-2" />
@@ -61,7 +61,7 @@ const Index = () => {
               </Button>
             </Link>
             <Link to="/rankings">
-              <Button variant="outline" className={`border-rap-burgundy/50 text-rap-burgundy hover:bg-rap-burgundy/20 font-street transition-all duration-300 ${
+              <Button variant="outline" className={`border-rap-burgundy/50 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan transition-all duration-300 ${
                 isScrolled ? 'text-xs px-2 py-1' : ''
               }`}>
                 <Trophy className="w-4 h-4 mr-2" />
@@ -72,7 +72,7 @@ const Index = () => {
               // Authenticated user navigation
               <>
                 <Link to="/profile">
-                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-street transition-all duration-300 ${
+                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${
                     isScrolled ? 'text-xs px-2 py-1' : ''
                   }`}>
                     <User className="w-4 h-4 mr-2" />
@@ -80,7 +80,7 @@ const Index = () => {
                   </Button>
                 </Link>
                 <Link to="/analytics">
-                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-street transition-all duration-300 ${
+                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${
                     isScrolled ? 'text-xs px-2 py-1' : ''
                   }`}>
                     <BarChart3 className="w-4 h-4 mr-2" />
@@ -89,15 +89,15 @@ const Index = () => {
                 </Link>
                 {/* Admin button - we'll implement role checking later */}
                 <Link to="/admin">
-                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-street transition-all duration-300 ${
+                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${
                     isScrolled ? 'text-xs px-2 py-1' : ''
                   }`}>
                     <Settings className="w-4 h-4 mr-2" />
                     {isScrolled ? '' : 'Admin'}
                   </Button>
                 </Link>
-                {!isScrolled && <span className="text-rap-smoke font-street">Welcome, {user.email}</span>}
-                <Button onClick={signOut} variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-street transition-all duration-300 ${
+                {!isScrolled && <span className="text-rap-smoke font-kaushan">Welcome, {user.email}</span>}
+                <Button onClick={signOut} variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${
                   isScrolled ? 'text-xs px-2 py-1' : ''
                 }`}>
                   {isScrolled ? 'Out' : 'Sign Out'}
@@ -106,9 +106,9 @@ const Index = () => {
             ) : (
               // Guest user navigation
               <>
-                {!isScrolled && <span className="text-rap-smoke font-street">Browsing as Guest</span>}
+                {!isScrolled && <span className="text-rap-smoke font-kaushan">Browsing as Guest</span>}
                 <Link to="/auth">
-                  <Button className={`bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-graffiti transition-all duration-300 ${
+                  <Button className={`bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra transition-all duration-300 ${
                     isScrolled ? 'text-xs px-3 py-1' : ''
                   }`}>
                     <LogIn className="w-4 h-4 mr-2" />
@@ -125,16 +125,16 @@ const Index = () => {
       <main className="pt-20 max-w-7xl mx-auto p-6">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-graffiti text-rap-silver mb-4 animate-text-glow">
+          <h2 className="text-4xl font-ceviche text-rap-silver mb-4 animate-text-glow">
             The Ultimate Lyrical Community
           </h2>
-          <p className="text-rap-platinum text-lg max-w-2xl mx-auto font-street leading-relaxed">
+          <p className="text-rap-platinum text-lg max-w-2xl mx-auto font-kaushan leading-relaxed">
             Where wordplay meets warfare. Vote for your favorite lyricists, study the metrics, and connect with the culture that shapes the future of hip-hop.
           </p>
           {!user && (
             <div className="mt-6">
               <Link to="/auth">
-                <Button size="lg" className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-graffiti text-lg">
+                <Button size="lg" className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra text-lg">
                   Enter the Cypher
                 </Button>
               </Link>
@@ -154,14 +154,14 @@ const Index = () => {
         {/* Guest user call-to-action */}
         {!user && (
           <div className="mt-12 text-center bg-carbon-fiber border border-rap-burgundy/30 rounded-lg p-8">
-            <h3 className="text-2xl font-graffiti text-rap-silver mb-4">
+            <h3 className="text-2xl font-ceviche text-rap-silver mb-4">
               Ready to Drop Your Vote?
             </h3>
-            <p className="text-rap-platinum mb-6 font-street">
+            <p className="text-rap-platinum mb-6 font-kaushan">
               Join thousands of hip-hop heads voting on their favorite lyricists, accessing exclusive analytics, and shaping the culture.
             </p>
             <Link to="/auth">
-              <Button size="lg" className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-graffiti">
+              <Button size="lg" className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra">
                 Sign Up Now - It's Free
               </Button>
             </Link>

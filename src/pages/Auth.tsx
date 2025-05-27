@@ -115,7 +115,7 @@ const Auth = () => {
       {/* Back Navigation */}
       <div className="absolute top-6 left-6">
         <Link to="/">
-          <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-street">
+          <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>
@@ -128,14 +128,14 @@ const Auth = () => {
             <div className="w-8 h-8 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-lg flex items-center justify-center">
               <Music className="w-5 h-5 text-rap-silver" />
             </div>
-            <h1 className="text-2xl font-graffiti bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent">
+            <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent">
               Spit Hierarchy
             </h1>
           </div>
-          <CardTitle className="text-rap-silver font-graffiti">
+          <CardTitle className="text-rap-silver font-ceviche">
             {isLogin ? "Welcome Back" : "Join The Culture"}
           </CardTitle>
-          <p className="text-rap-smoke font-street text-sm mt-2">
+          <p className="text-rap-smoke font-kaushan text-sm mt-2">
             {isLogin ? "Sign in to vote and rank your favorite MCs" : "Create your account to start ranking rap legends"}
           </p>
         </CardHeader>
@@ -147,7 +147,7 @@ const Auth = () => {
               onClick={() => handleSocialAuth('google')}
               disabled={socialLoading === 'google'}
               variant="outline"
-              className="w-full bg-rap-carbon/50 border-rap-silver/30 text-rap-silver hover:bg-rap-burgundy/20 font-street"
+              className="w-full bg-rap-carbon/50 border-rap-silver/30 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan"
             >
               {socialLoading === 'google' ? (
                 "Connecting..."
@@ -168,7 +168,7 @@ const Auth = () => {
               onClick={() => handleSocialAuth('facebook')}
               disabled={socialLoading === 'facebook'}
               variant="outline"
-              className="w-full bg-blue-600/20 border-blue-500/30 text-rap-silver hover:bg-blue-600/30 font-street"
+              className="w-full bg-blue-600/20 border-blue-500/30 text-rap-silver hover:bg-blue-600/30 font-kaushan"
             >
               {socialLoading === 'facebook' ? (
                 "Connecting..."
@@ -186,7 +186,7 @@ const Auth = () => {
               onClick={() => handleSocialAuth('twitter')}
               disabled={socialLoading === 'twitter'}
               variant="outline"
-              className="w-full bg-rap-carbon/20 border-rap-smoke/30 text-rap-silver hover:bg-rap-carbon/30 font-street"
+              className="w-full bg-rap-carbon/20 border-rap-smoke/30 text-rap-silver hover:bg-rap-carbon/30 font-kaushan"
             >
               {socialLoading === 'twitter' ? (
                 "Connecting..."
@@ -206,7 +206,7 @@ const Auth = () => {
               <Separator className="w-full bg-rap-smoke/50" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-carbon-fiber px-2 text-rap-smoke font-street">Or continue with email</span>
+              <span className="bg-carbon-fiber px-2 text-rap-smoke font-kaushan">Or continue with email</span>
             </div>
           </div>
 
@@ -215,7 +215,7 @@ const Auth = () => {
             {!isLogin && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="username" className="text-rap-platinum font-street">Username</Label>
+                  <Label htmlFor="username" className="text-rap-platinum font-kaushan">Username</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                     <Input
@@ -225,13 +225,13 @@ const Auth = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required={!isLogin}
-                      className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
+                      className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-rap-platinum font-street">Full Name</Label>
+                  <Label htmlFor="fullName" className="text-rap-platinum font-kaushan">Full Name</Label>
                   <div className="relative">
                     <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                     <Input
@@ -240,7 +240,7 @@ const Auth = () => {
                       placeholder="Enter your full name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
+                      className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan"
                     />
                   </div>
                 </div>
@@ -248,7 +248,7 @@ const Auth = () => {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-rap-platinum font-street">Email</Label>
+              <Label htmlFor="email" className="text-rap-platinum font-kaushan">Email</Label>
               <div className="relative">
                 <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                 <Input
@@ -258,13 +258,13 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
+                  className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan"
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-rap-platinum font-street">Password</Label>
+              <Label htmlFor="password" className="text-rap-platinum font-kaushan">Password</Label>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                 <Input
@@ -274,7 +274,7 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
+                  className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan"
                 />
               </div>
             </div>
@@ -282,7 +282,7 @@ const Auth = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-graffiti text-rap-silver"
+              className="w-full bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra text-rap-silver"
             >
               {loading ? "Processing..." : (isLogin ? "Sign In" : "Join the Hierarchy")}
             </Button>
@@ -291,12 +291,12 @@ const Auth = () => {
           <div className="text-center space-y-3">
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-rap-silver hover:text-rap-platinum transition-colors font-street"
+              className="text-rap-silver hover:text-rap-platinum transition-colors font-kaushan"
             >
               {isLogin ? "New to the game? Join the culture" : "Already in the crew? Sign in"}
             </button>
             
-            <div className="text-xs text-rap-smoke font-street">
+            <div className="text-xs text-rap-smoke font-kaushan">
               <Link to="/about" className="hover:text-rap-silver transition-colors">
                 Learn more about Spit Hierarchy
               </Link>
