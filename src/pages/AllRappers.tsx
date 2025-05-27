@@ -24,13 +24,16 @@ const AllRappers = () => {
   // Debounce search input with 2 second delay
   useEffect(() => {
     const timer = setTimeout(() => {
-      setSearchTerm(searchInput);
-      setCurrentPage(0); // Reset to first page when search changes
-      setAllRappers([]); // Clear existing rappers
+      // Only reset if the search term actually changed
+      if (searchTerm !== searchInput) {
+        setSearchTerm(searchInput);
+        setCurrentPage(0); // Reset to first page when search changes
+        setAllRappers([]); // Clear existing rappers only when search actually changes
+      }
     }, 2000);
 
     return () => clearTimeout(timer);
-  }, [searchInput]);
+  }, [searchInput, searchTerm]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, currentPage],
