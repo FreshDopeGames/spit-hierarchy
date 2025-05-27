@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Mic, Menu } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Mic, Menu, Info } from "lucide-react";
 
 interface NavigationSidebarProps {
   trigger?: React.ReactNode;
@@ -52,6 +52,13 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-silver font-street">
                 <Home className="w-4 h-4 mr-3" />
                 Home
+              </Button>
+            </Link>
+
+            <Link to="/about">
+              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-silver font-street">
+                <Info className="w-4 h-4 mr-3" />
+                About
               </Button>
             </Link>
 

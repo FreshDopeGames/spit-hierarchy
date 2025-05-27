@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -5,8 +6,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Music, User, Mail, Lock } from "lucide-react";
+import { Music, User, Mail, Lock, ArrowLeft } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
+import { Link } from "react-router-dom";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -109,20 +111,33 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md bg-black/40 border-purple-500/20">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center p-4">
+      {/* Back Navigation */}
+      <div className="absolute top-6 left-6">
+        <Link to="/">
+          <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-street">
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Home
+          </Button>
+        </Link>
+      </div>
+
+      <Card className="w-full max-w-md bg-carbon-fiber border-rap-burgundy/50">
         <CardHeader className="text-center">
           <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-lg flex items-center justify-center">
+              <Music className="w-5 h-5 text-rap-silver" />
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-2xl font-graffiti bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent">
               Spit Hierarchy
             </h1>
           </div>
-          <CardTitle className="text-white">
+          <CardTitle className="text-rap-silver font-graffiti">
             {isLogin ? "Welcome Back" : "Join The Culture"}
           </CardTitle>
+          <p className="text-rap-smoke font-street text-sm mt-2">
+            {isLogin ? "Sign in to vote and rank your favorite MCs" : "Create your account to start ranking rap legends"}
+          </p>
         </CardHeader>
         
         <CardContent className="space-y-6">
@@ -132,7 +147,7 @@ const Auth = () => {
               onClick={() => handleSocialAuth('google')}
               disabled={socialLoading === 'google'}
               variant="outline"
-              className="w-full bg-white/10 border-white/20 text-white hover:bg-white/20"
+              className="w-full bg-rap-carbon/50 border-rap-silver/30 text-rap-silver hover:bg-rap-burgundy/20 font-street"
             >
               {socialLoading === 'google' ? (
                 "Connecting..."
@@ -153,7 +168,7 @@ const Auth = () => {
               onClick={() => handleSocialAuth('facebook')}
               disabled={socialLoading === 'facebook'}
               variant="outline"
-              className="w-full bg-blue-600/20 border-blue-500/30 text-white hover:bg-blue-600/30"
+              className="w-full bg-blue-600/20 border-blue-500/30 text-rap-silver hover:bg-blue-600/30 font-street"
             >
               {socialLoading === 'facebook' ? (
                 "Connecting..."
@@ -171,7 +186,7 @@ const Auth = () => {
               onClick={() => handleSocialAuth('twitter')}
               disabled={socialLoading === 'twitter'}
               variant="outline"
-              className="w-full bg-black/20 border-gray-600/30 text-white hover:bg-black/30"
+              className="w-full bg-rap-carbon/20 border-rap-smoke/30 text-rap-silver hover:bg-rap-carbon/30 font-street"
             >
               {socialLoading === 'twitter' ? (
                 "Connecting..."
@@ -188,10 +203,10 @@ const Auth = () => {
 
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <Separator className="w-full bg-gray-600" />
+              <Separator className="w-full bg-rap-smoke/50" />
             </div>
             <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-slate-900 px-2 text-gray-400">Or continue with email</span>
+              <span className="bg-carbon-fiber px-2 text-rap-smoke font-street">Or continue with email</span>
             </div>
           </div>
 
@@ -200,9 +215,9 @@ const Auth = () => {
             {!isLogin && (
               <>
                 <div className="space-y-2">
-                  <Label htmlFor="username" className="text-gray-300">Username</Label>
+                  <Label htmlFor="username" className="text-rap-platinum font-street">Username</Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                     <Input
                       id="username"
                       type="text"
@@ -210,22 +225,22 @@ const Auth = () => {
                       value={username}
                       onChange={(e) => setUsername(e.target.value)}
                       required={!isLogin}
-                      className="pl-10 bg-black/50 border-purple-500/30 text-white placeholder-gray-400 focus:border-purple-400"
+                      className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
                     />
                   </div>
                 </div>
                 
                 <div className="space-y-2">
-                  <Label htmlFor="fullName" className="text-gray-300">Full Name</Label>
+                  <Label htmlFor="fullName" className="text-rap-platinum font-street">Full Name</Label>
                   <div className="relative">
-                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                     <Input
                       id="fullName"
                       type="text"
                       placeholder="Enter your full name"
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
-                      className="pl-10 bg-black/50 border-purple-500/30 text-white placeholder-gray-400 focus:border-purple-400"
+                      className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
                     />
                   </div>
                 </div>
@@ -233,9 +248,9 @@ const Auth = () => {
             )}
             
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-gray-300">Email</Label>
+              <Label htmlFor="email" className="text-rap-platinum font-street">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                 <Input
                   id="email"
                   type="email"
@@ -243,15 +258,15 @@ const Auth = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   required
-                  className="pl-10 bg-black/50 border-purple-500/30 text-white placeholder-gray-400 focus:border-purple-400"
+                  className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
                 />
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="password" className="text-gray-300">Password</Label>
+              <Label htmlFor="password" className="text-rap-platinum font-street">Password</Label>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                 <Input
                   id="password"
                   type="password"
@@ -259,7 +274,7 @@ const Auth = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
-                  className="pl-10 bg-black/50 border-purple-500/30 text-white placeholder-gray-400 focus:border-purple-400"
+                  className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-street"
                 />
               </div>
             </div>
@@ -267,19 +282,25 @@ const Auth = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              className="w-full bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-graffiti text-rap-silver"
             >
-              {loading ? "Processing..." : (isLogin ? "Sign In" : "Create Account")}
+              {loading ? "Processing..." : (isLogin ? "Sign In" : "Join the Hierarchy")}
             </Button>
           </form>
           
-          <div className="text-center">
+          <div className="text-center space-y-3">
             <button
               onClick={() => setIsLogin(!isLogin)}
-              className="text-purple-400 hover:text-purple-300 transition-colors"
+              className="text-rap-silver hover:text-rap-platinum transition-colors font-street"
             >
-              {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+              {isLogin ? "New to the game? Join the culture" : "Already in the crew? Sign in"}
             </button>
+            
+            <div className="text-xs text-rap-smoke font-street">
+              <Link to="/about" className="hover:text-rap-silver transition-colors">
+                Learn more about Spit Hierarchy
+              </Link>
+            </div>
           </div>
         </CardContent>
       </Card>

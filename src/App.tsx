@@ -3,6 +3,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import About from "./pages/About";
 import Rankings from "./pages/Rankings";
 import OfficialRankings from "./pages/OfficialRankings";
 import Analytics from "./pages/Analytics";
@@ -22,6 +23,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
+            <Route path="/about" element={<About />} />
             <Route path="/rankings" element={<Rankings />} />
             <Route path="/official-rankings" element={<OfficialRankings />} />
             <Route path="/analytics" element={<Analytics />} />
