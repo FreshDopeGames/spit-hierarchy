@@ -23,17 +23,24 @@ const InternalPageHeader = ({
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Link to={backLink}>
-            <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-street">
+            <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan">
               <ArrowLeft className="w-4 h-4 mr-2" />
               {backText}
             </Button>
           </Link>
           
-          <div>
-            <h1 className="text-2xl font-graffiti text-rap-silver animate-text-glow">{title}</h1>
-            {subtitle && (
-              <p className="text-rap-platinum font-street text-sm">{subtitle}</p>
-            )}
+          <div className="flex items-center space-x-3">
+            <img 
+              src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
+              alt="Spit Hierarchy Logo" 
+              className="w-10 h-10 object-contain"
+            />
+            <div>
+              <h1 className="text-2xl font-mogra text-rap-silver animate-text-glow">{title}</h1>
+              {subtitle && (
+                <p className="text-rap-platinum font-kaushan text-sm">{subtitle}</p>
+              )}
+            </div>
           </div>
         </div>
 

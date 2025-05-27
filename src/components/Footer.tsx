@@ -1,7 +1,6 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
-import { Mic, Music, Trophy, User, BarChart3, Settings, Info } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, Info } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -10,9 +9,11 @@ const Footer = () => {
         {/* Logo and Brand */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div className="flex items-center space-x-3 mb-6 md:mb-0">
-            <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl w-12 h-12 flex items-center justify-center">
-              <Mic className="text-rap-silver w-7 h-7" />
-            </div>
+            <img 
+              src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
+              alt="Spit Hierarchy Logo" 
+              className="w-12 h-12 object-contain"
+            />
             <div>
               <h3 className="font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent text-2xl">
                 Spit Hierarchy

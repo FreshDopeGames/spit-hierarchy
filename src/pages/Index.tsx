@@ -1,8 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, Settings, BarChart3, LogIn, Trophy, User, Mic } from "lucide-react";
+import { Music, Settings, BarChart3, LogIn, Trophy, User } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
@@ -32,13 +31,13 @@ const Index = () => {
       }`}>
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
-            <div className={`bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl flex items-center justify-center transition-all duration-300 ${
-              isScrolled ? 'w-8 h-8' : 'w-10 h-10'
-            }`}>
-              <Mic className={`text-rap-silver transition-all duration-300 ${
-                isScrolled ? 'w-5 h-5' : 'w-6 h-6'
-              }`} />
-            </div>
+            <img 
+              src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
+              alt="Spit Hierarchy Logo" 
+              className={`object-contain transition-all duration-300 ${
+                isScrolled ? 'w-8 h-8' : 'w-10 h-10'
+              }`}
+            />
             <div className="flex flex-col">
               <h1 className={`font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent transition-all duration-300 ${
                 isScrolled ? 'text-lg' : 'text-2xl'

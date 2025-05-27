@@ -1,10 +1,9 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Mic, Menu, Info } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info } from "lucide-react";
 
 interface NavigationSidebarProps {
   trigger?: React.ReactNode;
@@ -31,9 +30,11 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
       <SheetContent side="left" className="w-80 bg-carbon-fiber border-rap-burgundy/50">
         <SheetHeader className="pb-6">
           <SheetTitle className="flex items-center space-x-3">
-            <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl w-10 h-10 flex items-center justify-center">
-              <Mic className="text-rap-silver w-6 h-6" />
-            </div>
+            <img 
+              src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
+              alt="Spit Hierarchy Logo" 
+              className="w-12 h-12 object-contain"
+            />
             <div>
               <h1 className="font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent text-xl">
                 Spit Hierarchy
