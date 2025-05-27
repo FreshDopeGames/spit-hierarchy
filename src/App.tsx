@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import Rankings from "./pages/Rankings";
+import OfficialRankings from "./pages/OfficialRankings";
 import Analytics from "./pages/Analytics";
 import Admin from "./pages/Admin";
 import RapperDetail from "./pages/RapperDetail";
@@ -22,6 +23,7 @@ function App() {
             <Route path="/" element={<Index />} />
             <Route path="/auth" element={<Auth />} />
             <Route path="/rankings" element={<Rankings />} />
+            <Route path="/official-rankings" element={<OfficialRankings />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/rapper/:id" element={<RapperDetail />} />
