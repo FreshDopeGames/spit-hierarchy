@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,6 +22,7 @@ const AllRappers = () => {
   const [loadedCount, setLoadedCount] = useState(20);
   
   const itemsPerPage = 20;
+  const scrollAnchorRef = useRef<HTMLDivElement>(null);
 
   // Debounce search input with 2 second delay
   useEffect(() => {
@@ -95,6 +95,11 @@ const AllRappers = () => {
   };
 
   const handleLoadMore = () => {
+    // Store current scroll position before loading more
+    if (scrollAnchorRef.current) {
+      scrollAnchorRef.current.scrollIntoView({ behavior: 'instant', block: 'start' });
+    }
+    
     setLoadedCount(prev => prev + itemsPerPage);
   };
 
@@ -302,6 +307,9 @@ const AllRappers = () => {
                 )}
               </div>
             ))}
+
+            {/* Scroll anchor for maintaining position */}
+            {hasMore && <div ref={scrollAnchorRef} className="h-0" />}
 
             {/* Load More Button */}
             {hasMore && (
