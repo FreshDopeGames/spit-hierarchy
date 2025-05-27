@@ -1,5 +1,8 @@
-import { useLocation } from "react-router-dom";
+
+import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Home } from "lucide-react";
 
 const NotFound = () => {
   const location = useLocation();
@@ -12,13 +15,30 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">404</h1>
-        <p className="text-xl text-gray-600 mb-4">Oops! Page not found</p>
-        <a href="/" className="text-blue-500 hover:text-blue-700 underline">
-          Return to Home
-        </a>
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative flex items-center justify-center">
+      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+      
+      <div className="relative z-10 text-center p-8">
+        <div className="mb-8">
+          <img 
+            src="/lovable-uploads/f3e5bf3e-0cea-4d04-a6e8-48de8e5b1b7a.png" 
+            alt="Spit Hierarchy Logo" 
+            className="w-24 h-24 mx-auto mb-6 animate-glow-pulse"
+          />
+        </div>
+        
+        <h1 className="text-6xl font-mogra text-rap-gold mb-4 animate-text-glow">404</h1>
+        <h2 className="text-2xl font-ceviche text-rap-silver mb-4">Page Not Found</h2>
+        <p className="text-rap-platinum font-kaushan text-lg mb-8 max-w-md">
+          Looks like this page got lost in the cipher. Let's get you back to the hierarchy.
+        </p>
+        
+        <Link to="/">
+          <Button className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra text-rap-silver px-8 py-3 shadow-lg shadow-rap-burgundy/30 border border-rap-gold/20">
+            <Home className="w-4 h-4 mr-2" />
+            Return to Home
+          </Button>
+        </Link>
       </div>
     </div>
   );

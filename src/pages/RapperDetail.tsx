@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -41,13 +42,14 @@ const RapperDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="max-w-4xl mx-auto p-6">
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+        <div className="relative z-10 max-w-4xl mx-auto p-6">
           <div className="animate-pulse">
-            <div className="h-8 bg-gray-700 rounded w-32 mb-6"></div>
-            <div className="h-96 bg-gray-700 rounded mb-6"></div>
-            <div className="h-6 bg-gray-700 rounded w-3/4 mb-4"></div>
-            <div className="h-4 bg-gray-700 rounded w-1/2"></div>
+            <div className="h-8 bg-rap-carbon-light rounded w-32 mb-6"></div>
+            <div className="h-96 bg-rap-carbon-light rounded mb-6"></div>
+            <div className="h-6 bg-rap-carbon-light rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-rap-carbon-light rounded w-1/2"></div>
           </div>
         </div>
       </div>
@@ -56,18 +58,19 @@ const RapperDetail = () => {
 
   if (!rapper) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-        <div className="max-w-4xl mx-auto p-6">
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+        <div className="relative z-10 max-w-4xl mx-auto p-6">
           <Link to="/">
-            <Button variant="outline" className="mb-6 border-purple-500/30 text-purple-300">
+            <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 font-kaushan">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
           </Link>
-          <Card className="bg-black/40 border-purple-500/20">
+          <Card className="bg-carbon-fiber border-rap-burgundy/30 shadow-lg shadow-rap-burgundy/20">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-bold text-white mb-4">Rapper Not Found</h2>
-              <p className="text-gray-400">The rapper you're looking for doesn't exist.</p>
+              <h2 className="text-2xl font-mogra text-rap-silver mb-4">Rapper Not Found</h2>
+              <p className="text-rap-smoke font-kaushan">The rapper you're looking for doesn't exist.</p>
             </CardContent>
           </Card>
         </div>
@@ -76,11 +79,13 @@ const RapperDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      <div className="max-w-4xl mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+      
+      <div className="relative z-10 max-w-4xl mx-auto p-6">
         {/* Back Button */}
         <Link to="/">
-          <Button variant="outline" className="mb-6 border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
+          <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Home
           </Button>
