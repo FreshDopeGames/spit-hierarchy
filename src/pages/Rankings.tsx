@@ -13,8 +13,8 @@ const officialRankings = [
   {
     id: "official-1",
     title: "Hip-Hop Hall of Fame: The Greatest Ever",
-    description: "Our editorial team's definitive ranking of the most influential rappers in hip-hop history.",
-    author: "Editorial Team",
+    description: "Our definitive ranking of the most influential rappers in hip-hop history.",
+    author: "Admin Team",
     authorId: "admin",
     createdAt: "2024-01-01",
     timeAgo: "1 month ago",
@@ -36,7 +36,7 @@ const officialRankings = [
     id: "official-2",
     title: "Best New Artists 2024",
     description: "Rising stars making waves in the hip-hop scene this year, curated by our music experts.",
-    author: "Music Editorial",
+    author: "Content Team",
     authorId: "admin",
     createdAt: "2024-01-05",
     timeAgo: "3 weeks ago",
@@ -288,7 +288,7 @@ const Rankings = () => {
             <Award className="w-6 h-6 text-yellow-500" />
             <h2 className="text-3xl font-bold text-white">Official Rankings</h2>
             <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
-              Curated by Experts
+              Curated Topics
             </Badge>
           </div>
           
