@@ -76,11 +76,13 @@ const BlogCarousel = () => {
           <div className="flex flex-col md:flex-row">
             {/* Featured Image */}
             <div className="md:w-1/2 relative">
-              <img 
-                src={currentPost.imageUrl} 
-                alt={currentPost.title}
-                className="w-full h-64 md:h-80 object-cover"
-              />
+              <Link to={`/blog/${currentPost.id}`}>
+                <img 
+                  src={currentPost.imageUrl} 
+                  alt={currentPost.title}
+                  className="w-full h-64 md:h-80 object-cover hover:opacity-90 transition-opacity cursor-pointer"
+                />
+              </Link>
               <div className="absolute top-4 left-4">
                 <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
                   Featured
@@ -96,9 +98,11 @@ const BlogCarousel = () => {
                   <span>{currentPost.timeAgo}</span>
                 </div>
                 
-                <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight">
-                  {currentPost.title}
-                </h2>
+                <Link to={`/blog/${currentPost.id}`}>
+                  <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight hover:text-purple-300 transition-colors cursor-pointer">
+                    {currentPost.title}
+                  </h2>
+                </Link>
                 
                 <p className="text-gray-300 text-lg leading-relaxed">
                   {currentPost.excerpt}
