@@ -1,0 +1,196 @@
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { ArrowLeft, Trophy, Star, Users, Calendar, Eye, Award } from "lucide-react";
+import CommentBubble from "@/components/CommentBubble";
+import VoteButton from "@/components/VoteButton";
+import HotBadge from "@/components/analytics/HotBadge";
+import { useAuth } from "@/hooks/useAuth";
+import { useToast } from "@/components/ui/use-toast";
+
+interface Rapper {
+  rank: number;
+  name: string;
+  reason: string;
+}
+
+interface RankingData {
+  id: string;
+  title: string;
+  description: string;
+  author: string;
+  timeAgo: string;
+  rappers: Rapper[];
+  likes: number;
+  views: number;
+  isOfficial: boolean;
+  tags: string[];
+}
+
+interface RankingDetailViewProps {
+  ranking: RankingData;
+  onBack: () => void;
+}
+
+const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
+  const { user } = useAuth();
+  const { toast } = useToast();
+
+  const handleVote = (rapperName: string) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to vote for rappers.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Vote submitted!",
+      description: `Your vote for ${rapperName} has been recorded.`,
+    });
+  };
+
+  const handleVoteWithNote = (rapperName: string, note: string) => {
+    if (!user) {
+      toast({
+        title: "Sign in required",
+        description: "Please sign in to vote for rappers.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Vote with note submitted!",
+      description: `Your vote for ${rapperName} with note has been recorded.`,
+    });
+  };
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      {/* Header */}
+      <header className="bg-black/40 border-b border-purple-500/20 p-4">
+        <div className="max-w-6xl mx-auto flex items-center justify-between">
+          <Button
+            variant="ghost"
+            onClick={onBack}
+            className="text-purple-300 hover:text-white"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to Rankings
+          </Button>
+          
+          <div className="flex items-center gap-2">
+            {ranking.isOfficial && (
+              <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                <Award className="w-3 h-3 mr-1" />
+                Official
+              </Badge>
+            )}
+            <Badge variant="secondary" className="bg-purple-600/20 text-purple-300">
+              <Eye className="w-3 h-3 mr-1" />
+              {ranking.views}
+            </Badge>
+            <Badge variant="secondary" className="bg-purple-600/20 text-purple-300">
+              <Star className="w-3 h-3 mr-1" />
+              {ranking.likes}
+            </Badge>
+          </div>
+        </div>
+      </header>
+
+      <main className="max-w-4xl mx-auto p-6">
+        {/* Ranking Header */}
+        <div className="mb-8">
+          <div className="flex flex-wrap gap-2 mb-4">
+            {ranking.tags.map((tag) => (
+              <Badge key={tag} variant="secondary" className="bg-purple-600/20 text-purple-300">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+            {ranking.title}
+          </h1>
+          
+          <p className="text-xl text-gray-300 mb-6 leading-relaxed">
+            {ranking.description}
+          </p>
+          
+          <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-6">
+            <div className="flex items-center gap-2">
+              <Users className="w-4 h-4" />
+              <span>by {ranking.author}</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <Calendar className="w-4 h-4" />
+              <span>{ranking.timeAgo}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Ranking List */}
+        <Card className="bg-black/40 border-purple-500/20">
+          <CardHeader>
+            <CardTitle className="text-white flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-yellow-500" />
+              The Rankings
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {ranking.rappers.map((rapper) => {
+              // For demo purposes, we'll show some rappers as "hot" based on their rank
+              const isHot = rapper.rank <= 2; // Top 2 rappers are "hot" for demo
+              const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
+              
+              return (
+                <div 
+                  key={rapper.rank}
+                  className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg hover:bg-gray-800/50 transition-colors relative"
+                >
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">#{rapper.rank}</span>
+                  </div>
+                  
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-white font-semibold text-lg">{rapper.name}</h3>
+                      {isHot && (
+                        <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
+                      )}
+                    </div>
+                    <p className="text-gray-300">{rapper.reason}</p>
+                  </div>
+                  
+                  <div className="flex items-center gap-3">
+                    <VoteButton
+                      onVote={() => handleVote(rapper.name)}
+                      onVoteWithNote={(note) => handleVoteWithNote(rapper.name, note)}
+                      disabled={!user}
+                    />
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="text-purple-300 hover:text-white"
+                    >
+                      View Profile
+                    </Button>
+                  </div>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+      </main>
+
+      {/* Comment Bubble */}
+      <CommentBubble contentType="ranking" contentId={ranking.id} />
+    </div>
+  );
+};
+
+export default RankingDetailView;
