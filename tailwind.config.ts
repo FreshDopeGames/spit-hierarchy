@@ -63,20 +63,29 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Hip-hop themed colors
-				'hip-hop': {
-					'gold': '#FFD700',
+				// Rap culture themed colors - neutral and dark
+				'rap': {
+					'burgundy': '#800020',
+					'burgundy-light': '#A0002A',
+					'burgundy-dark': '#600018',
+					'forest': '#355E3B',
+					'forest-light': '#4A7C59',
+					'forest-dark': '#2B4C32',
+					'carbon': '#1C1C1C',
+					'carbon-light': '#2A2A2A',
+					'silver': '#C0C0C0',
 					'platinum': '#E5E4E2',
-					'bronze': '#CD7F32',
-					'neon-green': '#39FF14',
-					'electric-blue': '#007FFF',
-					'hot-pink': '#FF69B4'
+					'smoke': '#848884'
 				}
 			},
 			fontFamily: {
-				'graffiti': ['Creepster', 'cursive'],
-				'street': ['Righteous', 'sans-serif'],
-				'bold': ['Bungee', 'sans-serif'],
+				'rap': ['Nerko One', 'cursive'],
+				'graffiti': ['Permanent Marker', 'cursive'],
+				'street': ['Sedgwick Ave Display', 'cursive'],
+			},
+			backgroundImage: {
+				'carbon-fiber': 'radial-gradient(circle at 25% 25%, #2A2A2A 2%, transparent 3%), radial-gradient(circle at 75% 75%, #2A2A2A 2%, transparent 3%), linear-gradient(45deg, #1C1C1C 25%, transparent 25%, transparent 75%, #1C1C1C 75%, #1C1C1C), linear-gradient(-45deg, #1C1C1C 25%, transparent 25%, transparent 75%, #1C1C1C 75%, #1C1C1C)',
+				'vinyl': 'repeating-conic-gradient(from 0deg at 50% 50%, #1C1C1C 0deg 2deg, #2A2A2A 2deg 4deg)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -102,26 +111,31 @@ export default {
 				},
 				'glow-pulse': {
 					'0%, 100%': { 
-						boxShadow: '0 0 20px rgba(147, 51, 234, 0.5)' 
+						boxShadow: '0 0 20px rgba(128, 0, 32, 0.5)' 
 					},
 					'50%': { 
-						boxShadow: '0 0 40px rgba(147, 51, 234, 0.8)' 
+						boxShadow: '0 0 40px rgba(128, 0, 32, 0.8)' 
 					}
 				},
 				'text-glow': {
 					'0%, 100%': { 
-						textShadow: '0 0 10px rgba(255, 215, 0, 0.8)' 
+						textShadow: '0 0 10px rgba(192, 192, 192, 0.8)' 
 					},
 					'50%': { 
-						textShadow: '0 0 20px rgba(255, 215, 0, 1)' 
+						textShadow: '0 0 20px rgba(192, 192, 192, 1)' 
 					}
+				},
+				'vinyl-spin': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-				'text-glow': 'text-glow 2s ease-in-out infinite'
+				'text-glow': 'text-glow 2s ease-in-out infinite',
+				'vinyl-spin': 'vinyl-spin 3s linear infinite'
 			}
 		}
 	},
