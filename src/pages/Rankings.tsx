@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Plus, ArrowLeft, Trophy, Star, Users, Calendar, Edit, Trash2, Eye, Award } from "lucide-react";
 import CommentBubble from "@/components/CommentBubble";
 import VoteButton from "@/components/VoteButton";
+import HotBadge from "@/components/analytics/HotBadge";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
 
