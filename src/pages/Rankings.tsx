@@ -4,12 +4,60 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, ArrowLeft, Trophy, Star, Users, Calendar, Edit, Trash2, Eye } from "lucide-react";
+import { Plus, ArrowLeft, Trophy, Star, Users, Calendar, Edit, Trash2, Eye, Award } from "lucide-react";
 import CommentBubble from "@/components/CommentBubble";
 import { useAuth } from "@/hooks/useAuth";
 
-// Mock data for existing rankings
-const mockRankings = [
+// Mock data for official rankings
+const officialRankings = [
+  {
+    id: "official-1",
+    title: "Hip-Hop Hall of Fame: The Greatest Ever",
+    description: "Our editorial team's definitive ranking of the most influential rappers in hip-hop history.",
+    author: "Editorial Team",
+    authorId: "admin",
+    createdAt: "2024-01-01",
+    timeAgo: "1 month ago",
+    rappers: [
+      { rank: 1, name: "Nas", reason: "Illmatic changed everything" },
+      { rank: 2, name: "Jay-Z", reason: "Blueprint for success" },
+      { rank: 3, name: "The Notorious B.I.G.", reason: "Storytelling legend" },
+      { rank: 4, name: "Tupac Shakur", reason: "Voice of a generation" },
+      { rank: 5, name: "Eminem", reason: "Technical virtuoso" },
+    ],
+    likes: 892,
+    comments: 234,
+    views: 5240,
+    isPublic: true,
+    isOfficial: true,
+    tags: ["Official", "GOAT", "Hall of Fame"]
+  },
+  {
+    id: "official-2",
+    title: "Best New Artists 2024",
+    description: "Rising stars making waves in the hip-hop scene this year, curated by our music experts.",
+    author: "Music Editorial",
+    authorId: "admin",
+    createdAt: "2024-01-05",
+    timeAgo: "3 weeks ago",
+    rappers: [
+      { rank: 1, name: "Doechii", reason: "Breakthrough versatility" },
+      { rank: 2, name: "Lil Yachty", reason: "Artistic evolution" },
+      { rank: 3, name: "Ice Spice", reason: "Cultural impact" },
+      { rank: 4, name: "Central Cee", reason: "Global crossover appeal" },
+      { rank: 5, name: "Sexyy Red", reason: "Authentic street energy" },
+    ],
+    likes: 445,
+    comments: 89,
+    views: 2890,
+    isPublic: true,
+    isOfficial: true,
+    tags: ["Official", "2024", "Rising Stars"]
+  }
+];
+
+// Mock data for user-generated rankings
+const userRankings = [
   {
     id: "1",
     title: "Top 10 G.O.A.T. Rappers of All Time",
@@ -29,6 +77,7 @@ const mockRankings = [
     comments: 89,
     views: 1240,
     isPublic: true,
+    isOfficial: false,
     tags: ["GOAT", "Classic Hip-Hop", "All-Time"]
   },
   {
@@ -50,6 +99,7 @@ const mockRankings = [
     comments: 34,
     views: 890,
     isPublic: true,
+    isOfficial: false,
     tags: ["New School", "2020s", "Rising Stars"]
   },
   {
@@ -71,6 +121,7 @@ const mockRankings = [
     comments: 67,
     views: 1150,
     isPublic: true,
+    isOfficial: false,
     tags: ["Lyricism", "Wordplay", "Technical"]
   }
 ];
@@ -80,9 +131,11 @@ const Rankings = () => {
   const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
   const [filter, setFilter] = useState<"all" | "my-rankings" | "popular">("all");
 
-  const selectedRankingData = mockRankings.find(r => r.id === selectedRanking);
+  // Combine all rankings for selection
+  const allRankings = [...officialRankings, ...userRankings];
+  const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
 
-  const filteredRankings = mockRankings.filter(ranking => {
+  const filteredUserRankings = userRankings.filter(ranking => {
     if (filter === "my-rankings") return user && ranking.authorId === user.id;
     if (filter === "popular") return ranking.likes > 200;
     return true;
@@ -104,6 +157,12 @@ const Rankings = () => {
             </Button>
             
             <div className="flex items-center gap-2">
+              {selectedRankingData.isOfficial && (
+                <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                  <Award className="w-3 h-3 mr-1" />
+                  Official
+                </Badge>
+              )}
               <Badge variant="secondary" className="bg-purple-600/20 text-purple-300">
                 <Eye className="w-3 h-3 mr-1" />
                 {selectedRankingData.views}
@@ -223,121 +282,205 @@ const Rankings = () => {
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex items-center gap-4 mb-8">
-          <Button
-            variant={filter === "all" ? "default" : "outline"}
-            onClick={() => setFilter("all")}
-            className={filter === "all" 
-              ? "bg-gradient-to-r from-purple-600 to-blue-600" 
-              : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
-            }
-          >
-            All Rankings
-          </Button>
-          <Button
-            variant={filter === "popular" ? "default" : "outline"}
-            onClick={() => setFilter("popular")}
-            className={filter === "popular" 
-              ? "bg-gradient-to-r from-purple-600 to-blue-600" 
-              : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
-            }
-          >
-            <Star className="w-4 h-4 mr-2" />
-            Popular
-          </Button>
-          {user && (
-            <Button
-              variant={filter === "my-rankings" ? "default" : "outline"}
-              onClick={() => setFilter("my-rankings")}
-              className={filter === "my-rankings" 
-                ? "bg-gradient-to-r from-purple-600 to-blue-600" 
-                : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
-              }
-            >
-              My Rankings
-            </Button>
-          )}
-        </div>
-
-        {/* Rankings Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {filteredRankings.map((ranking) => (
-            <Card key={ranking.id} className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-colors group cursor-pointer">
-              <CardContent className="p-6" onClick={() => setSelectedRanking(ranking.id)}>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  {ranking.tags.map((tag) => (
-                    <Badge key={tag} variant="secondary" className="bg-purple-600/20 text-purple-300 text-xs">
-                      {tag}
+        {/* Official Rankings Section */}
+        <div className="mb-12">
+          <div className="flex items-center gap-3 mb-6">
+            <Award className="w-6 h-6 text-yellow-500" />
+            <h2 className="text-3xl font-bold text-white">Official Rankings</h2>
+            <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+              Curated by Experts
+            </Badge>
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            {officialRankings.map((ranking) => (
+              <Card key={ranking.id} className="bg-black/40 border-yellow-500/30 hover:border-yellow-400/50 transition-colors group cursor-pointer">
+                <CardContent className="p-6" onClick={() => setSelectedRanking(ranking.id)}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300 text-xs">
+                      <Award className="w-3 h-3 mr-1" />
+                      Official
                     </Badge>
-                  ))}
-                </div>
-                
-                <h2 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
-                  {ranking.title}
-                </h2>
-                
-                <p className="text-gray-300 mb-4 line-clamp-2">
-                  {ranking.description}
-                </p>
-                
-                <div className="space-y-2 mb-4">
-                  {ranking.rappers.slice(0, 3).map((rapper) => (
-                    <div key={rapper.rank} className="flex items-center gap-2 text-sm">
-                      <span className="text-purple-400 font-semibold">#{rapper.rank}</span>
-                      <span className="text-white">{rapper.name}</span>
-                    </div>
-                  ))}
-                  {ranking.rappers.length > 3 && (
-                    <div className="text-gray-400 text-sm">
-                      +{ranking.rappers.length - 3} more...
-                    </div>
-                  )}
-                </div>
-                
-                <div className="flex items-center justify-between text-gray-400 text-sm border-t border-gray-700 pt-4">
-                  <div className="flex items-center gap-4">
-                    <span>by {ranking.author}</span>
-                    <span>{ranking.timeAgo}</span>
+                    {ranking.tags.filter(tag => tag !== "Official").map((tag) => (
+                      <Badge key={tag} variant="secondary" className="bg-purple-600/20 text-purple-300 text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
                   </div>
                   
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-1">
-                      <Eye className="w-4 h-4" />
-                      <span>{ranking.views}</span>
+                  <h2 className="text-xl font-bold text-white mb-2 group-hover:text-yellow-300 transition-colors">
+                    {ranking.title}
+                  </h2>
+                  
+                  <p className="text-gray-300 mb-4 line-clamp-2">
+                    {ranking.description}
+                  </p>
+                  
+                  <div className="space-y-2 mb-4">
+                    {ranking.rappers.slice(0, 3).map((rapper) => (
+                      <div key={rapper.rank} className="flex items-center gap-2 text-sm">
+                        <span className="text-yellow-400 font-semibold">#{rapper.rank}</span>
+                        <span className="text-white">{rapper.name}</span>
+                      </div>
+                    ))}
+                    {ranking.rappers.length > 3 && (
+                      <div className="text-gray-400 text-sm">
+                        +{ranking.rappers.length - 3} more...
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-gray-400 text-sm border-t border-gray-700 pt-4">
+                    <div className="flex items-center gap-4">
+                      <span>by {ranking.author}</span>
+                      <span>{ranking.timeAgo}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-4 h-4" />
-                      <span>{ranking.likes}</span>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span>{ranking.views}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4" />
+                        <span>{ranking.likes}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </CardContent>
+              </Card>
+            ))}
+          </div>
         </div>
 
-        {/* Empty State */}
-        {filteredRankings.length === 0 && (
-          <div className="text-center py-12">
-            <Trophy className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">
-              {filter === "my-rankings" ? "No rankings created yet" : "No rankings found"}
-            </h3>
-            <p className="text-gray-400 mb-6">
-              {filter === "my-rankings" 
-                ? "Create your first ranking to share your opinions with the community."
-                : "Be the first to create a ranking for this category."
-              }
-            </p>
-            {user && (
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-                <Plus className="w-4 h-4 mr-2" />
-                Create Your First Ranking
+        {/* Member Made Rankings Section */}
+        <div>
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-3">
+              <Users className="w-6 h-6 text-purple-400" />
+              <h2 className="text-3xl font-bold text-white">Member Made Rankings</h2>
+            </div>
+            
+            {/* Filter Tabs */}
+            <div className="flex items-center gap-4">
+              <Button
+                variant={filter === "all" ? "default" : "outline"}
+                onClick={() => setFilter("all")}
+                size="sm"
+                className={filter === "all" 
+                  ? "bg-gradient-to-r from-purple-600 to-blue-600" 
+                  : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+                }
+              >
+                All
               </Button>
-            )}
+              <Button
+                variant={filter === "popular" ? "default" : "outline"}
+                onClick={() => setFilter("popular")}
+                size="sm"
+                className={filter === "popular" 
+                  ? "bg-gradient-to-r from-purple-600 to-blue-600" 
+                  : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+                }
+              >
+                <Star className="w-4 h-4 mr-2" />
+                Popular
+              </Button>
+              {user && (
+                <Button
+                  variant={filter === "my-rankings" ? "default" : "outline"}
+                  onClick={() => setFilter("my-rankings")}
+                  size="sm"
+                  className={filter === "my-rankings" 
+                    ? "bg-gradient-to-r from-purple-600 to-blue-600" 
+                    : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+                  }
+                >
+                  Mine
+                </Button>
+              )}
+            </div>
           </div>
-        )}
+
+          {/* User Rankings Grid */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {filteredUserRankings.map((ranking) => (
+              <Card key={ranking.id} className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-colors group cursor-pointer">
+                <CardContent className="p-6" onClick={() => setSelectedRanking(ranking.id)}>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {ranking.tags.map((tag) => (
+                      <Badge key={tag} variant="secondary" className="bg-purple-600/20 text-purple-300 text-xs">
+                        {tag}
+                      </Badge>
+                    ))}
+                  </div>
+                  
+                  <h2 className="text-xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors">
+                    {ranking.title}
+                  </h2>
+                  
+                  <p className="text-gray-300 mb-4 line-clamp-2">
+                    {ranking.description}
+                  </p>
+                  
+                  <div className="space-y-2 mb-4">
+                    {ranking.rappers.slice(0, 3).map((rapper) => (
+                      <div key={rapper.rank} className="flex items-center gap-2 text-sm">
+                        <span className="text-purple-400 font-semibold">#{rapper.rank}</span>
+                        <span className="text-white">{rapper.name}</span>
+                      </div>
+                    ))}
+                    {ranking.rappers.length > 3 && (
+                      <div className="text-gray-400 text-sm">
+                        +{ranking.rappers.length - 3} more...
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center justify-between text-gray-400 text-sm border-t border-gray-700 pt-4">
+                    <div className="flex items-center gap-4">
+                      <span>by {ranking.author}</span>
+                      <span>{ranking.timeAgo}</span>
+                    </div>
+                    
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-1">
+                        <Eye className="w-4 h-4" />
+                        <span>{ranking.views}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <Star className="w-4 h-4" />
+                        <span>{ranking.likes}</span>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          {/* Empty State */}
+          {filteredUserRankings.length === 0 && (
+            <div className="text-center py-12">
+              <Trophy className="w-16 h-16 text-gray-500 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold text-white mb-2">
+                {filter === "my-rankings" ? "No rankings created yet" : "No rankings found"}
+              </h3>
+              <p className="text-gray-400 mb-6">
+                {filter === "my-rankings" 
+                  ? "Create your first ranking to share your opinions with the community."
+                  : "Be the first to create a ranking for this category."
+                }
+              </p>
+              {user && (
+                <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Your First Ranking
+                </Button>
+              )}
+            </div>
+          )}
+        </div>
 
         {!user && (
           <Card className="bg-black/40 border-purple-500/20 mt-8">
