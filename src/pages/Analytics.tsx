@@ -25,22 +25,22 @@ const Analytics = () => {
             <div className="flex items-center space-x-3">
               <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
                 <ArrowLeft className="w-5 h-5" />
-                <span>Return to Dynasty</span>
+                <span>Back to Home</span>
               </Link>
               <div className="w-10 h-10 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl flex items-center justify-center shadow-lg">
                 <BarChart3 className="w-6 h-6 text-rap-silver" />
               </div>
               <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent animate-text-glow">
-                Temple Analytics
+                Analytics Dashboard
               </h1>
             </div>
             
             <div className="flex items-center space-x-4">
               {user && (
                 <>
-                  <span className="text-rap-platinum font-kaushan">Oracle: {user.email}</span>
+                  <span className="text-rap-platinum font-kaushan">User: {user.email}</span>
                   <Button onClick={signOut} variant="outline" className="border-rap-burgundy/50 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
-                    Exit Temple
+                    Sign Out
                   </Button>
                 </>
               )}
@@ -52,10 +52,10 @@ const Analytics = () => {
         <main className="max-w-7xl mx-auto p-6 pt-24">
           <div className="mb-8">
             <h2 className="text-3xl font-mogra text-rap-gold mb-2 animate-text-glow">
-              Sacred Knowledge Dashboard
+              Community Insights
             </h2>
             <p className="text-rap-platinum font-kaushan text-lg tracking-wide">
-              Divine insights into the voting patterns and dynasty trends
+              Deep dive into voting patterns and community trends
             </p>
           </div>
 
@@ -73,28 +73,28 @@ const Analytics = () => {
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
               >
                 <BarChart3 className="w-4 h-4 mr-2" />
-                Temple
+                Platform
               </TabsTrigger>
               <TabsTrigger 
                 value="trends" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
               >
                 <TrendingUp className="w-4 h-4 mr-2" />
-                Prophecies
+                Trends
               </TabsTrigger>
               <TabsTrigger 
                 value="network" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
               >
                 <Network className="w-4 h-4 mr-2" />
-                Dynasty Web
+                Network
               </TabsTrigger>
               <TabsTrigger 
                 value="astrology" 
                 className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
               >
                 <Star className="w-4 h-4 mr-2" />
-                Celestial
+                Astrology
               </TabsTrigger>
             </TabsList>
 

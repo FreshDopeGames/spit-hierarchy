@@ -145,42 +145,44 @@ const Rankings = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <header className="bg-black/40 border-b border-purple-500/20 p-4">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/">
-            <Button variant="ghost" className="text-purple-300 hover:text-white">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </Button>
-          </Link>
-          
-          {user && (
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Ranking
-            </Button>
-          )}
-        </div>
-      </header>
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+      
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
+          <div className="max-w-6xl mx-auto flex items-center justify-between">
+            <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Home</span>
+            </Link>
+            
+            {user && (
+              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Ranking
+              </Button>
+            )}
+          </div>
+        </header>
 
-      <main className="max-w-6xl mx-auto p-6">
-        <RankingHeader 
-          title="Rankings & Lists"
-          description="Discover community-created rapper rankings, or create your own custom lists to share your opinions with the hip-hop community."
-        />
+        <main className="max-w-6xl mx-auto p-6 pt-24">
+          <RankingHeader 
+            title="Rankings & Lists"
+            description="Discover community-created rapper rankings, or create your own custom lists to share your opinions with the hip-hop community."
+          />
 
-        <OfficialRankingsSection 
-          rankings={officialRankings}
-          onRankingClick={setSelectedRanking}
-        />
+          <OfficialRankingsSection 
+            rankings={officialRankings}
+            onRankingClick={setSelectedRanking}
+          />
 
-        <UserRankingsSection 
-          rankings={userRankings}
-          onRankingClick={setSelectedRanking}
-        />
-      </main>
+          <UserRankingsSection 
+            rankings={userRankings}
+            onRankingClick={setSelectedRanking}
+          />
+        </main>
+      </div>
     </div>
   );
 };

@@ -41,18 +41,18 @@ const TopVoters = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-black/40 border-purple-500/20 animate-pulse">
+      <Card className="bg-carbon-fiber/90 border-rap-gold/30 animate-pulse shadow-lg shadow-rap-gold/20">
         <CardContent className="p-6">
-          <div className="h-64 bg-gray-700 rounded"></div>
+          <div className="h-64 bg-rap-carbon-light rounded"></div>
         </CardContent>
       </Card>
     );
   }
 
   return (
-    <Card className="bg-black/40 border-purple-500/20">
+    <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
       <CardHeader>
-        <CardTitle className="text-white flex items-center gap-2">
+        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
           <Trophy className="w-5 h-5" />
           Top Voters
         </CardTitle>
@@ -60,33 +60,33 @@ const TopVoters = () => {
       <CardContent>
         <div className="space-y-3">
           {topVoters?.map((voter: any, index: number) => (
-            <div key={voter.user_id} className="flex items-center justify-between p-3 bg-purple-900/20 rounded-lg">
+            <div key={voter.user_id} className="flex items-center justify-between p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg">
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-white font-bold text-sm ${
-                  index === 0 ? 'bg-gradient-to-r from-yellow-500 to-orange-500' :
-                  index === 1 ? 'bg-gradient-to-r from-gray-400 to-gray-500' :
-                  index === 2 ? 'bg-gradient-to-r from-orange-600 to-yellow-600' :
-                  'bg-gradient-to-r from-purple-500 to-blue-500'
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-rap-carbon font-bold text-sm font-mogra ${
+                  index === 0 ? 'bg-gradient-to-r from-rap-gold to-rap-silver' :
+                  index === 1 ? 'bg-gradient-to-r from-rap-silver to-rap-platinum' :
+                  index === 2 ? 'bg-gradient-to-r from-rap-burgundy to-rap-gold' :
+                  'bg-gradient-to-r from-rap-burgundy to-rap-forest'
                 }`}>
                   #{index + 1}
                 </div>
                 <div>
-                  <p className="text-white font-medium">
+                  <p className="text-rap-platinum font-medium font-kaushan">
                     {voter.profile?.full_name || voter.profile?.username || 'Anonymous User'}
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-gray-400">
-                    <span>{voter.unique_rappers_voted} rappers</span>
+                  <div className="flex items-center gap-2 text-sm text-rap-smoke">
+                    <span className="font-kaushan">{voter.unique_rappers_voted} rappers</span>
                     <span>•</span>
-                    <span>{voter.categories_used} categories</span>
+                    <span className="font-kaushan">{voter.categories_used} categories</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-center">
-                  <p className="text-white font-bold">{voter.total_votes}</p>
-                  <p className="text-gray-400 text-xs">Votes</p>
+                  <p className="text-rap-platinum font-bold font-mogra">{voter.total_votes}</p>
+                  <p className="text-rap-smoke text-xs font-kaushan">Votes</p>
                 </div>
-                <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
                   {Number(voter.average_rating_given || 0).toFixed(1)} avg
                 </Badge>
               </div>
@@ -95,8 +95,8 @@ const TopVoters = () => {
           
           {(!topVoters || topVoters.length === 0) && (
             <div className="text-center py-8">
-              <Users className="w-12 h-12 text-gray-500 mx-auto mb-2" />
-              <p className="text-gray-400">No voting data available yet</p>
+              <Users className="w-12 h-12 text-rap-smoke mx-auto mb-2" />
+              <p className="text-rap-smoke font-kaushan">No voting data available yet</p>
             </div>
           )}
         </div>

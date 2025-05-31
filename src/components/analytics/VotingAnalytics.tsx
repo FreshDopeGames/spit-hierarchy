@@ -73,9 +73,9 @@ const VotingAnalytics = () => {
     return (
       <div className="space-y-6">
         {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="bg-black/40 border-purple-500/20 animate-pulse">
+          <Card key={i} className="bg-carbon-fiber/90 border-rap-gold/30 animate-pulse">
             <CardContent className="p-6">
-              <div className="h-32 bg-gray-700 rounded"></div>
+              <div className="h-32 bg-rap-carbon-light rounded"></div>
             </CardContent>
           </Card>
         ))}
@@ -85,62 +85,62 @@ const VotingAnalytics = () => {
 
   return (
     <div className="space-y-6">
-      <h3 className="text-2xl font-bold text-white mb-4">Platform Analytics</h3>
+      <h3 className="text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">Platform Analytics</h3>
 
       {/* Global Stats */}
       {globalStats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-black/40 border-purple-500/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 flex items-center justify-center">
-                  <Vote className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-burgundy to-rap-forest flex items-center justify-center shadow-lg">
+                  <Vote className="w-5 h-5 text-rap-silver" />
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">Total Votes</p>
-                  <p className="text-white font-bold text-lg">{globalStats.totalVotes}</p>
+                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Total Votes</p>
+                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.totalVotes}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-black/40 border-purple-500/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-blue-500 to-cyan-500 flex items-center justify-center">
-                  <Users className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-forest to-rap-gold flex items-center justify-center shadow-lg">
+                  <Users className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">Active Voters</p>
-                  <p className="text-white font-bold text-lg">{globalStats.activeVoters}</p>
+                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Active Voters</p>
+                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.activeVoters}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-black/40 border-purple-500/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-cyan-500 to-green-500 flex items-center justify-center">
-                  <Award className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-gold to-rap-silver flex items-center justify-center shadow-lg">
+                  <Award className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">Rated Rappers</p>
-                  <p className="text-white font-bold text-lg">{globalStats.ratedRappers}</p>
+                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Rated Rappers</p>
+                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.ratedRappers}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-black/40 border-purple-500/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-green-500 to-yellow-500 flex items-center justify-center">
-                  <Star className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-silver to-rap-platinum flex items-center justify-center shadow-lg">
+                  <Star className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">Avg Rating</p>
-                  <p className="text-white font-bold text-lg">{globalStats.avgRating.toFixed(1)}</p>
+                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Avg Rating</p>
+                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.avgRating.toFixed(1)}</p>
                 </div>
               </div>
             </CardContent>
@@ -150,9 +150,9 @@ const VotingAnalytics = () => {
 
       {/* Category Analytics */}
       {categoryAnalytics && categoryAnalytics.length > 0 && (
-        <Card className="bg-black/40 border-purple-500/20">
+        <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
               <TrendingUp className="w-5 h-5" />
               Category Performance
             </CardTitle>
@@ -160,21 +160,21 @@ const VotingAnalytics = () => {
           <CardContent>
             <div className="space-y-3">
               {categoryAnalytics.map((category: any) => (
-                <div key={category.id} className="flex items-center justify-between p-3 bg-purple-900/20 rounded-lg">
+                <div key={category.id} className="flex items-center justify-between p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg">
                   <div className="flex-1">
-                    <h4 className="text-white font-medium">{category.name}</h4>
-                    <p className="text-gray-400 text-sm">{category.description}</p>
+                    <h4 className="text-rap-platinum font-medium font-kaushan">{category.name}</h4>
+                    <p className="text-rap-smoke text-sm font-kaushan">{category.description}</p>
                   </div>
                   <div className="flex items-center gap-4 text-sm">
                     <div className="text-center">
-                      <p className="text-white font-bold">{category.total_votes}</p>
-                      <p className="text-gray-400">Votes</p>
+                      <p className="text-rap-platinum font-bold font-mogra">{category.total_votes}</p>
+                      <p className="text-rap-smoke font-kaushan">Votes</p>
                     </div>
                     <div className="text-center">
-                      <p className="text-white font-bold">{category.unique_voters}</p>
-                      <p className="text-gray-400">Voters</p>
+                      <p className="text-rap-platinum font-bold font-mogra">{category.unique_voters}</p>
+                      <p className="text-rap-smoke font-kaushan">Voters</p>
                     </div>
-                    <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                    <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
                       {Number(category.average_rating || 0).toFixed(1)}
                     </Badge>
                   </div>
@@ -187,9 +187,9 @@ const VotingAnalytics = () => {
 
       {/* Top Voted Rappers */}
       {topRappers && topRappers.length > 0 && (
-        <Card className="bg-black/40 border-purple-500/20">
+        <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
               <Users className="w-5 h-5" />
               Most Voted Rappers
             </CardTitle>
@@ -197,22 +197,22 @@ const VotingAnalytics = () => {
           <CardContent>
             <div className="space-y-3">
               {topRappers.map((rapper: any, index: number) => (
-                <div key={rapper.id} className="flex items-center justify-between p-3 bg-purple-900/20 rounded-lg">
+                <div key={rapper.id} className="flex items-center justify-between p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg">
                   <div className="flex items-center gap-3">
-                    <div className="w-8 h-8 bg-gradient-to-r from-yellow-500 to-orange-500 rounded-full flex items-center justify-center text-white font-bold text-sm">
+                    <div className="w-8 h-8 bg-gradient-to-r from-rap-gold to-rap-silver rounded-full flex items-center justify-center text-rap-carbon font-bold text-sm font-mogra">
                       #{index + 1}
                     </div>
                     <div>
-                      <h4 className="text-white font-medium">{rapper.name}</h4>
-                      <p className="text-gray-400 text-sm">{rapper.unique_voters} unique voters</p>
+                      <h4 className="text-rap-platinum font-medium font-kaushan">{rapper.name}</h4>
+                      <p className="text-rap-smoke text-sm font-kaushan">{rapper.unique_voters} unique voters</p>
                     </div>
                   </div>
                   <div className="flex items-center gap-4 text-sm">
                     <div className="text-center">
-                      <p className="text-white font-bold">{rapper.total_votes}</p>
-                      <p className="text-gray-400">Total Votes</p>
+                      <p className="text-rap-platinum font-bold font-mogra">{rapper.total_votes}</p>
+                      <p className="text-rap-smoke font-kaushan">Total Votes</p>
                     </div>
-                    <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                    <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
                       {Number(rapper.average_rating || 0).toFixed(1)}
                     </Badge>
                   </div>
@@ -225,9 +225,9 @@ const VotingAnalytics = () => {
 
       {/* Recent Activity */}
       {recentActivity && recentActivity.length > 0 && (
-        <Card className="bg-black/40 border-purple-500/20">
+        <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
               <Activity className="w-5 h-5" />
               Recent Voting Activity
             </CardTitle>
@@ -237,15 +237,15 @@ const VotingAnalytics = () => {
               {recentActivity.slice(0, 5).map((vote: any) => (
                 <div key={vote.id} className="flex items-center justify-between p-2 text-sm">
                   <div className="flex-1">
-                    <span className="text-white">{vote.rappers?.name}</span>
-                    <span className="text-gray-400 mx-2">in</span>
-                    <span className="text-purple-300">{vote.voting_categories?.name}</span>
+                    <span className="text-rap-platinum font-kaushan">{vote.rappers?.name}</span>
+                    <span className="text-rap-smoke mx-2 font-kaushan">in</span>
+                    <span className="text-rap-gold font-kaushan">{vote.voting_categories?.name}</span>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                    <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
                       {vote.rating}/10
                     </Badge>
-                    <span className="text-gray-400 text-xs">
+                    <span className="text-rap-smoke text-xs font-kaushan">
                       {new Date(vote.created_at).toLocaleTimeString()}
                     </span>
                   </div>
