@@ -62,7 +62,7 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Rap culture themed colors - neutral and dark
+				// Ancient Egyptian + Futuristic rap culture themed colors
 				'rap': {
 					'burgundy': '#800020',
 					'burgundy-light': '#A0002A',
@@ -70,11 +70,11 @@ export default {
 					'forest': '#4CAF50',
 					'forest-light': '#66BB6A',
 					'forest-dark': '#388E3C',
-					'gold': '#FFD700',
-					'gold-light': '#FFED4A',
-					'gold-dark': '#F1C40F',
-					'carbon': '#1C1C1C',
-					'carbon-light': '#2A2A2A',
+					'gold': '#D4AF37',
+					'gold-light': '#F7DC6F',
+					'gold-dark': '#B7950B',
+					'carbon': '#0D0D0D',
+					'carbon-light': '#1A1A1A',
 					'silver': '#C0C0C0',
 					'platinum': '#E5E4E2',
 					'smoke': '#848884'
@@ -88,6 +88,8 @@ export default {
 			backgroundImage: {
 				'carbon-fiber': 'radial-gradient(circle at 25% 25%, #2A2A2A 2%, transparent 3%), radial-gradient(circle at 75% 75%, #2A2A2A 2%, transparent 3%), linear-gradient(45deg, #1C1C1C 25%, transparent 25%, transparent 75%, #1C1C1C 75%, #1C1C1C), linear-gradient(-45deg, #1C1C1C 25%, transparent 25%, transparent 75%, #1C1C1C 75%, #1C1C1C)',
 				'vinyl': 'repeating-conic-gradient(from 0deg at 50% 50%, #1C1C1C 0deg 2deg, #2A2A2A 2deg 4deg)',
+				'hieroglyph': 'linear-gradient(45deg, #D4AF37 0%, transparent 25%), linear-gradient(-45deg, #D4AF37 0%, transparent 25%), radial-gradient(circle at 50% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 70%)',
+				'pyramid': 'linear-gradient(135deg, #D4AF37 0%, #B7950B 50%, #0D0D0D 100%)',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
@@ -113,31 +115,43 @@ export default {
 				},
 				'glow-pulse': {
 					'0%, 100%': { 
-						boxShadow: '0 0 20px rgba(128, 0, 32, 0.5)' 
+						boxShadow: '0 0 20px rgba(212, 175, 55, 0.4), 0 0 40px rgba(212, 175, 55, 0.2), 0 0 60px rgba(212, 175, 55, 0.1)' 
 					},
 					'50%': { 
-						boxShadow: '0 0 40px rgba(128, 0, 32, 0.8)' 
+						boxShadow: '0 0 30px rgba(212, 175, 55, 0.8), 0 0 60px rgba(212, 175, 55, 0.4), 0 0 90px rgba(212, 175, 55, 0.2)' 
 					}
 				},
 				'text-glow': {
 					'0%, 100%': { 
-						textShadow: '0 0 10px rgba(192, 192, 192, 0.8)' 
+						textShadow: '0 0 10px rgba(212, 175, 55, 0.6), 0 0 20px rgba(212, 175, 55, 0.4), 0 0 30px rgba(212, 175, 55, 0.2)' 
 					},
 					'50%': { 
-						textShadow: '0 0 20px rgba(192, 192, 192, 1)' 
+						textShadow: '0 0 20px rgba(212, 175, 55, 1), 0 0 40px rgba(212, 175, 55, 0.6), 0 0 60px rgba(212, 175, 55, 0.4)' 
 					}
 				},
 				'vinyl-spin': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' }
+				},
+				'pharaoh-rise': {
+					'0%': { transform: 'translateY(100px) scale(0.8)', opacity: '0' },
+					'50%': { transform: 'translateY(50px) scale(0.9)', opacity: '0.5' },
+					'100%': { transform: 'translateY(0) scale(1)', opacity: '1' }
+				},
+				'hieroglyph-float': {
+					'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
+					'33%': { transform: 'translateY(-10px) rotate(1deg)' },
+					'66%': { transform: 'translateY(5px) rotate(-1deg)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'glow-pulse': 'glow-pulse 2s ease-in-out infinite',
-				'text-glow': 'text-glow 2s ease-in-out infinite',
-				'vinyl-spin': 'vinyl-spin 3s linear infinite'
+				'glow-pulse': 'glow-pulse 3s ease-in-out infinite',
+				'text-glow': 'text-glow 3s ease-in-out infinite',
+				'vinyl-spin': 'vinyl-spin 3s linear infinite',
+				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
+				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite'
 			}
 		}
 	},

@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
@@ -26,26 +27,26 @@ const Index = () => {
       {/* Sticky Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled 
-          ? 'bg-rap-carbon/95 backdrop-blur-md border-b border-rap-burgundy/50 py-2' 
-          : 'bg-carbon-fiber border-b border-rap-burgundy/30 py-4'
+          ? 'bg-rap-carbon/95 backdrop-blur-md border-b border-rap-gold/50 py-2' 
+          : 'bg-carbon-fiber border-b border-rap-gold/30 py-4'
       }`}>
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
           <div className="flex items-center space-x-3">
             <img 
-              src="/lovable-uploads/e375529f-0120-4c1e-9985-fb5e4cb79211.png" 
+              src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
               alt="Spit Hierarchy Logo" 
               className={`object-contain transition-all duration-300 ${
-                isScrolled ? 'w-8 h-8' : 'w-10 h-10'
-              }`}
+                isScrolled ? 'w-12 h-8' : 'w-16 h-12'
+              } animate-glow-pulse`}
             />
             <div className="flex flex-col">
-              <h1 className={`font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent transition-all duration-300 ${
+              <h1 className={`font-mogra bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent transition-all duration-300 ${
                 isScrolled ? 'text-lg' : 'text-2xl'
-              }`}>
+              } animate-text-glow`}>
                 Spit Hierarchy
               </h1>
               {!isScrolled && (
-                <span className="text-xs text-rap-smoke font-kaushan">Where Bars Meet Rankings</span>
+                <span className="text-xs text-rap-gold/60 font-kaushan tracking-widest">The Pharaoh's Cypher</span>
               )}
             </div>
           </div>
@@ -95,7 +96,7 @@ const Index = () => {
                     {isScrolled ? '' : 'Admin'}
                   </Button>
                 </Link>
-                {!isScrolled && <span className="text-rap-smoke font-kaushan">Welcome, {user.email}</span>}
+                {!isScrolled && <span className="text-rap-gold/70 font-kaushan">Welcome, Pharaoh {user.email}</span>}
                 <Button onClick={signOut} variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${
                   isScrolled ? 'text-xs px-2 py-1' : ''
                 }`}>
@@ -105,13 +106,13 @@ const Index = () => {
             ) : (
               // Guest user navigation
               <>
-                {!isScrolled && <span className="text-rap-smoke font-kaushan">Browsing as Guest</span>}
+                {!isScrolled && <span className="text-rap-gold/60 font-kaushan">Wandering the Tombs</span>}
                 <Link to="/auth">
-                  <Button className={`bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra transition-all duration-300 ${
+                  <Button className={`bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${
                     isScrolled ? 'text-xs px-3 py-1' : ''
                   }`}>
                     <LogIn className="w-4 h-4 mr-2" />
-                    {isScrolled ? 'Join' : 'Sign In / Join'}
+                    {isScrolled ? 'Ascend' : 'Enter the Dynasty'}
                   </Button>
                 </Link>
               </>
@@ -124,17 +125,17 @@ const Index = () => {
       <main className="pt-20 max-w-7xl mx-auto p-6">
         {/* Hero Section */}
         <div className="text-center mb-12">
-          <h2 className="text-4xl font-ceviche text-rap-silver mb-4 animate-text-glow">
-            The Ultimate Lyrical Community
+          <h2 className="text-4xl font-ceviche text-rap-gold mb-4 animate-text-glow tracking-wider">
+            The Sacred Order of Bars
           </h2>
           <p className="text-rap-platinum text-lg max-w-2xl mx-auto font-kaushan leading-relaxed">
-            Where wordplay meets warfare. Vote for your favorite lyricists, study the metrics, and connect with the culture that shapes the future of hip-hop.
+            Where ancient wisdom meets modern wordplay. Join the pharaohs of flow, study the hieroglyphs of hip-hop, and ascend through the dynasty of lyrical supremacy.
           </p>
           {!user && (
             <div className="mt-6">
               <Link to="/auth">
-                <Button size="lg" className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra text-lg">
-                  Enter the Cypher
+                <Button size="lg" className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-lg shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+                  Claim Your Throne
                 </Button>
               </Link>
             </div>
@@ -152,16 +153,17 @@ const Index = () => {
 
         {/* Guest user call-to-action */}
         {!user && (
-          <div className="mt-12 text-center bg-carbon-fiber border border-rap-burgundy/30 rounded-lg p-8">
-            <h3 className="text-2xl font-ceviche text-rap-silver mb-4">
-              Ready to Drop Your Vote?
+          <div className="mt-12 text-center bg-carbon-fiber border border-rap-gold/40 rounded-lg p-8 shadow-2xl shadow-rap-gold/20 relative overflow-hidden">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+            <h3 className="text-2xl font-ceviche text-rap-gold mb-4 animate-text-glow">
+              Ready to Rule the Realm?
             </h3>
             <p className="text-rap-platinum mb-6 font-kaushan">
-              Join thousands of hip-hop heads voting on their favorite lyricists, accessing exclusive analytics, and shaping the culture.
+              Join the dynasty of lyrical emperors, unlock the sacred scrolls of analytics, and etch your name in the hieroglyphs of hip-hop history.
             </p>
             <Link to="/auth">
-              <Button size="lg" className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra">
-                Sign Up Now - It's Free
+              <Button size="lg" className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+                Begin Your Dynasty - Free Ascension
               </Button>
             </Link>
           </div>
