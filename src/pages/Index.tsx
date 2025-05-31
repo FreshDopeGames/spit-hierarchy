@@ -6,12 +6,14 @@ import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
 import StatsOverview from "@/components/StatsOverview";
+
 const Index = () => {
   const {
     user,
     signOut
   } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
+  
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -20,7 +22,9 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       {/* Sticky Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-rap-carbon/95 backdrop-blur-md border-b border-rap-gold/50 py-2' : 'bg-carbon-fiber border-b border-rap-gold/30 py-4'}`}>
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -86,8 +90,8 @@ const Index = () => {
         </div>
       </header>
 
-      {/* Main Content with top padding to account for fixed header */}
-      <main className="pt-20 max-w-7xl mx-auto p-6">
+      {/* Main Content with increased top padding to account for fixed header */}
+      <main className="pt-24 max-w-7xl mx-auto p-6">
         {/* Hero Section */}
         <div className="text-center mb-12">
           <h2 className="font-ceviche text-rap-gold mb-4 animate-text-glow tracking-wider text-8xl">
@@ -128,6 +132,8 @@ const Index = () => {
             </Link>
           </div>}
       </main>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
