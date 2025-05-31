@@ -44,14 +44,24 @@ const StatsOverview = () => {
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-        {Array.from({ length: 4 }).map((_, i) => (
-          <Card key={i} className="bg-black/40 border-purple-500/20 animate-pulse">
-            <CardContent className="p-4">
-              <div className="h-16 bg-gray-700 rounded"></div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="mb-12">
+        <div className="text-center mb-8">
+          <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
+            Dynasty Statistics
+          </h2>
+          <p className="text-rap-platinum font-kaushan text-lg">
+            Sacred numbers from the Temple archives
+          </p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <Card key={i} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
+              <CardContent className="p-4">
+                <div className="h-16 bg-rap-carbon-light rounded"></div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
     );
   }
@@ -59,47 +69,59 @@ const StatsOverview = () => {
   const statCards = [
     {
       icon: Users,
-      label: "Total Rappers",
+      label: "Pharaohs",
       value: stats?.totalRappers || 0,
-      color: "from-purple-500 to-blue-500"
+      color: "from-rap-burgundy to-rap-burgundy-light"
     },
     {
       icon: Vote,
-      label: "Total Votes",
+      label: "Sacred Votes",
       value: stats?.totalVotes || 0,
-      color: "from-blue-500 to-cyan-500"
+      color: "from-rap-forest to-rap-forest-light"
     },
     {
       icon: Trophy,
-      label: "Categories",
+      label: "Royal Decrees",
       value: stats?.totalCategories || 0,
-      color: "from-cyan-500 to-green-500"
+      color: "from-rap-gold to-rap-gold-light"
     },
     {
       icon: TrendingUp,
-      label: "Top Rated",
+      label: "Supreme Ruler",
       value: stats?.topRapper || "N/A",
-      color: "from-green-500 to-yellow-500"
+      color: "from-rap-silver to-rap-platinum"
     }
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-      {statCards.map((stat, index) => (
-        <Card key={index} className="bg-black/40 border-purple-500/20 hover:border-purple-400/40 transition-colors">
-          <CardContent className="p-4">
-            <div className="flex items-center space-x-3">
-              <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center`}>
-                <stat.icon className="w-5 h-5 text-white" />
+    <div className="mb-12">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
+          Dynasty Statistics
+        </h2>
+        <p className="text-rap-platinum font-kaushan text-lg">
+          Sacred numbers from the Temple archives
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {statCards.map((stat, index) => (
+          <Card key={index} className="bg-carbon-fiber border border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 shadow-lg shadow-rap-gold/20 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-3">
+                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg group-hover:animate-glow-pulse`}>
+                  <stat.icon className="w-5 h-5 text-rap-carbon" />
+                </div>
+                <div>
+                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">{stat.label}</p>
+                  <p className="text-rap-platinum font-bold text-lg font-mogra">{stat.value}</p>
+                </div>
               </div>
-              <div>
-                <p className="text-gray-400 text-sm">{stat.label}</p>
-                <p className="text-white font-bold text-lg">{stat.value}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+            </CardContent>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

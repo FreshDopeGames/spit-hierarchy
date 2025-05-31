@@ -15,110 +15,114 @@ const Analytics = () => {
   const { user, signOut } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
-      {/* Header */}
-      <header className="bg-black/40 border-b border-purple-500/20 p-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center space-x-3">
-            <Link to="/" className="flex items-center space-x-2 text-purple-300 hover:text-purple-200">
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Home</span>
-            </Link>
-            <div className="w-10 h-10 bg-gradient-to-r from-purple-500 to-blue-500 rounded-xl flex items-center justify-center">
-              <BarChart3 className="w-6 h-6 text-white" />
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+      
+      <div className="relative z-10">
+        {/* Header */}
+        <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
+          <div className="max-w-7xl mx-auto flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
+                <ArrowLeft className="w-5 h-5" />
+                <span>Return to Dynasty</span>
+              </Link>
+              <div className="w-10 h-10 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl flex items-center justify-center shadow-lg">
+                <BarChart3 className="w-6 h-6 text-rap-silver" />
+              </div>
+              <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent animate-text-glow">
+                Temple Analytics
+              </h1>
             </div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
-              Voting Analytics
-            </h1>
-          </div>
-          
-          <div className="flex items-center space-x-4">
-            {user && (
-              <>
-                <span className="text-gray-300">Welcome, {user.email}</span>
-                <Button onClick={signOut} variant="outline" className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20">
-                  Sign Out
-                </Button>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
-
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-white mb-2">
-            Analytics Dashboard
-          </h2>
-          <p className="text-gray-300">
-            Track voting patterns, user engagement, and community trends
-          </p>
-        </div>
-
-        <Tabs defaultValue="personal" className="w-full">
-          <TabsList className="grid w-full max-w-3xl grid-cols-5 bg-black/40 border border-purple-500/20">
-            <TabsTrigger 
-              value="personal" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-            >
-              <User className="w-4 h-4 mr-2" />
-              Personal
-            </TabsTrigger>
-            <TabsTrigger 
-              value="platform" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-            >
-              <BarChart3 className="w-4 h-4 mr-2" />
-              Platform
-            </TabsTrigger>
-            <TabsTrigger 
-              value="trends" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-            >
-              <TrendingUp className="w-4 h-4 mr-2" />
-              Trends
-            </TabsTrigger>
-            <TabsTrigger 
-              value="network" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-            >
-              <Network className="w-4 h-4 mr-2" />
-              Network
-            </TabsTrigger>
-            <TabsTrigger 
-              value="astrology" 
-              className="data-[state=active]:bg-purple-600 data-[state=active]:text-white"
-            >
-              <Star className="w-4 h-4 mr-2" />
-              Astrology
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="personal" className="mt-6">
-            <UserVotingDashboard />
-          </TabsContent>
-
-          <TabsContent value="platform" className="mt-6">
-            <VotingAnalytics />
-          </TabsContent>
-
-          <TabsContent value="trends" className="mt-6">
-            <div className="space-y-6">
-              <VotingTrends />
-              <TopVoters />
+            
+            <div className="flex items-center space-x-4">
+              {user && (
+                <>
+                  <span className="text-rap-platinum font-kaushan">Oracle: {user.email}</span>
+                  <Button onClick={signOut} variant="outline" className="border-rap-burgundy/50 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
+                    Exit Temple
+                  </Button>
+                </>
+              )}
             </div>
-          </TabsContent>
+          </div>
+        </header>
 
-          <TabsContent value="network" className="mt-6">
-            <RapperNetworkGraph />
-          </TabsContent>
+        {/* Main Content */}
+        <main className="max-w-7xl mx-auto p-6 pt-24">
+          <div className="mb-8">
+            <h2 className="text-3xl font-mogra text-rap-gold mb-2 animate-text-glow">
+              Sacred Knowledge Dashboard
+            </h2>
+            <p className="text-rap-platinum font-kaushan text-lg tracking-wide">
+              Divine insights into the voting patterns and dynasty trends
+            </p>
+          </div>
 
-          <TabsContent value="astrology" className="mt-6">
-            <AstrologicalRankings />
-          </TabsContent>
-        </Tabs>
-      </main>
+          <Tabs defaultValue="personal" className="w-full">
+            <TabsList className="grid w-full max-w-3xl grid-cols-5 bg-carbon-fiber border border-rap-gold/40">
+              <TabsTrigger 
+                value="personal" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
+              >
+                <User className="w-4 h-4 mr-2" />
+                Personal
+              </TabsTrigger>
+              <TabsTrigger 
+                value="platform" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
+              >
+                <BarChart3 className="w-4 h-4 mr-2" />
+                Temple
+              </TabsTrigger>
+              <TabsTrigger 
+                value="trends" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
+              >
+                <TrendingUp className="w-4 h-4 mr-2" />
+                Prophecies
+              </TabsTrigger>
+              <TabsTrigger 
+                value="network" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
+              >
+                <Network className="w-4 h-4 mr-2" />
+                Dynasty Web
+              </TabsTrigger>
+              <TabsTrigger 
+                value="astrology" 
+                className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum font-kaushan"
+              >
+                <Star className="w-4 h-4 mr-2" />
+                Celestial
+              </TabsTrigger>
+            </TabsList>
+
+            <TabsContent value="personal" className="mt-6">
+              <UserVotingDashboard />
+            </TabsContent>
+
+            <TabsContent value="platform" className="mt-6">
+              <VotingAnalytics />
+            </TabsContent>
+
+            <TabsContent value="trends" className="mt-6">
+              <div className="space-y-6">
+                <VotingTrends />
+                <TopVoters />
+              </div>
+            </TabsContent>
+
+            <TabsContent value="network" className="mt-6">
+              <RapperNetworkGraph />
+            </TabsContent>
+
+            <TabsContent value="astrology" className="mt-6">
+              <AstrologicalRankings />
+            </TabsContent>
+          </Tabs>
+        </main>
+      </div>
     </div>
   );
 };

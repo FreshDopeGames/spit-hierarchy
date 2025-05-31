@@ -25,14 +25,14 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
 
   return (
     <>
-      <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden">
+      <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20">
         {/* Rap culture accent bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
         
         <CardContent className="p-6">
           {/* Ranking Badge */}
           {sortBy === "rating" && (
-            <div className="absolute -top-2 -left-2 bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-mogra">
+            <div className="absolute -top-2 -left-2 bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-mogra shadow-lg shadow-rap-gold/50">
               #{index + 1}
             </div>
           )}
@@ -46,7 +46,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
 
           {/* Rapper Image Placeholder - Make it clickable */}
           <Link to={`/rapper/${rapper.id}`}>
-            <div className="w-full h-48 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-lg mb-4 flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors">
+            <div className="w-full h-48 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-lg mb-4 flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
               <Music className="w-16 h-16 text-rap-platinum/70" />
             </div>
           </Link>
@@ -55,7 +55,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           <div className="space-y-3">
             <div className="flex items-start justify-between">
               <Link to={`/rapper/${rapper.id}`}>
-                <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-silver transition-colors cursor-pointer font-mogra">{rapper.name}</h3>
+                <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-gold transition-colors cursor-pointer font-mogra">{rapper.name}</h3>
               </Link>
               {rapper.verified && (
                 <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
@@ -90,7 +90,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
                 </span>
               </div>
               <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 font-kaushan">
-                {rapper.total_votes || 0} votes
+                {rapper.total_votes || 0} royal decrees
               </Badge>
             </div>
 
@@ -104,9 +104,9 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             {/* Vote Button */}
             <Button
               onClick={() => setSelectedRapper(rapper)}
-              className="w-full bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light text-rap-platinum font-mogra"
+              className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light text-rap-platinum font-mogra shadow-lg shadow-rap-gold/30"
             >
-              Vote & Rate
+              Cast Royal Decree
             </Button>
           </div>
         </CardContent>

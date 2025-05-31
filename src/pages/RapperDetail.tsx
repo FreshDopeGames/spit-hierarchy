@@ -44,7 +44,7 @@ const RapperDetail = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-        <div className="relative z-10 max-w-4xl mx-auto p-6">
+        <div className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
           <div className="animate-pulse">
             <div className="h-8 bg-rap-carbon-light rounded w-32 mb-6"></div>
             <div className="h-96 bg-rap-carbon-light rounded mb-6"></div>
@@ -60,17 +60,17 @@ const RapperDetail = () => {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-        <div className="relative z-10 max-w-4xl mx-auto p-6">
+        <div className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
           <Link to="/">
             <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 font-kaushan">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
+              Return to Dynasty
             </Button>
           </Link>
           <Card className="bg-carbon-fiber border-rap-burgundy/30 shadow-lg shadow-rap-burgundy/20">
             <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-mogra text-rap-silver mb-4">Rapper Not Found</h2>
-              <p className="text-rap-smoke font-kaushan">The rapper you're looking for doesn't exist.</p>
+              <h2 className="text-2xl font-mogra text-rap-silver mb-4">Pharaoh Not Found</h2>
+              <p className="text-rap-smoke font-kaushan">This pharaoh has vanished from the dynasty.</p>
             </CardContent>
           </Card>
         </div>
@@ -82,12 +82,12 @@ const RapperDetail = () => {
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
-      <div className="relative z-10 max-w-4xl mx-auto p-6">
+      <div className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
         {/* Back Button */}
         <Link to="/">
           <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
+            Return to Dynasty
           </Button>
         </Link>
 

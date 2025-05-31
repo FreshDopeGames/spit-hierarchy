@@ -71,7 +71,18 @@ const BlogCarousel = () => {
 
   return (
     <div className="mb-12">
-      <Card className="bg-black/40 border-purple-500/20 overflow-hidden">
+      <div className="text-center mb-8">
+        <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
+          Sacred Scrolls of Knowledge
+        </h2>
+        <p className="text-rap-platinum font-kaushan text-lg">
+          Chronicles from the Temple of Hip-Hop
+        </p>
+      </div>
+      
+      <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20 relative">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+        
         <CardContent className="p-0">
           <div className="flex flex-col md:flex-row">
             {/* Featured Image */}
@@ -84,35 +95,35 @@ const BlogCarousel = () => {
                 />
               </Link>
               <div className="absolute top-4 left-4">
-                <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                  Featured
+                <span className="bg-gradient-to-r from-rap-burgundy to-rap-forest text-rap-platinum px-3 py-1 rounded-full text-sm font-mogra shadow-lg shadow-rap-burgundy/30">
+                  Featured Scroll
                 </span>
               </div>
             </div>
 
             {/* Content */}
-            <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-between">
+            <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-between bg-gradient-to-br from-rap-carbon/50 to-rap-carbon-light/50">
               <div className="space-y-4">
-                <div className="flex items-center gap-2 text-gray-400 text-sm">
+                <div className="flex items-center gap-2 text-rap-smoke font-kaushan text-sm">
                   <Clock className="w-4 h-4" />
                   <span>{currentPost.timeAgo}</span>
                 </div>
                 
                 <Link to={`/blog/${currentPost.id}`}>
-                  <h2 className="text-2xl md:text-3xl font-bold text-white leading-tight hover:text-purple-300 transition-colors cursor-pointer">
+                  <h2 className="text-2xl md:text-3xl font-bold text-rap-platinum leading-tight hover:text-rap-gold transition-colors cursor-pointer font-ceviche">
                     {currentPost.title}
                   </h2>
                 </Link>
                 
-                <p className="text-gray-300 text-lg leading-relaxed">
+                <p className="text-rap-silver text-lg leading-relaxed font-kaushan">
                   {currentPost.excerpt}
                 </p>
               </div>
 
               <div className="mt-6">
                 <Link to={`/blog/${currentPost.id}`}>
-                  <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 group">
-                    Read Full Article
+                  <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light group font-mogra shadow-lg shadow-rap-gold/30">
+                    Read Full Hieroglyphs
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
@@ -121,15 +132,15 @@ const BlogCarousel = () => {
           </div>
 
           {/* Progress Bar */}
-          <div className="relative h-1 bg-gray-700">
+          <div className="relative h-1 bg-rap-carbon">
             <div 
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-purple-500 to-blue-500 transition-all duration-100"
+              className="absolute top-0 left-0 h-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest transition-all duration-100"
               style={{ width: `${progress}%` }}
             />
           </div>
 
           {/* Carousel Indicators */}
-          <div className="flex justify-center gap-2 py-4 bg-black/20">
+          <div className="flex justify-center gap-2 py-4 bg-carbon-fiber">
             {mockBlogPosts.map((_, index) => (
               <button
                 key={index}
@@ -139,8 +150,8 @@ const BlogCarousel = () => {
                 }}
                 className={`w-3 h-3 rounded-full transition-colors ${
                   index === currentIndex 
-                    ? 'bg-purple-500' 
-                    : 'bg-gray-600 hover:bg-gray-500'
+                    ? 'bg-rap-gold shadow-lg shadow-rap-gold/50' 
+                    : 'bg-rap-smoke hover:bg-rap-silver'
                 }`}
               />
             ))}
