@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Music, LogIn, Trophy, User, Settings, Bell, LogOut } from "lucide-react";
+import { Music, LogIn, Trophy, User, Settings, Bell, LogOut, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
@@ -85,6 +85,12 @@ const Index = () => {
           </div>
           
           <div className="flex items-center space-x-4">
+            <Link to="/blog">
+              <Button variant="outline" className={`border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
+                <Calendar className="w-4 h-4 mr-2" />
+                Sacred Scrolls
+              </Button>
+            </Link>
             <Link to="/all-rappers">
               <Button variant="outline" className={`border-rap-forest/50 text-rap-forest hover:bg-rap-forest/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
                 <Music className="w-4 h-4 mr-2" />
