@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -110,70 +109,62 @@ const Index = () => {
             
             {user ?
           // Authenticated user navigation with avatar and dropdown
-          <div className="flex items-center space-x-3">
-                {!isScrolled && <span className="text-rap-gold/70 font-kaushan">
-                    Welcome, Pharaoh {userProfile?.username || user.email}
-                  </span>}
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <div className="flex items-center space-x-2 cursor-pointer">
-                      <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
-                        <AvatarImage src={userProfile?.avatar_url} alt={userProfile?.username || 'User'} />
-                        <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum font-mogra text-sm">
-                          {getUserInitials()}
-                        </AvatarFallback>
-                      </Avatar>
-                      <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
-                        <User className="w-4 h-4 mr-2" />
-                        Profile
-                      </Button>
-                    </div>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56 bg-carbon-fiber border-rap-gold/30 shadow-2xl shadow-rap-gold/20" align="end">
-                    <Link to="/profile">
-                      <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
-                        <User className="w-4 h-4 mr-3" />
-                        View Profile
-                      </DropdownMenuItem>
-                    </Link>
-                    
+          <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <div className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
+                    <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
+                      <AvatarImage src={userProfile?.avatar_url} alt={userProfile?.username || 'User'} />
+                      <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum font-mogra text-sm">
+                        {getUserInitials()}
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-rap-gold font-kaushan text-sm">
+                      {userProfile?.username || user.email}
+                    </span>
+                  </div>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56 bg-carbon-fiber border-rap-gold/30 shadow-2xl shadow-rap-gold/20" align="end">
+                  <Link to="/profile">
                     <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
-                      <Bell className="w-4 h-4 mr-3" />
-                      Notifications
+                      <User className="w-4 h-4 mr-3" />
+                      View Profile
                     </DropdownMenuItem>
-                    
-                    <DropdownMenuSeparator className="bg-rap-smoke/30" />
-                    
-                    <Link to="/analytics">
-                      <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
-                        <Trophy className="w-4 h-4 mr-3" />
-                        Analytics
-                      </DropdownMenuItem>
-                    </Link>
-                    
-                    {(isAdmin || canManageBlog) && <>
-                        <DropdownMenuSeparator className="bg-rap-smoke/30" />
-                        <Link to="/admin">
-                          <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
-                            <Settings className="w-4 h-4 mr-3" />
-                            Admin Panel
-                          </DropdownMenuItem>
-                        </Link>
-                      </>}
-                    
-                    <DropdownMenuSeparator className="bg-rap-smoke/30" />
-                    
-                    <DropdownMenuItem onClick={signOut} className="text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-burgundy font-kaushan cursor-pointer">
-                      <LogOut className="w-4 h-4 mr-3" />
-                      Sign Out
+                  </Link>
+                  
+                  <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                    <Bell className="w-4 h-4 mr-3" />
+                    Notifications
+                  </DropdownMenuItem>
+                  
+                  <DropdownMenuSeparator className="bg-rap-smoke/30" />
+                  
+                  <Link to="/analytics">
+                    <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                      <Trophy className="w-4 h-4 mr-3" />
+                      Analytics
                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div> :
+                  </Link>
+                  
+                  {(isAdmin || canManageBlog) && <>
+                      <DropdownMenuSeparator className="bg-rap-smoke/30" />
+                      <Link to="/admin">
+                        <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                          <Settings className="w-4 h-4 mr-3" />
+                          Admin Panel
+                        </DropdownMenuItem>
+                      </Link>
+                    </>}
+                  
+                  <DropdownMenuSeparator className="bg-rap-smoke/30" />
+                  
+                  <DropdownMenuItem onClick={signOut} className="text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-burgundy font-kaushan cursor-pointer">
+                    <LogOut className="w-4 h-4 mr-3" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu> :
           // Guest user navigation with simple "Join In" button
           <div className="flex items-center space-x-4">
-                {!isScrolled}
                 <Link to="/auth">
                   <Button className={`bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${isScrolled ? 'text-xs px-3 py-1' : ''}`}>
                     <LogIn className="w-4 h-4 mr-2" />
