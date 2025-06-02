@@ -8,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
@@ -152,9 +152,9 @@ const AdminRapperDialog = ({ rapper, isOpen, onClose }: AdminRapperDialogProps) 
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-slate-900 border-purple-500/20 text-white max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)] text-[var(--theme-text)] max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold">
+          <DialogTitle className="text-xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)]">
             {rapper ? "Edit Rapper" : "Add New Rapper"}
           </DialogTitle>
         </DialogHeader>
@@ -162,93 +162,93 @@ const AdminRapperDialog = ({ rapper, isOpen, onClose }: AdminRapperDialogProps) 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name *</Label>
+              <Label htmlFor="name" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Name *</Label>
               <Input
                 id="name"
                 value={formData.name}
                 onChange={handleInputChange("name")}
                 placeholder="Enter rapper name"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="real_name">Real Name</Label>
+              <Label htmlFor="real_name" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Real Name</Label>
               <Input
                 id="real_name"
                 value={formData.real_name}
                 onChange={handleInputChange("real_name")}
                 placeholder="Enter real name"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="origin">Origin</Label>
+              <Label htmlFor="origin" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Origin</Label>
               <Input
                 id="origin"
                 value={formData.origin}
                 onChange={handleInputChange("origin")}
                 placeholder="Enter origin/location"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="birth_year">Birth Year</Label>
+              <Label htmlFor="birth_year" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Birth Year</Label>
               <Input
                 id="birth_year"
                 type="number"
                 value={formData.birth_year}
                 onChange={handleInputChange("birth_year")}
                 placeholder="Enter birth year"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="spotify_id">Spotify ID</Label>
+              <Label htmlFor="spotify_id" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Spotify ID</Label>
               <Input
                 id="spotify_id"
                 value={formData.spotify_id}
                 onChange={handleInputChange("spotify_id")}
                 placeholder="Enter Spotify ID"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               />
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="instagram_handle">Instagram Handle</Label>
+              <Label htmlFor="instagram_handle" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Instagram Handle</Label>
               <Input
                 id="instagram_handle"
                 value={formData.instagram_handle}
                 onChange={handleInputChange("instagram_handle")}
                 placeholder="Enter Instagram handle"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               />
             </div>
 
             <div className="space-y-2 md:col-span-2">
-              <Label htmlFor="twitter_handle">Twitter Handle</Label>
+              <Label htmlFor="twitter_handle" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Twitter Handle</Label>
               <Input
                 id="twitter_handle"
                 value={formData.twitter_handle}
                 onChange={handleInputChange("twitter_handle")}
                 placeholder="Enter Twitter handle"
-                className="bg-slate-800 border-purple-500/30"
+                className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="bio">Bio</Label>
+            <Label htmlFor="bio" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Bio</Label>
             <Textarea
               id="bio"
               value={formData.bio}
               onChange={handleInputChange("bio")}
               placeholder="Enter rapper bio"
-              className="bg-slate-800 border-purple-500/30"
+              className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
               rows={3}
             />
           </div>
@@ -261,25 +261,26 @@ const AdminRapperDialog = ({ rapper, isOpen, onClose }: AdminRapperDialogProps) 
                 setFormData(prev => ({ ...prev, verified: checked }))
               }
             />
-            <Label htmlFor="verified">Verified Artist</Label>
+            <Label htmlFor="verified" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Verified Artist</Label>
           </div>
 
           <div className="flex gap-3 pt-4">
-            <Button
+            <ThemedButton
               type="button"
               variant="outline"
               onClick={onClose}
-              className="flex-1 border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+              className="flex-1"
             >
               Cancel
-            </Button>
-            <Button
+            </ThemedButton>
+            <ThemedButton
               type="submit"
               disabled={saveRapperMutation.isPending}
-              className="flex-1 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              variant="gradient"
+              className="flex-1"
             >
               {saveRapperMutation.isPending ? "Saving..." : (rapper ? "Update" : "Create")}
-            </Button>
+            </ThemedButton>
           </div>
         </form>
       </DialogContent>
