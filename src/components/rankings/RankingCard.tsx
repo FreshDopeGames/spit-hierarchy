@@ -20,7 +20,8 @@ interface RankingCardProps {
   views: number;
   isOfficial: boolean;
   tags: string[];
-  onClick: (id: string) => void;
+  onClick?: (id: string) => void;
+  slug?: string;
 }
 
 const RankingCard = ({
@@ -34,18 +35,25 @@ const RankingCard = ({
   views,
   isOfficial,
   tags,
-  onClick
+  onClick,
+  slug
 }: RankingCardProps) => {
   const borderColor = isOfficial ? "border-rap-gold/40 hover:border-rap-gold/70" : "border-rap-burgundy/40 hover:border-rap-burgundy/70";
   const hoverColor = isOfficial ? "group-hover:text-rap-gold-light" : "group-hover:text-rap-silver";
   const rankColor = isOfficial ? "text-rap-gold" : "text-rap-burgundy";
+
+  const handleClick = () => {
+    if (onClick) {
+      onClick(slug || id);
+    }
+  };
 
   return (
     <Card className={`bg-carbon-fiber ${borderColor} transition-colors group cursor-pointer relative overflow-hidden`}>
       {/* Rap culture accent bar */}
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
       
-      <CardContent className="p-6" onClick={() => onClick(id)}>
+      <CardContent className="p-6" onClick={handleClick}>
         <div className="flex items-center gap-2 mb-3">
           {isOfficial && (
             <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-xs font-kaushan">

@@ -6,6 +6,7 @@ import Auth from "./pages/Auth";
 import About from "./pages/About";
 import Rankings from "./pages/Rankings";
 import OfficialRankings from "./pages/OfficialRankings";
+import OfficialRankingDetail from "./pages/OfficialRankingDetail";
 import Analytics from "./pages/Analytics";
 import Admin from "./pages/Admin";
 import RapperDetail from "./pages/RapperDetail";
@@ -27,6 +28,7 @@ function App() {
             <Route path="/about" element={<About />} />
             <Route path="/rankings" element={<Rankings />} />
             <Route path="/official-rankings" element={<OfficialRankings />} />
+            <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
             <Route path="/analytics" element={<Analytics />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/rapper/:id" element={<RapperDetail />} />
