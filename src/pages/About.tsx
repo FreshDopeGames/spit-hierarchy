@@ -1,4 +1,3 @@
-
 import React from "react";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import Footer from "@/components/Footer";
@@ -6,32 +5,21 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Trophy, Users, BarChart3, Music, Vote } from "lucide-react";
-
 const About = () => {
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
       {/* Background overlay for future custom backgrounds */}
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10">
-        <InternalPageHeader 
-          title="About Spit Hierarchy" 
-          subtitle="Where Bars Meet Rankings"
-          backLink="/"
-          backText="Back to Home"
-        />
+        <InternalPageHeader title="About Spit Hierarchy" subtitle="Where Bars Meet Rankings" backLink="/" backText="Back to Home" />
         
         <div className="pt-20 max-w-4xl mx-auto p-6 space-y-8">
           {/* Hero Section */}
           <div className="text-center space-y-4 mb-12">
             <div className="flex items-center justify-center space-x-3 mb-6">
-              <img 
-                src="/lovable-uploads/f3e5bf3e-0cea-4d04-a6e8-48de8e5b1b7a.png" 
-                alt="Spit Hierarchy Logo" 
-                className="w-16 h-16 object-contain animate-glow-pulse"
-              />
+              <img alt="Spit Hierarchy Logo" className="w-16 h-16 object-contain animate-glow-pulse" src="/lovable-uploads/8a42312a-e1dc-4889-ae2a-9eaed3baede1.png" />
               <div>
-                <h1 className="font-mogra bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent text-4xl animate-text-glow">
+                <h1 className="font-ceviche bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent animate-text-glow text-8xl">
                   Spit Hierarchy
                 </h1>
                 <p className="text-rap-smoke font-kaushan text-sm">The Culture's Voice</p>
@@ -47,7 +35,7 @@ const About = () => {
           {/* What We Do */}
           <Card className="bg-carbon-fiber border-rap-gold/30 shadow-lg shadow-rap-gold/20">
             <CardHeader>
-              <CardTitle className="text-rap-gold font-ceviche text-2xl flex items-center">
+              <CardTitle className="text-rap-gold font-ceviche flex items-center text-5xl font-normal">
                 <Music className="w-6 h-6 mr-3 text-rap-gold" />
                 What We Do
               </CardTitle>
@@ -132,7 +120,7 @@ const About = () => {
           {/* How It Works */}
           <Card className="bg-carbon-fiber border-rap-gold/30 shadow-lg shadow-rap-gold/20">
             <CardHeader>
-              <CardTitle className="text-rap-gold font-ceviche text-2xl">
+              <CardTitle className="text-rap-gold font-ceviche font-normal text-5xl">
                 How It Works
               </CardTitle>
             </CardHeader>
@@ -198,8 +186,6 @@ const About = () => {
 
         <Footer />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default About;
