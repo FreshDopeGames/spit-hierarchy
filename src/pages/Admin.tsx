@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import BlogManagement from "@/components/admin/BlogManagement";
+import ThemeManagement from "@/components/admin/ThemeManagement";
 import { Navigate } from "react-router-dom";
 
 const Admin = () => {
@@ -89,6 +90,14 @@ const Admin = () => {
                 Blog Management
               </TabsTrigger>
             )}
+            {isAdmin && (
+              <TabsTrigger 
+                value="theme" 
+                className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra"
+              >
+                Theme Management
+              </TabsTrigger>
+            )}
           </TabsList>
 
           {isAdmin && (
@@ -100,6 +109,12 @@ const Admin = () => {
           {canManageBlog && (
             <TabsContent value="blog">
               <BlogManagement />
+            </TabsContent>
+          )}
+
+          {isAdmin && (
+            <TabsContent value="theme">
+              <ThemeManagement />
             </TabsContent>
           )}
         </Tabs>

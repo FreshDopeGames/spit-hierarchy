@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -35,47 +36,79 @@
     --radius: 0.5rem;
 
     --sidebar-background: 0 0% 98%;
-
     --sidebar-foreground: 240 5.3% 26.1%;
-
     --sidebar-primary: 240 5.9% 10%;
-
     --sidebar-primary-foreground: 0 0% 98%;
-
     --sidebar-accent: 240 4.8% 95.9%;
-
     --sidebar-accent-foreground: 240 5.9% 10%;
-
     --sidebar-border: 220 13% 91%;
-
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Theme Variables - Default Rap Colors */
+    --theme-primary: #D4AF37;
+    --theme-primaryLight: #F7DC6F;
+    --theme-primaryDark: #B7950B;
+    --theme-secondary: #800020;
+    --theme-secondaryLight: #A0002A;
+    --theme-secondaryDark: #600018;
+    --theme-accent: #4CAF50;
+    --theme-accentLight: #66BB6A;
+    --theme-accentDark: #388E3C;
+    --theme-background: #0D0D0D;
+    --theme-backgroundLight: #1A1A1A;
+    --theme-backgroundDark: #000000;
+    --theme-surface: #2A2A2A;
+    --theme-text: #E5E4E2;
+    --theme-textLight: #FFFFFF;
+    --theme-textMuted: #848884;
+    --theme-border: #404040;
+    --theme-success: #4CAF50;
+    --theme-warning: #FF9800;
+    --theme-error: #F44336;
+
+    /* Theme Font Variables */
+    --theme-font-heading: 'Mogra', cursive;
+    --theme-font-body: 'Kaushan Script', cursive;
+    --theme-font-display: 'Ceviche One', cursive;
+    --theme-font-code: 'JetBrains Mono', monospace;
+
+    /* Theme Spacing Variables */
+    --theme-spacing-xs: 0.25rem;
+    --theme-spacing-sm: 0.5rem;
+    --theme-spacing-md: 1rem;
+    --theme-spacing-lg: 2rem;
+    --theme-spacing-xl: 4rem;
+
+    /* Theme Border Radius Variables */
+    --theme-radius-sm: 4px;
+    --theme-radius-md: 8px;
+    --theme-radius-lg: 12px;
+    --theme-radius-xl: 16px;
+
+    /* Theme Shadow Variables */
+    --theme-shadow-sm: 0 1px 2px rgba(212, 175, 55, 0.1);
+    --theme-shadow-md: 0 4px 6px rgba(212, 175, 55, 0.1);
+    --theme-shadow-lg: 0 10px 15px rgba(212, 175, 55, 0.2);
+    --theme-shadow-xl: 0 20px 25px rgba(212, 175, 55, 0.3);
   }
 
   .dark {
     --background: 222.2 84% 4.9%;
     --foreground: 210 40% 98%;
-
     --card: 222.2 84% 4.9%;
     --card-foreground: 210 40% 98%;
-
     --popover: 222.2 84% 4.9%;
     --popover-foreground: 210 40% 98%;
-
     --primary: 210 40% 98%;
     --primary-foreground: 222.2 47.4% 11.2%;
-
     --secondary: 217.2 32.6% 17.5%;
     --secondary-foreground: 210 40% 98%;
-
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
-
     --accent: 217.2 32.6% 17.5%;
     --accent-foreground: 210 40% 98%;
-
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 217.2 32.6% 17.5%;
     --input: 217.2 32.6% 17.5%;
     --ring: 212.7 26.8% 83.9%;
@@ -97,5 +130,55 @@
 
   body {
     @apply bg-background text-foreground;
+    background: var(--theme-background);
+    color: var(--theme-text);
+    font-family: var(--theme-font-body);
+  }
+}
+
+/* Global theme-aware utilities */
+@layer utilities {
+  .theme-bg-primary {
+    background-color: var(--theme-primary);
+  }
+  
+  .theme-bg-secondary {
+    background-color: var(--theme-secondary);
+  }
+  
+  .theme-bg-surface {
+    background-color: var(--theme-surface);
+  }
+  
+  .theme-text-primary {
+    color: var(--theme-primary);
+  }
+  
+  .theme-text-secondary {
+    color: var(--theme-secondary);
+  }
+  
+  .theme-text {
+    color: var(--theme-text);
+  }
+  
+  .theme-text-muted {
+    color: var(--theme-textMuted);
+  }
+  
+  .theme-border {
+    border-color: var(--theme-border);
+  }
+  
+  .theme-font-heading {
+    font-family: var(--theme-font-heading);
+  }
+  
+  .theme-font-body {
+    font-family: var(--theme-font-body);
+  }
+  
+  .theme-font-display {
+    font-family: var(--theme-font-display);
   }
 }
