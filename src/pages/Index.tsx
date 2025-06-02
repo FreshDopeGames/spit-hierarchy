@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -11,22 +10,24 @@ import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
 import StatsOverview from "@/components/StatsOverview";
-
 const Index = () => {
-  const { user, signOut } = useAuth();
+  const {
+    user,
+    signOut
+  } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
-  
+
   // Check if user has admin role
-  const { data: userRoles } = useQuery({
+  const {
+    data: userRoles
+  } = useQuery({
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id);
-      
+      const {
+        data,
+        error
+      } = await supabase.from('user_roles').select('role').eq('user_id', user.id);
       if (error) throw error;
       return data;
     },
@@ -34,26 +35,23 @@ const Index = () => {
   });
 
   // Get user profile for avatar
-  const { data: userProfile } = useQuery({
+  const {
+    data: userProfile
+  } = useQuery({
     queryKey: ['user-profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('username, full_name, avatar_url')
-        .eq('id', user.id)
-        .single();
-      
+      const {
+        data,
+        error
+      } = await supabase.from('profiles').select('username, full_name, avatar_url').eq('id', user.id).single();
       if (error) throw error;
       return data;
     },
     enabled: !!user?.id
   });
-
   const isAdmin = userRoles?.some(role => role.role === 'admin');
   const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
-  
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -62,7 +60,6 @@ const Index = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
   const getUserInitials = () => {
     if (userProfile?.full_name) {
       return userProfile.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
@@ -75,9 +72,7 @@ const Index = () => {
     }
     return 'U';
   };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       {/* Sticky Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-rap-carbon/95 backdrop-blur-md border-b border-rap-gold/50 py-2' : 'bg-carbon-fiber border-b border-rap-gold/30 py-4'}`}>
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
@@ -102,14 +97,12 @@ const Index = () => {
               </Button>
             </Link>
             
-            {user ? (
-              // Authenticated user navigation with avatar and dropdown
-              <div className="flex items-center space-x-3">
-                {!isScrolled && (
-                  <span className="text-rap-gold/70 font-kaushan">
+            {user ?
+          // Authenticated user navigation with avatar and dropdown
+          <div className="flex items-center space-x-3">
+                {!isScrolled && <span className="text-rap-gold/70 font-kaushan">
                     Welcome, Pharaoh {userProfile?.username || user.email}
-                  </span>
-                )}
+                  </span>}
                 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -148,8 +141,7 @@ const Index = () => {
                       </DropdownMenuItem>
                     </Link>
                     
-                    {(isAdmin || canManageBlog) && (
-                      <>
+                    {(isAdmin || canManageBlog) && <>
                         <DropdownMenuSeparator className="bg-rap-smoke/30" />
                         <Link to="/admin">
                           <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
@@ -157,33 +149,27 @@ const Index = () => {
                             Admin Panel
                           </DropdownMenuItem>
                         </Link>
-                      </>
-                    )}
+                      </>}
                     
                     <DropdownMenuSeparator className="bg-rap-smoke/30" />
                     
-                    <DropdownMenuItem 
-                      onClick={signOut}
-                      className="text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-burgundy font-kaushan cursor-pointer"
-                    >
+                    <DropdownMenuItem onClick={signOut} className="text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-burgundy font-kaushan cursor-pointer">
                       <LogOut className="w-4 h-4 mr-3" />
                       Sign Out
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-              </div>
-            ) : (
-              // Guest user navigation with simple "Join In" button
-              <div className="flex items-center space-x-4">
-                {!isScrolled && <span className="text-rap-gold/60 font-kaushan">Wandering the Tombs</span>}
+              </div> :
+          // Guest user navigation with simple "Join In" button
+          <div className="flex items-center space-x-4">
+                {!isScrolled}
                 <Link to="/auth">
                   <Button className={`bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${isScrolled ? 'text-xs px-3 py-1' : ''}`}>
                     <LogIn className="w-4 h-4 mr-2" />
                     {isScrolled ? 'Join In' : 'Join In'}
                   </Button>
                 </Link>
-              </div>
-            )}
+              </div>}
           </div>
         </div>
       </header>
@@ -230,8 +216,6 @@ const Index = () => {
             </Link>
           </div>}
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Index;
