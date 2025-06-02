@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -113,22 +114,6 @@ export default {
 						height: '0'
 					}
 				},
-				'glow-pulse': {
-					'0%, 100%': { 
-						boxShadow: '0 0 8px rgba(212, 175, 55, 0.6), 0 0 16px rgba(212, 175, 55, 0.3)' 
-					},
-					'50%': { 
-						boxShadow: '0 0 12px rgba(212, 175, 55, 0.9), 0 0 24px rgba(212, 175, 55, 0.5)' 
-					}
-				},
-				'text-glow': {
-					'0%, 100%': { 
-						textShadow: '0 0 4px rgba(212, 175, 55, 0.8), 0 0 8px rgba(212, 175, 55, 0.5)' 
-					},
-					'50%': { 
-						textShadow: '0 0 8px rgba(212, 175, 55, 1), 0 0 16px rgba(212, 175, 55, 0.7)' 
-					}
-				},
 				'vinyl-spin': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' }
@@ -147,8 +132,6 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'glow-pulse': 'glow-pulse 6s ease-in-out infinite',
-				'text-glow': 'text-glow 6s ease-in-out infinite',
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite'
