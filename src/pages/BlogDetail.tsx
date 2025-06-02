@@ -24,7 +24,7 @@ interface BlogPost {
   blog_categories?: {
     name: string;
   };
-  blog_tags?: Array<{
+  blog_post_tags?: Array<{
     blog_tags: {
       name: string;
       slug: string;
