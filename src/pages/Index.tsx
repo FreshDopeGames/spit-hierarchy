@@ -1,18 +1,58 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Music, Settings, BarChart3, LogIn, Trophy, User } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Music, LogIn, Trophy, User, Settings, Bell, LogOut } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
 import StatsOverview from "@/components/StatsOverview";
 
 const Index = () => {
-  const {
-    user,
-    signOut
-  } = useAuth();
+  const { user, signOut } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Check if user has admin role
+  const { data: userRoles } = useQuery({
+    queryKey: ['user-roles', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  // Get user profile for avatar
+  const { data: userProfile } = useQuery({
+    queryKey: ['user-profile', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username, full_name, avatar_url')
+        .eq('id', user.id)
+        .single();
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  const isAdmin = userRoles?.some(role => role.role === 'admin');
+  const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
   
   useEffect(() => {
     const handleScroll = () => {
@@ -23,6 +63,19 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const getUserInitials = () => {
+    if (userProfile?.full_name) {
+      return userProfile.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
+    if (userProfile?.username) {
+      return userProfile.username.substring(0, 2).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.substring(0, 2).toUpperCase();
+    }
+    return 'U';
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       {/* Sticky Header */}
@@ -32,7 +85,6 @@ const Index = () => {
             <img src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" alt="Spit Hierarchy Logo" className={`object-contain transition-all duration-300 ${isScrolled ? 'w-12 h-8' : 'w-16 h-12'} animate-glow-pulse`} />
             <div className="flex flex-col px-[40px]">
               <h1 className={`font-mogra bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent transition-all duration-300 ${isScrolled ? 'text-lg' : 'text-2xl'} animate-text-glow`}>Spit Hierarchy</h1>
-              {!isScrolled}
             </div>
           </div>
           
@@ -49,43 +101,89 @@ const Index = () => {
                 Rankings
               </Button>
             </Link>
-            {user ?
-          // Authenticated user navigation
-          <>
-                <Link to="/profile">
-                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
-                    <User className="w-4 h-4 mr-2" />
-                    {isScrolled ? '' : 'Profile'}
-                  </Button>
-                </Link>
-                <Link to="/analytics">
-                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
-                    <BarChart3 className="w-4 h-4 mr-2" />
-                    {isScrolled ? '' : 'Analytics'}
-                  </Button>
-                </Link>
-                {/* Admin button - we'll implement role checking later */}
-                <Link to="/admin">
-                  <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
-                    <Settings className="w-4 h-4 mr-2" />
-                    {isScrolled ? '' : 'Admin'}
-                  </Button>
-                </Link>
-                {!isScrolled && <span className="text-rap-gold/70 font-kaushan">Welcome, Pharaoh {user.email}</span>}
-                <Button onClick={signOut} variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
-                  {isScrolled ? 'Out' : 'Sign Out'}
-                </Button>
-              </> :
-          // Guest user navigation
-          <>
+            
+            {user ? (
+              // Authenticated user navigation with avatar and dropdown
+              <div className="flex items-center space-x-3">
+                {!isScrolled && (
+                  <span className="text-rap-gold/70 font-kaushan">
+                    Welcome, Pharaoh {userProfile?.username || user.email}
+                  </span>
+                )}
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="flex items-center space-x-2 cursor-pointer">
+                      <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
+                        <AvatarImage src={userProfile?.avatar_url} alt={userProfile?.username || 'User'} />
+                        <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum font-mogra text-sm">
+                          {getUserInitials()}
+                        </AvatarFallback>
+                      </Avatar>
+                      <Button variant="outline" className={`border-rap-silver/50 text-rap-silver hover:bg-rap-silver/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
+                        <User className="w-4 h-4 mr-2" />
+                        Profile
+                      </Button>
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56 bg-carbon-fiber border-rap-gold/30 shadow-2xl shadow-rap-gold/20" align="end">
+                    <Link to="/profile">
+                      <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                        <User className="w-4 h-4 mr-3" />
+                        View Profile
+                      </DropdownMenuItem>
+                    </Link>
+                    
+                    <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                      <Bell className="w-4 h-4 mr-3" />
+                      Notifications
+                    </DropdownMenuItem>
+                    
+                    <DropdownMenuSeparator className="bg-rap-smoke/30" />
+                    
+                    <Link to="/analytics">
+                      <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                        <Trophy className="w-4 h-4 mr-3" />
+                        Analytics
+                      </DropdownMenuItem>
+                    </Link>
+                    
+                    {(isAdmin || canManageBlog) && (
+                      <>
+                        <DropdownMenuSeparator className="bg-rap-smoke/30" />
+                        <Link to="/admin">
+                          <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+                            <Settings className="w-4 h-4 mr-3" />
+                            Admin Panel
+                          </DropdownMenuItem>
+                        </Link>
+                      </>
+                    )}
+                    
+                    <DropdownMenuSeparator className="bg-rap-smoke/30" />
+                    
+                    <DropdownMenuItem 
+                      onClick={signOut}
+                      className="text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-burgundy font-kaushan cursor-pointer"
+                    >
+                      <LogOut className="w-4 h-4 mr-3" />
+                      Sign Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            ) : (
+              // Guest user navigation with simple "Join In" button
+              <div className="flex items-center space-x-4">
                 {!isScrolled && <span className="text-rap-gold/60 font-kaushan">Wandering the Tombs</span>}
                 <Link to="/auth">
                   <Button className={`bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${isScrolled ? 'text-xs px-3 py-1' : ''}`}>
                     <LogIn className="w-4 h-4 mr-2" />
-                    {isScrolled ? 'Ascend' : 'Enter the Dynasty'}
+                    {isScrolled ? 'Join In' : 'Join In'}
                   </Button>
                 </Link>
-              </>}
+              </div>
+            )}
           </div>
         </div>
       </header>
