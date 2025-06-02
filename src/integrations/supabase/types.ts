@@ -9,6 +9,152 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      blog_categories: {
+        Row: {
+          created_at: string | null
+          description: string | null
+          id: string
+          name: string
+          slug: string
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          description?: string | null
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string | null
+        }
+        Relationships: []
+      }
+      blog_post_tags: {
+        Row: {
+          id: string
+          post_id: string | null
+          tag_id: string | null
+        }
+        Insert: {
+          id?: string
+          post_id?: string | null
+          tag_id?: string | null
+        }
+        Update: {
+          id?: string
+          post_id?: string | null
+          tag_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_post_tags_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "blog_post_tags_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "blog_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_posts: {
+        Row: {
+          author_id: string | null
+          category_id: string | null
+          content: string
+          created_at: string | null
+          excerpt: string | null
+          featured: boolean | null
+          featured_image_url: string | null
+          id: string
+          meta_description: string | null
+          meta_title: string | null
+          published_at: string | null
+          slug: string
+          status: string
+          title: string
+          updated_at: string | null
+          view_count: number | null
+        }
+        Insert: {
+          author_id?: string | null
+          category_id?: string | null
+          content: string
+          created_at?: string | null
+          excerpt?: string | null
+          featured?: boolean | null
+          featured_image_url?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Update: {
+          author_id?: string | null
+          category_id?: string | null
+          content?: string
+          created_at?: string | null
+          excerpt?: string | null
+          featured?: boolean | null
+          featured_image_url?: string | null
+          id?: string
+          meta_description?: string | null
+          meta_title?: string | null
+          published_at?: string | null
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string | null
+          view_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "blog_posts_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "blog_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      blog_tags: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          slug: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          slug: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          slug?: string
+        }
+        Relationships: []
+      }
       member_stats: {
         Row: {
           badges: Json | null
@@ -147,6 +293,27 @@ export type Database = {
           twitter_handle?: string | null
           updated_at?: string
           verified?: boolean | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -342,7 +509,14 @@ export type Database = {
       }
     }
     Functions: {
-      [_ in never]: never
+      can_manage_blog: {
+        Args: { _user_id: string }
+        Returns: boolean
+      }
+      has_role: {
+        Args: { _user_id: string; _role: string }
+        Returns: boolean
+      }
     }
     Enums: {
       member_status: "bronze" | "silver" | "gold" | "platinum" | "diamond"

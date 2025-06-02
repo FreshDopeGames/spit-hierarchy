@@ -1,65 +1,108 @@
 
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
-import { Music, ArrowLeft } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
+import BlogManagement from "@/components/admin/BlogManagement";
+import { Navigate } from "react-router-dom";
 
 const Admin = () => {
-  const { user, signOut } = useAuth();
+  const { user, loading } = useAuth();
+
+  // Check if user has admin role
+  const { data: userRoles, isLoading: rolesLoading } = useQuery({
+    queryKey: ['user-roles', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id);
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  const isAdmin = userRoles?.some(role => role.role === 'admin');
+  const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
+
+  if (loading || rolesLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
+        <div className="text-rap-platinum">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!isAdmin && !canManageBlog) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
+        <Card className="bg-carbon-fiber border border-red-500/50 p-8">
+          <CardHeader>
+            <CardTitle className="text-red-400 text-center">Access Denied</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-rap-platinum text-center">You don't have permission to access the admin panel.</p>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
-      {/* Background overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-      
-      <div className="relative z-10">
-        {/* Header */}
-        <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
-          <div className="max-w-7xl mx-auto flex items-center justify-between">
-            <div className="flex items-center space-x-3">
-              <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
-                <ArrowLeft className="w-5 h-5" />
-                <span>Return to Dynasty</span>
-              </Link>
-              <div className="w-10 h-10 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl flex items-center justify-center shadow-lg">
-                <Music className="w-6 h-6 text-rap-silver" />
-              </div>
-              <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent animate-text-glow">
-                High Priest Panel
-              </h1>
-            </div>
-            
-            <div className="flex items-center space-x-4">
-              {user && (
-                <>
-                  <span className="text-rap-platinum font-kaushan">High Priest: {user.email}</span>
-                  <Button 
-                    onClick={signOut} 
-                    variant="outline" 
-                    className="border-rap-burgundy/50 text-rap-burgundy hover:bg-rap-burgundy/20 hover:border-rap-burgundy font-kaushan"
-                  >
-                    Exit Temple
-                  </Button>
-                </>
-              )}
-            </div>
-          </div>
-        </header>
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <div className="container mx-auto px-4 py-8">
+        <div className="mb-8 text-center">
+          <h1 className="text-4xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
+            Admin Control Panel
+          </h1>
+          <p className="text-rap-platinum font-kaushan text-lg">
+            Manage the Sacred Temple of Hip-Hop
+          </p>
+        </div>
 
-        {/* Main Content */}
-        <main className="max-w-7xl mx-auto p-6 pt-24">
-          <div className="mb-8">
-            <h2 className="text-3xl font-mogra text-rap-gold mb-2 animate-text-glow">
-              Pharaoh Management
-            </h2>
-            <p className="text-rap-platinum font-kaushan text-lg tracking-wide">
-              Command the royal court and manage the dynasty
-            </p>
-          </div>
+        <Tabs defaultValue={isAdmin ? "rappers" : "blog"} className="space-y-6">
+          <TabsList className="bg-carbon-fiber border border-rap-gold/30 p-1">
+            {isAdmin && (
+              <TabsTrigger 
+                value="rappers" 
+                className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra"
+              >
+                Rapper Management
+              </TabsTrigger>
+            )}
+            {canManageBlog && (
+              <TabsTrigger 
+                value="blog" 
+                className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra"
+              >
+                Blog Management
+              </TabsTrigger>
+            )}
+          </TabsList>
 
-          <AdminRapperManagement />
-        </main>
+          {isAdmin && (
+            <TabsContent value="rappers">
+              <AdminRapperManagement />
+            </TabsContent>
+          )}
+
+          {canManageBlog && (
+            <TabsContent value="blog">
+              <BlogManagement />
+            </TabsContent>
+          )}
+        </Tabs>
       </div>
     </div>
   );
