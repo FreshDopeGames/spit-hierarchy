@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { TrendingUp, Calendar } from "lucide-react";
 
@@ -43,92 +43,92 @@ const VotingTrends = () => {
   if (isLoading) {
     return (
       <div className="space-y-4">
-        <Card className="bg-black/40 border-purple-500/20 animate-pulse">
-          <CardContent className="p-6">
-            <div className="h-64 bg-gray-700 rounded"></div>
-          </CardContent>
-        </Card>
+        <ThemedCard className="animate-pulse">
+          <ThemedCardContent className="p-6">
+            <div className="h-64 bg-[var(--theme-surface)] rounded"></div>
+          </ThemedCardContent>
+        </ThemedCard>
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      <Card className="bg-black/40 border-purple-500/20">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+      <ThemedCard>
+        <ThemedCardHeader>
+          <ThemedCardTitle className="flex items-center gap-2">
             <TrendingUp className="w-5 h-5" />
             Daily Voting Activity (Last 30 Days)
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </ThemedCardTitle>
+        </ThemedCardHeader>
+        <ThemedCardContent>
           <ResponsiveContainer width="100%" height={300}>
             <LineChart data={votingTrends}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--theme-border)" />
               <XAxis 
                 dataKey="date" 
-                stroke="#9CA3AF"
+                stroke="var(--theme-textMuted)"
                 fontSize={12}
                 tickFormatter={(value) => new Date(value).getDate().toString()}
               />
-              <YAxis stroke="#9CA3AF" fontSize={12} />
+              <YAxis stroke="var(--theme-textMuted)" fontSize={12} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#1F2937', 
-                  border: '1px solid #374151',
-                  borderRadius: '8px',
-                  color: '#F9FAFB'
+                  backgroundColor: 'var(--theme-surface)', 
+                  border: `1px solid var(--theme-border)`,
+                  borderRadius: 'var(--theme-radius-md)',
+                  color: 'var(--theme-text)'
                 }}
                 labelFormatter={(value) => new Date(value).toLocaleDateString()}
               />
               <Line 
                 type="monotone" 
                 dataKey="votes" 
-                stroke="#8B5CF6" 
+                stroke="var(--theme-primary)" 
                 strokeWidth={2}
-                dot={{ fill: '#8B5CF6', strokeWidth: 2 }}
+                dot={{ fill: 'var(--theme-primary)', strokeWidth: 2 }}
               />
             </LineChart>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
+        </ThemedCardContent>
+      </ThemedCard>
 
-      <Card className="bg-black/40 border-purple-500/20">
-        <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+      <ThemedCard>
+        <ThemedCardHeader>
+          <ThemedCardTitle className="flex items-center gap-2">
             <Calendar className="w-5 h-5" />
             Average Daily Rating
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
+          </ThemedCardTitle>
+        </ThemedCardHeader>
+        <ThemedCardContent>
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={votingTrends}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--theme-border)" />
               <XAxis 
                 dataKey="date" 
-                stroke="#9CA3AF"
+                stroke="var(--theme-textMuted)"
                 fontSize={12}
                 tickFormatter={(value) => new Date(value).getDate().toString()}
               />
-              <YAxis stroke="#9CA3AF" fontSize={12} domain={[0, 10]} />
+              <YAxis stroke="var(--theme-textMuted)" fontSize={12} domain={[0, 10]} />
               <Tooltip 
                 contentStyle={{ 
-                  backgroundColor: '#1F2937', 
-                  border: '1px solid #374151',
-                  borderRadius: '8px',
-                  color: '#F9FAFB'
+                  backgroundColor: 'var(--theme-surface)', 
+                  border: `1px solid var(--theme-border)`,
+                  borderRadius: 'var(--theme-radius-md)',
+                  color: 'var(--theme-text)'
                 }}
                 labelFormatter={(value) => new Date(value).toLocaleDateString()}
               />
               <Bar 
                 dataKey="avgRating" 
-                fill="#10B981"
+                fill="var(--theme-accent)"
                 radius={[4, 4, 0, 0]}
               />
             </BarChart>
           </ResponsiveContainer>
-        </CardContent>
-      </Card>
+        </ThemedCardContent>
+      </ThemedCard>
     </div>
   );
 };
