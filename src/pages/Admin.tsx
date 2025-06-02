@@ -14,15 +14,19 @@ const Admin = () => {
   const { user, loading } = useAuth();
 
   // Check if user has admin role
-  const { data: userRoles, isLoading: rolesLoading } = useQuery({
+  const { data: userRoles, isLoading: rolesLoading, error: rolesError } = useQuery({
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
+      
+      console.log('Checking roles for user ID:', user.id);
       
       const { data, error } = await supabase
         .from('user_roles')
         .select('role')
         .eq('user_id', user.id);
+      
+      console.log('User roles query result:', { data, error });
       
       if (error) throw error;
       return data;
@@ -30,8 +34,16 @@ const Admin = () => {
     enabled: !!user?.id
   });
 
+  console.log('Current user:', user);
+  console.log('User roles:', userRoles);
+  console.log('Roles loading:', rolesLoading);
+  console.log('Roles error:', rolesError);
+
   const isAdmin = userRoles?.some(role => role.role === 'admin');
   const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
+
+  console.log('Is admin:', isAdmin);
+  console.log('Can manage blog:', canManageBlog);
 
   if (loading || rolesLoading) {
     return (
@@ -42,18 +54,25 @@ const Admin = () => {
   }
 
   if (!user) {
+    console.log('No user found, redirecting to auth');
     return <Navigate to="/auth" replace />;
   }
 
   if (!isAdmin && !canManageBlog) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <Card className="bg-carbon-fiber border border-red-500/50 p-8">
+        <Card className="bg-carbon-fiber border border-red-500/50 p-8 max-w-md">
           <CardHeader>
             <CardTitle className="text-red-400 text-center">Access Denied</CardTitle>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
             <p className="text-rap-platinum text-center">You don't have permission to access the admin panel.</p>
+            <div className="text-sm text-rap-smoke space-y-2">
+              <p><strong>User ID:</strong> {user.id}</p>
+              <p><strong>Email:</strong> {user.email}</p>
+              <p><strong>Roles found:</strong> {userRoles?.length ? userRoles.map(r => r.role).join(', ') : 'None'}</p>
+              {rolesError && <p className="text-red-400"><strong>Error:</strong> {rolesError.message}</p>}
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -64,7 +83,7 @@ const Admin = () => {
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       <div className="container mx-auto px-4 py-8">
         <div className="mb-8 text-center">
-          <h1 className="text-4xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
+          <h1 className="text-4xl font-ceviche text-rap-gold mb-2 tracking-wider">
             Admin Control Panel
           </h1>
           <p className="text-rap-platinum font-kaushan text-lg">
