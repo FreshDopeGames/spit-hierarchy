@@ -1,58 +1,92 @@
 
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
-import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
-import { ThemedButton } from "@/components/ui/themed-button";
 
 interface RelatedPost {
   id: string;
   title: string;
+  excerpt: string;
   imageUrl: string;
   timeAgo: string;
 }
 
 interface BlogSidebarProps {
   relatedPosts: RelatedPost[];
-  showSignUp: boolean;
+  showSignUp?: boolean;
 }
 
-const BlogSidebar = ({ relatedPosts, showSignUp }: BlogSidebarProps) => {
+const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => {
   return (
-    <ThemedCard className="sticky top-6">
-      <ThemedCardContent className="p-6">
-        <h3 className="text-lg font-semibold text-[var(--theme-textLight)] mb-4 font-[var(--theme-font-heading)]">Related Articles</h3>
-        <div className="space-y-4">
-          {relatedPosts.map((post) => (
-            <Link key={post.id} to={`/blog/${post.id}`}>
-              <div className="group cursor-pointer">
-                <img 
-                  src={post.imageUrl} 
-                  alt={post.title}
-                  className="w-full h-24 object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity"
-                />
-                <h4 className="text-[var(--theme-textLight)] font-medium text-sm leading-tight mb-1 group-hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]">
-                  {post.title}
-                </h4>
-                <p className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-font-body)]">{post.timeAgo}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
+    <div className="space-y-6">
+      {/* Related Posts */}
+      {relatedPosts.length > 0 && (
+        <Card className="bg-carbon-fiber border border-rap-gold/40">
+          <CardHeader>
+            <CardTitle className="text-rap-gold font-ceviche">Related Sacred Scrolls</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            {relatedPosts.map((post) => (
+              <Link key={post.id} to={`/blog/${post.id}`} className="block group">
+                <div className="flex gap-3 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <img 
+                    src={post.imageUrl} 
+                    alt={post.title}
+                    className="w-16 h-16 object-cover rounded-md group-hover:opacity-80 transition-opacity"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-kaushan text-rap-platinum group-hover:text-rap-gold transition-colors line-clamp-2 mb-1">
+                      {post.title}
+                    </h4>
+                    <div className="flex items-center gap-1 text-xs text-rap-smoke">
+                      <Clock className="w-3 h-3" />
+                      <span>{post.timeAgo}</span>
+                    </div>
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </CardContent>
+        </Card>
+      )}
 
-        {showSignUp && (
-          <div className="mt-6 pt-6 border-t border-[var(--theme-border)]">
-            <h4 className="text-[var(--theme-textLight)] font-medium mb-2 font-[var(--theme-font-heading)]">Join the Community</h4>
-            <p className="text-[var(--theme-textMuted)] text-sm mb-3 font-[var(--theme-font-body)]">
-              Sign up to save articles, leave comments, and connect with other hip-hop fans.
+      {/* Newsletter Signup */}
+      {showSignUp && (
+        <Card className="bg-gradient-to-br from-rap-burgundy/20 to-rap-forest/20 border border-rap-gold/40">
+          <CardHeader>
+            <CardTitle className="text-rap-gold font-ceviche">Join the Temple</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-rap-platinum font-kaushan mb-4">
+              Subscribe to receive the latest sacred scrolls and exclusive insights from the temple.
             </p>
             <Link to="/auth">
-              <ThemedButton size="sm" variant="gradient" className="w-full">
-                Sign Up Free
-              </ThemedButton>
+              <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra">
+                Join Now
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
             </Link>
-          </div>
-        )}
-      </ThemedCardContent>
-    </ThemedCard>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Browse All Posts */}
+      <Card className="bg-carbon-fiber border border-rap-gold/40">
+        <CardContent className="p-6 text-center">
+          <h3 className="text-rap-gold font-ceviche mb-2">Explore All Scrolls</h3>
+          <p className="text-rap-silver font-kaushan text-sm mb-4">
+            Discover more wisdom from our sacred archives
+          </p>
+          <Link to="/blog">
+            <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20">
+              <ArrowRight className="w-4 h-4 mr-2" />
+              View All
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

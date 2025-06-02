@@ -1,5 +1,7 @@
 
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import CommentBubble from "@/components/CommentBubble";
 import { useAuth } from "@/hooks/useAuth";
 import BlogDetailHeader from "@/components/blog/BlogDetailHeader";
@@ -7,72 +9,96 @@ import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
 import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
 import BlogSidebar from "@/components/blog/BlogSidebar";
+import { format } from "date-fns";
+import { Card, CardContent } from "@/components/ui/card";
 
-// Mock blog data - this would come from your database in a real app
-const mockBlogPost = {
-  id: "1",
-  title: "The Evolution of Hip-Hop: From Bronx Streets to Global Phenomenon",
-  content: `
-    <p class="text-lg text-[var(--theme-textMuted)] leading-relaxed mb-6">Hip-hop culture emerged in the 1970s from the South Bronx, New York City, as a creative response to social and economic challenges facing urban communities. What began as block parties and community gatherings has evolved into one of the most influential cultural movements in modern history.</p>
-
-    <h2 class="text-2xl font-bold text-[var(--theme-textLight)] mb-4 mt-8 font-[var(--theme-font-heading)]">The Four Pillars</h2>
-    <p class="text-[var(--theme-text)] leading-relaxed mb-6 font-[var(--theme-font-body)]">Hip-hop culture is built on four foundational elements, often called the "four pillars": DJing, MCing (rapping), breakdancing (B-boying), and graffiti art. Each element contributed to the rich tapestry of expression that defines hip-hop culture today.</p>
-
-    <h3 class="text-xl font-semibold text-[var(--theme-primary)] mb-3 mt-6 font-[var(--theme-font-heading)]">DJing: The Foundation</h3>
-    <p class="text-[var(--theme-text)] leading-relaxed mb-4 font-[var(--theme-font-body)]">DJ Kool Herc is widely credited as the father of hip-hop, pioneering the technique of isolating and extending the "break" - the instrumental section of funk and soul records where dancers would showcase their moves.</p>
-
-    <h3 class="text-xl font-semibold text-[var(--theme-primary)] mb-3 mt-6 font-[var(--theme-font-heading)]">MCing: The Voice</h3>
-    <p class="text-[var(--theme-text)] leading-relaxed mb-4 font-[var(--theme-font-body)]">What started as DJs hyping up the crowd evolved into the complex lyrical artform we know today. MCs began telling stories, sharing experiences, and commenting on social issues through rhythmic spoken word.</p>
-
-    <h2 class="text-2xl font-bold text-[var(--theme-textLight)] mb-4 mt-8 font-[var(--theme-font-heading)]">Global Impact</h2>
-    <p class="text-[var(--theme-text)] leading-relaxed mb-6 font-[var(--theme-font-body)]">Today, hip-hop is the most popular music genre worldwide, influencing fashion, language, and social movements across continents. From the streets of the Bronx to the global stage, hip-hop continues to evolve while maintaining its core values of authenticity and creative expression.</p>
-
-    <blockquote class="border-l-4 border-[var(--theme-primary)] pl-6 py-4 my-8 bg-[var(--theme-backgroundDark)]/30 rounded-r-lg">
-      <p class="text-lg italic text-[var(--theme-primary)] font-[var(--theme-font-body)]">"Hip-hop is not just music; it's a way of life, a culture, a movement that speaks truth to power and gives voice to the voiceless."</p>
-      <footer class="text-[var(--theme-textMuted)] mt-2 font-[var(--theme-font-body)]">— Afrika Bambaataa</footer>
-    </blockquote>
-
-    <p class="text-[var(--theme-text)] leading-relaxed mb-6 font-[var(--theme-font-body)]">As we look to the future, hip-hop continues to break barriers and create new pathways for artistic expression, remaining true to its roots while embracing innovation and change.</p>
-  `,
-  excerpt: "Explore the incredible journey of hip-hop culture from its humble beginnings in the 1970s Bronx to becoming one of the most influential music genres worldwide.",
-  imageUrl: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=600&fit=crop",
-  author: "Marcus Johnson",
-  publishedAt: "2024-01-15",
-  timeAgo: "2 days ago",
-  readTime: "8 min read",
-  tags: ["Hip-Hop History", "Culture", "Music", "Bronx"],
-  likes: 124,
-  isLiked: false,
-  isBookmarked: false
-};
-
-const relatedPosts = [
-  {
-    id: "2",
-    title: "Breaking Down the Greatest Rap Battles in Hip-Hop History",
-    excerpt: "From legendary studio tracks to unforgettable live performances...",
-    imageUrl: "https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=400&h=250&fit=crop",
-    timeAgo: "5 days ago"
-  },
-  {
-    id: "3",
-    title: "The Rise of Female Rappers: Changing the Game Forever",
-    excerpt: "Celebrating the powerful voices and groundbreaking contributions...",
-    imageUrl: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400&h=250&fit=crop",
-    timeAgo: "1 week ago"
-  }
-];
+interface BlogPost {
+  id: string;
+  title: string;
+  content: string;
+  excerpt: string;
+  featured_image_url: string;
+  published_at: string;
+  author_id: string;
+  category_id: string;
+  blog_categories?: {
+    name: string;
+  };
+  blog_tags?: Array<{
+    blog_tags: {
+      name: string;
+      slug: string;
+    };
+  }>;
+}
 
 const BlogDetail = () => {
   const { id } = useParams();
   const { user } = useAuth();
-  
-  // In a real app, you'd fetch the blog post based on the ID
-  const blogPost = mockBlogPost;
+
+  // Fetch the blog post
+  const { data: blogPost, isLoading, error } = useQuery({
+    queryKey: ['blog-post', id],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select(`
+          id,
+          title,
+          content,
+          excerpt,
+          featured_image_url,
+          published_at,
+          author_id,
+          category_id,
+          blog_categories(name),
+          blog_post_tags(
+            blog_tags(
+              name,
+              slug
+            )
+          )
+        `)
+        .eq('id', id)
+        .eq('status', 'published')
+        .maybeSingle();
+      
+      if (error) throw error;
+      return data as BlogPost;
+    },
+    enabled: !!id
+  });
+
+  // Fetch related posts
+  const { data: relatedPosts } = useQuery({
+    queryKey: ['related-posts', blogPost?.category_id],
+    queryFn: async () => {
+      if (!blogPost?.category_id) return [];
+      
+      const { data, error } = await supabase
+        .from('blog_posts')
+        .select(`
+          id,
+          title,
+          excerpt,
+          featured_image_url,
+          published_at
+        `)
+        .eq('status', 'published')
+        .eq('category_id', blogPost.category_id)
+        .neq('id', blogPost.id)
+        .order('published_at', { ascending: false })
+        .limit(3);
+      
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!blogPost?.category_id
+  });
 
   const handleShare = (platform: string) => {
     const url = window.location.href;
-    const text = `Check out this article: ${blogPost.title}`;
+    const text = `Check out this article: ${blogPost?.title}`;
     
     switch (platform) {
       case 'twitter':
@@ -87,21 +113,84 @@ const BlogDetail = () => {
     }
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+        <BlogDetailHeader onShare={handleShare} />
+        <main className="max-w-4xl mx-auto p-6">
+          <div className="animate-pulse">
+            <div className="h-8 bg-rap-carbon rounded mb-4"></div>
+            <div className="h-64 bg-rap-carbon rounded mb-8"></div>
+            <div className="space-y-4">
+              <div className="h-4 bg-rap-carbon rounded"></div>
+              <div className="h-4 bg-rap-carbon rounded"></div>
+              <div className="h-4 bg-rap-carbon rounded w-3/4"></div>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  if (error || !blogPost) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+        <BlogDetailHeader onShare={handleShare} />
+        <main className="max-w-4xl mx-auto p-6">
+          <Card className="bg-carbon-fiber border border-rap-gold/40">
+            <CardContent className="p-8 text-center">
+              <h1 className="text-2xl font-ceviche text-rap-gold mb-4">Sacred Scroll Not Found</h1>
+              <p className="text-rap-platinum mb-6">This scroll may have been lost to the winds of time.</p>
+              <Link to="/blog" className="text-rap-gold hover:text-rap-gold-light">
+                Return to Sacred Scrolls
+              </Link>
+            </CardContent>
+          </Card>
+        </main>
+      </div>
+    );
+  }
+
+  const formatDate = (dateString: string) => {
+    try {
+      return format(new Date(dateString), 'MMMM d, yyyy');
+    } catch {
+      return 'Unknown date';
+    }
+  };
+
+  const transformedBlogPost = {
+    title: blogPost.title,
+    tags: blogPost.blog_post_tags?.map(pt => pt.blog_tags.name) || [],
+    author: "Temple Scribe", // Default author for now
+    timeAgo: formatDate(blogPost.published_at),
+    readTime: "5 min read", // Default read time
+    imageUrl: blogPost.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=600&fit=crop"
+  };
+
+  const transformedRelatedPosts = relatedPosts?.map(post => ({
+    id: post.id,
+    title: post.title,
+    excerpt: post.excerpt || `${post.title.substring(0, 100)}...`,
+    imageUrl: post.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
+    timeAgo: formatDate(post.published_at)
+  })) || [];
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--theme-backgroundDark)] via-[var(--theme-background)] to-[var(--theme-backgroundDark)]">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       <BlogDetailHeader onShare={handleShare} />
 
       <main className="max-w-4xl mx-auto p-6">
-        <BlogArticleHeader blogPost={blogPost} />
+        <BlogArticleHeader blogPost={transformedBlogPost} />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3">
             <BlogArticleContent content={blogPost.content} />
             <BlogEngagementActions 
-              likes={blogPost.likes}
-              isLiked={blogPost.isLiked}
-              isBookmarked={blogPost.isBookmarked}
+              likes={0}
+              isLiked={false}
+              isBookmarked={false}
               onShare={handleShare}
             />
           </div>
@@ -109,7 +198,7 @@ const BlogDetail = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1">
             <BlogSidebar 
-              relatedPosts={relatedPosts}
+              relatedPosts={transformedRelatedPosts}
               showSignUp={!user}
             />
           </div>
