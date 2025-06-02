@@ -96,14 +96,16 @@ const BlogCarousel = () => {
         <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20">
           <CardContent className="p-8 text-center">
             <div className="text-rap-platinum mb-4">No published scrolls yet. Check back soon for wisdom from the temple!</div>
-            <Link to="/blog">
-              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
-                <ArrowRight className="w-4 h-4 mr-2" />
-                Explore All Sacred Scrolls
-              </Button>
-            </Link>
           </CardContent>
         </Card>
+        <div className="text-center mt-8">
+          <Link to="/blog">
+            <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
+              <ArrowRight className="w-4 h-4 mr-2" />
+              Explore All Sacred Scrolls
+            </Button>
+          </Link>
+        </div>
       </div>
     );
   }
@@ -120,12 +122,6 @@ const BlogCarousel = () => {
         <p className="text-rap-platinum font-kaushan text-lg">
           Chronicles from the Temple of Hip-Hop
         </p>
-        <Link to="/blog">
-          <Button variant="outline" className="mt-4 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 font-kaushan">
-            <ArrowRight className="w-4 h-4 mr-2" />
-            View All Sacred Scrolls
-          </Button>
-        </Link>
       </div>
       
       <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20 relative">
@@ -212,6 +208,16 @@ const BlogCarousel = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* View All Button - Now positioned below the carousel */}
+      <div className="text-center mt-8">
+        <Link to="/blog">
+          <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
+            <ArrowRight className="w-4 h-4 mr-2" />
+            View All Sacred Scrolls
+          </Button>
+        </Link>
+      </div>
     </div>
   );
 };

@@ -10,20 +10,35 @@ import RapperCard from "./RapperCard";
 
 type Rapper = Tables<"rappers">;
 
+interface OfficialRankingItem {
+  position: number;
+  reason: string;
+  rappers: Rapper;
+}
+
 const TopRappersGrid = () => {
-  const { data: topRappers, isLoading } = useQuery({
-    queryKey: ["top-rappers"],
+  const { data: officialRanking, isLoading } = useQuery({
+    queryKey: ["official-goat-ranking"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("rappers")
-        .select("*")
-        .order("average_rating", { ascending: false })
-        .order("total_votes", { ascending: false })
-        .order("name", { ascending: true })
+        .from("official_ranking_items")
+        .select(`
+          position,
+          reason,
+          rappers (*)
+        `)
+        .eq("ranking_id", (
+          await supabase
+            .from("official_rankings")
+            .select("id")
+            .eq("slug", "goat-top-5")
+            .single()
+        ).data?.id)
+        .order("position", { ascending: true })
         .limit(5);
       
       if (error) throw error;
-      return data;
+      return data as OfficialRankingItem[];
     }
   });
 
@@ -38,9 +53,9 @@ const TopRappersGrid = () => {
             The most revered rulers of the lyrical kingdom
           </p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-            {Array.from({ length: 3 }).map((_, i) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Array.from({ length: 2 }).map((_, i) => (
               <Card key={i} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
                 <CardContent className="p-6">
                   <div className="h-48 bg-rap-carbon-light rounded-lg mb-4"></div>
@@ -50,8 +65,8 @@ const TopRappersGrid = () => {
               </Card>
             ))}
           </div>
-          <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-6 md:px-16">
-            {Array.from({ length: 2 }).map((_, i) => (
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {Array.from({ length: 3 }).map((_, i) => (
               <Card key={i} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
                 <CardContent className="p-6">
                   <div className="h-48 bg-rap-carbon-light rounded-lg mb-4"></div>
@@ -66,7 +81,7 @@ const TopRappersGrid = () => {
     );
   }
 
-  if (!topRappers || topRappers.length === 0) {
+  if (!officialRanking || officialRanking.length === 0) {
     return (
       <div className="mb-12">
         <div className="text-center mb-8">
@@ -100,26 +115,26 @@ const TopRappersGrid = () => {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {/* Top Row - First 3 rappers */}
-        <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-6">
-          {topRappers.slice(0, 3).map((rapper, index) => (
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Top Row - First 2 rappers (pyramid top) */}
+        <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+          {officialRanking.slice(0, 2).map((item) => (
             <RapperCard 
-              key={rapper.id} 
-              rapper={rapper} 
-              position={index + 1} 
+              key={item.rappers.id} 
+              rapper={item.rappers} 
+              position={item.position} 
             />
           ))}
         </div>
 
-        {/* Bottom Row - Last 2 rappers (if they exist) */}
-        {topRappers.length > 3 && (
-          <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 md:px-16">
-            {topRappers.slice(3, 5).map((rapper, index) => (
+        {/* Bottom Row - Last 3 rappers (pyramid base) */}
+        {officialRanking.length > 2 && (
+          <div className="md:col-span-2 grid grid-cols-1 md:grid-cols-3 gap-6">
+            {officialRanking.slice(2, 5).map((item) => (
               <RapperCard 
-                key={rapper.id} 
-                rapper={rapper} 
-                position={index + 4} 
+                key={item.rappers.id} 
+                rapper={item.rappers} 
+                position={item.position} 
               />
             ))}
           </div>
@@ -128,12 +143,12 @@ const TopRappersGrid = () => {
 
       {/* View All Button */}
       <div className="text-center mt-8">
-        <Link to="/all-rappers">
+        <Link to="/rankings/official/goat-top-5">
           <Button 
             className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-lg shadow-xl shadow-rap-gold/40 border border-rap-gold/30"
             size="lg"
           >
-            Enter the Full Pharaoh Court
+            View Full GOAT Rankings
           </Button>
         </Link>
       </div>

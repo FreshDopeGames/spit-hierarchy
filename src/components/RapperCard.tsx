@@ -1,97 +1,138 @@
 
 import { Card, CardContent } from "@/components/ui/card";
-import { Star, MapPin, Calendar, Verified, Music } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/integrations/supabase/types";
-import RankingBadge from "./RankingBadge";
-import RapperStats from "./RapperStats";
-import HotBadge from "./analytics/HotBadge";
-import { useIsHotRapper } from "@/hooks/useHotRappers";
+import { Star, Crown, Trophy } from "lucide-react";
+import { Link } from "react-router-dom";
 
 type Rapper = Tables<"rappers">;
 
 interface RapperCardProps {
   rapper: Rapper;
   position: number;
+  compact?: boolean;
 }
 
-const RapperCard = ({ rapper, position }: RapperCardProps) => {
-  const { isHot, voteVelocity } = useIsHotRapper(rapper.id);
+const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
+  const getPositionIcon = (pos: number) => {
+    switch (pos) {
+      case 1:
+        return <Crown className="w-5 h-5 text-rap-gold" />;
+      case 2:
+        return <Trophy className="w-5 h-5 text-rap-silver" />;
+      case 3:
+        return <Star className="w-5 h-5 text-orange-500" />;
+      default:
+        return <span className="w-5 h-5 flex items-center justify-center text-rap-platinum font-mogra text-sm">#{pos}</span>;
+    }
+  };
 
-  return (
-    <div className="relative">
+  const getPositionColors = (pos: number) => {
+    switch (pos) {
+      case 1:
+        return "border-rap-gold/50 shadow-rap-gold/30";
+      case 2:
+        return "border-rap-silver/50 shadow-rap-silver/30";
+      case 3:
+        return "border-orange-500/50 shadow-orange-500/30";
+      default:
+        return "border-rap-platinum/50 shadow-rap-platinum/30";
+    }
+  };
+
+  if (compact) {
+    return (
       <Link to={`/rapper/${rapper.id}`}>
-        <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 relative cursor-pointer group overflow-hidden">
-          {/* Rap culture accent bar */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+        <Card className={`bg-carbon-fiber ${getPositionColors(position)} transition-all duration-300 hover:scale-105 group cursor-pointer relative overflow-hidden`}>
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
           
-          <CardContent className="p-6">
-            <RankingBadge position={position} />
-
-            {/* Hot Badge */}
-            {isHot && (
-              <div className="absolute top-2 right-2 z-10">
-                <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                {getPositionIcon(position)}
               </div>
-            )}
-
-            {/* Special effects for #1 */}
-            {position === 1 && (
-              <div className="absolute inset-0 bg-gradient-to-r from-rap-gold/10 to-rap-burgundy/10 pointer-events-none" />
-            )}
-
-            {/* Rapper Image Placeholder */}
-            <div className="w-full h-48 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-all duration-300">
-              <Music className="w-16 h-16 text-rap-platinum/70" />
-              {position === 1 && (
-                <div className="absolute inset-0 bg-gradient-to-br from-rap-gold/20 to-rap-burgundy/20 rounded-lg" />
-              )}
+              <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-xs font-kaushan">
+                #{position}
+              </Badge>
             </div>
-
-            {/* Rapper Info */}
-            <div className="space-y-3">
-              <div className="flex items-start justify-between">
-                <h3 className="text-rap-platinum font-bold text-lg leading-tight font-mogra">{rapper.name}</h3>
-                {rapper.verified && (
-                  <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
-                )}
-              </div>
-
-              {rapper.real_name && (
-                <p className="text-rap-smoke text-sm font-kaushan">{rapper.real_name}</p>
-              )}
-
-              <div className="flex flex-wrap gap-2 text-xs">
-                {rapper.origin && (
-                  <div className="flex items-center gap-1 text-rap-platinum font-kaushan">
-                    <MapPin className="w-3 h-3" />
-                    <span>{rapper.origin}</span>
-                  </div>
-                )}
-                {rapper.birth_year && (
-                  <div className="flex items-center gap-1 text-rap-platinum font-kaushan">
-                    <Calendar className="w-3 h-3" />
-                    <span>{rapper.birth_year}</span>
-                  </div>
-                )}
-              </div>
-
-              <RapperStats 
-                averageRating={rapper.average_rating} 
-                totalVotes={rapper.total_votes || 0} 
+            
+            <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-gradient-to-br from-rap-carbon to-rap-carbon-light">
+              <img 
+                src={rapper.image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"} 
+                alt={rapper.name} 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
               />
-
-              {/* Bio Preview */}
-              {rapper.bio && (
-                <p className="text-rap-smoke text-sm line-clamp-2 font-kaushan">
-                  {rapper.bio}
-                </p>
-              )}
             </div>
+            
+            <h3 className="text-rap-platinum font-mogra text-sm group-hover:text-rap-gold transition-colors leading-tight">
+              {rapper.name}
+            </h3>
+            
+            {rapper.real_name && (
+              <p className="text-rap-smoke text-xs font-kaushan mt-1">
+                {rapper.real_name}
+              </p>
+            )}
           </CardContent>
         </Card>
       </Link>
-    </div>
+    );
+  }
+
+  return (
+    <Link to={`/rapper/${rapper.id}`}>
+      <Card className={`bg-carbon-fiber ${getPositionColors(position)} transition-all duration-300 hover:scale-105 group cursor-pointer relative overflow-hidden`}>
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+        
+        <CardContent className="p-6">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              {getPositionIcon(position)}
+              <h3 className="text-xl font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors">
+                {rapper.name}
+              </h3>
+            </div>
+            <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
+              #{position}
+            </Badge>
+          </div>
+          
+          <div className="aspect-[4/3] mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-rap-carbon to-rap-carbon-light">
+            <img 
+              src={rapper.image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop"} 
+              alt={rapper.name} 
+              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+            />
+          </div>
+          
+          <div className="space-y-2">
+            {rapper.real_name && (
+              <p className="text-rap-smoke font-kaushan">
+                <span className="text-rap-silver">Real Name:</span> {rapper.real_name}
+              </p>
+            )}
+            
+            {rapper.origin && (
+              <p className="text-rap-smoke font-kaushan">
+                <span className="text-rap-silver">Origin:</span> {rapper.origin}
+              </p>
+            )}
+            
+            <div className="flex items-center gap-4 pt-2 border-t border-rap-smoke/20">
+              <div className="flex items-center gap-1">
+                <Star className="w-4 h-4 text-rap-gold" />
+                <span className="text-rap-platinum font-kaushan text-sm">
+                  {rapper.average_rating ? parseFloat(rapper.average_rating.toString()).toFixed(1) : "0.0"}
+                </span>
+              </div>
+              <span className="text-rap-smoke font-kaushan text-sm">
+                {rapper.total_votes || 0} votes
+              </span>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 

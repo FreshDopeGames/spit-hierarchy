@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
@@ -5,10 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Music, LogIn, Trophy, User, Settings, Bell, LogOut, Calendar } from "lucide-react";
+import { Music, LogIn, Trophy, User, Settings, Bell, LogOut, Calendar, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
 import BlogCarousel from "@/components/BlogCarousel";
 import TopRappersGrid from "@/components/TopRappersGrid";
+import RisingLegendsSection from "@/components/RisingLegendsSection";
+import LyricalMastersSection from "@/components/LyricalMastersSection";
 import StatsOverview from "@/components/StatsOverview";
 
 const Index = () => {
@@ -73,6 +76,7 @@ const Index = () => {
     }
     return 'U';
   };
+
   return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       {/* Sticky Header */}
       <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-rap-carbon/95 backdrop-blur-md border-b border-rap-gold/50 py-2' : 'bg-carbon-fiber border-b border-rap-gold/30 py-4'}`}>
@@ -204,8 +208,39 @@ const Index = () => {
         {/* Top 5 Rappers Grid */}
         <TopRappersGrid />
 
+        {/* Rising Legends Section */}
+        <RisingLegendsSection />
+
+        {/* Lyrical Masters Section */}
+        <LyricalMastersSection />
+
         {/* Stats Overview */}
         <StatsOverview />
+        
+        {/* View All Stats Button */}
+        <div className="text-center mt-8 mb-12">
+          {user ? (
+            <Link to="/analytics">
+              <Button 
+                className="bg-gradient-to-r from-rap-silver to-rap-platinum hover:from-rap-platinum hover:to-rap-silver font-mogra text-lg shadow-xl shadow-rap-silver/40 border border-rap-silver/30"
+                size="lg"
+              >
+                <BarChart3 className="w-5 h-5 mr-2" />
+                View Full Analytics Dashboard
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/auth">
+              <Button 
+                className="bg-gradient-to-r from-rap-silver to-rap-platinum hover:from-rap-platinum hover:to-rap-silver font-mogra text-lg shadow-xl shadow-rap-silver/40 border border-rap-silver/30"
+                size="lg"
+              >
+                <BarChart3 className="w-5 h-5 mr-2" />
+                Sign In to View Analytics
+              </Button>
+            </Link>
+          )}
+        </div>
 
         {/* Guest user call-to-action */}
         {!user && <div className="mt-12 text-center bg-carbon-fiber border border-rap-gold/40 rounded-lg p-8 shadow-2xl shadow-rap-gold/20 relative overflow-hidden">
