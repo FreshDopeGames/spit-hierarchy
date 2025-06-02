@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -65,7 +64,11 @@ const OfficialRankingDetail = () => {
       setOfficialItems(itemsData || []);
 
       // Fetch first batch of all rappers (excluding those in official ranking)
-      await fetchMoreRappers(0, itemsData?.map(item => item.rapper_id) || []);
+      const validRapperIds = (itemsData || [])
+        .map(item => item.rapper_id)
+        .filter(id => id !== null && id !== undefined) as string[];
+      
+      await fetchMoreRappers(0, validRapperIds);
     } catch (error) {
       console.error("Error fetching ranking data:", error);
       toast({
@@ -90,6 +93,7 @@ const OfficialRankingDetail = () => {
         .order("average_rating", { ascending: false })
         .range(from, to);
 
+      // Only add the exclusion filter if we have valid UUIDs to exclude
       if (excludeIds.length > 0) {
         query = query.not("id", "in", `(${excludeIds.join(",")})`);
       }
@@ -108,6 +112,11 @@ const OfficialRankingDetail = () => {
       setPage(pageNum);
     } catch (error) {
       console.error("Error fetching rappers:", error);
+      toast({
+        title: "Error",
+        description: "Failed to load additional rappers.",
+        variant: "destructive",
+      });
     } finally {
       setLoadingMore(false);
     }
@@ -115,8 +124,10 @@ const OfficialRankingDetail = () => {
 
   const loadMore = () => {
     if (!loadingMore && hasMore) {
-      const excludeIds = officialItems.map(item => item.rapper_id).filter(Boolean) as string[];
-      fetchMoreRappers(page + 1, excludeIds);
+      const validExcludeIds = officialItems
+        .map(item => item.rapper_id)
+        .filter(id => id !== null && id !== undefined) as string[];
+      fetchMoreRappers(page + 1, validExcludeIds);
     }
   };
 
