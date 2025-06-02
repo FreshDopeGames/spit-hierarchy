@@ -22,21 +22,42 @@ const BlogManagement = () => {
   const [showPostDialog, setShowPostDialog] = useState(false);
   const [showCategoryDialog, setShowCategoryDialog] = useState(false);
 
-  // Fetch blog posts
+  // Fetch blog posts with author information
   const { data: posts, isLoading: postsLoading } = useQuery({
     queryKey: ['admin-blog-posts'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      // First get the blog posts with category info
+      const { data: postsData, error: postsError } = await supabase
         .from('blog_posts')
         .select(`
           *,
-          blog_categories(name),
-          profiles(username, full_name)
+          blog_categories(name)
         `)
         .order('created_at', { ascending: false });
       
-      if (error) throw error;
-      return data;
+      if (postsError) throw postsError;
+
+      // Then get profiles for authors
+      const authorIds = postsData?.map(post => post.author_id).filter(Boolean) || [];
+      
+      let profilesData = [];
+      if (authorIds.length > 0) {
+        const { data: profiles, error: profilesError } = await supabase
+          .from('profiles')
+          .select('id, username, full_name')
+          .in('id', authorIds);
+        
+        if (profilesError) throw profilesError;
+        profilesData = profiles || [];
+      }
+
+      // Combine the data
+      const postsWithAuthors = postsData?.map(post => ({
+        ...post,
+        author_profile: profilesData.find(profile => profile.id === post.author_id)
+      }));
+
+      return postsWithAuthors;
     }
   });
 
@@ -153,7 +174,7 @@ const BlogManagement = () => {
                         <div className="flex-1">
                           <h3 className="text-lg font-semibold text-rap-platinum mb-2">{post.title}</h3>
                           <div className="flex items-center gap-4 text-sm text-rap-smoke mb-2">
-                            <span>By: {post.profiles?.full_name || post.profiles?.username || 'Unknown'}</span>
+                            <span>By: {post.author_profile?.full_name || post.author_profile?.username || 'Unknown'}</span>
                             <span>Category: {post.blog_categories?.name || 'Uncategorized'}</span>
                             <span>Created: {new Date(post.created_at).toLocaleDateString()}</span>
                           </div>
