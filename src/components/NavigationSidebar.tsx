@@ -34,13 +34,13 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <img 
               src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
               alt="Spit Hierarchy Logo" 
-              className="w-12 h-8 object-contain animate-glow-pulse"
+              className="w-12 h-8 object-contain"
             />
             <div>
-              <h1 className="font-mogra bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-xl animate-text-glow">
+              <h1 className="font-mogra bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-xl">
                 Spit Hierarchy
               </h1>
-              <span className="text-xs text-rap-gold/60 font-kaushan tracking-widest">The Pharaoh's Cypher</span>
+              <span className="text-xs text-rap-gold/60 font-kaushan tracking-widest">The Ultimate Rankings</span>
             </div>
           </SheetTitle>
         </SheetHeader>
@@ -48,33 +48,33 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
         <nav className="space-y-4">
           {/* Main Navigation */}
           <div className="space-y-2">
-            <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Navigate the Dynasty</h3>
+            <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Navigate</h3>
             
             <Link to="/">
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                 <Home className="w-4 h-4 mr-3" />
-                The Throne Room
+                Home
               </Button>
             </Link>
 
             <Link to="/about">
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                 <Info className="w-4 h-4 mr-3" />
-                Sacred Scrolls
+                About
               </Button>
             </Link>
 
             <Link to="/all-rappers">
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                 <Music className="w-4 h-4 mr-3" />
-                Court of Pharaohs
+                All Artists
               </Button>
             </Link>
 
             <Link to="/rankings">
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                 <Trophy className="w-4 h-4 mr-3" />
-                Hieroglyphic Rankings
+                Rankings
               </Button>
             </Link>
           </div>
@@ -83,29 +83,29 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
           <div className="border-t border-rap-gold/30 pt-4 space-y-2">
             {user ? (
               <>
-                <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Your Dynasty</h3>
+                <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">User Menu</h3>
                 <div className="text-xs text-rap-gold/70 font-kaushan mb-2 px-3">
-                  Pharaoh {user.email}
+                  {user.email}
                 </div>
                 
                 <Link to="/profile">
                   <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                     <User className="w-4 h-4 mr-3" />
-                    Royal Profile
+                    Profile
                   </Button>
                 </Link>
 
                 <Link to="/analytics">
                   <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                     <BarChart3 className="w-4 h-4 mr-3" />
-                    Temple Analytics
+                    Analytics
                   </Button>
                 </Link>
 
                 <Link to="/admin">
                   <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan">
                     <Settings className="w-4 h-4 mr-3" />
-                    High Priest Panel
+                    Admin
                   </Button>
                 </Link>
 
@@ -115,20 +115,20 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                   className="w-full justify-start text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan"
                 >
                   <LogIn className="w-4 h-4 mr-3" />
-                  Leave the Realm
+                  Sign Out
                 </Button>
               </>
             ) : (
               <>
-                <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Join the Dynasty</h3>
+                <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
                 <div className="text-xs text-rap-gold/60 font-kaushan mb-2 px-3">
-                  Wandering the Tombs
+                  Not signed in
                 </div>
                 
                 <Link to="/auth">
                   <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
                     <LogIn className="w-4 h-4 mr-3" />
-                    Ascend to Power
+                    Sign In
                   </Button>
                 </Link>
               </>

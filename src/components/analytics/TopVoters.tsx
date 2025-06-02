@@ -52,7 +52,7 @@ const TopVoters = () => {
   return (
     <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
       <CardHeader>
-        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
+        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2">
           <Trophy className="w-5 h-5" />
           Top Voters
         </CardTitle>

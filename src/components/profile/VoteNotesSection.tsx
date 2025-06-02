@@ -10,7 +10,7 @@ interface VoteNotesSectionProps {
 const VoteNotesSection = ({ voteNotes }: VoteNotesSectionProps) => {
   return (
     <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-6 shadow-lg shadow-rap-gold/20">
-      <h3 className="text-xl font-mogra text-rap-gold mb-6 flex items-center gap-2 animate-text-glow">
+      <h3 className="text-xl font-mogra text-rap-gold mb-6 flex items-center gap-2">
         <MessageSquare className="w-5 h-5" />
         Your Vote Notes
       </h3>

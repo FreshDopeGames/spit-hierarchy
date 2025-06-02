@@ -19,7 +19,7 @@ const ProfileHeader = ({ user, profile }: ProfileHeaderProps) => {
         </div>
         
         <div className="flex-1">
-          <h2 className="text-2xl font-mogra text-rap-gold mb-2 animate-text-glow">
+          <h2 className="text-2xl font-mogra text-rap-gold mb-2">
             {profile?.full_name || profile?.username || user.email}
           </h2>
           

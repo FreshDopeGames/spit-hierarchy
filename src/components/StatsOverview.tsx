@@ -46,11 +46,11 @@ const StatsOverview = () => {
     return (
       <div className="mb-12">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-            Dynasty Statistics
+          <h2 className="text-3xl font-ceviche text-rap-gold mb-2 tracking-wider">
+            Site Statistics
           </h2>
           <p className="text-rap-platinum font-kaushan text-lg">
-            Sacred numbers from the Temple archives
+            Numbers from the community
           </p>
         </div>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -69,25 +69,25 @@ const StatsOverview = () => {
   const statCards = [
     {
       icon: Users,
-      label: "Pharaohs",
+      label: "Artists",
       value: stats?.totalRappers || 0,
       color: "from-rap-burgundy to-rap-burgundy-light"
     },
     {
       icon: Vote,
-      label: "Sacred Votes",
+      label: "Total Votes",
       value: stats?.totalVotes || 0,
       color: "from-rap-forest to-rap-forest-light"
     },
     {
       icon: Trophy,
-      label: "Royal Decrees",
+      label: "Categories",
       value: stats?.totalCategories || 0,
       color: "from-rap-gold to-rap-gold-light"
     },
     {
       icon: TrendingUp,
-      label: "Supreme Ruler",
+      label: "Top Rated",
       value: stats?.topRapper || "N/A",
       color: "from-rap-silver to-rap-platinum"
     }
@@ -96,11 +96,11 @@ const StatsOverview = () => {
   return (
     <div className="mb-12">
       <div className="text-center mb-8">
-        <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-          Dynasty Statistics
+        <h2 className="text-3xl font-ceviche text-rap-gold mb-2 tracking-wider">
+          Site Statistics
         </h2>
         <p className="text-rap-platinum font-kaushan text-lg">
-          Sacred numbers from the Temple archives
+          Numbers from the community
         </p>
       </div>
       
@@ -110,7 +110,7 @@ const StatsOverview = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg group-hover:animate-glow-pulse`}>
+                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg`}>
                   <stat.icon className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
