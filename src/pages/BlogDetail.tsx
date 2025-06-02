@@ -1,11 +1,12 @@
 
-import { useParams, Link } from "react-router-dom";
-import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
-import { ThemedButton } from "@/components/ui/themed-button";
-import { Badge } from "@/components/ui/badge";
-import { Clock, Calendar, User, ArrowLeft, Share2, Heart, Bookmark, Twitter, Facebook, Link as LinkIcon } from "lucide-react";
+import { useParams } from "react-router-dom";
 import CommentBubble from "@/components/CommentBubble";
 import { useAuth } from "@/hooks/useAuth";
+import BlogDetailHeader from "@/components/blog/BlogDetailHeader";
+import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
+import BlogArticleContent from "@/components/blog/BlogArticleContent";
+import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
+import BlogSidebar from "@/components/blog/BlogSidebar";
 
 // Mock blog data - this would come from your database in a real app
 const mockBlogPost = {
@@ -88,179 +89,29 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[var(--theme-backgroundDark)] via-[var(--theme-background)] to-[var(--theme-backgroundDark)]">
-      {/* Header */}
-      <header className="bg-[var(--theme-backgroundDark)]/40 border-b border-[var(--theme-border)] p-4">
-        <div className="max-w-4xl mx-auto flex items-center justify-between">
-          <Link to="/">
-            <ThemedButton variant="ghost" className="text-[var(--theme-primary)] hover:text-[var(--theme-textLight)]">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Home
-            </ThemedButton>
-          </Link>
-          
-          <div className="flex items-center gap-2">
-            <ThemedButton
-              variant="ghost"
-              size="sm"
-              onClick={() => handleShare('twitter')}
-              className="text-[var(--theme-textMuted)] hover:text-[var(--theme-textLight)]"
-            >
-              <Twitter className="w-4 h-4" />
-            </ThemedButton>
-            <ThemedButton
-              variant="ghost"
-              size="sm"
-              onClick={() => handleShare('facebook')}
-              className="text-[var(--theme-textMuted)] hover:text-[var(--theme-textLight)]"
-            >
-              <Facebook className="w-4 h-4" />
-            </ThemedButton>
-            <ThemedButton
-              variant="ghost"
-              size="sm"
-              onClick={() => handleShare('copy')}
-              className="text-[var(--theme-textMuted)] hover:text-[var(--theme-textLight)]"
-            >
-              <LinkIcon className="w-4 h-4" />
-            </ThemedButton>
-          </div>
-        </div>
-      </header>
+      <BlogDetailHeader onShare={handleShare} />
 
       <main className="max-w-4xl mx-auto p-6">
-        {/* Article Header */}
-        <div className="mb-8">
-          <div className="flex flex-wrap gap-2 mb-4">
-            {blogPost.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30">
-                {tag}
-              </Badge>
-            ))}
-          </div>
-          
-          <h1 className="text-4xl md:text-5xl font-bold text-[var(--theme-textLight)] mb-6 leading-tight font-[var(--theme-font-heading)]">
-            {blogPost.title}
-          </h1>
-          
-          <div className="flex flex-wrap items-center gap-6 text-[var(--theme-textMuted)] mb-6">
-            <div className="flex items-center gap-2">
-              <User className="w-4 h-4" />
-              <span className="font-[var(--theme-font-body)]">{blogPost.author}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Calendar className="w-4 h-4" />
-              <span className="font-[var(--theme-font-body)]">{blogPost.timeAgo}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-4 h-4" />
-              <span className="font-[var(--theme-font-body)]">{blogPost.readTime}</span>
-            </div>
-          </div>
-
-          {/* Featured Image */}
-          <div className="relative rounded-xl overflow-hidden mb-8">
-            <img 
-              src={blogPost.imageUrl} 
-              alt={blogPost.title}
-              className="w-full h-64 md:h-96 object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-backgroundDark)]/30 to-transparent" />
-          </div>
-        </div>
+        <BlogArticleHeader blogPost={blogPost} />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Main Content */}
           <div className="lg:col-span-3">
-            <ThemedCard className="mb-8">
-              <ThemedCardContent className="p-8">
-                <div 
-                  className="prose prose-invert prose-lg max-w-none"
-                  dangerouslySetInnerHTML={{ __html: blogPost.content }}
-                />
-              </ThemedCardContent>
-            </ThemedCard>
-
-            {/* Engagement Actions */}
-            <ThemedCard className="mb-8">
-              <ThemedCardContent className="p-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <ThemedButton
-                      variant={blogPost.isLiked ? "default" : "outline"}
-                      size="sm"
-                      className={blogPost.isLiked 
-                        ? "bg-[var(--theme-error)] hover:bg-[var(--theme-error)]/80" 
-                        : ""
-                      }
-                    >
-                      <Heart className={`w-4 h-4 mr-2 ${blogPost.isLiked ? 'fill-current' : ''}`} />
-                      {blogPost.likes}
-                    </ThemedButton>
-                    
-                    <ThemedButton
-                      variant={blogPost.isBookmarked ? "default" : "outline"}
-                      size="sm"
-                      className={blogPost.isBookmarked 
-                        ? "bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/80" 
-                        : ""
-                      }
-                    >
-                      <Bookmark className={`w-4 h-4 mr-2 ${blogPost.isBookmarked ? 'fill-current' : ''}`} />
-                      Save
-                    </ThemedButton>
-                  </div>
-
-                  <ThemedButton
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleShare('copy')}
-                  >
-                    <Share2 className="w-4 h-4 mr-2" />
-                    Share
-                  </ThemedButton>
-                </div>
-              </ThemedCardContent>
-            </ThemedCard>
+            <BlogArticleContent content={blogPost.content} />
+            <BlogEngagementActions 
+              likes={blogPost.likes}
+              isLiked={blogPost.isLiked}
+              isBookmarked={blogPost.isBookmarked}
+              onShare={handleShare}
+            />
           </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">
-            <ThemedCard className="sticky top-6">
-              <ThemedCardContent className="p-6">
-                <h3 className="text-lg font-semibold text-[var(--theme-textLight)] mb-4 font-[var(--theme-font-heading)]">Related Articles</h3>
-                <div className="space-y-4">
-                  {relatedPosts.map((post) => (
-                    <Link key={post.id} to={`/blog/${post.id}`}>
-                      <div className="group cursor-pointer">
-                        <img 
-                          src={post.imageUrl} 
-                          alt={post.title}
-                          className="w-full h-24 object-cover rounded-lg mb-2 group-hover:opacity-80 transition-opacity"
-                        />
-                        <h4 className="text-[var(--theme-textLight)] font-medium text-sm leading-tight mb-1 group-hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]">
-                          {post.title}
-                        </h4>
-                        <p className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-font-body)]">{post.timeAgo}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-
-                {!user && (
-                  <div className="mt-6 pt-6 border-t border-[var(--theme-border)]">
-                    <h4 className="text-[var(--theme-textLight)] font-medium mb-2 font-[var(--theme-font-heading)]">Join the Community</h4>
-                    <p className="text-[var(--theme-textMuted)] text-sm mb-3 font-[var(--theme-font-body)]">
-                      Sign up to save articles, leave comments, and connect with other hip-hop fans.
-                    </p>
-                    <Link to="/auth">
-                      <ThemedButton size="sm" variant="gradient" className="w-full">
-                        Sign Up Free
-                      </ThemedButton>
-                    </Link>
-                  </div>
-                )}
-              </ThemedCardContent>
-            </ThemedCard>
+            <BlogSidebar 
+              relatedPosts={relatedPosts}
+              showSignUp={!user}
+            />
           </div>
         </div>
       </main>
