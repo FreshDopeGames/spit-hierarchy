@@ -13,7 +13,7 @@ type Rapper = Tables<"rappers">;
 interface OfficialRankingItem {
   position: number;
   reason: string;
-  rappers: Rapper;
+  rappers: Rapper | null;
 }
 
 const RisingLegendsSection = () => {
@@ -72,7 +72,10 @@ const RisingLegendsSection = () => {
     );
   }
 
-  if (!risingLegends || risingLegends.length === 0) {
+  // Filter out items where rappers is null to prevent errors
+  const validRisingLegends = risingLegends?.filter(item => item.rappers !== null) || [];
+
+  if (validRisingLegends.length === 0) {
     return (
       <div className="mb-12">
         <div className="text-center mb-8">
@@ -113,10 +116,10 @@ const RisingLegendsSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {risingLegends.map((item) => (
+        {validRisingLegends.map((item) => (
           <RapperCard 
-            key={item.rappers.id} 
-            rapper={item.rappers} 
+            key={item.rappers!.id} 
+            rapper={item.rappers!} 
             position={item.position}
             compact={true}
           />

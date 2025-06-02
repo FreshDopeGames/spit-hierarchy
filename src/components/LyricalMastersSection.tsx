@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { PenTool, Mic } from "lucide-react";
+import { Mic, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import RapperCard from "./RapperCard";
@@ -13,7 +13,7 @@ type Rapper = Tables<"rappers">;
 interface OfficialRankingItem {
   position: number;
   reason: string;
-  rappers: Rapper;
+  rappers: Rapper | null;
 }
 
 const LyricalMastersSection = () => {
@@ -47,14 +47,14 @@ const LyricalMastersSection = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <PenTool className="w-6 h-6 text-rap-burgundy" />
+            <Mic className="w-6 h-6 text-rap-burgundy" />
             <h2 className="text-3xl font-ceviche text-rap-burgundy mb-0 animate-text-glow tracking-wider">
               Lyrical Masters
             </h2>
-            <Mic className="w-6 h-6 text-rap-burgundy" />
+            <Crown className="w-6 h-6 text-rap-burgundy" />
           </div>
           <p className="text-rap-platinum font-kaushan text-lg">
-            The wordsmiths who paint with poetry
+            The supreme wordsmiths of hip-hop
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
@@ -72,25 +72,28 @@ const LyricalMastersSection = () => {
     );
   }
 
-  if (!lyricalMasters || lyricalMasters.length === 0) {
+  // Filter out items where rappers is null to prevent errors
+  const validLyricalMasters = lyricalMasters?.filter(item => item.rappers !== null) || [];
+
+  if (validLyricalMasters.length === 0) {
     return (
       <div className="mb-12">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <PenTool className="w-6 h-6 text-rap-burgundy" />
+            <Mic className="w-6 h-6 text-rap-burgundy" />
             <h2 className="text-3xl font-ceviche text-rap-burgundy mb-0 animate-text-glow tracking-wider">
               Lyrical Masters
             </h2>
-            <Mic className="w-6 h-6 text-rap-burgundy" />
+            <Crown className="w-6 h-6 text-rap-burgundy" />
           </div>
           <p className="text-rap-platinum font-kaushan text-lg">
-            The wordsmiths who paint with poetry
+            The supreme wordsmiths of hip-hop
           </p>
         </div>
         <Card className="bg-carbon-fiber border border-rap-burgundy/40 shadow-2xl shadow-rap-burgundy/20">
           <CardContent className="p-8 text-center">
-            <PenTool className="w-16 h-16 text-rap-burgundy mx-auto mb-4" />
-            <p className="text-rap-smoke font-kaushan">The masters of words await recognition.</p>
+            <Mic className="w-16 h-16 text-rap-burgundy mx-auto mb-4" />
+            <p className="text-rap-smoke font-kaushan">The lyrical legends await their crowning.</p>
           </CardContent>
         </Card>
       </div>
@@ -101,22 +104,22 @@ const LyricalMastersSection = () => {
     <div className="mb-12">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <PenTool className="w-6 h-6 text-rap-burgundy" />
+          <Mic className="w-6 h-6 text-rap-burgundy" />
           <h2 className="text-3xl font-ceviche text-rap-burgundy mb-0 animate-text-glow tracking-wider">
             Lyrical Masters
           </h2>
-          <Mic className="w-6 h-6 text-rap-burgundy" />
+          <Crown className="w-6 h-6 text-rap-burgundy" />
         </div>
         <p className="text-rap-platinum font-kaushan text-lg">
-          The wordsmiths who paint with poetry
+          The supreme wordsmiths of hip-hop
         </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        {lyricalMasters.map((item) => (
+        {validLyricalMasters.map((item) => (
           <RapperCard 
-            key={item.rappers.id} 
-            rapper={item.rappers} 
+            key={item.rappers!.id} 
+            rapper={item.rappers!} 
             position={item.position}
             compact={true}
           />
