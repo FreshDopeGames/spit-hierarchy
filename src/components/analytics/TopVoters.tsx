@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Trophy, Star } from "lucide-react";
 
@@ -41,52 +41,52 @@ const TopVoters = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-carbon-fiber/90 border-rap-gold/30 animate-pulse shadow-lg shadow-rap-gold/20">
-        <CardContent className="p-6">
-          <div className="h-64 bg-rap-carbon-light rounded"></div>
-        </CardContent>
-      </Card>
+      <ThemedCard className="animate-pulse">
+        <ThemedCardContent className="p-6">
+          <div className="h-64 bg-[var(--theme-surface)] rounded"></div>
+        </ThemedCardContent>
+      </ThemedCard>
     );
   }
 
   return (
-    <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
-      <CardHeader>
-        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2">
+    <ThemedCard>
+      <ThemedCardHeader>
+        <ThemedCardTitle className="flex items-center gap-2">
           <Trophy className="w-5 h-5" />
           Top Voters
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ThemedCardTitle>
+      </ThemedCardHeader>
+      <ThemedCardContent>
         <div className="space-y-3">
           {topVoters?.map((voter: any, index: number) => (
-            <div key={voter.user_id} className="flex items-center justify-between p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg">
+            <div key={voter.user_id} className="flex items-center justify-between p-3 bg-[var(--theme-surface)]/30 border border-[var(--theme-border)] rounded-lg">
               <div className="flex items-center gap-3">
-                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-rap-carbon font-bold text-sm font-mogra ${
-                  index === 0 ? 'bg-gradient-to-r from-rap-gold to-rap-silver' :
-                  index === 1 ? 'bg-gradient-to-r from-rap-silver to-rap-platinum' :
-                  index === 2 ? 'bg-gradient-to-r from-rap-burgundy to-rap-gold' :
-                  'bg-gradient-to-r from-rap-burgundy to-rap-forest'
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[var(--theme-background)] font-bold text-sm font-[var(--theme-font-heading)] ${
+                  index === 0 ? 'bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)]' :
+                  index === 1 ? 'bg-gradient-to-r from-[var(--theme-primaryLight)] to-[var(--theme-text)]' :
+                  index === 2 ? 'bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-primary)]' :
+                  'bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-accent)]'
                 }`}>
                   #{index + 1}
                 </div>
                 <div>
-                  <p className="text-rap-platinum font-medium font-kaushan">
+                  <p className="text-[var(--theme-text)] font-medium font-[var(--theme-font-body)]">
                     {voter.profile?.full_name || voter.profile?.username || 'Anonymous User'}
                   </p>
-                  <div className="flex items-center gap-2 text-sm text-rap-smoke">
-                    <span className="font-kaushan">{voter.unique_rappers_voted} rappers</span>
+                  <div className="flex items-center gap-2 text-sm text-[var(--theme-textMuted)]">
+                    <span className="font-[var(--theme-font-body)]">{voter.unique_rappers_voted} rappers</span>
                     <span>•</span>
-                    <span className="font-kaushan">{voter.categories_used} categories</span>
+                    <span className="font-[var(--theme-font-body)]">{voter.categories_used} categories</span>
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-3">
                 <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra">{voter.total_votes}</p>
-                  <p className="text-rap-smoke text-xs font-kaushan">Votes</p>
+                  <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)]">{voter.total_votes}</p>
+                  <p className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-font-body)]">Votes</p>
                 </div>
-                <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
+                <Badge variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30">
                   {Number(voter.average_rating_given || 0).toFixed(1)} avg
                 </Badge>
               </div>
@@ -95,13 +95,13 @@ const TopVoters = () => {
           
           {(!topVoters || topVoters.length === 0) && (
             <div className="text-center py-8">
-              <Users className="w-12 h-12 text-rap-smoke mx-auto mb-2" />
-              <p className="text-rap-smoke font-kaushan">No voting data available yet</p>
+              <Users className="w-12 h-12 text-[var(--theme-textMuted)] mx-auto mb-2" />
+              <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">No voting data available yet</p>
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 };
 
