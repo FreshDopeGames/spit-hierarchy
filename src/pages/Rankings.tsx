@@ -158,7 +158,7 @@ const Rankings = () => {
             </Link>
             
             {user && (
-              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-carbon shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Ranking
               </Button>
@@ -168,7 +168,7 @@ const Rankings = () => {
 
         <main className="max-w-6xl mx-auto p-6 pt-24">
           <RankingHeader 
-            title="Rankings & Lists"
+            title="Top Rapper Rankings"
             description="Discover community-created rapper rankings, or create your own custom lists to share your opinions with the hip-hop community."
           />
 

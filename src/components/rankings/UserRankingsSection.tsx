@@ -46,8 +46,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
     <div>
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-3">
-          <Users className="w-6 h-6 text-purple-400" />
-          <h2 className="text-3xl font-bold text-white">Member Made Rankings</h2>
+          <Users className="w-6 h-6 text-rap-forest" />
+          <h2 className="text-3xl font-bold text-rap-platinum font-mogra">Member Made Rankings</h2>
         </div>
         
         {/* Filter Tabs */}
@@ -57,8 +57,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
             onClick={() => setFilter("all")}
             size="sm"
             className={filter === "all" 
-              ? "bg-gradient-to-r from-purple-600 to-blue-600" 
-              : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan" 
+              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan"
             }
           >
             All
@@ -68,8 +68,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
             onClick={() => setFilter("popular")}
             size="sm"
             className={filter === "popular" 
-              ? "bg-gradient-to-r from-purple-600 to-blue-600" 
-              : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan" 
+              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan"
             }
           >
             <Star className="w-4 h-4 mr-2" />
@@ -81,8 +81,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
               onClick={() => setFilter("my-rankings")}
               size="sm"
               className={filter === "my-rankings" 
-                ? "bg-gradient-to-r from-purple-600 to-blue-600" 
-                : "border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+                ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan" 
+                : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan"
               }
             >
               Mine
@@ -105,18 +105,18 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
       {/* Empty State */}
       {filteredRankings.length === 0 && (
         <div className="text-center py-12">
-          <Trophy className="w-16 h-16 text-gray-500 mx-auto mb-4" />
-          <h3 className="text-xl font-semibold text-white mb-2">
+          <Trophy className="w-16 h-16 text-rap-smoke mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-rap-platinum mb-2 font-mogra">
             {filter === "my-rankings" ? "No rankings created yet" : "No rankings found"}
           </h3>
-          <p className="text-gray-400 mb-6">
+          <p className="text-rap-smoke mb-6 font-kaushan">
             {filter === "my-rankings" 
               ? "Create your first ranking to share your opinions with the community."
               : "Be the first to create a ranking for this category."
             }
           </p>
           {user && (
-            <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+            <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra">
               <Plus className="w-4 h-4 mr-2" />
               Create Your First Ranking
             </Button>
@@ -125,15 +125,15 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
       )}
 
       {!user && (
-        <Card className="bg-black/40 border-purple-500/20 mt-8">
+        <Card className="bg-carbon-fiber border-rap-gold/20 mt-8">
           <CardContent className="p-8 text-center">
-            <Users className="w-12 h-12 text-purple-400 mx-auto mb-4" />
-            <h3 className="text-xl font-semibold text-white mb-2">Join the Community</h3>
-            <p className="text-gray-400 mb-6">
+            <Users className="w-12 h-12 text-rap-forest mx-auto mb-4" />
+            <h3 className="text-xl font-semibold text-rap-platinum mb-2 font-mogra">Join the Community</h3>
+            <p className="text-rap-smoke mb-6 font-kaushan">
               Sign up to create your own rapper rankings and engage with other hip-hop fans.
             </p>
             <Link to="/auth">
-              <Button className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700">
+              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra">
                 Sign Up Free
               </Button>
             </Link>

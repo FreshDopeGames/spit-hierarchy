@@ -7,7 +7,7 @@ import CommentBubble from "@/components/CommentBubble";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
 import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 
 interface Rapper {
   rank: number;
@@ -70,14 +70,14 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       {/* Header */}
-      <header className="bg-black/40 border-b border-purple-500/20 p-4">
+      <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
         <div className="max-w-6xl mx-auto flex items-center justify-between">
           <Button
             variant="ghost"
             onClick={onBack}
-            className="text-purple-300 hover:text-white"
+            className="text-rap-gold hover:text-rap-gold-light font-kaushan"
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to Rankings
@@ -85,16 +85,16 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
           
           <div className="flex items-center gap-2">
             {ranking.isOfficial && (
-              <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+              <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
                 <Award className="w-3 h-3 mr-1" />
                 Official
               </Badge>
             )}
-            <Badge variant="secondary" className="bg-purple-600/20 text-purple-300">
+            <Badge variant="secondary" className="bg-rap-forest/20 text-rap-forest border-rap-forest/30 font-kaushan">
               <Eye className="w-3 h-3 mr-1" />
               {ranking.views}
             </Badge>
-            <Badge variant="secondary" className="bg-purple-600/20 text-purple-300">
+            <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
               <Star className="w-3 h-3 mr-1" />
               {ranking.likes}
             </Badge>
@@ -107,21 +107,21 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
         <div className="mb-8">
           <div className="flex flex-wrap gap-2 mb-4">
             {ranking.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-purple-600/20 text-purple-300">
+              <Badge key={tag} variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
                 {tag}
               </Badge>
             ))}
           </div>
           
-          <h1 className="text-4xl md:text-5xl font-bold text-white mb-4 leading-tight">
+          <h1 className="text-4xl md:text-5xl font-bold text-rap-platinum mb-4 leading-tight font-mogra">
             {ranking.title}
           </h1>
           
-          <p className="text-xl text-gray-300 mb-6 leading-relaxed">
+          <p className="text-xl text-rap-smoke mb-6 leading-relaxed font-kaushan">
             {ranking.description}
           </p>
           
-          <div className="flex flex-wrap items-center gap-6 text-gray-400 mb-6">
+          <div className="flex flex-wrap items-center gap-6 text-rap-smoke mb-6 font-kaushan">
             <div className="flex items-center gap-2">
               <Users className="w-4 h-4" />
               <span>by {ranking.author}</span>
@@ -134,10 +134,10 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
         </div>
 
         {/* Ranking List */}
-        <Card className="bg-black/40 border-purple-500/20">
+        <Card className="bg-carbon-fiber border-rap-gold/30">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
-              <Trophy className="w-5 h-5 text-yellow-500" />
+            <CardTitle className="text-rap-platinum flex items-center gap-2 font-mogra">
+              <Trophy className="w-5 h-5 text-rap-gold" />
               The Rankings
             </CardTitle>
           </CardHeader>
@@ -150,20 +150,20 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
               return (
                 <div 
                   key={rapper.rank}
-                  className="flex items-center gap-4 p-4 bg-gray-800/30 rounded-lg hover:bg-gray-800/50 transition-colors relative"
+                  className="flex items-center gap-4 p-4 bg-rap-carbon-light/30 rounded-lg hover:bg-rap-carbon-light/50 transition-colors relative"
                 >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-purple-500 to-blue-500 rounded-full flex items-center justify-center">
-                    <span className="text-white font-bold text-lg">#{rapper.rank}</span>
+                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center">
+                    <span className="text-rap-platinum font-bold text-lg font-ceviche">#{rapper.rank}</span>
                   </div>
                   
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="text-white font-semibold text-lg">{rapper.name}</h3>
+                      <h3 className="text-rap-platinum font-semibold text-lg font-mogra">{rapper.name}</h3>
                       {isHot && (
                         <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
                       )}
                     </div>
-                    <p className="text-gray-300">{rapper.reason}</p>
+                    <p className="text-rap-smoke font-kaushan">{rapper.reason}</p>
                   </div>
                   
                   <div className="flex items-center gap-3">
@@ -175,7 +175,7 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-purple-300 hover:text-white"
+                      className="text-rap-gold hover:text-rap-gold-light font-kaushan"
                     >
                       View Profile
                     </Button>
