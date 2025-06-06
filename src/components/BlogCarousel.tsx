@@ -67,7 +67,7 @@ const BlogCarousel = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-            Sacred Scrolls of Knowledge
+            Slick Talk Chronicles
           </h2>
           <p className="text-rap-platinum font-kaushan text-lg">
             Chronicles from the Temple of Hip-Hop
@@ -75,7 +75,7 @@ const BlogCarousel = () => {
         </div>
         <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20">
           <CardContent className="p-8 text-center">
-            <div className="text-rap-platinum">Loading sacred scrolls...</div>
+            <div className="text-rap-platinum">Loading slick talk...</div>
           </CardContent>
         </Card>
       </div>
@@ -87,7 +87,7 @@ const BlogCarousel = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-            Sacred Scrolls of Knowledge
+            Slick Talk Chronicles
           </h2>
           <p className="text-rap-platinum font-kaushan text-lg">
             Chronicles from the Temple of Hip-Hop
@@ -95,14 +95,14 @@ const BlogCarousel = () => {
         </div>
         <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20">
           <CardContent className="p-8 text-center">
-            <div className="text-rap-platinum mb-4">No published scrolls yet. Check back soon for wisdom from the temple!</div>
+            <div className="text-rap-platinum mb-4">No published posts yet. Check back soon for wisdom from the temple!</div>
           </CardContent>
         </Card>
         <div className="text-center mt-8">
           <Link to="/blog">
             <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
               <ArrowRight className="w-4 h-4 mr-2" />
-              Explore All Sacred Scrolls
+              Explore All Slick Talk
             </Button>
           </Link>
         </div>
@@ -117,7 +117,7 @@ const BlogCarousel = () => {
     <div className="mb-12">
       <div className="text-center mb-8">
         <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-          Sacred Scrolls of Knowledge
+          Slick Talk Chronicles
         </h2>
         <p className="text-rap-platinum font-kaushan text-lg">
           Chronicles from the Temple of Hip-Hop
@@ -214,7 +214,7 @@ const BlogCarousel = () => {
         <Link to="/blog">
           <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
             <ArrowRight className="w-4 h-4 mr-2" />
-            View All Sacred Scrolls
+            View All Slick Talk
           </Button>
         </Link>
       </div>

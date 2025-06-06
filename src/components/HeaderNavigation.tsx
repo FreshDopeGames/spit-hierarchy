@@ -65,7 +65,7 @@ const HeaderNavigation = ({
           <Link to="/blog">
             <Button variant="outline" className={`border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}>
               <Calendar className="w-4 h-4 mr-2" />
-              Sacred Scrolls
+              Slick Talk
             </Button>
           </Link>
           <Link to="/all-rappers">

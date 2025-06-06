@@ -20,7 +20,7 @@ const Footer = () => {
               <h3 className="font-mogra bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-2xl animate-text-glow">
                 Spit Hierarchy
               </h3>
-              <p className="text-rap-gold/60 font-kaushan text-sm tracking-widest">The Pharaoh's Cypher</p>
+              <p className="text-rap-gold/60 font-kaushan text-sm tracking-widest">The Real Spit</p>
             </div>
           </div>
         </div>
@@ -38,31 +38,31 @@ const Footer = () => {
               <li>
                 <Link to="/about" className="text-rap-platinum hover:text-rap-gold font-kaushan flex items-center transition-colors">
                   <Info className="w-4 h-4 mr-2" />
-                  Sacred Scrolls
+                  Slick Talk
                 </Link>
               </li>
               <li>
                 <Link to="/all-rappers" className="text-rap-platinum hover:text-rap-gold font-kaushan flex items-center transition-colors">
                   <Music className="w-4 h-4 mr-2" />
-                  Court of Pharaohs
+                  Ranked Rappers
                 </Link>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-mogra text-rap-gold text-lg mb-4 tracking-wider">Royal Chambers</h4>
+            <h4 className="font-mogra text-rap-gold text-lg mb-4 tracking-wider">Booth</h4>
             <ul className="space-y-2">
               <li>
                 <Link to="/rankings" className="text-rap-platinum hover:text-rap-gold font-kaushan flex items-center transition-colors">
                   <Trophy className="w-4 h-4 mr-2" />
-                  Hieroglyphic Rankings
+                  Top Rapper Rankings
                 </Link>
               </li>
               <li>
                 <Link to="/analytics" className="text-rap-platinum hover:text-rap-gold font-kaushan flex items-center transition-colors">
                   <BarChart3 className="w-4 h-4 mr-2" />
-                  Temple Analytics
+                  Community Analytics
                 </Link>
               </li>
             </ul>
@@ -79,7 +79,7 @@ const Footer = () => {
               <li>
                 <Link to="/profile" className="text-rap-platinum hover:text-rap-gold font-kaushan flex items-center transition-colors">
                   <User className="w-4 h-4 mr-2" />
-                  Royal Profile
+                  Your Profile
                 </Link>
               </li>
             </ul>
@@ -91,7 +91,7 @@ const Footer = () => {
               <li>
                 <Link to="/admin" className="text-rap-platinum hover:text-rap-gold font-kaushan flex items-center transition-colors">
                   <Settings className="w-4 h-4 mr-2" />
-                  High Priest Panel
+                  Admin Panel
                 </Link>
               </li>
             </ul>
