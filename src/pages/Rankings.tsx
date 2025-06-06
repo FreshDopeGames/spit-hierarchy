@@ -1,61 +1,24 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Plus, ArrowLeft } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
+import { Tables } from "@/integrations/supabase/types";
 import RankingHeader from "@/components/rankings/RankingHeader";
 import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
 
-// Mock data for official rankings
-const officialRankings = [
-  {
-    id: "official-1",
-    title: "Hip-Hop Hall of Fame: The Greatest Ever",
-    description: "Our definitive ranking of the most influential rappers in hip-hop history.",
-    author: "Admin Team",
-    authorId: "admin",
-    createdAt: "2024-01-01",
-    timeAgo: "1 month ago",
-    rappers: [
-      { rank: 1, name: "Nas", reason: "Illmatic changed everything" },
-      { rank: 2, name: "Jay-Z", reason: "Blueprint for success" },
-      { rank: 3, name: "The Notorious B.I.G.", reason: "Storytelling legend" },
-      { rank: 4, name: "Tupac Shakur", reason: "Voice of a generation" },
-      { rank: 5, name: "Eminem", reason: "Technical virtuoso" },
-    ],
-    likes: 892,
-    comments: 234,
-    views: 5240,
-    isPublic: true,
-    isOfficial: true,
-    tags: ["Official", "GOAT", "Hall of Fame"]
-  },
-  {
-    id: "official-2",
-    title: "Best New Artists 2024",
-    description: "Rising stars making waves in the hip-hop scene this year, curated by our music experts.",
-    author: "Content Team",
-    authorId: "admin",
-    createdAt: "2024-01-05",
-    timeAgo: "3 weeks ago",
-    rappers: [
-      { rank: 1, name: "Doechii", reason: "Breakthrough versatility" },
-      { rank: 2, name: "Lil Yachty", reason: "Artistic evolution" },
-      { rank: 3, name: "Ice Spice", reason: "Cultural impact" },
-      { rank: 4, name: "Central Cee", reason: "Global crossover appeal" },
-      { rank: 5, name: "Sexyy Red", reason: "Authentic street energy" },
-    ],
-    likes: 445,
-    comments: 89,
-    views: 2890,
-    isPublic: true,
-    isOfficial: true,
-    tags: ["Official", "2024", "Rising Stars"]
-  }
-];
+type OfficialRanking = Tables<"official_rankings">;
+type OfficialRankingItem = Tables<"official_ranking_items"> & {
+  rapper: Tables<"rappers">;
+};
+
+interface RankingWithItems extends OfficialRanking {
+  items: OfficialRankingItem[];
+}
 
 // Mock data for user-generated rankings
 const userRankings = [
@@ -130,9 +93,73 @@ const userRankings = [
 const Rankings = () => {
   const { user } = useAuth();
   const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
+  const [officialRankings, setOfficialRankings] = useState<RankingWithItems[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOfficialRankings();
+  }, []);
+
+  const fetchOfficialRankings = async () => {
+    try {
+      // Fetch all official rankings
+      const { data: rankingsData, error: rankingsError } = await supabase
+        .from("official_rankings")
+        .select("*")
+        .order("display_order", { ascending: true });
+
+      if (rankingsError) throw rankingsError;
+
+      // Fetch items for each ranking
+      const rankingsWithItems = await Promise.all(
+        (rankingsData || []).map(async (ranking) => {
+          const { data: itemsData, error: itemsError } = await supabase
+            .from("official_ranking_items")
+            .select(`
+              *,
+              rapper:rappers(*)
+            `)
+            .eq("ranking_id", ranking.id)
+            .order("position");
+
+          if (itemsError) {
+            console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
+            return { ...ranking, items: [] };
+          }
+
+          return { ...ranking, items: itemsData || [] };
+        })
+      );
+
+      setOfficialRankings(rankingsWithItems);
+    } catch (error) {
+      console.error("Error fetching official rankings:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // Transform database data to match component props
+  const transformedOfficialRankings = officialRankings.map((ranking) => ({
+    id: ranking.id,
+    title: ranking.title,
+    description: ranking.description || "",
+    author: "Editorial Team",
+    timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
+    rappers: ranking.items.map((item) => ({
+      rank: item.position,
+      name: item.rapper?.name || "Unknown",
+      reason: item.reason || "",
+    })),
+    likes: Math.floor(Math.random() * 1000) + 100, // Mock data for now
+    views: Math.floor(Math.random() * 5000) + 1000, // Mock data for now
+    isOfficial: true,
+    tags: ["Official", ranking.category],
+    slug: ranking.slug,
+  }));
 
   // Combine all rankings for selection
-  const allRankings = [...officialRankings, ...userRankings];
+  const allRankings = [...transformedOfficialRankings, ...userRankings];
   const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
 
   if (selectedRanking && selectedRankingData) {
@@ -141,6 +168,14 @@ const Rankings = () => {
         ranking={selectedRankingData}
         onBack={() => setSelectedRanking(null)}
       />
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
+        <div className="text-rap-gold font-mogra text-xl">Loading rankings...</div>
+      </div>
     );
   }
 
@@ -173,7 +208,7 @@ const Rankings = () => {
           />
 
           <OfficialRankingsSection 
-            rankings={officialRankings}
+            rankings={transformedOfficialRankings}
             onRankingClick={setSelectedRanking}
           />
 

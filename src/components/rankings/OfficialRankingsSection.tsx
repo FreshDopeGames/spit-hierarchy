@@ -22,6 +22,7 @@ interface OfficialRanking {
   views: number;
   isOfficial: boolean;
   tags: string[];
+  slug?: string;
 }
 
 interface OfficialRankingsSectionProps {
@@ -53,11 +54,21 @@ const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsS
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {rankings.map((ranking) => (
-          <RankingCard
-            key={ranking.id}
-            {...ranking}
-            onClick={onRankingClick}
-          />
+          <div key={ranking.id}>
+            {ranking.slug ? (
+              <Link to={`/rankings/official/${ranking.slug}`}>
+                <RankingCard
+                  {...ranking}
+                  onClick={() => {}} // Not used since we're using Link
+                />
+              </Link>
+            ) : (
+              <RankingCard
+                {...ranking}
+                onClick={onRankingClick}
+              />
+            )}
+          </div>
         ))}
       </div>
     </div>
