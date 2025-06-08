@@ -107,7 +107,7 @@ const Auth = () => {
         if (data.user) {
           toast({
             title: "Account created!",
-            description: "Welcome to Spit Hierarchy! You can now start voting and engaging with the community."
+            description: "Welcome to Spit Hierarchy! You can now start ranking rap legends"
           });
           window.location.href = '/';
         }
@@ -133,7 +133,7 @@ const Auth = () => {
             <div className="flex items-center justify-center space-x-2 mb-4">
               <div className="w-8 h-8 rounded-lg flex items-center justify-center">
                 <img 
-                  src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
+                  src="/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png" 
                   alt="Spit Hierarchy Logo" 
                   className="w-8 h-8 object-contain"
                 />
