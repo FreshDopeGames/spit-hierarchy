@@ -21,14 +21,14 @@ const TopVotedRappersCard = () => {
     }
   });
   if (isLoading) {
-    return <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 animate-pulse">
+    return <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 animate-pulse border-2 border-rap-gold">
         <CardContent className="p-6">
           <div className="h-32 bg-rap-carbon-light rounded"></div>
         </CardContent>
       </Card>;
   }
   if (!topRappers || topRappers.length === 0) return null;
-  return <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 border-2 border-rap-gold">
       <CardHeader>
         <CardTitle className="text-rap-gold font-ceviche flex items-center gap-2 font-normal text-5xl">
           <Users className="w-5 h-5" />
