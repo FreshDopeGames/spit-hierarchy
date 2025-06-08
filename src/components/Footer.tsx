@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Music, Trophy, User, BarChart3, Settings, Info } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, Info, Home } from "lucide-react";
+
 const Footer = () => {
   const handleNavigation = () => {
     window.scrollTo(0, 0);
@@ -28,6 +29,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/" onClick={handleNavigation} className="text-rap-platinum hover:text-rap-gold font-merienda flex items-center transition-colors">
+                  <Home className="w-4 h-4 mr-2" />
                   Home
                 </Link>
               </li>
