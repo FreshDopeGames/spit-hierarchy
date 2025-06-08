@@ -182,14 +182,14 @@ const AstrologicalRankings = () => {
                 All Signs
               </TabsTrigger>
               {zodiacSigns.slice(0, 6).map(sign => <TabsTrigger key={sign.name} value={sign.name} className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs flex items-center gap-1 font-merienda font-extrabold text-rap-platinum">
-                  <span>{sign.symbol}</span>
+                  <span className="bg-rap-gold text-black px-1.5 py-0.5 rounded text-xs font-bold">{sign.symbol}</span>
                   <span className="hidden sm:inline">{sign.name}</span>
                 </TabsTrigger>)}
             </TabsList>
             
             <div className="mt-4 grid grid-cols-2 lg:grid-cols-6 gap-2">
               {zodiacSigns.slice(6).map(sign => <button key={sign.name} onClick={() => setSelectedZodiac(sign.name)} className={`p-2 rounded-lg border text-xs flex items-center gap-1 justify-center transition-colors font-merienda font-extrabold ${selectedZodiac === sign.name ? 'bg-rap-gold text-rap-carbon border-rap-gold' : 'bg-carbon-fiber text-rap-smoke border-rap-gold/20 hover:bg-rap-carbon/50'}`}>
-                  <span>{sign.symbol}</span>
+                  <span className="bg-rap-gold text-black px-1.5 py-0.5 rounded text-xs font-bold">{sign.symbol}</span>
                   <span>{sign.name}</span>
                 </button>)}
             </div>
@@ -200,7 +200,7 @@ const AstrologicalRankings = () => {
                     <CardContent className="p-4">
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center gap-2">
-                          <span className="text-2xl">{stat.symbol}</span>
+                          <span className="bg-rap-gold text-black px-2 py-1 rounded-lg text-xl font-bold">{stat.symbol}</span>
                           <div>
                             <h3 className="text-rap-gold font-bold font-merienda">{stat.name}</h3>
                             <p className="text-xs text-rap-smoke font-merienda">{stat.dates}</p>
@@ -237,7 +237,7 @@ const AstrologicalRankings = () => {
             {zodiacSigns.map(sign => <TabsContent key={sign.name} value={sign.name} className="mt-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-3 mb-6">
-                    <span className="text-4xl">{sign.symbol}</span>
+                    <span className="bg-rap-gold text-black px-3 py-2 rounded-xl text-4xl font-bold">{sign.symbol}</span>
                     <div>
                       <h2 className="text-2xl font-bold text-rap-gold font-mogra animate-text-glow">{sign.name}</h2>
                       <p className="text-rap-smoke font-merienda">{sign.dates} • {sign.element} Sign</p>
