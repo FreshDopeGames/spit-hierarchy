@@ -144,7 +144,7 @@ const BlogPostDialog = ({
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-carbon-fiber border border-rap-gold/30">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche text-2xl">
+          <DialogTitle className="text-rap-gold font-ceviche font-thin text-4xl">
             {post ? 'Edit Post' : 'Create New Post'}
           </DialogTitle>
         </DialogHeader>
