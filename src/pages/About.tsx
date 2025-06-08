@@ -127,33 +127,33 @@ const About = () => {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-kaushan shadow-lg">1</div>
+                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">1</div>
                   <div>
-                    <h3 className="font-mogra text-rap-silver">Browse Artists</h3>
+                    <h3 className="font-mogra text-3xl text-rap-platinum">Browse Artists</h3>
                     <p className="text-rap-platinum font-merienda ">Explore our comprehensive database of rappers from all eras and regions.</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-kaushan shadow-lg">2</div>
+                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">2</div>
                   <div>
-                    <h3 className="font-mogra text-rap-silver">Cast Your Vote</h3>
+                    <h3 className="font-mogra font-normal text-3xl text-rap-platinum">Cast Your Vote</h3>
                     <p className="text-rap-platinum font-merienda ">Rate artists based on skills, impact, and your personal preference.</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-kaushan shadow-lg">3</div>
+                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">3</div>
                   <div>
-                    <h3 className="font-mogra text-rap-silver">Watch Rankings</h3>
+                    <h3 className="font-mogra text-3xl text-rap-platinum">Watch Rankings</h3>
                     <p className="text-rap-platinum font-merienda ">See how your votes contribute to the live, community-driven rankings.</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-kaushan shadow-lg">4</div>
+                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">4</div>
                   <div>
-                    <h3 className="font-mogra text-rap-silver">Join the Debate</h3>
+                    <h3 className="font-mogra text-3xl text-rap-platinum">Join the Debate</h3>
                     <p className="text-rap-platinum font-merienda ">Engage with the community and defend your favorite artists.</p>
                   </div>
                 </div>
@@ -171,12 +171,10 @@ const About = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth">
-                <Button className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra text-rap-silver px-8 py-3 shadow-lg shadow-rap-burgundy/30 border border-rap-gold/20">
-                  Join the Hierarchy
-                </Button>
+                <Button className="hover:from-rap-gold hover:to-rap-gold-dark font-kaushan text-rap-platinum px-8 py-3 shadow-lg shadow-rap-burgundy/30 border border-rap-gold/20 rounded font-extrabold text-lg">Build With Us</Button>
               </Link>
               <Link to="/all-rappers">
-                <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan px-8 py-3 shadow-lg shadow-rap-gold/20">
+                <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan px-8 py-3 shadow-lg shadow-rap-gold/20 rounded text-lg font-extrabold bg-[rap-carbon-light]">
                   Browse Artists
                 </Button>
               </Link>
