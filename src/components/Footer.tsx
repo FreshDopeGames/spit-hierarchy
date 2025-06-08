@@ -1,23 +1,19 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Music, Trophy, User, BarChart3, Settings, Info } from "lucide-react";
-
 const Footer = () => {
   const handleNavigation = () => {
     window.scrollTo(0, 0);
   };
-
-  return (
-    <footer className="bg-rap-carbon border-t border-rap-gold/30 mt-0 relative overflow-hidden">
+  return <footer className="bg-rap-carbon border-t border-rap-gold/30 mt-0 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Logo and Brand */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
           <div className="flex items-center space-x-3 mb-6 md:mb-0">
-            <img src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" alt="Spit Hierarchy Logo" className="w-12 h-8 object-contain animate-glow-pulse" />
+            <img src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" alt="Spit Hierarchy Logo" className="w-12 h-8 object-contain" />
             <div>
-              <h3 className="font-merienda font-extrabold bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-2xl animate-text-glow">
+              <h3 className="font-merienda font-extrabold bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-2xl">
                 Spit Hierarchy
               </h3>
               <p className="text-rap-gold/60 font-merienda text-sm tracking-widest">The Realest Spit</p>
@@ -101,8 +97,6 @@ const Footer = () => {
           </div>
         </div>
       </div>
-    </footer>
-  );
+    </footer>;
 };
-
 export default Footer;
