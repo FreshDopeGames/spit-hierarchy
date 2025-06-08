@@ -10,6 +10,7 @@ import RankingHeader from "@/components/rankings/RankingHeader";
 import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
+import { useUserRankings } from "@/hooks/useUserRankings";
 
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
@@ -20,81 +21,14 @@ interface RankingWithItems extends OfficialRanking {
   items: RankingItem[];
 }
 
-// Mock data for user-generated rankings
-const userRankings = [
-  {
-    id: "1",
-    title: "Top 10 G.O.A.T. Rappers of All Time",
-    description: "My personal ranking of the greatest rappers ever, based on lyricism, influence, and cultural impact.",
-    author: "HipHopHead92",
-    authorId: "user1",
-    createdAt: "2024-01-15",
-    timeAgo: "3 days ago",
-    rappers: [
-      { rank: 1, name: "Nas", reason: "Illmatic alone secures his spot" },
-      { rank: 2, name: "Jay-Z", reason: "Business acumen and longevity" },
-      { rank: 3, name: "Biggie", reason: "Storytelling master" },
-      { rank: 4, name: "Tupac", reason: "Raw emotion and social consciousness" },
-      { rank: 5, name: "Eminem", reason: "Technical skill and wordplay" },
-    ],
-    likes: 247,
-    comments: 89,
-    views: 1240,
-    isPublic: true,
-    isOfficial: false,
-    tags: ["GOAT", "Classic Hip-Hop", "All-Time"]
-  },
-  {
-    id: "2",
-    title: "Best New School Rappers (2020-2024)",
-    description: "Rising stars who are shaping the future of hip-hop right now.",
-    author: "NextGenMusic",
-    authorId: "user2",
-    createdAt: "2024-01-10",
-    timeAgo: "1 week ago",
-    rappers: [
-      { rank: 1, name: "Baby Keem", reason: "Innovative sound and production" },
-      { rank: 2, name: "JID", reason: "Incredible flow and technical ability" },
-      { rank: 3, name: "Denzel Curry", reason: "Versatility and energy" },
-      { rank: 4, name: "Vince Staples", reason: "Unique perspective and delivery" },
-      { rank: 5, name: "Earl Sweatshirt", reason: "Artistic evolution and depth" },
-    ],
-    likes: 156,
-    comments: 34,
-    views: 890,
-    isPublic: true,
-    isOfficial: false,
-    tags: ["New School", "2020s", "Rising Stars"]
-  },
-  {
-    id: "3",
-    title: "Best Lyricists in Hip-Hop",
-    description: "Ranking rappers purely on their lyrical ability and wordplay.",
-    author: "WordplayWizard",
-    authorId: "user3",
-    createdAt: "2024-01-08",
-    timeAgo: "1 week ago",
-    rappers: [
-      { rank: 1, name: "MF DOOM", reason: "Complex wordplay and metaphors" },
-      { rank: 2, name: "Kendrick Lamar", reason: "Storytelling and social commentary" },
-      { rank: 3, name: "Black Thought", reason: "Consistent excellence" },
-      { rank: 4, name: "Andre 3000", reason: "Creative and unpredictable" },
-      { rank: 5, name: "Lupe Fiasco", reason: "Double entendres and complexity" },
-    ],
-    likes: 203,
-    comments: 67,
-    views: 1150,
-    isPublic: true,
-    isOfficial: false,
-    tags: ["Lyricism", "Wordplay", "Technical"]
-  }
-];
-
 const Rankings = () => {
   const { user } = useAuth();
   const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
   const [officialRankings, setOfficialRankings] = useState<RankingWithItems[]>([]);
   const [loading, setLoading] = useState(true);
+
+  // Use the new hook for user rankings
+  const { data: userRankings = [], isLoading: userRankingsLoading } = useUserRankings();
 
   useEffect(() => {
     fetchOfficialRankings();
@@ -173,7 +107,7 @@ const Rankings = () => {
     );
   }
 
-  if (loading) {
+  if (loading || userRankingsLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
         <div className="text-rap-gold font-mogra text-xl">Loading rankings...</div>

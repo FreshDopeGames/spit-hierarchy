@@ -6,26 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Star, Trophy, Plus } from "lucide-react";
 import RankingCard from "./RankingCard";
 import { useAuth } from "@/hooks/useAuth";
-
-interface Rapper {
-  rank: number;
-  name: string;
-  reason: string;
-}
-
-interface UserRanking {
-  id: string;
-  title: string;
-  description: string;
-  author: string;
-  authorId: string;
-  timeAgo: string;
-  rappers: Rapper[];
-  likes: number;
-  views: number;
-  isOfficial: boolean;
-  tags: string[];
-}
+import { UserRanking } from "@/hooks/useUserRankings";
 
 interface UserRankingsSectionProps {
   rankings: UserRanking[];
@@ -41,6 +22,13 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
     if (filter === "popular") return ranking.likes > 200;
     return true;
   });
+
+  // Transform UserRanking to match RankingCard props
+  const transformedRankings = filteredRankings.map(ranking => ({
+    ...ranking,
+    views: ranking.views || 0,
+    isOfficial: false,
+  }));
 
   return (
     <div>
@@ -93,7 +81,7 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
 
       {/* User Rankings Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {filteredRankings.map((ranking) => (
+        {transformedRankings.map((ranking) => (
           <RankingCard
             key={ranking.id}
             {...ranking}
