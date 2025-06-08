@@ -32,8 +32,9 @@ export const useModerationStatus = () => {
     }) => {
       if (!user) throw new Error("Must be logged in to flag content");
 
+      // Use raw query to insert into the new table since TypeScript types haven't been regenerated yet
       const { data, error } = await supabase
-        .from("content_moderation_flags")
+        .from("content_moderation_flags" as any)
         .insert({
           content_type: contentType,
           content_id: contentId,

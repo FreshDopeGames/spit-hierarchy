@@ -239,6 +239,45 @@ export type Database = {
           },
         ]
       }
+      content_moderation_flags: {
+        Row: {
+          content_id: string
+          content_type: string
+          created_at: string
+          id: string
+          moderator_id: string | null
+          moderator_notes: string | null
+          reason: string
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content_id: string
+          content_type: string
+          created_at?: string
+          id?: string
+          moderator_id?: string | null
+          moderator_notes?: string | null
+          reason: string
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content_id?: string
+          content_type?: string
+          created_at?: string
+          id?: string
+          moderator_id?: string | null
+          moderator_notes?: string | null
+          reason?: string
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       member_stats: {
         Row: {
           badges: Json | null
