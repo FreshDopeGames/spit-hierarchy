@@ -24,6 +24,20 @@ interface StyleSelectorProps {
 }
 
 const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRappers }: StyleSelectorProps) => {
+  // Sort styles: those with images first, then those without images
+  const sortedStyles = Object.entries(styleLabels).sort(([styleA], [styleB]) => {
+    const statsA = completionStats[styleA as ImageStyle] || 0;
+    const statsB = completionStats[styleB as ImageStyle] || 0;
+    
+    // If both have images or both have no images, sort alphabetically
+    if ((statsA > 0 && statsB > 0) || (statsA === 0 && statsB === 0)) {
+      return styleLabels[styleA as ImageStyle].localeCompare(styleLabels[styleB as ImageStyle]);
+    }
+    
+    // Styles with images come first
+    return statsB > 0 ? 1 : -1;
+  });
+
   return (
     <div className="flex items-center gap-4">
       <Palette className="w-6 h-6 text-rap-gold" />
@@ -34,7 +48,7 @@ const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRap
           <SelectValue />
         </SelectTrigger>
         <SelectContent className="bg-carbon-fiber border-rap-gold/30">
-          {Object.entries(styleLabels).map(([style, label]) => (
+          {sortedStyles.map(([style, label]) => (
             <SelectItem key={style} value={style} className="text-rap-platinum hover:bg-rap-gold/20">
               {label}
             </SelectItem>
