@@ -81,7 +81,7 @@ const TermsOfUse = () => {
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>Our ranking system operates under these guidelines:</p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
-                    <li>One vote per user per rapper ranking</li>
+                    <li>One vote per user per rapper ranking per day</li>
                     <li>Votes should reflect genuine artistic assessment</li>
                     <li>Vote manipulation or coordinated efforts are prohibited</li>
                     <li>Rankings are updated in real-time based on community input</li>
