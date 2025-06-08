@@ -119,14 +119,14 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-black border-rap-gold/50 max-w-2xl">
+      <DialogContent className="bg-black border-rap-gold/50 max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-mogra">Crop Your Avatar</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           {imageSrc && (
-            <div className="flex justify-center">
+            <div className="flex justify-center max-h-[60vh] overflow-hidden">
               <ReactCrop
                 crop={crop}
                 onChange={(newCrop) => setCrop(newCrop)}
@@ -138,7 +138,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
                   ref={imgRef}
                   src={imageSrc}
                   alt="Crop preview"
-                  className="max-w-full max-h-96"
+                  className="max-w-full max-h-[50vh] object-contain"
                   onLoad={onImageLoad}
                 />
               </ReactCrop>
@@ -150,7 +150,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
             style={{ display: 'none' }}
           />
           
-          <div className="flex justify-end space-x-2">
+          <div className="flex justify-end space-x-2 pt-4 border-t border-rap-gold/30">
             <Button
               variant="outline"
               onClick={onClose}
