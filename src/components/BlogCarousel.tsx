@@ -6,7 +6,6 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
-
 interface BlogPost {
   id: string;
   title: string;
@@ -17,7 +16,6 @@ interface BlogPost {
     name: string;
   };
 }
-
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -47,7 +45,6 @@ const BlogCarousel = () => {
       return data as BlogPost[];
     }
   });
-
   useEffect(() => {
     if (!posts || posts.length === 0) return;
     const interval = setInterval(() => {
@@ -61,7 +58,6 @@ const BlogCarousel = () => {
     }, 100);
     return () => clearInterval(interval);
   }, [posts]);
-
   if (isLoading) {
     return <div className="mb-12">
         <div className="text-center mb-8">
@@ -79,7 +75,6 @@ const BlogCarousel = () => {
         </Card>
       </div>;
   }
-
   if (!posts || posts.length === 0) {
     return <div className="mb-12">
         <div className="text-center mb-8">
@@ -105,10 +100,8 @@ const BlogCarousel = () => {
         </div>
       </div>;
   }
-
   const currentPost = posts[currentIndex];
   const timeAgo = currentPost.published_at ? format(new Date(currentPost.published_at), 'MMMM d, yyyy') : 'Unknown date';
-
   return <div className="mb-12">
       <div className="text-center mb-8 py-0">
         <h2 className="font-ceviche text-rap-gold mb-2 tracking-wider text-5xl">
@@ -157,7 +150,7 @@ const BlogCarousel = () => {
                 </p>
               </div>
 
-              <div className="mt-6 text-black font-merienda font-extrabold bg-rap-gold">
+              <div className="mt-6 text-black font-merienda font-extrabold bg-transparent">
                 <Link to={`/blog/${currentPost.id}`}>
                   <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon group font-mogra shadow-lg shadow-rap-gold/30">
                     Read Full Hieroglyphs
@@ -196,5 +189,4 @@ const BlogCarousel = () => {
       </div>
     </div>;
 };
-
 export default BlogCarousel;
