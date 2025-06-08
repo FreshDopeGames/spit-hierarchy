@@ -17,12 +17,12 @@ const About = () => {
           {/* Hero Section */}
           <div className="text-center space-y-4 mb-12">
             <div className="flex items-center justify-center space-x-3 mb-6">
-              <img alt="Spit Hierarchy Logo" src="/lovable-uploads/8a42312a-e1dc-4889-ae2a-9eaed3baede1.png" className="w-16 h-16 object-contain" />
+              <img alt="Spit Hierarchy Logo" className="w-16 h-16 object-contain animate-glow-pulse" src="/lovable-uploads/8a42312a-e1dc-4889-ae2a-9eaed3baede1.png" />
               <div>
-                <h1 className="font-ceviche bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent text-8xl">
+                <h1 className="font-ceviche bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent animate-text-glow text-8xl">
                   Spit Hierarchy
                 </h1>
-                <p className="text-rap-smoke font-merienda text-xl">The Culture's Voice</p>
+                <p className="text-rap-smoke font-kaushan text-sm">The Culture's Voice</p>
               </div>
             </div>
             
@@ -41,12 +41,12 @@ const About = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-rap-platinum font-merienda ">
+              <p className="text-rap-platinum font-kaushan">
                 Spit Hierarchy is a community-driven platform where hip-hop fans vote, rank, and debate 
                 the greatest rappers of all time. We're not just another ranking site – we're the voice 
                 of the culture, powered by real fans who live and breathe hip-hop.
               </p>
-              <p className="text-rap-platinum font-merienda ">
+              <p className="text-rap-platinum font-kaushan">
                 From underground legends to mainstream superstars, every MC gets their due respect. 
                 Our rankings reflect what the streets are saying, what the clubs are playing, 
                 and what the culture is feeling.
@@ -58,13 +58,13 @@ const About = () => {
           <div className="grid md:grid-cols-2 gap-6">
             <Card className="bg-carbon-fiber border-rap-burgundy/30 shadow-lg shadow-rap-burgundy/20">
               <CardHeader>
-                <CardTitle className="text-rap-silver font-ceviche flex items-center font-normal text-3xl">
+                <CardTitle className="text-rap-silver font-mogra flex items-center">
                   <Vote className="w-5 h-5 mr-3 text-rap-burgundy" />
                   Vote & Rank
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-rap-platinum font-merienda ">
+                <p className="text-rap-platinum font-kaushan">
                   Cast your vote for your favorite MCs across different categories. 
                   Rate their lyrical ability, flow, impact, and overall contribution to the culture.
                 </p>
@@ -73,13 +73,13 @@ const About = () => {
 
             <Card className="bg-carbon-fiber border-rap-forest/30 shadow-lg shadow-rap-forest/20">
               <CardHeader>
-                <CardTitle className="text-rap-silver font-ceviche flex items-center text-3xl font-normal">
+                <CardTitle className="text-rap-silver font-mogra flex items-center">
                   <Trophy className="w-5 h-5 mr-3 text-rap-forest" />
                   Real Rankings
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-rap-platinum font-merienda ">
+                <p className="text-rap-platinum font-kaushan">
                   See live rankings that change based on community votes. 
                   Watch as new artists climb the charts and legends defend their positions.
                 </p>
@@ -88,13 +88,13 @@ const About = () => {
 
             <Card className="bg-carbon-fiber border-rap-gold/30 shadow-lg shadow-rap-gold/20">
               <CardHeader>
-                <CardTitle className="text-rap-platinum font-ceviche flex items-center font-medium text-3xl">
+                <CardTitle className="text-rap-silver font-mogra flex items-center">
                   <Users className="w-5 h-5 mr-3 text-rap-gold" />
                   Community Driven
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-rap-platinum font-merienda ">
+                <p className="text-rap-platinum font-kaushan">
                   Join a community of true hip-hop heads. Share your opinions, 
                   debate the rankings, and connect with fans who share your passion.
                 </p>
@@ -103,13 +103,13 @@ const About = () => {
 
             <Card className="bg-carbon-fiber border-rap-silver/30 shadow-lg shadow-rap-silver/20">
               <CardHeader>
-                <CardTitle className="text-rap-platinum font-ceviche flex items-center font-medium text-3xl">
+                <CardTitle className="text-rap-silver font-mogra flex items-center">
                   <BarChart3 className="w-5 h-5 mr-3 text-rap-silver" />
                   Deep Analytics
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-rap-platinum font-merienda ">
+                <p className="text-rap-platinum font-kaushan">
                   Dive deep into the data with comprehensive analytics. 
                   Track voting trends, see regional preferences, and discover emerging artists.
                 </p>
@@ -127,34 +127,34 @@ const About = () => {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">1</div>
+                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">1</div>
                   <div>
-                    <h3 className="font-mogra text-3xl text-rap-platinum">Browse Artists</h3>
-                    <p className="text-rap-platinum font-merienda ">Explore our comprehensive database of rappers from all eras and regions.</p>
+                    <h3 className="font-mogra text-rap-silver">Browse Artists</h3>
+                    <p className="text-rap-platinum font-kaushan">Explore our comprehensive database of rappers from all eras and regions.</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">2</div>
+                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">2</div>
                   <div>
-                    <h3 className="font-mogra font-normal text-3xl text-rap-platinum">Cast Your Vote</h3>
-                    <p className="text-rap-platinum font-merienda ">Rate artists based on skills, impact, and your personal preference.</p>
+                    <h3 className="font-mogra text-rap-silver">Cast Your Vote</h3>
+                    <p className="text-rap-platinum font-kaushan">Rate artists based on skills, impact, and your personal preference.</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">3</div>
+                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">3</div>
                   <div>
-                    <h3 className="font-mogra text-3xl text-rap-platinum">Watch Rankings</h3>
-                    <p className="text-rap-platinum font-merienda ">See how your votes contribute to the live, community-driven rankings.</p>
+                    <h3 className="font-mogra text-rap-silver">Watch Rankings</h3>
+                    <p className="text-rap-platinum font-kaushan">See how your votes contribute to the live, community-driven rankings.</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-rap-gold rounded-full w-8 h-8 flex items-center justify-center text-black font-kaushan font-bold shadow-lg">4</div>
+                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">4</div>
                   <div>
-                    <h3 className="font-mogra text-3xl text-rap-platinum">Join the Debate</h3>
-                    <p className="text-rap-platinum font-merienda ">Engage with the community and defend your favorite artists.</p>
+                    <h3 className="font-mogra text-rap-silver">Join the Debate</h3>
+                    <p className="text-rap-platinum font-kaushan">Engage with the community and defend your favorite artists.</p>
                   </div>
                 </div>
               </div>
@@ -163,18 +163,20 @@ const About = () => {
 
           {/* Call to Action */}
           <div className="text-center space-y-6 py-8">
-            <h2 className="font-ceviche text-rap-gold text-4xl">Ready to Join the Culture?</h2>
-            <p className="text-rap-platinum font-merienda  max-w-2xl mx-auto">
+            <h2 className="font-ceviche text-rap-gold text-3xl animate-text-glow">Ready to Join the Culture?</h2>
+            <p className="text-rap-platinum font-kaushan max-w-2xl mx-auto">
               Whether you're a day-one fan or new to the game, your voice matters. 
               Help us build the definitive ranking of hip-hop's greatest artists.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth">
-                <Button className="hover:from-rap-gold hover:to-rap-gold-dark font-kaushan text-rap-platinum px-8 py-3 shadow-lg shadow-rap-burgundy/30 border border-rap-gold/20 rounded font-extrabold text-lg">Build With Us</Button>
+                <Button className="font-kaushan px-8 py-3 shadow-lg border border-rap-gold bg-rap-gold text-rap-carbon font-extrabold">
+                  Join the Hierarchy
+                </Button>
               </Link>
               <Link to="/all-rappers">
-                <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan px-8 py-3 shadow-lg shadow-rap-gold/20 rounded text-lg font-extrabold bg-[rap-carbon-light]">
+                <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan px-8 py-3 shadow-lg shadow-rap-gold/20">
                   Browse Artists
                 </Button>
               </Link>
