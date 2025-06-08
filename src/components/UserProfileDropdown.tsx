@@ -1,14 +1,17 @@
+
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { User, Settings, Bell, LogOut, Trophy } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+
 interface UserProfileDropdownProps {
   userProfile: any;
   isAdmin: boolean;
   canManageBlog: boolean;
   isScrolled: boolean;
 }
+
 const UserProfileDropdown = ({
   userProfile,
   isAdmin,
@@ -19,25 +22,15 @@ const UserProfileDropdown = ({
     user,
     signOut
   } = useAuth();
-  const getUserInitials = () => {
-    if (userProfile?.full_name) {
-      return userProfile.full_name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
-    }
-    if (userProfile?.username) {
-      return userProfile.username.substring(0, 2).toUpperCase();
-    }
-    if (user?.email) {
-      return user.email.substring(0, 2).toUpperCase();
-    }
-    return 'U';
-  };
-  return <DropdownMenu>
+
+  return (
+    <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
           <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
             <AvatarImage src={userProfile?.avatar_url} alt={userProfile?.username || 'User'} />
-            <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum font-mogra text-sm">
-              {getUserInitials()}
+            <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
+              <User className="w-4 h-4" />
             </AvatarFallback>
           </Avatar>
           <span className="text-rap-gold font-kaushan text-sm">
@@ -67,7 +60,8 @@ const UserProfileDropdown = ({
           </DropdownMenuItem>
         </Link>
         
-        {(isAdmin || canManageBlog) && <>
+        {(isAdmin || canManageBlog) && (
+          <>
             <DropdownMenuSeparator className="bg-rap-smoke/30" />
             <Link to="/admin">
               <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
@@ -75,7 +69,8 @@ const UserProfileDropdown = ({
                 Admin Panel
               </DropdownMenuItem>
             </Link>
-          </>}
+          </>
+        )}
         
         <DropdownMenuSeparator className="bg-rap-smoke/30" />
         
@@ -84,6 +79,8 @@ const UserProfileDropdown = ({
           Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
-    </DropdownMenu>;
+    </DropdownMenu>
+  );
 };
+
 export default UserProfileDropdown;

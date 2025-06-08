@@ -1,23 +1,51 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+
 interface NavigationSidebarProps {
   trigger?: React.ReactNode;
 }
-const NavigationSidebar = ({
-  trigger
-}: NavigationSidebarProps) => {
-  const {
-    user,
-    signOut
-  } = useAuth();
-  const defaultTrigger = <Button variant="outline" size="icon" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 shadow-lg shadow-rap-gold/20">
+
+const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
+  const { user, signOut } = useAuth();
+
+  // Get user profile for avatar and username
+  const { data: userProfile } = useQuery({
+    queryKey: ['user-profile', user?.id],
+    queryFn: async () => {
+      if (!user?.id) return null;
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username, full_name, avatar_url')
+        .eq('id', user.id)
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user?.id
+  });
+
+  const defaultTrigger = (
+    <Button 
+      variant="outline" 
+      size="icon" 
+      className="bg-rap-gold border-2 border-black text-black hover:bg-rap-gold/80 shadow-lg"
+    >
       <Menu className="h-4 w-4" />
-    </Button>;
-  return <Sheet>
+    </Button>
+  );
+
+  const displayName = userProfile?.username || userProfile?.full_name || user?.email;
+
+  return (
+    <Sheet>
       <SheetTrigger asChild>
         {trigger || defaultTrigger}
       </SheetTrigger>
@@ -37,30 +65,30 @@ const NavigationSidebar = ({
         <nav className="space-y-4">
           {/* Main Navigation */}
           <div className="space-y-2">
-            <h3 className="text-rap-gold font-ceviche a mb-3 tracking-wider text-3xl">Navigate</h3>
+            <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">Navigate</h3>
             
-            <Link to="/">
+            <Link to="/" onClick={() => window.scrollTo(0, 0)}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                 <Home className="w-4 h-4 mr-3" />
                 Home
               </Button>
             </Link>
 
-            <Link to="/about">
+            <Link to="/about" onClick={() => window.scrollTo(0, 0)}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                 <Info className="w-4 h-4 mr-3" />
                 About
               </Button>
             </Link>
 
-            <Link to="/all-rappers">
+            <Link to="/all-rappers" onClick={() => window.scrollTo(0, 0)}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                 <Music className="w-4 h-4 mr-3" />
                 All Artists
               </Button>
             </Link>
 
-            <Link to="/rankings">
+            <Link to="/rankings" onClick={() => window.scrollTo(0, 0)}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                 <Trophy className="w-4 h-4 mr-3" />
                 Rankings
@@ -70,27 +98,29 @@ const NavigationSidebar = ({
 
           {/* User Section */}
           <div className="border-t border-rap-gold/30 pt-4 space-y-2">
-            {user ? <>
+            {user ? (
+              <>
                 <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">User Menu</h3>
-                <div className="text-xs text-rap-gold/70 font-kaushan mb-2 px-3">
-                  {user.email}
-                </div>
-                
-                <Link to="/profile">
-                  <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
-                    <User className="w-4 h-4 mr-3" />
-                    Profile
-                  </Button>
+                <Link to="/profile" onClick={() => window.scrollTo(0, 0)}>
+                  <div className="flex items-center space-x-3 p-3 hover:bg-rap-gold/20 rounded-lg transition-colors cursor-pointer">
+                    <Avatar className="w-8 h-8 border-2 border-rap-gold/50">
+                      <AvatarImage src={userProfile?.avatar_url} alt={displayName || 'User'} />
+                      <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
+                        <User className="w-4 h-4" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <span className="text-rap-gold/70 font-kaushan text-sm">{displayName}</span>
+                  </div>
                 </Link>
 
-                <Link to="/analytics">
+                <Link to="/analytics" onClick={() => window.scrollTo(0, 0)}>
                   <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                     <BarChart3 className="w-4 h-4 mr-3" />
                     Analytics
                   </Button>
                 </Link>
 
-                <Link to="/admin">
+                <Link to="/admin" onClick={() => window.scrollTo(0, 0)}>
                   <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                     <Settings className="w-4 h-4 mr-3" />
                     Admin
@@ -101,22 +131,27 @@ const NavigationSidebar = ({
                   <LogIn className="w-4 h-4 mr-3" />
                   Sign Out
                 </Button>
-              </> : <>
+              </>
+            ) : (
+              <>
                 <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
                 <div className="text-xs text-rap-gold/60 font-kaushan mb-2 px-3">
                   Not signed in
                 </div>
                 
-                <Link to="/auth">
+                <Link to="/auth" onClick={() => window.scrollTo(0, 0)}>
                   <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
                     <LogIn className="w-4 h-4 mr-3" />
                     Sign In
                   </Button>
                 </Link>
-              </>}
+              </>
+            )}
           </div>
         </nav>
       </SheetContent>
-    </Sheet>;
+    </Sheet>
+  );
 };
+
 export default NavigationSidebar;

@@ -1,7 +1,8 @@
 
-import React from "react";
-import { Calendar, MapPin } from "lucide-react";
+import React, { useState } from "react";
+import { Calendar, MapPin, User } from "lucide-react";
 import { format } from "date-fns";
+import AvatarUpload from "../AvatarUpload";
 
 interface ProfileHeaderProps {
   user: any;
@@ -9,14 +10,20 @@ interface ProfileHeaderProps {
 }
 
 const ProfileHeader = ({ user, profile }: ProfileHeaderProps) => {
+  const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url);
+
+  const handleAvatarUpdate = (newUrl: string) => {
+    setAvatarUrl(newUrl);
+  };
+
   return (
     <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-6 mb-8 shadow-lg shadow-rap-gold/20">
       <div className="flex items-start space-x-6">
-        <div className="w-20 h-20 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center shadow-lg">
-          <span className="text-2xl font-bold text-rap-silver">
-            {profile?.username?.charAt(0).toUpperCase() || user.email?.charAt(0).toUpperCase()}
-          </span>
-        </div>
+        <AvatarUpload 
+          currentAvatarUrl={avatarUrl}
+          onAvatarUpdate={handleAvatarUpdate}
+          userId={user.id}
+        />
         
         <div className="flex-1">
           <h2 className="text-2xl font-mogra text-rap-gold mb-2">
