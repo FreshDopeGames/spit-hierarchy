@@ -28,7 +28,7 @@ const InternalPageHeader = ({
           <div className="flex items-center space-x-3">
             <img src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" alt="Spit Hierarchy Logo" className="w-10 h-8 object-contain animate-glow-pulse" />
             <div>
-              <h1 className="font-ceviche text-rap-gold animate-text-glow text-3xl">{title}</h1>
+              <h1 className="font-ceviche text-rap-gold text-3xl">{title}</h1>
               {subtitle}
             </div>
           </div>
