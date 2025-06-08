@@ -76,7 +76,7 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
             />
           ) : (
             <Link to="/auth">
-              <Button className={`bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${isScrolled ? 'text-xs px-3 py-1' : ''}`}>
+              <Button className={`bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${isScrolled ? 'text-xs px-3 py-1' : ''}`}>
                 <LogIn className="w-4 h-4 mr-2" />
                 Join In
               </Button>
