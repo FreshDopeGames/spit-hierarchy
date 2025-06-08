@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -230,7 +229,7 @@ const RapperNetworkGraph = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-black/40 border-purple-500/20 animate-pulse">
+      <Card className="bg-black/40 border-2 border-rap-gold animate-pulse">
         <CardContent className="p-6">
           <div className="h-96 bg-gray-700 rounded"></div>
         </CardContent>
@@ -241,7 +240,7 @@ const RapperNetworkGraph = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Network Graph */}
-      <Card className="lg:col-span-2 bg-black/40 border-purple-500/20">
+      <Card className="lg:col-span-2 bg-black/40 border-2 border-rap-gold">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Network className="w-5 h-5" />
@@ -257,7 +256,7 @@ const RapperNetworkGraph = () => {
               ref={canvasRef}
               width={600}
               height={400}
-              className="w-full border border-purple-500/20 rounded-lg cursor-pointer"
+              className="w-full border-2 border-rap-gold rounded-lg cursor-pointer"
               style={{ maxHeight: '400px' }}
             />
             <div className="absolute top-2 right-2 text-xs text-gray-400 bg-black/60 p-2 rounded">
@@ -279,7 +278,7 @@ const RapperNetworkGraph = () => {
       </Card>
 
       {/* Node Details Panel */}
-      <Card className="bg-black/40 border-purple-500/20">
+      <Card className="bg-black/40 border-2 border-rap-gold">
         <CardHeader>
           <CardTitle className="text-white flex items-center gap-2">
             <Users className="w-5 h-5" />
