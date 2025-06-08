@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Music, LogIn, Trophy, Calendar } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -62,34 +62,6 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
         </div>
         
         <div className="flex items-center space-x-2 md:space-x-4 absolute right-4">
-          <Link to="/blog">
-            <Button 
-              variant="outline" 
-              className={`bg-rap-charcoal border-4 border-rap-charcoal text-rap-gold hover:bg-rap-charcoal/80 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}
-            >
-              <Calendar className="w-4 h-4 mr-2" />
-              Slick Talk
-            </Button>
-          </Link>
-          <Link to="/all-rappers">
-            <Button 
-              variant="outline" 
-              className={`bg-rap-charcoal border-4 border-rap-charcoal text-rap-forest hover:bg-rap-charcoal/80 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}
-            >
-              <Music className="w-4 h-4 mr-2" />
-              All Artists
-            </Button>
-          </Link>
-          <Link to="/rankings">
-            <Button 
-              variant="outline" 
-              className={`bg-rap-charcoal border-4 border-rap-charcoal text-rap-burgundy hover:bg-rap-charcoal/80 font-kaushan transition-all duration-300 ${isScrolled ? 'text-xs px-2 py-1' : ''}`}
-            >
-              <Trophy className="w-4 h-4 mr-2" />
-              Rankings
-            </Button>
-          </Link>
-          
           {user ? (
             <UserProfileDropdown 
               userProfile={userProfile} 
