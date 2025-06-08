@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import UserProfileDropdown from "./UserProfileDropdown";
+import NavigationSidebar from "./NavigationSidebar";
 
 interface HeaderNavigationProps {
   isScrolled: boolean;
@@ -51,6 +52,10 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/95 backdrop-blur-md border-b border-rap-gold/50 h-16' : 'bg-black border-b border-rap-gold/30 h-20'}`}>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full">
+        <div className="flex items-center">
+          <NavigationSidebar />
+        </div>
+        
         <div className="flex items-center justify-center flex-1">
           <Link to="/" className="flex items-center justify-center">
             <img 
@@ -61,7 +66,7 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
           </Link>
         </div>
         
-        <div className="flex items-center space-x-2 md:space-x-4 absolute right-4">
+        <div className="flex items-center space-x-2 md:space-x-4">
           {user ? (
             <UserProfileDropdown 
               userProfile={userProfile} 

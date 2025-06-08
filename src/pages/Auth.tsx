@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
@@ -6,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Music, User, Mail, Lock, ArrowLeft } from "lucide-react";
+import { Music, User, Mail, Lock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { Link } from "react-router-dom";
+import HeaderNavigation from "@/components/HeaderNavigation";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -18,6 +17,7 @@ const Auth = () => {
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  const [isScrolled, setIsScrolled] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -29,6 +29,14 @@ const Auth = () => {
       }
     };
     checkUser();
+
+    // Handle scroll for header
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const handleSocialAuth = async (provider: 'google' | 'facebook' | 'twitter') => {
@@ -111,71 +119,64 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center p-4">
-      {/* Back Navigation */}
-      <div className="absolute top-6 left-6">
-        <Link to="/">
-          <Button variant="outline" className="border-rap-silver/50 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
-        </Link>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <HeaderNavigation isScrolled={isScrolled} />
 
-      <Card className="w-full max-w-md bg-carbon-fiber border-rap-burgundy/50">
-        <CardHeader className="text-center">
-          <div className="flex items-center justify-center space-x-2 mb-4">
-            <div className="w-8 h-8 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-lg flex items-center justify-center">
-              <Music className="w-5 h-5 text-rap-silver" />
+      <div className="pt-24 flex items-center justify-center p-4 min-h-screen">
+        <Card className="w-full max-w-md bg-carbon-fiber border-rap-burgundy/50">
+          <CardHeader className="text-center">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <div className="w-8 h-8 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-lg flex items-center justify-center">
+                <Music className="w-5 h-5 text-rap-silver" />
+              </div>
+              <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent">
+                Spit Hierarchy
+              </h1>
             </div>
-            <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent">
-              Spit Hierarchy
-            </h1>
-          </div>
-          <CardTitle className="text-rap-silver font-ceviche">
-            {isLogin ? "Welcome Back" : "Join The Culture"}
-          </CardTitle>
-          <p className="text-rap-smoke font-kaushan text-sm mt-2">
-            {isLogin ? "Sign in to vote and rank your favorite MCs" : "Create your account to start ranking rap legends"}
-          </p>
-        </CardHeader>
-        
-        <CardContent className="space-y-6">
-          {/* Social Login Buttons */}
-          <div className="space-y-3">
-            <Button
-              onClick={() => handleSocialAuth('google')}
-              disabled={socialLoading === 'google'}
-              variant="outline"
-              className="w-full bg-rap-carbon/50 border-rap-silver/30 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan"
-            >
-              {socialLoading === 'google' ? (
-                "Connecting..."
-              ) : (
-                <>
-                  <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
-                    <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
-                    <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
-                    <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
-                  </svg>
-                  Continue with Google
-                </>
-              )}
-            </Button>
+            <CardTitle className="text-rap-silver font-ceviche">
+              {isLogin ? "Welcome Back" : "Join The Culture"}
+            </CardTitle>
+            <p className="text-rap-smoke font-kaushan text-sm mt-2">
+              {isLogin ? "Sign in to vote and rank your favorite MCs" : "Create your account to start ranking rap legends"}
+            </p>
+          </CardHeader>
+          
+          <CardContent className="space-y-6">
+            {/* Social Login Buttons */}
+            <div className="space-y-3">
+              <Button
+                onClick={() => handleSocialAuth('google')}
+                disabled={socialLoading === 'google'}
+                variant="outline"
+                className="w-full bg-rap-carbon/50 border-rap-silver/30 text-rap-silver hover:bg-rap-burgundy/20 font-kaushan"
+              >
+                {socialLoading === 'google' ? (
+                  "Connecting..."
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                      <path fill="currentColor" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                      <path fill="currentColor" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                      <path fill="currentColor" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                    </svg>
+                    Continue with Google
+                  </>
+                )}
+              </Button>
 
-            <Button
-              onClick={() => handleSocialAuth('facebook')}
-              disabled={socialLoading === 'facebook'}
-              variant="outline"
-              className="w-full bg-blue-600/20 border-blue-500/30 text-rap-silver hover:bg-blue-600/30 font-kaushan"
-            >
-              {socialLoading === 'facebook' ? (
-                "Connecting..."
-              ) : (
-                <>
-                  <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+              <Button
+                onClick={() => handleSocialAuth('facebook')}
+                disabled={socialLoading === 'facebook'}
+                variant="outline"
+                className="w-full bg-blue-600/20 border-blue-500/30 text-rap-silver hover:bg-blue-600/30 font-kaushan"
+              >
+                {socialLoading === 'facebook' ? (
+                  "Connecting..."
+                ) : (
+                  <>
+                    <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
                   </svg>
                   Continue with Facebook
                 </>
@@ -297,9 +298,12 @@ const Auth = () => {
             </button>
             
             <div className="text-xs text-rap-smoke font-kaushan">
-              <Link to="/about" className="hover:text-rap-silver transition-colors">
+              <button 
+                onClick={() => window.location.href = '/about'}
+                className="hover:text-rap-silver transition-colors"
+              >
                 Learn more about Spit Hierarchy
-              </Link>
+              </button>
             </div>
           </div>
         </CardContent>

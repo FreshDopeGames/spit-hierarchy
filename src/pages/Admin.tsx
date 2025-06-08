@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -9,10 +9,21 @@ import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import BlogManagement from "@/components/admin/BlogManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
 import RapperImageManagement from "@/components/admin/RapperImageManagement";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import { Navigate } from "react-router-dom";
 
 const Admin = () => {
   const { user, loading } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   // Check if user has admin role
   const { data: userRoles, isLoading: rolesLoading, error: rolesError } = useQuery({
@@ -48,8 +59,11 @@ const Admin = () => {
 
   if (loading || rolesLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <div className="text-rap-platinum">Loading...</div>
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+        <HeaderNavigation isScrolled={isScrolled} />
+        <div className="pt-24 flex items-center justify-center">
+          <div className="text-rap-platinum">Loading...</div>
+        </div>
       </div>
     );
   }
@@ -61,28 +75,33 @@ const Admin = () => {
 
   if (!isAdmin && !canManageBlog) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <Card className="bg-carbon-fiber border border-red-500/50 p-8 max-w-md">
-          <CardHeader>
-            <CardTitle className="text-red-400 text-center">Access Denied</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <p className="text-rap-platinum text-center">You don't have permission to access the admin panel.</p>
-            <div className="text-sm text-rap-smoke space-y-2">
-              <p><strong>User ID:</strong> {user.id}</p>
-              <p><strong>Email:</strong> {user.email}</p>
-              <p><strong>Roles found:</strong> {userRoles?.length ? userRoles.map(r => r.role).join(', ') : 'None'}</p>
-              {rolesError && <p className="text-red-400"><strong>Error:</strong> {rolesError.message}</p>}
-            </div>
-          </CardContent>
-        </Card>
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+        <HeaderNavigation isScrolled={isScrolled} />
+        <div className="pt-24 flex items-center justify-center">
+          <Card className="bg-carbon-fiber border border-red-500/50 p-8 max-w-md">
+            <CardHeader>
+              <CardTitle className="text-red-400 text-center">Access Denied</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-rap-platinum text-center">You don't have permission to access the admin panel.</p>
+              <div className="text-sm text-rap-smoke space-y-2">
+                <p><strong>User ID:</strong> {user.id}</p>
+                <p><strong>Email:</strong> {user.email}</p>
+                <p><strong>Roles found:</strong> {userRoles?.length ? userRoles.map(r => r.role).join(', ') : 'None'}</p>
+                {rolesError && <p className="text-red-400"><strong>Error:</strong> {rolesError.message}</p>}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      <div className="container mx-auto px-4 py-8">
+      <HeaderNavigation isScrolled={isScrolled} />
+      
+      <div className="pt-24 container mx-auto px-4 py-8">
         <div className="mb-8 text-center">
           <h1 className="text-4xl font-ceviche text-rap-gold mb-2 tracking-wider">
             Admin Control Panel

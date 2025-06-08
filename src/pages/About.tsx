@@ -1,19 +1,33 @@
-import React from "react";
-import InternalPageHeader from "@/components/InternalPageHeader";
+
+import React, { useState, useEffect } from "react";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import { Trophy, Users, BarChart3, Music, Vote } from "lucide-react";
+
 const About = () => {
-  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
       {/* Background overlay for future custom backgrounds */}
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10">
-        <InternalPageHeader title="About Spit Hierarchy" subtitle="Where Bars Meet Rankings" backLink="/" backText="Back to Home" />
+        <HeaderNavigation isScrolled={isScrolled} />
         
-        <div className="pt-20 max-w-4xl mx-auto p-6 space-y-8">
+        <div className="pt-24 max-w-4xl mx-auto p-6 space-y-8">
           {/* Hero Section */}
           <div className="text-center space-y-4 mb-12">
             <div className="flex items-center justify-center space-x-3 mb-6">
@@ -182,6 +196,8 @@ const About = () => {
 
         <Footer />
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default About;
