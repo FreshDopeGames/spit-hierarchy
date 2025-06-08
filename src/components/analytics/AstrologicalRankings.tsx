@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Calendar, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 interface RapperWithZodiac {
   id: string;
   name: string;
@@ -174,7 +175,7 @@ const AstrologicalRankings = () => {
             Discover how the stars align with hip-hop talent across zodiac signs
           </p>
         </CardHeader>
-        <CardContent className="border-2 rounded-md border-rap-gold ">
+        <CardContent>
           <Tabs value={selectedZodiac} onValueChange={setSelectedZodiac} className="w-full">
             <TabsList className="grid grid-cols-4 lg:grid-cols-7 gap-1 bg-carbon-fiber border border-rap-gold/40 h-auto p-2">
               <TabsTrigger value="all" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs font-merienda font-extrabold text-rap-platinum">
