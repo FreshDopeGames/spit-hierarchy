@@ -1,77 +1,69 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Vote, Users, Star, Calendar, TrendingUp, Award } from "lucide-react";
-
 const UserVotingDashboard = () => {
-  const { user } = useAuth();
-
-  const { data: userStats, isLoading } = useQuery({
+  const {
+    user
+  } = useAuth();
+  const {
+    data: userStats,
+    isLoading
+  } = useQuery({
     queryKey: ["user-voting-stats", user?.id],
     queryFn: async () => {
       if (!user) return null;
-      
-      const { data, error } = await supabase
-        .from("user_voting_stats")
-        .select("*")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      
+      const {
+        data,
+        error
+      } = await supabase.from("user_voting_stats").select("*").eq("user_id", user.id).maybeSingle();
       if (error) throw error;
       return data;
     },
     enabled: !!user
   });
-
-  const { data: recentVotes, isLoading: loadingRecent } = useQuery({
+  const {
+    data: recentVotes,
+    isLoading: loadingRecent
+  } = useQuery({
     queryKey: ["user-recent-votes", user?.id],
     queryFn: async () => {
       if (!user) return [];
-      
-      const { data, error } = await supabase
-        .from("votes")
-        .select(`
+      const {
+        data,
+        error
+      } = await supabase.from("votes").select(`
           *,
           rappers(name),
           voting_categories(name)
-        `)
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-      
+        `).eq("user_id", user.id).order("created_at", {
+        ascending: false
+      }).limit(5);
       if (error) throw error;
       return data;
     },
     enabled: !!user
   });
-
   if (!user) {
-    return (
-      <Card className="bg-black/40 border-purple-500/20">
+    return <Card className="bg-black/40 border-purple-500/20">
         <CardContent className="p-6 text-center">
           <p className="text-gray-400">Please log in to view your voting statistics.</p>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
   if (isLoading) {
-    return (
-      <div className="space-y-4">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} className="bg-black/40 border-purple-500/20 animate-pulse">
+    return <div className="space-y-4">
+        {Array.from({
+        length: 3
+      }).map((_, i) => <Card key={i} className="bg-black/40 border-purple-500/20 animate-pulse">
             <CardContent className="p-6">
               <div className="h-16 bg-gray-700 rounded"></div>
             </CardContent>
-          </Card>
-        ))}
-      </div>
-    );
+          </Card>)}
+      </div>;
   }
-
   const stats = userStats || {
     total_votes: 0,
     unique_rappers_voted: 0,
@@ -80,60 +72,49 @@ const UserVotingDashboard = () => {
     last_vote_date: null,
     first_vote_date: null
   };
-
-  const statCards = [
-    {
-      icon: Vote,
-      label: "Total Votes",
-      value: stats.total_votes || 0,
-      color: "from-purple-500 to-blue-500"
-    },
-    {
-      icon: Users,
-      label: "Rappers Voted",
-      value: stats.unique_rappers_voted || 0,
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      icon: Award,
-      label: "Categories Used",
-      value: stats.categories_used || 0,
-      color: "from-cyan-500 to-green-500"
-    },
-    {
-      icon: Star,
-      label: "Avg Rating Given",
-      value: stats.average_rating_given ? Number(stats.average_rating_given).toFixed(1) : "0.0",
-      color: "from-green-500 to-yellow-500"
-    }
-  ];
-
-  return (
-    <div className="space-y-6">
+  const statCards = [{
+    icon: Vote,
+    label: "Total Votes",
+    value: stats.total_votes || 0,
+    color: "from-purple-500 to-blue-500"
+  }, {
+    icon: Users,
+    label: "Rappers Voted",
+    value: stats.unique_rappers_voted || 0,
+    color: "from-blue-500 to-cyan-500"
+  }, {
+    icon: Award,
+    label: "Categories Used",
+    value: stats.categories_used || 0,
+    color: "from-cyan-500 to-green-500"
+  }, {
+    icon: Star,
+    label: "Avg Rating Given",
+    value: stats.average_rating_given ? Number(stats.average_rating_given).toFixed(1) : "0.0",
+    color: "from-green-500 to-yellow-500"
+  }];
+  return <div className="space-y-6">
       <h3 className="text-2xl font-bold text-white mb-4">Your Voting Statistics</h3>
       
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {statCards.map((stat, index) => (
-          <Card key={index} className="bg-black/40 border-purple-500/20">
-            <CardContent className="p-4">
+        {statCards.map((stat, index) => <Card key={index} className="bg-black/40 border-purple-500/20">
+            <CardContent className="p-4 border-rap-gold ">
               <div className="flex items-center space-x-3">
                 <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center`}>
                   <stat.icon className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-gray-400 text-sm">{stat.label}</p>
+                  <p className="text-gray-400 text-lg font-extrabold">{stat.label}</p>
                   <p className="text-white font-bold text-lg">{stat.value}</p>
                 </div>
               </div>
             </CardContent>
-          </Card>
-        ))}
+          </Card>)}
       </div>
 
       {/* Voting Timeline */}
-      {stats.first_vote_date && (
-        <Card className="bg-black/40 border-purple-500/20">
+      {stats.first_vote_date && <Card className="bg-black/40 border-purple-500/20">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <Calendar className="w-5 h-5" />
@@ -148,22 +129,18 @@ const UserVotingDashboard = () => {
                   {new Date(stats.first_vote_date).toLocaleDateString()}
                 </span>
               </div>
-              {stats.last_vote_date && (
-                <div className="flex items-center gap-2">
+              {stats.last_vote_date && <div className="flex items-center gap-2">
                   <span className="text-gray-400">Last Vote:</span>
                   <span className="text-white">
                     {new Date(stats.last_vote_date).toLocaleDateString()}
                   </span>
-                </div>
-              )}
+                </div>}
             </div>
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
       {/* Recent Votes */}
-      {recentVotes && recentVotes.length > 0 && (
-        <Card className="bg-black/40 border-purple-500/20">
+      {recentVotes && recentVotes.length > 0 && <Card className="bg-black/40 border-purple-500/20">
           <CardHeader>
             <CardTitle className="text-white flex items-center gap-2">
               <TrendingUp className="w-5 h-5" />
@@ -172,8 +149,7 @@ const UserVotingDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {recentVotes.map((vote: any) => (
-                <div key={vote.id} className="flex items-center justify-between p-3 bg-purple-900/20 rounded-lg">
+              {recentVotes.map((vote: any) => <div key={vote.id} className="flex items-center justify-between p-3 bg-purple-900/20 rounded-lg">
                   <div className="flex-1">
                     <p className="text-white font-medium">{vote.rappers?.name}</p>
                     <p className="text-gray-400 text-sm">{vote.voting_categories?.name}</p>
@@ -186,24 +162,18 @@ const UserVotingDashboard = () => {
                       {new Date(vote.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
-      {stats.total_votes === 0 && (
-        <Card className="bg-black/40 border-purple-500/20">
-          <CardContent className="p-6 text-center">
+      {stats.total_votes === 0 && <Card className="bg-black/40 border-purple-500/20">
+          <CardContent className="p-6 text-center border-rap-gold ">
             <Vote className="w-16 h-16 text-purple-500 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Votes Yet</h3>
             <p className="text-gray-400">Start voting for your favorite rappers to see your statistics here!</p>
           </CardContent>
-        </Card>
-      )}
-    </div>
-  );
+        </Card>}
+    </div>;
 };
-
 export default UserVotingDashboard;
