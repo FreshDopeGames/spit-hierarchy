@@ -200,7 +200,7 @@ const Auth = () => {
                   
                   <div className="space-y-2">
                     <Label htmlFor="fullName" className="text-rap-platinum font-kaushan">Full Name</Label>
-                    <div className="relative">
+                    <div className="relative font-merienda text-rap-gold">
                       <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
                       <Input id="fullName" type="text" placeholder="Enter your full name" value={fullName} onChange={e => setFullName(e.target.value)} className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan" />
                     </div>
