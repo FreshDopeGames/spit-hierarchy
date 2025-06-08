@@ -15,6 +15,8 @@ import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
 import AllRappers from "./pages/AllRappers";
+import TermsOfUse from "./pages/TermsOfUse";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./hooks/useAuth";
 
@@ -38,6 +40,8 @@ function App() {
               <Route path="/blog/:id" element={<BlogDetail />} />
               <Route path="/profile" element={<UserProfile />} />
               <Route path="/all-rappers" element={<AllRappers />} />
+              <Route path="/terms" element={<TermsOfUse />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </main>

@@ -1,6 +1,7 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
-import { Music, Trophy, User, BarChart3, Settings, Info, Home } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, Info, Home, FileText, Shield } from "lucide-react";
 
 const Footer = () => {
   const handleNavigation = () => {
@@ -23,7 +24,7 @@ const Footer = () => {
         </div>
 
         {/* Navigation Links */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-8 mb-8">
           <div>
             <h4 className="font-merienda font-extrabold text-rap-gold text-lg mb-4 tracking-wider">Explore the Realm</h4>
             <ul className="space-y-2">
@@ -85,6 +86,24 @@ const Footer = () => {
                 <Link to="/admin" onClick={handleNavigation} className="text-rap-platinum hover:text-rap-gold font-merienda flex items-center transition-colors">
                   <Settings className="w-4 h-4 mr-2" />
                   Admin Panel
+                </Link>
+              </li>
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="font-merienda font-extrabold text-rap-gold text-lg mb-4 tracking-wider">Legal</h4>
+            <ul className="space-y-2">
+              <li>
+                <Link to="/terms" onClick={handleNavigation} className="text-rap-platinum hover:text-rap-gold font-merienda flex items-center transition-colors">
+                  <FileText className="w-4 h-4 mr-2" />
+                  Terms of Use
+                </Link>
+              </li>
+              <li>
+                <Link to="/privacy" onClick={handleNavigation} className="text-rap-platinum hover:text-rap-gold font-merienda flex items-center transition-colors">
+                  <Shield className="w-4 h-4 mr-2" />
+                  Privacy Policy
                 </Link>
               </li>
             </ul>
