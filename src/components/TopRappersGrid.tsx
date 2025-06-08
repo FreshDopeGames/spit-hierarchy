@@ -81,9 +81,7 @@ const TopRappersGrid = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <Crown className="w-6 h-6 text-rap-gold" />
-            <h2 className="text-3xl font-ceviche text-rap-gold mb-0 animate-text-glow tracking-wider text-border">
-              The Elite Five
-            </h2>
+            <h2 className="text-3xl font-ceviche text-rap-gold mb-0 animate-text-glow tracking-wider text-border">THE GOATS 🐐</h2>
             <Trophy className="w-6 h-6 text-rap-gold" />
           </div>
           <p className="text-rap-platinum font-merienda text-lg">
