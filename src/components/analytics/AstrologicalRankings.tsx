@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Calendar, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
 interface RapperWithZodiac {
   id: string;
   name: string;
@@ -177,17 +178,17 @@ const AstrologicalRankings = () => {
         <CardContent>
           <Tabs value={selectedZodiac} onValueChange={setSelectedZodiac} className="w-full">
             <TabsList className="grid grid-cols-4 lg:grid-cols-7 gap-1 bg-carbon-fiber border border-rap-gold/40 h-auto p-2">
-              <TabsTrigger value="all" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum text-xs font-kaushan">
+              <TabsTrigger value="all" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs font-merienda font-extrabold text-rap-platinum">
                 All Signs
               </TabsTrigger>
-              {zodiacSigns.slice(0, 6).map(sign => <TabsTrigger key={sign.name} value={sign.name} className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-rap-burgundy data-[state=active]:to-rap-forest data-[state=active]:text-rap-platinum text-xs flex items-center gap-1 font-kaushan">
+              {zodiacSigns.slice(0, 6).map(sign => <TabsTrigger key={sign.name} value={sign.name} className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs flex items-center gap-1 font-merienda font-extrabold text-rap-platinum">
                   <span>{sign.symbol}</span>
                   <span className="hidden sm:inline">{sign.name}</span>
                 </TabsTrigger>)}
             </TabsList>
             
             <div className="mt-4 grid grid-cols-2 lg:grid-cols-6 gap-2">
-              {zodiacSigns.slice(6).map(sign => <button key={sign.name} onClick={() => setSelectedZodiac(sign.name)} className={`p-2 rounded-lg border text-xs flex items-center gap-1 justify-center transition-colors font-kaushan ${selectedZodiac === sign.name ? 'bg-gradient-to-r from-rap-burgundy to-rap-forest text-rap-platinum border-rap-gold' : 'bg-carbon-fiber text-rap-smoke border-rap-gold/20 hover:bg-rap-carbon/50'}`}>
+              {zodiacSigns.slice(6).map(sign => <button key={sign.name} onClick={() => setSelectedZodiac(sign.name)} className={`p-2 rounded-lg border text-xs flex items-center gap-1 justify-center transition-colors font-merienda font-extrabold ${selectedZodiac === sign.name ? 'bg-rap-gold text-rap-carbon border-rap-gold' : 'bg-carbon-fiber text-rap-smoke border-rap-gold/20 hover:bg-rap-carbon/50'}`}>
                   <span>{sign.symbol}</span>
                   <span>{sign.name}</span>
                 </button>)}
@@ -201,8 +202,8 @@ const AstrologicalRankings = () => {
                         <div className="flex items-center gap-2">
                           <span className="text-2xl">{stat.symbol}</span>
                           <div>
-                            <h3 className="text-rap-gold font-bold font-kaushan">{stat.name}</h3>
-                            <p className="text-xs text-rap-smoke font-kaushan">{stat.dates}</p>
+                            <h3 className="text-rap-gold font-bold font-merienda">{stat.name}</h3>
+                            <p className="text-xs text-rap-smoke font-merienda">{stat.dates}</p>
                           </div>
                         </div>
                         <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
@@ -211,21 +212,21 @@ const AstrologicalRankings = () => {
                       </div>
                       
                       <div className="space-y-2 text-sm">
-                        <div className="flex justify-between text-rap-platinum font-kaushan">
+                        <div className="flex justify-between text-rap-platinum font-merienda">
                           <span>Rappers:</span>
                           <span>{stat.count}</span>
                         </div>
-                        <div className="flex justify-between text-rap-platinum font-kaushan">
+                        <div className="flex justify-between text-rap-platinum font-merienda">
                           <span>Avg Rating:</span>
                           <span>{stat.averageRating.toFixed(2)}</span>
                         </div>
-                        <div className="flex justify-between text-rap-platinum font-kaushan">
+                        <div className="flex justify-between text-rap-platinum font-merienda">
                           <span>Total Votes:</span>
                           <span>{stat.totalVotes}</span>
                         </div>
                         {stat.topRapper && <div className="pt-2 border-t border-rap-gold/20">
-                            <p className="text-xs text-rap-smoke font-kaushan">Top Rapper:</p>
-                            <p className="text-rap-gold font-medium font-kaushan">{stat.topRapper.name}</p>
+                            <p className="text-xs text-rap-smoke font-merienda">Top Rapper:</p>
+                            <p className="text-rap-gold font-medium font-merienda">{stat.topRapper.name}</p>
                           </div>}
                       </div>
                     </CardContent>
@@ -239,7 +240,7 @@ const AstrologicalRankings = () => {
                     <span className="text-4xl">{sign.symbol}</span>
                     <div>
                       <h2 className="text-2xl font-bold text-rap-gold font-mogra animate-text-glow">{sign.name}</h2>
-                      <p className="text-rap-smoke font-kaushan">{sign.dates} • {sign.element} Sign</p>
+                      <p className="text-rap-smoke font-merienda">{sign.dates} • {sign.element} Sign</p>
                     </div>
                   </div>
 
@@ -247,7 +248,7 @@ const AstrologicalRankings = () => {
                       {groupedByZodiac[sign.name].map((rapper, index) => <Card key={rapper.id} className="bg-carbon-fiber/60 border-rap-gold/20 shadow-lg shadow-rap-gold/10">
                           <CardContent className="p-4">
                             <div className="flex items-center justify-between mb-3">
-                              <h3 className="text-rap-gold font-bold font-kaushan">{rapper.name}</h3>
+                              <h3 className="text-rap-gold font-bold font-merienda">{rapper.name}</h3>
                               <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
                                 #{index + 1}
                               </Badge>
@@ -256,19 +257,19 @@ const AstrologicalRankings = () => {
                             <div className="space-y-2 text-sm">
                               <div className="flex items-center gap-2">
                                 <Star className="w-4 h-4 text-rap-gold" />
-                                <span className="text-rap-platinum font-kaushan">
+                                <span className="text-rap-platinum font-merienda">
                                   {Number(rapper.average_rating || 0).toFixed(1)} rating
                                 </span>
                               </div>
                               <div className="flex items-center gap-2">
                                 <TrendingUp className="w-4 h-4 text-rap-forest" />
-                                <span className="text-rap-platinum font-kaushan">
+                                <span className="text-rap-platinum font-merienda">
                                   {rapper.total_votes || 0} votes
                                 </span>
                               </div>
                               {rapper.birth_month && rapper.birth_day && <div className="flex items-center gap-2">
                                   <Calendar className="w-4 h-4 text-rap-burgundy" />
-                                  <span className="text-rap-platinum font-kaushan">
+                                  <span className="text-rap-platinum font-merienda">
                                     {rapper.birth_month}/{rapper.birth_day}
                                   </span>
                                 </div>}
@@ -276,8 +277,8 @@ const AstrologicalRankings = () => {
                           </CardContent>
                         </Card>)}
                     </div> : <div className="text-center py-8">
-                      <p className="text-rap-smoke font-kaushan">No rappers found for {sign.name}</p>
-                      <p className="text-sm text-rap-smoke mt-2 font-kaushan">
+                      <p className="text-rap-smoke font-merienda">No rappers found for {sign.name}</p>
+                      <p className="text-sm text-rap-smoke mt-2 font-merienda">
                         Birth dates may not be available for all artists
                       </p>
                     </div>}
