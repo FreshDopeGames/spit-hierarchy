@@ -119,29 +119,32 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-black border-rap-gold/50 max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="bg-black border-rap-gold/50 max-w-5xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-mogra">Crop Your Avatar</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
           {imageSrc && (
-            <div className="flex justify-center max-h-[60vh] overflow-hidden">
-              <ReactCrop
-                crop={crop}
-                onChange={(newCrop) => setCrop(newCrop)}
-                onComplete={(c) => setCompletedCrop(c)}
-                aspect={1}
-                className="max-w-full"
-              >
-                <img
-                  ref={imgRef}
-                  src={imageSrc}
-                  alt="Crop preview"
-                  className="max-w-full max-h-[50vh] object-contain"
-                  onLoad={onImageLoad}
-                />
-              </ReactCrop>
+            <div className="flex justify-center items-center min-h-0">
+              <div className="w-full max-h-[70vh] overflow-hidden flex justify-center">
+                <ReactCrop
+                  crop={crop}
+                  onChange={(newCrop) => setCrop(newCrop)}
+                  onComplete={(c) => setCompletedCrop(c)}
+                  aspect={1}
+                  className="max-w-full max-h-full"
+                >
+                  <img
+                    ref={imgRef}
+                    src={imageSrc}
+                    alt="Crop preview"
+                    className="max-w-[90vw] max-h-[65vh] w-auto h-auto object-contain"
+                    onLoad={onImageLoad}
+                    style={{ display: 'block' }}
+                  />
+                </ReactCrop>
+              </div>
             </div>
           )}
           
