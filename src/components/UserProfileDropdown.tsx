@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { User, Settings, Bell, LogOut, Trophy } from "lucide-react";
+import { User, Settings, LogOut, Trophy } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 interface UserProfileDropdownProps {
@@ -54,11 +54,6 @@ const UserProfileDropdown = ({
             View Profile
           </DropdownMenuItem>
         </Link>
-        
-        <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
-          <Bell className="w-4 h-4 mr-3" />
-          Notifications
-        </DropdownMenuItem>
         
         <DropdownMenuSeparator className="bg-rap-smoke/30" />
         
