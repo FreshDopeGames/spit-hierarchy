@@ -252,7 +252,7 @@ const BlogPostDialog = ({
           </div>
 
           <div className="flex gap-4 pt-4">
-            <Button type="submit" disabled={savePostMutation.isPending} className="bg-rap-gold font-mogra">
+            <Button type="submit" disabled={savePostMutation.isPending} className="bg-rap-gold font-mogra text-black text-lg">
               {savePostMutation.isPending ? 'Saving...' : post ? 'Update Post' : 'Create Post'}
             </Button>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold">
