@@ -517,6 +517,69 @@ export type Database = {
           },
         ]
       }
+      ranking_tag_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          ranking_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ranking_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ranking_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_tag_assignments_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "official_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "ranking_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranking_tags: {
+        Row: {
+          color: string | null
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rapper_images: {
         Row: {
           created_at: string

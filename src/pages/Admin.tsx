@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,14 +9,14 @@ import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import BlogManagement from "@/components/admin/BlogManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
 import RapperImageManagement from "@/components/admin/RapperImageManagement";
+import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import { Navigate } from "react-router-dom";
+
 const Admin = () => {
-  const {
-    user,
-    loading
-  } = useAuth();
+  const { user, loading } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
+
   useEffect(() => {
     const handleScroll = () => {
       const scrollTop = window.scrollY;
@@ -26,50 +27,52 @@ const Admin = () => {
   }, []);
 
   // Check if user has admin role
-  const {
-    data: userRoles,
-    isLoading: rolesLoading,
-    error: rolesError
-  } = useQuery({
+  const { data: userRoles, isLoading: rolesLoading, error: rolesError } = useQuery({
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
       console.log('Checking roles for user ID:', user.id);
-      const {
-        data,
-        error
-      } = await supabase.from('user_roles').select('role').eq('user_id', user.id);
-      console.log('User roles query result:', {
-        data,
-        error
-      });
+      const { data, error } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', user.id);
+      console.log('User roles query result:', { data, error });
       if (error) throw error;
       return data;
     },
     enabled: !!user?.id
   });
+
   console.log('Current user:', user);
   console.log('User roles:', userRoles);
   console.log('Roles loading:', rolesLoading);
   console.log('Roles error:', rolesError);
+
   const isAdmin = userRoles?.some(role => role.role === 'admin');
   const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
+
   console.log('Is admin:', isAdmin);
   console.log('Can manage blog:', canManageBlog);
+
   if (loading || rolesLoading) {
-    return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
         <HeaderNavigation isScrolled={isScrolled} />
         <div className="pt-24 flex items-center justify-center">
           <div className="text-rap-platinum">Loading...</div>
         </div>
-      </div>;
+      </div>
+    );
   }
+
   if (!user) {
     console.log('No user found, redirecting to auth');
     return <Navigate to="/auth" replace />;
   }
+
   if (!isAdmin && !canManageBlog) {
-    return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
         <HeaderNavigation isScrolled={isScrolled} />
         <div className="pt-24 flex items-center justify-center">
           <Card className="bg-carbon-fiber border border-red-500/50 p-8 max-w-md">
@@ -87,9 +90,12 @@ const Admin = () => {
             </CardContent>
           </Card>
         </div>
-      </div>;
+      </div>
+    );
   }
-  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       <HeaderNavigation isScrolled={isScrolled} />
       
       <div className="pt-24 container mx-auto px-4 py-8">
@@ -104,37 +110,66 @@ const Admin = () => {
 
         <Tabs defaultValue={isAdmin ? "rappers" : "blog"} className="space-y-6">
           <TabsList className="bg-carbon-fiber border border-rap-gold/30 p-1">
-            {isAdmin && <TabsTrigger value="rappers" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+            {isAdmin && (
+              <TabsTrigger value="rappers" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
                 Rapper Management
-              </TabsTrigger>}
-            {isAdmin && <TabsTrigger value="images" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+              </TabsTrigger>
+            )}
+            {isAdmin && (
+              <TabsTrigger value="rankings" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+                Rankings Management
+              </TabsTrigger>
+            )}
+            {isAdmin && (
+              <TabsTrigger value="images" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
                 Image Management
-              </TabsTrigger>}
-            {canManageBlog && <TabsTrigger value="blog" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+              </TabsTrigger>
+            )}
+            {canManageBlog && (
+              <TabsTrigger value="blog" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
                 Blog Management
-              </TabsTrigger>}
-            {isAdmin && <TabsTrigger value="theme" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+              </TabsTrigger>
+            )}
+            {isAdmin && (
+              <TabsTrigger value="theme" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
                 Theme Management
-              </TabsTrigger>}
+              </TabsTrigger>
+            )}
           </TabsList>
 
-          {isAdmin && <TabsContent value="rappers">
+          {isAdmin && (
+            <TabsContent value="rappers">
               <AdminRapperManagement />
-            </TabsContent>}
+            </TabsContent>
+          )}
 
-          {isAdmin && <TabsContent value="images">
+          {isAdmin && (
+            <TabsContent value="rankings">
+              <AdminRankingsManagement />
+            </TabsContent>
+          )}
+
+          {isAdmin && (
+            <TabsContent value="images">
               <RapperImageManagement />
-            </TabsContent>}
+            </TabsContent>
+          )}
 
-          {canManageBlog && <TabsContent value="blog">
+          {canManageBlog && (
+            <TabsContent value="blog">
               <BlogManagement />
-            </TabsContent>}
+            </TabsContent>
+          )}
 
-          {isAdmin && <TabsContent value="theme">
+          {isAdmin && (
+            <TabsContent value="theme">
               <ThemeManagement />
-            </TabsContent>}
+            </TabsContent>
+          )}
         </Tabs>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Admin;
