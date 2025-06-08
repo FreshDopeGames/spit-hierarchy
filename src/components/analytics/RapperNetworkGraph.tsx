@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Network, Users, Star, TrendingUp } from "lucide-react";
 import { useState, useEffect, useRef } from "react";
-
 interface NetworkNode {
   id: string;
   name: string;
@@ -14,44 +13,49 @@ interface NetworkNode {
   y?: number;
   connections: string[];
 }
-
 interface NetworkEdge {
   source: string;
   target: string;
   strength: number;
 }
-
 const RapperNetworkGraph = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [selectedNode, setSelectedNode] = useState<NetworkNode | null>(null);
   const [hoveredNode, setHoveredNode] = useState<NetworkNode | null>(null);
-
-  const { data: networkData, isLoading } = useQuery({
+  const {
+    data: networkData,
+    isLoading
+  } = useQuery({
     queryKey: ["rapper-network"],
     queryFn: async () => {
       // Get voting patterns - users who vote on similar rappers
-      const { data: votes, error: votesError } = await supabase
-        .from("votes")
-        .select(`
+      const {
+        data: votes,
+        error: votesError
+      } = await supabase.from("votes").select(`
           user_id,
           rapper_id,
           rating,
           rappers!inner(id, name, total_votes, average_rating)
-        `)
-        .order("rating", { ascending: false });
-
+        `).order("rating", {
+        ascending: false
+      });
       if (votesError) throw votesError;
 
       // Group votes by user to find voting patterns
-      const userVotes: { [userId: string]: { [rapperId: string]: number } } = {};
-      const rapperData: { [rapperId: string]: NetworkNode } = {};
-
+      const userVotes: {
+        [userId: string]: {
+          [rapperId: string]: number;
+        };
+      } = {};
+      const rapperData: {
+        [rapperId: string]: NetworkNode;
+      } = {};
       votes?.forEach((vote: any) => {
         if (!userVotes[vote.user_id]) {
           userVotes[vote.user_id] = {};
         }
         userVotes[vote.user_id][vote.rapper_id] = vote.rating;
-
         if (!rapperData[vote.rapper_id]) {
           rapperData[vote.rapper_id] = {
             id: vote.rapper_id,
@@ -66,45 +70,42 @@ const RapperNetworkGraph = () => {
       // Calculate rapper relationships based on shared voters
       const edges: NetworkEdge[] = [];
       const rapperIds = Object.keys(rapperData);
-
       for (let i = 0; i < rapperIds.length; i++) {
         for (let j = i + 1; j < rapperIds.length; j++) {
           const rapper1 = rapperIds[i];
           const rapper2 = rapperIds[j];
-          
+
           // Find users who voted on both rappers
           let sharedVoters = 0;
           let ratingCorrelation = 0;
           let validComparisons = 0;
-
           Object.keys(userVotes).forEach(userId => {
             if (userVotes[userId][rapper1] && userVotes[userId][rapper2]) {
               sharedVoters++;
               // Calculate rating similarity (inverse of difference)
               const ratingDiff = Math.abs(userVotes[userId][rapper1] - userVotes[userId][rapper2]);
-              ratingCorrelation += (5 - ratingDiff); // 5 is max rating difference
+              ratingCorrelation += 5 - ratingDiff; // 5 is max rating difference
               validComparisons++;
             }
           });
-
-          if (sharedVoters >= 3) { // Minimum threshold for meaningful connection
+          if (sharedVoters >= 3) {
+            // Minimum threshold for meaningful connection
             const avgCorrelation = validComparisons > 0 ? ratingCorrelation / validComparisons : 0;
-            const strength = (sharedVoters * avgCorrelation) / 100; // Normalize
+            const strength = sharedVoters * avgCorrelation / 100; // Normalize
 
-            if (strength > 0.1) { // Only include meaningful connections
+            if (strength > 0.1) {
+              // Only include meaningful connections
               edges.push({
                 source: rapper1,
                 target: rapper2,
                 strength
               });
-              
               rapperData[rapper1].connections.push(rapper2);
               rapperData[rapper2].connections.push(rapper1);
             }
           }
         }
       }
-
       return {
         nodes: Object.values(rapperData),
         edges
@@ -115,11 +116,9 @@ const RapperNetworkGraph = () => {
   // Simple force-directed layout simulation
   useEffect(() => {
     if (!networkData || !canvasRef.current) return;
-
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
-
     const width = canvas.width;
     const height = canvas.height;
 
@@ -155,7 +154,7 @@ const RapperNetworkGraph = () => {
       nodes.forEach(node => {
         ctx.globalAlpha = 1;
         const radius = Math.max(5, Math.min(15, (node.totalVotes || 0) / 10));
-        
+
         // Node color based on average rating
         const rating = node.averageRating || 0;
         if (rating >= 4) {
@@ -165,11 +164,9 @@ const RapperNetworkGraph = () => {
         } else {
           ctx.fillStyle = '#6b7280'; // Gray for low rated
         }
-
         if (hoveredNode?.id === node.id) {
           ctx.fillStyle = '#ec4899'; // Pink for hovered
         }
-
         ctx.beginPath();
         ctx.arc(node.x || 0, node.y || 0, radius, 0, 2 * Math.PI);
         ctx.fill();
@@ -189,60 +186,43 @@ const RapperNetworkGraph = () => {
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
-
       const hoveredNode = nodes.find(node => {
-        const distance = Math.sqrt(
-          Math.pow((node.x || 0) - mouseX, 2) + Math.pow((node.y || 0) - mouseY, 2)
-        );
+        const distance = Math.sqrt(Math.pow((node.x || 0) - mouseX, 2) + Math.pow((node.y || 0) - mouseY, 2));
         return distance < 20;
       });
-
       setHoveredNode(hoveredNode || null);
     };
-
     const handleClick = (e: MouseEvent) => {
       const rect = canvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
-
       const clickedNode = nodes.find(node => {
-        const distance = Math.sqrt(
-          Math.pow((node.x || 0) - mouseX, 2) + Math.pow((node.y || 0) - mouseY, 2)
-        );
+        const distance = Math.sqrt(Math.pow((node.x || 0) - mouseX, 2) + Math.pow((node.y || 0) - mouseY, 2));
         return distance < 20;
       });
-
       setSelectedNode(clickedNode || null);
     };
-
     canvas.addEventListener('mousemove', handleMouseMove);
     canvas.addEventListener('click', handleClick);
-
     const animationFrame = setInterval(simulate, 100);
-
     return () => {
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('click', handleClick);
       clearInterval(animationFrame);
     };
   }, [networkData, hoveredNode]);
-
   if (isLoading) {
-    return (
-      <Card className="bg-black/40 border-2 border-rap-gold animate-pulse">
+    return <Card className="bg-black/40 border-2 border-rap-gold animate-pulse">
         <CardContent className="p-6">
           <div className="h-96 bg-gray-700 rounded"></div>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
-  return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+  return <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
       {/* Main Network Graph */}
       <Card className="lg:col-span-2 bg-black/40 border-2 border-rap-gold">
         <CardHeader>
-          <CardTitle className="text-white flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-rap-gold font-normal">
             <Network className="w-5 h-5" />
             Rapper Network Graph
           </CardTitle>
@@ -252,13 +232,9 @@ const RapperNetworkGraph = () => {
         </CardHeader>
         <CardContent>
           <div className="relative">
-            <canvas
-              ref={canvasRef}
-              width={600}
-              height={400}
-              className="w-full border-2 border-rap-gold rounded-lg cursor-pointer"
-              style={{ maxHeight: '400px' }}
-            />
+            <canvas ref={canvasRef} width={600} height={400} className="w-full border-2 border-rap-gold rounded-lg cursor-pointer" style={{
+            maxHeight: '400px'
+          }} />
             <div className="absolute top-2 right-2 text-xs text-gray-400 bg-black/60 p-2 rounded">
               <div className="flex items-center gap-2 mb-1">
                 <div className="w-3 h-3 bg-green-500 rounded-full"></div>
@@ -286,8 +262,7 @@ const RapperNetworkGraph = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {(selectedNode || hoveredNode) ? (
-            <div className="space-y-4">
+          {selectedNode || hoveredNode ? <div className="space-y-4">
               <div>
                 <h3 className="text-white font-bold text-lg">
                   {(selectedNode || hoveredNode)?.name}
@@ -309,17 +284,13 @@ const RapperNetworkGraph = () => {
                   {(selectedNode || hoveredNode)?.connections.length || 0} connections
                 </p>
                 {networkData && (selectedNode || hoveredNode)?.connections.slice(0, 5).map(connId => {
-                  const connRapper = networkData.nodes.find(n => n.id === connId);
-                  return connRapper ? (
-                    <div key={connId} className="text-gray-300 text-sm py-1">
+              const connRapper = networkData.nodes.find(n => n.id === connId);
+              return connRapper ? <div key={connId} className="text-gray-300 text-sm py-1">
                       • {connRapper.name}
-                    </div>
-                  ) : null;
-                })}
+                    </div> : null;
+            })}
               </div>
-            </div>
-          ) : (
-            <div className="space-y-4">
+            </div> : <div className="space-y-4">
               <div className="text-center">
                 <TrendingUp className="w-12 h-12 text-gray-500 mx-auto mb-2" />
                 <p className="text-gray-400 text-sm">
@@ -335,19 +306,12 @@ const RapperNetworkGraph = () => {
                   <strong>Connections:</strong> {networkData?.edges.length || 0}
                 </div>
                 <div className="text-gray-300 text-sm">
-                  <strong>Network Density:</strong> {
-                    networkData?.nodes.length && networkData?.edges.length 
-                      ? ((networkData.edges.length * 2) / (networkData.nodes.length * (networkData.nodes.length - 1)) * 100).toFixed(1)
-                      : 0
-                  }%
+                  <strong>Network Density:</strong> {networkData?.nodes.length && networkData?.edges.length ? (networkData.edges.length * 2 / (networkData.nodes.length * (networkData.nodes.length - 1)) * 100).toFixed(1) : 0}%
                 </div>
               </div>
-            </div>
-          )}
+            </div>}
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default RapperNetworkGraph;
