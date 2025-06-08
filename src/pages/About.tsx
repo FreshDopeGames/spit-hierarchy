@@ -171,12 +171,12 @@ const About = () => {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link to="/auth">
-                <Button className="font-kaushan px-8 py-3 shadow-lg border border-rap-gold bg-rap-gold text-rap-carbon font-extrabold">
+                <Button className="font-kaushan px-8 py-3 shadow-lg border border-rap-gold bg-rap-gold text-rap-carbon text-xl font-extrabold hover:bg-rap-carbon-light/10 hover:border-rap-carbon-light hover:text-rap-carbon-light">
                   Join the Hierarchy
                 </Button>
               </Link>
               <Link to="/all-rappers">
-                <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan px-8 py-3 shadow-lg shadow-rap-gold/20">
+                <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold text-rap-carbon-light font-kaushan px-8 py-3 shadow-lg shadow-rap-gold/20 text-xl font-extrabold">
                   Browse Artists
                 </Button>
               </Link>
