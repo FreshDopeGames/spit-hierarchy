@@ -184,13 +184,12 @@ const Auth = () => {
               </Button>
             </div>
 
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <Separator className="w-full bg-rap-smoke/50" />
-              </div>
-              <div className="relative flex justify-center text-xs uppercase">
-                <span className="bg-carbon-fiber px-2 text-rap-smoke font-merienda ">Or continue with email</span>
-              </div>
+            <div className="relative flex items-center">
+              <div className="flex-grow border-t border-rap-smoke/50"></div>
+              <span className="flex-shrink mx-4 text-rap-smoke font-merienda text-xs uppercase">
+                Or continue with email
+              </span>
+              <div className="flex-grow border-t border-rap-smoke/50"></div>
             </div>
 
             {/* Email/Password Form */}
