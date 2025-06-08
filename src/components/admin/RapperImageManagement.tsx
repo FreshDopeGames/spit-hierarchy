@@ -58,10 +58,20 @@ const RapperImageManagement = () => {
     return rapperImages?.find(img => img.rapper_id === rapperId && img.style === style)?.image_url || null;
   };
 
-  const getCompletionStats = () => {
-    if (!rappers || !rapperImages) return {};
+  const getCompletionStats = (): Record<ImageStyle, number> => {
+    const defaultStats: Record<ImageStyle, number> = {
+      photo_real: 0,
+      comic_book: 0,
+      anime: 0,
+      video_game: 0,
+      hardcore: 0,
+      minimalist: 0,
+      retro: 0
+    };
+
+    if (!rappers || !rapperImages) return defaultStats;
     
-    const stats: Record<ImageStyle, number> = {} as Record<ImageStyle, number>;
+    const stats: Record<ImageStyle, number> = { ...defaultStats };
     Object.keys(styleLabels).forEach(style => {
       stats[style as ImageStyle] = rapperImages.filter(img => img.style === style).length;
     });
