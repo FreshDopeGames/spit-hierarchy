@@ -127,7 +127,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
         <div className="space-y-4">
           {imageSrc && (
             <div className="flex justify-center items-center min-h-0">
-              <div className="w-full max-h-[70vh] overflow-hidden flex justify-center">
+              <div className="w-full max-h-[60vh] overflow-hidden flex justify-center items-center">
                 <ReactCrop
                   crop={crop}
                   onChange={(newCrop) => setCrop(newCrop)}
@@ -139,9 +139,9 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
                     ref={imgRef}
                     src={imageSrc}
                     alt="Crop preview"
-                    className="max-w-[90vw] max-h-[65vh] w-auto h-auto object-contain"
+                    className="max-w-full max-h-full w-auto h-auto object-contain"
                     onLoad={onImageLoad}
-                    style={{ display: 'block' }}
+                    style={{ display: 'block', maxWidth: '90vw', maxHeight: '55vh' }}
                   />
                 </ReactCrop>
               </div>
