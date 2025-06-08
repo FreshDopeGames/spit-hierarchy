@@ -1,10 +1,11 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
@@ -85,10 +86,10 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               </Button>
             </Link>
 
-            <Link to="/about" onClick={() => window.scrollTo(0, 0)}>
+            <Link to="/rankings" onClick={() => window.scrollTo(0, 0)}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
-                <Info className="w-4 h-4 mr-3" />
-                About
+                <Trophy className="w-4 h-4 mr-3" />
+                Rankings
               </Button>
             </Link>
 
@@ -99,10 +100,17 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               </Button>
             </Link>
 
-            <Link to="/rankings" onClick={() => window.scrollTo(0, 0)}>
+            <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
-                <Trophy className="w-4 h-4 mr-3" />
-                Rankings
+                <Calendar className="w-4 h-4 mr-3" />
+                Slick Talk
+              </Button>
+            </Link>
+
+            <Link to="/about" onClick={() => window.scrollTo(0, 0)}>
+              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+                <Info className="w-4 h-4 mr-3" />
+                About
               </Button>
             </Link>
           </div>
