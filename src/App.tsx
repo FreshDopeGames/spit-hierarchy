@@ -15,29 +15,33 @@ import Blog from "./pages/Blog";
 import NotFound from "./pages/NotFound";
 import UserProfile from "./pages/UserProfile";
 import AllRappers from "./pages/AllRappers";
+import Footer from "./components/Footer";
 import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
   return (
     <AuthProvider>
       <Router>
-        <div className="min-h-screen">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/rankings" element={<Rankings />} />
-            <Route path="/official-rankings" element={<OfficialRankings />} />
-            <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
-            <Route path="/analytics" element={<Analytics />} />
-            <Route path="/admin" element={<Admin />} />
-            <Route path="/rapper/:id" element={<RapperDetail />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
-            <Route path="/profile" element={<UserProfile />} />
-            <Route path="/all-rappers" element={<AllRappers />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+        <div className="min-h-screen flex flex-col">
+          <main className="flex-1">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/rankings" element={<Rankings />} />
+              <Route path="/official-rankings" element={<OfficialRankings />} />
+              <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
+              <Route path="/analytics" element={<Analytics />} />
+              <Route path="/admin" element={<Admin />} />
+              <Route path="/rapper/:id" element={<RapperDetail />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:id" element={<BlogDetail />} />
+              <Route path="/profile" element={<UserProfile />} />
+              <Route path="/all-rappers" element={<AllRappers />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
         </div>
         <Toaster />
       </Router>

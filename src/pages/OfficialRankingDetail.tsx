@@ -10,6 +10,7 @@ import CommentBubble from "@/components/CommentBubble";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
 import BillboardAd from "@/components/BillboardAd";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -30,7 +31,17 @@ const OfficialRankingDetail = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [page, setPage] = useState(0);
   const [hasMore, setHasMore] = useState(true);
+  const [isScrolled, setIsScrolled] = useState(false);
   const ITEMS_PER_PAGE = 50;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (slug) {
@@ -166,7 +177,8 @@ const OfficialRankingDetail = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <div className="text-rap-gold font-mogra text-xl">Loading...</div>
+        <HeaderNavigation isScrolled={isScrolled} />
+        <div className="text-rap-gold font-mogra text-xl pt-24">Loading...</div>
       </div>
     );
   }
@@ -174,7 +186,8 @@ const OfficialRankingDetail = () => {
   if (!ranking) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <div className="text-rap-platinum font-mogra text-xl">Ranking not found</div>
+        <HeaderNavigation isScrolled={isScrolled} />
+        <div className="text-rap-platinum font-mogra text-xl pt-24">Ranking not found</div>
       </div>
     );
   }
@@ -183,29 +196,9 @@ const OfficialRankingDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      {/* Header */}
-      <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/official-rankings">
-            <Button
-              variant="ghost"
-              className="text-rap-gold hover:text-rap-gold-light font-kaushan"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to Official Rankings
-            </Button>
-          </Link>
-          
-          <div className="flex items-center gap-2">
-            <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
-              <Award className="w-3 h-3 mr-1" />
-              Official
-            </Badge>
-          </div>
-        </div>
-      </header>
-
-      <main className="max-w-4xl mx-auto p-6">
+      <HeaderNavigation isScrolled={isScrolled} />
+      
+      <main className="max-w-4xl mx-auto p-6 pt-24">
         {/* Ranking Header */}
         <div className="mb-8">
           <div className="flex flex-wrap gap-2 mb-4">
@@ -218,7 +211,7 @@ const OfficialRankingDetail = () => {
             {ranking.title}
           </h1>
           
-          <p className="text-xl text-rap-smoke mb-6 leading-relaxed font-kaushan">
+          <p className="text-xl text-rap-smoke mb-6 leading-relaxed font-merienda">
             {ranking.description}
           </p>
         </div>
@@ -253,7 +246,7 @@ const OfficialRankingDetail = () => {
                           <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
                         )}
                       </div>
-                      <p className="text-rap-smoke font-kaushan">{item.reason}</p>
+                      <p className="text-rap-smoke font-merienda">{item.reason}</p>
                     </div>
                     
                     <div className="flex items-center gap-3">
@@ -261,6 +254,7 @@ const OfficialRankingDetail = () => {
                         onVote={() => handleVote(item.rapper?.name || "")}
                         onVoteWithNote={(note) => handleVoteWithNote(item.rapper?.name || "", note)}
                         disabled={!user}
+                        className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-lg px-6 py-3"
                       />
                       <Link to={`/rapper/${item.rapper?.id}`}>
                         <Button
@@ -279,12 +273,12 @@ const OfficialRankingDetail = () => {
           </Card>
         )}
 
-        {/* All Other Rappers */}
+        {/* All Other Rappers with the Gen Z reference */}
         <Card className="bg-carbon-fiber border-rap-silver/40 shadow-2xl shadow-rap-silver/20">
           <CardHeader>
             <CardTitle className="text-rap-silver flex items-center gap-2 font-mogra">
               <Star className="w-5 h-5" />
-              All Rappers
+              6, 7, ... etc.
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -302,13 +296,13 @@ const OfficialRankingDetail = () => {
                       <div className="flex items-center gap-2">
                         <h3 className="text-rap-platinum font-semibold text-lg font-mogra">{rapper.name}</h3>
                       </div>
-                      <p className="text-rap-smoke font-kaushan">{rapper.real_name} • {rapper.origin}</p>
+                      <p className="text-rap-smoke font-merienda">{rapper.real_name} • {rapper.origin}</p>
                       <div className="flex items-center gap-2 mt-1">
                         <Star className="w-4 h-4 text-rap-gold" />
-                        <span className="text-rap-platinum font-kaushan text-sm">
+                        <span className="text-rap-platinum font-merienda text-sm">
                           {rapper.average_rating ? parseFloat(rapper.average_rating.toString()).toFixed(1) : "0.0"}
                         </span>
-                        <span className="text-rap-smoke font-kaushan text-sm">
+                        <span className="text-rap-smoke font-merienda text-sm">
                           ({rapper.total_votes || 0} votes)
                         </span>
                       </div>
@@ -319,6 +313,7 @@ const OfficialRankingDetail = () => {
                         onVote={() => handleVote(rapper.name)}
                         onVoteWithNote={(note) => handleVoteWithNote(rapper.name, note)}
                         disabled={!user}
+                        className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-lg px-6 py-3"
                       />
                       <Link to={`/rapper/${rapper.id}`}>
                         <Button

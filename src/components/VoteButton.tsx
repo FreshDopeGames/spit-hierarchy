@@ -1,13 +1,7 @@
 
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, ArrowUp } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { ThumbsUp, MessageSquare } from "lucide-react";
 import VoteWithNoteModal from "./VoteWithNoteModal";
 
 interface VoteButtonProps {
@@ -15,18 +9,9 @@ interface VoteButtonProps {
   onVoteWithNote: (note: string) => void;
   disabled?: boolean;
   className?: string;
-  rapperId?: string;
-  rankingId?: string;
 }
 
-const VoteButton = ({ 
-  onVote, 
-  onVoteWithNote, 
-  disabled = false, 
-  className = "",
-  rapperId,
-  rankingId
-}: VoteButtonProps) => {
+const VoteButton = ({ onVote, onVoteWithNote, disabled = false, className = "" }: VoteButtonProps) => {
   const [showNoteModal, setShowNoteModal] = useState(false);
 
   const handleVoteWithNote = (note: string) => {
@@ -36,44 +21,32 @@ const VoteButton = ({
 
   return (
     <>
-      <div className={`flex ${className}`}>
-        {/* Main Vote Button */}
+      <div className="flex items-center gap-2">
         <Button
           onClick={onVote}
           disabled={disabled}
-          className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light rounded-r-none border-r border-rap-gold/20 font-mogra shadow-lg shadow-rap-burgundy/30 text-rap-platinum"
+          size="sm"
+          className={`bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-lg px-6 py-3 ${className}`}
         >
-          <ArrowUp className="w-4 h-4 mr-2" />
+          <ThumbsUp className="w-4 h-4 mr-2" />
           Vote
         </Button>
-
-        {/* Dropdown for Vote with Note */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              disabled={disabled}
-              className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light rounded-l-none border-l border-rap-gold/20 px-2 shadow-lg shadow-rap-burgundy/30 text-rap-platinum"
-            >
-              <ChevronDown className="w-4 h-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-carbon-fiber border-rap-gold/30 text-rap-silver z-50">
-            <DropdownMenuItem
-              onClick={() => setShowNoteModal(true)}
-              className="hover:bg-rap-burgundy/20 cursor-pointer font-kaushan text-rap-platinum hover:text-rap-silver"
-            >
-              Vote with Note
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        
+        <Button
+          onClick={() => setShowNoteModal(true)}
+          disabled={disabled}
+          variant="outline"
+          size="sm"
+          className="border-rap-gold text-rap-gold hover:bg-rap-gold/20"
+        >
+          <MessageSquare className="w-4 h-4" />
+        </Button>
       </div>
 
       <VoteWithNoteModal
         isOpen={showNoteModal}
         onClose={() => setShowNoteModal(false)}
         onSubmit={handleVoteWithNote}
-        rapperId={rapperId}
-        rankingId={rankingId}
       />
     </>
   );
