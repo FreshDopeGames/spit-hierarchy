@@ -90,57 +90,57 @@ const VotingAnalytics = () => {
       {/* Global Stats */}
       {globalStats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-burgundy to-rap-forest flex items-center justify-center shadow-lg">
                   <Vote className="w-5 h-5 text-rap-silver" />
                 </div>
                 <div>
-                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Total Votes</p>
-                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.totalVotes}</p>
+                  <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide">Total Votes</p>
+                  <p className="text-rap-platinum font-extrabold text-lg font-merienda">{globalStats.totalVotes}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-forest to-rap-gold flex items-center justify-center shadow-lg">
                   <Users className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
-                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Active Voters</p>
-                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.activeVoters}</p>
+                  <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide">Active Voters</p>
+                  <p className="text-rap-platinum font-extrabold text-lg font-merienda">{globalStats.activeVoters}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-gold to-rap-silver flex items-center justify-center shadow-lg">
                   <Award className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
-                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Rated Rappers</p>
-                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.ratedRappers}</p>
+                  <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide">Rated Rappers</p>
+                  <p className="text-rap-platinum font-extrabold text-lg font-merienda">{globalStats.ratedRappers}</p>
                 </div>
               </div>
             </CardContent>
           </Card>
 
-          <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+          <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-silver to-rap-platinum flex items-center justify-center shadow-lg">
                   <Star className="w-5 h-5 text-rap-carbon" />
                 </div>
                 <div>
-                  <p className="text-rap-smoke text-sm font-kaushan tracking-wide">Avg Rating</p>
-                  <p className="text-rap-platinum font-bold text-lg font-mogra">{globalStats.avgRating.toFixed(1)}</p>
+                  <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide">Avg Rating</p>
+                  <p className="text-rap-platinum font-extrabold text-lg font-merienda">{globalStats.avgRating.toFixed(1)}</p>
                 </div>
               </div>
             </CardContent>
@@ -150,7 +150,7 @@ const VotingAnalytics = () => {
 
       {/* Category Analytics */}
       {categoryAnalytics && categoryAnalytics.length > 0 && (
-        <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+        <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
           <CardHeader>
             <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
               <TrendingUp className="w-5 h-5" />
