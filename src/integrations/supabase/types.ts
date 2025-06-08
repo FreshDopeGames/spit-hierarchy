@@ -424,6 +424,8 @@ export type Database = {
           rapper_id: string
           reason: string | null
           updated_at: string | null
+          vote_velocity_24_hours: number | null
+          vote_velocity_7_days: number | null
         }
         Insert: {
           created_at?: string | null
@@ -434,6 +436,8 @@ export type Database = {
           rapper_id: string
           reason?: string | null
           updated_at?: string | null
+          vote_velocity_24_hours?: number | null
+          vote_velocity_7_days?: number | null
         }
         Update: {
           created_at?: string | null
@@ -444,6 +448,8 @@ export type Database = {
           rapper_id?: string
           reason?: string | null
           updated_at?: string | null
+          vote_velocity_24_hours?: number | null
+          vote_velocity_7_days?: number | null
         }
         Relationships: [
           {
@@ -455,6 +461,55 @@ export type Database = {
           },
           {
             foreignKeyName: "ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranking_position_history: {
+        Row: {
+          created_at: string
+          id: string
+          position: number
+          ranking_id: string
+          rapper_id: string
+          snapshot_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          position: number
+          ranking_id: string
+          rapper_id: string
+          snapshot_date?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          position?: number
+          ranking_id?: string
+          rapper_id?: string
+          snapshot_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_position_history_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "official_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_position_history_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_position_history_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
             referencedRelation: "rappers"
@@ -783,6 +838,14 @@ export type Database = {
       can_manage_blog: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      create_weekly_ranking_snapshot: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
+      get_position_delta: {
+        Args: { p_ranking_id: string; p_rapper_id: string }
+        Returns: number
       }
       has_role: {
         Args: { _user_id: string; _role: string }

@@ -53,22 +53,6 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
     });
   };
 
-  const handleVoteWithNote = (rapperName: string, note: string) => {
-    if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to vote for rappers.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Vote with note submitted!",
-      description: `Your vote for ${rapperName} with note has been recorded.`,
-    });
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       {/* Header */}
@@ -143,8 +127,7 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
           </CardHeader>
           <CardContent className="space-y-4">
             {ranking.rappers.map((rapper) => {
-              // For demo purposes, we'll show some rappers as "hot" based on their rank
-              const isHot = rapper.rank <= 2; // Top 2 rappers are "hot" for demo
+              const isHot = rapper.rank <= 2;
               const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
               
               return (
@@ -169,7 +152,6 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
                   <div className="flex items-center gap-3">
                     <VoteButton
                       onVote={() => handleVote(rapper.name)}
-                      onVoteWithNote={(note) => handleVoteWithNote(rapper.name, note)}
                       disabled={!user}
                     />
                     <Button

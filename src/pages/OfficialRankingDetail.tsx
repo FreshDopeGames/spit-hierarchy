@@ -9,22 +9,19 @@ import OfficialRankingHeader from "@/components/rankings/OfficialRankingHeader";
 import OfficialRankingItems from "@/components/rankings/OfficialRankingItems";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/components/ui/use-toast";
-import { Button } from "@/components/ui/button";
+import { useRankingData, useHotThreshold } from "@/hooks/useRankingData";
 
-type Rapper = Tables<"rappers">;
 type OfficialRanking = Tables<"official_rankings">;
-type RankingItem = Tables<"ranking_items"> & {
-  rapper: Rapper;
-};
+
+const ITEMS_PER_PAGE = 20;
 
 const OfficialRankingDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
   const { toast } = useToast();
   const [ranking, setRanking] = useState<OfficialRanking | null>(null);
-  const [rankingItems, setRankingItems] = useState<RankingItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAllRappers, setShowAllRappers] = useState(false);
+  const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -44,7 +41,6 @@ const OfficialRankingDetail = () => {
 
   const fetchRankingData = async () => {
     try {
-      // Fetch the ranking details
       const { data: rankingData, error: rankingError } = await supabase
         .from("official_rankings")
         .select("*")
@@ -53,19 +49,6 @@ const OfficialRankingDetail = () => {
 
       if (rankingError) throw rankingError;
       setRanking(rankingData);
-
-      // Fetch all ranking items with rapper details
-      const { data: itemsData, error: itemsError } = await supabase
-        .from("ranking_items")
-        .select(`
-          *,
-          rapper:rappers(*)
-        `)
-        .eq("ranking_id", rankingData.id)
-        .order("position");
-
-      if (itemsError) throw itemsError;
-      setRankingItems(itemsData || []);
     } catch (error) {
       console.error("Error fetching ranking data:", error);
       toast({
@@ -77,6 +60,9 @@ const OfficialRankingDetail = () => {
       setLoading(false);
     }
   };
+
+  const { data: rankingItems = [], isLoading: itemsLoading } = useRankingData(ranking?.id || "");
+  const hotThreshold = useHotThreshold(rankingItems);
 
   const handleVote = (rapperName: string) => {
     if (!user) {
@@ -94,23 +80,11 @@ const OfficialRankingDetail = () => {
     });
   };
 
-  const handleVoteWithNote = (rapperName: string, note: string) => {
-    if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to vote for rappers.",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    toast({
-      title: "Vote with note submitted!",
-      description: `Your vote for ${rapperName} with note has been recorded.`,
-    });
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + ITEMS_PER_PAGE);
   };
 
-  if (loading) {
+  if (loading || itemsLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
         <HeaderNavigation isScrolled={isScrolled} />
@@ -128,8 +102,7 @@ const OfficialRankingDetail = () => {
     );
   }
 
-  const rankedItems = rankingItems.filter(item => item.is_ranked);
-  const unrankedItems = rankingItems.filter(item => !item.is_ranked);
+  const hasMore = displayCount < rankingItems.length;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
@@ -142,42 +115,16 @@ const OfficialRankingDetail = () => {
           category={ranking.category}
         />
 
-        {/* Editorial Rankings - Always show these */}
         <OfficialRankingItems
-          items={rankedItems}
+          items={rankingItems}
           onVote={handleVote}
-          onVoteWithNote={handleVoteWithNote}
           userLoggedIn={!!user}
-          showAll={false}
-          maxItems={20}
+          hotThreshold={hotThreshold}
+          displayCount={displayCount}
+          onLoadMore={handleLoadMore}
+          hasMore={hasMore}
+          loading={false}
         />
-
-        {/* Toggle for showing all rappers */}
-        {unrankedItems.length > 0 && (
-          <div className="mb-6 text-center">
-            <Button
-              onClick={() => setShowAllRappers(!showAllRappers)}
-              variant="outline"
-              className="border-rap-silver/30 text-rap-silver hover:bg-rap-silver/20 font-kaushan"
-            >
-              {showAllRappers 
-                ? `Hide remaining ${unrankedItems.length} rappers` 
-                : `Show all ${unrankedItems.length} remaining rappers`
-              }
-            </Button>
-          </div>
-        )}
-
-        {/* All remaining rappers */}
-        {showAllRappers && unrankedItems.length > 0 && (
-          <OfficialRankingItems
-            items={unrankedItems}
-            onVote={handleVote}
-            onVoteWithNote={handleVoteWithNote}
-            userLoggedIn={!!user}
-            showAll={true}
-          />
-        )}
       </main>
 
       <CommentBubble contentType="ranking" contentId={ranking.id} />
