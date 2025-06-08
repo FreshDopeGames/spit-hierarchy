@@ -26,24 +26,24 @@ export interface UserRanking {
   slug?: string;
 }
 
-type UserRankingFromDB = Tables<"user_rankings"> & {
+interface UserRankingFromDB extends Tables<"user_rankings"> {
   profiles?: {
     username: string;
     full_name?: string;
-  };
+  } | null;
   user_ranking_items: Array<{
     position: number;
     reason: string | null;
     rapper: {
       name: string;
-    };
+    } | null;
   }>;
   user_ranking_tag_assignments: Array<{
     ranking_tags: {
       name: string;
-    };
+    } | null;
   }>;
-};
+}
 
 export const useUserRankings = () => {
   const { user } = useAuth();
@@ -73,12 +73,14 @@ export const useUserRankings = () => {
         throw error;
       }
 
+      if (!data) return [];
+
       // Transform the data to match the UserRanking interface
-      const transformedRankings: UserRanking[] = (data as UserRankingFromDB[]).map((ranking) => {
-        const topRappers = ranking.user_ranking_items
-          .filter(item => item.position <= 5) // Show only top 5 for preview
-          .sort((a, b) => a.position - b.position)
-          .map(item => ({
+      const transformedRankings: UserRanking[] = data.map((ranking: any) => {
+        const topRappers = (ranking.user_ranking_items || [])
+          .filter((item: any) => item.position <= 5) // Show only top 5 for preview
+          .sort((a: any, b: any) => a.position - b.position)
+          .map((item: any) => ({
             rank: item.position,
             name: item.rapper?.name || "Unknown",
             reason: item.reason || "",
@@ -98,9 +100,9 @@ export const useUserRankings = () => {
           views: Math.floor(Math.random() * 2000) + 500, // Mock data for now
           isPublic: ranking.is_public || false,
           isOfficial: false,
-          tags: ranking.user_ranking_tag_assignments?.map(assignment => 
-            assignment.ranking_tags?.name || ""
-          ).filter(Boolean) || [],
+          tags: (ranking.user_ranking_tag_assignments || [])
+            .map((assignment: any) => assignment.ranking_tags?.name || "")
+            .filter(Boolean),
           slug: ranking.slug,
         };
       });
