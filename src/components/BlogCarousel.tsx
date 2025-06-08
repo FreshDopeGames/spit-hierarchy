@@ -150,7 +150,7 @@ const BlogCarousel = () => {
                 </p>
               </div>
 
-              <div className="mt-6 bg-rap-gold text-black font-merienda font-extrabold">
+              <div className="mt-6 text-black font-merienda font-extrabold bg-rap-gold">
                 <Link to={`/blog/${currentPost.id}`}>
                   <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light group font-mogra shadow-lg shadow-rap-gold/30">
                     Read Full Hieroglyphs
