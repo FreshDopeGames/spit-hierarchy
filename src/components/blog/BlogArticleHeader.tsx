@@ -1,7 +1,5 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
-
 interface BlogPost {
   title: string;
   tags: string[];
@@ -10,23 +8,20 @@ interface BlogPost {
   readTime: string;
   imageUrl: string;
 }
-
 interface BlogArticleHeaderProps {
   blogPost: BlogPost;
 }
-
-const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
-  return (
-    <div className="mb-8">
+const BlogArticleHeader = ({
+  blogPost
+}: BlogArticleHeaderProps) => {
+  return <div className="mb-8">
       <div className="flex flex-wrap gap-2 mb-4">
-        {blogPost.tags.map((tag) => (
-          <Badge key={tag} variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30">
+        {blogPost.tags.map(tag => <Badge key={tag} variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30">
             {tag}
-          </Badge>
-        ))}
+          </Badge>)}
       </div>
       
-      <h1 className="text-4xl md:text-5xl font-bold text-[var(--theme-textLight)] mb-6 leading-tight font-[var(--theme-font-heading)]">
+      <h1 className="text-4xl text-[var(--theme-textLight)] mb-6 leading-tight font-[[var(--theme-font-heading)]] font-ceviche font-normal text-rap-gold md:text-6xl">
         {blogPost.title}
       </h1>
       
@@ -47,15 +42,9 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
 
       {/* Featured Image */}
       <div className="relative rounded-xl overflow-hidden mb-8">
-        <img 
-          src={blogPost.imageUrl} 
-          alt={blogPost.title}
-          className="w-full h-64 md:h-96 object-cover"
-        />
+        <img src={blogPost.imageUrl} alt={blogPost.title} className="w-full h-64 md:h-96 object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-backgroundDark)]/30 to-transparent" />
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default BlogArticleHeader;
