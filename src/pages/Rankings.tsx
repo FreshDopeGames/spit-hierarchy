@@ -12,12 +12,12 @@ import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
 
 type OfficialRanking = Tables<"official_rankings">;
-type OfficialRankingItem = Tables<"official_ranking_items"> & {
+type RankingItem = Tables<"ranking_items"> & {
   rapper: Tables<"rappers">;
 };
 
 interface RankingWithItems extends OfficialRanking {
-  items: OfficialRankingItem[];
+  items: RankingItem[];
 }
 
 // Mock data for user-generated rankings
@@ -114,13 +114,15 @@ const Rankings = () => {
       const rankingsWithItems = await Promise.all(
         (rankingsData || []).map(async (ranking) => {
           const { data: itemsData, error: itemsError } = await supabase
-            .from("official_ranking_items")
+            .from("ranking_items")
             .select(`
               *,
               rapper:rappers(*)
             `)
             .eq("ranking_id", ranking.id)
-            .order("position");
+            .eq("is_ranked", true) // Only get manually ranked items for preview
+            .order("position")
+            .limit(5); // Only get top 5 for display
 
           if (itemsError) {
             console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
@@ -204,7 +206,7 @@ const Rankings = () => {
         <main className="max-w-6xl mx-auto p-6 pt-24">
           <RankingHeader 
             title="Top Rapper Rankings"
-            description="Discover community-created rapper rankings, or create your own custom lists to share your opinions with the hip-hop community."
+            description="Discover comprehensive rapper rankings with every artist in our database. Official rankings now include all 112+ rappers, while community rankings let you create your own complete lists."
           />
 
           <OfficialRankingsSection 

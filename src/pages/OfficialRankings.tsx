@@ -9,12 +9,12 @@ import RankingHeader from "@/components/rankings/RankingHeader";
 import RankingCard from "@/components/rankings/RankingCard";
 
 type OfficialRanking = Tables<"official_rankings">;
-type OfficialRankingItem = Tables<"official_ranking_items"> & {
+type RankingItem = Tables<"ranking_items"> & {
   rapper: Tables<"rappers">;
 };
 
 interface RankingWithItems extends OfficialRanking {
-  items: OfficialRankingItem[];
+  items: RankingItem[];
 }
 
 const OfficialRankings = () => {
@@ -39,12 +39,13 @@ const OfficialRankings = () => {
       const rankingsWithItems = await Promise.all(
         (rankingsData || []).map(async (ranking) => {
           const { data: itemsData, error: itemsError } = await supabase
-            .from("official_ranking_items")
+            .from("ranking_items")
             .select(`
               *,
               rapper:rappers(*)
             `)
             .eq("ranking_id", ranking.id)
+            .eq("is_ranked", true) // Only get manually ranked items for preview
             .order("position")
             .limit(5); // Only get top 5 for display
 
@@ -116,7 +117,7 @@ const OfficialRankings = () => {
       <main className="max-w-6xl mx-auto p-6">
         <RankingHeader
           title="Official Rankings"
-          description="Curated rankings created by our expert editorial team, featuring the most comprehensive and authoritative lists in hip-hop."
+          description="Curated rankings created by our expert editorial team, featuring the most comprehensive and authoritative lists in hip-hop. Each list now includes every rapper in our database."
         />
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

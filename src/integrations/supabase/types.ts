@@ -414,6 +414,54 @@ export type Database = {
         }
         Relationships: []
       }
+      ranking_items: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_ranked: boolean | null
+          position: number
+          ranking_id: string
+          rapper_id: string
+          reason: string | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_ranked?: boolean | null
+          position: number
+          ranking_id: string
+          rapper_id: string
+          reason?: string | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_ranked?: boolean | null
+          position?: number
+          ranking_id?: string
+          rapper_id?: string
+          reason?: string | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_images: {
         Row: {
           created_at: string
@@ -739,6 +787,10 @@ export type Database = {
       has_role: {
         Args: { _user_id: string; _role: string }
         Returns: boolean
+      }
+      populate_ranking_with_all_rappers: {
+        Args: { ranking_uuid: string }
+        Returns: undefined
       }
     }
     Enums: {
