@@ -7,6 +7,7 @@ import { Star, MapPin, Calendar, Verified, Mic2, Loader2, Users } from "lucide-r
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import BillboardAd from "@/components/BillboardAd";
+import { useRapperImage } from "@/hooks/useImageStyle";
 
 type Rapper = Tables<"rappers">;
 
@@ -18,6 +19,90 @@ interface AllRappersGridProps {
   itemsPerPage: number;
   onLoadMore: () => void;
 }
+
+const RapperCard = ({ rapper }: { rapper: Rapper }) => {
+  const { data: imageUrl } = useRapperImage(rapper.id);
+
+  return (
+    <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
+      <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group">
+        {/* Rap culture accent bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+        
+        <CardContent className="p-6">
+          {/* Rapper image or placeholder */}
+          <div className="w-full h-32 bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300 overflow-hidden">
+            {imageUrl ? (
+              <img 
+                src={imageUrl} 
+                alt={rapper.name}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <>
+                <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-transparent to-rap-carbon/50 rounded-lg"></div>
+                
+                {/* Stage spotlight effect */}
+                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-rap-silver/30 to-transparent rounded-full blur-sm"></div>
+                
+                {/* Rapper silhouette with microphone */}
+                <div className="relative z-10 flex flex-col items-center">
+                  <Mic2 className="w-8 h-8 text-rap-silver/70 group-hover:text-rap-platinum transition-colors mb-1" />
+                  <Users className="w-4 h-4 text-rap-silver/50 group-hover:text-rap-platinum/70 transition-colors" />
+                </div>
+                
+                {/* Stage floor effect */}
+                <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-rap-carbon to-transparent rounded-b-lg"></div>
+              </>
+            )}
+          </div>
+
+          {/* Rapper Info */}
+          <div className="space-y-3">
+            <div className="flex items-start justify-between">
+              <h3 className="text-rap-platinum font-mogra font-bold text-lg leading-tight group-hover:text-rap-silver transition-colors">{rapper.name}</h3>
+              {rapper.verified && (
+                <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
+              )}
+            </div>
+
+            {rapper.real_name && (
+              <p className="text-rap-smoke text-sm font-medium font-kaushan">{rapper.real_name}</p>
+            )}
+
+            <div className="flex flex-wrap gap-2 text-xs">
+              {rapper.origin && (
+                <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
+                  <MapPin className="w-3 h-3" />
+                  <span>{rapper.origin}</span>
+                </div>
+              )}
+              {rapper.birth_year && (
+                <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
+                  <Calendar className="w-3 h-3" />
+                  <span>{rapper.birth_year}</span>
+                </div>
+              )}
+            </div>
+
+            {/* Stats with enhanced styling */}
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-1 bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-3 py-1 rounded-full border border-rap-silver/20">
+                <Star className="w-4 h-4 text-rap-gold" />
+                <span className="text-rap-platinum font-bold font-ceviche">
+                  {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
+                </span>
+              </div>
+              <Badge variant="secondary" className="bg-gradient-to-r from-rap-forest/40 to-rap-burgundy/40 text-rap-platinum border-rap-silver/30 font-kaushan">
+                {rapper.total_votes || 0} votes
+              </Badge>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </Link>
+  );
+};
 
 const AllRappersGrid = ({
   rappers,
@@ -55,74 +140,8 @@ const AllRappersGrid = ({
         <div key={sectionIndex}>
           {section.type === 'rappers' ? (
             <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${section.isFirstChunk ? 'mb-8' : 'mb-8'}`}>
-              {section.data.map((rapper, index) => (
-                <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
-                  <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group">
-                    {/* Rap culture accent bar */}
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
-                    
-                    <CardContent className="p-6">
-                      {/* Rapper on stage placeholder image */}
-                      <div className="w-full h-32 bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300">
-                        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-transparent to-rap-carbon/50 rounded-lg"></div>
-                        
-                        {/* Stage spotlight effect */}
-                        <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-rap-silver/30 to-transparent rounded-full blur-sm"></div>
-                        
-                        {/* Rapper silhouette with microphone */}
-                        <div className="relative z-10 flex flex-col items-center">
-                          <Mic2 className="w-8 h-8 text-rap-silver/70 group-hover:text-rap-platinum transition-colors mb-1" />
-                          <Users className="w-4 h-4 text-rap-silver/50 group-hover:text-rap-platinum/70 transition-colors" />
-                        </div>
-                        
-                        {/* Stage floor effect */}
-                        <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-rap-carbon to-transparent rounded-b-lg"></div>
-                      </div>
-
-                      {/* Rapper Info */}
-                      <div className="space-y-3">
-                        <div className="flex items-start justify-between">
-                          <h3 className="text-rap-platinum font-mogra font-bold text-lg leading-tight group-hover:text-rap-silver transition-colors">{rapper.name}</h3>
-                          {rapper.verified && (
-                            <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
-                          )}
-                        </div>
-
-                        {rapper.real_name && (
-                          <p className="text-rap-smoke text-sm font-medium font-kaushan">{rapper.real_name}</p>
-                        )}
-
-                        <div className="flex flex-wrap gap-2 text-xs">
-                          {rapper.origin && (
-                            <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
-                              <MapPin className="w-3 h-3" />
-                              <span>{rapper.origin}</span>
-                            </div>
-                          )}
-                          {rapper.birth_year && (
-                            <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
-                              <Calendar className="w-3 h-3" />
-                              <span>{rapper.birth_year}</span>
-                            </div>
-                          )}
-                        </div>
-
-                        {/* Stats with enhanced styling */}
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-1 bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-3 py-1 rounded-full border border-rap-silver/20">
-                            <Star className="w-4 h-4 text-rap-gold" />
-                            <span className="text-rap-platinum font-bold font-ceviche">
-                              {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
-                            </span>
-                          </div>
-                          <Badge variant="secondary" className="bg-gradient-to-r from-rap-forest/40 to-rap-burgundy/40 text-rap-platinum border-rap-silver/30 font-kaushan">
-                            {rapper.total_votes || 0} votes
-                          </Badge>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
+              {section.data.map((rapper) => (
+                <RapperCard key={rapper.id} rapper={rapper} />
               ))}
             </div>
           ) : (
