@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network, Star } from "lucide-react";
@@ -10,12 +9,12 @@ import VotingTrends from "@/components/analytics/VotingTrends";
 import TopVoters from "@/components/analytics/TopVoters";
 import RapperNetworkGraph from "@/components/analytics/RapperNetworkGraph";
 import AstrologicalRankings from "@/components/analytics/AstrologicalRankings";
-
 const Analytics = () => {
-  const { user, signOut } = useAuth();
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+  const {
+    user,
+    signOut
+  } = useAuth();
+  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10">
@@ -36,14 +35,12 @@ const Analytics = () => {
             </div>
             
             <div className="flex items-center space-x-4">
-              {user && (
-                <>
+              {user && <>
                   <span className="text-rap-platinum font-kaushan">User: {user.email}</span>
                   <Button onClick={signOut} variant="outline" className="border-rap-burgundy/50 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
                     Sign Out
                   </Button>
-                </>
-              )}
+                </>}
             </div>
           </div>
         </header>
@@ -108,8 +105,6 @@ const Analytics = () => {
           </Tabs>
         </main>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Analytics;
