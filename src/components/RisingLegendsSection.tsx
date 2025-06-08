@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -127,7 +126,7 @@ const RisingLegendsSection = () => {
 
       <div className="text-center mt-8">
         <Link to="/rankings/official/rising-legends-2024">
-          <Button className="bg-gradient-to-r from-rap-forest to-rap-forest-light hover:from-rap-forest-light hover:to-rap-forest font-mogra shadow-xl shadow-rap-forest/40 border border-rap-forest/30" size="lg">
+          <Button className="bg-rap-forest hover:bg-rap-forest-light text-rap-platinum font-mogra shadow-xl shadow-rap-forest/40 border border-rap-forest/30" size="lg">
             View Complete Rising Legends List
           </Button>
         </Link>

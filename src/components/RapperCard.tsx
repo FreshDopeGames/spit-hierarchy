@@ -1,4 +1,3 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/integrations/supabase/types";
@@ -47,7 +46,7 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
     return (
       <Link to={`/rapper/${rapper.id}`}>
         <Card className={`bg-carbon-fiber ${getPositionColors(position)} transition-all duration-300 hover:scale-105 group cursor-pointer relative overflow-hidden`}>
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+          <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
           
           <CardContent className="p-4">
             <div className="flex items-center justify-between mb-3">
@@ -89,7 +88,7 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
   return (
     <Link to={`/rapper/${rapper.id}`}>
       <Card className={`bg-carbon-fiber ${getPositionColors(position)} transition-all duration-300 hover:scale-105 group cursor-pointer relative overflow-hidden`}>
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">

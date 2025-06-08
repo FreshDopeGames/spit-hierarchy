@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -29,7 +28,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
     <>
       <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20">
         {/* Rap culture accent bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
         <CardContent className="p-6">
           {/* Ranking Badge */}
@@ -114,7 +113,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             {/* Vote Button */}
             <Button
               onClick={() => setSelectedRapper(rapper)}
-              className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light text-rap-platinum font-mogra shadow-lg shadow-rap-gold/30"
+              className="w-full bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30"
             >
               Cast Royal Decree
             </Button>

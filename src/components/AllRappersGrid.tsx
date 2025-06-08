@@ -27,7 +27,7 @@ const RapperCard = ({ rapper }: { rapper: Rapper }) => {
     <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
       <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group">
         {/* Rap culture accent bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
         <CardContent className="p-6">
           {/* Rapper image or placeholder - changed to tall aspect ratio */}
@@ -160,7 +160,7 @@ const AllRappersGrid = ({
           <Button
             onClick={onLoadMore}
             disabled={isFetching}
-            className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light text-rap-platinum font-bold px-8 py-3 text-lg border-2 border-rap-silver/50 hover:border-rap-silver shadow-lg hover:shadow-rap-burgundy/30 transition-all duration-300 font-mogra"
+            className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold px-8 py-3 text-lg border-2 border-rap-silver/50 hover:border-rap-silver shadow-lg hover:shadow-rap-gold/30 transition-all duration-300 font-mogra"
           >
             {isFetching ? (
               <>

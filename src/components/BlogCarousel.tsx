@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
+
 interface BlogPost {
   id: string;
   title: string;
@@ -16,6 +17,7 @@ interface BlogPost {
     name: string;
   };
 }
+
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -45,6 +47,7 @@ const BlogCarousel = () => {
       return data as BlogPost[];
     }
   });
+
   useEffect(() => {
     if (!posts || posts.length === 0) return;
     const interval = setInterval(() => {
@@ -58,6 +61,7 @@ const BlogCarousel = () => {
     }, 100);
     return () => clearInterval(interval);
   }, [posts]);
+
   if (isLoading) {
     return <div className="mb-12">
         <div className="text-center mb-8">
@@ -75,6 +79,7 @@ const BlogCarousel = () => {
         </Card>
       </div>;
   }
+
   if (!posts || posts.length === 0) {
     return <div className="mb-12">
         <div className="text-center mb-8">
@@ -92,7 +97,7 @@ const BlogCarousel = () => {
         </Card>
         <div className="text-center mt-8">
           <Link to="/blog">
-            <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
+            <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30">
               <ArrowRight className="w-4 h-4 mr-2" />
               Explore All Slick Talk
             </Button>
@@ -100,8 +105,10 @@ const BlogCarousel = () => {
         </div>
       </div>;
   }
+
   const currentPost = posts[currentIndex];
   const timeAgo = currentPost.published_at ? format(new Date(currentPost.published_at), 'MMMM d, yyyy') : 'Unknown date';
+
   return <div className="mb-12">
       <div className="text-center mb-8 py-0">
         <h2 className="font-ceviche text-rap-gold mb-2 tracking-wider text-5xl">
@@ -113,7 +120,7 @@ const BlogCarousel = () => {
       </div>
       
       <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20 relative">
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
         <CardContent className="p-0">
           <div className="flex flex-col md:flex-row">
@@ -152,7 +159,7 @@ const BlogCarousel = () => {
 
               <div className="mt-6 text-black font-merienda font-extrabold bg-rap-gold">
                 <Link to={`/blog/${currentPost.id}`}>
-                  <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light group font-mogra shadow-lg shadow-rap-gold/30">
+                  <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon group font-mogra shadow-lg shadow-rap-gold/30">
                     Read Full Hieroglyphs
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
@@ -163,7 +170,7 @@ const BlogCarousel = () => {
 
           {/* Progress Bar */}
           <div className="relative h-1 bg-rap-carbon">
-            <div className="absolute top-0 left-0 h-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest transition-all duration-100" style={{
+            <div className="absolute top-0 left-0 h-full bg-rap-gold transition-all duration-100" style={{
             width: `${progress}%`
           }} />
           </div>
@@ -181,7 +188,7 @@ const BlogCarousel = () => {
       {/* View All Button - Now positioned below the carousel */}
       <div className="text-center mt-8">
         <Link to="/blog">
-          <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
+          <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30">
             <ArrowRight className="w-4 h-4 mr-2" />
             View All Slick Talk
           </Button>
@@ -189,4 +196,5 @@ const BlogCarousel = () => {
       </div>
     </div>;
 };
+
 export default BlogCarousel;
