@@ -27,7 +27,7 @@ const Rankings = () => {
   const [officialRankings, setOfficialRankings] = useState<RankingWithItems[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Use the new hook for user rankings
+  // Use the updated hook for user rankings
   const { data: userRankings = [], isLoading: userRankingsLoading } = useUserRankings();
 
   useEffect(() => {
@@ -94,7 +94,7 @@ const Rankings = () => {
     slug: ranking.slug,
   }));
 
-  // Combine all rankings for selection
+  // Combine all rankings for selection (user rankings are already transformed)
   const allRankings = [...transformedOfficialRankings, ...userRankings];
   const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
 

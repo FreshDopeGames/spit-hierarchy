@@ -23,7 +23,7 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
     return true;
   });
 
-  // Transform UserRanking to match RankingCard props
+  // Transform UserRanking to match RankingCard props (no changes needed since data is already properly formatted)
   const transformedRankings = filteredRankings.map(ranking => ({
     ...ranking,
     views: ranking.views || 0,

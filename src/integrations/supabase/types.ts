@@ -685,6 +685,145 @@ export type Database = {
         }
         Relationships: []
       }
+      user_ranking_items: {
+        Row: {
+          created_at: string
+          id: string
+          is_ranked: boolean | null
+          position: number
+          ranking_id: string
+          rapper_id: string
+          reason: string | null
+          updated_at: string
+          vote_velocity_24_hours: number | null
+          vote_velocity_7_days: number | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_ranked?: boolean | null
+          position: number
+          ranking_id: string
+          rapper_id: string
+          reason?: string | null
+          updated_at?: string
+          vote_velocity_24_hours?: number | null
+          vote_velocity_7_days?: number | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_ranked?: boolean | null
+          position?: number
+          ranking_id?: string
+          rapper_id?: string
+          reason?: string | null
+          updated_at?: string
+          vote_velocity_24_hours?: number | null
+          vote_velocity_7_days?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_ranking_items_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "user_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_ranking_tag_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          ranking_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ranking_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ranking_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_ranking_tag_assignments_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "user_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_ranking_tag_assignments_tag_id_fkey"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "ranking_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_rankings: {
+        Row: {
+          category: string
+          created_at: string
+          description: string | null
+          display_order: number | null
+          id: string
+          is_featured: boolean | null
+          is_public: boolean | null
+          slug: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          category: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_featured?: boolean | null
+          is_public?: boolean | null
+          slug: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          category?: string
+          created_at?: string
+          description?: string | null
+          display_order?: number | null
+          id?: string
+          is_featured?: boolean | null
+          is_public?: boolean | null
+          slug?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -915,6 +1054,10 @@ export type Database = {
         Returns: boolean
       }
       populate_ranking_with_all_rappers: {
+        Args: { ranking_uuid: string }
+        Returns: undefined
+      }
+      populate_user_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
         Returns: undefined
       }

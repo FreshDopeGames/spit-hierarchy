@@ -2,6 +2,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { Tables } from "@/integrations/supabase/types";
 
 export interface UserRanking {
   id: string;
@@ -25,99 +26,207 @@ export interface UserRanking {
   slug?: string;
 }
 
+type UserRankingFromDB = Tables<"user_rankings"> & {
+  profiles?: {
+    username: string;
+    full_name?: string;
+  };
+  user_ranking_items: Array<{
+    position: number;
+    reason: string | null;
+    rapper: {
+      name: string;
+    };
+  }>;
+  user_ranking_tag_assignments: Array<{
+    ranking_tags: {
+      name: string;
+    };
+  }>;
+};
+
 export const useUserRankings = () => {
   const { user } = useAuth();
 
   return useQuery({
     queryKey: ["user-rankings"],
     queryFn: async () => {
-      // For now, return the existing mock data since we need to create the database structure first
-      // This will be updated once we have the proper tables
-      const mockRankings: UserRanking[] = [
-        {
-          id: "1",
-          title: "Top 10 G.O.A.T. Rappers of All Time",
-          description: "My personal ranking of the greatest rappers ever, based on lyricism, influence, and cultural impact.",
-          author: "HipHopHead92",
-          authorId: "user1",
-          createdAt: "2024-01-15",
-          timeAgo: "3 days ago",
-          rappers: [
-            { rank: 1, name: "Nas", reason: "Illmatic alone secures his spot" },
-            { rank: 2, name: "Jay-Z", reason: "Business acumen and longevity" },
-            { rank: 3, name: "Biggie", reason: "Storytelling master" },
-            { rank: 4, name: "Tupac", reason: "Raw emotion and social consciousness" },
-            { rank: 5, name: "Eminem", reason: "Technical skill and wordplay" },
-          ],
-          likes: 247,
-          comments: 89,
-          views: 1240,
-          isPublic: true,
-          isOfficial: false,
-          tags: ["GOAT", "Classic Hip-Hop", "All-Time"]
-        },
-        {
-          id: "2",
-          title: "Best New School Rappers (2020-2024)",
-          description: "Rising stars who are shaping the future of hip-hop right now.",
-          author: "NextGenMusic",
-          authorId: "user2",
-          createdAt: "2024-01-10",
-          timeAgo: "1 week ago",
-          rappers: [
-            { rank: 1, name: "Baby Keem", reason: "Innovative sound and production" },
-            { rank: 2, name: "JID", reason: "Incredible flow and technical ability" },
-            { rank: 3, name: "Denzel Curry", reason: "Versatility and energy" },
-            { rank: 4, name: "Vince Staples", reason: "Unique perspective and delivery" },
-            { rank: 5, name: "Earl Sweatshirt", reason: "Artistic evolution and depth" },
-          ],
-          likes: 156,
-          comments: 34,
-          views: 890,
-          isPublic: true,
-          isOfficial: false,
-          tags: ["New School", "2020s", "Rising Stars"]
-        },
-        {
-          id: "3",
-          title: "Best Lyricists in Hip-Hop",
-          description: "Ranking rappers purely on their lyrical ability and wordplay.",
-          author: "WordplayWizard",
-          authorId: "user3",
-          createdAt: "2024-01-08",
-          timeAgo: "1 week ago",
-          rappers: [
-            { rank: 1, name: "MF DOOM", reason: "Complex wordplay and metaphors" },
-            { rank: 2, name: "Kendrick Lamar", reason: "Storytelling and social commentary" },
-            { rank: 3, name: "Black Thought", reason: "Consistent excellence" },
-            { rank: 4, name: "Andre 3000", reason: "Creative and unpredictable" },
-            { rank: 5, name: "Lupe Fiasco", reason: "Double entendres and complexity" },
-          ],
-          likes: 203,
-          comments: 67,
-          views: 1150,
-          isPublic: true,
-          isOfficial: false,
-          tags: ["Lyricism", "Wordplay", "Technical"]
-        }
-      ];
+      const { data, error } = await supabase
+        .from("user_rankings")
+        .select(`
+          *,
+          profiles!user_rankings_user_id_fkey(username, full_name),
+          user_ranking_items!inner(
+            position,
+            reason,
+            rapper:rappers(name)
+          ),
+          user_ranking_tag_assignments(
+            ranking_tags(name)
+          )
+        `)
+        .eq("is_public", true)
+        .order("created_at", { ascending: false });
 
-      return mockRankings;
+      if (error) {
+        console.error("Error fetching user rankings:", error);
+        throw error;
+      }
+
+      // Transform the data to match the UserRanking interface
+      const transformedRankings: UserRanking[] = (data as UserRankingFromDB[]).map((ranking) => {
+        const topRappers = ranking.user_ranking_items
+          .filter(item => item.position <= 5) // Show only top 5 for preview
+          .sort((a, b) => a.position - b.position)
+          .map(item => ({
+            rank: item.position,
+            name: item.rapper?.name || "Unknown",
+            reason: item.reason || "",
+          }));
+
+        return {
+          id: ranking.id,
+          title: ranking.title,
+          description: ranking.description || "",
+          author: ranking.profiles?.username || "Unknown User",
+          authorId: ranking.user_id,
+          createdAt: ranking.created_at,
+          timeAgo: formatTimeAgo(ranking.created_at),
+          rappers: topRappers,
+          likes: Math.floor(Math.random() * 500) + 50, // Mock data for now
+          comments: Math.floor(Math.random() * 100) + 10, // Mock data for now
+          views: Math.floor(Math.random() * 2000) + 500, // Mock data for now
+          isPublic: ranking.is_public || false,
+          isOfficial: false,
+          tags: ranking.user_ranking_tag_assignments?.map(assignment => 
+            assignment.ranking_tags?.name || ""
+          ).filter(Boolean) || [],
+          slug: ranking.slug,
+        };
+      });
+
+      return transformedRankings;
     }
   });
 };
 
 export const useCreateUserRanking = () => {
   const queryClient = useQueryClient();
+  const { user } = useAuth();
   
   return useMutation({
-    mutationFn: async (rankingData: Partial<UserRanking>) => {
-      // This will be implemented once we have the proper database structure
-      console.log("Creating user ranking:", rankingData);
-      throw new Error("User ranking creation not yet implemented - needs database structure");
+    mutationFn: async (rankingData: {
+      title: string;
+      description: string;
+      category: string;
+      tags?: string[];
+      isPublic?: boolean;
+    }) => {
+      if (!user) {
+        throw new Error("User must be logged in to create rankings");
+      }
+
+      // Generate a slug from the title
+      const slug = generateSlug(rankingData.title);
+
+      // Create the ranking
+      const { data: ranking, error: rankingError } = await supabase
+        .from("user_rankings")
+        .insert({
+          title: rankingData.title,
+          description: rankingData.description,
+          category: rankingData.category,
+          slug: slug,
+          user_id: user.id,
+          is_public: rankingData.isPublic ?? true,
+        })
+        .select()
+        .single();
+
+      if (rankingError) throw rankingError;
+
+      // Populate the ranking with all rappers
+      const { error: populateError } = await supabase.rpc(
+        "populate_user_ranking_with_all_rappers",
+        { ranking_uuid: ranking.id }
+      );
+
+      if (populateError) {
+        console.error("Error populating ranking with rappers:", populateError);
+      }
+
+      return ranking;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
     }
   });
 };
+
+export const useUpdateUserRanking = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async ({ 
+      id, 
+      updates 
+    }: { 
+      id: string; 
+      updates: Partial<Tables<"user_rankings">> 
+    }) => {
+      const { data, error } = await supabase
+        .from("user_rankings")
+        .update(updates)
+        .eq("id", id)
+        .select()
+        .single();
+
+      if (error) throw error;
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
+    }
+  });
+};
+
+export const useDeleteUserRanking = () => {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const { error } = await supabase
+        .from("user_rankings")
+        .delete()
+        .eq("id", id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
+    }
+  });
+};
+
+// Helper functions
+function formatTimeAgo(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffInSeconds = Math.floor((now.getTime() - date.getTime()) / 1000);
+
+  if (diffInSeconds < 60) return "just now";
+  if (diffInSeconds < 3600) return `${Math.floor(diffInSeconds / 60)} minutes ago`;
+  if (diffInSeconds < 86400) return `${Math.floor(diffInSeconds / 3600)} hours ago`;
+  if (diffInSeconds < 604800) return `${Math.floor(diffInSeconds / 86400)} days ago`;
+  if (diffInSeconds < 2419200) return `${Math.floor(diffInSeconds / 604800)} weeks ago`;
+  return date.toLocaleDateString();
+}
+
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '') // Remove special characters
+    .replace(/\s+/g, '-') // Replace spaces with hyphens
+    .replace(/-+/g, '-') // Replace multiple hyphens with single
+    .trim();
+}
