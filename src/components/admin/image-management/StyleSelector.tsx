@@ -21,23 +21,10 @@ interface StyleSelectorProps {
   onStyleChange: (style: ImageStyle) => void;
   completionStats: Record<ImageStyle, number>;
   totalRappers: number;
+  sortedStyles: [string, string][];
 }
 
-const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRappers }: StyleSelectorProps) => {
-  // Sort styles: those with images first, then those without images
-  const sortedStyles = Object.entries(styleLabels).sort(([styleA], [styleB]) => {
-    const statsA = completionStats[styleA as ImageStyle] || 0;
-    const statsB = completionStats[styleB as ImageStyle] || 0;
-    
-    // If both have images or both have no images, sort alphabetically
-    if ((statsA > 0 && statsB > 0) || (statsA === 0 && statsB === 0)) {
-      return styleLabels[styleA as ImageStyle].localeCompare(styleLabels[styleB as ImageStyle]);
-    }
-    
-    // Styles with images come first
-    return statsB > 0 ? 1 : -1;
-  });
-
+const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRappers, sortedStyles }: StyleSelectorProps) => {
   return (
     <div className="flex items-center gap-4">
       <Palette className="w-6 h-6 text-rap-gold" />

@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,8 +23,24 @@ const styleLabels: Record<ImageStyle, string> = {
   retro: "Retro"
 };
 
+// Helper function to sort styles based on completion stats
+const getSortedStyles = (completionStats: Record<ImageStyle, number>) => {
+  return Object.entries(styleLabels).sort(([styleA], [styleB]) => {
+    const statsA = completionStats[styleA as ImageStyle] || 0;
+    const statsB = completionStats[styleB as ImageStyle] || 0;
+    
+    // If both have images or both have no images, sort alphabetically
+    if ((statsA > 0 && statsB > 0) || (statsA === 0 && statsB === 0)) {
+      return styleLabels[styleA as ImageStyle].localeCompare(styleLabels[styleB as ImageStyle]);
+    }
+    
+    // Styles with images come first
+    return statsB > 0 ? 1 : -1;
+  });
+};
+
 const RapperImageManagement = () => {
-  const [selectedStyle, setSelectedStyle] = useState<ImageStyle>("photo_real");
+  const [selectedStyle, setSelectedStyle] = useState<ImageStyle | null>(null);
 
   const { data: rappers, isLoading: rappersLoading } = useQuery({
     queryKey: ["admin-rappers-images"],
@@ -80,8 +95,16 @@ const RapperImageManagement = () => {
   };
 
   const completionStats = getCompletionStats();
+  const sortedStyles = getSortedStyles(completionStats);
 
-  if (rappersLoading || imagesLoading) {
+  // Set initial selected style to the first in the sorted list
+  useEffect(() => {
+    if (!selectedStyle && sortedStyles.length > 0 && !rappersLoading && !imagesLoading) {
+      setSelectedStyle(sortedStyles[0][0] as ImageStyle);
+    }
+  }, [selectedStyle, sortedStyles, rappersLoading, imagesLoading]);
+
+  if (rappersLoading || imagesLoading || !selectedStyle) {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
@@ -105,6 +128,7 @@ const RapperImageManagement = () => {
           onStyleChange={setSelectedStyle}
           completionStats={completionStats}
           totalRappers={rappers?.length || 0}
+          sortedStyles={sortedStyles}
         />
 
         {/* Completion Overview */}
