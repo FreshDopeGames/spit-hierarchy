@@ -5,18 +5,32 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Upload, Check, X, Music } from "lucide-react";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Upload, Check, X, Music, Palette } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { Tables } from "@/integrations/supabase/types";
+import { Tables, Database } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
+type ImageStyle = Database["public"]["Enums"]["image_style"];
+type RapperImage = Tables<"rapper_images">;
+
+const styleLabels: Record<ImageStyle, string> = {
+  photo_real: "Photo Real",
+  comic_book: "Comic Book",
+  anime: "Anime", 
+  video_game: "Video Game",
+  hardcore: "Hardcore",
+  minimalist: "Minimalist",
+  retro: "Retro"
+};
 
 const RapperImageManagement = () => {
-  const [uploadingRappers, setUploadingRappers] = useState<Set<string>>(new Set());
+  const [uploadingImages, setUploadingImages] = useState<Set<string>>(new Set());
+  const [selectedStyle, setSelectedStyle] = useState<ImageStyle>("photo_real");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: rappers, isLoading } = useQuery({
+  const { data: rappers, isLoading: rappersLoading } = useQuery({
     queryKey: ["admin-rappers-images"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -29,30 +43,25 @@ const RapperImageManagement = () => {
     }
   });
 
-  const updateRapperImageMutation = useMutation({
-    mutationFn: async ({ rapperId, imageUrl }: { rapperId: string; imageUrl: string }) => {
-      const { error } = await supabase
-        .from("rappers")
-        .update({ image_url: imageUrl })
-        .eq("id", rapperId);
+  const { data: rapperImages, isLoading: imagesLoading } = useQuery({
+    queryKey: ["rapper-images"],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from("rapper_images")
+        .select("*");
       
       if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-rappers-images"] });
-      queryClient.invalidateQueries({ queryKey: ["rappers"] });
-      queryClient.invalidateQueries({ queryKey: ["top-rappers"] });
+      return data;
     }
   });
 
-  const handleImageUpload = async (rapper: Rapper, file: File) => {
-    try {
-      setUploadingRappers(prev => new Set(prev).add(rapper.id));
-
-      // Create a file name with rapper's name (sanitized)
-      const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+  const uploadImageMutation = useMutation({
+    mutationFn: async ({ rapperId, style, file }: { rapperId: string; style: ImageStyle; file: File }) => {
+      // Create a file name with rapper's name and style
+      const rapper = rappers?.find(r => r.id === rapperId);
+      const sanitizedName = rapper?.name.toLowerCase().replace(/[^a-z0-9]/g, '-') || 'unknown';
       const fileExt = file.name.split('.').pop();
-      const fileName = `${sanitizedName}-${Date.now()}.${fileExt}`;
+      const fileName = `${sanitizedName}-${style}-${Date.now()}.${fileExt}`;
 
       // Upload to storage
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -69,15 +78,39 @@ const RapperImageManagement = () => {
         .from('rapper-images')
         .getPublicUrl(uploadData.path);
 
-      // Update rapper with new image URL
-      await updateRapperImageMutation.mutateAsync({
+      // Insert or update rapper image
+      const { error: insertError } = await supabase
+        .from("rapper_images")
+        .upsert({
+          rapper_id: rapperId,
+          style: style,
+          image_url: publicUrl
+        });
+
+      if (insertError) throw insertError;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["rapper-images"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-rappers-images"] });
+      queryClient.invalidateQueries({ queryKey: ["rappers"] });
+    }
+  });
+
+  const handleImageUpload = async (rapper: Rapper, style: ImageStyle, file: File) => {
+    const uploadKey = `${rapper.id}-${style}`;
+    
+    try {
+      setUploadingImages(prev => new Set(prev).add(uploadKey));
+
+      await uploadImageMutation.mutateAsync({
         rapperId: rapper.id,
-        imageUrl: publicUrl
+        style,
+        file
       });
 
       toast({
         title: "Success",
-        description: `Image uploaded for ${rapper.name}`,
+        description: `${styleLabels[style]} image uploaded for ${rapper.name}`,
       });
 
     } catch (error: any) {
@@ -88,15 +121,15 @@ const RapperImageManagement = () => {
         variant: "destructive",
       });
     } finally {
-      setUploadingRappers(prev => {
+      setUploadingImages(prev => {
         const newSet = new Set(prev);
-        newSet.delete(rapper.id);
+        newSet.delete(uploadKey);
         return newSet;
       });
     }
   };
 
-  const handleFileSelect = (rapper: Rapper, event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = (rapper: Rapper, style: ImageStyle, event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -120,13 +153,27 @@ const RapperImageManagement = () => {
       return;
     }
 
-    handleImageUpload(rapper, file);
+    handleImageUpload(rapper, style, file);
   };
 
-  const rappersWithImages = rappers?.filter(r => r.image_url) || [];
-  const rappersWithoutImages = rappers?.filter(r => !r.image_url) || [];
+  const getImageForStyle = (rapperId: string, style: ImageStyle): string | null => {
+    return rapperImages?.find(img => img.rapper_id === rapperId && img.style === style)?.image_url || null;
+  };
 
-  if (isLoading) {
+  const getCompletionStats = () => {
+    if (!rappers || !rapperImages) return {};
+    
+    const stats: Record<ImageStyle, number> = {} as Record<ImageStyle, number>;
+    Object.keys(styleLabels).forEach(style => {
+      stats[style as ImageStyle] = rapperImages.filter(img => img.style === style).length;
+    });
+    
+    return stats;
+  };
+
+  const completionStats = getCompletionStats();
+
+  if (rappersLoading || imagesLoading) {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
@@ -143,87 +190,83 @@ const RapperImageManagement = () => {
 
   return (
     <div className="space-y-8">
-      {/* Stats Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="bg-carbon-fiber border-rap-gold/30">
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-rap-gold">{rappers?.length || 0}</div>
-            <div className="text-sm text-rap-platinum">Total Rappers</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-carbon-fiber border-rap-forest/30">
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-rap-forest">{rappersWithImages.length}</div>
-            <div className="text-sm text-rap-platinum">With Images</div>
-          </CardContent>
-        </Card>
-        <Card className="bg-carbon-fiber border-rap-burgundy/30">
-          <CardContent className="p-4">
-            <div className="text-2xl font-bold text-rap-burgundy">{rappersWithoutImages.length}</div>
-            <div className="text-sm text-rap-platinum">Need Images</div>
-          </CardContent>
-        </Card>
+      {/* Style Selector and Stats */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-4">
+          <Palette className="w-6 h-6 text-rap-gold" />
+          <h2 className="text-xl font-mogra text-rap-platinum">Image Style Management</h2>
+        </div>
+        
+        <div className="flex items-center gap-4">
+          <Select value={selectedStyle} onValueChange={(value) => setSelectedStyle(value as ImageStyle)}>
+            <SelectTrigger className="w-48 bg-carbon-fiber border-rap-gold/30 text-rap-platinum">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-carbon-fiber border-rap-gold/30">
+              {Object.entries(styleLabels).map(([style, label]) => (
+                <SelectItem key={style} value={style} className="text-rap-platinum hover:bg-rap-gold/20">
+                  {label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+          
+          <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
+            {completionStats[selectedStyle] || 0} / {rappers?.length || 0} completed
+          </Badge>
+        </div>
+
+        {/* Completion Overview */}
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-7 gap-2">
+          {Object.entries(styleLabels).map(([style, label]) => (
+            <Card key={style} className="bg-carbon-fiber border-rap-gold/30">
+              <CardContent className="p-3 text-center">
+                <div className="text-lg font-bold text-rap-gold">{completionStats[style as ImageStyle] || 0}</div>
+                <div className="text-xs text-rap-platinum font-kaushan">{label}</div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
       </div>
 
-      {/* Rappers Without Images - Priority Section */}
-      {rappersWithoutImages.length > 0 && (
-        <Card className="bg-carbon-fiber border-rap-burgundy/30">
-          <CardHeader>
-            <CardTitle className="text-rap-burgundy font-mogra">
-              Rappers Needing Images ({rappersWithoutImages.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {rappersWithoutImages.map((rapper) => (
-                <RapperImageCard
-                  key={rapper.id}
-                  rapper={rapper}
-                  isUploading={uploadingRappers.has(rapper.id)}
-                  onFileSelect={(file) => handleFileSelect(rapper, file)}
-                  hasImage={false}
-                />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Rappers With Images */}
-      {rappersWithImages.length > 0 && (
-        <Card className="bg-carbon-fiber border-rap-forest/30">
-          <CardHeader>
-            <CardTitle className="text-rap-forest font-mogra">
-              Rappers With Images ({rappersWithImages.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              {rappersWithImages.map((rapper) => (
-                <RapperImageCard
-                  key={rapper.id}
-                  rapper={rapper}
-                  isUploading={uploadingRappers.has(rapper.id)}
-                  onFileSelect={(file) => handleFileSelect(rapper, file)}
-                  hasImage={true}
-                />
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Rappers Grid for Selected Style */}
+      <Card className="bg-carbon-fiber border-rap-gold/30">
+        <CardHeader>
+          <CardTitle className="text-rap-gold font-mogra flex items-center gap-2">
+            <Palette className="w-5 h-5" />
+            {styleLabels[selectedStyle]} Images ({completionStats[selectedStyle] || 0}/{rappers?.length || 0})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+            {rappers?.map((rapper) => (
+              <StyleImageCard
+                key={`${rapper.id}-${selectedStyle}`}
+                rapper={rapper}
+                style={selectedStyle}
+                imageUrl={getImageForStyle(rapper.id, selectedStyle)}
+                isUploading={uploadingImages.has(`${rapper.id}-${selectedStyle}`)}
+                onFileSelect={(file) => handleFileSelect(rapper, selectedStyle, file)}
+              />
+            ))}
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
 
-interface RapperImageCardProps {
+interface StyleImageCardProps {
   rapper: Rapper;
+  style: ImageStyle;
+  imageUrl: string | null;
   isUploading: boolean;
   onFileSelect: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  hasImage: boolean;
 }
 
-const RapperImageCard = ({ rapper, isUploading, onFileSelect, hasImage }: RapperImageCardProps) => {
+const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: StyleImageCardProps) => {
+  const hasImage = !!imageUrl;
+
   return (
     <Card className={`bg-carbon-fiber transition-all duration-300 ${
       hasImage 
@@ -234,10 +277,10 @@ const RapperImageCard = ({ rapper, isUploading, onFileSelect, hasImage }: Rapper
         <div className="space-y-3">
           {/* Image Preview */}
           <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center">
-            {rapper.image_url ? (
+            {imageUrl ? (
               <img 
-                src={rapper.image_url} 
-                alt={rapper.name}
+                src={imageUrl} 
+                alt={`${rapper.name} - ${styleLabels[style]}`}
                 className="w-full h-full object-cover"
               />
             ) : (
@@ -258,28 +301,26 @@ const RapperImageCard = ({ rapper, isUploading, onFileSelect, hasImage }: Rapper
           </div>
 
           {/* Status Badge */}
-          <div className="flex items-center justify-between">
-            <Badge 
-              variant="secondary" 
-              className={`text-xs font-kaushan ${
-                hasImage 
-                  ? 'bg-rap-forest/20 text-rap-forest border-rap-forest/30' 
-                  : 'bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30'
-              }`}
-            >
-              {hasImage ? (
-                <>
-                  <Check className="w-3 h-3 mr-1" />
-                  Has Image
-                </>
-              ) : (
-                <>
-                  <X className="w-3 h-3 mr-1" />
-                  No Image
-                </>
-              )}
-            </Badge>
-          </div>
+          <Badge 
+            variant="secondary" 
+            className={`text-xs font-kaushan w-full justify-center ${
+              hasImage 
+                ? 'bg-rap-forest/20 text-rap-forest border-rap-forest/30' 
+                : 'bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30'
+            }`}
+          >
+            {hasImage ? (
+              <>
+                <Check className="w-3 h-3 mr-1" />
+                {styleLabels[style]} Ready
+              </>
+            ) : (
+              <>
+                <X className="w-3 h-3 mr-1" />
+                No {styleLabels[style]}
+              </>
+            )}
+          </Badge>
 
           {/* Upload Button */}
           <div className="relative">
@@ -305,7 +346,7 @@ const RapperImageCard = ({ rapper, isUploading, onFileSelect, hasImage }: Rapper
               ) : (
                 <Upload className="w-4 h-4 mr-2" />
               )}
-              {hasImage ? 'Replace Image' : 'Upload Image'}
+              {hasImage ? 'Replace' : 'Upload'} {styleLabels[style]}
             </Button>
           </div>
         </div>

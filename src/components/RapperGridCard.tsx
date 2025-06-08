@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import VoteModal from "./VoteModal";
 import HotBadge from "./analytics/HotBadge";
 import { useIsHotRapper } from "@/hooks/useHotRappers";
+import { useRapperImage } from "@/hooks/useImageStyle";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -22,6 +23,7 @@ interface RapperGridCardProps {
 const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridCardProps) => {
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const { isHot, voteVelocity } = useIsHotRapper(rapper.id);
+  const { data: imageUrl } = useRapperImage(rapper.id);
 
   return (
     <>
@@ -47,9 +49,9 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           {/* Rapper Image - Make it clickable */}
           <Link to={`/rapper/${rapper.id}`}>
             <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
-              {rapper.image_url ? (
+              {imageUrl ? (
                 <img 
-                  src={rapper.image_url} 
+                  src={imageUrl} 
                   alt={rapper.name}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />

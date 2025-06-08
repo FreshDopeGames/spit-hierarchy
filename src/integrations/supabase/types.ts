@@ -291,6 +291,9 @@ export type Database = {
           full_name: string | null
           id: string
           location: string | null
+          preferred_image_style:
+            | Database["public"]["Enums"]["image_style"]
+            | null
           social_links: Json | null
           updated_at: string | null
           username: string
@@ -303,6 +306,9 @@ export type Database = {
           full_name?: string | null
           id: string
           location?: string | null
+          preferred_image_style?:
+            | Database["public"]["Enums"]["image_style"]
+            | null
           social_links?: Json | null
           updated_at?: string | null
           username: string
@@ -315,11 +321,59 @@ export type Database = {
           full_name?: string | null
           id?: string
           location?: string | null
+          preferred_image_style?:
+            | Database["public"]["Enums"]["image_style"]
+            | null
           social_links?: Json | null
           updated_at?: string | null
           username?: string
         }
         Relationships: []
+      }
+      rapper_images: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          is_default: boolean | null
+          rapper_id: string
+          style: Database["public"]["Enums"]["image_style"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          is_default?: boolean | null
+          rapper_id: string
+          style: Database["public"]["Enums"]["image_style"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          is_default?: boolean | null
+          rapper_id?: string
+          style?: Database["public"]["Enums"]["image_style"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_images_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_images_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       rappers: {
         Row: {
@@ -604,6 +658,14 @@ export type Database = {
       }
     }
     Enums: {
+      image_style:
+        | "photo_real"
+        | "comic_book"
+        | "anime"
+        | "video_game"
+        | "hardcore"
+        | "minimalist"
+        | "retro"
       member_status: "bronze" | "silver" | "gold" | "platinum" | "diamond"
     }
     CompositeTypes: {
@@ -720,6 +782,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      image_style: [
+        "photo_real",
+        "comic_book",
+        "anime",
+        "video_game",
+        "hardcore",
+        "minimalist",
+        "retro",
+      ],
       member_status: ["bronze", "silver", "gold", "platinum", "diamond"],
     },
   },
