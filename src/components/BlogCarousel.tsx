@@ -123,9 +123,7 @@ const BlogCarousel = () => {
                 <img src={currentPost.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=400&fit=crop"} alt={currentPost.title} className="w-full h-64 md:h-80 object-cover hover:opacity-90 transition-opacity cursor-pointer" />
               </Link>
               <div className="absolute top-4 left-4">
-                <span className="bg-gradient-to-r from-rap-burgundy to-rap-forest text-rap-platinum px-3 py-1 rounded-full text-sm font-mogra shadow-lg shadow-rap-burgundy/30">
-                  Featured Scroll
-                </span>
+                <span className="bg-gradient-to-r from-rap-burgundy to-rap-forest text-rap-platinum px-3 py-1 rounded-full text-sm font-mogra shadow-lg shadow-rap-burgundy/30">Featured Post</span>
               </div>
             </div>
 
