@@ -44,7 +44,9 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
     };
     
     const sizeName = sizeMap[size];
-    return baseUrl.replace('/original.', `/${sizeName}.`);
+    
+    // Construct the full Supabase storage URL
+    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg`;
   };
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -85,9 +87,9 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
       // Generate multiple resolutions
       const resizedImages = await generateAvatarSizes(croppedBlob);
 
-      // Upload original cropped image
+      // Upload original cropped image - corrected path without 'avatars/' prefix
       const originalFile = new File([croppedBlob], `${userId}-original.jpg`, { type: 'image/jpeg' });
-      const originalPath = `avatars/${userId}/original.jpg`;
+      const originalPath = `${userId}/original.jpg`;
 
       const { error: originalUploadError } = await supabase.storage
         .from('avatars')
@@ -97,11 +99,11 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
         throw originalUploadError;
       }
 
-      // Upload resized versions
+      // Upload resized versions - corrected paths
       await Promise.all(
         resizedImages.map(async ({ name, blob }) => {
           const file = new File([blob], `${userId}-${name}.jpg`, { type: 'image/jpeg' });
-          const path = `avatars/${userId}/${name}.jpg`;
+          const path = `${userId}/${name}.jpg`;
           
           const { error } = await supabase.storage
             .from('avatars')
@@ -111,13 +113,8 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
         })
       );
 
-      // Get the public URL for the original
-      const { data: { publicUrl } } = supabase.storage
-        .from('avatars')
-        .getPublicUrl(originalPath);
-
-      // Update user profile with new avatar URL base path
-      const avatarBasePath = `avatars/${userId}`;
+      // Update user profile with new avatar URL base path (just the user ID)
+      const avatarBasePath = userId;
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ 
