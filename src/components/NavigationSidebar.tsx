@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -8,56 +7,48 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
 interface NavigationSidebarProps {
   trigger?: React.ReactNode;
 }
-
-const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
-  const { user, signOut } = useAuth();
+const NavigationSidebar = ({
+  trigger
+}: NavigationSidebarProps) => {
+  const {
+    user,
+    signOut
+  } = useAuth();
 
   // Get user profile for avatar and username
-  const { data: userProfile } = useQuery({
+  const {
+    data: userProfile
+  } = useQuery({
     queryKey: ['user-profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('username, full_name, avatar_url')
-        .eq('id', user.id)
-        .single();
+      const {
+        data,
+        error
+      } = await supabase.from('profiles').select('username, full_name, avatar_url').eq('id', user.id).single();
       if (error) throw error;
       return data;
     },
     enabled: !!user?.id
   });
-
   const getAvatarUrl = (baseUrl?: string) => {
     if (!baseUrl) return undefined;
-    
+
     // If it's already a full URL, return as is
     if (baseUrl.startsWith('http')) return baseUrl;
-    
+
     // Construct the thumb size URL for sidebar
     return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/thumb.jpg`;
   };
-
   const avatarUrl = getAvatarUrl(userProfile?.avatar_url);
-
-  const defaultTrigger = (
-    <Button 
-      variant="outline" 
-      size="icon" 
-      className="bg-rap-gold border-2 border-black text-black hover:bg-rap-gold/80 shadow-lg"
-    >
+  const defaultTrigger = <Button variant="outline" size="icon" className="bg-rap-gold border-2 border-black text-black hover:bg-rap-gold/80 shadow-lg">
       <Menu className="h-4 w-4" />
-    </Button>
-  );
-
+    </Button>;
   const displayName = userProfile?.username || userProfile?.full_name || user?.email;
-
-  return (
-    <Sheet>
+  return <Sheet>
       <SheetTrigger asChild>
         {trigger || defaultTrigger}
       </SheetTrigger>
@@ -117,8 +108,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
 
           {/* User Section */}
           <div className="border-t border-rap-gold/30 pt-4 space-y-2">
-            {user ? (
-              <>
+            {user ? <>
                 <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">User Menu</h3>
                 <Link to="/profile" onClick={() => window.scrollTo(0, 0)}>
                   <div className="flex items-center space-x-3 p-3 hover:bg-rap-gold/20 rounded-lg transition-colors cursor-pointer">
@@ -150,27 +140,20 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                   <LogIn className="w-4 h-4 mr-3" />
                   Sign Out
                 </Button>
-              </>
-            ) : (
-              <>
+              </> : <>
                 <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
-                <div className="text-xs text-rap-gold/60 font-kaushan mb-2 px-3">
-                  Not signed in
-                </div>
+                
                 
                 <Link to="/auth" onClick={() => window.scrollTo(0, 0)}>
-                  <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-lg shadow-rap-gold/30">
+                  <Button className="w-full font-merienda shadow-lg shadow-rap-gold/30 bg-rap-gold text-black font-extrabold text-xl">
                     <LogIn className="w-4 h-4 mr-3" />
                     Sign In
                   </Button>
                 </Link>
-              </>
-            )}
+              </>}
           </div>
         </nav>
       </SheetContent>
-    </Sheet>
-  );
+    </Sheet>;
 };
-
 export default NavigationSidebar;
