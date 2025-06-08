@@ -29,7 +29,7 @@ const Analytics = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-xl flex items-center justify-center shadow-lg">
                 <BarChart3 className="w-6 h-6 text-rap-silver" />
               </div>
-              <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent animate-text-glow">
+              <h1 className="text-2xl font-mogra bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent">
                 Analytics Dashboard
               </h1>
             </div>
@@ -48,7 +48,7 @@ const Analytics = () => {
         {/* Main Content */}
         <main className="max-w-7xl mx-auto p-6 pt-24">
           <div className="mb-8">
-            <h2 className="text-3xl font-mogra text-rap-gold mb-2 animate-text-glow">
+            <h2 className="text-3xl font-mogra text-rap-gold mb-2">
               Community Insights
             </h2>
             <p className="text-rap-platinum font-kaushan text-lg tracking-wide">
