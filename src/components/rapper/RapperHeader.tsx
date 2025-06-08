@@ -26,8 +26,16 @@ const RapperHeader = ({ rapper, onVoteClick }: RapperHeaderProps) => {
         <div className="grid md:grid-cols-3 gap-8">
           {/* Rapper Image */}
           <div className="md:col-span-1">
-            <div className="w-full aspect-square bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-xl flex items-center justify-center">
-              <Music className="w-24 h-24 text-rap-platinum/70" />
+            <div className="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center">
+              {rapper.image_url ? (
+                <img 
+                  src={rapper.image_url} 
+                  alt={rapper.name}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <Music className="w-24 h-24 text-rap-platinum/70" />
+              )}
             </div>
           </div>
 

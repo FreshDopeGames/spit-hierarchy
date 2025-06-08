@@ -8,6 +8,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import BlogManagement from "@/components/admin/BlogManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
+import RapperImageManagement from "@/components/admin/RapperImageManagement";
 import { Navigate } from "react-router-dom";
 
 const Admin = () => {
@@ -101,6 +102,14 @@ const Admin = () => {
                 Rapper Management
               </TabsTrigger>
             )}
+            {isAdmin && (
+              <TabsTrigger 
+                value="images" 
+                className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra"
+              >
+                Image Management
+              </TabsTrigger>
+            )}
             {canManageBlog && (
               <TabsTrigger 
                 value="blog" 
@@ -122,6 +131,12 @@ const Admin = () => {
           {isAdmin && (
             <TabsContent value="rappers">
               <AdminRapperManagement />
+            </TabsContent>
+          )}
+
+          {isAdmin && (
+            <TabsContent value="images">
+              <RapperImageManagement />
             </TabsContent>
           )}
 

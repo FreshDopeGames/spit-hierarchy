@@ -1,8 +1,7 @@
-
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/integrations/supabase/types";
-import { Star, Crown, Trophy } from "lucide-react";
+import { Star, Crown, Trophy, Music } from "lucide-react";
 import { Link } from "react-router-dom";
 
 type Rapper = Tables<"rappers">;
@@ -56,12 +55,16 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
               </Badge>
             </div>
             
-            <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-gradient-to-br from-rap-carbon to-rap-carbon-light">
-              <img 
-                src={rapper.image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=200&h=200&fit=crop"} 
-                alt={rapper.name} 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
-              />
+            <div className="aspect-square mb-3 overflow-hidden rounded-lg bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center">
+              {rapper.image_url ? (
+                <img 
+                  src={rapper.image_url} 
+                  alt={rapper.name} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+                />
+              ) : (
+                <Music className="w-12 h-12 text-rap-platinum/50" />
+              )}
             </div>
             
             <h3 className="text-rap-platinum font-mogra text-sm group-hover:text-rap-gold transition-colors leading-tight">
@@ -97,12 +100,16 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
             </Badge>
           </div>
           
-          <div className="aspect-[4/3] mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-rap-carbon to-rap-carbon-light">
-            <img 
-              src={rapper.image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=300&fit=crop"} 
-              alt={rapper.name} 
-              className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
-            />
+          <div className="aspect-[4/3] mb-4 overflow-hidden rounded-lg bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center">
+            {rapper.image_url ? (
+              <img 
+                src={rapper.image_url} 
+                alt={rapper.name} 
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" 
+              />
+            ) : (
+              <Music className="w-16 h-16 text-rap-platinum/50" />
+            )}
           </div>
           
           <div className="space-y-2">
