@@ -81,12 +81,12 @@ const AdminRapperManagement = () => {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-white">
+        <h3 className="text-xl font-semibold text-rap-platinum">
           Manage Rappers ({rappers?.length || 0})
         </h3>
         <Button
           onClick={handleAddRapper}
-          className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+          className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra"
         >
           <Plus className="w-4 h-4 mr-2" />
           Add Rapper
