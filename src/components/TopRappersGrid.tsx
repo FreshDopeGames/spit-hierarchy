@@ -86,14 +86,14 @@ const TopRappersGrid = () => {
             </h2>
             <Trophy className="w-6 h-6 text-rap-gold" />
           </div>
-          <p className="text-rap-platinum font-kaushan text-lg">
+          <p className="text-rap-platinum font-merienda text-lg">
             The supreme rulers of the rap realm
           </p>
         </div>
         <Card className="bg-carbon-fiber border border-rap-gold/40 shadow-2xl shadow-rap-gold/20">
           <CardContent className="p-8 text-center">
             <Crown className="w-16 h-16 text-rap-gold mx-auto mb-4" />
-            <p className="text-rap-smoke font-kaushan">The throne awaits its rightful rulers.</p>
+            <p className="text-rap-smoke font-merienda ">The throne awaits its rightful rulers.</p>
           </CardContent>
         </Card>
       </div>;

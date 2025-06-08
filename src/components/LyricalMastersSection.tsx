@@ -73,14 +73,14 @@ const LyricalMastersSection = () => {
             </h2>
             <Crown className="w-6 h-6 text-rap-burgundy" />
           </div>
-          <p className="text-rap-platinum font-kaushan text-lg">
+          <p className="text-rap-platinum font-merienda text-lg">
             The supreme wordsmiths of hip-hop
           </p>
         </div>
         <Card className="bg-carbon-fiber border border-rap-burgundy/40 shadow-2xl shadow-rap-burgundy/20">
           <CardContent className="p-8 text-center">
             <Mic className="w-16 h-16 text-rap-burgundy mx-auto mb-4" />
-            <p className="text-rap-smoke font-kaushan">The lyrical legends await their crowning.</p>
+            <p className="text-rap-smoke font-merienda ">The lyrical legends await their crowning.</p>
           </CardContent>
         </Card>
       </div>;

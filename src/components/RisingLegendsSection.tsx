@@ -71,14 +71,14 @@ const RisingLegendsSection = () => {
             <h2 className="text-3xl font-ceviche text-rap-forest mb-0 animate-text-glow tracking-wider text-border">Rising Legends of 2025</h2>
             <Crown className="w-6 h-6 text-rap-forest" />
           </div>
-          <p className="text-rap-platinum font-kaushan text-lg">
+          <p className="text-rap-platinum font-merienda text-lg">
             The next generation ascending to greatness
           </p>
         </div>
         <Card className="bg-carbon-fiber border border-rap-forest/40 shadow-2xl shadow-rap-forest/20">
           <CardContent className="p-8 text-center">
             <TrendingUp className="w-16 h-16 text-rap-forest mx-auto mb-4" />
-            <p className="text-rap-smoke font-kaushan">The rising stars are yet to be crowned.</p>
+            <p className="text-rap-smoke font-merienda ">The rising stars are yet to be crowned.</p>
           </CardContent>
         </Card>
       </div>;
