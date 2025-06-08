@@ -8,10 +8,10 @@ const HeroSection = () => {
 
   return (
     <div className="text-center mb-12">
-      <h2 className="font-ceviche text-rap-gold mb-4 tracking-wider text-8xl">
+      <h2 className="font-ceviche text-rap-gold mb-4 tracking-wider text-4xl sm:text-6xl md:text-8xl leading-tight">
         The Ultimate Rap Rankings
       </h2>
-      <p className="max-w-2xl mx-auto font-kaushan leading-relaxed text-2xl font-normal text-rap-smoke">
+      <p className="max-w-2xl mx-auto font-kaushan leading-relaxed text-lg sm:text-xl md:text-2xl font-normal text-rap-smoke">
         The Ultimate Rapper Rankings
       </p>
       {!user && (
