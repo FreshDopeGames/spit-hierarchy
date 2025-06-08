@@ -222,7 +222,7 @@ const RapperNetworkGraph = () => {
       {/* Main Network Graph */}
       <Card className="lg:col-span-2 bg-black/40 border-2 border-rap-gold">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2 text-rap-gold font-normal">
+          <CardTitle className="flex items-center gap-2 text-rap-gold font-extrabold text-2xl">
             <Network className="w-5 h-5" />
             Rapper Network Graph
           </CardTitle>
