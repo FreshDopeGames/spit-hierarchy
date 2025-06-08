@@ -19,7 +19,7 @@ const ProfileHeader = ({
         <AvatarUpload currentAvatarUrl={avatarUrl} onAvatarUpdate={handleAvatarUpdate} userId={user.id} />
         
         <div className="flex-1">
-          <h2 className="font-mogra text-rap-gold mb-2 text-4xl">
+          <h2 className="font-merienda text-rap-gold mb-2 text-4xl font-extrabold">
             {profile?.full_name || profile?.username || user.email}
           </h2>
           
