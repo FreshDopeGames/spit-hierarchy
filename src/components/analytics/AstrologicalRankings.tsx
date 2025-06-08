@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge";
 import { Star, Calendar, TrendingUp } from "lucide-react";
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 interface RapperWithZodiac {
   id: string;
   name: string;
@@ -164,7 +163,7 @@ const AstrologicalRankings = () => {
       </Card>;
   }
   const filteredRappers = selectedZodiac === 'all' ? rappersData?.filter(r => r.zodiac_sign !== 'Unknown') || [] : groupedByZodiac?.[selectedZodiac] || [];
-  return <div className="space-y-6">
+  return <div className="space-y-6 border-2 border-rap-gold rounded-lg">
       <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
         <CardHeader>
           <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 animate-text-glow">
