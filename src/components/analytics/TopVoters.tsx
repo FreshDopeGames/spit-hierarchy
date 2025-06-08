@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Users, Trophy, Star } from "lucide-react";
-
 const TopVoters = () => {
   const {
     data: topVoters,
@@ -47,7 +46,7 @@ const TopVoters = () => {
   }
   return <ThemedCard className="bg-rap-carbon border-2 border-rap-gold">
       <ThemedCardHeader>
-        <ThemedCardTitle className="flex items-center gap-2">
+        <ThemedCardTitle className="flex items-center gap-2 text-rap-gold text-2xl font-extrabold">
           <Trophy className="w-5 h-5" />
           Top Voters
         </ThemedCardTitle>
@@ -89,5 +88,4 @@ const TopVoters = () => {
       </ThemedCardContent>
     </ThemedCard>;
 };
-
 export default TopVoters;

@@ -3,7 +3,6 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar } from "recharts";
 import { TrendingUp, Calendar } from "lucide-react";
-
 const VotingTrends = () => {
   const {
     data: votingTrends,
@@ -55,7 +54,7 @@ const VotingTrends = () => {
   return <div className="space-y-6">
       <ThemedCard className="border-2 border-rap-gold">
         <ThemedCardHeader className="bg-rap-carbon">
-          <ThemedCardTitle className="flex items-center gap-2">
+          <ThemedCardTitle className="flex items-center gap-2 font-extrabold text-2xl">
             <TrendingUp className="w-5 h-5" />
             Daily Voting Activity (Last 30 Days)
           </ThemedCardTitle>
@@ -83,7 +82,7 @@ const VotingTrends = () => {
 
       <ThemedCard className="border-2 border-rap-gold">
         <ThemedCardHeader className="bg-rap-carbon">
-          <ThemedCardTitle className="flex items-center gap-2">
+          <ThemedCardTitle className="flex items-center gap-2 text-2xl text-rap-gold font-extrabold">
             <Calendar className="w-5 h-5" />
             Average Daily Rating
           </ThemedCardTitle>
@@ -107,5 +106,4 @@ const VotingTrends = () => {
       </ThemedCard>
     </div>;
 };
-
 export default VotingTrends;
