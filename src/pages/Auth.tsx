@@ -5,9 +5,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/components/ui/use-toast";
-import { Music, User, Mail, Lock } from "lucide-react";
+import { User, Mail, Lock } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 import HeaderNavigation from "@/components/HeaderNavigation";
+
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -122,15 +123,20 @@ const Auth = () => {
       setLoading(false);
     }
   };
-  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       <HeaderNavigation isScrolled={isScrolled} />
 
       <div className="pt-24 flex items-center justify-center p-4 min-h-screen">
         <Card className="w-full max-w-md bg-carbon-fiber border-rap-burgundy/50">
           <CardHeader className="text-center">
             <div className="flex items-center justify-center space-x-2 mb-4">
-              <div className="w-8 h-8 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-lg flex items-center justify-center">
-                <Music className="w-5 h-5 text-rap-silver" />
+              <div className="w-8 h-8 rounded-lg flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
+                  alt="Spit Hierarchy Logo" 
+                  className="w-8 h-8 object-contain"
+                />
               </div>
               <h1 className="font-ceviche bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent text-3xl font-normal">
                 Spit Hierarchy
@@ -242,6 +248,8 @@ const Auth = () => {
           </CardContent>
         </Card>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default Auth;
