@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { Users, Vote, Trophy, TrendingUp } from "lucide-react";
+
 const StatsOverview = () => {
   const {
     data: stats,
@@ -72,12 +73,12 @@ const StatsOverview = () => {
     icon: Users,
     label: "Artists",
     value: stats?.totalRappers || 0,
-    color: "from-rap-burgundy to-rap-burgundy-light"
+    color: "from-rap-gold to-rap-gold-light"
   }, {
     icon: Vote,
     label: "Total Votes",
     value: stats?.totalVotes || 0,
-    color: "from-rap-forest to-rap-forest-light"
+    color: "from-rap-gold to-rap-gold-light"
   }, {
     icon: Trophy,
     label: "Categories",
@@ -87,7 +88,7 @@ const StatsOverview = () => {
     icon: TrendingUp,
     label: "Top Rated",
     value: stats?.topRapper || "N/A",
-    color: "from-rap-silver to-rap-platinum"
+    color: "from-rap-gold to-rap-gold-light"
   }];
   return <div className="mb-12">
       <div className="text-center mb-8">
@@ -101,7 +102,7 @@ const StatsOverview = () => {
       
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {statCards.map((stat, index) => <Card key={index} className="bg-carbon-fiber border border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 shadow-lg shadow-rap-gold/20 relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+            <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
                 <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg`}>
@@ -117,4 +118,5 @@ const StatsOverview = () => {
       </div>
     </div>;
 };
+
 export default StatsOverview;
