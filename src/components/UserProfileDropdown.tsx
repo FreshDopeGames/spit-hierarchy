@@ -18,17 +18,26 @@ const UserProfileDropdown = ({
   canManageBlog,
   isScrolled
 }: UserProfileDropdownProps) => {
-  const {
-    user,
-    signOut
-  } = useAuth();
+  const { user, signOut } = useAuth();
+
+  const getAvatarUrl = (baseUrl?: string) => {
+    if (!baseUrl) return undefined;
+    
+    // If it's already a full URL, return as is
+    if (baseUrl.startsWith('http')) return baseUrl;
+    
+    // Construct the thumb size URL for navigation
+    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/thumb.jpg`;
+  };
+
+  const avatarUrl = getAvatarUrl(userProfile?.avatar_url);
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
           <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
-            <AvatarImage src={userProfile?.avatar_url} alt={userProfile?.username || 'User'} />
+            <AvatarImage src={avatarUrl} alt={userProfile?.username || 'User'} />
             <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
               <User className="w-4 h-4" />
             </AvatarFallback>

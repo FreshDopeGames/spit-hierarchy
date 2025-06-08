@@ -5,59 +5,139 @@ import { Input } from "@/components/ui/input";
 import { User, Upload } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import AvatarCropper from "./AvatarCropper";
+import { generateAvatarSizes } from "@/utils/imageUtils";
 
 interface AvatarUploadProps {
   currentAvatarUrl?: string;
   onAvatarUpdate: (url: string) => void;
   userId: string;
+  size?: 'small' | 'medium' | 'large';
 }
 
-const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId }: AvatarUploadProps) => {
+const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large' }: AvatarUploadProps) => {
   const [uploading, setUploading] = useState(false);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [showCropper, setShowCropper] = useState(false);
   const { toast } = useToast();
 
-  const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const getSizeClass = () => {
+    switch (size) {
+      case 'small': return 'w-8 h-8';
+      case 'medium': return 'w-16 h-16';
+      case 'large': return 'w-24 h-24';
+      default: return 'w-24 h-24';
+    }
+  };
+
+  const getAvatarUrl = (baseUrl?: string) => {
+    if (!baseUrl) return undefined;
+    
+    // If it's already a full URL, return as is
+    if (baseUrl.startsWith('http')) return baseUrl;
+    
+    // If it's a path, construct the appropriate size URL
+    const sizeMap = {
+      small: 'thumb',
+      medium: 'medium', 
+      large: 'large'
+    };
+    
+    const sizeName = sizeMap[size];
+    return baseUrl.replace('/original.', `/${sizeName}.`);
+  };
+
+  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!event.target.files || event.target.files.length === 0) {
+      return;
+    }
+
+    const file = event.target.files[0];
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Invalid file type",
+        description: "Please select an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "File too large",
+        description: "Please select an image smaller than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setSelectedFile(file);
+    setShowCropper(true);
+  };
+
+  const handleCropComplete = async (croppedBlob: Blob) => {
     try {
       setUploading(true);
-      
-      if (!event.target.files || event.target.files.length === 0) {
-        throw new Error('You must select an image to upload.');
-      }
 
-      const file = event.target.files[0];
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${userId}-${Math.random()}.${fileExt}`;
-      const filePath = `avatars/${fileName}`;
+      // Generate multiple resolutions
+      const resizedImages = await generateAvatarSizes(croppedBlob);
 
-      const { error: uploadError } = await supabase.storage
+      // Upload original cropped image
+      const originalFile = new File([croppedBlob], `${userId}-original.jpg`, { type: 'image/jpeg' });
+      const originalPath = `avatars/${userId}/original.jpg`;
+
+      const { error: originalUploadError } = await supabase.storage
         .from('avatars')
-        .upload(filePath, file);
+        .upload(originalPath, originalFile, { upsert: true });
 
-      if (uploadError) {
-        throw uploadError;
+      if (originalUploadError) {
+        throw originalUploadError;
       }
 
+      // Upload resized versions
+      await Promise.all(
+        resizedImages.map(async ({ name, blob }) => {
+          const file = new File([blob], `${userId}-${name}.jpg`, { type: 'image/jpeg' });
+          const path = `avatars/${userId}/${name}.jpg`;
+          
+          const { error } = await supabase.storage
+            .from('avatars')
+            .upload(path, file, { upsert: true });
+          
+          if (error) throw error;
+        })
+      );
+
+      // Get the public URL for the original
       const { data: { publicUrl } } = supabase.storage
         .from('avatars')
-        .getPublicUrl(filePath);
+        .getPublicUrl(originalPath);
 
-      // Update user profile with new avatar URL
+      // Update user profile with new avatar URL base path
+      const avatarBasePath = `avatars/${userId}`;
       const { error: updateError } = await supabase
         .from('profiles')
-        .update({ avatar_url: publicUrl })
+        .update({ 
+          avatar_url: avatarBasePath,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', userId);
 
       if (updateError) {
         throw updateError;
       }
 
-      onAvatarUpdate(publicUrl);
+      onAvatarUpdate(avatarBasePath);
       toast({
         title: "Avatar updated successfully!",
         description: "Your profile picture has been updated.",
       });
 
     } catch (error) {
+      console.error('Avatar upload error:', error);
       toast({
         title: "Error uploading avatar",
         description: error instanceof Error ? error.message : "An error occurred",
@@ -65,47 +145,66 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId }: AvatarUpload
       });
     } finally {
       setUploading(false);
+      setSelectedFile(null);
     }
   };
 
+  const displayUrl = getAvatarUrl(currentAvatarUrl);
+
   return (
-    <div className="flex flex-col items-center space-y-4">
-      <div className="relative w-24 h-24 bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50">
-        {currentAvatarUrl ? (
-          <img 
-            src={currentAvatarUrl} 
-            alt="Avatar" 
-            className="w-full h-full rounded-full object-cover"
-          />
-        ) : (
-          <User className="w-12 h-12 text-rap-silver" />
+    <>
+      <div className="flex flex-col items-center space-y-4">
+        <div className={`relative ${getSizeClass()} bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50`}>
+          {displayUrl ? (
+            <img 
+              src={displayUrl} 
+              alt="Avatar" 
+              className="w-full h-full rounded-full object-cover"
+            />
+          ) : (
+            <User className="w-1/2 h-1/2 text-rap-silver" />
+          )}
+        </div>
+        
+        {size === 'large' && (
+          <div className="flex flex-col items-center space-y-2">
+            <Input
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
+              disabled={uploading}
+              className="hidden"
+              id="avatar-upload"
+            />
+            <label htmlFor="avatar-upload">
+              <Button 
+                variant="outline" 
+                className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 cursor-pointer font-merienda"
+                disabled={uploading}
+                asChild
+              >
+                <span>
+                  <Upload className="w-4 h-4 mr-2" />
+                  {uploading ? 'Uploading...' : 'Update Avatar'}
+                </span>
+              </Button>
+            </label>
+          </div>
         )}
       </div>
-      
-      <div className="flex flex-col items-center space-y-2">
-        <Input
-          type="file"
-          accept="image/*"
-          onChange={handleFileUpload}
-          disabled={uploading}
-          className="hidden"
-          id="avatar-upload"
+
+      {selectedFile && (
+        <AvatarCropper
+          isOpen={showCropper}
+          onClose={() => {
+            setShowCropper(false);
+            setSelectedFile(null);
+          }}
+          onCropComplete={handleCropComplete}
+          imageFile={selectedFile}
         />
-        <label htmlFor="avatar-upload">
-          <Button 
-            variant="outline" 
-            className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 cursor-pointer"
-            disabled={uploading}
-            asChild
-          >
-            <span>
-              <Upload className="w-4 h-4 mr-2" />
-              {uploading ? 'Uploading...' : 'Update Avatar'}
-            </span>
-          </Button>
-        </label>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

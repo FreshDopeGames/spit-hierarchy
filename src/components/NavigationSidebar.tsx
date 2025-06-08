@@ -32,6 +32,18 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     enabled: !!user?.id
   });
 
+  const getAvatarUrl = (baseUrl?: string) => {
+    if (!baseUrl) return undefined;
+    
+    // If it's already a full URL, return as is
+    if (baseUrl.startsWith('http')) return baseUrl;
+    
+    // Construct the thumb size URL for sidebar
+    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/thumb.jpg`;
+  };
+
+  const avatarUrl = getAvatarUrl(userProfile?.avatar_url);
+
   const defaultTrigger = (
     <Button 
       variant="outline" 
@@ -104,7 +116,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                 <Link to="/profile" onClick={() => window.scrollTo(0, 0)}>
                   <div className="flex items-center space-x-3 p-3 hover:bg-rap-gold/20 rounded-lg transition-colors cursor-pointer">
                     <Avatar className="w-8 h-8 border-2 border-rap-gold/50">
-                      <AvatarImage src={userProfile?.avatar_url} alt={displayName || 'User'} />
+                      <AvatarImage src={avatarUrl} alt={displayName || 'User'} />
                       <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
                         <User className="w-4 h-4" />
                       </AvatarFallback>
