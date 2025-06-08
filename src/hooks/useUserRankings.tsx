@@ -1,8 +1,9 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { Tables } from "@/integrations/supabase/types";
+import { validateContent } from "@/utils/contentModeration";
+import { useToast } from "@/hooks/use-toast";
 
 export interface UserRanking {
   id: string;
@@ -115,6 +116,7 @@ export const useUserRankings = () => {
 export const useCreateUserRanking = () => {
   const queryClient = useQueryClient();
   const { user } = useAuth();
+  const { toast } = useToast();
   
   return useMutation({
     mutationFn: async (rankingData: {
@@ -126,6 +128,19 @@ export const useCreateUserRanking = () => {
     }) => {
       if (!user) {
         throw new Error("User must be logged in to create rankings");
+      }
+
+      // Validate title and description for profanity
+      const titleValidation = validateContent(rankingData.title);
+      if (!titleValidation.isValid) {
+        throw new Error(`Title contains inappropriate content: ${titleValidation.message}`);
+      }
+
+      if (rankingData.description) {
+        const descValidation = validateContent(rankingData.description);
+        if (!descValidation.isValid) {
+          throw new Error(`Description contains inappropriate content: ${descValidation.message}`);
+        }
       }
 
       // Generate a slug from the title
@@ -161,6 +176,17 @@ export const useCreateUserRanking = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
+      toast({
+        title: "Ranking created!",
+        description: "Your ranking has been created successfully.",
+      });
+    },
+    onError: (error) => {
+      toast({
+        title: "Error creating ranking",
+        description: error.message,
+        variant: "destructive",
+      });
     }
   });
 };

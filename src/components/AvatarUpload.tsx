@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,6 +6,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import AvatarCropper from "./AvatarCropper";
 import { generateAvatarSizes } from "@/utils/imageUtils";
+import { validateImageFile, validateImageContent } from "@/utils/contentModeration";
+import ModerationAlert from "./ModerationAlert";
 
 interface AvatarUploadProps {
   currentAvatarUrl?: string;
@@ -19,6 +20,7 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
   const [uploading, setUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showCropper, setShowCropper] = useState(false);
+  const [moderationError, setModerationError] = useState<string | null>(null);
   const { toast } = useToast();
 
   const getSizeClass = () => {
@@ -49,30 +51,30 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
     return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg`;
   };
 
-  const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) {
       return;
     }
 
     const file = event.target.files[0];
+    setModerationError(null);
     
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid file type",
-        description: "Please select an image file",
-        variant: "destructive",
-      });
+    // Validate file type and size
+    const fileValidation = validateImageFile(file);
+    if (!fileValidation.isValid) {
+      setModerationError(fileValidation.message || "Invalid file");
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File too large",
-        description: "Please select an image smaller than 5MB",
-        variant: "destructive",
-      });
+    // Validate image content
+    try {
+      const contentValidation = await validateImageContent(file);
+      if (!contentValidation.isValid) {
+        setModerationError(contentValidation.message || "Image content not allowed");
+        return;
+      }
+    } catch (error) {
+      setModerationError("Error validating image content");
       return;
     }
 
@@ -83,11 +85,21 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
   const handleCropComplete = async (croppedBlob: Blob) => {
     try {
       setUploading(true);
+      setModerationError(null);
+
+      // Additional validation on cropped image
+      const croppedFile = new File([croppedBlob], `${userId}-cropped.jpg`, { type: 'image/jpeg' });
+      const finalValidation = await validateImageContent(croppedFile);
+      
+      if (!finalValidation.isValid) {
+        setModerationError(finalValidation.message || "Cropped image not allowed");
+        return;
+      }
 
       // Generate multiple resolutions
       const resizedImages = await generateAvatarSizes(croppedBlob);
 
-      // Upload original cropped image - corrected path without 'avatars/' prefix
+      // Upload original cropped image
       const originalFile = new File([croppedBlob], `${userId}-original.jpg`, { type: 'image/jpeg' });
       const originalPath = `${userId}/original.jpg`;
 
@@ -99,7 +111,7 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
         throw originalUploadError;
       }
 
-      // Upload resized versions - corrected paths
+      // Upload resized versions
       await Promise.all(
         resizedImages.map(async ({ name, blob }) => {
           const file = new File([blob], `${userId}-${name}.jpg`, { type: 'image/jpeg' });
@@ -113,7 +125,7 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
         })
       );
 
-      // Update user profile with new avatar URL base path (just the user ID)
+      // Update user profile with new avatar URL base path
       const avatarBasePath = userId;
       const { error: updateError } = await supabase
         .from('profiles')
@@ -151,6 +163,15 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
   return (
     <>
       <div className="flex flex-col items-center space-y-4">
+        {moderationError && (
+          <ModerationAlert
+            type="inappropriate"
+            message={moderationError}
+            onEdit={() => setModerationError(null)}
+            className="w-full"
+          />
+        )}
+        
         <div className={`relative ${getSizeClass()} bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50`}>
           {displayUrl ? (
             <img 

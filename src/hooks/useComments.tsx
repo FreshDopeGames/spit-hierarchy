@@ -1,9 +1,9 @@
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useToast } from "@/hooks/use-toast";
+import { validateContent } from "@/utils/contentModeration";
 
 interface Comment {
   id: string;
@@ -80,10 +80,16 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
     }
   });
 
-  // Create comment mutation
+  // Create comment mutation with content validation
   const createCommentMutation = useMutation({
     mutationFn: async ({ text, parentId }: { text: string; parentId?: string }) => {
       if (!user) throw new Error("Must be logged in to comment");
+
+      // Validate content for profanity and inappropriate language
+      const validation = validateContent(text);
+      if (!validation.isValid) {
+        throw new Error(validation.message);
+      }
 
       const { data, error } = await supabase
         .from("comments")
