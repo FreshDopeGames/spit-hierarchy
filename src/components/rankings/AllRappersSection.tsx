@@ -13,7 +13,6 @@ interface AllRappersSectionProps {
   rappers: Rapper[];
   officialItemsCount: number;
   onVote: (rapperName: string) => void;
-  onVoteWithNote: (rapperName: string, note: string) => void;
   userLoggedIn: boolean;
   hasMore: boolean;
   loadingMore: boolean;
@@ -24,7 +23,6 @@ const AllRappersSection = ({
   rappers, 
   officialItemsCount, 
   onVote, 
-  onVoteWithNote, 
   userLoggedIn, 
   hasMore, 
   loadingMore, 
@@ -55,7 +53,7 @@ const AllRappersSection = ({
                   <div className="flex items-center gap-2">
                     <h3 className="text-rap-platinum font-semibold text-lg font-mogra truncate">{rapper.name}</h3>
                   </div>
-                  <p className="text-rap-smoke font-merienda text-sm sm:text-base">{rapper.real_name} • {rapper.origin}</p>
+                  <p className="text-rap-smoke font-merienda text-sm sm:text-base">{rapper.origin}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Star className="w-4 h-4 text-rap-gold" />
                     <span className="text-rap-platinum font-merienda text-sm">
@@ -70,7 +68,6 @@ const AllRappersSection = ({
                 <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   <VoteButton
                     onVote={() => onVote(rapper.name)}
-                    onVoteWithNote={(note) => onVoteWithNote(rapper.name, note)}
                     disabled={!userLoggedIn}
                     className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3"
                   />
