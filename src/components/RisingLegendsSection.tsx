@@ -68,7 +68,7 @@ const RisingLegendsSection = () => {
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
             <TrendingUp className="w-6 h-6 text-rap-forest" />
-            <h2 className="text-3xl font-ceviche text-rap-forest mb-0 animate-text-glow tracking-wider">Rising Legends of 2025</h2>
+            <h2 className="text-3xl font-ceviche text-rap-forest mb-0 animate-text-glow tracking-wider text-border">Rising Legends of 2025</h2>
             <Crown className="w-6 h-6 text-rap-forest" />
           </div>
           <p className="text-rap-platinum font-kaushan text-lg">
