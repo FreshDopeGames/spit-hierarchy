@@ -28,7 +28,7 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link to="/" onClick={handleNavigation} className="text-rap-platinum hover:text-rap-gold font-merienda flex items-center transition-colors">
-                  The Throne Room
+                  Home
                 </Link>
               </li>
               <li>
