@@ -46,16 +46,16 @@ const AllRappersSection = ({
           
           return (
             <div key={rapper.id}>
-              <div className="flex items-center gap-4 p-4 bg-rap-carbon/30 rounded-lg hover:bg-rap-carbon/50 transition-colors relative">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3 sm:p-4 bg-rap-carbon/30 rounded-lg hover:bg-rap-carbon/50 transition-colors relative">
                 <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-silver to-rap-platinum rounded-full flex items-center justify-center">
                   <span className="text-rap-carbon font-bold text-lg font-mogra">#{globalIndex}</span>
                 </div>
                 
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2">
-                    <h3 className="text-rap-platinum font-semibold text-lg font-mogra">{rapper.name}</h3>
+                    <h3 className="text-rap-platinum font-semibold text-lg font-mogra truncate">{rapper.name}</h3>
                   </div>
-                  <p className="text-rap-smoke font-merienda">{rapper.real_name} • {rapper.origin}</p>
+                  <p className="text-rap-smoke font-merienda text-sm sm:text-base">{rapper.real_name} • {rapper.origin}</p>
                   <div className="flex items-center gap-2 mt-1">
                     <Star className="w-4 h-4 text-rap-gold" />
                     <span className="text-rap-platinum font-merienda text-sm">
@@ -67,18 +67,18 @@ const AllRappersSection = ({
                   </div>
                 </div>
                 
-                <div className="flex items-center gap-3">
+                <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
                   <VoteButton
                     onVote={() => onVote(rapper.name)}
                     onVoteWithNote={(note) => onVoteWithNote(rapper.name, note)}
                     disabled={!userLoggedIn}
-                    className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-lg px-6 py-3"
+                    className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3"
                   />
-                  <Link to={`/rapper/${rapper.id}`}>
+                  <Link to={`/rapper/${rapper.id}`} className="w-full sm:w-auto">
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="text-rap-silver hover:text-rap-platinum font-kaushan"
+                      className="text-rap-silver hover:text-rap-platinum font-kaushan w-full sm:w-auto text-sm"
                     >
                       View Profile
                     </Button>
@@ -100,7 +100,7 @@ const AllRappersSection = ({
             <Button
               onClick={onLoadMore}
               disabled={loadingMore}
-              className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30"
+              className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30 w-full sm:w-auto px-4 py-2 sm:px-6 sm:py-3 text-sm sm:text-base"
             >
               {loadingMore ? "Loading..." : "Load More Rappers"}
             </Button>

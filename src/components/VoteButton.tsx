@@ -21,12 +21,12 @@ const VoteButton = ({ onVote, onVoteWithNote, disabled = false, className = "" }
 
   return (
     <>
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2 w-full sm:w-auto">
         <Button
           onClick={onVote}
           disabled={disabled}
           size="sm"
-          className={`bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-lg px-6 py-3 ${className}`}
+          className={`bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold flex-1 sm:flex-none text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3 ${className}`}
         >
           <ThumbsUp className="w-4 h-4 mr-2" />
           Vote
@@ -37,7 +37,7 @@ const VoteButton = ({ onVote, onVoteWithNote, disabled = false, className = "" }
           disabled={disabled}
           variant="outline"
           size="sm"
-          className="border-rap-gold text-rap-gold hover:bg-rap-gold/20"
+          className="border-rap-gold text-rap-gold hover:bg-rap-gold/20 flex-shrink-0 px-2 sm:px-3"
         >
           <MessageSquare className="w-4 h-4" />
         </Button>
