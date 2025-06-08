@@ -59,9 +59,11 @@ const OfficialRankingItems = ({
               key={item.id}
               className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3 sm:p-4 bg-rap-carbon/30 rounded-lg hover:bg-rap-carbon/50 transition-colors relative border border-rap-gold/20"
             >
-              <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-gold to-rap-burgundy rounded-full flex items-center justify-center relative">
-                <span className="text-rap-carbon font-bold text-lg font-mogra">#{item.position}</span>
-                <div className="absolute -top-1 -right-1">
+              <div className="flex items-center gap-2">
+                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-gold to-rap-burgundy rounded-full flex items-center justify-center">
+                  <span className="text-rap-carbon font-bold text-lg font-mogra">#{item.position}</span>
+                </div>
+                <div className="flex items-center justify-center">
                   {getDeltaIcon(item.position_delta)}
                 </div>
               </div>
