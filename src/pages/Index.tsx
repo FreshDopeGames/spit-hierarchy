@@ -9,6 +9,7 @@ import LyricalMastersSection from "@/components/LyricalMastersSection";
 import StatsOverview from "@/components/StatsOverview";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
+import AdUnit from "@/components/AdUnit";
 
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -32,8 +33,14 @@ const Index = () => {
         {/* Hero Section */}
         <HeroSection />
 
+        {/* Ad placement after hero */}
+        <AdUnit placement="hero-bottom" pageRoute="/" />
+
         {/* Featured Blog Posts Carousel */}
         <BlogCarousel />
+
+        {/* Ad placement between sections */}
+        <AdUnit placement="between-sections" pageRoute="/" />
 
         {/* Top 5 Rappers Grid */}
         <TopRappersGrid />

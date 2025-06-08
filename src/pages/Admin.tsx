@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,6 +9,7 @@ import BlogManagement from "@/components/admin/BlogManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
 import RapperImageManagement from "@/components/admin/RapperImageManagement";
 import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement";
+import AdManagement from "@/components/admin/AdManagement";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import { Navigate } from "react-router-dom";
 
@@ -131,6 +131,11 @@ const Admin = () => {
               </TabsTrigger>
             )}
             {isAdmin && (
+              <TabsTrigger value="ads" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+                Ad Management
+              </TabsTrigger>
+            )}
+            {isAdmin && (
               <TabsTrigger value="theme" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
                 Theme Management
               </TabsTrigger>
@@ -158,6 +163,12 @@ const Admin = () => {
           {canManageBlog && (
             <TabsContent value="blog">
               <BlogManagement />
+            </TabsContent>
+          )}
+
+          {isAdmin && (
+            <TabsContent value="ads">
+              <AdManagement />
             </TabsContent>
           )}
 

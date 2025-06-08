@@ -9,6 +9,42 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      ad_placements: {
+        Row: {
+          ad_format: string
+          ad_unit_id: string
+          created_at: string
+          id: string
+          is_active: boolean
+          page_name: string
+          page_route: string
+          placement_name: string
+          updated_at: string
+        }
+        Insert: {
+          ad_format?: string
+          ad_unit_id: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          page_name: string
+          page_route: string
+          placement_name: string
+          updated_at?: string
+        }
+        Update: {
+          ad_format?: string
+          ad_unit_id?: string
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          page_name?: string
+          page_route?: string
+          placement_name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       blog_categories: {
         Row: {
           created_at: string | null
@@ -402,6 +438,33 @@ export type Database = {
           slug?: string
           title?: string
           updated_at?: string | null
+        }
+        Relationships: []
+      }
+      page_templates: {
+        Row: {
+          available_placements: string[]
+          created_at: string
+          description: string | null
+          id: string
+          route_pattern: string
+          template_name: string
+        }
+        Insert: {
+          available_placements?: string[]
+          created_at?: string
+          description?: string | null
+          id?: string
+          route_pattern: string
+          template_name: string
+        }
+        Update: {
+          available_placements?: string[]
+          created_at?: string
+          description?: string | null
+          id?: string
+          route_pattern?: string
+          template_name?: string
         }
         Relationships: []
       }

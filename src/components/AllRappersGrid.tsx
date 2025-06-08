@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Star, MapPin, Calendar, Verified, Mic2, Loader2, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
-import BillboardAd from "@/components/BillboardAd";
+import AdUnit from "@/components/AdUnit";
 import { useRapperImage } from "@/hooks/useImageStyle";
 
 type Rapper = Tables<"rappers">;
@@ -113,46 +112,29 @@ const AllRappersGrid = ({
   onLoadMore,
 }: AllRappersGridProps) => {
 
-  // Split rappers into chunks to insert ads between sections
-  const rappersWithAds = [];
-  const chunkSize = itemsPerPage;
-  
-  for (let i = 0; i < rappers.length; i += chunkSize) {
-    const chunk = rappers.slice(i, i + chunkSize);
-    rappersWithAds.push({ type: 'rappers', data: chunk, isFirstChunk: i === 0 });
-    
-    // Add ad after each chunk except the last one
-    if (i + chunkSize < rappers.length) {
-      rappersWithAds.push({ 
-        type: 'ad', 
-        data: {
-          title: "Discover New Music",
-          description: "Find the latest hip-hop tracks and underground artists",
-          ctaText: "Explore Now"
-        }
-      });
-    }
-  }
-
   return (
     <>
-      {rappersWithAds.map((section, sectionIndex) => (
-        <div key={sectionIndex}>
-          {section.type === 'rappers' ? (
-            <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 ${section.isFirstChunk ? 'mb-8' : 'mb-8'}`}>
-              {section.data.map((rapper) => (
-                <RapperCard key={rapper.id} rapper={rapper} />
-              ))}
-            </div>
-          ) : (
-            <BillboardAd
-              title={section.data.title}
-              description={section.data.description}
-              ctaText={section.data.ctaText}
-            />
-          )}
-        </div>
-      ))}
+      {/* Top ad placement */}
+      <AdUnit placement="grid-top" pageRoute="/all-rappers" />
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+        {rappers.map((rapper, index) => {
+          // Show middle ad after every 20 rappers
+          const shouldShowMiddleAd = (index + 1) % 20 === 0 && index < rappers.length - 1;
+          
+          return (
+            <React.Fragment key={rapper.id}>
+              <RapperCard rapper={rapper} />
+              
+              {shouldShowMiddleAd && (
+                <div className="col-span-full">
+                  <AdUnit placement="grid-middle" pageRoute="/all-rappers" />
+                </div>
+              )}
+            </React.Fragment>
+          );
+        })}
+      </div>
 
       {/* Enhanced Load More Button */}
       {hasMore && (
@@ -173,6 +155,9 @@ const AllRappersGrid = ({
           </Button>
         </div>
       )}
+
+      {/* Bottom ad placement */}
+      <AdUnit placement="grid-bottom" pageRoute="/all-rappers" />
     </>
   );
 };
