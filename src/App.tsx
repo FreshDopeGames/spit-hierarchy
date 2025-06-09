@@ -18,6 +18,7 @@ import AllRappers from "./pages/AllRappers";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Footer from "./components/Footer";
+import AuthGuard from "./components/AuthGuard";
 import { AuthProvider } from "./hooks/useAuth";
 
 function App() {
@@ -33,8 +34,16 @@ function App() {
               <Route path="/rankings" element={<Rankings />} />
               <Route path="/official-rankings" element={<OfficialRankings />} />
               <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
-              <Route path="/analytics" element={<Analytics />} />
-              <Route path="/admin" element={<Admin />} />
+              <Route path="/analytics" element={
+                <AuthGuard requireAuth={true}>
+                  <Analytics />
+                </AuthGuard>
+              } />
+              <Route path="/admin" element={
+                <AuthGuard requireAuth={true} adminOnly={true}>
+                  <Admin />
+                </AuthGuard>
+              } />
               <Route path="/rapper/:id" element={<RapperDetail />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:id" element={<BlogDetail />} />
