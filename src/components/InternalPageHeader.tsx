@@ -18,13 +18,14 @@ const InternalPageHeader = ({
   backText = "Return to Dynasty"
 }: InternalPageHeaderProps) => {
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-rap-gold/30 py-3">
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-rap-gold/30 py-2 sm:py-3">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 flex items-center justify-between h-full">
         <div className="flex items-center">
           <Link to={backLink} onClick={() => window.scrollTo(0, 0)}>
-            <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 hover:text-rap-gold-light font-mogra shadow-lg shadow-rap-gold/20">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              {backText}
+            <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 hover:text-rap-gold-light font-mogra shadow-lg shadow-rap-gold/20 text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2">
+              <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              <span className="hidden sm:inline">{backText}</span>
+              <span className="sm:hidden">Back</span>
             </Button>
           </Link>
         </div>
@@ -34,7 +35,7 @@ const InternalPageHeader = ({
             <img 
               src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
               alt="Spit Hierarchy Logo" 
-              className="h-12 object-contain" 
+              className="h-8 sm:h-12 object-contain" 
             />
           </Link>
         </div>
