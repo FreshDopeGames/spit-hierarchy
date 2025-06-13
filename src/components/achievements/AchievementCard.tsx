@@ -6,7 +6,7 @@ import { Progress } from "@/components/ui/progress";
 import * as LucideIcons from "lucide-react";
 
 interface Achievement {
-  id: string;
+  achievement_id: string;
   name: string;
   description: string;
   icon: string;
