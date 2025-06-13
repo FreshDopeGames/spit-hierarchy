@@ -9,6 +9,51 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      achievements: {
+        Row: {
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean
+          name: string
+          points: number
+          rarity: Database["public"]["Enums"]["achievement_rarity"]
+          threshold_field: string | null
+          threshold_value: number | null
+          type: Database["public"]["Enums"]["achievement_type"]
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          icon: string
+          id?: string
+          is_active?: boolean
+          name: string
+          points?: number
+          rarity?: Database["public"]["Enums"]["achievement_rarity"]
+          threshold_field?: string | null
+          threshold_value?: number | null
+          type: Database["public"]["Enums"]["achievement_type"]
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean
+          name?: string
+          points?: number
+          rarity?: Database["public"]["Enums"]["achievement_rarity"]
+          threshold_field?: string | null
+          threshold_value?: number | null
+          type?: Database["public"]["Enums"]["achievement_type"]
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ad_placements: {
         Row: {
           ad_format: string
@@ -787,6 +832,45 @@ export type Database = {
         }
         Relationships: []
       }
+      user_achievements: {
+        Row: {
+          achievement_id: string
+          earned_at: string
+          id: string
+          progress_value: number | null
+          user_id: string
+        }
+        Insert: {
+          achievement_id: string
+          earned_at?: string
+          id?: string
+          progress_value?: number | null
+          user_id: string
+        }
+        Update: {
+          achievement_id?: string
+          earned_at?: string
+          id?: string
+          progress_value?: number | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_achievements_achievement_id_fkey"
+            columns: ["achievement_id"]
+            isOneToOne: false
+            referencedRelation: "user_achievement_progress"
+            referencedColumns: ["achievement_id"]
+          },
+        ]
+      }
       user_ranking_items: {
         Row: {
           created_at: string
@@ -1125,6 +1209,25 @@ export type Database = {
         }
         Relationships: []
       }
+      user_achievement_progress: {
+        Row: {
+          achievement_id: string | null
+          description: string | null
+          earned_at: string | null
+          icon: string | null
+          is_earned: boolean | null
+          name: string | null
+          points: number | null
+          progress_percentage: number | null
+          progress_value: number | null
+          rarity: Database["public"]["Enums"]["achievement_rarity"] | null
+          threshold_field: string | null
+          threshold_value: number | null
+          type: Database["public"]["Enums"]["achievement_type"] | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       user_voting_stats: {
         Row: {
           average_rating_given: number | null
@@ -1142,6 +1245,10 @@ export type Database = {
       can_manage_blog: {
         Args: { _user_id: string }
         Returns: boolean
+      }
+      check_and_award_achievements: {
+        Args: { target_user_id: string }
+        Returns: undefined
       }
       create_weekly_ranking_snapshot: {
         Args: Record<PropertyKey, never>
@@ -1165,6 +1272,14 @@ export type Database = {
       }
     }
     Enums: {
+      achievement_rarity: "common" | "rare" | "epic" | "legendary"
+      achievement_type:
+        | "voting"
+        | "engagement"
+        | "quality"
+        | "community"
+        | "time_based"
+        | "special"
       image_style:
         | "photo_real"
         | "comic_book"
@@ -1289,6 +1404,15 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      achievement_rarity: ["common", "rare", "epic", "legendary"],
+      achievement_type: [
+        "voting",
+        "engagement",
+        "quality",
+        "community",
+        "time_based",
+        "special",
+      ],
       image_style: [
         "photo_real",
         "comic_book",

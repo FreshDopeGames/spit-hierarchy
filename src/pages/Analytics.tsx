@@ -1,10 +1,11 @@
 
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network, Star } from "lucide-react";
+import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network, Star, Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import UserVotingDashboard from "@/components/analytics/UserVotingDashboard";
+import UserAchievements from "@/components/analytics/UserAchievements";
 import VotingAnalytics from "@/components/analytics/VotingAnalytics";
 import VotingTrends from "@/components/analytics/VotingTrends";
 import TopVoters from "@/components/analytics/TopVoters";
@@ -47,10 +48,14 @@ const Analytics = () => {
           </div>
 
           <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="grid w-full max-w-3xl grid-cols-5 bg-carbon-fiber border border-rap-gold border-2">
+            <TabsList className="grid w-full max-w-4xl grid-cols-6 bg-carbon-fiber border border-rap-gold border-2">
               <TabsTrigger value="personal" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum">
                 <User className="w-4 h-4 mr-2" />
                 Personal
+              </TabsTrigger>
+              <TabsTrigger value="achievements" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum">
+                <Award className="w-4 h-4 mr-2" />
+                Achievements
               </TabsTrigger>
               <TabsTrigger value="platform" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum">
                 <BarChart3 className="w-4 h-4 mr-2" />
@@ -72,6 +77,10 @@ const Analytics = () => {
 
             <TabsContent value="personal" className="mt-6">
               <UserVotingDashboard />
+            </TabsContent>
+
+            <TabsContent value="achievements" className="mt-6">
+              <UserAchievements />
             </TabsContent>
 
             <TabsContent value="platform" className="mt-6">
