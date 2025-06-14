@@ -33,19 +33,19 @@ interface OfficialRankingsSectionProps {
 const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsSectionProps) => {
   return (
     <div className="mb-12">
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <Award className="w-6 h-6 text-rap-gold" />
-          <h2 className="text-3xl font-bold text-rap-platinum font-mogra">Official Rankings</h2>
-          <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
+          <Award className="w-6 h-6 text-rap-gold flex-shrink-0" />
+          <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">Official Rankings</h2>
+          <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan text-xs sm:text-sm">
             Curated Topics
           </Badge>
         </div>
         
-        <Link to="/official-rankings">
+        <Link to="/official-rankings" className="w-full sm:w-auto">
           <Button 
             variant="outline" 
-            className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20 hover:text-rap-gold-light font-kaushan"
+            className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20 hover:text-rap-gold-light font-kaushan text-sm px-3 py-2"
           >
             See All Official Rankings
           </Button>

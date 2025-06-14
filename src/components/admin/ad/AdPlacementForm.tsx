@@ -1,209 +1,158 @@
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Switch } from "@/components/ui/switch";
 
-import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
+const adPlacementSchema = z.object({
+  placement_name: z.string().min(1, "Placement name is required"),
+  ad_unit_id: z.string().min(1, "Ad unit ID is required"),
+  ad_format: z.enum(["banner", "leaderboard", "rectangle", "mobile-banner"]),
+  page_name: z.string().min(1, "Page name is required"),
+  page_route: z.string().min(1, "Page route is required"),
+  is_active: z.boolean(),
+});
 
-interface AdPlacement {
-  id: string;
-  page_name: string;
-  page_route: string;
-  placement_name: string;
-  ad_unit_id: string;
-  ad_format: string;
-  is_active: boolean;
-}
-
-interface PageTemplate {
-  id: string;
-  template_name: string;
-  route_pattern: string;
-  available_placements: string[];
-}
+type AdPlacementFormData = z.infer<typeof adPlacementSchema>;
 
 interface AdPlacementFormProps {
-  editingAd: AdPlacement | null;
-  formData: {
-    page_name: string;
-    page_route: string;
-    placement_name: string;
-    ad_unit_id: string;
-    ad_format: string;
-    is_active: boolean;
-  };
-  pageTemplates: PageTemplate[] | undefined;
-  isSubmitting: boolean;
-  onSubmit: (e: React.FormEvent) => void;
-  onCancel: () => void;
-  onFormDataChange: (updates: Partial<typeof formData>) => void;
-  onTemplateChange: (templateId: string) => void;
+  onSubmit: (data: AdPlacementFormData) => void;
+  initialData?: Partial<AdPlacementFormData>;
+  isLoading?: boolean;
 }
 
-const AdPlacementForm = ({
-  editingAd,
-  formData,
-  pageTemplates,
-  isSubmitting,
-  onSubmit,
-  onCancel,
-  onFormDataChange,
-  onTemplateChange,
-}: AdPlacementFormProps) => {
-  const selectedTemplate = pageTemplates?.find(t => 
-    t.template_name === formData.page_name || t.route_pattern === formData.page_route
-  );
+const AdPlacementForm = ({ onSubmit, initialData, isLoading }: AdPlacementFormProps) => {
+  const form = useForm<AdPlacementFormData>({
+    resolver: zodResolver(adPlacementSchema),
+    defaultValues: {
+      placement_name: initialData?.placement_name || "",
+      ad_unit_id: initialData?.ad_unit_id || "",
+      ad_format: initialData?.ad_format || "banner",
+      page_name: initialData?.page_name || "",
+      page_route: initialData?.page_route || "",
+      is_active: initialData?.is_active ?? true,
+    },
+  });
+
+  const handleSubmit = (data: AdPlacementFormData) => {
+    console.log("Submitting ad placement data:", data);
+    onSubmit(data);
+  };
 
   return (
-    <Card className="bg-carbon-fiber border-rap-silver/40">
-      <CardHeader>
-        <CardTitle className="text-rap-silver font-mogra">
-          {editingAd ? 'Edit Ad Placement' : 'Create New Ad Placement'}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={onSubmit} className="space-y-4">
-          {pageTemplates && pageTemplates.length > 0 && (
-            <div className="space-y-2">
-              <Label htmlFor="template" className="text-rap-platinum font-kaushan">
-                Use Page Template (Optional)
-              </Label>
-              <Select onValueChange={onTemplateChange}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select a page template to auto-fill" />
-                </SelectTrigger>
-                <SelectContent>
-                  {pageTemplates.map((template) => (
-                    <SelectItem key={template.id} value={template.id}>
-                      {template.template_name} - {template.route_pattern}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6">
+        <FormField
+          control={form.control}
+          name="placement_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Placement Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter placement name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
           )}
+        />
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="page_name" className="text-rap-platinum font-kaushan">
-                Page Name *
-              </Label>
-              <Input
-                id="page_name"
-                value={formData.page_name}
-                onChange={(e) => onFormDataChange({ page_name: e.target.value })}
-                placeholder="e.g., Home Page"
-                required
-                className="bg-rap-carbon/50 border-rap-silver/30 text-rap-platinum"
-              />
-            </div>
+        <FormField
+          control={form.control}
+          name="ad_unit_id"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ad Unit ID</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter ad unit ID" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            <div className="space-y-2">
-              <Label htmlFor="page_route" className="text-rap-platinum font-kaushan">
-                Page Route *
-              </Label>
-              <Input
-                id="page_route"
-                value={formData.page_route}
-                onChange={(e) => onFormDataChange({ page_route: e.target.value })}
-                placeholder="e.g., /"
-                required
-                className="bg-rap-carbon/50 border-rap-silver/30 text-rap-platinum"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="placement_name" className="text-rap-platinum font-kaushan">
-              Placement Name *
-            </Label>
-            <Select value={formData.placement_name} onValueChange={(value) => onFormDataChange({ placement_name: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select placement location" />
-              </SelectTrigger>
-              <SelectContent>
-                {selectedTemplate?.available_placements.map((placement) => (
-                  <SelectItem key={placement} value={placement}>
-                    {placement}
-                  </SelectItem>
-                )) || (
-                  <>
-                    <SelectItem value="hero-bottom">After Hero Section</SelectItem>
-                    <SelectItem value="between-sections">Between Sections</SelectItem>
-                    <SelectItem value="sidebar">Sidebar</SelectItem>
-                    <SelectItem value="footer">Footer</SelectItem>
-                  </>
-                )}
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="ad_unit_id" className="text-rap-platinum font-kaushan">
-                Ad Unit ID *
-              </Label>
-              <Input
-                id="ad_unit_id"
-                value={formData.ad_unit_id}
-                onChange={(e) => onFormDataChange({ ad_unit_id: e.target.value })}
-                placeholder="ca-pub-xxxxxxxxxx/xxxxxxxxxx"
-                required
-                className="bg-rap-carbon/50 border-rap-silver/30 text-rap-platinum"
-              />
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="ad_format" className="text-rap-platinum font-kaushan">
-                Ad Format
-              </Label>
-              <Select value={formData.ad_format} onValueChange={(value) => onFormDataChange({ ad_format: value })}>
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
+        <FormField
+          control={form.control}
+          name="ad_format"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Ad Format</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select ad format" />
+                  </SelectTrigger>
+                </FormControl>
                 <SelectContent>
                   <SelectItem value="banner">Banner</SelectItem>
-                  <SelectItem value="rectangle">Rectangle</SelectItem>
                   <SelectItem value="leaderboard">Leaderboard</SelectItem>
-                  <SelectItem value="skyscraper">Skyscraper</SelectItem>
+                  <SelectItem value="rectangle">Rectangle</SelectItem>
+                  <SelectItem value="mobile-banner">Mobile Banner</SelectItem>
                 </SelectContent>
               </Select>
-            </div>
-          </div>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="flex items-center space-x-2">
-            <Switch
-              id="is_active"
-              checked={formData.is_active}
-              onCheckedChange={(checked) => onFormDataChange({ is_active: checked })}
-            />
-            <Label htmlFor="is_active" className="text-rap-platinum font-kaushan">
-              Active
-            </Label>
-          </div>
+        <FormField
+          control={form.control}
+          name="page_name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Page Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter page name" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-          <div className="flex gap-3 pt-4">
-            <Button
-              type="submit"
-              disabled={isSubmitting}
-              className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra"
-            >
-              {isSubmitting ? 'Saving...' : editingAd ? 'Update Ad' : 'Create Ad'}
-            </Button>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onCancel}
-              className="border-rap-silver/30 text-rap-silver hover:bg-rap-silver/10 font-kaushan"
-            >
-              Cancel
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
+        <FormField
+          control={form.control}
+          name="page_route"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Page Route</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter page route (e.g., /rankings)" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="is_active"
+          render={({ field }) => (
+            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-0.5">
+                <FormLabel className="text-base">Active</FormLabel>
+                <div className="text-sm text-muted-foreground">
+                  Enable this ad placement
+                </div>
+              </div>
+              <FormControl>
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              </FormControl>
+            </FormItem>
+          )}
+        />
+
+        <Button type="submit" disabled={isLoading} className="w-full">
+          {isLoading ? "Submitting..." : "Save Ad Placement"}
+        </Button>
+      </form>
+    </Form>
   );
 };
 
