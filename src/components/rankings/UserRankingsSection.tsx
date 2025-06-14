@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Users, Star, Trophy, Plus } from "lucide-react";
 import RankingCard from "./RankingCard";
 import { useAuth } from "@/hooks/useAuth";
-import { UserRanking } from "@/hooks/useUserRankings";
+import { UserRanking } from "@/types/userRanking";
 
 interface UserRankingsSectionProps {
   rankings: UserRanking[];
