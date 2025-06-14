@@ -1,8 +1,6 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Crown, TrendingUp } from "lucide-react";
-
 interface SectionHeader {
   id: string;
   section_name: string;
@@ -11,18 +9,16 @@ interface SectionHeader {
   background_image_url: string | null;
   is_active: boolean;
 }
-
 const RankingsSectionHeader = () => {
-  const { data: headerData } = useQuery({
+  const {
+    data: headerData
+  } = useQuery({
     queryKey: ["section-header", "rankings"],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("section_headers")
-        .select("*")
-        .eq("section_name", "rankings")
-        .eq("is_active", true)
-        .single();
-      
+      const {
+        data,
+        error
+      } = await supabase.from("section_headers").select("*").eq("section_name", "rankings").eq("is_active", true).single();
       if (error) {
         console.log("No custom header found, using default");
         return null;
@@ -30,23 +26,17 @@ const RankingsSectionHeader = () => {
       return data as SectionHeader;
     }
   });
-
   const title = headerData?.title || "The Ultimate Rap Hierarchy";
   const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
   const backgroundImage = headerData?.background_image_url;
-
-  return (
-    <div className="relative mb-12 overflow-hidden rounded-2xl">
+  return <div className="relative mb-12 overflow-hidden rounded-2xl">
       {/* Background Image Container */}
-      <div 
-        className="absolute inset-0 bg-gradient-to-br from-rap-gold/20 via-rap-carbon to-rap-burgundy/30"
-        style={{
-          backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundBlendMode: 'overlay'
-        }}
-      />
+      <div className="absolute inset-0 bg-gradient-to-br from-rap-gold/20 via-rap-carbon to-rap-burgundy/30" style={{
+      backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
+      backgroundSize: 'cover',
+      backgroundPosition: 'center',
+      backgroundBlendMode: 'overlay'
+    }} />
       
       {/* Overlay for text readability */}
       <div className="absolute inset-0 bg-gradient-to-r from-rap-carbon/80 via-rap-carbon/60 to-rap-carbon/80" />
@@ -57,7 +47,7 @@ const RankingsSectionHeader = () => {
           {/* Icon and Title */}
           <div className="flex items-center justify-center gap-4 mb-6">
             <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-rap-gold animate-pulse" />
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-ceviche text-rap-gold animate-text-glow tracking-wider">
+            <h1 className="text-4xl sm:text-5xl font-ceviche text-rap-gold animate-text-glow tracking-wider font-normal lg:text-6xl">
               {title}
             </h1>
             <TrendingUp className="w-8 h-8 sm:w-10 sm:h-10 text-rap-gold animate-pulse" />
@@ -79,8 +69,6 @@ const RankingsSectionHeader = () => {
       
       {/* Bottom fade effect */}
       <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-rap-carbon to-transparent" />
-    </div>
-  );
+    </div>;
 };
-
 export default RankingsSectionHeader;

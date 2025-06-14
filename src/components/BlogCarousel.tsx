@@ -104,9 +104,7 @@ const BlogCarousel = () => {
   const timeAgo = currentPost.published_at ? format(new Date(currentPost.published_at), 'MMMM d, yyyy') : 'Unknown date';
   return <div className="mb-12">
       <div className="text-center mb-8 py-0">
-        <h2 className="font-ceviche text-rap-gold mb-2 tracking-wider text-5xl">
-          Slick Talk Chronicles
-        </h2>
+        <h2 className="font-ceviche text-rap-gold mb-2 tracking-wider text-5xl">SLICK TALK</h2>
         <p className="text-rap-platinum font-merienda text-lg">
           Chronicles from the Temple of Hip-Hop
         </p>
