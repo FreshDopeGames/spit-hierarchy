@@ -39,7 +39,7 @@ const AdManagement = () => {
   const { data: placements, isLoading } = useQuery({
     queryKey: ["ad-placements"],
     queryFn: async () => {
-      const { data, error } = await supabase
+      const { data, error } =  await supabase
         .from("ad_placements")
         .select("*")
         .order("created_at", { ascending: false });
@@ -171,10 +171,16 @@ const AdManagement = () => {
 
   return (
     <div className="space-y-6">
-      <AdManagementHeader
-        onCreateNew={() => setShowForm(true)}
-        showForm={showForm}
-      />
+      <div className="flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-rap-gold">Ad Management</h2>
+        <Button 
+          onClick={() => setShowForm(true)}
+          className="bg-rap-gold text-rap-carbon hover:bg-rap-gold/80"
+        >
+          <Plus className="w-4 h-4 mr-2" />
+          Create New Placement
+        </Button>
+      </div>
 
       {showForm && (
         <Card className="bg-carbon-fiber border-rap-gold/30">
@@ -186,21 +192,73 @@ const AdManagement = () => {
           <CardContent>
             <AdPlacementForm
               onSubmit={handleSubmit}
-              onCancel={handleCancel}
               initialData={editingPlacement}
-              templates={templates || []}
               isLoading={createMutation.isPending || updateMutation.isPending}
             />
+            <div className="flex gap-2 mt-4">
+              <Button 
+                type="button" 
+                variant="outline" 
+                onClick={handleCancel}
+                className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+              >
+                Cancel
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
 
-      <AdPlacementList
-        placements={placements || []}
-        isLoading={isLoading}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <Card className="bg-carbon-fiber border-rap-gold/30">
+        <CardHeader>
+          <CardTitle className="text-rap-gold">Ad Placements</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {isLoading ? (
+            <div className="space-y-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="h-16 bg-rap-carbon/50 rounded animate-pulse" />
+              ))}
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {placements && placements.length > 0 ? (
+                placements.map((placement) => (
+                  <div key={placement.id} className="flex items-center justify-between p-4 bg-rap-carbon/20 rounded-lg border border-rap-gold/20">
+                    <div className="flex-1">
+                      <h3 className="font-semibold text-white">{placement.placement_name}</h3>
+                      <p className="text-gray-400 text-sm">{placement.page_name} ({placement.page_route})</p>
+                      <p className="text-gray-500 text-xs">Format: {placement.ad_format} | Unit ID: {placement.ad_unit_id}</p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(placement)}
+                        className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+                      >
+                        <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDelete(placement.id)}
+                        className="border-red-500/30 text-red-400 hover:bg-red-500 hover:text-white"
+                      >
+                        <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div className="text-center py-8">
+                  <p className="text-gray-400">No ad placements found</p>
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
   );
 };

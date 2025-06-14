@@ -1,14 +1,16 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useAchievements } from "@/hooks/useAchievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AchievementCard from "@/components/achievements/AchievementCard";
-import { Award, Trophy } from "lucide-react";
+import AchievementTable from "@/components/achievements/AchievementTable";
+import { Award, Trophy, LayoutGrid, Table } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 const ProfileAchievements = () => {
-  const { getEarnedAchievements, getTotalPoints, isLoading } = useAchievements();
+  const { achievements, getEarnedAchievements, getTotalPoints, isLoading } = useAchievements();
 
   if (isLoading) {
     return (
@@ -61,25 +63,68 @@ const ProfileAchievements = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {recentAchievements.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {recentAchievements.map((achievement) => (
-              <AchievementCard 
-                key={achievement.achievement_id} 
-                achievement={achievement} 
-                showProgress={false}
+        <Tabs defaultValue="overview" className="w-full">
+          <TabsList className="grid w-full grid-cols-2 bg-carbon-fiber border border-rap-gold/30 mb-4">
+            <TabsTrigger 
+              value="overview" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+            >
+              <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              Recent
+            </TabsTrigger>
+            <TabsTrigger 
+              value="table" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+            >
+              <Table className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              All Progress
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview">
+            {recentAchievements.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+                {recentAchievements.map((achievement) => (
+                  <AchievementCard 
+                    key={achievement.id} 
+                    achievement={achievement} 
+                    showProgress={false}
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-6 sm:py-8">
+                <Award className="w-10 h-10 sm:w-12 sm:h-12 text-rap-gold/50 mx-auto mb-3" />
+                <h3 className="text-base sm:text-lg font-bold text-rap-silver mb-2">No Achievements Yet</h3>
+                <p className="text-rap-platinum text-xs sm:text-sm px-4">
+                  Start voting and engaging to earn your first achievements!
+                </p>
+              </div>
+            )}
+          </TabsContent>
+
+          <TabsContent value="table">
+            <div className="space-y-4">
+              <div className="text-sm text-rap-silver">
+                Track your progress on all {achievements.length} available achievements
+              </div>
+              <AchievementTable 
+                achievements={achievements.slice(0, 6)} 
+                showProgress={true}
               />
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-6 sm:py-8">
-            <Award className="w-10 h-10 sm:w-12 sm:h-12 text-rap-gold/50 mx-auto mb-3" />
-            <h3 className="text-base sm:text-lg font-bold text-rap-silver mb-2">No Achievements Yet</h3>
-            <p className="text-rap-platinum text-xs sm:text-sm px-4">
-              Start voting and engaging to earn your first achievements!
-            </p>
-          </div>
-        )}
+              <div className="text-center">
+                <Link to="/analytics">
+                  <Button 
+                    variant="outline"
+                    className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+                  >
+                    View Complete Achievement List
+                  </Button>
+                </Link>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
       </CardContent>
     </Card>
   );

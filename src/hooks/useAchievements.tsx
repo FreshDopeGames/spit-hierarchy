@@ -9,9 +9,24 @@ export const useAchievements = () => {
   const queryClient = useQueryClient();
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
 
-  // Fetch user achievements
-  const { data: achievements, isLoading } = useQuery({
-    queryKey: ['user-achievements', user?.id],
+  // Fetch ALL achievements
+  const { data: allAchievements, isLoading: loadingAll } = useQuery({
+    queryKey: ['all-achievements'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('achievements')
+        .select('*')
+        .eq('is_active', true)
+        .order('points', { ascending: false });
+      
+      if (error) throw error;
+      return data;
+    }
+  });
+
+  // Fetch user progress for achievements
+  const { data: userProgress, isLoading: loadingProgress } = useQuery({
+    queryKey: ['user-achievement-progress', user?.id],
     queryFn: async () => {
       if (!user) return [];
       
@@ -26,6 +41,20 @@ export const useAchievements = () => {
     enabled: !!user
   });
 
+  // Combine all achievements with user progress
+  const achievements = allAchievements?.map(achievement => {
+    const progress = userProgress?.find(p => p.achievement_id === achievement.id);
+    return {
+      ...achievement,
+      progress_value: progress?.progress_value || 0,
+      progress_percentage: progress?.progress_percentage || 0,
+      is_earned: progress?.is_earned || false,
+      earned_at: progress?.earned_at || null
+    };
+  }) || [];
+
+  const isLoading = loadingAll || loadingProgress;
+
   // Check for new achievements periodically
   const checkForNewAchievements = async () => {
     if (!user) return;
@@ -37,7 +66,7 @@ export const useAchievements = () => {
       });
       
       // Refetch achievements to see if any new ones were awarded
-      queryClient.invalidateQueries({ queryKey: ['user-achievements', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
     } catch (error) {
       console.error('Error checking achievements:', error);
     }
@@ -72,7 +101,7 @@ export const useAchievements = () => {
           }
           
           // Refresh achievement list
-          queryClient.invalidateQueries({ queryKey: ['user-achievements', user?.id] });
+          queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
         }
       )
       .subscribe();
@@ -87,11 +116,11 @@ export const useAchievements = () => {
   };
 
   const getEarnedAchievements = () => {
-    return achievements?.filter(a => a.is_earned) || [];
+    return achievements.filter(a => a.is_earned);
   };
 
   const getUnlockedAchievements = () => {
-    return achievements?.filter(a => !a.is_earned) || [];
+    return achievements.filter(a => !a.is_earned);
   };
 
   const getTotalPoints = () => {
@@ -99,7 +128,7 @@ export const useAchievements = () => {
   };
 
   return {
-    achievements: achievements || [],
+    achievements,
     newAchievements,
     isLoading,
     checkForNewAchievements,

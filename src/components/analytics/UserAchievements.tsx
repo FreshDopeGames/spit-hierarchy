@@ -1,13 +1,16 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { useAchievements } from "@/hooks/useAchievements";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import AchievementCard from "@/components/achievements/AchievementCard";
-import { Award, Trophy, Target, Lock } from "lucide-react";
+import AchievementTable from "@/components/achievements/AchievementTable";
+import { Award, Trophy, Target, Lock, LayoutGrid, Table as TableIcon } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 const UserAchievements = () => {
   const { achievements, isLoading, getEarnedAchievements, getUnlockedAchievements, getTotalPoints } = useAchievements();
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
 
   if (isLoading) {
     return (
@@ -24,28 +27,41 @@ const UserAchievements = () => {
 
   const earnedAchievements = getEarnedAchievements();
   const unlockedAchievements = getUnlockedAchievements();
-  const recentAchievements = earnedAchievements
-    .sort((a, b) => new Date(b.earned_at).getTime() - new Date(a.earned_at).getTime())
-    .slice(0, 6);
-
-  // Categorize achievements by type
-  const categorizeAchievements = (achievementsList: any[]) => {
-    return achievementsList.reduce((acc, achievement) => {
-      const type = achievement.type || 'other';
-      if (!acc[type]) acc[type] = [];
-      acc[type].push(achievement);
-      return acc;
-    }, {} as Record<string, any[]>);
-  };
-
-  const earnedByCategory = categorizeAchievements(earnedAchievements);
-  const unlockedByCategory = categorizeAchievements(unlockedAchievements);
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h3 className="text-lg sm:text-2xl mb-3 sm:mb-4 text-rap-gold font-extrabold">
-        Your Achievements
-      </h3>
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <h3 className="text-lg sm:text-2xl mb-0 text-rap-gold font-extrabold">
+          Your Achievements
+        </h3>
+        
+        <div className="flex items-center gap-2">
+          <Button
+            variant={viewMode === 'table' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('table')}
+            className={viewMode === 'table' 
+              ? "bg-rap-gold text-rap-carbon hover:bg-rap-gold/80" 
+              : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+            }
+          >
+            <TableIcon className="w-4 h-4 mr-1" />
+            Table
+          </Button>
+          <Button
+            variant={viewMode === 'cards' ? 'default' : 'outline'}
+            size="sm"
+            onClick={() => setViewMode('cards')}
+            className={viewMode === 'cards' 
+              ? "bg-rap-gold text-rap-carbon hover:bg-rap-gold/80" 
+              : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+            }
+          >
+            <LayoutGrid className="w-4 h-4 mr-1" />
+            Cards
+          </Button>
+        </div>
+      </div>
       
       {/* Achievement Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
@@ -92,128 +108,134 @@ const UserAchievements = () => {
         </Card>
       </div>
 
-      {/* Achievement Tabs */}
-      <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 bg-carbon-fiber border border-rap-gold/30">
-          <TabsTrigger 
-            value="all" 
-            className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
-          >
-            All
-          </TabsTrigger>
-          <TabsTrigger 
-            value="earned" 
-            className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
-          >
-            <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            Earned
-          </TabsTrigger>
-          <TabsTrigger 
-            value="progress" 
-            className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
-          >
-            <Target className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            In Progress
-          </TabsTrigger>
-          <TabsTrigger 
-            value="locked" 
-            className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
-          >
-            <Lock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-            Locked
-          </TabsTrigger>
-        </TabsList>
+      {/* Achievement Content */}
+      {viewMode === 'table' ? (
+        <div className="space-y-4">
+          <AchievementTable achievements={achievements} showProgress={true} />
+        </div>
+      ) : (
+        <Tabs defaultValue="all" className="w-full">
+          <TabsList className="grid w-full grid-cols-4 bg-carbon-fiber border border-rap-gold/30">
+            <TabsTrigger 
+              value="all" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+            >
+              All
+            </TabsTrigger>
+            <TabsTrigger 
+              value="earned" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+            >
+              <Trophy className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              Earned
+            </TabsTrigger>
+            <TabsTrigger 
+              value="progress" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+            >
+              <Target className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              In Progress
+            </TabsTrigger>
+            <TabsTrigger 
+              value="locked" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+            >
+              <Lock className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+              Locked
+            </TabsTrigger>
+          </TabsList>
 
-        <TabsContent value="all" className="mt-4 sm:mt-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {achievements.map((achievement) => (
-              <AchievementCard 
-                key={achievement.achievement_id} 
-                achievement={achievement} 
-                showProgress={true}
-              />
-            ))}
-          </div>
-        </TabsContent>
-
-        <TabsContent value="earned" className="mt-4 sm:mt-6">
-          {earnedAchievements.length > 0 ? (
+          <TabsContent value="all" className="mt-4 sm:mt-6">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {earnedAchievements.map((achievement) => (
+              {achievements.map((achievement) => (
                 <AchievementCard 
-                  key={achievement.achievement_id} 
+                  key={achievement.id} 
                   achievement={achievement} 
-                  showProgress={false}
+                  showProgress={true}
                 />
               ))}
             </div>
-          ) : (
-            <Card className="bg-black/40 border-2 border-rap-gold">
-              <CardContent className="p-4 sm:p-6 text-center">
-                <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold/50 mx-auto mb-4" />
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No Achievements Yet</h3>
-                <p className="text-gray-400 text-sm sm:text-base px-4">
-                  Start voting and engaging with the community to unlock your first achievements!
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
+          </TabsContent>
 
-        <TabsContent value="progress" className="mt-4 sm:mt-6">
-          {unlockedAchievements.filter(a => a.progress_percentage > 0).length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {unlockedAchievements
-                .filter(a => a.progress_percentage > 0)
-                .sort((a, b) => b.progress_percentage - a.progress_percentage)
-                .map((achievement) => (
+          <TabsContent value="earned" className="mt-4 sm:mt-6">
+            {earnedAchievements.length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+                {earnedAchievements.map((achievement) => (
                   <AchievementCard 
-                    key={achievement.achievement_id} 
+                    key={achievement.id} 
                     achievement={achievement} 
-                    showProgress={true}
+                    showProgress={false}
                   />
                 ))}
-            </div>
-          ) : (
-            <Card className="bg-black/40 border-2 border-rap-gold">
-              <CardContent className="p-4 sm:p-6 text-center">
-                <Target className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold/50 mx-auto mb-4" />
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No Progress Yet</h3>
-                <p className="text-gray-400 text-sm sm:text-base px-4">
-                  Start engaging with the platform to make progress toward achievements!
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
+              </div>
+            ) : (
+              <Card className="bg-black/40 border-2 border-rap-gold">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <Trophy className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold/50 mx-auto mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No Achievements Yet</h3>
+                  <p className="text-gray-400 text-sm sm:text-base px-4">
+                    Start voting and engaging with the community to unlock your first achievements!
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
 
-        <TabsContent value="locked" className="mt-4 sm:mt-6">
-          {unlockedAchievements.filter(a => a.progress_percentage === 0).length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-              {unlockedAchievements
-                .filter(a => a.progress_percentage === 0)
-                .sort((a, b) => a.threshold_value - b.threshold_value)
-                .map((achievement) => (
-                  <AchievementCard 
-                    key={achievement.achievement_id} 
-                    achievement={achievement} 
-                    showProgress={true}
-                  />
-                ))}
-            </div>
-          ) : (
-            <Card className="bg-black/40 border-2 border-rap-gold">
-              <CardContent className="p-4 sm:p-6 text-center">
-                <Lock className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold/50 mx-auto mb-4" />
-                <h3 className="text-lg sm:text-xl font-bold text-white mb-2">All Achievements Started!</h3>
-                <p className="text-gray-400 text-sm sm:text-base px-4">
-                  You've made progress on all available achievements. Keep going!
-                </p>
-              </CardContent>
-            </Card>
-          )}
-        </TabsContent>
-      </Tabs>
+          <TabsContent value="progress" className="mt-4 sm:mt-6">
+            {unlockedAchievements.filter(a => a.progress_percentage > 0).length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+                {unlockedAchievements
+                  .filter(a => a.progress_percentage > 0)
+                  .sort((a, b) => b.progress_percentage - a.progress_percentage)
+                  .map((achievement) => (
+                    <AchievementCard 
+                      key={achievement.id} 
+                      achievement={achievement} 
+                      showProgress={true}
+                    />
+                  ))}
+              </div>
+            ) : (
+              <Card className="bg-black/40 border-2 border-rap-gold">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <Target className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold/50 mx-auto mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">No Progress Yet</h3>
+                  <p className="text-gray-400 text-sm sm:text-base px-4">
+                    Start engaging with the platform to make progress toward achievements!
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+
+          <TabsContent value="locked" className="mt-4 sm:mt-6">
+            {unlockedAchievements.filter(a => a.progress_percentage === 0).length > 0 ? (
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
+                {unlockedAchievements
+                  .filter(a => a.progress_percentage === 0)
+                  .sort((a, b) => a.points - b.points)
+                  .map((achievement) => (
+                    <AchievementCard 
+                      key={achievement.id} 
+                      achievement={achievement} 
+                      showProgress={true}
+                    />
+                  ))}
+              </div>
+            ) : (
+              <Card className="bg-black/40 border-2 border-rap-gold">
+                <CardContent className="p-4 sm:p-6 text-center">
+                  <Lock className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold/50 mx-auto mb-4" />
+                  <h3 className="text-lg sm:text-xl font-bold text-white mb-2">All Achievements Started!</h3>
+                  <p className="text-gray-400 text-sm sm:text-base px-4">
+                    You've made progress on all available achievements. Keep going!
+                  </p>
+                </CardContent>
+              </Card>
+            )}
+          </TabsContent>
+        </Tabs>
+      )}
     </div>
   );
 };
