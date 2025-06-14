@@ -140,7 +140,7 @@ const AchievementGallery = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {achievements?.map((achievement) => (
               <AchievementCard 
-                key={achievement.achievement_id || achievement.id} 
+                key={achievement.achievement_id} 
                 achievement={transformAchievement(achievement)} 
               />
             ))}
@@ -152,7 +152,7 @@ const AchievementGallery = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {typeAchievements.map((achievement) => (
                 <AchievementCard 
-                  key={achievement.achievement_id || achievement.id} 
+                  key={achievement.achievement_id} 
                   achievement={transformAchievement(achievement)} 
                 />
               ))}
