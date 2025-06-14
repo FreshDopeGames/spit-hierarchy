@@ -1,0 +1,106 @@
+
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Database, Users, Vote } from "lucide-react";
+
+const AnalyticsDebugInfo = () => {
+  const { data: debugInfo } = useQuery({
+    queryKey: ["analytics-debug"],
+    queryFn: async () => {
+      // Get vote count
+      const { count: voteCount } = await supabase
+        .from("votes")
+        .select("*", { count: "exact", head: true });
+
+      // Get user count  
+      const { count: userCount } = await supabase
+        .from("profiles")
+        .select("*", { count: "exact", head: true });
+
+      // Get rapper count with birth data
+      const { data: rappersWithBirthData } = await supabase
+        .from("rappers")
+        .select("name, birth_month, birth_day")
+        .not("birth_month", "is", null)
+        .not("birth_day", "is", null);
+
+      // Get recent votes for trends
+      const { data: recentVotes } = await supabase
+        .from("votes")
+        .select("created_at, rating")
+        .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
+        .order("created_at", { ascending: false });
+
+      return {
+        totalVotes: voteCount || 0,
+        totalUsers: userCount || 0,
+        rappersWithBirthData: rappersWithBirthData?.length || 0,
+        recentVotes: recentVotes?.length || 0,
+        rapperNames: rappersWithBirthData?.map(r => r.name) || []
+      };
+    }
+  });
+
+  if (!debugInfo) return null;
+
+  return (
+    <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 mb-6">
+      <CardHeader>
+        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2">
+          <Database className="w-5 h-5" />
+          Analytics Data Status
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Vote className="w-4 h-4 text-rap-gold" />
+              <span className="text-rap-platinum font-bold">{debugInfo.totalVotes}</span>
+            </div>
+            <p className="text-rap-smoke text-sm">Total Votes</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Users className="w-4 h-4 text-rap-gold" />
+              <span className="text-rap-platinum font-bold">{debugInfo.totalUsers}</span>
+            </div>
+            <p className="text-rap-smoke text-sm">Users</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Database className="w-4 h-4 text-rap-gold" />
+              <span className="text-rap-platinum font-bold">{debugInfo.recentVotes}</span>
+            </div>
+            <p className="text-rap-smoke text-sm">Recent Votes (7d)</p>
+          </div>
+          
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-2 mb-1">
+              <Database className="w-4 h-4 text-rap-gold" />
+              <span className="text-rap-platinum font-bold">{debugInfo.rappersWithBirthData}</span>
+            </div>
+            <p className="text-rap-smoke text-sm">Rappers w/ Birth Data</p>
+          </div>
+        </div>
+        
+        <div>
+          <h4 className="text-rap-platinum font-medium mb-2">Rappers with Birth Data:</h4>
+          <div className="flex flex-wrap gap-1">
+            {debugInfo.rapperNames.map(name => (
+              <Badge key={name} variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-xs">
+                {name}
+              </Badge>
+            ))}
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default AnalyticsDebugInfo;

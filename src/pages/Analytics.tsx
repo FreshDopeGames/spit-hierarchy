@@ -10,6 +10,7 @@ import VotingTrends from "@/components/analytics/VotingTrends";
 import TopVoters from "@/components/analytics/TopVoters";
 import RapperNetworkGraph from "@/components/analytics/RapperNetworkGraph";
 import AstrologicalRankings from "@/components/analytics/AstrologicalRankings";
+import AnalyticsDebugInfo from "@/components/analytics/AnalyticsDebugInfo";
 import InternalPageHeader from "@/components/InternalPageHeader";
 
 const Analytics = () => {
@@ -45,6 +46,9 @@ const Analytics = () => {
               Deep dive into voting patterns and community trends
             </p>
           </div>
+
+          {/* Debug Info - Temporary */}
+          <AnalyticsDebugInfo />
 
           <Tabs defaultValue="personal" className="w-full">
             <div className="overflow-x-auto">
