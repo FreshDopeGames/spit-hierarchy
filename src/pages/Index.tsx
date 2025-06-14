@@ -11,7 +11,8 @@ import StatsOverview from "@/components/StatsOverview";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
 import AdUnit from "@/components/AdUnit";
-import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -71,68 +72,6 @@ const Index = () => {
     }
   });
 
-  // Fetch the most active official rankings for the dedicated section
-  const { data: activeRankings = [] } = useQuery({
-    queryKey: ["active-official-rankings"],
-    queryFn: async () => {
-      // Get the top 3 most active official rankings
-      const { data: rankingsData, error: rankingsError } = await supabase
-        .from("official_rankings")
-        .select("*")
-        .order("activity_score", { ascending: false })
-        .order("last_activity_at", { ascending: false })
-        .limit(3);
-
-      if (rankingsError) throw rankingsError;
-
-      // Fetch items for each ranking
-      const rankingsWithItems = await Promise.all(
-        (rankingsData || []).map(async (ranking) => {
-          const { data: itemsData, error: itemsError } = await supabase
-            .from("ranking_items")
-            .select(`
-              *,
-              rapper:rappers(*)
-            `)
-            .eq("ranking_id", ranking.id)
-            .eq("is_ranked", true)
-            .order("position")
-            .limit(5);
-
-          if (itemsError) {
-            console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
-            return { ...ranking, items: [] };
-          }
-
-          return { ...ranking, items: itemsData || [] };
-        })
-      );
-
-      // Transform to match component props
-      return rankingsWithItems.map((ranking) => ({
-        id: ranking.id,
-        title: ranking.title,
-        description: ranking.description || "",
-        author: "Editorial Team",
-        timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
-        rappers: ranking.items.map((item) => ({
-          rank: item.position,
-          name: item.rapper?.name || "Unknown",
-          reason: item.reason || "",
-        })),
-        likes: ranking.activity_score || 0,
-        views: Math.floor((ranking.activity_score || 0) * 2.5) + 500,
-        isOfficial: true,
-        tags: ["Official", ranking.category],
-        slug: ranking.slug,
-      }));
-    }
-  });
-
-  const handleRankingClick = (id: string) => {
-    console.log('Ranking clicked:', id);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
       {/* Sticky Header */}
@@ -172,13 +111,17 @@ const Index = () => {
             </>
           )}
 
-          {/* Most Active Official Rankings */}
-          {activeRankings.length > 0 && (
-            <OfficialRankingsSection 
-              rankings={activeRankings}
-              onRankingClick={handleRankingClick}
-            />
-          )}
+          {/* All Official Rankings Button */}
+          <div className="mb-12 text-center">
+            <Link to="/official-rankings" className="w-full sm:w-auto">
+              <Button 
+                variant="outline" 
+                className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal font-mogra text-sm px-6 py-3"
+              >
+                See All Official Rankings
+              </Button>
+            </Link>
+          </div>
 
           {/* Stats Overview */}
           <StatsOverview />
