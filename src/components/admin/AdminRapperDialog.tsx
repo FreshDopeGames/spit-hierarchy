@@ -19,9 +19,9 @@ interface AdminRapperDialogProps {
 const AdminRapperDialog = ({ rapper, isOpen, onClose }: AdminRapperDialogProps) => {
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)] text-[var(--theme-text)] max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-2xl bg-[var(--theme-surface)] border border-[var(--theme-border)] text-[var(--theme-text)] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)]">
+          <DialogTitle className="text-lg sm:text-xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)]">
             {rapper ? "Edit Rapper" : "Add New Rapper"}
           </DialogTitle>
         </DialogHeader>

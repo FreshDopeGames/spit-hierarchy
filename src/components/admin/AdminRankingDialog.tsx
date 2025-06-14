@@ -179,23 +179,23 @@ const AdminRankingDialog = ({ open, onOpenChange, ranking, onSuccess }: AdminRan
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl bg-carbon-fiber border border-rap-gold/30">
+      <DialogContent className="w-[95vw] max-w-2xl bg-carbon-fiber border border-rap-gold/30 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-mogra text-xl">
+          <DialogTitle className="text-rap-gold font-mogra text-lg sm:text-xl">
             {ranking ? "Edit Ranking" : "Create New Ranking"}
           </DialogTitle>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title" className="text-rap-platinum font-kaushan">
+              <Label htmlFor="title" className="text-rap-platinum font-kaushan text-sm sm:text-base">
                 Title *
               </Label>
               <Input
                 id="title"
                 {...register("title", { required: "Title is required" })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
+                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
                 placeholder="Enter ranking title"
               />
               {errors.title && (
@@ -204,13 +204,13 @@ const AdminRankingDialog = ({ open, onOpenChange, ranking, onSuccess }: AdminRan
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="category" className="text-rap-platinum font-kaushan">
+              <Label htmlFor="category" className="text-rap-platinum font-kaushan text-sm sm:text-base">
                 Category *
               </Label>
               <Input
                 id="category"
                 {...register("category", { required: "Category is required" })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
+                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
                 placeholder="e.g., Greatest of All Time"
               />
               {errors.category && (
@@ -220,26 +220,26 @@ const AdminRankingDialog = ({ open, onOpenChange, ranking, onSuccess }: AdminRan
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-rap-platinum font-kaushan">
+            <Label htmlFor="description" className="text-rap-platinum font-kaushan text-sm sm:text-base">
               Description
             </Label>
             <Textarea
               id="description"
               {...register("description")}
-              className="bg-rap-carbon border-rap-gold/30 text-rap-platinum min-h-[100px]"
+              className="bg-rap-carbon border-rap-gold/30 text-rap-platinum min-h-[80px] sm:min-h-[100px]"
               placeholder="Enter ranking description"
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="slug" className="text-rap-platinum font-kaushan">
+              <Label htmlFor="slug" className="text-rap-platinum font-kaushan text-sm sm:text-base">
                 URL Slug *
               </Label>
               <Input
                 id="slug"
                 {...register("slug", { required: "Slug is required" })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
+                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
                 placeholder="url-friendly-slug"
               />
               {errors.slug && (
@@ -248,51 +248,51 @@ const AdminRankingDialog = ({ open, onOpenChange, ranking, onSuccess }: AdminRan
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="display_order" className="text-rap-platinum font-kaushan">
+              <Label htmlFor="display_order" className="text-rap-platinum font-kaushan text-sm sm:text-base">
                 Display Order
               </Label>
               <Input
                 id="display_order"
                 type="number"
                 {...register("display_order", { valueAsNumber: true })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
+                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
                 placeholder="0"
               />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label className="text-rap-platinum font-kaushan">Tags</Label>
+            <Label className="text-rap-platinum font-kaushan text-sm sm:text-base">Tags</Label>
             <RankingTagSelector
               selectedTags={selectedTags}
               onTagsChange={setSelectedTags}
             />
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-3 p-3 sm:p-2 bg-rap-carbon/30 rounded">
             <Switch
               id="is_featured"
               {...register("is_featured")}
               onCheckedChange={(checked) => setValue("is_featured", checked)}
             />
-            <Label htmlFor="is_featured" className="text-rap-platinum font-kaushan">
+            <Label htmlFor="is_featured" className="text-rap-platinum font-kaushan text-sm sm:text-base">
               Featured Ranking
             </Label>
           </div>
 
-          <div className="flex justify-end space-x-2">
+          <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
             <Button
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/20"
+              className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/20 h-11 sm:h-10 w-full sm:w-auto"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading}
-              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light font-kaushan"
+              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light font-kaushan h-11 sm:h-10 w-full sm:w-auto"
             >
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {ranking ? "Update" : "Create"} Ranking

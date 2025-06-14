@@ -105,14 +105,14 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
               <Badge
                 key={tag.id}
                 variant="outline"
-                className="text-rap-platinum border-rap-gold/30 bg-rap-gold/10"
+                className="text-rap-platinum border-rap-gold/30 bg-rap-gold/10 text-xs sm:text-sm h-8 sm:h-6 px-2 sm:px-3"
                 style={{ borderColor: tag.color }}
               >
-                {tag.name}
+                <span className="truncate max-w-[120px] sm:max-w-none">{tag.name}</span>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-1 h-auto p-0 text-rap-platinum hover:text-red-400"
+                  className="ml-1 h-auto p-0 text-rap-platinum hover:text-red-400 min-w-[16px]"
                   onClick={() => handleTagToggle(tag.id)}
                 >
                   <X className="w-3 h-3" />
@@ -133,11 +133,11 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
             <Badge
               key={tag.id}
               variant="outline"
-              className="cursor-pointer text-rap-platinum border-rap-smoke/30 hover:border-rap-gold/50 hover:bg-rap-gold/10 transition-colors"
+              className="cursor-pointer text-rap-platinum border-rap-smoke/30 hover:border-rap-gold/50 hover:bg-rap-gold/10 transition-colors text-xs sm:text-sm h-8 sm:h-6 px-2 sm:px-3"
               style={{ borderColor: tag.color }}
               onClick={() => handleTagToggle(tag.id)}
             >
-              {tag.name}
+              <span className="truncate max-w-[120px] sm:max-w-none">{tag.name}</span>
             </Badge>
           ))}
         </div>
@@ -150,14 +150,14 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
             variant="outline"
             size="sm"
             onClick={() => setIsCreating(true)}
-            className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/20"
+            className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/20 h-10 sm:h-9 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create New Tag
           </Button>
         ) : (
-          <div className="flex gap-2 items-end">
-            <div className="flex-1">
+          <div className="space-y-3">
+            <div>
               <Label className="text-rap-platinum font-kaushan text-sm">
                 New Tag Name
               </Label>
@@ -165,27 +165,29 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
                 placeholder="Enter tag name"
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
+                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10 mt-1"
                 onKeyPress={(e) => e.key === 'Enter' && handleCreateTag()}
               />
             </div>
-            <Button
-              onClick={handleCreateTag}
-              disabled={!newTagName.trim() || createTagMutation.isPending}
-              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light"
-            >
-              Create
-            </Button>
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsCreating(false);
-                setNewTagName("");
-              }}
-              className="border-rap-gold/30 text-rap-platinum"
-            >
-              Cancel
-            </Button>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <Button
+                onClick={handleCreateTag}
+                disabled={!newTagName.trim() || createTagMutation.isPending}
+                className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light h-10 flex-1 sm:flex-none"
+              >
+                Create
+              </Button>
+              <Button
+                variant="outline"
+                onClick={() => {
+                  setIsCreating(false);
+                  setNewTagName("");
+                }}
+                className="border-rap-gold/30 text-rap-platinum h-10 flex-1 sm:flex-none"
+              >
+                Cancel
+              </Button>
+            </div>
           </div>
         )}
       </div>

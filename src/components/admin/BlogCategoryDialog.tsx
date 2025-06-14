@@ -109,52 +109,52 @@ const BlogCategoryDialog = ({ open, onOpenChange, category, onSuccess }: BlogCat
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md bg-carbon-fiber border border-rap-gold/30">
+      <DialogContent className="w-[95vw] max-w-md bg-carbon-fiber border border-rap-gold/30 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche text-xl">
+          <DialogTitle className="text-rap-gold font-ceviche text-lg sm:text-xl">
             {category ? 'Edit Category' : 'Create New Category'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-rap-platinum">Name *</Label>
+            <Label htmlFor="name" className="text-rap-platinum text-sm sm:text-base">Name *</Label>
             <Input
               id="name"
               value={formData.name}
               onChange={(e) => handleNameChange(e.target.value)}
-              className="bg-rap-carbon border-rap-smoke text-rap-platinum"
+              className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slug" className="text-rap-platinum">Slug</Label>
+            <Label htmlFor="slug" className="text-rap-platinum text-sm sm:text-base">Slug</Label>
             <Input
               id="slug"
               value={formData.slug}
               onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-              className="bg-rap-carbon border-rap-smoke text-rap-platinum"
+              className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
               placeholder="auto-generated-from-name"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-rap-platinum">Description</Label>
+            <Label htmlFor="description" className="text-rap-platinum text-sm sm:text-base">Description</Label>
             <Textarea
               id="description"
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
-              className="bg-rap-carbon border-rap-smoke text-rap-platinum"
+              className="bg-rap-carbon border-rap-smoke text-rap-platinum min-h-[80px]"
               rows={3}
             />
           </div>
 
-          <div className="flex gap-4 pt-4">
+          <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-4">
             <Button 
               type="submit" 
               disabled={saveCategoryMutation.isPending}
-              className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra"
+              className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra h-11 flex-1 sm:flex-none"
             >
               {saveCategoryMutation.isPending ? 'Saving...' : (category ? 'Update Category' : 'Create Category')}
             </Button>
@@ -162,7 +162,7 @@ const BlogCategoryDialog = ({ open, onOpenChange, category, onSuccess }: BlogCat
               type="button" 
               variant="outline" 
               onClick={() => onOpenChange(false)}
-              className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold"
+              className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold h-11 flex-1 sm:flex-none"
             >
               Cancel
             </Button>
