@@ -6,19 +6,25 @@ import { useAuth } from "@/hooks/useAuth";
 const HeroSection = () => {
   const { user } = useAuth();
 
-  return <div className="text-center mb-12">
-      <h2 className="font-ceviche text-rap-gold mb-4 tracking-wider text-4xl sm:text-6xl md:text-8xl leading-tight">SPIT HIERARCHY</h2>
-      <p className="max-w-2xl mx-auto font-merienda leading-relaxed text-lg sm:text-xl md:text-2xl font-extrabold text-rap-silver">
+  return (
+    <div className="text-center mb-8 sm:mb-12 px-2 sm:px-0">
+      <h2 className="font-ceviche text-rap-gold mb-4 tracking-wider text-3xl sm:text-4xl md:text-6xl lg:text-8xl leading-tight break-words max-w-full">
+        SPIT HIERARCHY
+      </h2>
+      <p className="max-w-2xl mx-auto font-merienda leading-relaxed text-base sm:text-lg md:text-xl lg:text-2xl font-extrabold text-rap-silver break-words px-4 sm:px-0">
         The Ultimate Rapper Rankings
       </p>
-      {!user && <div className="mt-6">
+      {!user && (
+        <div className="mt-6">
           <Link to="/auth">
-            <Button size="lg" className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra text-lg shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+            <Button size="lg" className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra text-base sm:text-lg shadow-xl shadow-rap-gold/40 border border-rap-gold/30 px-6 sm:px-8">
               Join The Cypher
             </Button>
           </Link>
-        </div>}
-    </div>;
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default HeroSection;

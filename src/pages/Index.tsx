@@ -24,41 +24,43 @@ const Index = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
       {/* Sticky Header */}
       <HeaderNavigation isScrolled={isScrolled} />
 
       {/* Main Content with increased top padding to account for fixed header */}
-      <main className="pt-24 max-w-7xl mx-auto p-6">
-        {/* Hero Section */}
-        <HeroSection />
+      <main className="pt-20 sm:pt-24 w-full overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+          {/* Hero Section */}
+          <HeroSection />
 
-        {/* Ad placement after hero */}
-        <AdUnit placement="hero-bottom" pageRoute="/" />
+          {/* Ad placement after hero */}
+          <AdUnit placement="hero-bottom" pageRoute="/" />
 
-        {/* Featured Blog Posts Carousel */}
-        <BlogCarousel />
+          {/* Featured Blog Posts Carousel */}
+          <BlogCarousel />
 
-        {/* Ad placement between sections */}
-        <AdUnit placement="between-sections" pageRoute="/" />
+          {/* Ad placement between sections */}
+          <AdUnit placement="between-sections" pageRoute="/" />
 
-        {/* Top 5 Rappers Grid */}
-        <TopRappersGrid />
+          {/* Top 5 Rappers Grid */}
+          <TopRappersGrid />
 
-        {/* Rising Legends Section */}
-        <RisingLegendsSection />
+          {/* Rising Legends Section */}
+          <RisingLegendsSection />
 
-        {/* Lyrical Masters Section */}
-        <LyricalMastersSection />
+          {/* Lyrical Masters Section */}
+          <LyricalMastersSection />
 
-        {/* Stats Overview */}
-        <StatsOverview />
-        
-        {/* View All Stats Button */}
-        <AnalyticsButton />
+          {/* Stats Overview */}
+          <StatsOverview />
+          
+          {/* View All Stats Button */}
+          <AnalyticsButton />
 
-        {/* Guest user call-to-action */}
-        <GuestCallToAction />
+          {/* Guest user call-to-action */}
+          <GuestCallToAction />
+        </div>
       </main>
     </div>
   );
