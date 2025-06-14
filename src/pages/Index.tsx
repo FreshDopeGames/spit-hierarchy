@@ -130,7 +130,7 @@ const Index = () => {
   });
 
   const handleRankingClick = (id: string) => {
-    // This will be handled by the Link component in OfficialRankingsSection
+    console.log('Ranking clicked:', id);
   };
 
   return (
