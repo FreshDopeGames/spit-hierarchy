@@ -40,15 +40,22 @@ const AdminRapperPagination = ({
 
   const getVisiblePages = () => {
     const pages = [];
-    const maxVisible = 5;
+    // Reduce visible pages on mobile
+    const maxVisible = window.innerWidth < 640 ? 3 : 5;
     
     if (totalPages <= maxVisible) {
       for (let i = 1; i <= totalPages; i++) {
         pages.push(i);
       }
     } else {
-      const start = Math.max(1, currentPage - 2);
-      const end = Math.min(totalPages, start + maxVisible - 1);
+      const halfVisible = Math.floor(maxVisible / 2);
+      let start = Math.max(1, currentPage - halfVisible);
+      let end = Math.min(totalPages, start + maxVisible - 1);
+      
+      // Adjust start if we're near the end
+      if (end - start + 1 < maxVisible) {
+        start = Math.max(1, end - maxVisible + 1);
+      }
       
       for (let i = start; i <= end; i++) {
         pages.push(i);
@@ -61,13 +68,18 @@ const AdminRapperPagination = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="space-y-4">
-      <div className="text-center text-sm text-rap-smoke">
-        Showing {startItem}-{endItem} of {totalItems} rappers
+    <div className="space-y-3 sm:space-y-4 px-2 sm:px-0">
+      <div className="text-center text-xs sm:text-sm text-rap-smoke">
+        <span className="hidden sm:inline">Showing </span>
+        <span className="font-medium">{startItem}-{endItem}</span>
+        <span className="hidden sm:inline"> of </span>
+        <span className="sm:hidden"> / </span>
+        <span className="font-medium">{totalItems}</span>
+        <span className="hidden sm:inline"> rappers</span>
       </div>
       
       <Pagination className="justify-center">
-        <PaginationContent>
+        <PaginationContent className="gap-0.5 sm:gap-1">
           <PaginationItem>
             <PaginationPrevious 
               onClick={handlePrevious}
@@ -75,8 +87,11 @@ const AdminRapperPagination = ({
                 currentPage === 1 
                   ? 'pointer-events-none opacity-50' 
                   : 'cursor-pointer hover:bg-rap-gold/20 hover:text-rap-gold'
-              } text-rap-platinum border-rap-gold/30`}
-            />
+              } text-rap-platinum border-rap-gold/30 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10`}
+            >
+              <span className="hidden sm:inline">Previous</span>
+              <span className="sm:hidden">Prev</span>
+            </PaginationPrevious>
           </PaginationItem>
           
           {getVisiblePages().map(page => (
@@ -84,7 +99,7 @@ const AdminRapperPagination = ({
               <PaginationLink
                 onClick={() => onPageChange(page)}
                 isActive={page === currentPage}
-                className={`cursor-pointer ${
+                className={`cursor-pointer text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10 min-w-[32px] sm:min-w-[40px] ${
                   page === currentPage
                     ? 'bg-rap-gold text-rap-carbon'
                     : 'text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold'
@@ -102,8 +117,11 @@ const AdminRapperPagination = ({
                 currentPage === totalPages 
                   ? 'pointer-events-none opacity-50' 
                   : 'cursor-pointer hover:bg-rap-gold/20 hover:text-rap-gold'
-              } text-rap-platinum border-rap-gold/30`}
-            />
+              } text-rap-platinum border-rap-gold/30 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10`}
+            >
+              <span className="hidden sm:inline">Next</span>
+              <span className="sm:hidden">Next</span>
+            </PaginationNext>
           </PaginationItem>
         </PaginationContent>
       </Pagination>
