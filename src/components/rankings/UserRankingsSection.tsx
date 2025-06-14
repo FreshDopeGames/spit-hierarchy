@@ -45,8 +45,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
             onClick={() => setFilter("all")}
             size="sm"
             className={filter === "all" 
-              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan text-xs sm:text-sm" 
-              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan text-xs sm:text-sm"
+              ? "bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-kaushan text-xs sm:text-sm" 
+              : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan text-xs sm:text-sm"
             }
           >
             All
@@ -56,8 +56,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
             onClick={() => setFilter("popular")}
             size="sm"
             className={filter === "popular" 
-              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan text-xs sm:text-sm" 
-              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan text-xs sm:text-sm"
+              ? "bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-kaushan text-xs sm:text-sm" 
+              : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan text-xs sm:text-sm"
             }
           >
             <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
@@ -69,8 +69,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
               onClick={() => setFilter("my-rankings")}
               size="sm"
               className={filter === "my-rankings" 
-                ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan text-xs sm:text-sm" 
-                : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan text-xs sm:text-sm"
+                ? "bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-kaushan text-xs sm:text-sm" 
+                : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan text-xs sm:text-sm"
               }
             >
               Mine
@@ -104,7 +104,7 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
             }
           </p>
           {user && (
-            <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra">
+            <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra">
               <Plus className="w-4 h-4 mr-2" />
               Create Your First Ranking
             </Button>
@@ -121,7 +121,7 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
               Sign up to create your own rapper rankings and engage with other hip-hop fans.
             </p>
             <Link to="/auth">
-              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra">
+              <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra">
                 Sign Up Free
               </Button>
             </Link>

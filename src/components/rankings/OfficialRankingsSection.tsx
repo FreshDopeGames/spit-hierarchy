@@ -45,7 +45,7 @@ const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsS
         <Link to="/official-rankings" className="w-full sm:w-auto">
           <Button 
             variant="outline" 
-            className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20 hover:text-rap-gold-light font-kaushan text-sm px-3 py-2"
+            className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan text-sm px-3 py-2"
           >
             See All Official Rankings
           </Button>

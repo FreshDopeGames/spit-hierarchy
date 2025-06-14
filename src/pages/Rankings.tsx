@@ -129,7 +129,7 @@ const Rankings = () => {
             </Link>
             
             {user && (
-              <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-carbon shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+              <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Ranking
               </Button>

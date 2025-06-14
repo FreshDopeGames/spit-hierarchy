@@ -105,7 +105,7 @@ const OfficialRankings = () => {
           <Link to="/rankings">
             <Button
               variant="ghost"
-              className="text-rap-gold hover:text-rap-gold-light font-kaushan"
+              className="text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan"
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to All Rankings
