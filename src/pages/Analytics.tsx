@@ -1,4 +1,3 @@
-
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network, Star, Award } from "lucide-react";
@@ -52,15 +51,15 @@ const Analytics = () => {
               <TabsList className="grid w-full min-w-[600px] sm:min-w-0 sm:max-w-4xl grid-cols-6 bg-carbon-fiber border border-rap-gold border-2 mb-4 sm:mb-6">
                 <TabsTrigger value="personal" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum text-xs sm:text-sm p-2 sm:p-3">
                   <User className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Personal</span>
+                  <span className="hidden sm:inline">My Stats</span>
                 </TabsTrigger>
                 <TabsTrigger value="achievements" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum text-xs sm:text-sm p-2 sm:p-3">
                   <Award className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Achievements</span>
+                  <span className="hidden sm:inline">My Achievements</span>
                 </TabsTrigger>
                 <TabsTrigger value="platform" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum text-xs sm:text-sm p-2 sm:p-3">
                   <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
-                  <span className="hidden sm:inline">Platform</span>
+                  <span className="hidden sm:inline">Community</span>
                 </TabsTrigger>
                 <TabsTrigger value="trends" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum text-xs sm:text-sm p-2 sm:p-3">
                   <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
