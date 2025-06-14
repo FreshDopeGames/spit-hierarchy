@@ -2,164 +2,116 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Crown, Trophy } from "lucide-react";
+import { Crown, Trophy, Star, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Tables } from "@/integrations/supabase/types";
 import RapperCard from "./RapperCard";
+import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
 
-interface RankingItem {
-  position: number;
-  reason: string;
-  rapper: Rapper | null;
+interface TopRappersGridProps {
+  title?: string;
+  description?: string;
+  rappers?: Rapper[];
+  showViewAll?: boolean;
+  viewAllLink?: string;
 }
 
-const TopRappersGrid = () => {
-  const { data: topRappers, isLoading } = useQuery({
-    queryKey: ["goat-top-5"],
+const TopRappersGrid = ({ 
+  title = "The GOATs", 
+  description = "The undisputed legends who shaped the culture",
+  rappers: providedRappers,
+  showViewAll = false,
+  viewAllLink = "/all-rappers"
+}: TopRappersGridProps) => {
+  // Only fetch default data if no rappers are provided
+  const { data: fetchedRappers = [], isLoading } = useQuery({
+    queryKey: ["top-rappers"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("ranking_items")
-        .select(`
-          position,
-          reason,
-          rapper:rappers (*)
-        `)
-        .eq("ranking_id", (await supabase
-          .from("official_rankings")
-          .select("id")
-          .eq("slug", "goat-top-5")
-          .single()).data?.id)
-        .eq("is_ranked", true) // Only get manually ranked items
-        .order("position", { ascending: true })
+        .from("rappers")
+        .select("*")
+        .order("average_rating", { ascending: false })
+        .order("total_votes", { ascending: false })
         .limit(5);
-      
+
       if (error) throw error;
-      return data as RankingItem[];
-    }
+      return data;
+    },
+    enabled: !providedRappers // Only run query if no rappers provided
   });
 
-  if (isLoading) {
+  const rappers = providedRappers || fetchedRappers;
+
+  if (isLoading && !providedRappers) {
     return (
-      <div className="mb-8 sm:mb-12">
-        <div className="text-center mb-6 sm:mb-8 px-4">
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
-            <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
-            <h2 className="text-2xl sm:text-3xl font-ceviche text-rap-gold mb-0 animate-text-glow tracking-wider break-words">
-              The Elite Five
-            </h2>
-            <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
-          </div>
-          <p className="text-rap-platinum font-kaushan text-base sm:text-lg">
-            The supreme rulers of the rap realm
-          </p>
-        </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-          <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-            {Array.from({ length: 2 }).map((_, i) => (
-              <Card key={i} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
-                <CardContent className="p-4 sm:p-6">
-                  <div className="h-32 sm:h-48 bg-rap-carbon-light rounded-lg mb-4"></div>
-                  <div className="h-4 bg-rap-carbon-light rounded mb-2"></div>
-                  <div className="h-3 bg-rap-carbon-light rounded w-2/3"></div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <div className="sm:col-span-2 lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 sm:gap-6">
-            {Array.from({ length: 3 }).map((_, i) => (
-              <Card key={i + 2} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
-                <CardContent className="p-4 sm:p-6">
-                  <div className="h-32 sm:h-48 bg-rap-carbon-light rounded-lg mb-4"></div>
-                  <div className="h-4 bg-rap-carbon-light rounded mb-2"></div>
-                  <div className="h-3 bg-rap-carbon-light rounded w-2/3"></div>
-                </CardContent>
-              </Card>
+      <section className="mb-16">
+        <div className="animate-pulse">
+          <div className="h-8 bg-rap-carbon-light rounded w-48 mb-4"></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="h-64 bg-rap-carbon-light rounded"></div>
             ))}
           </div>
         </div>
-      </div>
+      </section>
     );
   }
 
-  // Filter out items where rapper is null to prevent errors
-  const validTopRappers = topRappers?.filter(item => item.rapper !== null) || [];
-
-  if (validTopRappers.length === 0) {
-    return (
-      <div className="mb-8 sm:mb-12">
-        <div className="text-center mb-6 sm:mb-8 px-4">
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
-            <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
-            <h2 className="text-2xl sm:text-3xl font-ceviche text-rap-gold mb-0 animate-text-glow tracking-wider text-border break-words">
-              THE GOATS 🐐
-            </h2>
-            <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
-          </div>
-          <p className="text-rap-platinum font-merienda text-base sm:text-lg">
-            The supreme rulers of the rap realm
-          </p>
-        </div>
-        <Card className="bg-carbon-fiber border border-rap-gold/40 shadow-2xl shadow-rap-gold/20">
-          <CardContent className="p-6 sm:p-8 text-center">
-            <Crown className="w-12 h-12 sm:w-16 sm:h-16 text-rap-gold mx-auto mb-4" />
-            <p className="text-rap-smoke font-merienda text-sm sm:text-base">The throne awaits its rightful rulers.</p>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
+  const getPositionIcon = (position: number) => {
+    switch (position) {
+      case 1:
+        return <Crown className="w-6 h-6 text-rap-gold" />;
+      case 2:
+        return <Trophy className="w-6 h-6 text-rap-silver" />;
+      case 3:
+        return <Star className="w-6 h-6 text-orange-500" />;
+      default:
+        return <TrendingUp className="w-6 h-6 text-rap-platinum" />;
+    }
+  };
 
   return (
-    <div className="mb-8 sm:mb-12">
-      <div className="text-center mb-6 sm:mb-8 px-4">
-        <div className="flex items-center justify-center gap-2 sm:gap-3 mb-4">
-          <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
-          <h2 className="text-2xl sm:text-3xl font-ceviche text-rap-gold mb-0 animate-text-glow tracking-wider break-words">
-            The Elite Five
-          </h2>
-          <Trophy className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
-        </div>
-        <p className="text-rap-platinum font-kaushan text-base sm:text-lg">
-          The supreme rulers of the rap realm
-        </p>
-      </div>
-
-      {/* Pyramid layout: 2 on top, 3 on bottom */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-        {/* Top row - positions 1 & 2 */}
-        <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-          {validTopRappers.slice(0, 2).map(item => (
-            <RapperCard 
-              key={item.rapper!.id} 
-              rapper={item.rapper!} 
-              position={item.position} 
-            />
-          ))}
+    <section className="mb-16">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="flex items-center gap-3">
+          {getPositionIcon(1)}
+          <div>
+            <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">{title}</h2>
+            <p className="text-rap-smoke font-merienda text-sm sm:text-base mt-1">
+              {description}
+            </p>
+          </div>
+          <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan text-xs sm:text-sm">
+            Top 5
+          </Badge>
         </div>
         
-        {/* Bottom row - positions 3, 4 & 5 */}
-        <div className="sm:col-span-2 lg:col-span-1 grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-4 sm:gap-6">
-          {validTopRappers.slice(2, 5).map(item => (
-            <RapperCard 
-              key={item.rapper!.id} 
-              rapper={item.rapper!} 
-              position={item.position} 
-            />
-          ))}
-        </div>
+        {showViewAll && (
+          <Link to={viewAllLink} className="w-full sm:w-auto">
+            <Button 
+              variant="outline" 
+              className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan text-sm px-3 py-2"
+            >
+              View Full Ranking
+            </Button>
+          </Link>
+        )}
       </div>
-
-      <div className="text-center mt-6 sm:mt-8 px-4">
-        <Link to="/rankings/official/goat-top-5">
-          <Button className="bg-gradient-to-r from-rap-gold to-rap-gold-light hover:from-rap-gold-light hover:to-rap-gold font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30 text-sm sm:text-base px-4 sm:px-6" size="lg">
-            View Complete GOAT Rankings
-          </Button>
-        </Link>
+      
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+        {rappers.slice(0, 5).map((rapper, index) => (
+          <RapperCard 
+            key={rapper.id} 
+            rapper={rapper} 
+            position={index + 1}
+            compact={true}
+          />
+        ))}
       </div>
-    </div>
+    </section>
   );
 };
 

@@ -7,8 +7,6 @@ import HeroSection from "@/components/HeroSection";
 import BlogCarousel from "@/components/BlogCarousel";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import TopRappersGrid from "@/components/TopRappersGrid";
-import RisingLegendsSection from "@/components/RisingLegendsSection";
-import LyricalMastersSection from "@/components/LyricalMastersSection";
 import StatsOverview from "@/components/StatsOverview";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
@@ -27,8 +25,53 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch the most active official rankings
-  const { data: activeRankings = [], isLoading } = useQuery({
+  // Fetch the top 3 most active official rankings to replace the fixed sections
+  const { data: topActiveRankings = [], isLoading } = useQuery({
+    queryKey: ["top-active-rankings-for-sections"],
+    queryFn: async () => {
+      // Get the top 3 most active official rankings
+      const { data: rankingsData, error: rankingsError } = await supabase
+        .from("official_rankings")
+        .select("*")
+        .order("activity_score", { ascending: false })
+        .order("last_activity_at", { ascending: false })
+        .limit(3);
+
+      if (rankingsError) throw rankingsError;
+
+      // Fetch top 5 ranked items for each ranking
+      const rankingsWithItems = await Promise.all(
+        (rankingsData || []).map(async (ranking) => {
+          const { data: itemsData, error: itemsError } = await supabase
+            .from("ranking_items")
+            .select(`
+              *,
+              rapper:rappers(*)
+            `)
+            .eq("ranking_id", ranking.id)
+            .eq("is_ranked", true)
+            .order("position")
+            .limit(5);
+
+          if (itemsError) {
+            console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
+            return { ...ranking, items: [] };
+          }
+
+          return { 
+            ...ranking, 
+            items: itemsData || [],
+            rappers: (itemsData || []).map(item => item.rapper).filter(Boolean)
+          };
+        })
+      );
+
+      return rankingsWithItems;
+    }
+  });
+
+  // Fetch the most active official rankings for the dedicated section
+  const { data: activeRankings = [] } = useQuery({
     queryKey: ["active-official-rankings"],
     queryFn: async () => {
       // Get the top 3 most active official rankings
@@ -112,22 +155,32 @@ const Index = () => {
           {/* Rankings Section with Prominent Header */}
           <RankingsSectionHeader />
 
-          {/* Top 5 Rappers Grid */}
+          {/* Top 5 Rappers Grid - Always show this as the main grid */}
           <TopRappersGrid />
 
+          {/* Dynamic Ranking Sections - Replace fixed sections with most active rankings */}
+          {!isLoading && topActiveRankings.length > 0 && (
+            <>
+              {topActiveRankings.map((ranking, index) => (
+                <TopRappersGrid 
+                  key={ranking.id}
+                  title={ranking.title}
+                  description={ranking.description}
+                  rappers={ranking.rappers}
+                  showViewAll={true}
+                  viewAllLink={`/rankings/official/${ranking.slug}`}
+                />
+              ))}
+            </>
+          )}
+
           {/* Most Active Official Rankings */}
-          {!isLoading && activeRankings.length > 0 && (
+          {activeRankings.length > 0 && (
             <OfficialRankingsSection 
               rankings={activeRankings}
               onRankingClick={handleRankingClick}
             />
           )}
-
-          {/* Rising Legends Section */}
-          <RisingLegendsSection />
-
-          {/* Lyrical Masters Section */}
-          <LyricalMastersSection />
 
           {/* Stats Overview */}
           <StatsOverview />
