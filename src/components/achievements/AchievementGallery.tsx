@@ -6,6 +6,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import AchievementCard from "./AchievementCard";
 import { Award, Trophy, Users, Heart, Calendar, Star } from "lucide-react";
+import { sortAchievementsByRarity } from "@/utils/achievementUtils";
 
 const AchievementGallery = () => {
   const { user } = useAuth();
@@ -18,11 +19,12 @@ const AchievementGallery = () => {
       const { data, error } = await supabase
         .from('user_achievement_progress')
         .select('*')
-        .eq('user_id', user.id)
-        .order('rarity', { ascending: false });
+        .eq('user_id', user.id);
       
       if (error) throw error;
-      return data;
+      
+      // Sort achievements from least rare to most rare
+      return sortAchievementsByRarity(data || []);
     },
     enabled: !!user
   });
@@ -67,12 +69,19 @@ const AchievementGallery = () => {
   const categorizeAchievements = () => {
     if (!achievements) return {};
     
-    return achievements.reduce((acc, achievement) => {
+    const categorized = achievements.reduce((acc, achievement) => {
       const type = achievement.type || 'other';
       if (!acc[type]) acc[type] = [];
       acc[type].push(achievement);
       return acc;
     }, {} as Record<string, any[]>);
+
+    // Sort each category from least rare to most rare
+    Object.keys(categorized).forEach(type => {
+      categorized[type] = sortAchievementsByRarity(categorized[type]);
+    });
+
+    return categorized;
   };
 
   const categorized = categorizeAchievements();

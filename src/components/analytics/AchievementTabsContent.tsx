@@ -5,6 +5,7 @@ import { Trophy, Target, Lock } from "lucide-react";
 import AchievementCard from "@/components/achievements/AchievementCard";
 import AchievementEmptyState from "./AchievementEmptyState";
 import { Achievement } from "./types/achievementTypes";
+import { sortAchievementsByRarity } from "@/utils/achievementUtils";
 
 interface AchievementTabsContentProps {
   achievements: Achievement[];
@@ -17,6 +18,11 @@ const AchievementTabsContent = ({
   earnedAchievements, 
   unlockedAchievements 
 }: AchievementTabsContentProps) => {
+  // Sort all achievement lists from least rare to most rare
+  const sortedAchievements = sortAchievementsByRarity([...achievements]);
+  const sortedEarned = sortAchievementsByRarity([...earnedAchievements]);
+  const sortedUnlocked = sortAchievementsByRarity([...unlockedAchievements]);
+
   // Transform achievement data to match AchievementCard expectations
   const transformAchievement = (achievement: Achievement) => ({
     id: achievement.id,
@@ -64,7 +70,7 @@ const AchievementTabsContent = ({
 
       <TabsContent value="all" className="mt-4 sm:mt-6">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-          {achievements.map((achievement) => (
+          {sortedAchievements.map((achievement) => (
             <AchievementCard 
               key={achievement.id} 
               achievement={transformAchievement(achievement)} 
@@ -75,9 +81,9 @@ const AchievementTabsContent = ({
       </TabsContent>
 
       <TabsContent value="earned" className="mt-4 sm:mt-6">
-        {earnedAchievements.length > 0 ? (
+        {sortedEarned.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {earnedAchievements.map((achievement) => (
+            {sortedEarned.map((achievement) => (
               <AchievementCard 
                 key={achievement.id} 
                 achievement={transformAchievement(achievement)} 
@@ -91,11 +97,10 @@ const AchievementTabsContent = ({
       </TabsContent>
 
       <TabsContent value="progress" className="mt-4 sm:mt-6">
-        {unlockedAchievements.filter(a => a.progress_percentage > 0).length > 0 ? (
+        {sortedUnlocked.filter(a => a.progress_percentage > 0).length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {unlockedAchievements
+            {sortedUnlocked
               .filter(a => a.progress_percentage > 0)
-              .sort((a, b) => b.progress_percentage - a.progress_percentage)
               .map((achievement) => (
                 <AchievementCard 
                   key={achievement.id} 
@@ -110,11 +115,10 @@ const AchievementTabsContent = ({
       </TabsContent>
 
       <TabsContent value="locked" className="mt-4 sm:mt-6">
-        {unlockedAchievements.filter(a => a.progress_percentage === 0).length > 0 ? (
+        {sortedUnlocked.filter(a => a.progress_percentage === 0).length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {unlockedAchievements
+            {sortedUnlocked
               .filter(a => a.progress_percentage === 0)
-              .sort((a, b) => a.points - b.points)
               .map((achievement) => (
                 <AchievementCard 
                   key={achievement.id} 

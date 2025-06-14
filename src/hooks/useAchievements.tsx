@@ -1,8 +1,8 @@
-
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { sortAchievementsByRarity } from '@/utils/achievementUtils';
 
 export const useAchievements = () => {
   const { user } = useAuth();
@@ -16,11 +16,12 @@ export const useAchievements = () => {
       const { data, error } = await supabase
         .from('achievements')
         .select('*')
-        .eq('is_active', true)
-        .order('points', { ascending: false });
+        .eq('is_active', true);
       
       if (error) throw error;
-      return data;
+      
+      // Sort achievements from least rare to most rare
+      return sortAchievementsByRarity(data || []);
     }
   });
 
@@ -41,17 +42,19 @@ export const useAchievements = () => {
     enabled: !!user
   });
 
-  // Combine all achievements with user progress
-  const achievements = allAchievements?.map(achievement => {
-    const progress = userProgress?.find(p => p.achievement_id === achievement.id);
-    return {
-      ...achievement,
-      progress_value: progress?.progress_value || 0,
-      progress_percentage: progress?.progress_percentage || 0,
-      is_earned: progress?.is_earned || false,
-      earned_at: progress?.earned_at || null
-    };
-  }) || [];
+  // Combine all achievements with user progress and sort
+  const achievements = sortAchievementsByRarity(
+    allAchievements?.map(achievement => {
+      const progress = userProgress?.find(p => p.achievement_id === achievement.id);
+      return {
+        ...achievement,
+        progress_value: progress?.progress_value || 0,
+        progress_percentage: progress?.progress_percentage || 0,
+        is_earned: progress?.is_earned || false,
+        earned_at: progress?.earned_at || null
+      };
+    }) || []
+  );
 
   const isLoading = loadingAll || loadingProgress;
 
@@ -116,11 +119,11 @@ export const useAchievements = () => {
   };
 
   const getEarnedAchievements = () => {
-    return achievements.filter(a => a.is_earned);
+    return sortAchievementsByRarity(achievements.filter(a => a.is_earned));
   };
 
   const getUnlockedAchievements = () => {
-    return achievements.filter(a => !a.is_earned);
+    return sortAchievementsByRarity(achievements.filter(a => !a.is_earned));
   };
 
   const getTotalPoints = () => {

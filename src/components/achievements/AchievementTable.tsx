@@ -1,10 +1,10 @@
-
 import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Trophy, Lock, Target, Star } from "lucide-react";
 import * as LucideIcons from "lucide-react";
+import { sortAchievementsByRarity } from "@/utils/achievementUtils";
 
 interface Achievement {
   id: string;
@@ -26,6 +26,9 @@ interface AchievementTableProps {
 }
 
 const AchievementTable = ({ achievements, showProgress = true }: AchievementTableProps) => {
+  // Sort achievements from least rare to most rare
+  const sortedAchievements = sortAchievementsByRarity([...achievements]);
+
   const getStatusBadge = (achievement: Achievement) => {
     if (achievement.is_earned) {
       return (
@@ -87,7 +90,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
           </TableRow>
         </TableHeader>
         <TableBody>
-          {achievements.map((achievement) => (
+          {sortedAchievements.map((achievement) => (
             <TableRow 
               key={achievement.id} 
               className="border-b border-rap-gold/20 hover:bg-rap-carbon/30 transition-colors"
