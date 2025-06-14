@@ -32,21 +32,21 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
-          <Users className="w-6 h-6 text-rap-forest" />
-          <h2 className="text-3xl font-bold text-rap-platinum font-mogra">Member Made Rankings</h2>
+          <Users className="w-6 h-6 text-rap-forest flex-shrink-0" />
+          <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">Member Made Rankings</h2>
         </div>
         
         {/* Filter Tabs */}
-        <div className="flex items-center gap-4">
+        <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <Button
             variant={filter === "all" ? "default" : "outline"}
             onClick={() => setFilter("all")}
             size="sm"
             className={filter === "all" 
-              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan" 
-              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan"
+              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan text-xs sm:text-sm" 
+              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan text-xs sm:text-sm"
             }
           >
             All
@@ -56,11 +56,11 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
             onClick={() => setFilter("popular")}
             size="sm"
             className={filter === "popular" 
-              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan" 
-              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan"
+              ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan text-xs sm:text-sm" 
+              : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan text-xs sm:text-sm"
             }
           >
-            <Star className="w-4 h-4 mr-2" />
+            <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
             Popular
           </Button>
           {user && (
@@ -69,8 +69,8 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
               onClick={() => setFilter("my-rankings")}
               size="sm"
               className={filter === "my-rankings" 
-                ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan" 
-                : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan"
+                ? "bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-kaushan text-xs sm:text-sm" 
+                : "border-rap-forest/30 text-rap-forest hover:bg-rap-forest/20 font-kaushan text-xs sm:text-sm"
               }
             >
               Mine
