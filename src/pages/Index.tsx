@@ -55,13 +55,14 @@ const Index = () => {
 
           if (itemsError) {
             console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
-            return { ...ranking, items: [] };
+            return { ...ranking, items: [], rappers: [] };
           }
 
+          const rappers = (itemsData || []).map(item => item.rapper).filter(Boolean);
           return { 
             ...ranking, 
             items: itemsData || [],
-            rappers: (itemsData || []).map(item => item.rapper).filter(Boolean)
+            rappers: rappers
           };
         })
       );
@@ -154,9 +155,6 @@ const Index = () => {
 
           {/* Rankings Section with Prominent Header */}
           <RankingsSectionHeader />
-
-          {/* Top 5 Rappers Grid - Always show this as the main grid */}
-          <TopRappersGrid />
 
           {/* Dynamic Ranking Sections - Replace fixed sections with most active rankings */}
           {!isLoading && topActiveRankings.length > 0 && (
