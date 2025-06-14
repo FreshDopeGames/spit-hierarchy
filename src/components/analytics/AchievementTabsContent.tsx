@@ -17,6 +17,19 @@ const AchievementTabsContent = ({
   earnedAchievements, 
   unlockedAchievements 
 }: AchievementTabsContentProps) => {
+  // Transform achievement data to match AchievementCard expectations
+  const transformAchievement = (achievement: Achievement) => ({
+    id: achievement.id,
+    name: achievement.name,
+    description: achievement.description,
+    icon: achievement.icon,
+    rarity: achievement.rarity as 'common' | 'rare' | 'epic' | 'legendary',
+    points: achievement.points,
+    is_earned: achievement.is_earned,
+    progress_percentage: achievement.progress_percentage,
+    earned_at: achievement.earned_at || undefined
+  });
+
   return (
     <Tabs defaultValue="all" className="w-full">
       <TabsList className="grid w-full grid-cols-4 bg-carbon-fiber border border-rap-gold/30">
@@ -54,7 +67,7 @@ const AchievementTabsContent = ({
           {achievements.map((achievement) => (
             <AchievementCard 
               key={achievement.id} 
-              achievement={achievement} 
+              achievement={transformAchievement(achievement)} 
               showProgress={true}
             />
           ))}
@@ -67,7 +80,7 @@ const AchievementTabsContent = ({
             {earnedAchievements.map((achievement) => (
               <AchievementCard 
                 key={achievement.id} 
-                achievement={achievement} 
+                achievement={transformAchievement(achievement)} 
                 showProgress={false}
               />
             ))}
@@ -86,7 +99,7 @@ const AchievementTabsContent = ({
               .map((achievement) => (
                 <AchievementCard 
                   key={achievement.id} 
-                  achievement={achievement} 
+                  achievement={transformAchievement(achievement)} 
                   showProgress={true}
                 />
               ))}
@@ -105,7 +118,7 @@ const AchievementTabsContent = ({
               .map((achievement) => (
                 <AchievementCard 
                   key={achievement.id} 
-                  achievement={achievement} 
+                  achievement={transformAchievement(achievement)} 
                   showProgress={true}
                 />
               ))}

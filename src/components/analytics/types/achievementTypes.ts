@@ -1,9 +1,11 @@
 
 export interface Achievement {
   id: string;
+  achievement_id?: string; // For backward compatibility
   name: string;
   description: string;
   icon: string;
+  type?: string; // For backward compatibility
   points: number;
   threshold_value: number;
   progress_value: number;

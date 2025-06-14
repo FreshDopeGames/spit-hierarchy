@@ -37,6 +37,19 @@ const ProfileAchievements = () => {
   const earnedAchievements = getEarnedAchievements();
   const recentAchievements = earnedAchievements.slice(0, 4);
 
+  // Transform achievement data to match AchievementCard expectations
+  const transformAchievement = (achievement: any) => ({
+    id: achievement.id,
+    name: achievement.name,
+    description: achievement.description,
+    icon: achievement.icon,
+    rarity: achievement.rarity as 'common' | 'rare' | 'epic' | 'legendary',
+    points: achievement.points,
+    is_earned: achievement.is_earned,
+    progress_percentage: achievement.progress_percentage,
+    earned_at: achievement.earned_at || undefined
+  });
+
   return (
     <Card className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
       <CardHeader>
@@ -87,7 +100,7 @@ const ProfileAchievements = () => {
                 {recentAchievements.map((achievement) => (
                   <AchievementCard 
                     key={achievement.id} 
-                    achievement={achievement} 
+                    achievement={transformAchievement(achievement)} 
                     showProgress={false}
                   />
                 ))}

@@ -3,7 +3,8 @@ import React from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Lock, Target } from "lucide-react";
+import { Trophy, Lock, Target, Star } from "lucide-react";
+import * as LucideIcons from "lucide-react";
 
 interface Achievement {
   id: string;
@@ -67,6 +68,11 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
     }
   };
 
+  const renderIcon = (iconName: string) => {
+    const IconComponent = (LucideIcons as any)[iconName] || Star;
+    return <IconComponent className="w-6 h-6 text-rap-gold" />;
+  };
+
   return (
     <div className="border border-rap-gold/30 rounded-lg overflow-hidden bg-carbon-fiber/90">
       <Table>
@@ -87,7 +93,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
               className="border-b border-rap-gold/20 hover:bg-rap-carbon/30 transition-colors"
             >
               <TableCell>
-                <div className="text-2xl">{achievement.icon}</div>
+                {renderIcon(achievement.icon)}
               </TableCell>
               <TableCell>
                 <div className="space-y-1">

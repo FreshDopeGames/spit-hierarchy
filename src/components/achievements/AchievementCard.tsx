@@ -6,11 +6,10 @@ import { Progress } from "@/components/ui/progress";
 import * as LucideIcons from "lucide-react";
 
 interface Achievement {
-  achievement_id: string;
+  id: string;
   name: string;
   description: string;
   icon: string;
-  type: string;
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
   points: number;
   is_earned: boolean;
