@@ -84,16 +84,16 @@ const AdminRankingsManagement = () => {
     <div className="space-y-6">
       <Card className="bg-carbon-fiber border border-rap-gold/30">
         <CardHeader>
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
             <div className="flex items-center gap-3">
               <Trophy className="w-6 h-6 text-rap-gold" />
-              <CardTitle className="text-rap-gold font-mogra text-2xl">
+              <CardTitle className="text-rap-gold font-mogra text-xl sm:text-2xl">
                 Rankings Management
               </CardTitle>
             </div>
             <Button
               onClick={handleCreate}
-              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light font-kaushan"
+              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light font-kaushan w-full sm:w-auto text-sm sm:text-base px-3 sm:px-4 py-2 h-10 sm:h-auto"
             >
               <Plus className="w-4 h-4 mr-2" />
               Create Ranking
