@@ -7,11 +7,12 @@ import { generateTestVotes, generateTestUserRankings } from "@/utils/generateTes
 import { useToast } from "@/hooks/use-toast";
 
 const TestDataGenerator = () => {
-  const [isGenerating, setIsGenerating] = useState(false);
+  const [isGeneratingVotes, setIsGeneratingVotes] = useState(false);
+  const [isGeneratingRankings, setIsGeneratingRankings] = useState(false);
   const { toast } = useToast();
 
   const handleGenerateVotes = async () => {
-    setIsGenerating(true);
+    setIsGeneratingVotes(true);
     try {
       const inserted = await generateTestVotes(2000);
       toast({
@@ -19,18 +20,19 @@ const TestDataGenerator = () => {
         description: `Successfully created ${inserted} test votes.`,
       });
     } catch (error) {
+      console.error("Vote generation error:", error);
       toast({
-        title: "Error",
-        description: "Failed to generate test votes.",
+        title: "Error generating votes",
+        description: error instanceof Error ? error.message : "Failed to generate test votes.",
         variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
+      setIsGeneratingVotes(false);
     }
   };
 
   const handleGenerateRankings = async () => {
-    setIsGenerating(true);
+    setIsGeneratingRankings(true);
     try {
       const created = await generateTestUserRankings(30);
       toast({
@@ -38,13 +40,14 @@ const TestDataGenerator = () => {
         description: `Successfully created ${created} test user rankings.`,
       });
     } catch (error) {
+      console.error("Rankings generation error:", error);
       toast({
-        title: "Error",
-        description: "Failed to generate test rankings.",
+        title: "Error generating rankings",
+        description: error instanceof Error ? error.message : "Failed to generate test rankings.",
         variant: "destructive",
       });
     } finally {
-      setIsGenerating(false);
+      setIsGeneratingRankings(false);
     }
   };
 
@@ -60,13 +63,13 @@ const TestDataGenerator = () => {
         <div className="flex flex-wrap gap-4">
           <Button
             onClick={handleGenerateVotes}
-            disabled={isGenerating}
+            disabled={isGeneratingVotes || isGeneratingRankings}
             className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra"
           >
-            {isGenerating ? (
+            {isGeneratingVotes ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
+                Generating Votes...
               </>
             ) : (
               "Generate Test Votes"
@@ -75,13 +78,13 @@ const TestDataGenerator = () => {
           
           <Button
             onClick={handleGenerateRankings}
-            disabled={isGenerating}
+            disabled={isGeneratingVotes || isGeneratingRankings}
             className="bg-rap-forest hover:bg-rap-forest-light text-rap-platinum font-mogra"
           >
-            {isGenerating ? (
+            {isGeneratingRankings ? (
               <>
                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Generating...
+                Generating Rankings...
               </>
             ) : (
               "Generate Test Rankings"

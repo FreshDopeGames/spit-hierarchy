@@ -54,8 +54,8 @@ const Analytics = () => {
           <TestDataGenerator />
 
           <Tabs defaultValue="personal" className="w-full">
-            <div className="overflow-x-auto mb-4 sm:mb-6">
-              <TabsList className="grid w-full min-w-[600px] sm:min-w-0 sm:max-w-4xl grid-cols-6 bg-carbon-fiber border-2 border-rap-gold/40 p-1">
+            <div className="overflow-x-auto mb-4 sm:mb-6 bg-carbon-fiber/60 p-2 rounded-lg border border-rap-gold/20">
+              <TabsList className="grid w-full min-w-[600px] sm:min-w-0 sm:max-w-4xl grid-cols-6 bg-transparent border-2 border-rap-gold/40 p-1">
                 <TabsTrigger value="personal" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum text-xs sm:text-sm p-2 sm:p-3">
                   <User className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
                   <span className="hidden sm:inline">My Stats</span>

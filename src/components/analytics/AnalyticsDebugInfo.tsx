@@ -18,13 +18,6 @@ const AnalyticsDebugInfo = () => {
         .from("profiles")
         .select("*", { count: "exact", head: true });
 
-      // Get rapper count with birth data
-      const { data: rappersWithBirthData } = await supabase
-        .from("rappers")
-        .select("name, birth_month, birth_day")
-        .not("birth_month", "is", null)
-        .not("birth_day", "is", null);
-
       // Get recent votes for trends
       const { data: recentVotes } = await supabase
         .from("votes")
@@ -35,7 +28,6 @@ const AnalyticsDebugInfo = () => {
       return {
         totalVotes: voteCount || 0,
         totalUsers: userCount || 0,
-        rappersWithBirthData: rappersWithBirthData?.length || 0,
         recentVotes: recentVotes?.length || 0
       };
     }
@@ -52,7 +44,7 @@ const AnalyticsDebugInfo = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
               <Vote className="w-4 h-4 text-rap-gold" />
@@ -75,14 +67,6 @@ const AnalyticsDebugInfo = () => {
               <span className="text-rap-platinum font-bold">{debugInfo.recentVotes}</span>
             </div>
             <p className="text-rap-smoke text-sm">Recent Votes (7d)</p>
-          </div>
-          
-          <div className="text-center">
-            <div className="flex items-center justify-center gap-2 mb-1">
-              <Database className="w-4 h-4 text-rap-gold" />
-              <span className="text-rap-platinum font-bold">{debugInfo.rappersWithBirthData}</span>
-            </div>
-            <p className="text-rap-smoke text-sm">Rappers w/ Birth Data</p>
           </div>
         </div>
       </CardContent>
