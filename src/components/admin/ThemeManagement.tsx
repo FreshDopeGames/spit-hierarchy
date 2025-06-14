@@ -73,17 +73,17 @@ const ThemeManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-[var(--theme-font-heading)] text-[var(--theme-primary)]">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
+        <h2 className="text-xl sm:text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)] font-mogra">
           Theme Management
         </h2>
-        <div className="flex gap-2">
-          <ThemedButton variant="outline" onClick={exportTheme}>
+        <div className="flex flex-col sm:flex-row gap-2">
+          <ThemedButton variant="outline" onClick={exportTheme} className="w-full sm:w-auto text-sm sm:text-base px-3 sm:px-4 py-2 h-10 sm:h-auto">
             <Download className="w-4 h-4 mr-2" />
             Export
           </ThemedButton>
-          <label>
-            <ThemedButton variant="outline" asChild>
+          <label className="w-full sm:w-auto">
+            <ThemedButton variant="outline" asChild className="w-full sm:w-auto text-sm sm:text-base px-3 sm:px-4 py-2 h-10 sm:h-auto">
               <span>
                 <Upload className="w-4 h-4 mr-2" />
                 Import
@@ -96,7 +96,7 @@ const ThemeManagement = () => {
               className="hidden"
             />
           </label>
-          <ThemedButton variant="destructive" onClick={resetTheme}>
+          <ThemedButton variant="destructive" onClick={resetTheme} className="w-full sm:w-auto text-sm sm:text-base px-3 sm:px-4 py-2 h-10 sm:h-auto">
             <Undo className="w-4 h-4 mr-2" />
             Reset
           </ThemedButton>
@@ -104,20 +104,22 @@ const ThemeManagement = () => {
       </div>
 
       <Tabs defaultValue="colors" className="space-y-4">
-        <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
-          <TabsTrigger value="colors" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)]">
-            <Palette className="w-4 h-4 mr-2" />
-            Colors
-          </TabsTrigger>
-          <TabsTrigger value="fonts" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)]">
-            <Type className="w-4 h-4 mr-2" />
-            Typography
-          </TabsTrigger>
-          <TabsTrigger value="layout" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)]">
-            <Layout className="w-4 h-4 mr-2" />
-            Layout
-          </TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto">
+          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-border)] w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0">
+            <TabsTrigger value="colors" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+              <Palette className="w-4 h-4 mr-2" />
+              Colors
+            </TabsTrigger>
+            <TabsTrigger value="fonts" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+              <Type className="w-4 h-4 mr-2" />
+              Typography
+            </TabsTrigger>
+            <TabsTrigger value="layout" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+              <Layout className="w-4 h-4 mr-2" />
+              Layout
+            </TabsTrigger>
+          </TabsList>
+        </div>
 
         <TabsContent value="colors" className="space-y-4">
           <ThemedCard>
