@@ -85,6 +85,19 @@ const AchievementGallery = () => {
     special: Award
   };
 
+  // Transform achievement data to match AchievementCard expectations
+  const transformAchievement = (achievement: any) => ({
+    id: achievement.achievement_id || achievement.id,
+    name: achievement.name,
+    description: achievement.description,
+    icon: achievement.icon,
+    rarity: achievement.rarity as 'common' | 'rare' | 'epic' | 'legendary',
+    points: achievement.points,
+    is_earned: achievement.is_earned,
+    progress_percentage: achievement.progress_percentage,
+    earned_at: achievement.earned_at || undefined
+  });
+
   return (
     <div className="space-y-6">
       {/* Stats Overview */}
@@ -126,7 +139,10 @@ const AchievementGallery = () => {
         <TabsContent value="all" className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {achievements?.map((achievement) => (
-              <AchievementCard key={achievement.achievement_id} achievement={achievement} />
+              <AchievementCard 
+                key={achievement.achievement_id || achievement.id} 
+                achievement={transformAchievement(achievement)} 
+              />
             ))}
           </div>
         </TabsContent>
@@ -135,7 +151,10 @@ const AchievementGallery = () => {
           <TabsContent key={type} value={type} className="mt-6">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {typeAchievements.map((achievement) => (
-                <AchievementCard key={achievement.achievement_id} achievement={achievement} />
+                <AchievementCard 
+                  key={achievement.achievement_id || achievement.id} 
+                  achievement={transformAchievement(achievement)} 
+                />
               ))}
             </div>
           </TabsContent>
