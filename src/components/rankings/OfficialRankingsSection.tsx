@@ -3,6 +3,7 @@ import { Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import RankingCard from "./RankingCard";
 
 interface Rapper {
@@ -31,14 +32,19 @@ interface OfficialRankingsSectionProps {
 }
 
 const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsSectionProps) => {
+  // Don't render if no rankings
+  if (!rankings || rankings.length === 0) {
+    return null;
+  }
+
   return (
     <div className="mb-12">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <Award className="w-6 h-6 text-rap-gold flex-shrink-0" />
-          <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">Official Rankings</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">Most Active Rankings</h2>
           <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan text-xs sm:text-sm">
-            Curated Topics
+            Trending Now
           </Badge>
         </div>
         
@@ -52,7 +58,7 @@ const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsS
         </Link>
       </div>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
         {rankings.map((ranking) => (
           <div key={ranking.id}>
             {ranking.slug ? (

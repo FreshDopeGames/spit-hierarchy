@@ -452,34 +452,40 @@ export type Database = {
       }
       official_rankings: {
         Row: {
+          activity_score: number | null
           category: string
           created_at: string | null
           description: string | null
           display_order: number | null
           id: string
           is_featured: boolean | null
+          last_activity_at: string | null
           slug: string
           title: string
           updated_at: string | null
         }
         Insert: {
+          activity_score?: number | null
           category: string
           created_at?: string | null
           description?: string | null
           display_order?: number | null
           id?: string
           is_featured?: boolean | null
+          last_activity_at?: string | null
           slug: string
           title: string
           updated_at?: string | null
         }
         Update: {
+          activity_score?: number | null
           category?: string
           created_at?: string | null
           description?: string | null
           display_order?: number | null
           id?: string
           is_featured?: boolean | null
+          last_activity_at?: string | null
           slug?: string
           title?: string
           updated_at?: string | null
