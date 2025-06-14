@@ -2,7 +2,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { Database, Users, Vote } from "lucide-react";
 
 const AnalyticsDebugInfo = () => {
@@ -37,8 +36,7 @@ const AnalyticsDebugInfo = () => {
         totalVotes: voteCount || 0,
         totalUsers: userCount || 0,
         rappersWithBirthData: rappersWithBirthData?.length || 0,
-        recentVotes: recentVotes?.length || 0,
-        rapperNames: rappersWithBirthData?.map(r => r.name) || []
+        recentVotes: recentVotes?.length || 0
       };
     }
   });
@@ -54,7 +52,7 @@ const AnalyticsDebugInfo = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
               <Vote className="w-4 h-4 text-rap-gold" />
@@ -85,17 +83,6 @@ const AnalyticsDebugInfo = () => {
               <span className="text-rap-platinum font-bold">{debugInfo.rappersWithBirthData}</span>
             </div>
             <p className="text-rap-smoke text-sm">Rappers w/ Birth Data</p>
-          </div>
-        </div>
-        
-        <div>
-          <h4 className="text-rap-platinum font-medium mb-2">Rappers with Birth Data:</h4>
-          <div className="flex flex-wrap gap-1">
-            {debugInfo.rapperNames.map(name => (
-              <Badge key={name} variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-xs">
-                {name}
-              </Badge>
-            ))}
           </div>
         </div>
       </CardContent>

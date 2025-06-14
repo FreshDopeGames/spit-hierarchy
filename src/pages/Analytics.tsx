@@ -1,3 +1,4 @@
+
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Music, ArrowLeft, BarChart3, User, TrendingUp, Network, Star, Award } from "lucide-react";
@@ -11,6 +12,7 @@ import TopVoters from "@/components/analytics/TopVoters";
 import RapperNetworkGraph from "@/components/analytics/RapperNetworkGraph";
 import AstrologicalRankings from "@/components/analytics/AstrologicalRankings";
 import AnalyticsDebugInfo from "@/components/analytics/AnalyticsDebugInfo";
+import TestDataGenerator from "@/components/analytics/TestDataGenerator";
 import InternalPageHeader from "@/components/InternalPageHeader";
 
 const Analytics = () => {
@@ -47,12 +49,13 @@ const Analytics = () => {
             </p>
           </div>
 
-          {/* Debug Info - Temporary */}
+          {/* Debug Info & Test Data Generator */}
           <AnalyticsDebugInfo />
+          <TestDataGenerator />
 
           <Tabs defaultValue="personal" className="w-full">
-            <div className="overflow-x-auto">
-              <TabsList className="grid w-full min-w-[600px] sm:min-w-0 sm:max-w-4xl grid-cols-6 bg-carbon-fiber border border-rap-gold border-2 mb-4 sm:mb-6">
+            <div className="overflow-x-auto mb-4 sm:mb-6">
+              <TabsList className="grid w-full min-w-[600px] sm:min-w-0 sm:max-w-4xl grid-cols-6 bg-carbon-fiber border-2 border-rap-gold/40 p-1">
                 <TabsTrigger value="personal" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-merienda font-extrabold text-rap-platinum text-xs sm:text-sm p-2 sm:p-3">
                   <User className="w-3 h-3 sm:w-4 sm:h-4 sm:mr-2" />
                   <span className="hidden sm:inline">My Stats</span>
