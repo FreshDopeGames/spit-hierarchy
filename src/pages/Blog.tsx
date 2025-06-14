@@ -157,6 +157,7 @@ const Blog = () => {
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
         <InternalPageHeader showTitle={false} />
         <main className="flex-1 max-w-6xl mx-auto p-6 pt-24">
+          <h1 className="text-6xl font-ceviche text-rap-gold text-center mb-8">SLICK TALK</h1>
           <div className="text-center py-12">
             <p className="text-rap-platinum">Error loading blog posts. Please try again later.</p>
           </div>
@@ -170,6 +171,9 @@ const Blog = () => {
       <InternalPageHeader showTitle={false} />
       
       <main className="flex-1 max-w-6xl mx-auto p-6 pt-24">
+        {/* Main Page Title */}
+        <h1 className="text-6xl font-ceviche text-rap-gold text-center mb-12">SLICK TALK</h1>
+
         {/* Active Filters */}
         {(selectedCategory !== 'all' || selectedTag) && (
           <div className="mb-6 p-4 bg-carbon-fiber border border-rap-gold/40 rounded-lg">
