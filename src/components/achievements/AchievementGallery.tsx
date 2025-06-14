@@ -69,7 +69,7 @@ const AchievementGallery = () => {
   const categorizeAchievements = () => {
     if (!achievements) return {};
     
-    const categorized = achievements.reduce((acc, achievement) => {
+    const categorized: Record<string, any[]> = achievements.reduce((acc, achievement) => {
       const type = achievement.type || 'other';
       if (!acc[type]) acc[type] = [];
       acc[type].push(achievement);
