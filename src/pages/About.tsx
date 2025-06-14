@@ -30,7 +30,7 @@ const About = () => {
         <div className="pt-24 max-w-4xl mx-auto p-6 space-y-8">
           {/* Hero Section */}
           <div className="text-center space-y-4 mb-12">
-            <div className="flex items-center justify-center space-x-3 mb-6">
+            <div className="flex flex-col items-center space-y-4 mb-6">
               <img alt="Spit Hierarchy Logo" className="w-16 h-16 object-contain animate-glow-pulse" src="/lovable-uploads/8a42312a-e1dc-4889-ae2a-9eaed3baede1.png" />
               <div>
                 <h1 className="font-ceviche bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent text-7xl">ABOUT SPIT HIERARCHY</h1>
