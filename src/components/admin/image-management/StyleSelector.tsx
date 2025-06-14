@@ -26,26 +26,30 @@ interface StyleSelectorProps {
 
 const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRappers, sortedStyles }: StyleSelectorProps) => {
   return (
-    <div className="flex items-center gap-4">
-      <Palette className="w-6 h-6 text-rap-gold" />
-      <h2 className="text-xl font-mogra text-rap-platinum">Image Style Management</h2>
+    <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+      <div className="flex items-center gap-3">
+        <Palette className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold flex-shrink-0" />
+        <h2 className="text-lg sm:text-xl font-mogra text-rap-platinum">Image Style Management</h2>
+      </div>
       
-      <Select value={selectedStyle} onValueChange={(value) => onStyleChange(value as ImageStyle)}>
-        <SelectTrigger className="w-48 bg-carbon-fiber border-rap-gold/30 text-rap-platinum">
-          <SelectValue />
-        </SelectTrigger>
-        <SelectContent className="bg-carbon-fiber border-rap-gold/30">
-          {sortedStyles.map(([style, label]) => (
-            <SelectItem key={style} value={style} className="text-rap-platinum hover:bg-rap-gold/20">
-              {label}
-            </SelectItem>
-          ))}
-        </SelectContent>
-      </Select>
-      
-      <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
-        {completionStats[selectedStyle] || 0} / {totalRappers} completed
-      </Badge>
+      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
+        <Select value={selectedStyle} onValueChange={(value) => onStyleChange(value as ImageStyle)}>
+          <SelectTrigger className="w-full sm:w-48 bg-carbon-fiber border-rap-gold/30 text-rap-platinum">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="bg-carbon-fiber border-rap-gold/30">
+            {sortedStyles.map(([style, label]) => (
+              <SelectItem key={style} value={style} className="text-rap-platinum hover:bg-rap-gold/20">
+                {label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+        
+        <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan text-xs sm:text-sm whitespace-nowrap">
+          {completionStats[selectedStyle] || 0} / {totalRappers} completed
+        </Badge>
+      </div>
     </div>
   );
 };

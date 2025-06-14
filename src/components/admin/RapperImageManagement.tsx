@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,6 +8,7 @@ import { Tables, Database } from "@/integrations/supabase/types";
 import StyleSelector from "./image-management/StyleSelector";
 import CompletionOverview from "./image-management/CompletionOverview";
 import StyleImageCard from "./image-management/StyleImageCard";
+import AdminRapperPagination from "./AdminRapperPagination";
 import { useImageUpload } from "./image-management/useImageUpload";
 
 type Rapper = Tables<"rappers">;
@@ -22,6 +24,8 @@ const styleLabels: Record<ImageStyle, string> = {
   minimalist: "Minimalist",
   retro: "Retro"
 };
+
+const ITEMS_PER_PAGE = 20;
 
 // Helper function to sort styles based on completion stats
 const getSortedStyles = (completionStats: Record<ImageStyle, number>) => {
@@ -41,14 +45,33 @@ const getSortedStyles = (completionStats: Record<ImageStyle, number>) => {
 
 const RapperImageManagement = () => {
   const [selectedStyle, setSelectedStyle] = useState<ImageStyle | null>(null);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  const { data: rappers, isLoading: rappersLoading } = useQuery({
-    queryKey: ["admin-rappers-images"],
+  // Query for total count of rappers
+  const { data: totalCount } = useQuery({
+    queryKey: ["admin-rappers-images-count"],
     queryFn: async () => {
+      const { count, error } = await supabase
+        .from("rappers")
+        .select("*", { count: "exact", head: true });
+      
+      if (error) throw error;
+      return count || 0;
+    }
+  });
+
+  // Query for paginated rappers
+  const { data: rappers, isLoading: rappersLoading } = useQuery({
+    queryKey: ["admin-rappers-images", currentPage],
+    queryFn: async () => {
+      const from = (currentPage - 1) * ITEMS_PER_PAGE;
+      const to = from + ITEMS_PER_PAGE - 1;
+      
       const { data, error } = await supabase
         .from("rappers")
         .select("*")
-        .order("name", { ascending: true });
+        .order("name", { ascending: true })
+        .range(from, to);
       
       if (error) throw error;
       return data;
@@ -84,7 +107,7 @@ const RapperImageManagement = () => {
       retro: 0
     };
 
-    if (!rappers || !rapperImages) return defaultStats;
+    if (!rapperImages) return defaultStats;
     
     const stats: Record<ImageStyle, number> = { ...defaultStats };
     Object.keys(styleLabels).forEach(style => {
@@ -104,6 +127,12 @@ const RapperImageManagement = () => {
     }
   }, [selectedStyle, sortedStyles, rappersLoading, imagesLoading]);
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const totalPages = Math.ceil((totalCount || 0) / ITEMS_PER_PAGE);
+
   if (rappersLoading || imagesLoading || !selectedStyle) {
     return (
       <div className="space-y-6">
@@ -120,14 +149,14 @@ const RapperImageManagement = () => {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Style Selector and Stats */}
       <div className="space-y-4">
         <StyleSelector
           selectedStyle={selectedStyle}
           onStyleChange={setSelectedStyle}
           completionStats={completionStats}
-          totalRappers={rappers?.length || 0}
+          totalRappers={totalCount || 0}
           sortedStyles={sortedStyles}
         />
 
@@ -137,14 +166,16 @@ const RapperImageManagement = () => {
 
       {/* Rappers Grid for Selected Style */}
       <Card className="bg-carbon-fiber border-rap-gold/30">
-        <CardHeader>
-          <CardTitle className="text-rap-gold font-mogra flex items-center gap-2">
-            <Palette className="w-5 h-5" />
-            {styleLabels[selectedStyle]} Images ({completionStats[selectedStyle] || 0}/{rappers?.length || 0})
+        <CardHeader className="pb-4 sm:pb-6">
+          <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 text-lg sm:text-xl">
+            <Palette className="w-4 h-4 sm:w-5 sm:h-5" />
+            <span className="break-words">
+              {styleLabels[selectedStyle]} Images ({completionStats[selectedStyle] || 0}/{totalCount || 0})
+            </span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <CardContent className="px-3 sm:px-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4">
             {rappers?.map((rapper) => (
               <StyleImageCard
                 key={`${rapper.id}-${selectedStyle}`}
@@ -156,6 +187,19 @@ const RapperImageManagement = () => {
               />
             ))}
           </div>
+
+          {/* Pagination */}
+          {totalCount && totalCount > ITEMS_PER_PAGE && (
+            <div className="mt-6 sm:mt-8">
+              <AdminRapperPagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalItems={totalCount}
+                itemsPerPage={ITEMS_PER_PAGE}
+                onPageChange={handlePageChange}
+              />
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>
