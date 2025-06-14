@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import HeroSection from "@/components/HeroSection";
 import BlogCarousel from "@/components/BlogCarousel";
+import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import TopRappersGrid from "@/components/TopRappersGrid";
 import RisingLegendsSection from "@/components/RisingLegendsSection";
 import LyricalMastersSection from "@/components/LyricalMastersSection";
@@ -42,6 +43,9 @@ const Index = () => {
 
           {/* Ad placement between sections */}
           <AdUnit placement="between-sections" pageRoute="/" />
+
+          {/* Rankings Section with Prominent Header */}
+          <RankingsSectionHeader />
 
           {/* Top 5 Rappers Grid */}
           <TopRappersGrid />

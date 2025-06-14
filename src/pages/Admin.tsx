@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -13,6 +12,7 @@ import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement"
 import AdManagement from "@/components/admin/AdManagement";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import { Navigate } from "react-router-dom";
+import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement";
 
 const Admin = () => {
   const { user, loading } = useAuth();
@@ -85,6 +85,8 @@ const Admin = () => {
     );
   }
 
+  const [activeTab, setActiveTab] = useState(isAdmin ? "rappers" : "blog");
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
       <InternalPageHeader />
@@ -100,41 +102,27 @@ const Admin = () => {
             </p>
           </div>
 
-          <Tabs defaultValue={isAdmin ? "rappers" : "blog"} className="space-y-4 sm:space-y-6">
-            <div className="overflow-x-auto">
-              <TabsList className="bg-carbon-fiber border border-rap-gold/30 p-1 w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0">
-                {isAdmin && (
-                  <TabsTrigger value="rappers" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-                    Rappers
-                  </TabsTrigger>
-                )}
-                {isAdmin && (
-                  <TabsTrigger value="rankings" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-                    Rankings
-                  </TabsTrigger>
-                )}
-                {isAdmin && (
-                  <TabsTrigger value="images" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-                    Images
-                  </TabsTrigger>
-                )}
-                {canManageBlog && (
-                  <TabsTrigger value="blog" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-                    Blog
-                  </TabsTrigger>
-                )}
-                {isAdmin && (
-                  <TabsTrigger value="ads" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-                    Ads
-                  </TabsTrigger>
-                )}
-                {isAdmin && (
-                  <TabsTrigger value="theme" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-                    Theme
-                  </TabsTrigger>
-                )}
-              </TabsList>
-            </div>
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-rap-carbon-light border border-rap-silver/30 mb-6">
+              <TabsTrigger value="rappers" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+                Rappers
+              </TabsTrigger>
+              <TabsTrigger value="rankings" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+                Rankings
+              </TabsTrigger>
+              <TabsTrigger value="blog" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+                Blog
+              </TabsTrigger>
+              <TabsTrigger value="ads" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+                Ads
+              </TabsTrigger>
+              <TabsTrigger value="headers" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+                Headers
+              </TabsTrigger>
+              <TabsTrigger value="theme" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+                Theme
+              </TabsTrigger>
+            </TabsList>
 
             {isAdmin && (
               <TabsContent value="rappers">
@@ -171,6 +159,10 @@ const Admin = () => {
                 <ThemeManagement />
               </TabsContent>
             )}
+
+            <TabsContent value="headers" className="space-y-6">
+              <SectionHeaderManagement />
+            </TabsContent>
           </Tabs>
         </div>
       </div>

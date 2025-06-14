@@ -832,6 +832,39 @@ export type Database = {
         }
         Relationships: []
       }
+      section_headers: {
+        Row: {
+          background_image_url: string | null
+          created_at: string
+          id: string
+          is_active: boolean
+          section_name: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          background_image_url?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          section_name: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          background_image_url?: string | null
+          created_at?: string
+          id?: string
+          is_active?: boolean
+          section_name?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_achievements: {
         Row: {
           achievement_id: string
