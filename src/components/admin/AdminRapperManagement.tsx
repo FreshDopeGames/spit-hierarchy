@@ -7,23 +7,45 @@ import { Plus } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
+import AdminRapperPagination from "./AdminRapperPagination";
 import { useToast } from "@/hooks/use-toast";
 
 type Rapper = Tables<"rappers">;
 
+const ITEMS_PER_PAGE = 20;
+
 const AdminRapperManagement = () => {
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  const { data: rappers, isLoading } = useQuery({
-    queryKey: ["admin-rappers"],
+  // Query for total count
+  const { data: totalCount } = useQuery({
+    queryKey: ["admin-rappers-count"],
     queryFn: async () => {
+      const { count, error } = await supabase
+        .from("rappers")
+        .select("*", { count: "exact", head: true });
+      
+      if (error) throw error;
+      return count || 0;
+    }
+  });
+
+  // Query for paginated rappers
+  const { data: rappers, isLoading } = useQuery({
+    queryKey: ["admin-rappers", currentPage],
+    queryFn: async () => {
+      const from = (currentPage - 1) * ITEMS_PER_PAGE;
+      const to = from + ITEMS_PER_PAGE - 1;
+      
       const { data, error } = await supabase
         .from("rappers")
         .select("*")
-        .order("name", { ascending: true });
+        .order("name", { ascending: true })
+        .range(from, to);
       
       if (error) throw error;
       return data;
@@ -41,6 +63,7 @@ const AdminRapperManagement = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-rappers-count"] });
       queryClient.invalidateQueries({ queryKey: ["top-rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       toast({
@@ -76,13 +99,22 @@ const AdminRapperManagement = () => {
   const handleDialogClose = () => {
     setIsDialogOpen(false);
     setSelectedRapper(null);
+    // Refresh the queries to get updated data
+    queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
+    queryClient.invalidateQueries({ queryKey: ["admin-rappers-count"] });
   };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const totalPages = Math.ceil((totalCount || 0) / ITEMS_PER_PAGE);
 
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <h3 className="text-xl font-semibold text-rap-platinum">
-          Manage Rappers ({rappers?.length || 0})
+          Manage Rappers ({totalCount || 0})
         </h3>
         <Button
           onClick={handleAddRapper}
@@ -99,6 +131,16 @@ const AdminRapperManagement = () => {
         onEdit={handleEditRapper}
         onDelete={handleDeleteRapper}
       />
+
+      {totalCount && totalCount > ITEMS_PER_PAGE && (
+        <AdminRapperPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalCount}
+          itemsPerPage={ITEMS_PER_PAGE}
+          onPageChange={handlePageChange}
+        />
+      )}
 
       <AdminRapperDialog
         rapper={selectedRapper}
