@@ -1,5 +1,5 @@
 
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { fetchUserRankingsOptimized, fetchUserRankingsCount } from "@/services/optimizedUserRankingService";
 import { UserRanking } from "@/types/userRanking";
 

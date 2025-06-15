@@ -11,10 +11,12 @@ interface DatabaseRanking {
   created_at: string;
   slug: string;
   is_public: boolean;
-  profiles: {
-    username: string;
-    full_name: string | null;
-  } | null;
+}
+
+interface UserProfile {
+  id: string;
+  username: string;
+  full_name: string | null;
 }
 
 interface PreviewItem {
@@ -28,7 +30,7 @@ export async function fetchUserRankingsOptimized(
   limit: number = 20,
   offset: number = 0
 ): Promise<UserRanking[]> {
-  // First, fetch rankings with basic info and profile data
+  // First, fetch rankings with basic info only
   const { data: rankings, error } = await supabase
     .from("user_rankings")
     .select(`
@@ -38,8 +40,7 @@ export async function fetchUserRankingsOptimized(
       user_id,
       created_at,
       slug,
-      is_public,
-      profiles!user_rankings_user_id_fkey(username, full_name)
+      is_public
     `)
     .eq("is_public", true)
     .order("created_at", { ascending: false })
@@ -51,6 +52,26 @@ export async function fetchUserRankingsOptimized(
   }
 
   if (!rankings || rankings.length === 0) return [];
+
+  // Get unique user IDs and fetch profiles separately
+  const userIds = [...new Set(rankings.map(r => r.user_id))];
+  
+  const { data: profiles, error: profilesError } = await supabase
+    .from("profiles")
+    .select("id, username, full_name")
+    .in("id", userIds);
+
+  if (profilesError) {
+    console.error("Error fetching profiles:", profilesError);
+  }
+
+  // Create a map for quick profile lookup
+  const profilesMap = new Map<string, UserProfile>();
+  if (profiles) {
+    profiles.forEach((profile: UserProfile) => {
+      profilesMap.set(profile.id, profile);
+    });
+  }
 
   // Get all preview items for all rankings in a single query
   const rankingIds = rankings.map(r => r.id);
@@ -92,6 +113,7 @@ export async function fetchUserRankingsOptimized(
   // Transform the data to match the UserRanking interface
   const transformedRankings: UserRanking[] = rankings.map((ranking: DatabaseRanking) => {
     const previewItems = previewItemsMap.get(ranking.id) || [];
+    const userProfile = profilesMap.get(ranking.user_id);
 
     const topRappers = previewItems.map((item: PreviewItem) => ({
       rank: item.position,
@@ -103,7 +125,7 @@ export async function fetchUserRankingsOptimized(
       id: ranking.id,
       title: ranking.title,
       description: ranking.description || "",
-      author: ranking.profiles?.username || "Unknown User",
+      author: userProfile?.username || "Unknown User",
       authorId: ranking.user_id,
       createdAt: ranking.created_at,
       timeAgo: formatTimeAgo(ranking.created_at),
