@@ -149,16 +149,16 @@ const UserVotingDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {recentVotes.map((vote: any) => <div key={vote.id} className="flex items-center justify-between p-3 bg-purple-900/20 rounded-lg">
+              {recentVotes.map((vote: any) => <div key={vote.id} className="flex items-center justify-between p-3 rounded-lg bg-rap-gold">
                   <div className="flex-1">
-                    <p className="text-white font-medium">{vote.rappers?.name}</p>
-                    <p className="text-gray-400 text-sm">{vote.voting_categories?.name}</p>
+                    <p className="text-black font-extrabold text-xl">{vote.rappers?.name}</p>
+                    <p className="text-rap-carbon font-bold">{vote.voting_categories?.name}</p>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="bg-yellow-600/20 text-yellow-300">
+                    <Badge variant="secondary" className="text-rap-gold-dark bg-black">
                       {vote.rating}/10
                     </Badge>
-                    <span className="text-gray-400 text-xs">
+                    <span className="text-xs font-normal text-black">
                       {new Date(vote.created_at).toLocaleDateString()}
                     </span>
                   </div>
