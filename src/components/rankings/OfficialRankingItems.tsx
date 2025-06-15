@@ -59,45 +59,43 @@ const OfficialRankingItems = ({
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 flex-1">
-              {/* Dynamic Position with enhanced gold gradient circular background */}
+              {/* Primary: Dynamic Position with enhanced gold gradient circular background */}
               <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg">
                 <span className="text-2xl font-bold text-rap-carbon font-mogra">
                   {item.dynamic_position}
                 </span>
               </div>
 
-              {/* Rapper Info */}
+              {/* Primary: Rapper Info */}
               <div className="flex-1">
-                <h3 className="text-xl font-bold text-rap-platinum font-kaushan">
-                  {item.rapper?.name}
-                </h3>
+                <div className="flex items-center gap-2 mb-1">
+                  <h3 className="text-xl font-bold text-rap-platinum font-kaushan">
+                    {item.rapper?.name}
+                  </h3>
+                  {/* Contextual: Hot Badge - smaller and positioned as secondary info */}
+                  {isHot(item.vote_velocity_24_hours || 0) && (
+                    <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none text-xs px-2 py-1">
+                      <Flame className="w-3 h-3 mr-1" />
+                      Hot
+                    </Badge>
+                  )}
+                </div>
+                
+                {/* Primary: Hometown */}
                 {item.rapper?.origin && (
                   <p className="text-sm text-rap-smoke font-kaushan">
                     {item.rapper.origin}
                   </p>
                 )}
-                {/* Vote Count Display - only show if votes > 0 */}
-                {item.ranking_votes && item.ranking_votes > 0 && (
-                  <p className="text-sm text-white font-bold font-kaushan">
-                    Votes: {formatVoteCount(item.ranking_votes)}
-                  </p>
-                )}
-                {item.reason && (
-                  <p className="text-sm text-rap-silver mt-1 font-kaushan italic">
-                    "{item.reason}"
-                  </p>
-                )}
+                
+                {/* Primary: Vote Count - Always visible */}
+                <p className="text-sm text-white font-bold font-kaushan mt-1">
+                  Votes: {formatVoteCount(item.ranking_votes)}
+                </p>
               </div>
 
-              {/* Badges */}
+              {/* Secondary: Position Delta Badge */}
               <div className="flex items-center space-x-2">
-                {isHot(item.vote_velocity_24_hours || 0) && (
-                  <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none">
-                    <Flame className="w-3 h-3 mr-1" />
-                    Hot
-                  </Badge>
-                )}
-                
                 {item.position_delta && item.position_delta !== 0 && (
                   <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum">
                     {getDeltaIcon(item.position_delta)}
@@ -107,7 +105,7 @@ const OfficialRankingItems = ({
               </div>
             </div>
 
-            {/* Vote Button */}
+            {/* Primary: Vote Button */}
             <div className="ml-4">
               <VoteButton
                 onVote={() => onVote(item.rapper?.name || "")}
@@ -119,17 +117,29 @@ const OfficialRankingItems = ({
             </div>
           </div>
 
-          {/* Vote Velocity Info - only show non-zero values */}
+          {/* Contextual: Vote Velocity Info - Compact and visually integrated */}
           {((item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0) || 
             (item.vote_velocity_7_days && item.vote_velocity_7_days > 0)) && (
-            <div className="mt-3 pt-3 border-t border-rap-gold/20">
-              <div className="flex items-center space-x-4 text-xs text-rap-smoke">
-                {item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0 && (
-                  <span>24h: {item.vote_velocity_24_hours} votes</span>
-                )}
-                {item.vote_velocity_7_days && item.vote_velocity_7_days > 0 && (
-                  <span>7d: {item.vote_velocity_7_days} votes</span>
-                )}
+            <div className="mt-3 pt-2 border-t border-rap-gold/10">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4 text-xs text-rap-smoke/80">
+                  {item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0 && (
+                    <span className="flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      24h: {item.vote_velocity_24_hours}
+                    </span>
+                  )}
+                  {item.vote_velocity_7_days && item.vote_velocity_7_days > 0 && (
+                    <span className="flex items-center gap-1">
+                      <TrendingUp className="w-3 h-3" />
+                      7d: {item.vote_velocity_7_days}
+                    </span>
+                  )}
+                </div>
+                {/* Small indicator for power users */}
+                <span className="text-xs text-rap-smoke/60 font-kaushan italic">
+                  trending data
+                </span>
               </div>
             </div>
           )}
