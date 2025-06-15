@@ -13,6 +13,7 @@ const AllRappersPage = () => {
     sortOrder,
     searchInput,
     searchTerm,
+    locationInput,
     locationFilter,
     allRappers,
     rappersData,
@@ -22,7 +23,7 @@ const AllRappersPage = () => {
     handleSortChange,
     handleOrderChange,
     handleSearchInput,
-    handleLocationFilter,
+    handleLocationInput,
     handleLoadMore,
     currentPage,
   } = useAllRappers();
@@ -49,20 +50,22 @@ const AllRappersPage = () => {
       <HeaderNavigation isScrolled={false} />
       <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
         <BlogPageHeader title="All Rappers" />
-        <div className="mb-8">
+        {/* Gradient bar REMOVED */}
+        {/* <div className="mb-8">
           <div className="w-32 h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver rounded-full"></div>
-        </div>
+        </div> */}
         <p className="text-center text-rap-smoke text-xl font-kaushan mb-8">
           {total} legendary rappers • Showing {allRappers.length}
         </p>
         <AllRappersFilters
           searchInput={searchInput}
           searchTerm={searchTerm}
+          locationInput={locationInput}
           locationFilter={locationFilter}
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSearchInput={handleSearchInput}
-          onLocationFilter={handleLocationFilter}
+          onLocationInput={handleLocationInput}
           onSortChange={handleSortChange}
           onOrderChange={handleOrderChange}
         />

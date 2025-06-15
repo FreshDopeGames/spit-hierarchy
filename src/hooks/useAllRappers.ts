@@ -12,7 +12,8 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
+  const [locationInput, setLocationInput] = useState("");     // NEW: store city/state as raw input
+  const [locationFilter, setLocationFilter] = useState("");   // NEW: debounced city/state   
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
 
@@ -28,6 +29,19 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
 
     return () => clearTimeout(timer);
   }, [searchInput, searchTerm]);
+
+  // Debounce location input with 2 second delay (like search)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (locationFilter !== locationInput) {
+        setLocationFilter(locationInput);
+        setCurrentPage(0);
+        setAllRappers([]);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [locationInput, locationFilter]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, currentPage],
@@ -96,10 +110,9 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     setSearchInput(value);
   };
 
-  const handleLocationFilter = (value: string) => {
-    setLocationFilter(value);
-    setCurrentPage(0);
-    setAllRappers([]);
+  // This is now "locationInput", not "locationFilter"
+  const handleLocationInput = (value: string) => {
+    setLocationInput(value);
   };
 
   const handleLoadMore = () => {
@@ -111,6 +124,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     sortOrder,
     searchInput,
     searchTerm,
+    locationInput,
     locationFilter,
     allRappers,
     currentPage,
@@ -121,7 +135,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     handleSortChange,
     handleOrderChange,
     handleSearchInput,
-    handleLocationFilter,
+    handleLocationInput,
     handleLoadMore,
   };
 };

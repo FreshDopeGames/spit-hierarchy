@@ -8,11 +8,12 @@ import { Search, Loader2, Mic } from "lucide-react";
 interface AllRappersFiltersProps {
   searchInput: string;
   searchTerm: string;
+  locationInput: string;
   locationFilter: string;
   sortBy: string;
   sortOrder: string;
   onSearchInput: (value: string) => void;
-  onLocationFilter: (value: string) => void;
+  onLocationInput: (value: string) => void;
   onSortChange: (value: string) => void;
   onOrderChange: (value: string) => void;
 }
@@ -20,11 +21,12 @@ interface AllRappersFiltersProps {
 const AllRappersFilters = ({
   searchInput,
   searchTerm,
+  locationInput,
   locationFilter,
   sortBy,
   sortOrder,
   onSearchInput,
-  onLocationFilter,
+  onLocationInput,
   onSortChange,
   onOrderChange,
 }: AllRappersFiltersProps) => {
@@ -53,13 +55,20 @@ const AllRappersFilters = ({
           )}
         </div>
 
-        {/* Location Filter */}
-        <Input
-          placeholder="Filter by city/state..."
-          value={locationFilter}
-          onChange={(e) => onLocationFilter(e.target.value)}
-          className="bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street"
-        />
+        {/* Location Filter (Debounced now) */}
+        <div className="relative">
+          <Input
+            placeholder="Filter by city/state..."
+            value={locationInput}
+            onChange={(e) => onLocationInput(e.target.value)}
+            className="bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street"
+          />
+          {locationInput !== locationFilter && (
+            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+              <Loader2 className="w-4 h-4 text-rap-silver animate-spin" />
+            </div>
+          )}
+        </div>
 
         {/* Sort By */}
         <Select value={sortBy} onValueChange={onSortChange}>
