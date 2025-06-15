@@ -139,7 +139,7 @@ const About = () => {
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">1</div>
+                  <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg">1</div>
                   <div>
                     <h3 className="font-mogra text-rap-silver">Browse Artists</h3>
                     <p className="text-rap-platinum font-merienda ">Explore our comprehensive database of rappers from all eras and regions.</p>
@@ -147,7 +147,7 @@ const About = () => {
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">2</div>
+                  <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg">2</div>
                   <div>
                     <h3 className="font-mogra text-rap-silver">Cast Your Vote</h3>
                     <p className="text-rap-platinum font-merienda ">Rate artists based on skills, impact, and your personal preference.</p>
@@ -155,7 +155,7 @@ const About = () => {
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">3</div>
+                  <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg">3</div>
                   <div>
                     <h3 className="font-mogra text-rap-silver">Watch Rankings</h3>
                     <p className="text-rap-platinum font-merienda ">See how your votes contribute to the live, community-driven rankings.</p>
@@ -163,7 +163,7 @@ const About = () => {
                 </div>
                 
                 <div className="flex items-start space-x-4">
-                  <div className="bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full w-8 h-8 flex items-center justify-center text-rap-silver font-mogra shadow-lg">4</div>
+                  <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg">4</div>
                   <div>
                     <h3 className="font-mogra text-rap-silver">Join the Debate</h3>
                     <p className="text-rap-platinum font-merienda ">Engage with the community and defend your favorite artists.</p>
