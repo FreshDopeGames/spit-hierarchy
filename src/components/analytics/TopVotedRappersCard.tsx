@@ -30,7 +30,7 @@ const TopVotedRappersCard = () => {
   if (!topRappers || topRappers.length === 0) return null;
   return <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 border-2 border-rap-gold">
       <CardHeader>
-        <CardTitle className="text-rap-gold font-ceviche flex items-center gap-2 font-normal text-5xl">
+        <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 font-extrabold text-3xl">
           <Users className="w-5 h-5" />
           Most Voted Rappers
         </CardTitle>
