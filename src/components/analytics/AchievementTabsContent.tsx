@@ -21,7 +21,10 @@ const AchievementTabsContent = ({
   // Sort all achievement lists from least rare to most rare
   const sortedAchievements = sortAchievementsByRarity([...achievements]);
   const sortedEarned = sortAchievementsByRarity([...earnedAchievements]);
-  const sortedUnlocked = sortAchievementsByRarity([...unlockedAchievements]);
+  // Use all achievements for progress/locked filtering to ensure accuracy:
+  const notEarned = achievements.filter(a => !a.is_earned);
+  const inProgress = sortAchievementsByRarity([...notEarned.filter(a => a.progress_percentage > 0)]);
+  const locked = sortAchievementsByRarity([...notEarned.filter(a => a.progress_percentage === 0)]);
 
   // Transform achievement data to match AchievementCard expectations
   const transformAchievement = (achievement: Achievement) => ({
@@ -97,17 +100,15 @@ const AchievementTabsContent = ({
       </TabsContent>
 
       <TabsContent value="progress" className="mt-4 sm:mt-6">
-        {sortedUnlocked.filter(a => a.progress_percentage > 0).length > 0 ? (
+        {inProgress.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {sortedUnlocked
-              .filter(a => a.progress_percentage > 0)
-              .map((achievement) => (
-                <AchievementCard 
-                  key={achievement.id} 
-                  achievement={transformAchievement(achievement)} 
-                  showProgress={true}
-                />
-              ))}
+            {inProgress.map((achievement) => (
+              <AchievementCard 
+                key={achievement.id} 
+                achievement={transformAchievement(achievement)} 
+                showProgress={true}
+              />
+            ))}
           </div>
         ) : (
           <AchievementEmptyState type="progress" />
@@ -115,17 +116,15 @@ const AchievementTabsContent = ({
       </TabsContent>
 
       <TabsContent value="locked" className="mt-4 sm:mt-6">
-        {sortedUnlocked.filter(a => a.progress_percentage === 0).length > 0 ? (
+        {locked.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
-            {sortedUnlocked
-              .filter(a => a.progress_percentage === 0)
-              .map((achievement) => (
-                <AchievementCard 
-                  key={achievement.id} 
-                  achievement={transformAchievement(achievement)} 
-                  showProgress={true}
-                />
-              ))}
+            {locked.map((achievement) => (
+              <AchievementCard 
+                key={achievement.id} 
+                achievement={transformAchievement(achievement)} 
+                showProgress={true}
+              />
+            ))}
           </div>
         ) : (
           <AchievementEmptyState type="locked" />
