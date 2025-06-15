@@ -4,10 +4,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Vote, Users, Star, Calendar, TrendingUp, Award } from "lucide-react";
+
 const UserVotingDashboard = () => {
-  const {
-    user
-  } = useAuth();
+  const { user } = useAuth();
+
   const {
     data: userStats,
     isLoading
@@ -24,6 +24,7 @@ const UserVotingDashboard = () => {
     },
     enabled: !!user
   });
+
   const {
     data: recentVotes,
     isLoading: loadingRecent
@@ -46,63 +47,77 @@ const UserVotingDashboard = () => {
     },
     enabled: !!user
   });
+
   if (!user) {
-    return <Card className="bg-black/40 border-2 border-rap-gold">
+    return (
+      <Card className="bg-black/40 border-2 border-rap-gold">
         <CardContent className="p-6 text-center">
           <p className="text-gray-400">Please log in to view your voting statistics.</p>
         </CardContent>
-      </Card>;
+      </Card>
+    );
   }
+
   if (isLoading) {
-    return <div className="space-y-4">
-        {Array.from({
-        length: 3
-      }).map((_, i) => <Card key={i} className="bg-black/40 border-2 border-rap-gold animate-pulse">
+    return (
+      <div className="space-y-4">
+        {Array.from({ length: 3 }).map((_, i) => (
+          <Card key={i} className="bg-black/40 border-2 border-rap-gold animate-pulse">
             <CardContent className="p-6">
               <div className="h-16 bg-gray-700 rounded"></div>
             </CardContent>
-          </Card>)}
-      </div>;
+          </Card>
+        ))}
+      </div>
+    );
   }
+
   const stats = userStats || {
     total_votes: 0,
     unique_rappers_voted: 0,
     categories_used: 0,
     average_rating_given: 0,
     last_vote_date: null,
-    first_vote_date: null
+    first_vote_date: null,
   };
-  const statCards = [{
-    icon: Vote,
-    label: "Total Votes",
-    value: stats.total_votes || 0,
-    color: "from-purple-500 to-blue-500"
-  }, {
-    icon: Users,
-    label: "Rappers Voted",
-    value: stats.unique_rappers_voted || 0,
-    color: "from-blue-500 to-cyan-500"
-  }, {
-    icon: Award,
-    label: "Categories Used",
-    value: stats.categories_used || 0,
-    color: "from-cyan-500 to-green-500"
-  }, {
-    icon: Star,
-    label: "Avg Rating Given",
-    value: stats.average_rating_given ? Number(stats.average_rating_given).toFixed(1) : "0.0",
-    color: "from-green-500 to-yellow-500"
-  }];
-  return <div className="space-y-6">
+
+  const statCards = [
+    {
+      icon: Vote,
+      label: "Total Votes",
+      value: stats.total_votes || 0,
+    },
+    {
+      icon: Users,
+      label: "Rappers Voted",
+      value: stats.unique_rappers_voted || 0,
+    },
+    {
+      icon: Award,
+      label: "Categories Used",
+      value: stats.categories_used || 0,
+    },
+    {
+      icon: Star,
+      label: "Avg Rating Given",
+      value: stats.average_rating_given
+        ? Number(stats.average_rating_given).toFixed(1)
+        : "0.0",
+    },
+  ];
+
+  return (
+    <div className="space-y-6">
       <h3 className="text-2xl mb-4 text-rap-gold font-extrabold">Your Voting Statistics</h3>
       
       {/* Stats Grid */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {statCards.map((stat, index) => <Card key={index} className="bg-black/40 border-2 border-rap-gold">
+        {statCards.map((stat, index) => (
+          <Card key={index} className="bg-black/40 border-2 border-rap-gold">
             <CardContent className="p-4">
               <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center`}>
-                  <stat.icon className="w-5 h-5 text-white" />
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-r from-rap-gold to-rap-gold-light flex items-center justify-center">
+                  <stat.icon className="w-5 h-5 text-black" />
                 </div>
                 <div>
                   <p className="font-extrabold text-rap-gold-light text-xs">{stat.label}</p>
@@ -110,11 +125,13 @@ const UserVotingDashboard = () => {
                 </div>
               </div>
             </CardContent>
-          </Card>)}
+          </Card>
+        ))}
       </div>
 
       {/* Voting Timeline */}
-      {stats.first_vote_date && <Card className="bg-black/40 border-2 border-rap-gold">
+      {stats.first_vote_date && (
+        <Card className="bg-black/40 border-2 border-rap-gold">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-rap-gold">
               <Calendar className="w-5 h-5" />
@@ -129,18 +146,22 @@ const UserVotingDashboard = () => {
                   {new Date(stats.first_vote_date).toLocaleDateString()}
                 </span>
               </div>
-              {stats.last_vote_date && <div className="flex items-center gap-2">
+              {stats.last_vote_date && (
+                <div className="flex items-center gap-2">
                   <span className="text-gray-400 text-base">Last Vote:</span>
                   <span className="text-white text-lg">
                     {new Date(stats.last_vote_date).toLocaleDateString()}
                   </span>
-                </div>}
+                </div>
+              )}
             </div>
           </CardContent>
-        </Card>}
+        </Card>
+      )}
 
       {/* Recent Votes */}
-      {recentVotes && recentVotes.length > 0 && <Card className="bg-black/40 border-2 border-rap-gold">
+      {recentVotes && recentVotes.length > 0 && (
+        <Card className="bg-black/40 border-2 border-rap-gold">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-rap-gold">
               <TrendingUp className="w-5 h-5" />
@@ -149,7 +170,8 @@ const UserVotingDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {recentVotes.map((vote: any) => <div key={vote.id} className="flex items-center justify-between p-3 rounded-lg bg-rap-gold">
+              {recentVotes.map((vote: any) => (
+                <div key={vote.id} className="flex items-center justify-between p-3 rounded-lg bg-rap-gold">
                   <div className="flex-1">
                     <p className="text-black font-extrabold text-xl">{vote.rappers?.name}</p>
                     <p className="text-rap-carbon font-bold">{vote.voting_categories?.name}</p>
@@ -162,18 +184,24 @@ const UserVotingDashboard = () => {
                       {new Date(vote.created_at).toLocaleDateString()}
                     </span>
                   </div>
-                </div>)}
+                </div>
+              ))}
             </div>
           </CardContent>
-        </Card>}
+        </Card>
+      )}
 
-      {stats.total_votes === 0 && <Card className="bg-black/40 border-2 border-rap-gold">
+      {stats.total_votes === 0 && (
+        <Card className="bg-black/40 border-2 border-rap-gold">
           <CardContent className="p-6 text-center">
             <Vote className="w-16 h-16 text-purple-500 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-white mb-2">No Votes Yet</h3>
             <p className="text-gray-400">Start voting for your favorite rappers to see your statistics here!</p>
           </CardContent>
-        </Card>}
-    </div>;
+        </Card>
+      )}
+    </div>
+  );
 };
+
 export default UserVotingDashboard;
