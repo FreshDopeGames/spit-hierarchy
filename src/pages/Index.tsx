@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -49,7 +50,6 @@ const Index = () => {
               rapper:rappers(*)
             `)
             .eq("ranking_id", ranking.id)
-            .eq("is_ranked", true)
             .order("position")
             .limit(5);
 
