@@ -154,7 +154,7 @@ const BlogCategoryDialog = ({ open, onOpenChange, category, onSuccess }: BlogCat
             <Button 
               type="submit" 
               disabled={saveCategoryMutation.isPending}
-              className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra h-11 flex-1 sm:flex-none"
+              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-dark font-mogra h-11 flex-1 sm:flex-none"
             >
               {saveCategoryMutation.isPending ? 'Saving...' : (category ? 'Update Category' : 'Create Category')}
             </Button>
