@@ -56,17 +56,19 @@ const VoteButton = ({
           hasVoted 
             ? 'bg-gray-600 hover:bg-gray-600 text-gray-300 cursor-not-allowed' 
             : 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon'
-        } font-bold flex-1 sm:flex-none text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3 ${className}`}
+        } font-bold flex-1 sm:flex-none text-sm px-2 py-2 sm:px-4 sm:py-2 min-w-[80px] w-20 ${className}`}
       >
         {hasVoted ? (
           <>
-            <Check className="w-4 h-4 mr-2" />
-            Voted Today
+            <Check className="w-4 h-4 mr-1" />
+            <span className="hidden sm:inline">Voted</span>
+            <span className="sm:hidden">✓</span>
           </>
         ) : (
           <>
-            <ThumbsUp className="w-4 h-4 mr-2" />
-            Vote
+            <ThumbsUp className="w-4 h-4 mr-1" />
+            <span className="hidden sm:inline">Vote</span>
+            <span className="sm:hidden">+</span>
           </>
         )}
       </Button>
