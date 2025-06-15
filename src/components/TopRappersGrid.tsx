@@ -202,20 +202,11 @@ const TopRappersGrid = ({
                         {rapper.origin}
                       </p>
                     }
-                    {/* Overall Rating Display */}
-                    {rapper.average_rating && rapper.average_rating > 0 && (
-                      <div className="flex items-center gap-1 mt-1">
-                        <Star className="w-3 h-3 text-rap-gold fill-current" />
-                        <span className="text-rap-gold text-sm font-bold">
-                          {Number(rapper.average_rating).toFixed(1)} Overall Rating
-                        </span>
-                      </div>
-                    )}
-                    {/* Vote count - ranking-specific if available, otherwise global */}
+                    {/* Simplified vote count display */}
                     <p className="text-rap-silver text-xs font-bold mt-1">
-                      {rankingId && rapper.ranking_votes !== undefined 
-                        ? `${rapper.ranking_votes.toLocaleString()} ranking votes`
-                        : `${(rapper.total_votes || 0).toLocaleString()} total votes`
+                      Votes: {rankingId && rapper.ranking_votes !== undefined 
+                        ? rapper.ranking_votes.toLocaleString()
+                        : (rapper.total_votes || 0).toLocaleString()
                       }
                     </p>
                   </div>
@@ -242,20 +233,11 @@ const TopRappersGrid = ({
                         {rapper.origin}
                       </p>
                     }
-                    {/* Overall Rating Display */}
-                    {rapper.average_rating && rapper.average_rating > 0 && (
-                      <div className="flex items-center justify-center gap-1 mt-1">
-                        <Star className="w-3 h-3 text-rap-gold fill-current" />
-                        <span className="text-rap-gold text-xs font-bold">
-                          {Number(rapper.average_rating).toFixed(1)}
-                        </span>
-                      </div>
-                    )}
-                    {/* Vote count - ranking-specific if available, otherwise global */}
+                    {/* Simplified vote count display */}
                     <p className="text-rap-silver text-xs font-bold mt-1">
-                      {rankingId && rapper.ranking_votes !== undefined 
-                        ? `${rapper.ranking_votes.toLocaleString()}`
-                        : `${(rapper.total_votes || 0).toLocaleString()}`
+                      Votes: {rankingId && rapper.ranking_votes !== undefined 
+                        ? rapper.ranking_votes.toLocaleString()
+                        : (rapper.total_votes || 0).toLocaleString()
                       }
                     </p>
                   </div>
