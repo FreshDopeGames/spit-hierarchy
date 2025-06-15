@@ -29,20 +29,60 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
     <div className="space-y-4">
       {posts?.map(post => (
         <div key={post.id} className="border border-rap-smoke/30 rounded-lg p-4 hover:border-rap-gold/50 transition-colors">
-          <div className="flex justify-between items-start gap-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-semibold text-rap-platinum mb-2">{post.title}</h3>
-              <div className="flex items-center gap-4 text-sm text-rap-smoke mb-2">
+              
+              {/* Action buttons - shown below title on mobile, on the right on desktop */}
+              <div className="flex gap-2 mb-4 sm:hidden">
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => window.open(`/blog/${post.id}`, '_blank')}
+                  className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold"
+                >
+                  <Eye className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onEditPost(post)}
+                  className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold"
+                >
+                  <Edit className="w-4 h-4" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onDeletePost(post.id)}
+                  className="border-red-500 text-red-500 hover:border-red-400 hover:text-red-400"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </Button>
+              </div>
+
+              {/* Mobile layout - separate lines */}
+              <div className="block sm:hidden space-y-2 text-sm text-rap-smoke mb-3">
+                <div>By: {post.author_profile?.full_name || post.author_profile?.username || 'Unknown'}</div>
+                <div>Category: {post.blog_categories?.name || 'Uncategorized'}</div>
+                <div>Created: {new Date(post.created_at).toLocaleDateString()}</div>
+              </div>
+
+              {/* Desktop layout - same line */}
+              <div className="hidden sm:flex items-center gap-4 text-sm text-rap-smoke mb-2">
                 <span>By: {post.author_profile?.full_name || post.author_profile?.username || 'Unknown'}</span>
                 <span>Category: {post.blog_categories?.name || 'Uncategorized'}</span>
                 <span>Created: {new Date(post.created_at).toLocaleDateString()}</span>
               </div>
+
               <div className="flex items-center gap-2">
                 {getStatusBadge(post.status)}
                 {post.featured && <Badge className="bg-rap-gold text-rap-carbon">Featured</Badge>}
               </div>
             </div>
-            <div className="flex gap-2 flex-shrink-0">
+
+            {/* Action buttons - shown on the right on desktop */}
+            <div className="hidden sm:flex gap-2 flex-shrink-0">
               <Button
                 size="sm"
                 variant="outline"
