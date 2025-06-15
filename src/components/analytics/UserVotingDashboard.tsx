@@ -131,7 +131,7 @@ const UserVotingDashboard = () => {
               </div>
               {stats.last_vote_date && <div className="flex items-center gap-2">
                   <span className="text-gray-400 text-base">Last Vote:</span>
-                  <span className="text-white text-lg">
+                  <span className="text-white text-xl">
                     {new Date(stats.last_vote_date).toLocaleDateString()}
                   </span>
                 </div>}
