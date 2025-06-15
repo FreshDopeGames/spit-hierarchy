@@ -1,8 +1,7 @@
-
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import InternalPageHeader from "@/components/InternalPageHeader";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import BlogPageHeader from "@/components/blog/BlogPageHeader";
 import BlogFilters from "@/components/blog/BlogFilters";
 import BlogPostGrid from "@/components/blog/BlogPostGrid";
@@ -145,7 +144,7 @@ const Blog = () => {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
-        <InternalPageHeader showTitle={false} />
+        <HeaderNavigation isScrolled={false} />
         <main className="flex-1 max-w-6xl mx-auto p-6 pt-24">
           <BlogPageHeader title="SLICK TALK" />
           <div className="text-center py-12">
@@ -158,7 +157,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
-      <InternalPageHeader showTitle={false} />
+      <HeaderNavigation isScrolled={false} />
       
       <main className="flex-1 max-w-6xl mx-auto p-6 pt-24">
         <BlogPageHeader title="SLICK TALK" />
