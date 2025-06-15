@@ -49,7 +49,7 @@ export interface UserRankingFromDB {
 
 export interface CreateUserRankingData {
   title: string;
-  description: string;
+  description?: string;
   category: string;
   tags?: string[];
   isPublic?: boolean;
