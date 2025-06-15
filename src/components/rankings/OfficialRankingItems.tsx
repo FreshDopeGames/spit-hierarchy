@@ -59,8 +59,8 @@ const OfficialRankingItems = ({
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 flex-1">
-              {/* Dynamic Position with gold gradient circular background */}
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold via-yellow-400 to-rap-gold shadow-lg">
+              {/* Dynamic Position with enhanced gold gradient circular background */}
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg">
                 <span className="text-2xl font-bold text-rap-carbon font-mogra">
                   {item.dynamic_position}
                 </span>

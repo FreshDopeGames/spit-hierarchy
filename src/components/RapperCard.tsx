@@ -27,7 +27,7 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
         return <Star className="w-5 h-5 text-orange-500" />;
       default:
         return (
-          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-rap-gold via-yellow-400 to-rap-gold shadow-lg">
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg">
             <span className="text-rap-carbon font-mogra text-sm font-bold">{pos}</span>
           </div>
         );

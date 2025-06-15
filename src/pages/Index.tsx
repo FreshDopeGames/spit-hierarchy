@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -25,7 +26,7 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch the top 3 most active official rankings to replace the fixed sections
+  // Fetch the top 3 most active official rankings with real-time vote data
   const { data: topActiveRankings = [], isLoading } = useQuery({
     queryKey: ["top-active-rankings-for-sections"],
     queryFn: async () => {
@@ -39,35 +40,62 @@ const Index = () => {
 
       if (rankingsError) throw rankingsError;
 
-      // Fetch top 5 ranked items for each ranking
+      // For each ranking, get rappers with real-time vote counts
       const rankingsWithItems = await Promise.all(
         (rankingsData || []).map(async (ranking) => {
+          // Get all ranking items for this ranking
           const { data: itemsData, error: itemsError } = await supabase
             .from("ranking_items")
             .select(`
               *,
               rapper:rappers(*)
             `)
-            .eq("ranking_id", ranking.id)
-            .order("position")
-            .limit(5);
+            .eq("ranking_id", ranking.id);
 
           if (itemsError) {
             console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
             return { ...ranking, items: [], rappers: [] };
           }
 
-          const rappers = (itemsData || []).map(item => item.rapper).filter(Boolean);
+          // Get weighted vote counts for this specific ranking
+          const { data: voteData, error: voteError } = await supabase
+            .from("ranking_votes")
+            .select("rapper_id, vote_weight")
+            .eq("ranking_id", ranking.id);
+
+          if (voteError) {
+            console.error(`Error fetching votes for ranking ${ranking.id}:`, voteError);
+            return { ...ranking, items: itemsData || [], rappers: [] };
+          }
+
+          // Aggregate vote counts by rapper
+          const voteCounts: Record<string, number> = {};
+          voteData.forEach(vote => {
+            voteCounts[vote.rapper_id] = (voteCounts[vote.rapper_id] || 0) + vote.vote_weight;
+          });
+
+          // Enhance rappers with ranking-specific vote counts and sort by votes
+          const rappersWithVotes = (itemsData || [])
+            .map(item => ({
+              ...item.rapper,
+              ranking_votes: voteCounts[item.rapper?.id] || 0
+            }))
+            .filter(rapper => rapper.id)
+            .sort((a, b) => (b.ranking_votes || 0) - (a.ranking_votes || 0))
+            .slice(0, 5); // Top 5 for homepage display
+
           return { 
             ...ranking, 
             items: itemsData || [],
-            rappers: rappers
+            rappers: rappersWithVotes
           };
         })
       );
 
       return rankingsWithItems;
-    }
+    },
+    refetchInterval: 5000, // Refresh every 5 seconds to show real-time updates
+    refetchIntervalInBackground: true,
   });
 
   return (
@@ -93,7 +121,7 @@ const Index = () => {
           {/* Rankings Section with Prominent Header */}
           <RankingsSectionHeader />
 
-          {/* Dynamic Ranking Sections - Replace fixed sections with most active rankings */}
+          {/* Dynamic Ranking Sections with real-time vote data */}
           {!isLoading && topActiveRankings.length > 0 && (
             <>
               {topActiveRankings.map((ranking, index) => (
