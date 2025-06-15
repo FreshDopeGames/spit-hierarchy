@@ -29,8 +29,9 @@ const BlogCategoriesTab = ({ onEditCategory, onNewCategory }: BlogCategoriesTabP
   return (
     <Card className="bg-carbon-fiber border border-rap-gold/30">
       <CardHeader>
+        <CardTitle className="text-rap-platinum font-mogra mb-4 text-center text-2xl">Categories</CardTitle>
         <div className="flex justify-between items-center">
-          <CardTitle className="text-rap-platinum font-ceviche">Categories</CardTitle>
+          <div className="flex-1"></div>
           <Button 
             onClick={onNewCategory} 
             className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-dark font-mogra"
