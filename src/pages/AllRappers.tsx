@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -14,7 +15,8 @@ const AllRappers = () => {
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchInput, setSearchInput] = useState(""); // Input value for immediate UI updates
   const [searchTerm, setSearchTerm] = useState(""); // Debounced value for API calls
-  const [locationFilter, setLocationFilter] = useState("");
+  const [locationInput, setLocationInput] = useState(""); // Input value for location
+  const [locationFilter, setLocationFilter] = useState(""); // Debounced value for location
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   
@@ -33,6 +35,19 @@ const AllRappers = () => {
 
     return () => clearTimeout(timer);
   }, [searchInput, searchTerm]);
+
+  // Debounce location input with 2 second delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (locationFilter !== locationInput) {
+        setLocationFilter(locationInput);
+        setCurrentPage(0);
+        setAllRappers([]);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timer);
+  }, [locationInput, locationFilter]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, currentPage],
@@ -105,10 +120,9 @@ const AllRappers = () => {
     setSearchInput(value);
   };
 
-  const handleLocationFilter = (value: string) => {
-    setLocationFilter(value);
-    setCurrentPage(0);
-    setAllRappers([]);
+  // Input handler for city/state field
+  const handleLocationInput = (value: string) => {
+    setLocationInput(value);
   };
 
   const handleLoadMore = () => {
@@ -149,11 +163,12 @@ const AllRappers = () => {
         <AllRappersFilters
           searchInput={searchInput}
           searchTerm={searchTerm}
+          locationInput={locationInput}
           locationFilter={locationFilter}
           sortBy={sortBy}
           sortOrder={sortOrder}
           onSearchInput={handleSearchInput}
-          onLocationFilter={handleLocationFilter}
+          onLocationInput={handleLocationInput}
           onSortChange={handleSortChange}
           onOrderChange={handleOrderChange}
         />
@@ -175,4 +190,5 @@ const AllRappers = () => {
   );
 };
 
-export default AllRappersPage;
+export default AllRappers;
+
