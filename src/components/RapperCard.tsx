@@ -1,3 +1,4 @@
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/integrations/supabase/types";
@@ -25,7 +26,11 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
       case 3:
         return <Star className="w-5 h-5 text-orange-500" />;
       default:
-        return <span className="w-5 h-5 flex items-center justify-center text-rap-platinum font-mogra text-sm">#{pos}</span>;
+        return (
+          <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-rap-gold via-yellow-400 to-rap-gold shadow-lg">
+            <span className="text-rap-carbon font-mogra text-sm font-bold">{pos}</span>
+          </div>
+        );
     }
   };
 
@@ -54,7 +59,7 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
                 {getPositionIcon(position)}
               </div>
               <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-xs font-kaushan">
-                #{position}
+                {position}
               </Badge>
             </div>
             
@@ -99,7 +104,7 @@ const RapperCard = ({ rapper, position, compact = false }: RapperCardProps) => {
               </h3>
             </div>
             <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
-              #{position}
+              {position}
             </Badge>
           </div>
           
