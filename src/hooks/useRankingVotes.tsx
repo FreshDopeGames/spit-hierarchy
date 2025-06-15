@@ -99,8 +99,13 @@ export const useRankingVotes = () => {
         description: `Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`,
       });
 
+      // Invalidate member stats and achievements to check for updates
+      queryClient.invalidateQueries({ queryKey: ['member-status', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
+      queryClient.invalidateQueries({ queryKey: ['all-achievements'] });
+
       // The real-time subscription will handle the actual data update
-      // No need to manually invalidate queries here
+      // No need to manually invalidate queries here for ranking data
     }
   });
 

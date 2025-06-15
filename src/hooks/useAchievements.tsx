@@ -41,7 +41,8 @@ export const useAchievements = () => {
       if (error) throw error;
       return data;
     },
-    enabled: !!user
+    enabled: !!user,
+    refetchInterval: 5000, // Check for new achievements every 5 seconds
   });
 
   // Combine all achievements with user progress and sort
@@ -107,8 +108,9 @@ export const useAchievements = () => {
             setNewAchievements(prev => [...prev, achievement]);
           }
           
-          // Refresh achievement list
+          // Refresh achievement list and member stats
           queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
+          queryClient.invalidateQueries({ queryKey: ['member-status', user?.id] });
         }
       )
       .subscribe();
