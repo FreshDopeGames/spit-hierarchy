@@ -1,9 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Plus } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Plus, Search } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
@@ -18,34 +19,58 @@ const AdminRapperManagement = () => {
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
-  // Query for total count
+  // Debounce search query
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchQuery(searchQuery);
+      setCurrentPage(1); // Reset to first page when search changes
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [searchQuery]);
+
+  // Query for total count with search filter
   const { data: totalCount } = useQuery({
-    queryKey: ["admin-rappers-count"],
+    queryKey: ["admin-rappers-count", debouncedSearchQuery],
     queryFn: async () => {
-      const { count, error } = await supabase
+      let query = supabase
         .from("rappers")
         .select("*", { count: "exact", head: true });
+      
+      if (debouncedSearchQuery) {
+        query = query.ilike("name", `%${debouncedSearchQuery}%`);
+      }
+      
+      const { count, error } = await query;
       
       if (error) throw error;
       return count || 0;
     }
   });
 
-  // Query for paginated rappers
+  // Query for paginated rappers with search filter
   const { data: rappers, isLoading } = useQuery({
-    queryKey: ["admin-rappers", currentPage],
+    queryKey: ["admin-rappers", currentPage, debouncedSearchQuery],
     queryFn: async () => {
       const from = (currentPage - 1) * ITEMS_PER_PAGE;
       const to = from + ITEMS_PER_PAGE - 1;
       
-      const { data, error } = await supabase
+      let query = supabase
         .from("rappers")
         .select("*")
         .order("name", { ascending: true })
         .range(from, to);
+      
+      if (debouncedSearchQuery) {
+        query = query.ilike("name", `%${debouncedSearchQuery}%`);
+      }
+      
+      const { data, error } = await query;
       
       if (error) throw error;
       return data;
@@ -123,6 +148,17 @@ const AdminRapperManagement = () => {
           <Plus className="w-4 h-4 mr-2" />
           Add Rapper
         </Button>
+      </div>
+
+      {/* Search Filter */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+        <Input
+          placeholder="Search rappers by name..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-10 bg-rap-carbon-light border-rap-gold/30 text-rap-platinum placeholder:text-rap-smoke focus:border-rap-gold"
+        />
       </div>
 
       <AdminRapperTable
