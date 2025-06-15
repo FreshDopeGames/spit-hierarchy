@@ -40,7 +40,7 @@ const OfficialRankingItems = ({
   const getDeltaText = (delta: number) => {
     if (delta > 0) return `+${delta}`;
     if (delta < 0) return `${delta}`;
-    return "0";
+    return "";
   };
 
   const isHot = (velocity: number) => velocity >= hotThreshold && velocity > 0;
@@ -96,7 +96,7 @@ const OfficialRankingItems = ({
                   </Badge>
                 )}
                 
-                {item.position_delta !== 0 && (
+                {item.position_delta && item.position_delta !== 0 && (
                   <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum">
                     {getDeltaIcon(item.position_delta)}
                     <span className="ml-1">{getDeltaText(item.position_delta)}</span>
