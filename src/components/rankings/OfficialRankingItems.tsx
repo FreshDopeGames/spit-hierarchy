@@ -45,7 +45,8 @@ const OfficialRankingItems = ({
 
   const isHot = (velocity: number) => velocity >= hotThreshold && velocity > 0;
 
-  const formatVoteCount = (count: number) => {
+  const formatVoteCount = (count: number | undefined) => {
+    if (count === undefined || count === null) return "0";
     return count.toLocaleString();
   };
 
