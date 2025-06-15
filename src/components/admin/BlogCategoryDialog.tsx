@@ -124,7 +124,7 @@ const BlogCategoryDialog = ({
           </div>
 
           <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-4">
-            <Button type="submit" disabled={saveCategoryMutation.isPending} className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra h-11 flex-1 sm:flex-none mx-[10px]">
+            <Button type="submit" disabled={saveCategoryMutation.isPending} className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra h-11 flex-1 sm:flex-none mx-[10px]">
               {saveCategoryMutation.isPending ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
             </Button>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold h-11 flex-1 sm:flex-none font-mogra text-base">
