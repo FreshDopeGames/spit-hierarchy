@@ -1,7 +1,7 @@
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 const AboutHowItWorks = () => {
-  return <Card className="bg-carbon-fiber border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-carbon-fiber border-rap-gold/100 shadow-lg shadow-rap-gold/20 border-2">
       <CardHeader>
         <CardTitle className="text-rap-gold font-ceviche font-normal text-5xl">
           How It Works
