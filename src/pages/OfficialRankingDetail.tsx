@@ -74,6 +74,7 @@ const OfficialRankingDetail = () => {
       return;
     }
 
+    // This is now handled by the weighted voting system in VoteButton
     toast({
       title: "Vote submitted!",
       description: `Your vote for ${rapperName} has been recorded.`,
@@ -124,6 +125,7 @@ const OfficialRankingDetail = () => {
           onLoadMore={handleLoadMore}
           hasMore={hasMore}
           loading={false}
+          rankingId={ranking.id}
         />
       </main>
 

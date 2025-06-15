@@ -733,6 +733,61 @@ export type Database = {
         }
         Relationships: []
       }
+      ranking_votes: {
+        Row: {
+          created_at: string
+          id: string
+          member_status: Database["public"]["Enums"]["member_status"]
+          ranking_id: string
+          rapper_id: string
+          updated_at: string
+          user_id: string
+          vote_weight: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          member_status?: Database["public"]["Enums"]["member_status"]
+          ranking_id: string
+          rapper_id: string
+          updated_at?: string
+          user_id: string
+          vote_weight?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          member_status?: Database["public"]["Enums"]["member_status"]
+          ranking_id?: string
+          rapper_id?: string
+          updated_at?: string
+          user_id?: string
+          vote_weight?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_votes_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "official_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_images: {
         Row: {
           created_at: string
@@ -1281,6 +1336,10 @@ export type Database = {
       }
     }
     Functions: {
+      calculate_member_status: {
+        Args: { total_points: number }
+        Returns: Database["public"]["Enums"]["member_status"]
+      }
       can_manage_blog: {
         Args: { _user_id: string }
         Returns: boolean
@@ -1295,6 +1354,10 @@ export type Database = {
       }
       get_position_delta: {
         Args: { p_ranking_id: string; p_rapper_id: string }
+        Returns: number
+      }
+      get_vote_weight: {
+        Args: { status: Database["public"]["Enums"]["member_status"] }
         Returns: number
       }
       has_role: {

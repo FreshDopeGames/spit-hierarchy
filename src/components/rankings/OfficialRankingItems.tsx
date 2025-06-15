@@ -1,11 +1,10 @@
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import React from "react";
 import { Button } from "@/components/ui/button";
-import { Trophy, ChevronUp, ChevronDown, Minus, Users } from "lucide-react";
-import { Link } from "react-router-dom";
-import VoteButton from "@/components/VoteButton";
-import HotBadge from "@/components/analytics/HotBadge";
+import { Badge } from "@/components/ui/badge";
+import { TrendingUp, TrendingDown, Minus, Flame, ChevronDown } from "lucide-react";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
+import VoteButton from "@/components/VoteButton";
 
 interface OfficialRankingItemsProps {
   items: RankingItemWithDelta[];
@@ -15,129 +14,129 @@ interface OfficialRankingItemsProps {
   displayCount: number;
   onLoadMore: () => void;
   hasMore: boolean;
-  loading?: boolean;
+  loading: boolean;
+  rankingId?: string;
 }
 
-const OfficialRankingItems = ({ 
-  items, 
-  onVote, 
+const OfficialRankingItems = ({
+  items,
+  onVote,
   userLoggedIn,
   hotThreshold,
   displayCount,
   onLoadMore,
   hasMore,
-  loading = false
+  loading,
+  rankingId
 }: OfficialRankingItemsProps) => {
-  if (items.length === 0) {
-    return (
-      <Card className="bg-carbon-fiber border-rap-gold/40 mb-8 shadow-2xl shadow-rap-gold/20">
-        <CardHeader>
-          <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
-            <Trophy className="w-5 h-5" />
-            Official Rankings
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="text-center py-12">
-          <Users className="w-16 h-16 text-rap-gold/50 mx-auto mb-4" />
-          <h3 className="text-xl font-mogra text-rap-platinum mb-2">No Rappers in This Ranking Yet</h3>
-          <p className="text-rap-smoke font-merienda mb-4">
-            This ranking is being prepared and will be populated with rappers soon.
-          </p>
-          <p className="text-rap-smoke/70 font-merienda text-sm">
-            Check back later or explore other rankings in the meantime.
-          </p>
-        </CardContent>
-      </Card>
-    );
-  }
-
-  const displayItems = items.slice(0, displayCount);
+  const displayedItems = items.slice(0, displayCount);
 
   const getDeltaIcon = (delta: number) => {
-    if (delta < 0) {
-      return <ChevronUp className="w-4 h-4 text-green-500" />;
-    } else if (delta > 0) {
-      return <ChevronDown className="w-4 h-4 text-red-500" />;
-    } else {
-      return <Minus className="w-4 h-4 text-rap-gold" />;
-    }
+    if (delta > 0) return <TrendingDown className="w-4 h-4 text-red-400" />;
+    if (delta < 0) return <TrendingUp className="w-4 h-4 text-green-400" />;
+    return <Minus className="w-4 h-4 text-gray-400" />;
   };
 
+  const getDeltaText = (delta: number) => {
+    if (delta > 0) return `+${delta}`;
+    if (delta < 0) return `${delta}`;
+    return "0";
+  };
+
+  const isHot = (velocity: number) => velocity >= hotThreshold && velocity > 0;
+
   return (
-    <Card className="bg-carbon-fiber border-rap-gold/40 mb-8 shadow-2xl shadow-rap-gold/20">
-      <CardHeader>
-        <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
-          <Trophy className="w-5 h-5" />
-          Official Rankings ({items.length} total)
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        {displayItems.map((item) => {
-          const isHot = (item.vote_velocity_24_hours || 0) >= hotThreshold && hotThreshold > 0;
-          
-          return (
-            <div 
-              key={item.id}
-              className="flex flex-col sm:flex-row items-start sm:items-center gap-4 p-3 sm:p-4 bg-rap-carbon/30 rounded-lg hover:bg-rap-carbon/50 transition-colors relative border border-rap-gold/20"
-            >
-              <div className="flex items-center gap-2">
-                <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-gold to-rap-burgundy rounded-full flex items-center justify-center">
-                  <span className="text-rap-carbon font-bold text-lg font-mogra">#{item.position}</span>
-                </div>
-                <div className="flex items-center justify-center">
-                  {getDeltaIcon(item.position_delta)}
-                </div>
+    <div className="space-y-4">
+      {displayedItems.map((item, index) => (
+        <div
+          key={item.id}
+          className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 shadow-lg shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4 flex-1">
+              {/* Position */}
+              <div className="text-2xl font-bold text-rap-gold font-mogra w-12 text-center">
+                #{item.position}
               </div>
-              
-              <div className="flex-1 min-w-0">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <h3 className="text-rap-platinum font-semibold text-lg font-mogra truncate">{item.rapper?.name}</h3>
-                  {isHot && (
-                    <HotBadge isHot={isHot} voteVelocity={item.vote_velocity_24_hours || 0} variant="compact" />
-                  )}
-                </div>
-                <p className="text-rap-smoke font-merienda text-sm sm:text-base">
-                  {item.reason || `${item.rapper?.origin || 'Unknown Origin'}`}
-                </p>
+
+              {/* Rapper Info */}
+              <div className="flex-1">
+                <h3 className="text-lg font-bold text-rap-platinum font-kaushan">
+                  {item.rapper?.name}
+                </h3>
+                {item.rapper?.origin && (
+                  <p className="text-sm text-rap-smoke font-kaushan">
+                    {item.rapper.origin}
+                  </p>
+                )}
+                {item.reason && (
+                  <p className="text-sm text-rap-silver mt-1 font-kaushan italic">
+                    "{item.reason}"
+                  </p>
+                )}
               </div>
-              
-              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
-                <VoteButton
-                  onVote={() => onVote(item.rapper?.name || "")}
-                  disabled={!userLoggedIn}
-                  className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3"
-                />
-                <Link to={`/rapper/${item.rapper?.id}`} className="w-full sm:w-auto">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="text-rap-gold hover:text-rap-gold-light font-kaushan w-full sm:w-auto text-sm"
-                  >
-                    View Profile
-                  </Button>
-                </Link>
+
+              {/* Badges */}
+              <div className="flex items-center space-x-2">
+                {isHot(item.vote_velocity_24_hours || 0) && (
+                  <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none">
+                    <Flame className="w-3 h-3 mr-1" />
+                    Hot
+                  </Badge>
+                )}
+                
+                {item.position_delta !== 0 && (
+                  <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum">
+                    {getDeltaIcon(item.position_delta)}
+                    <span className="ml-1">{getDeltaText(item.position_delta)}</span>
+                  </Badge>
+                )}
               </div>
             </div>
-          );
-        })}
-        
-        {hasMore && (
-          <div className="text-center pt-4 border-t border-rap-gold/20">
-            <p className="text-rap-smoke font-kaushan text-sm mb-4">
-              Showing {displayCount} of {items.length} rappers.
-            </p>
-            <Button
-              onClick={onLoadMore}
-              disabled={loading}
-              variant="outline"
-              className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20 font-kaushan"
-            >
-              {loading ? "Loading..." : "Load More"}
-            </Button>
+
+            {/* Vote Button */}
+            <div className="ml-4">
+              <VoteButton
+                onVote={() => onVote(item.rapper?.name || "")}
+                disabled={!userLoggedIn}
+                showWeightedVoting={true}
+                rankingId={rankingId}
+                rapperId={item.rapper?.id}
+              />
+            </div>
           </div>
-        )}
-      </CardContent>
-    </Card>
+
+          {/* Vote Velocity Info */}
+          {(item.vote_velocity_24_hours || item.vote_velocity_7_days) && (
+            <div className="mt-3 pt-3 border-t border-rap-gold/20">
+              <div className="flex items-center space-x-4 text-xs text-rap-smoke">
+                {item.vote_velocity_24_hours && (
+                  <span>24h: {item.vote_velocity_24_hours} votes</span>
+                )}
+                {item.vote_velocity_7_days && (
+                  <span>7d: {item.vote_velocity_7_days} votes</span>
+                )}
+              </div>
+            </div>
+          )}
+        </div>
+      ))}
+
+      {/* Load More Button */}
+      {hasMore && (
+        <div className="text-center mt-6">
+          <Button
+            onClick={onLoadMore}
+            disabled={loading}
+            variant="outline"
+            className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+          >
+            <ChevronDown className="w-4 h-4 mr-2" />
+            {loading ? "Loading..." : `Load More (${items.length - displayCount} remaining)`}
+          </Button>
+        </div>
+      )}
+    </div>
   );
 };
 
