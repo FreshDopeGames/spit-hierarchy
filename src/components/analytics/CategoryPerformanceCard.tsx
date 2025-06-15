@@ -30,7 +30,7 @@ const CategoryPerformanceCard = () => {
   if (!categoryAnalytics || categoryAnalytics.length === 0) return null;
   return <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
       <CardHeader>
-        <CardTitle className="text-rap-gold font-ceviche flex items-center gap-2 font-thin text-3xl">
+        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 font-thin text-3xl">
           <TrendingUp className="w-5 h-5" />
           Category Performance
         </CardTitle>
