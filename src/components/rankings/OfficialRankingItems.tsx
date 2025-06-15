@@ -76,10 +76,12 @@ const OfficialRankingItems = ({
                     {item.rapper.origin}
                   </p>
                 )}
-                {/* Vote Count Display - now showing ranking-specific votes */}
-                <p className="text-sm text-white font-bold font-kaushan">
-                  Votes: {formatVoteCount(item.ranking_votes)}
-                </p>
+                {/* Vote Count Display - only show if votes > 0 */}
+                {item.ranking_votes && item.ranking_votes > 0 && (
+                  <p className="text-sm text-white font-bold font-kaushan">
+                    Votes: {formatVoteCount(item.ranking_votes)}
+                  </p>
+                )}
                 {item.reason && (
                   <p className="text-sm text-rap-silver mt-1 font-kaushan italic">
                     "{item.reason}"
@@ -117,14 +119,15 @@ const OfficialRankingItems = ({
             </div>
           </div>
 
-          {/* Vote Velocity Info */}
-          {(item.vote_velocity_24_hours || item.vote_velocity_7_days) && (
+          {/* Vote Velocity Info - only show non-zero values */}
+          {((item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0) || 
+            (item.vote_velocity_7_days && item.vote_velocity_7_days > 0)) && (
             <div className="mt-3 pt-3 border-t border-rap-gold/20">
               <div className="flex items-center space-x-4 text-xs text-rap-smoke">
-                {item.vote_velocity_24_hours && (
+                {item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0 && (
                   <span>24h: {item.vote_velocity_24_hours} votes</span>
                 )}
-                {item.vote_velocity_7_days && (
+                {item.vote_velocity_7_days && item.vote_velocity_7_days > 0 && (
                   <span>7d: {item.vote_velocity_7_days} votes</span>
                 )}
               </div>
