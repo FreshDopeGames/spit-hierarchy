@@ -13,7 +13,7 @@ interface StatusThresholds {
   silver: { min: 100; max: 299; multiplier: 2 };
   gold: { min: 300; max: 599; multiplier: 3 };
   platinum: { min: 600; max: 999; multiplier: 4 };
-  diamond: { min: 1000; max: Infinity; multiplier: 5 };
+  diamond: { min: 1000; max: number; multiplier: 5 };
 }
 
 const STATUS_THRESHOLDS: StatusThresholds = {
