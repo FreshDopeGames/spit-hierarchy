@@ -17,6 +17,11 @@ interface TopRappersGridProps {
   rappers?: Rapper[];
   showViewAll?: boolean;
   viewAllLink?: string;
+  rankingId?: string; // For ranking-specific vote counts
+}
+
+interface RapperWithVotes extends Rapper {
+  ranking_votes?: number;
 }
 
 const RapperAvatar = ({
@@ -64,7 +69,8 @@ const TopRappersGrid = ({
   description = "The undisputed legends who shaped the culture",
   rappers: providedRappers,
   showViewAll = false,
-  viewAllLink = "/all-rappers"
+  viewAllLink = "/all-rappers",
+  rankingId
 }: TopRappersGridProps) => {
   // Only fetch default data if no rappers are provided
   const {
@@ -91,7 +97,37 @@ const TopRappersGrid = ({
     refetchIntervalInBackground: true,
   });
 
+  // Fetch ranking-specific vote counts if rankingId is provided
+  const { data: rankingVoteCounts = {} } = useQuery({
+    queryKey: ["ranking-vote-counts", rankingId],
+    queryFn: async () => {
+      if (!rankingId) return {};
+      
+      const { data, error } = await supabase
+        .from("ranking_votes")
+        .select("rapper_id, vote_weight")
+        .eq("ranking_id", rankingId);
+      
+      if (error) throw error;
+      
+      // Aggregate vote counts by rapper
+      const counts: Record<string, number> = {};
+      data.forEach(vote => {
+        counts[vote.rapper_id] = (counts[vote.rapper_id] || 0) + vote.vote_weight;
+      });
+      
+      return counts;
+    },
+    enabled: !!rankingId
+  });
+
   const rappers = providedRappers || fetchedRappers;
+
+  // Enhance rappers with ranking-specific vote counts
+  const rappersWithVotes: RapperWithVotes[] = rappers.map(rapper => ({
+    ...rapper,
+    ranking_votes: rankingId ? (rankingVoteCounts[rapper.id] || 0) : undefined
+  }));
 
   if (isLoading && !providedRappers) {
     return (
@@ -149,7 +185,7 @@ const TopRappersGrid = ({
           <div className="space-y-8">
             {/* Top 2 in one row - TALLER CARDS for mobile */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-              {rappers.slice(0, 2).map((rapper, index) => 
+              {rappersWithVotes.slice(0, 2).map((rapper, index) => 
                 <div key={rapper.id} className="flex items-center space-x-4 sm:space-x-6 p-6 sm:p-4 bg-gradient-to-r from-rap-carbon-light/40 to-transparent rounded-lg border border-rap-gold/30 min-h-[120px] sm:min-h-[100px]">
                   <div className="flex items-center justify-center w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-rap-gold text-rap-charcoal font-mogra text-base sm:text-sm flex-shrink-0">
                     #{index + 1}
@@ -161,17 +197,27 @@ const TopRappersGrid = ({
                         {rapper.name}
                       </h3>
                     </Link>
-                    {rapper.real_name && 
+                    {rapper.origin && 
                       <p className="text-rap-smoke text-sm sm:text-sm font-kaushan mt-1 truncate">
-                        {rapper.real_name}
+                        {rapper.origin}
                       </p>
                     }
-                    {/* Show vote count if available */}
-                    {rapper.total_votes && rapper.total_votes > 0 && (
-                      <p className="text-rap-gold text-xs font-bold mt-1">
-                        {rapper.total_votes.toLocaleString()} votes
-                      </p>
+                    {/* Overall Rating Display */}
+                    {rapper.average_rating && rapper.average_rating > 0 && (
+                      <div className="flex items-center gap-1 mt-1">
+                        <Star className="w-3 h-3 text-rap-gold fill-current" />
+                        <span className="text-rap-gold text-sm font-bold">
+                          {Number(rapper.average_rating).toFixed(1)} Overall Rating
+                        </span>
+                      </div>
                     )}
+                    {/* Vote count - ranking-specific if available, otherwise global */}
+                    <p className="text-rap-silver text-xs font-bold mt-1">
+                      {rankingId && rapper.ranking_votes !== undefined 
+                        ? `${rapper.ranking_votes.toLocaleString()} ranking votes`
+                        : `${(rapper.total_votes || 0).toLocaleString()} total votes`
+                      }
+                    </p>
                   </div>
                 </div>
               )}
@@ -179,7 +225,7 @@ const TopRappersGrid = ({
             
             {/* Next 3 in one row - SHORTER CARDS for mobile */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-              {rappers.slice(2, 5).map((rapper, index) => 
+              {rappersWithVotes.slice(2, 5).map((rapper, index) => 
                 <div key={rapper.id} className="flex flex-col items-center space-y-2 sm:space-y-3 p-4 sm:p-4 bg-gradient-to-b from-rap-carbon-light/20 to-transparent rounded-lg border border-rap-gold/10 min-h-[100px] sm:min-h-[120px]">
                   <div className="flex items-center justify-center w-6 h-6 sm:w-6 sm:h-6 rounded-full bg-rap-silver text-rap-charcoal font-mogra text-xs flex-shrink-0">
                     #{index + 3}
@@ -191,17 +237,27 @@ const TopRappersGrid = ({
                         {rapper.name}
                       </h4>
                     </Link>
-                    {rapper.real_name && 
+                    {rapper.origin && 
                       <p className="text-rap-smoke text-xs sm:text-xs font-kaushan mt-1 truncate">
-                        {rapper.real_name}
+                        {rapper.origin}
                       </p>
                     }
-                    {/* Show vote count if available */}
-                    {rapper.total_votes && rapper.total_votes > 0 && (
-                      <p className="text-rap-gold text-xs font-bold mt-1">
-                        {rapper.total_votes.toLocaleString()}
-                      </p>
+                    {/* Overall Rating Display */}
+                    {rapper.average_rating && rapper.average_rating > 0 && (
+                      <div className="flex items-center justify-center gap-1 mt-1">
+                        <Star className="w-3 h-3 text-rap-gold fill-current" />
+                        <span className="text-rap-gold text-xs font-bold">
+                          {Number(rapper.average_rating).toFixed(1)}
+                        </span>
+                      </div>
                     )}
+                    {/* Vote count - ranking-specific if available, otherwise global */}
+                    <p className="text-rap-silver text-xs font-bold mt-1">
+                      {rankingId && rapper.ranking_votes !== undefined 
+                        ? `${rapper.ranking_votes.toLocaleString()}`
+                        : `${(rapper.total_votes || 0).toLocaleString()}`
+                      }
+                    </p>
                   </div>
                 </div>
               )}
