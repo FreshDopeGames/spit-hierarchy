@@ -58,9 +58,9 @@ const OfficialRankingItems = ({
         >
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4 flex-1">
-              {/* Position */}
+              {/* Dynamic Position based on votes */}
               <div className="text-2xl font-bold text-rap-gold font-mogra w-12 text-center">
-                #{item.position}
+                #{item.dynamic_position}
               </div>
 
               {/* Rapper Info */}
@@ -73,9 +73,9 @@ const OfficialRankingItems = ({
                     {item.rapper.origin}
                   </p>
                 )}
-                {/* Vote Count Display */}
+                {/* Vote Count Display - now showing ranking-specific votes */}
                 <p className="text-sm text-white font-bold font-kaushan">
-                  Votes: {formatVoteCount(item.rapper?.total_votes || 0)}
+                  Votes: {formatVoteCount(item.ranking_votes)}
                 </p>
                 {item.reason && (
                   <p className="text-sm text-rap-silver mt-1 font-kaushan italic">

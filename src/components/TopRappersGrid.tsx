@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -123,11 +122,16 @@ const TopRappersGrid = ({
 
   const rappers = providedRappers || fetchedRappers;
 
-  // Enhance rappers with ranking-specific vote counts
+  // Enhance rappers with ranking-specific vote counts and sort by votes when rankingId is present
   const rappersWithVotes: RapperWithVotes[] = rappers.map(rapper => ({
     ...rapper,
     ranking_votes: rankingId ? (rankingVoteCounts[rapper.id] || 0) : undefined
   }));
+
+  // Sort by ranking votes if we have rankingId, otherwise keep original order
+  const sortedRappers = rankingId 
+    ? rappersWithVotes.sort((a, b) => (b.ranking_votes || 0) - (a.ranking_votes || 0))
+    : rappersWithVotes;
 
   if (isLoading && !providedRappers) {
     return (
@@ -185,7 +189,7 @@ const TopRappersGrid = ({
           <div className="space-y-8">
             {/* Top 2 in one row - TALLER CARDS for mobile */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-              {rappersWithVotes.slice(0, 2).map((rapper, index) => 
+              {sortedRappers.slice(0, 2).map((rapper, index) => 
                 <div key={rapper.id} className="flex items-center space-x-4 sm:space-x-6 p-6 sm:p-4 bg-gradient-to-r from-rap-carbon-light/40 to-transparent rounded-lg border border-rap-gold/30 min-h-[120px] sm:min-h-[100px]">
                   <div className="flex items-center justify-center w-10 h-10 sm:w-8 sm:h-8 rounded-full bg-rap-gold text-rap-charcoal font-mogra text-base sm:text-sm flex-shrink-0">
                     #{index + 1}
@@ -216,7 +220,7 @@ const TopRappersGrid = ({
             
             {/* Next 3 in one row - SHORTER CARDS for mobile */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-              {rappersWithVotes.slice(2, 5).map((rapper, index) => 
+              {sortedRappers.slice(2, 5).map((rapper, index) => 
                 <div key={rapper.id} className="flex flex-col items-center space-y-2 sm:space-y-3 p-4 sm:p-4 bg-gradient-to-b from-rap-carbon-light/20 to-transparent rounded-lg border border-rap-gold/10 min-h-[100px] sm:min-h-[120px]">
                   <div className="flex items-center justify-center w-6 h-6 sm:w-6 sm:h-6 rounded-full bg-rap-silver text-rap-charcoal font-mogra text-xs flex-shrink-0">
                     #{index + 3}
