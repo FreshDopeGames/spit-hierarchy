@@ -3,15 +3,25 @@ import { supabase } from "@/integrations/supabase/client";
 import { UserRanking } from "@/types/userRanking";
 import { formatTimeAgo } from "@/utils/userRankingUtils";
 
-interface RankingPreviewItem {
-  item_position: number;
-  item_reason: string | null;
-  rapper_name: string;
+interface DatabaseRanking {
+  id: string;
+  title: string;
+  description: string | null;
+  user_id: string;
+  created_at: string;
+  slug: string;
+  is_public: boolean;
+  profiles: {
+    username: string;
+    full_name: string | null;
+  } | null;
 }
 
-interface PreviewData {
+interface PreviewItem {
   ranking_id: string;
-  items: RankingPreviewItem[];
+  position: number;
+  reason: string | null;
+  rapper_name: string;
 }
 
 export async function fetchUserRankingsOptimized(
@@ -42,35 +52,51 @@ export async function fetchUserRankingsOptimized(
 
   if (!rankings || rankings.length === 0) return [];
 
-  // Get preview items for all rankings in separate calls
+  // Get all preview items for all rankings in a single query
   const rankingIds = rankings.map(r => r.id);
-  const itemPromises = rankingIds.map(async (id) => {
-    const { data, error } = await supabase.rpc('get_user_ranking_preview_items', { 
-      ranking_uuid: id 
-    });
-    
-    if (error) {
-      console.error(`Error fetching preview items for ranking ${id}:`, error);
-      return { ranking_id: id, items: [] };
-    }
-    
-    return { 
-      ranking_id: id, 
-      items: data || [] 
-    };
-  });
+  
+  const { data: allPreviewItems, error: previewError } = await supabase
+    .from("user_ranking_items")
+    .select(`
+      ranking_id,
+      position,
+      reason,
+      rappers!inner(name)
+    `)
+    .in("ranking_id", rankingIds)
+    .lte("position", 5)
+    .order("position", { ascending: true });
 
-  const allPreviewResults = await Promise.all(itemPromises);
+  if (previewError) {
+    console.error("Error fetching preview items:", previewError);
+  }
+
+  // Group preview items by ranking_id for efficient lookup
+  const previewItemsMap = new Map<string, PreviewItem[]>();
+  
+  if (allPreviewItems) {
+    allPreviewItems.forEach((item: any) => {
+      const rankingId = item.ranking_id;
+      if (!previewItemsMap.has(rankingId)) {
+        previewItemsMap.set(rankingId, []);
+      }
+      previewItemsMap.get(rankingId)!.push({
+        ranking_id: rankingId,
+        position: item.position,
+        reason: item.reason,
+        rapper_name: item.rappers?.name || "Unknown"
+      });
+    });
+  }
 
   // Transform the data to match the UserRanking interface
-  const transformedRankings: UserRanking[] = rankings.map((ranking: any) => {
-    const previewData = allPreviewResults.find((p: PreviewData) => p.ranking_id === ranking.id);
-    const previewItems = previewData?.items || [];
+  const transformedRankings: UserRanking[] = rankings.map((ranking: DatabaseRanking) => {
+    const previewItems = previewItemsMap.get(ranking.id) || [];
 
-    const topRappers = previewItems.map((item: RankingPreviewItem) => ({
-      rank: item.item_position,
+    const topRappers = previewItems.map((item: PreviewItem) => ({
+      rank: item.position,
       name: item.rapper_name,
-      reason: item.item_reason || "",
+      reason: item.reason || "",
     }));
 
     return {
