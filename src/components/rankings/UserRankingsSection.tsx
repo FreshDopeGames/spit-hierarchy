@@ -47,7 +47,7 @@ const UserRankingsSection = ({
           <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">Member Made Rankings</h2>
         </div>
         
-        {/* Filter Tabs */}
+        {/* Filter Tabs and Create Button */}
         <div className="flex flex-wrap items-center gap-2 sm:gap-4">
           <Button
             variant={filter === "all" ? "default" : "outline"}
@@ -83,6 +83,14 @@ const UserRankingsSection = ({
               }
             >
               Mine
+            </Button>
+          )}
+          
+          {/* Create Ranking Button - moved here from header */}
+          {user && (
+            <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30 text-xs sm:text-sm">
+              <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+              Create Ranking
             </Button>
           )}
         </div>
