@@ -1,10 +1,8 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Loader2, Mic } from "lucide-react";
-
 interface AllRappersFiltersProps {
   searchInput: string;
   searchTerm: string;
@@ -16,7 +14,6 @@ interface AllRappersFiltersProps {
   onSortChange: (value: string) => void;
   onOrderChange: (value: string) => void;
 }
-
 const AllRappersFilters = ({
   searchInput,
   searchTerm,
@@ -26,10 +23,9 @@ const AllRappersFilters = ({
   onSearchInput,
   onLocationFilter,
   onSortChange,
-  onOrderChange,
+  onOrderChange
 }: AllRappersFiltersProps) => {
-  return (
-    <div className="bg-carbon-fiber border-2 border-rap-burgundy/40 rounded-lg p-6 mb-8 backdrop-blur-sm shadow-lg">
+  return <div className="bg-carbon-fiber border-2 border-rap-burgundy/40 rounded-lg p-6 mb-8 backdrop-blur-sm shadow-lg py-[23px]">
       <div className="flex items-center gap-3 mb-4">
         <Mic className="text-rap-silver w-6 h-6" />
         <h3 className="text-rap-silver font-graffiti text-xl animate-text-glow">Find Your Flow</h3>
@@ -40,26 +36,14 @@ const AllRappersFilters = ({
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-silver w-4 h-4" />
-          <Input
-            placeholder="Search the culture..."
-            value={searchInput}
-            onChange={(e) => onSearchInput(e.target.value)}
-            className="pl-10 bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street"
-          />
-          {searchInput !== searchTerm && (
-            <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+          <Input placeholder="Search the culture..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-10 bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street" />
+          {searchInput !== searchTerm && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-rap-silver animate-spin" />
-            </div>
-          )}
+            </div>}
         </div>
 
         {/* Location Filter */}
-        <Input
-          placeholder="Filter by city/state..."
-          value={locationFilter}
-          onChange={(e) => onLocationFilter(e.target.value)}
-          className="bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street"
-        />
+        <Input placeholder="Filter by city/state..." value={locationFilter} onChange={e => onLocationFilter(e.target.value)} className="bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street" />
 
         {/* Sort By */}
         <Select value={sortBy} onValueChange={onSortChange}>
@@ -85,8 +69,6 @@ const AllRappersFilters = ({
           </SelectContent>
         </Select>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default AllRappersFilters;
