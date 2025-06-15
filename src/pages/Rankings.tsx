@@ -120,7 +120,7 @@ const Rankings = () => {
       
       <div className="relative z-10">
         {/* Header */}
-        <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
+        <header className="sticky top-0 z-50 bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20 backdrop-blur-sm">
           <div className="max-w-6xl mx-auto flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
               <ArrowLeft className="w-5 h-5" />
