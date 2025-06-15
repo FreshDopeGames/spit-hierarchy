@@ -64,7 +64,7 @@ const RapperDetail = () => {
           <Link to="/">
             <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 font-kaushan">
               <ArrowLeft className="w-4 h-4 mr-2" />
-              Return to Dynasty
+              Back To Home
             </Button>
           </Link>
           <Card className="bg-carbon-fiber border-rap-burgundy/30 shadow-lg shadow-rap-burgundy/20">
@@ -87,7 +87,7 @@ const RapperDetail = () => {
         <Link to="/">
           <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
             <ArrowLeft className="w-4 h-4 mr-2" />
-            Return to Dynasty
+            Back To Home
           </Button>
         </Link>
 
