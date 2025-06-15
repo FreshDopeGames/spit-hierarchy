@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -36,7 +35,7 @@ const Rankings = () => {
     isFetchingNextPage
   } = useOptimizedUserRankings();
 
-  // Flatten the paginated data
+  // Flatten the paginated data with proper type handling
   const userRankings = userRankingPages?.pages.flatMap(page => page.rankings) || [];
 
   useEffect(() => {

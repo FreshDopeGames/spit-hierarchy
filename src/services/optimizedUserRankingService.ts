@@ -9,6 +9,11 @@ interface RankingPreviewItem {
   rapper_name: string;
 }
 
+interface PreviewData {
+  ranking_id: string;
+  items: RankingPreviewItem[];
+}
+
 export async function fetchUserRankingsOptimized(
   limit: number = 20,
   offset: number = 0
@@ -37,33 +42,29 @@ export async function fetchUserRankingsOptimized(
 
   if (!rankings || rankings.length === 0) return [];
 
-  // Get preview items for all rankings in a single batch
+  // Get preview items for all rankings in separate calls
   const rankingIds = rankings.map(r => r.id);
-  const { data: allPreviewItems, error: itemsError } = await supabase
-    .rpc('get_user_ranking_preview_items', { ranking_uuid: rankingIds[0] })
-    .then(async () => {
-      // Since RPC doesn't support arrays directly, we'll do individual calls but batch them
-      const itemPromises = rankingIds.map(id => 
-        supabase.rpc('get_user_ranking_preview_items', { ranking_uuid: id })
-      );
-      
-      const results = await Promise.all(itemPromises);
-      return {
-        data: results.map((result, index) => ({
-          ranking_id: rankingIds[index],
-          items: result.data || []
-        })),
-        error: results.find(r => r.error)?.error || null
-      };
+  const itemPromises = rankingIds.map(async (id) => {
+    const { data, error } = await supabase.rpc('get_user_ranking_preview_items', { 
+      ranking_uuid: id 
     });
+    
+    if (error) {
+      console.error(`Error fetching preview items for ranking ${id}:`, error);
+      return { ranking_id: id, items: [] };
+    }
+    
+    return { 
+      ranking_id: id, 
+      items: data || [] 
+    };
+  });
 
-  if (itemsError) {
-    console.error("Error fetching preview items:", itemsError);
-  }
+  const allPreviewResults = await Promise.all(itemPromises);
 
   // Transform the data to match the UserRanking interface
   const transformedRankings: UserRanking[] = rankings.map((ranking: any) => {
-    const previewData = allPreviewItems?.data?.find((p: any) => p.ranking_id === ranking.id);
+    const previewData = allPreviewResults.find((p: PreviewData) => p.ranking_id === ranking.id);
     const previewItems = previewData?.items || [];
 
     const topRappers = previewItems.map((item: RankingPreviewItem) => ({
