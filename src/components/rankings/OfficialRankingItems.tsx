@@ -68,7 +68,7 @@ const OfficialRankingItems = ({
 
               {/* Rapper Info */}
               <div className="flex-1">
-                <h3 className="text-lg font-bold text-rap-platinum font-kaushan">
+                <h3 className="text-xl font-bold text-rap-platinum font-kaushan">
                   {item.rapper?.name}
                 </h3>
                 {item.rapper?.origin && (
