@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trophy, Target, Lock } from "lucide-react";
@@ -23,8 +22,22 @@ const AchievementTabsContent = ({
   const sortedEarned = sortAchievementsByRarity([...earnedAchievements]);
   // Use all achievements for progress/locked filtering to ensure accuracy:
   const notEarned = achievements.filter(a => !a.is_earned);
-  const inProgress = sortAchievementsByRarity([...notEarned.filter(a => a.progress_percentage > 0)]);
-  const locked = sortAchievementsByRarity([...notEarned.filter(a => a.progress_percentage === 0)]);
+
+  // Updated logic: "progress" means not earned and progress between 0 and 100
+  const inProgress = sortAchievementsByRarity([
+    ...notEarned.filter(a => {
+      const pct = Number(a.progress_percentage) || 0;
+      return pct > 0 && pct < 100;
+    })
+  ]);
+
+  // "locked" means not earned and no progress yet
+  const locked = sortAchievementsByRarity([
+    ...notEarned.filter(a => {
+      const pct = Number(a.progress_percentage) || 0;
+      return pct === 0;
+    })
+  ]);
 
   // Transform achievement data to match AchievementCard expectations
   const transformAchievement = (achievement: Achievement) => ({
