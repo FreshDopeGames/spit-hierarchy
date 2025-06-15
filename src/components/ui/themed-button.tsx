@@ -1,4 +1,3 @@
-
 import * as React from "react";
 import { Slot } from "@radix-ui/react-slot";
 import { cva, type VariantProps } from "class-variance-authority";
@@ -15,7 +14,7 @@ const themedButtonVariants = cva(
         secondary: "bg-[var(--theme-secondary)] text-[var(--theme-textLight)] hover:bg-[var(--theme-secondaryDark)] font-[var(--theme-font-heading)]",
         ghost: "text-[var(--theme-text)] hover:bg-[var(--theme-surface)]",
         accent: "bg-[var(--theme-accent)] text-[var(--theme-textLight)] hover:bg-[var(--theme-accentDark)] font-[var(--theme-font-heading)]",
-        gradient: "bg-gradient-to-r from-[var(--theme-secondary)] via-[var(--theme-primary)] to-[var(--theme-accent)] text-[var(--theme-textLight)] hover:opacity-90 font-[var(--theme-font-heading)]",
+        gradient: "bg-gradient-to-r from-[var(--theme-secondary)] via-[var(--theme-primary)] to-[var(--theme-accent)] text-[var(--theme-background)] hover:opacity-90 font-[var(--theme-font-heading)]",
       },
       size: {
         default: "h-10 px-4 py-2",
