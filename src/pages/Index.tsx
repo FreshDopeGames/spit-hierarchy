@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -113,7 +112,7 @@ const Index = () => {
 
           {/* All Official Rankings Button */}
           <div className="mb-12 text-center">
-            <Link to="/official-rankings" className="w-full sm:w-auto">
+            <Link to="/official-rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
               <Button 
                 variant="outline" 
                 className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal font-mogra text-sm px-6 py-3"

@@ -1,4 +1,3 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -23,7 +22,7 @@ const RapperAvatar = ({ rapper }: { rapper: Rapper }) => {
   const { data: imageUrl } = useRapperImage(rapper.id);
   
   return (
-    <Link to={`/rapper/${rapper.id}`} className="group">
+    <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
       <div className="flex flex-col items-center space-y-2">
         <div className="w-16 h-16 rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors">
           {imageUrl ? (
@@ -117,7 +116,7 @@ const TopRappersGrid = ({
             </div>
             
             {showViewAll && (
-              <Link to={viewAllLink} className="w-full sm:w-auto">
+              <Link to={viewAllLink} className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
                 <Button 
                   className="w-full sm:w-auto bg-rap-gold text-rap-charcoal hover:bg-rap-gold/80 hover:text-rap-carbon font-mogra text-sm px-3 py-2"
                 >
@@ -138,7 +137,7 @@ const TopRappersGrid = ({
                   </div>
                   <RapperAvatar rapper={rapper} />
                   <div className="flex-1">
-                    <Link to={`/rapper/${rapper.id}`} className="group">
+                    <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
                       <h3 className="text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors">
                         {rapper.name}
                       </h3>
@@ -162,7 +161,7 @@ const TopRappersGrid = ({
                   </div>
                   <RapperAvatar rapper={rapper} />
                   <div className="text-center">
-                    <Link to={`/rapper/${rapper.id}`} className="group">
+                    <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
                       <h4 className="text-base font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors">
                         {rapper.name}
                       </h4>
