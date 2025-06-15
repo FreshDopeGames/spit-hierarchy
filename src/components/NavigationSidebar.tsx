@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -104,7 +103,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/all-rappers" onClick={() => handleNavClick('/all-rappers')}>
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                 <Music className="w-4 h-4 mr-3" />
-                All Artists
+                All Rappers
               </Button>
             </Link>
 
