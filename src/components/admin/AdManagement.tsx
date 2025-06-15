@@ -21,6 +21,13 @@ interface AdPlacement {
   updated_at: string;
 }
 
+interface PageTemplate {
+  id: string;
+  template_name: string;
+  route_pattern: string;
+  available_placements: string[];
+}
+
 interface FormData {
   placement_name: string;
   ad_unit_id: string;
@@ -49,7 +56,7 @@ const AdManagement = () => {
     }
   });
 
-  const { data: templates } = useQuery({
+  const { data: pageTemplates } = useQuery({
     queryKey: ["page-templates"],
     queryFn: async () => {
       const { data, error } = await supabase
@@ -58,7 +65,7 @@ const AdManagement = () => {
         .order("template_name");
       
       if (error) throw error;
-      return data;
+      return data as PageTemplate[];
     }
   });
 
@@ -194,6 +201,7 @@ const AdManagement = () => {
               onSubmit={handleSubmit}
               initialData={editingPlacement}
               isLoading={createMutation.isPending || updateMutation.isPending}
+              pageTemplates={pageTemplates || []}
             />
             <div className="flex gap-2 mt-4">
               <Button 

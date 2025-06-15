@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -20,13 +21,21 @@ const adPlacementSchema = z.object({
 
 type AdPlacementFormData = z.infer<typeof adPlacementSchema>;
 
+interface PageTemplate {
+  id: string;
+  template_name: string;
+  route_pattern: string;
+  available_placements: string[];
+}
+
 interface AdPlacementFormProps {
   onSubmit: (data: AdPlacementFormData) => void;
   initialData?: Partial<AdPlacementFormData>;
   isLoading?: boolean;
+  pageTemplates?: PageTemplate[];
 }
 
-const AdPlacementForm = ({ onSubmit, initialData, isLoading }: AdPlacementFormProps) => {
+const AdPlacementForm = ({ onSubmit, initialData, isLoading, pageTemplates = [] }: AdPlacementFormProps) => {
   const form = useForm<AdPlacementFormData>({
     resolver: zodResolver(adPlacementSchema),
     defaultValues: {
@@ -38,6 +47,14 @@ const AdPlacementForm = ({ onSubmit, initialData, isLoading }: AdPlacementFormPr
       is_active: initialData?.is_active ?? true,
     },
   });
+
+  const handlePageSelection = (templateName: string) => {
+    const selectedTemplate = pageTemplates.find(template => template.template_name === templateName);
+    if (selectedTemplate) {
+      form.setValue("page_name", selectedTemplate.template_name);
+      form.setValue("page_route", selectedTemplate.route_pattern);
+    }
+  };
 
   const handleSubmit = (data: AdPlacementFormData) => {
     console.log("Submitting ad placement data:", data);
@@ -104,10 +121,21 @@ const AdPlacementForm = ({ onSubmit, initialData, isLoading }: AdPlacementFormPr
           name="page_name"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Page Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter page name" {...field} />
-              </FormControl>
+              <FormLabel>Page Template</FormLabel>
+              <Select onValueChange={handlePageSelection} value={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select page template" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {pageTemplates.map((template) => (
+                    <SelectItem key={template.id} value={template.template_name}>
+                      {template.template_name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}
@@ -120,7 +148,7 @@ const AdPlacementForm = ({ onSubmit, initialData, isLoading }: AdPlacementFormPr
             <FormItem>
               <FormLabel>Page Route</FormLabel>
               <FormControl>
-                <Input placeholder="Enter page route (e.g., /rankings)" {...field} />
+                <Input placeholder="Page route will be auto-populated" {...field} readOnly />
               </FormControl>
               <FormMessage />
             </FormItem>
