@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,12 +8,14 @@ import ColorPaletteTab from "./theme/ColorPaletteTab";
 import TypographyTab from "./theme/TypographyTab";
 import LayoutTab from "./theme/LayoutTab";
 import ThemePreview from "./theme/ThemePreview";
+
 const ThemeManagement = () => {
   const {
     theme,
     updateTheme,
     resetTheme
   } = useTheme();
+  
   const handleColorChange = (colorKey: string, value: string) => {
     updateTheme({
       colors: {
@@ -21,6 +24,7 @@ const ThemeManagement = () => {
       }
     });
   };
+  
   const handleFontChange = (fontKey: string, value: string) => {
     updateTheme({
       fonts: {
@@ -29,26 +33,26 @@ const ThemeManagement = () => {
       }
     });
   };
-  return <div className="space-y-6">
+
+  return (
+    <div className="space-y-6">
       <ThemeManagementHeader theme={theme} updateTheme={updateTheme} resetTheme={resetTheme} />
 
       <Tabs defaultValue="colors" className="space-y-4">
-        <div className="overflow-x-auto">
-          <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0 py-[10px]">
-            <TabsTrigger value="colors" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-              <Palette className="w-4 h-4 mr-2" />
-              Colors
-            </TabsTrigger>
-            <TabsTrigger value="fonts" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-              <Type className="w-4 h-4 mr-2" />
-              Typography
-            </TabsTrigger>
-            <TabsTrigger value="layout" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
-              <Layout className="w-4 h-4 mr-2" />
-              Layout
-            </TabsTrigger>
-          </TabsList>
-        </div>
+        <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full grid grid-cols-3 p-2">
+          <TabsTrigger value="colors" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2">
+            <Palette className="w-4 h-4 mr-2" />
+            Colors
+          </TabsTrigger>
+          <TabsTrigger value="fonts" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2">
+            <Type className="w-4 h-4 mr-2" />
+            Typography
+          </TabsTrigger>
+          <TabsTrigger value="layout" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2">
+            <Layout className="w-4 h-4 mr-2" />
+            Layout
+          </TabsTrigger>
+        </TabsList>
 
         <TabsContent value="colors" className="space-y-4">
           <ColorPaletteTab theme={theme} onColorChange={handleColorChange} />
@@ -64,6 +68,8 @@ const ThemeManagement = () => {
       </Tabs>
 
       <ThemePreview />
-    </div>;
+    </div>
+  );
 };
+
 export default ThemeManagement;
