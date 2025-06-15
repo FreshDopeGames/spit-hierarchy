@@ -88,10 +88,12 @@ const UserRankingsSection = ({
           
           {/* Create Ranking Button - moved here from header */}
           {user && (
-            <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30 text-xs sm:text-sm">
-              <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
-              Create Ranking
-            </Button>
+            <Link to="/create-ranking">
+              <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30 text-xs sm:text-sm">
+                <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                Create Ranking
+              </Button>
+            </Link>
           )}
         </div>
       </div>
@@ -136,10 +138,12 @@ const UserRankingsSection = ({
             }
           </p>
           {user && (
-            <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra">
-              <Plus className="w-4 h-4 mr-2" />
-              Create Your First Ranking
-            </Button>
+            <Link to="/create-ranking">
+              <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra">
+                <Plus className="w-4 h-4 mr-2" />
+                Create Your First Ranking
+              </Button>
+            </Link>
           )}
         </div>
       )}

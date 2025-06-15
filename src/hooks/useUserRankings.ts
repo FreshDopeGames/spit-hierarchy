@@ -1,7 +1,7 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "./useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { validateContent } from "@/utils/contentModeration";
 import { generateSlug } from "@/utils/userRankingUtils";
 import { 
@@ -51,6 +51,7 @@ export const useCreateUserRanking = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
+      queryClient.invalidateQueries({ queryKey: ["optimized-user-rankings"] });
       toast({
         title: "Ranking created!",
         description: "Your ranking has been created successfully.",
