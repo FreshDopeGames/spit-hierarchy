@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Users, Star, Trophy, Plus } from "lucide-react";
+import { Users, Star, Trophy, Plus, ChevronDown } from "lucide-react";
 import RankingCard from "./RankingCard";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRanking } from "@/types/userRanking";
@@ -11,9 +11,18 @@ import { UserRanking } from "@/types/userRanking";
 interface UserRankingsSectionProps {
   rankings: UserRanking[];
   onRankingClick: (id: string) => void;
+  hasNextPage?: boolean;
+  onLoadMore?: () => void;
+  isLoadingMore?: boolean;
 }
 
-const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionProps) => {
+const UserRankingsSection = ({ 
+  rankings, 
+  onRankingClick, 
+  hasNextPage, 
+  onLoadMore, 
+  isLoadingMore 
+}: UserRankingsSectionProps) => {
   const { user } = useAuth();
   const [filter, setFilter] = useState<"all" | "my-rankings" | "popular">("all");
 
@@ -89,6 +98,21 @@ const UserRankingsSection = ({ rankings, onRankingClick }: UserRankingsSectionPr
           />
         ))}
       </div>
+
+      {/* Load More Button */}
+      {hasNextPage && onLoadMore && (
+        <div className="text-center mt-8">
+          <Button
+            onClick={onLoadMore}
+            disabled={isLoadingMore}
+            variant="outline"
+            className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-mogra"
+          >
+            <ChevronDown className="w-4 h-4 mr-2" />
+            {isLoadingMore ? "Loading..." : "Load More Rankings"}
+          </Button>
+        </div>
+      )}
 
       {/* Empty State */}
       {filteredRankings.length === 0 && (

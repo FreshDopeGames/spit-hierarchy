@@ -1102,7 +1102,15 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "fk_user_rankings_profiles"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_roles: {
         Row: {
@@ -1355,6 +1363,14 @@ export type Database = {
       get_position_delta: {
         Args: { p_ranking_id: string; p_rapper_id: string }
         Returns: number
+      }
+      get_user_ranking_preview_items: {
+        Args: { ranking_uuid: string; item_limit?: number }
+        Returns: {
+          item_position: number
+          item_reason: string
+          rapper_name: string
+        }[]
       }
       get_vote_weight: {
         Args: { status: Database["public"]["Enums"]["member_status"] }

@@ -10,7 +10,7 @@ import RankingHeader from "@/components/rankings/RankingHeader";
 import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
-import { useUserRankings } from "@/hooks/useUserRankings";
+import { useOptimizedUserRankings } from "@/hooks/useOptimizedUserRankings";
 
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
@@ -27,8 +27,17 @@ const Rankings = () => {
   const [officialRankings, setOfficialRankings] = useState<RankingWithItems[]>([]);
   const [loading, setLoading] = useState(true);
 
-  // Use the updated hook for user rankings
-  const { data: userRankings = [], isLoading: userRankingsLoading } = useUserRankings();
+  // Use the optimized hook for user rankings
+  const { 
+    data: userRankingPages, 
+    isLoading: userRankingsLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useOptimizedUserRankings();
+
+  // Flatten the paginated data
+  const userRankings = userRankingPages?.pages.flatMap(page => page.rankings) || [];
 
   useEffect(() => {
     fetchOfficialRankings();
@@ -94,7 +103,7 @@ const Rankings = () => {
     slug: ranking.slug,
   }));
 
-  // Combine all rankings for selection (user rankings are already transformed)
+  // Combine all rankings for selection
   const allRankings = [...transformedOfficialRankings, ...userRankings];
   const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
 
@@ -151,6 +160,9 @@ const Rankings = () => {
           <UserRankingsSection 
             rankings={userRankings}
             onRankingClick={setSelectedRanking}
+            hasNextPage={hasNextPage}
+            onLoadMore={fetchNextPage}
+            isLoadingMore={isFetchingNextPage}
           />
         </main>
       </div>
