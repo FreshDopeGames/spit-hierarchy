@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -21,7 +20,6 @@ import Footer from "./components/Footer";
 import AuthGuard from "./components/AuthGuard";
 import { AuthProvider } from "./hooks/useAuth";
 import { AchievementProvider } from "./components/achievements/AchievementProvider";
-import CreateRanking from "./pages/CreateRanking";
 
 function App() {
   return (
@@ -35,11 +33,6 @@ function App() {
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/about" element={<About />} />
                 <Route path="/rankings" element={<Rankings />} />
-                <Route path="/create-ranking" element={
-                  <AuthGuard requireAuth={true}>
-                    <CreateRanking />
-                  </AuthGuard>
-                } />
                 <Route path="/official-rankings" element={<OfficialRankings />} />
                 <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
                 <Route path="/analytics" element={

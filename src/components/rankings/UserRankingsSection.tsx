@@ -7,6 +7,7 @@ import { Users, Star, Trophy, Plus, ChevronDown } from "lucide-react";
 import RankingCard from "./RankingCard";
 import { useAuth } from "@/hooks/useAuth";
 import { UserRanking } from "@/types/userRanking";
+import CreateRankingDialog from "./CreateRankingDialog";
 
 interface UserRankingsSectionProps {
   rankings: UserRanking[];
@@ -88,12 +89,12 @@ const UserRankingsSection = ({
           
           {/* Create Ranking Button - moved here from header */}
           {user && (
-            <Link to="/create-ranking">
+            <CreateRankingDialog>
               <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30 text-xs sm:text-sm">
                 <Plus className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
                 Create Ranking
               </Button>
-            </Link>
+            </CreateRankingDialog>
           )}
         </div>
       </div>
@@ -138,12 +139,12 @@ const UserRankingsSection = ({
             }
           </p>
           {user && (
-            <Link to="/create-ranking">
+            <CreateRankingDialog>
               <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Your First Ranking
               </Button>
-            </Link>
+            </CreateRankingDialog>
           )}
         </div>
       )}
