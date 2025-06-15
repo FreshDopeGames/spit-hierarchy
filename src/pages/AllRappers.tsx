@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -5,7 +6,8 @@ import AllRappersFilters from "@/components/AllRappersFilters";
 import AllRappersGrid from "@/components/AllRappersGrid";
 import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
-import InternalPageHeader from "@/components/InternalPageHeader";
+import HeaderNavigation from "@/components/HeaderNavigation";
+import BlogPageHeader from "@/components/blog/BlogPageHeader";
 
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
@@ -115,14 +117,14 @@ const AllRappers = () => {
 
   if (isLoading && currentPage === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-        <InternalPageHeader 
-          title="All Artists" 
-          subtitle="Loading the culture..." 
-        />
-        <div className="pt-20 max-w-7xl mx-auto p-6">
-          <AllRappersLoadingSkeleton />
-        </div>
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
+        <HeaderNavigation isScrolled={false} />
+        <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
+          <BlogPageHeader title="All Rappers" />
+          <div className="pt-10">
+            <AllRappersLoadingSkeleton />
+          </div>
+        </main>
       </div>
     );
   }
@@ -131,18 +133,18 @@ const AllRappers = () => {
   const hasMore = rappersData?.hasMore || false;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      <InternalPageHeader 
-        title="The Lyricist Collective" 
-        subtitle={`${total} wordsmith legends • Showcasing ${allRappers.length}`}
-      />
-      
-      <div className="pt-20 max-w-7xl mx-auto p-6">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
+      <HeaderNavigation isScrolled={false} />
+      <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
+        <BlogPageHeader title="All Rappers" />
         {/* Enhanced stats display */}
         <div className="mb-8">
           <div className="w-32 h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver rounded-full"></div>
         </div>
-
+        {/* Subtitle with total rappers */}
+        <p className="text-center text-rap-smoke text-xl font-kaushan mb-8">
+          {total} legendary rappers • Showing {allRappers.length}
+        </p>
         {/* Filters and Search */}
         <AllRappersFilters
           searchInput={searchInput}
@@ -155,7 +157,6 @@ const AllRappers = () => {
           onSortChange={handleSortChange}
           onOrderChange={handleOrderChange}
         />
-
         {/* Rappers Grid with Ads */}
         {allRappers.length === 0 && !isLoading ? (
           <AllRappersEmptyState />
@@ -169,9 +170,10 @@ const AllRappers = () => {
             onLoadMore={handleLoadMore}
           />
         )}
-      </div>
+      </main>
     </div>
   );
 };
 
 export default AllRappers;
+
