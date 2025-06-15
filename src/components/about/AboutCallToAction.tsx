@@ -14,7 +14,7 @@ const AboutCallToAction = () => {
       
       <div className="flex flex-col sm:flex-row gap-4 justify-center">
         <Link to="/auth">
-          <Button className="font-kaushan px-8 py-3 shadow-lg border border-rap-gold text-rap-carbon text-xl font-extrabold bg-rap-gold">
+          <Button className="font-kaushan px-8 py-3 shadow-lg border border-rap-gold text-rap-carbon text-xl font-extrabold bg-rap-gold hover:bg-white hover:text-rap-carbon">
             Start Voting!
           </Button>
         </Link>
