@@ -39,7 +39,7 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
   const displayUrl = getAvatarUrl(avatarUrl);
 
   return (
-    <div className={`relative ${getSizeClass()} bg-gradient-to-r from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50`}>
+    <div className={`relative ${getSizeClass()} bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50`}>
       {displayUrl ? (
         <img 
           src={displayUrl} 
