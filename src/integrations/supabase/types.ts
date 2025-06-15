@@ -359,6 +359,33 @@ export type Database = {
         }
         Relationships: []
       }
+      daily_vote_tracking: {
+        Row: {
+          created_at: string
+          id: string
+          ranking_id: string
+          rapper_id: string
+          user_id: string
+          vote_date: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ranking_id: string
+          rapper_id: string
+          user_id: string
+          vote_date?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ranking_id?: string
+          rapper_id?: string
+          user_id?: string
+          vote_date?: string
+        }
+        Relationships: []
+      }
       member_stats: {
         Row: {
           badges: Json | null

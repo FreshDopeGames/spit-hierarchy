@@ -24,7 +24,8 @@ export const useRankingVotes = () => {
 
       const voteWeight = getVoteMultiplier();
 
-      const { data, error } = await supabase
+      // Insert the ranking vote
+      const { data: voteData, error: voteError } = await supabase
         .from('ranking_votes')
         .upsert({
           user_id: user.id,
@@ -39,8 +40,23 @@ export const useRankingVotes = () => {
         .select()
         .single();
 
-      if (error) throw error;
-      return data;
+      if (voteError) throw voteError;
+
+      // Also insert into daily vote tracking
+      const { error: dailyError } = await supabase
+        .from('daily_vote_tracking')
+        .upsert({
+          user_id: user.id,
+          ranking_id: rankingId,
+          rapper_id: rapperId,
+          vote_date: new Date().toISOString().split('T')[0]
+        }, {
+          onConflict: 'user_id,rapper_id,ranking_id,vote_date'
+        });
+
+      if (dailyError) throw dailyError;
+
+      return voteData;
     },
     onMutate: async ({ rankingId, rapperId }) => {
       // Optimistic update - immediately show the vote increase
@@ -62,10 +78,7 @@ export const useRankingVotes = () => {
             if (item.rapper?.id === rapperId) {
               return {
                 ...item,
-                rapper: {
-                  ...item.rapper,
-                  total_votes: (item.rapper.total_votes || 0) + voteWeight
-                }
+                ranking_votes: item.ranking_votes + voteWeight
               };
             }
             return item;
@@ -103,6 +116,10 @@ export const useRankingVotes = () => {
       queryClient.invalidateQueries({ queryKey: ['member-status', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['all-achievements'] });
+
+      // Invalidate daily votes cache to ensure fresh data
+      const today = new Date().toISOString().split('T')[0];
+      queryClient.invalidateQueries({ queryKey: ['daily-votes', user?.id, today, variables.rankingId] });
 
       // The real-time subscription will handle the actual data update
       // No need to manually invalidate queries here for ranking data

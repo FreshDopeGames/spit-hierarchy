@@ -1,8 +1,9 @@
 
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, Star } from "lucide-react";
+import { ThumbsUp, Star, Check } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
 import { useAuth } from "@/hooks/useAuth";
+import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
 
 interface VoteButtonProps {
   onVote: () => void;
@@ -23,10 +24,19 @@ const VoteButton = ({
 }: VoteButtonProps) => {
   const { user } = useAuth();
   const { submitRankingVote, getVoteMultiplier, currentStatus } = useRankingVotes();
+  const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(rankingId);
 
-  const handleClick = () => {
-    if (showWeightedVoting && rankingId && rapperId && user) {
-      // Use weighted ranking vote
+  const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
+  const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
+
+  const handleClick = async () => {
+    if (isDisabled || !rapperId || !rankingId) return;
+
+    if (showWeightedVoting && user) {
+      // Add to daily tracking optimistically
+      addVoteToTracking(rapperId);
+      
+      // Submit the vote
       submitRankingVote.mutate({ rankingId, rapperId });
     } else {
       // Use regular vote handler
@@ -40,18 +50,37 @@ const VoteButton = ({
     <div className="flex flex-col items-center gap-1">
       <Button
         onClick={handleClick}
-        disabled={disabled || submitRankingVote.isPending}
+        disabled={isDisabled}
         size="sm"
-        className={`bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold flex-1 sm:flex-none text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3 ${className}`}
+        className={`${
+          hasVoted 
+            ? 'bg-gray-600 hover:bg-gray-600 text-gray-300 cursor-not-allowed' 
+            : 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon'
+        } font-bold flex-1 sm:flex-none text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3 ${className}`}
       >
-        <ThumbsUp className="w-4 h-4 mr-2" />
-        Vote
+        {hasVoted ? (
+          <>
+            <Check className="w-4 h-4 mr-2" />
+            Voted Today
+          </>
+        ) : (
+          <>
+            <ThumbsUp className="w-4 h-4 mr-2" />
+            Vote
+          </>
+        )}
       </Button>
       
-      {showWeightedVoting && user && voteMultiplier > 1 && (
+      {showWeightedVoting && user && !hasVoted && voteMultiplier > 1 && (
         <div className="flex items-center gap-1 text-xs text-rap-gold font-bold">
           <Star className="w-3 h-3" />
           <span>{voteMultiplier}x power ({currentStatus})</span>
+        </div>
+      )}
+      
+      {hasVoted && (
+        <div className="text-xs text-gray-400 font-medium">
+          Vote again tomorrow
         </div>
       )}
     </div>
