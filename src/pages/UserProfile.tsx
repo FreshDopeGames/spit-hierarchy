@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProfileHeader from "@/components/profile/ProfileHeader";
+import MemberStatusCard from "@/components/profile/MemberStatusCard";
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileAchievements from "@/components/profile/ProfileAchievements";
 import VoteNotesSection from "@/components/profile/VoteNotesSection";
@@ -105,9 +106,9 @@ const UserProfile = () => {
         <main className="max-w-4xl mx-auto p-3 sm:p-6 pt-16 sm:pt-24">
           <ProfileHeader user={user} profile={profile} />
           
-          <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
-            <ProfileStats memberStats={memberStats} />
-          </div>
+          <MemberStatusCard memberStats={memberStats} />
+          
+          <ProfileStats memberStats={memberStats} />
 
           <div className="mb-6 sm:mb-8">
             <ProfileAchievements />

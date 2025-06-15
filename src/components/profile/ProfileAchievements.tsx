@@ -63,13 +63,13 @@ const ProfileAchievements = () => {
               <div className="text-rap-silver text-xs sm:text-sm">Total Points</div>
               <div className="text-rap-gold font-bold text-lg sm:text-xl">{getTotalPoints()}</div>
             </div>
-            <Link to="/analytics">
+            <Link to="/analytics?tab=achievements">
               <Button 
                 variant="outline" 
                 size="sm"
                 className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon w-full sm:w-auto text-xs sm:text-sm"
               >
-                View All
+                View All Achievements
               </Button>
             </Link>
           </div>
@@ -126,12 +126,12 @@ const ProfileAchievements = () => {
                 showProgress={true}
               />
               <div className="text-center">
-                <Link to="/analytics">
+                <Link to="/analytics?tab=achievements">
                   <Button 
                     variant="outline"
                     className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
                   >
-                    View Complete Achievement List
+                    View All Achievements
                   </Button>
                 </Link>
               </div>

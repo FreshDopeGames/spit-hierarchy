@@ -1,8 +1,10 @@
+
 import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { sortAchievementsByRarity } from '@/utils/achievementUtils';
+import { showAchievementToast } from '@/components/achievements/AchievementToast';
 
 export const useAchievements = () => {
   const { user } = useAuth();
@@ -100,6 +102,8 @@ export const useAchievements = () => {
             .single();
           
           if (achievement) {
+            // Show the toast notification
+            showAchievementToast(achievement);
             setNewAchievements(prev => [...prev, achievement]);
           }
           

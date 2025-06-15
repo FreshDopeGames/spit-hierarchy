@@ -1,23 +1,19 @@
+
 import React from "react";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
-import { Trophy, Lock, Target, Star } from "lucide-react";
 import * as LucideIcons from "lucide-react";
-import { sortAchievementsByRarity } from "@/utils/achievementUtils";
 
 interface Achievement {
   id: string;
   name: string;
   description: string;
   icon: string;
+  rarity: 'common' | 'rare' | 'epic' | 'legendary';
   points: number;
-  threshold_value: number;
-  progress_value: number;
-  progress_percentage: number;
   is_earned: boolean;
-  earned_at: string | null;
-  rarity: string;
+  progress_percentage: number;
+  earned_at?: string;
 }
 
 interface AchievementTableProps {
@@ -25,117 +21,150 @@ interface AchievementTableProps {
   showProgress?: boolean;
 }
 
+const rarityColors = {
+  common: "bg-gray-500",
+  rare: "bg-blue-500",
+  epic: "bg-purple-500", 
+  legendary: "bg-yellow-500"
+};
+
 const AchievementTable = ({ achievements, showProgress = true }: AchievementTableProps) => {
-  // Sort achievements from least rare to most rare
-  const sortedAchievements = sortAchievementsByRarity([...achievements]);
-
-  const getStatusBadge = (achievement: Achievement) => {
-    if (achievement.is_earned) {
-      return (
-        <Badge className="bg-green-600/20 text-green-300 border-green-500/30">
-          <Trophy className="w-3 h-3 mr-1" />
-          Earned
-        </Badge>
-      );
-    }
-    
-    if (achievement.progress_percentage > 0) {
-      return (
-        <Badge className="bg-blue-600/20 text-blue-300 border-blue-500/30">
-          <Target className="w-3 h-3 mr-1" />
-          In Progress
-        </Badge>
-      );
-    }
-    
-    return (
-      <Badge className="bg-gray-600/20 text-gray-400 border-gray-500/30">
-        <Lock className="w-3 h-3 mr-1" />
-        Locked
-      </Badge>
-    );
-  };
-
-  const getRarityColor = (rarity: string) => {
-    switch (rarity) {
-      case 'legendary':
-        return 'text-yellow-400';
-      case 'epic':
-        return 'text-purple-400';
-      case 'rare':
-        return 'text-blue-400';
-      case 'uncommon':
-        return 'text-green-400';
-      default:
-        return 'text-gray-400';
-    }
-  };
-
-  const renderIcon = (iconName: string) => {
-    const IconComponent = (LucideIcons as any)[iconName] || Star;
-    return <IconComponent className="w-6 h-6 text-rap-gold" />;
-  };
-
   return (
-    <div className="border border-rap-gold/30 rounded-lg overflow-hidden bg-carbon-fiber/90">
-      <Table>
-        <TableHeader>
-          <TableRow className="border-b border-rap-gold/30 hover:bg-rap-carbon/50">
-            <TableHead className="text-rap-gold font-bold w-12"></TableHead>
-            <TableHead className="text-rap-gold font-bold">Achievement</TableHead>
-            <TableHead className="text-rap-gold font-bold">Description</TableHead>
-            {showProgress && <TableHead className="text-rap-gold font-bold">Progress</TableHead>}
-            <TableHead className="text-rap-gold font-bold text-center">Points</TableHead>
-            <TableHead className="text-rap-gold font-bold text-center">Status</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {sortedAchievements.map((achievement) => (
-            <TableRow 
+    <div className="w-full">
+      {/* Mobile/Tablet Card View */}
+      <div className="block lg:hidden space-y-3">
+        {achievements.map((achievement) => {
+          const IconComponent = (LucideIcons as any)[achievement.icon] || LucideIcons.Star;
+          
+          return (
+            <div 
               key={achievement.id} 
-              className="border-b border-rap-gold/20 hover:bg-rap-carbon/30 transition-colors"
+              className={`bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 ${
+                achievement.is_earned ? 'opacity-100' : 'opacity-60'
+              }`}
             >
-              <TableCell>
-                {renderIcon(achievement.icon)}
-              </TableCell>
-              <TableCell>
-                <div className="space-y-1">
-                  <div className="font-semibold text-white">{achievement.name}</div>
-                  <div className={`text-xs font-medium capitalize ${getRarityColor(achievement.rarity)}`}>
-                    {achievement.rarity}
+              <div className="flex items-start space-x-3 mb-3">
+                <div className={`w-10 h-10 rounded-lg ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg flex-shrink-0`}>
+                  <IconComponent className="w-5 h-5 text-white" />
+                </div>
+                
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between mb-2">
+                    <h4 className="font-bold text-rap-gold text-sm truncate pr-2">{achievement.name}</h4>
+                    <Badge 
+                      variant="secondary" 
+                      className={`${rarityColors[achievement.rarity]} text-white text-xs capitalize flex-shrink-0`}
+                    >
+                      {achievement.rarity}
+                    </Badge>
                   </div>
-                </div>
-              </TableCell>
-              <TableCell>
-                <div className="text-gray-300 text-sm max-w-xs">
-                  {achievement.description}
-                </div>
-              </TableCell>
-              {showProgress && (
-                <TableCell>
-                  <div className="space-y-2 min-w-32">
-                    <Progress 
-                      value={achievement.progress_percentage} 
-                      className="h-2"
-                    />
-                    <div className="text-xs text-gray-400">
-                      {achievement.progress_value} / {achievement.threshold_value || 0}
+                  
+                  <p className="text-rap-platinum text-xs mb-2 line-clamp-2">{achievement.description}</p>
+                  
+                  <div className="flex items-center justify-between text-xs">
+                    <span className="text-rap-silver">{achievement.points} pts</span>
+                    {achievement.is_earned ? (
+                      <span className="text-rap-gold font-medium">
+                        ✓ Earned
+                      </span>
+                    ) : (
+                      showProgress && (
+                        <span className="text-rap-silver">
+                          {Math.round(achievement.progress_percentage)}%
+                        </span>
+                      )
+                    )}
+                  </div>
+                  
+                  {showProgress && !achievement.is_earned && (
+                    <div className="mt-2">
+                      <Progress 
+                        value={achievement.progress_percentage} 
+                        className="h-1.5 bg-rap-carbon"
+                      />
                     </div>
-                  </div>
-                </TableCell>
-              )}
-              <TableCell className="text-center">
-                <Badge variant="outline" className="text-rap-gold border-rap-gold/30">
-                  {achievement.points}
-                </Badge>
-              </TableCell>
-              <TableCell className="text-center">
-                {getStatusBadge(achievement)}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden lg:block overflow-x-auto">
+        <table className="w-full">
+          <thead>
+            <tr className="border-b border-rap-gold/30">
+              <th className="text-left py-3 px-4 text-rap-gold font-medium">Achievement</th>
+              <th className="text-left py-3 px-4 text-rap-gold font-medium">Description</th>
+              <th className="text-center py-3 px-4 text-rap-gold font-medium">Rarity</th>
+              <th className="text-center py-3 px-4 text-rap-gold font-medium">Points</th>
+              <th className="text-center py-3 px-4 text-rap-gold font-medium">Status</th>
+              {showProgress && <th className="text-center py-3 px-4 text-rap-gold font-medium">Progress</th>}
+            </tr>
+          </thead>
+          <tbody>
+            {achievements.map((achievement) => {
+              const IconComponent = (LucideIcons as any)[achievement.icon] || LucideIcons.Star;
+              
+              return (
+                <tr 
+                  key={achievement.id} 
+                  className={`border-b border-rap-gold/10 ${achievement.is_earned ? 'opacity-100' : 'opacity-60'}`}
+                >
+                  <td className="py-4 px-4">
+                    <div className="flex items-center space-x-3">
+                      <div className={`w-8 h-8 rounded ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg`}>
+                        <IconComponent className="w-4 h-4 text-white" />
+                      </div>
+                      <span className="font-medium text-rap-platinum">{achievement.name}</span>
+                    </div>
+                  </td>
+                  <td className="py-4 px-4 text-rap-silver text-sm max-w-xs">
+                    {achievement.description}
+                  </td>
+                  <td className="py-4 px-4 text-center">
+                    <Badge 
+                      variant="secondary" 
+                      className={`${rarityColors[achievement.rarity]} text-white text-xs capitalize`}
+                    >
+                      {achievement.rarity}
+                    </Badge>
+                  </td>
+                  <td className="py-4 px-4 text-center text-rap-silver font-medium">
+                    {achievement.points}
+                  </td>
+                  <td className="py-4 px-4 text-center">
+                    {achievement.is_earned ? (
+                      <span className="text-rap-gold font-medium">✓ Earned</span>
+                    ) : (
+                      <span className="text-rap-silver">Not Earned</span>
+                    )}
+                  </td>
+                  {showProgress && (
+                    <td className="py-4 px-4 text-center">
+                      {!achievement.is_earned ? (
+                        <div className="w-full max-w-20 mx-auto">
+                          <Progress 
+                            value={achievement.progress_percentage} 
+                            className="h-2 bg-rap-carbon"
+                          />
+                          <span className="text-xs text-rap-silver mt-1 block">
+                            {Math.round(achievement.progress_percentage)}%
+                          </span>
+                        </div>
+                      ) : (
+                        <span className="text-rap-gold text-sm">100%</span>
+                      )}
+                    </td>
+                  )}
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
