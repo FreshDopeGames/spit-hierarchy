@@ -105,8 +105,8 @@ const UserVotingDashboard = () => {
                   <stat.icon className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="text-gray-400 text-lg font-extrabold">{stat.label}</p>
-                  <p className="text-white font-bold text-lg">{stat.value}</p>
+                  <p className="font-extrabold text-rap-gold-light">{stat.label}</p>
+                  <p className="font-bold text-lg text-white">{stat.value}</p>
                 </div>
               </div>
             </CardContent>
@@ -116,7 +116,7 @@ const UserVotingDashboard = () => {
       {/* Voting Timeline */}
       {stats.first_vote_date && <Card className="bg-black/40 border-2 border-rap-gold">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-rap-gold">
               <Calendar className="w-5 h-5" />
               Voting Timeline
             </CardTitle>
@@ -124,14 +124,14 @@ const UserVotingDashboard = () => {
           <CardContent>
             <div className="flex flex-col sm:flex-row gap-4 text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-gray-400">First Vote:</span>
-                <span className="text-white">
+                <span className="text-gray-400 text-base">First Vote:</span>
+                <span className="text-white text-xl">
                   {new Date(stats.first_vote_date).toLocaleDateString()}
                 </span>
               </div>
               {stats.last_vote_date && <div className="flex items-center gap-2">
-                  <span className="text-gray-400">Last Vote:</span>
-                  <span className="text-white">
+                  <span className="text-gray-400 text-base">Last Vote:</span>
+                  <span className="text-white text-lg">
                     {new Date(stats.last_vote_date).toLocaleDateString()}
                   </span>
                 </div>}
@@ -142,7 +142,7 @@ const UserVotingDashboard = () => {
       {/* Recent Votes */}
       {recentVotes && recentVotes.length > 0 && <Card className="bg-black/40 border-2 border-rap-gold">
           <CardHeader>
-            <CardTitle className="text-white flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-rap-gold">
               <TrendingUp className="w-5 h-5" />
               Recent Votes
             </CardTitle>
