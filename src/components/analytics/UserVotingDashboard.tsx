@@ -105,7 +105,7 @@ const UserVotingDashboard = () => {
                   <stat.icon className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <p className="font-extrabold text-rap-gold-light">{stat.label}</p>
+                  <p className="font-extrabold text-rap-gold-light text-xs">{stat.label}</p>
                   <p className="font-bold text-lg text-white">{stat.value}</p>
                 </div>
               </div>
