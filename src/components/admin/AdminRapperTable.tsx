@@ -6,6 +6,7 @@ import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Star, MapPin, Calendar, Verified, Music, Edit, Trash2 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
+import { formatBirthdate } from "@/utils/zodiacUtils";
 
 type Rapper = Tables<"rappers">;
 
@@ -58,6 +59,7 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
 
 const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onEdit: (rapper: Rapper) => void; onDelete: (id: string) => void; }) => {
   const { data: imageUrl } = useRapperImage(rapper.id);
+  const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (
     <Card className="bg-rap-carbon-light border-rap-gold/20 hover:border-rap-gold/40 transition-all duration-300">
@@ -97,10 +99,10 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
                 <span>{rapper.origin}</span>
               </div>
             )}
-            {rapper.birth_year && (
+            {birthdate && (
               <div className="flex items-center gap-1 text-rap-silver">
                 <Calendar className="w-3 h-3" />
-                <span>{rapper.birth_year}</span>
+                <span>{birthdate}</span>
               </div>
             )}
           </div>

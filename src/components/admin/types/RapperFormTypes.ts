@@ -4,6 +4,8 @@ export interface RapperFormData {
   real_name: string;
   origin: string;
   birth_year: string;
+  birth_month: string;
+  birth_day: string;
   bio: string;
   verified: boolean;
   spotify_id: string;

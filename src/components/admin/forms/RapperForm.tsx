@@ -24,6 +24,8 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
     real_name: "",
     origin: "",
     birth_year: "",
+    birth_month: "",
+    birth_day: "",
     bio: "",
     verified: false,
     spotify_id: "",
@@ -38,6 +40,8 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
         real_name: rapper.real_name || "",
         origin: rapper.origin || "",
         birth_year: rapper.birth_year?.toString() || "",
+        birth_month: rapper.birth_month?.toString() || "",
+        birth_day: rapper.birth_day?.toString() || "",
         bio: rapper.bio || "",
         verified: rapper.verified || false,
         spotify_id: rapper.spotify_id || "",
@@ -50,6 +54,8 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
         real_name: "",
         origin: "",
         birth_year: "",
+        birth_month: "",
+        birth_day: "",
         bio: "",
         verified: false,
         spotify_id: "",
@@ -66,6 +72,8 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
         real_name: data.real_name || null,
         origin: data.origin || null,
         birth_year: data.birth_year ? parseInt(data.birth_year) : null,
+        birth_month: data.birth_month ? parseInt(data.birth_month) : null,
+        birth_day: data.birth_day ? parseInt(data.birth_day) : null,
         bio: data.bio || null,
         verified: data.verified,
         spotify_id: data.spotify_id || null,
@@ -129,6 +137,13 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
     }));
   };
 
+  const handleSelectChange = (field: keyof RapperFormData) => (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
   const handleVerifiedChange = (checked: boolean) => {
     setFormData(prev => ({ ...prev, verified: checked }));
   };
@@ -138,6 +153,7 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
       <RapperFormFields
         formData={formData}
         onInputChange={handleInputChange}
+        onSelectChange={handleSelectChange}
         onVerifiedChange={handleVerifiedChange}
       />
 

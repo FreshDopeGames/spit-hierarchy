@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +8,7 @@ import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import AdUnit from "@/components/AdUnit";
 import { useRapperImage } from "@/hooks/useImageStyle";
+import { formatBirthdate } from "@/utils/zodiacUtils";
 
 type Rapper = Tables<"rappers">;
 
@@ -21,6 +23,7 @@ interface AllRappersGridProps {
 
 const RapperCard = ({ rapper }: { rapper: Rapper }) => {
   const { data: imageUrl } = useRapperImage(rapper.id);
+  const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (
     <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
@@ -76,10 +79,10 @@ const RapperCard = ({ rapper }: { rapper: Rapper }) => {
                   <span>{rapper.origin}</span>
                 </div>
               )}
-              {rapper.birth_year && (
+              {birthdate && (
                 <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
                   <Calendar className="w-3 h-3" />
-                  <span>{rapper.birth_year}</span>
+                  <span>{birthdate}</span>
                 </div>
               )}
             </div>
