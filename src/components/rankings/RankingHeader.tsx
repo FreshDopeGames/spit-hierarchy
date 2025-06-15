@@ -1,3 +1,4 @@
+
 interface RankingHeaderProps {
   title: string;
   description: string;
@@ -6,7 +7,7 @@ const RankingHeader = ({
   title,
   description
 }: RankingHeaderProps) => {
-  return <div className="text-center mb-12">
+  return <div className="text-center mb-8 sm:mb-10 lg:mb-12">
       <h1 className="font-ceviche sm:text-4xl md:text-6xl mb-6 font-normal text-amber-400 leading-tight lg:text-8xl text-4xl">
         {title}
       </h1>

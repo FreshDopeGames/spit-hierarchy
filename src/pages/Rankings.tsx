@@ -10,6 +10,7 @@ import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSecti
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
 import { useOptimizedUserRankings } from "@/hooks/useOptimizedUserRankings";
+
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
   rapper: Tables<"rappers">;
@@ -17,6 +18,7 @@ type RankingItem = Tables<"ranking_items"> & {
 interface RankingWithItems extends OfficialRanking {
   items: RankingItem[];
 }
+
 const Rankings = () => {
   const {
     user
@@ -132,7 +134,7 @@ const Rankings = () => {
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto p-6 pt-24 py-[24px]">
+        <main className="max-w-6xl mx-auto p-6 pt-8 sm:pt-12 lg:pt-16">
           <RankingHeader title="Top Rapper Rankings" description="Discover comprehensive rapper rankings with every artist in our database. Official rankings now include all 112+ rappers, while community rankings let you create your own complete lists." />
 
           <OfficialRankingsSection rankings={transformedOfficialRankings} onRankingClick={setSelectedRanking} />
