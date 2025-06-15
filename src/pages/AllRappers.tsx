@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +7,7 @@ import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import BlogPageHeader from "@/components/blog/BlogPageHeader";
+import AllRappersPage from "./AllRappersPage";
 
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
@@ -175,5 +175,4 @@ const AllRappers = () => {
   );
 };
 
-export default AllRappers;
-
+export default AllRappersPage;
