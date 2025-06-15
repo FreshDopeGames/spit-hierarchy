@@ -1,14 +1,13 @@
 
-import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Switch } from "@/components/ui/switch";
+import { PageTemplate, FormData } from "./types";
 
 const adPlacementSchema = z.object({
   placement_name: z.string().min(1, "Placement name is required"),
@@ -19,24 +18,15 @@ const adPlacementSchema = z.object({
   is_active: z.boolean(),
 });
 
-type AdPlacementFormData = z.infer<typeof adPlacementSchema>;
-
-interface PageTemplate {
-  id: string;
-  template_name: string;
-  route_pattern: string;
-  available_placements: string[];
-}
-
 interface AdPlacementFormProps {
-  onSubmit: (data: AdPlacementFormData) => void;
-  initialData?: Partial<AdPlacementFormData>;
+  onSubmit: (data: FormData) => void;
+  initialData?: Partial<FormData>;
   isLoading?: boolean;
   pageTemplates?: PageTemplate[];
 }
 
 const AdPlacementForm = ({ onSubmit, initialData, isLoading, pageTemplates = [] }: AdPlacementFormProps) => {
-  const form = useForm<AdPlacementFormData>({
+  const form = useForm<FormData>({
     resolver: zodResolver(adPlacementSchema),
     defaultValues: {
       placement_name: initialData?.placement_name || "",
@@ -56,7 +46,7 @@ const AdPlacementForm = ({ onSubmit, initialData, isLoading, pageTemplates = [] 
     }
   };
 
-  const handleSubmit = (data: AdPlacementFormData) => {
+  const handleSubmit = (data: FormData) => {
     console.log("Submitting ad placement data:", data);
     onSubmit(data);
   };
