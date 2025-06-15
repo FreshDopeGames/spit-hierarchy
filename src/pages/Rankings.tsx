@@ -10,25 +10,24 @@ import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSecti
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
 import { useOptimizedUserRankings } from "@/hooks/useOptimizedUserRankings";
-
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
   rapper: Tables<"rappers">;
 };
-
 interface RankingWithItems extends OfficialRanking {
   items: RankingItem[];
 }
-
 const Rankings = () => {
-  const { user } = useAuth();
+  const {
+    user
+  } = useAuth();
   const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
   const [officialRankings, setOfficialRankings] = useState<RankingWithItems[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Use the optimized hook for user rankings
-  const { 
-    data: userRankingPages, 
+  const {
+    data: userRankingPages,
     isLoading: userRankingsLoading,
     fetchNextPage,
     hasNextPage,
@@ -37,44 +36,43 @@ const Rankings = () => {
 
   // Flatten the paginated data with proper type handling
   const userRankings = userRankingPages?.pages.flatMap(page => page.rankings) || [];
-
   useEffect(() => {
     fetchOfficialRankings();
   }, []);
-
   const fetchOfficialRankings = async () => {
     try {
       // Fetch all official rankings
-      const { data: rankingsData, error: rankingsError } = await supabase
-        .from("official_rankings")
-        .select("*")
-        .order("display_order", { ascending: true });
-
+      const {
+        data: rankingsData,
+        error: rankingsError
+      } = await supabase.from("official_rankings").select("*").order("display_order", {
+        ascending: true
+      });
       if (rankingsError) throw rankingsError;
 
       // Fetch items for each ranking
-      const rankingsWithItems = await Promise.all(
-        (rankingsData || []).map(async (ranking) => {
-          const { data: itemsData, error: itemsError } = await supabase
-            .from("ranking_items")
-            .select(`
+      const rankingsWithItems = await Promise.all((rankingsData || []).map(async ranking => {
+        const {
+          data: itemsData,
+          error: itemsError
+        } = await supabase.from("ranking_items").select(`
               *,
               rapper:rappers(*)
-            `)
-            .eq("ranking_id", ranking.id)
-            .eq("is_ranked", true) // Only get manually ranked items for preview
-            .order("position")
-            .limit(5); // Only get top 5 for display
+            `).eq("ranking_id", ranking.id).eq("is_ranked", true) // Only get manually ranked items for preview
+        .order("position").limit(5); // Only get top 5 for display
 
-          if (itemsError) {
-            console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
-            return { ...ranking, items: [] };
-          }
-
-          return { ...ranking, items: itemsData || [] };
-        })
-      );
-
+        if (itemsError) {
+          console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
+          return {
+            ...ranking,
+            items: []
+          };
+        }
+        return {
+          ...ranking,
+          items: itemsData || []
+        };
+      }));
       setOfficialRankings(rankingsWithItems);
     } catch (error) {
       console.error("Error fetching official rankings:", error);
@@ -84,47 +82,38 @@ const Rankings = () => {
   };
 
   // Transform database data to match component props
-  const transformedOfficialRankings = officialRankings.map((ranking) => ({
+  const transformedOfficialRankings = officialRankings.map(ranking => ({
     id: ranking.id,
     title: ranking.title,
     description: ranking.description || "",
     author: "Editorial Team",
     timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
-    rappers: ranking.items.map((item) => ({
+    rappers: ranking.items.map(item => ({
       rank: item.position,
       name: item.rapper?.name || "Unknown",
-      reason: item.reason || "",
+      reason: item.reason || ""
     })),
-    likes: Math.floor(Math.random() * 1000) + 100, // Mock data for now
-    views: Math.floor(Math.random() * 5000) + 1000, // Mock data for now
+    likes: Math.floor(Math.random() * 1000) + 100,
+    // Mock data for now
+    views: Math.floor(Math.random() * 5000) + 1000,
+    // Mock data for now
     isOfficial: true,
     tags: ["Official", ranking.category],
-    slug: ranking.slug,
+    slug: ranking.slug
   }));
 
   // Combine all rankings for selection
   const allRankings = [...transformedOfficialRankings, ...userRankings];
   const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
-
   if (selectedRanking && selectedRankingData) {
-    return (
-      <RankingDetailView 
-        ranking={selectedRankingData}
-        onBack={() => setSelectedRanking(null)}
-      />
-    );
+    return <RankingDetailView ranking={selectedRankingData} onBack={() => setSelectedRanking(null)} />;
   }
-
   if (loading || userRankingsLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
+    return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
         <div className="text-rap-gold font-mogra text-xl">Loading rankings...</div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10">
@@ -136,37 +125,21 @@ const Rankings = () => {
               <span>Back to Home</span>
             </Link>
             
-            {user && (
-              <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+            {user && <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
                 <Plus className="w-4 h-4 mr-2" />
                 Create Ranking
-              </Button>
-            )}
+              </Button>}
           </div>
         </header>
 
-        <main className="max-w-6xl mx-auto p-6 pt-24">
-          <RankingHeader 
-            title="Top Rapper Rankings"
-            description="Discover comprehensive rapper rankings with every artist in our database. Official rankings now include all 112+ rappers, while community rankings let you create your own complete lists."
-          />
+        <main className="max-w-6xl mx-auto p-6 pt-24 py-[24px]">
+          <RankingHeader title="Top Rapper Rankings" description="Discover comprehensive rapper rankings with every artist in our database. Official rankings now include all 112+ rappers, while community rankings let you create your own complete lists." />
 
-          <OfficialRankingsSection 
-            rankings={transformedOfficialRankings}
-            onRankingClick={setSelectedRanking}
-          />
+          <OfficialRankingsSection rankings={transformedOfficialRankings} onRankingClick={setSelectedRanking} />
 
-          <UserRankingsSection 
-            rankings={userRankings}
-            onRankingClick={setSelectedRanking}
-            hasNextPage={hasNextPage}
-            onLoadMore={fetchNextPage}
-            isLoadingMore={isFetchingNextPage}
-          />
+          <UserRankingsSection rankings={userRankings} onRankingClick={setSelectedRanking} hasNextPage={hasNextPage} onLoadMore={fetchNextPage} isLoadingMore={isFetchingNextPage} />
         </main>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Rankings;
