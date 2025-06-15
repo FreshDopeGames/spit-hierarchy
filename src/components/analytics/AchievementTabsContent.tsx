@@ -38,7 +38,7 @@ const AchievementTabsContent = ({
 
   return (
     <Tabs defaultValue="all" className="w-full">
-      <TabsList className="grid w-full grid-cols-4 bg-carbon-fiber border border-rap-gold/30">
+      <TabsList className="grid w-full grid-cols-4 bg-rap-carbon-light border border-rap-gold/30">
         <TabsTrigger 
           value="all" 
           className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"

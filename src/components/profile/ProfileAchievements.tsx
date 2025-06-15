@@ -77,7 +77,7 @@ const ProfileAchievements = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-carbon-fiber border border-rap-gold/30 mb-4">
+          <TabsList className="grid w-full grid-cols-2 bg-rap-carbon-light border border-rap-gold/30 mb-4">
             <TabsTrigger 
               value="overview" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"

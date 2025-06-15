@@ -40,16 +40,16 @@ const ThemeManagement = () => {
 
       <Tabs defaultValue="colors" className="space-y-4">
         <div className="overflow-x-auto">
-          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-border)] w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0">
-            <TabsTrigger value="colors" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+          <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0">
+            <TabsTrigger value="colors" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
               <Palette className="w-4 h-4 mr-2" />
               Colors
             </TabsTrigger>
-            <TabsTrigger value="fonts" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+            <TabsTrigger value="fonts" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
               <Type className="w-4 h-4 mr-2" />
               Typography
             </TabsTrigger>
-            <TabsTrigger value="layout" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
+            <TabsTrigger value="layout" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
               <Layout className="w-4 h-4 mr-2" />
               Layout
             </TabsTrigger>
