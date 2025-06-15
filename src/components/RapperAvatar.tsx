@@ -28,16 +28,11 @@ const RapperAvatar = ({ rapper, size = "md" }: RapperAvatarProps) => {
   
   return (
     <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-      <div className="flex flex-col items-center space-y-2">
-        <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
-          {imageUrl ? 
-            <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" /> : 
-            <Music className={`${iconSizeClasses[size]} text-rap-platinum/50`} />
-          }
-        </div>
-        <span className={`text-rap-platinum font-mogra text-center group-hover:text-rap-gold transition-colors leading-tight ${size === 'lg' ? 'text-base sm:text-lg' : size === 'md' ? 'text-sm sm:text-base' : 'text-xs sm:text-sm'}`}>
-          {rapper.name}
-        </span>
+      <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
+        {imageUrl ? 
+          <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" /> : 
+          <Music className={`${iconSizeClasses[size]} text-rap-platinum/50`} />
+        }
       </div>
     </Link>
   );

@@ -29,16 +29,16 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             <RapperAvatar rapper={rapper} size="lg" />
             <div className="flex-1 min-w-0">
               <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-                <h3 className="text-lg sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">
+                <h3 className="text-xl sm:text-xl font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">
                   {rapper.name}
                 </h3>
               </Link>
               {rapper.origin && 
-                <p className="text-rap-smoke text-sm sm:text-sm font-kaushan mt-1 truncate">
+                <p className="text-rap-smoke text-base sm:text-base font-kaushan mt-1 truncate">
                   {rapper.origin}
                 </p>
               }
-              <p className="text-rap-silver text-xs font-bold mt-1">
+              <p className="text-rap-silver text-sm font-bold mt-1">
                 Votes: {rankingId && rapper.ranking_votes !== undefined 
                   ? rapper.ranking_votes.toLocaleString()
                   : (rapper.total_votes || 0).toLocaleString()
@@ -61,12 +61,12 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             <RapperAvatar rapper={rapper} size="sm" />
             <div className="text-center min-w-0 w-full">
               <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-                <h4 className="text-sm sm:text-base font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">
+                <h4 className="text-base sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">
                   {rapper.name}
                 </h4>
               </Link>
               {rapper.origin && 
-                <p className="text-rap-smoke text-xs sm:text-xs font-kaushan mt-1 truncate">
+                <p className="text-rap-smoke text-sm sm:text-sm font-kaushan mt-1 truncate">
                   {rapper.origin}
                 </p>
               }
