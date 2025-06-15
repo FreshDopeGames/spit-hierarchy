@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -103,64 +104,82 @@ const Admin = () => {
           </div>
 
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-6 bg-rap-carbon-light border border-rap-silver/30 mb-6">
-              <TabsTrigger value="rappers" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+            <TabsList className="grid w-full grid-cols-3 lg:grid-cols-6 bg-rap-carbon-light border border-rap-silver/30 mb-8 py-2 px-2 h-auto gap-1">
+              <TabsTrigger 
+                value="rappers" 
+                className="text-rap-silver font-kaushan text-sm sm:text-base data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon py-2 px-2 whitespace-nowrap"
+              >
                 Rappers
               </TabsTrigger>
-              <TabsTrigger value="rankings" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+              <TabsTrigger 
+                value="rankings" 
+                className="text-rap-silver font-kaushan text-sm sm:text-base data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon py-2 px-2 whitespace-nowrap"
+              >
                 Rankings
               </TabsTrigger>
-              <TabsTrigger value="blog" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+              <TabsTrigger 
+                value="blog" 
+                className="text-rap-silver font-kaushan text-sm sm:text-base data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon py-2 px-2 whitespace-nowrap"
+              >
                 Blog
               </TabsTrigger>
-              <TabsTrigger value="ads" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+              <TabsTrigger 
+                value="ads" 
+                className="text-rap-silver font-kaushan text-sm sm:text-base data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon py-2 px-2 whitespace-nowrap"
+              >
                 Ads
               </TabsTrigger>
-              <TabsTrigger value="headers" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+              <TabsTrigger 
+                value="headers" 
+                className="text-rap-silver font-kaushan text-sm sm:text-base data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon py-2 px-2 whitespace-nowrap"
+              >
                 Headers
               </TabsTrigger>
-              <TabsTrigger value="theme" className="text-rap-silver font-kaushan data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+              <TabsTrigger 
+                value="theme" 
+                className="text-rap-silver font-kaushan text-sm sm:text-base data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon py-2 px-2 whitespace-nowrap"
+              >
                 Theme
               </TabsTrigger>
             </TabsList>
 
             {isAdmin && (
-              <TabsContent value="rappers">
+              <TabsContent value="rappers" className="mt-0">
                 <AdminRapperManagement />
               </TabsContent>
             )}
 
             {isAdmin && (
-              <TabsContent value="rankings">
+              <TabsContent value="rankings" className="mt-0">
                 <AdminRankingsManagement />
               </TabsContent>
             )}
 
             {isAdmin && (
-              <TabsContent value="images">
+              <TabsContent value="images" className="mt-0">
                 <RapperImageManagement />
               </TabsContent>
             )}
 
             {canManageBlog && (
-              <TabsContent value="blog">
+              <TabsContent value="blog" className="mt-0">
                 <BlogManagement />
               </TabsContent>
             )}
 
             {isAdmin && (
-              <TabsContent value="ads">
+              <TabsContent value="ads" className="mt-0">
                 <AdManagement />
               </TabsContent>
             )}
 
             {isAdmin && (
-              <TabsContent value="theme">
+              <TabsContent value="theme" className="mt-0">
                 <ThemeManagement />
               </TabsContent>
             )}
 
-            <TabsContent value="headers" className="space-y-6">
+            <TabsContent value="headers" className="mt-0">
               <SectionHeaderManagement />
             </TabsContent>
           </Tabs>
