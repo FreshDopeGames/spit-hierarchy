@@ -1,7 +1,6 @@
-
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
-import { UserRanking, UserRankingFromDB } from "@/types/userRanking";
+import { UserRanking, UserRankingFromDB, CreateUserRankingData } from "@/types/userRanking";
 import { formatTimeAgo } from "@/utils/userRankingUtils";
 
 export async function fetchUserRankings(): Promise<UserRanking[]> {
@@ -65,13 +64,7 @@ export async function fetchUserRankings(): Promise<UserRanking[]> {
 }
 
 export async function createUserRanking(
-  rankingData: {
-    title: string;
-    description: string;
-    category: string;
-    tags?: string[];
-    isPublic?: boolean;
-  },
+  rankingData: CreateUserRankingData,
   userId: string,
   slug: string
 ): Promise<Tables<"user_rankings">> {
