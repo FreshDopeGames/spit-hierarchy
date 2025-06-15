@@ -33,7 +33,7 @@ const BlogCategoriesTab = ({ onEditCategory, onNewCategory }: BlogCategoriesTabP
           <CardTitle className="text-rap-platinum font-ceviche">Categories</CardTitle>
           <Button 
             onClick={onNewCategory} 
-            className="bg-gradient-to-r from-rap-burgundy to-rap-forest hover:from-rap-burgundy-light hover:to-rap-forest-light font-mogra"
+            className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-dark font-mogra"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Category
