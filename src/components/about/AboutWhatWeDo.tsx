@@ -1,11 +1,8 @@
-
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Music } from "lucide-react";
-
 const AboutWhatWeDo = () => {
-  return (
-    <Card className="bg-carbon-fiber border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-carbon-fiber border-rap-gold/100 shadow-lg shadow-rap-gold/20 border-2">
       <CardHeader>
         <CardTitle className="text-rap-gold font-ceviche flex items-center text-5xl font-normal">
           <Music className="w-6 h-6 mr-3 text-rap-gold" />
@@ -24,8 +21,6 @@ const AboutWhatWeDo = () => {
           and what the culture is feeling.
         </p>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default AboutWhatWeDo;
