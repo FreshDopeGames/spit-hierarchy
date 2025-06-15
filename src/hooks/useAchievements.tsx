@@ -11,24 +11,8 @@ export const useAchievements = () => {
   const queryClient = useQueryClient();
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
 
-  // Fetch ALL achievements
-  const { data: allAchievements, isLoading: loadingAll } = useQuery({
-    queryKey: ['all-achievements'],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('achievements')
-        .select('*')
-        .eq('is_active', true);
-      
-      if (error) throw error;
-      
-      // Sort achievements from least rare to most rare
-      return sortAchievementsByRarity(data || []);
-    }
-  });
-
-  // Fetch user progress for achievements
-  const { data: userProgress, isLoading: loadingProgress } = useQuery({
+  // Fetch ALL achievements combined with user progress in a single query from the view
+  const { data: achievementsData, isLoading } = useQuery({
     queryKey: ['user-achievement-progress', user?.id],
     queryFn: async () => {
       if (!user) return [];
@@ -42,24 +26,11 @@ export const useAchievements = () => {
       return data;
     },
     enabled: !!user,
-    refetchInterval: 5000, // Check for new achievements every 5 seconds
+    refetchInterval: 5000, // Check for new achievements/progress every 5 seconds
   });
 
-  // Combine all achievements with user progress and sort
-  const achievements = sortAchievementsByRarity(
-    allAchievements?.map(achievement => {
-      const progress = userProgress?.find(p => p.achievement_id === achievement.id);
-      return {
-        ...achievement,
-        progress_value: progress?.progress_value || 0,
-        progress_percentage: progress?.progress_percentage || 0,
-        is_earned: progress?.is_earned || false,
-        earned_at: progress?.earned_at || null
-      };
-    }) || []
-  );
-
-  const isLoading = loadingAll || loadingProgress;
+  // Sort the achievements for consistent display
+  const achievements = sortAchievementsByRarity(achievementsData || []);
 
   // Check for new achievements periodically
   const checkForNewAchievements = async () => {
