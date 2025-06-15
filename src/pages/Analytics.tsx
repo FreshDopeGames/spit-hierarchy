@@ -31,9 +31,9 @@ const Analytics = () => {
         subtitle="Track your progress and explore platform insights"
       />
       
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 md:py-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-3 bg-rap-carbon-light border border-rap-gold/30">
+          <TabsList className="grid w-full grid-cols-3 bg-rap-carbon-light border border-rap-gold/30 mt-6 md:mt-8 lg:mt-10 relative z-10">
             <TabsTrigger 
               value="stats" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
