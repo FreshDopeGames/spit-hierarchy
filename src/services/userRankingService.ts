@@ -73,7 +73,7 @@ export async function createUserRanking(
     .from("user_rankings")
     .insert({
       title: rankingData.title,
-      description: rankingData.description,
+      description: rankingData.description || null,
       category: rankingData.category,
       slug: slug,
       user_id: userId,
