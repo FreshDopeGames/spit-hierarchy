@@ -117,6 +117,9 @@ export const useRankingVotes = () => {
       queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['all-achievements'] });
 
+      // Invalidate recent ranking votes to show the new vote
+      queryClient.invalidateQueries({ queryKey: ['user-recent-ranking-votes', user?.id] });
+
       // Invalidate daily votes cache to ensure fresh data
       const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ['daily-votes', user?.id, today, variables.rankingId] });
