@@ -1,7 +1,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Trophy, ChevronUp, ChevronDown, Minus } from "lucide-react";
+import { Trophy, ChevronUp, ChevronDown, Minus, Users } from "lucide-react";
 import { Link } from "react-router-dom";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
@@ -28,7 +28,28 @@ const OfficialRankingItems = ({
   hasMore,
   loading = false
 }: OfficialRankingItemsProps) => {
-  if (items.length === 0) return null;
+  if (items.length === 0) {
+    return (
+      <Card className="bg-carbon-fiber border-rap-gold/40 mb-8 shadow-2xl shadow-rap-gold/20">
+        <CardHeader>
+          <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
+            <Trophy className="w-5 h-5" />
+            Official Rankings
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="text-center py-12">
+          <Users className="w-16 h-16 text-rap-gold/50 mx-auto mb-4" />
+          <h3 className="text-xl font-mogra text-rap-platinum mb-2">No Rappers in This Ranking Yet</h3>
+          <p className="text-rap-smoke font-merienda mb-4">
+            This ranking is being prepared and will be populated with rappers soon.
+          </p>
+          <p className="text-rap-smoke/70 font-merienda text-sm">
+            Check back later or explore other rankings in the meantime.
+          </p>
+        </CardContent>
+      </Card>
+    );
+  }
 
   const displayItems = items.slice(0, displayCount);
 

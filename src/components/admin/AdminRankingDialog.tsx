@@ -1,304 +1,216 @@
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/components/ui/use-toast";
-import { Loader2 } from "lucide-react";
-import RankingTagSelector from "./RankingTagSelector";
+import { Button } from "@/components/ui/button";
+import { Plus, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { useToast } from "@/hooks/use-toast";
+import { Tables } from "@/integrations/supabase/types";
 
-interface RankingFormData {
-  title: string;
-  description: string;
-  category: string;
-  slug: string;
-  display_order: number;
-  is_featured: boolean;
-}
+const formSchema = z.object({
+  title: z.string().min(1, "Title is required"),
+  description: z.string().optional(),
+  category: z.string().min(1, "Category is required"),
+  slug: z.string().min(1, "Slug is required"),
+});
+
+type OfficialRanking = Tables<"official_rankings">;
 
 interface AdminRankingDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  ranking?: any;
-  onSuccess: () => void;
+  onRankingCreated: () => void;
+  ranking?: OfficialRanking;
 }
 
-const AdminRankingDialog = ({ open, onOpenChange, ranking, onSuccess }: AdminRankingDialogProps) => {
-  const [selectedTags, setSelectedTags] = useState<string[]>([]);
+const AdminRankingDialog = ({ onRankingCreated, ranking }: AdminRankingDialogProps) => {
+  const [open, setOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
-  
-  const { register, handleSubmit, setValue, watch, reset, formState: { errors } } = useForm<RankingFormData>({
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      description: "",
-      category: "",
-      slug: "",
-      display_order: 0,
-      is_featured: false,
-    }
+      title: ranking?.title || "",
+      description: ranking?.description || "",
+      category: ranking?.category || "",
+      slug: ranking?.slug || "",
+    },
   });
 
-  const watchedTitle = watch("title");
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
+    try {
+      if (ranking) {
+        // Update existing ranking
+        const { error } = await supabase
+          .from("official_rankings")
+          .update(values)
+          .eq("id", ranking.id);
 
-  // Auto-generate slug from title
-  useEffect(() => {
-    if (watchedTitle && !ranking) {
-      const slug = watchedTitle
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/(^-|-$)/g, '');
-      setValue("slug", slug);
-    }
-  }, [watchedTitle, setValue, ranking]);
+        if (error) throw error;
 
-  // Set form values when editing
-  useEffect(() => {
-    if (ranking && open) {
-      setValue("title", ranking.title);
-      setValue("description", ranking.description || "");
-      setValue("category", ranking.category);
-      setValue("slug", ranking.slug);
-      setValue("display_order", ranking.display_order);
-      setValue("is_featured", ranking.is_featured);
-      
-      // Set selected tags
-      const tagIds = ranking.ranking_tag_assignments?.map((assignment: any) => assignment.tag_id) || [];
-      setSelectedTags(tagIds);
-    } else if (!ranking && open) {
-      reset();
-      setSelectedTags([]);
-    }
-  }, [ranking, open, setValue, reset]);
+        toast({
+          title: "Success",
+          description: "Ranking updated successfully",
+        });
+      } else {
+        // Create new ranking
+        const { data: newRanking, error } = await supabase
+          .from("official_rankings")
+          .insert(values)
+          .select()
+          .single();
 
-  const createMutation = useMutation({
-    mutationFn: async (data: RankingFormData) => {
-      // First create the ranking
-      const { data: newRanking, error } = await supabase
-        .from("official_rankings")
-        .insert(data)
-        .select()
-        .single();
+        if (error) throw error;
 
-      if (error) throw error;
+        // Automatically populate the new ranking with all rappers
+        if (newRanking) {
+          const { error: populateError } = await supabase.rpc(
+            "populate_ranking_with_all_rappers",
+            { ranking_uuid: newRanking.id }
+          );
 
-      // Then assign tags
-      if (selectedTags.length > 0) {
-        const tagAssignments = selectedTags.map(tagId => ({
-          ranking_id: newRanking.id,
-          tag_id: tagId
-        }));
+          if (populateError) {
+            console.error("Error populating ranking with rappers:", populateError);
+            toast({
+              title: "Warning",
+              description: "Ranking created but failed to populate with rappers. You can add them manually.",
+              variant: "destructive",
+            });
+          }
+        }
 
-        const { error: tagError } = await supabase
-          .from("ranking_tag_assignments")
-          .insert(tagAssignments);
-
-        if (tagError) throw tagError;
+        toast({
+          title: "Success",
+          description: "Ranking created successfully and populated with all rappers",
+        });
       }
 
-      return newRanking;
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Ranking created successfully",
-      });
-      onSuccess();
-    },
-    onError: (error) => {
+      setOpen(false);
+      form.reset();
+      onRankingCreated();
+    } catch (error) {
+      console.error("Error saving ranking:", error);
       toast({
         title: "Error",
-        description: "Failed to create ranking",
+        description: "Failed to save ranking",
         variant: "destructive",
       });
-      console.error("Error creating ranking:", error);
-    }
-  });
-
-  const updateMutation = useMutation({
-    mutationFn: async (data: RankingFormData) => {
-      // Update the ranking
-      const { error } = await supabase
-        .from("official_rankings")
-        .update(data)
-        .eq("id", ranking.id);
-
-      if (error) throw error;
-
-      // Delete existing tag assignments
-      await supabase
-        .from("ranking_tag_assignments")
-        .delete()
-        .eq("ranking_id", ranking.id);
-
-      // Insert new tag assignments
-      if (selectedTags.length > 0) {
-        const tagAssignments = selectedTags.map(tagId => ({
-          ranking_id: ranking.id,
-          tag_id: tagId
-        }));
-
-        const { error: tagError } = await supabase
-          .from("ranking_tag_assignments")
-          .insert(tagAssignments);
-
-        if (tagError) throw tagError;
-      }
-    },
-    onSuccess: () => {
-      toast({
-        title: "Success",
-        description: "Ranking updated successfully",
-      });
-      onSuccess();
-    },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to update ranking",
-        variant: "destructive",
-      });
-      console.error("Error updating ranking:", error);
-    }
-  });
-
-  const onSubmit = (data: RankingFormData) => {
-    if (ranking) {
-      updateMutation.mutate(data);
-    } else {
-      createMutation.mutate(data);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const isLoading = createMutation.isPending || updateMutation.isPending;
-
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-2xl bg-carbon-fiber border border-rap-gold/30 max-h-[90vh] overflow-y-auto">
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        {ranking ? (
+          <Button variant="outline" size="sm">
+            Edit
+          </Button>
+        ) : (
+          <Button>
+            <Plus className="w-4 h-4 mr-2" />
+            Add Ranking
+          </Button>
+        )}
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-mogra text-lg sm:text-xl">
+          <DialogTitle>
             {ranking ? "Edit Ranking" : "Create New Ranking"}
           </DialogTitle>
         </DialogHeader>
-
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="title" className="text-rap-platinum font-kaushan text-sm sm:text-base">
-                Title *
-              </Label>
-              <Input
-                id="title"
-                {...register("title", { required: "Title is required" })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
-                placeholder="Enter ranking title"
-              />
-              {errors.title && (
-                <p className="text-red-400 text-sm">{errors.title.message}</p>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            <FormField
+              control={form.control}
+              name="title"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter ranking title" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="category" className="text-rap-platinum font-kaushan text-sm sm:text-base">
-                Category *
-              </Label>
-              <Input
-                id="category"
-                {...register("category", { required: "Category is required" })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
-                placeholder="e.g., Greatest of All Time"
-              />
-              {errors.category && (
-                <p className="text-red-400 text-sm">{errors.category.message}</p>
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea
+                      placeholder="Enter ranking description"
+                      {...field}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="description" className="text-rap-platinum font-kaushan text-sm sm:text-base">
-              Description
-            </Label>
-            <Textarea
-              id="description"
-              {...register("description")}
-              className="bg-rap-carbon border-rap-gold/30 text-rap-platinum min-h-[80px] sm:min-h-[100px]"
-              placeholder="Enter ranking description"
             />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="slug" className="text-rap-platinum font-kaushan text-sm sm:text-base">
-                URL Slug *
-              </Label>
-              <Input
-                id="slug"
-                {...register("slug", { required: "Slug is required" })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
-                placeholder="url-friendly-slug"
-              />
-              {errors.slug && (
-                <p className="text-red-400 text-sm">{errors.slug.message}</p>
+            <FormField
+              control={form.control}
+              name="category"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Category</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter category" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
               )}
-            </div>
-
-            <div className="space-y-2">
-              <Label htmlFor="display_order" className="text-rap-platinum font-kaushan text-sm sm:text-base">
-                Display Order
-              </Label>
-              <Input
-                id="display_order"
-                type="number"
-                {...register("display_order", { valueAsNumber: true })}
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10"
-                placeholder="0"
-              />
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <Label className="text-rap-platinum font-kaushan text-sm sm:text-base">Tags</Label>
-            <RankingTagSelector
-              selectedTags={selectedTags}
-              onTagsChange={setSelectedTags}
             />
-          </div>
-
-          <div className="flex items-center space-x-3 p-3 sm:p-2 bg-rap-carbon/30 rounded">
-            <Switch
-              id="is_featured"
-              {...register("is_featured")}
-              onCheckedChange={(checked) => setValue("is_featured", checked)}
+            <FormField
+              control={form.control}
+              name="slug"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Slug</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter URL slug" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            <Label htmlFor="is_featured" className="text-rap-platinum font-kaushan text-sm sm:text-base">
-              Featured Ranking
-            </Label>
-          </div>
-
-          <div className="flex flex-col sm:flex-row justify-end space-y-2 sm:space-y-0 sm:space-x-2 pt-4">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-              className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/20 h-11 sm:h-10 w-full sm:w-auto"
-            >
-              Cancel
-            </Button>
-            <Button
-              type="submit"
-              disabled={isLoading}
-              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light font-kaushan h-11 sm:h-10 w-full sm:w-auto"
-            >
-              {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              {ranking ? "Update" : "Create"} Ranking
-            </Button>
-          </div>
-        </form>
+            <div className="flex justify-end gap-2">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setOpen(false)}
+              >
+                Cancel
+              </Button>
+              <Button type="submit" disabled={isLoading}>
+                {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+                {ranking ? "Update" : "Create"}
+              </Button>
+            </div>
+          </form>
+        </Form>
       </DialogContent>
     </Dialog>
   );

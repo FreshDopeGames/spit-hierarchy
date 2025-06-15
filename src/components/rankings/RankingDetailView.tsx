@@ -2,7 +2,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, Trophy, Star, Users, Calendar, Eye, Award } from "lucide-react";
+import { ArrowLeft, Trophy, Star, Users, Calendar, Eye, Award, Music } from "lucide-react";
 import CommentBubble from "@/components/CommentBubble";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
@@ -125,46 +125,61 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
               The Rankings
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
-            {ranking.rappers.map((rapper) => {
-              const isHot = rapper.rank <= 2;
-              const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
-              
-              return (
-                <div 
-                  key={rapper.rank}
-                  className="flex items-center gap-4 p-4 bg-rap-carbon-light/30 rounded-lg hover:bg-rap-carbon-light/50 transition-colors relative"
-                >
-                  <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center">
-                    <span className="text-rap-platinum font-bold text-lg font-ceviche">#{rapper.rank}</span>
-                  </div>
+          <CardContent>
+            {ranking.rappers.length === 0 ? (
+              <div className="text-center py-12">
+                <Music className="w-16 h-16 text-rap-gold/50 mx-auto mb-4" />
+                <h3 className="text-xl font-mogra text-rap-platinum mb-2">No Rappers Ranked Yet</h3>
+                <p className="text-rap-smoke font-kaushan mb-4">
+                  This ranking is being prepared and will be populated with rappers soon.
+                </p>
+                <p className="text-rap-smoke/70 font-kaushan text-sm">
+                  Check back later or explore other rankings in the meantime.
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {ranking.rappers.map((rapper) => {
+                  const isHot = rapper.rank <= 2;
+                  const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
                   
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <h3 className="text-rap-platinum font-semibold text-lg font-mogra">{rapper.name}</h3>
-                      {isHot && (
-                        <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
-                      )}
-                    </div>
-                    <p className="text-rap-smoke font-kaushan">{rapper.reason}</p>
-                  </div>
-                  
-                  <div className="flex items-center gap-3">
-                    <VoteButton
-                      onVote={() => handleVote(rapper.name)}
-                      disabled={!user}
-                    />
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="text-rap-gold hover:text-rap-gold-light font-kaushan"
+                  return (
+                    <div 
+                      key={rapper.rank}
+                      className="flex items-center gap-4 p-4 bg-rap-carbon-light/30 rounded-lg hover:bg-rap-carbon-light/50 transition-colors relative"
                     >
-                      View Profile
-                    </Button>
-                  </div>
-                </div>
-              );
-            })}
+                      <div className="flex-shrink-0 w-12 h-12 bg-gradient-to-br from-rap-burgundy to-rap-forest rounded-full flex items-center justify-center">
+                        <span className="text-rap-platinum font-bold text-lg font-ceviche">#{rapper.rank}</span>
+                      </div>
+                      
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-rap-platinum font-semibold text-lg font-mogra">{rapper.name}</h3>
+                          {isHot && (
+                            <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
+                          )}
+                        </div>
+                        <p className="text-rap-smoke font-kaushan">{rapper.reason}</p>
+                      </div>
+                      
+                      <div className="flex items-center gap-3">
+                        <VoteButton
+                          onVote={() => handleVote(rapper.name)}
+                          disabled={!user}
+                        />
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="text-rap-gold hover:text-rap-gold-light font-kaushan"
+                        >
+                          View Profile
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </CardContent>
         </Card>
       </main>
