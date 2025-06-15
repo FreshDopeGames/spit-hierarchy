@@ -149,7 +149,7 @@ const UserVotingDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              {recentVotes.map((vote: any) => <div key={vote.id} className="flex items-center gap-2 text-rap-gold">
+              {recentVotes.map((vote: any) => <div key={vote.id} className="flex items-center gap-5 text-rap-gold bg-rap-gold">
                   <div className="flex-1">
                     <p className="text-black font-extrabold text-xl">{vote.rappers?.name}</p>
                     <p className="text-rap-carbon font-bold">{vote.voting_categories?.name}</p>
