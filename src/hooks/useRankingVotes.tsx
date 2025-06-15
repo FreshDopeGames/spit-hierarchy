@@ -4,6 +4,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemberStatus } from '@/hooks/useMemberStatus';
 import { useToast } from '@/hooks/use-toast';
+import { RankingItemWithDelta } from './useRankingData';
 
 export const useRankingVotes = () => {
   const { user } = useAuth();
@@ -41,6 +42,55 @@ export const useRankingVotes = () => {
       if (error) throw error;
       return data;
     },
+    onMutate: async ({ rankingId, rapperId }) => {
+      // Optimistic update - immediately show the vote increase
+      const voteWeight = getVoteMultiplier();
+      
+      // Cancel outgoing refetches to avoid overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey: ['ranking-data-with-deltas', rankingId] });
+
+      // Snapshot the previous value
+      const previousData = queryClient.getQueryData<RankingItemWithDelta[]>(['ranking-data-with-deltas', rankingId]);
+
+      // Optimistically update the cache
+      queryClient.setQueryData<RankingItemWithDelta[]>(
+        ['ranking-data-with-deltas', rankingId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          
+          return oldData.map(item => {
+            if (item.rapper?.id === rapperId) {
+              return {
+                ...item,
+                rapper: {
+                  ...item.rapper,
+                  total_votes: (item.rapper.total_votes || 0) + voteWeight
+                }
+              };
+            }
+            return item;
+          });
+        }
+      );
+
+      return { previousData };
+    },
+    onError: (error, variables, context) => {
+      // Rollback optimistic update on error
+      if (context?.previousData) {
+        queryClient.setQueryData(
+          ['ranking-data-with-deltas', variables.rankingId],
+          context.previousData
+        );
+      }
+      
+      console.error('Error submitting ranking vote:', error);
+      toast({
+        title: "Error",
+        description: "Failed to submit vote. Please try again.",
+        variant: "destructive",
+      });
+    },
     onSuccess: (_, variables) => {
       const voteWeight = getVoteMultiplier();
       
@@ -49,17 +99,8 @@ export const useRankingVotes = () => {
         description: `Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`,
       });
 
-      // Invalidate related queries
-      queryClient.invalidateQueries({ queryKey: ['ranking-data-with-deltas'] });
-      queryClient.invalidateQueries({ queryKey: ['ranking-votes'] });
-    },
-    onError: (error) => {
-      console.error('Error submitting ranking vote:', error);
-      toast({
-        title: "Error",
-        description: "Failed to submit vote. Please try again.",
-        variant: "destructive",
-      });
+      // The real-time subscription will handle the actual data update
+      // No need to manually invalidate queries here
     }
   });
 

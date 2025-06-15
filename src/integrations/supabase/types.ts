@@ -1348,6 +1348,10 @@ export type Database = {
         Args: { total_points: number }
         Returns: Database["public"]["Enums"]["member_status"]
       }
+      calculate_rapper_total_votes: {
+        Args: { rapper_uuid: string }
+        Returns: number
+      }
       can_manage_blog: {
         Args: { _user_id: string }
         Returns: boolean

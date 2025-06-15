@@ -1,5 +1,6 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface RankingItemWithDelta {
@@ -19,7 +20,10 @@ export interface RankingItemWithDelta {
 }
 
 export const useRankingData = (rankingId: string) => {
-  return useQuery({
+  const queryClient = useQueryClient();
+  const channelRef = useRef<any>(null);
+
+  const query = useQuery({
     queryKey: ["ranking-data-with-deltas", rankingId],
     queryFn: async () => {
       // Get all ranking items with rapper data
@@ -60,8 +64,68 @@ export const useRankingData = (rankingId: string) => {
       );
 
       return itemsWithDeltas;
-    }
+    },
+    refetchInterval: 5000, // Fallback polling every 5 seconds
+    refetchIntervalInBackground: true,
   });
+
+  // Set up real-time subscription for rappers table updates
+  useEffect(() => {
+    if (!rankingId || !query.data) return;
+
+    // Get rapper IDs from current ranking
+    const rapperIds = query.data.map(item => item.rapper?.id).filter(Boolean);
+    
+    if (rapperIds.length === 0) return;
+
+    // Create a channel for real-time updates
+    channelRef.current = supabase
+      .channel(`ranking-${rankingId}-votes`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'rappers',
+          filter: `id=in.(${rapperIds.join(',')})`
+        },
+        (payload) => {
+          console.log('Real-time rapper update received:', payload);
+          
+          // Update the specific rapper in the cache
+          queryClient.setQueryData(
+            ["ranking-data-with-deltas", rankingId],
+            (oldData: RankingItemWithDelta[] | undefined) => {
+              if (!oldData) return oldData;
+              
+              return oldData.map(item => {
+                if (item.rapper?.id === payload.new.id) {
+                  return {
+                    ...item,
+                    rapper: {
+                      ...item.rapper,
+                      total_votes: payload.new.total_votes
+                    }
+                  };
+                }
+                return item;
+              });
+            }
+          );
+        }
+      )
+      .subscribe();
+
+    // Cleanup subscription on unmount or dependency change
+    return () => {
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current);
+        channelRef.current = null;
+      }
+    };
+  }, [rankingId, query.data, queryClient]);
+
+  return query;
 };
 
 export const useHotThreshold = (items: RankingItemWithDelta[]) => {
