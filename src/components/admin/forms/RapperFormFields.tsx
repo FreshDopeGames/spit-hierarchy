@@ -97,7 +97,7 @@ export const RapperFormFields = ({
               <SelectValue placeholder="Select month" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
+              <SelectItem value="none">None</SelectItem>
               {months.map(month => (
                 <SelectItem key={month.value} value={month.value}>
                   {month.label}
@@ -114,7 +114,7 @@ export const RapperFormFields = ({
               <SelectValue placeholder="Select day" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">None</SelectItem>
+              <SelectItem value="none">None</SelectItem>
               {days.map(day => (
                 <SelectItem key={day.value} value={day.value}>
                   {day.label}
