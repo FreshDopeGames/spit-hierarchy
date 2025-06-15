@@ -59,10 +59,17 @@ const AdminRankingDialog = ({ onRankingCreated, ranking }: AdminRankingDialogPro
     setIsLoading(true);
     try {
       if (ranking) {
-        // Update existing ranking
+        // Update existing ranking - ensure all required fields are present
+        const updateData = {
+          title: values.title,
+          description: values.description || "",
+          category: values.category,
+          slug: values.slug,
+        };
+
         const { error } = await supabase
           .from("official_rankings")
-          .update(values)
+          .update(updateData)
           .eq("id", ranking.id);
 
         if (error) throw error;
@@ -72,10 +79,17 @@ const AdminRankingDialog = ({ onRankingCreated, ranking }: AdminRankingDialogPro
           description: "Ranking updated successfully",
         });
       } else {
-        // Create new ranking
+        // Create new ranking - ensure all required fields are present
+        const insertData = {
+          title: values.title,
+          description: values.description || "",
+          category: values.category,
+          slug: values.slug,
+        };
+
         const { data: newRanking, error } = await supabase
           .from("official_rankings")
-          .insert(values)
+          .insert(insertData)
           .select()
           .single();
 

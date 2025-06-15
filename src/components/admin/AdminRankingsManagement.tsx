@@ -5,12 +5,11 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Trophy } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import AdminRankingsTable from "./AdminRankingsTable";
 import AdminRankingDialog from "./AdminRankingDialog";
 
 const AdminRankingsManagement = () => {
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [editingRanking, setEditingRanking] = useState(null);
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -64,20 +63,19 @@ const AdminRankingsManagement = () => {
     }
   });
 
-  const handleCreate = () => {
-    setEditingRanking(null);
-    setDialogOpen(true);
-  };
-
   const handleEdit = (ranking: any) => {
     setEditingRanking(ranking);
-    setDialogOpen(true);
   };
 
   const handleDelete = (ranking: any) => {
     if (confirm(`Are you sure you want to delete "${ranking.title}"? This action cannot be undone.`)) {
       deleteRankingMutation.mutate(ranking.id);
     }
+  };
+
+  const handleRankingCreated = () => {
+    queryClient.invalidateQueries({ queryKey: ["admin-rankings"] });
+    setEditingRanking(null);
   };
 
   return (
@@ -91,13 +89,7 @@ const AdminRankingsManagement = () => {
                 Rankings Management
               </CardTitle>
             </div>
-            <Button
-              onClick={handleCreate}
-              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light font-kaushan w-full sm:w-auto text-sm sm:text-base px-3 sm:px-4 py-2 h-10 sm:h-auto"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Create Ranking
-            </Button>
+            <AdminRankingDialog onRankingCreated={handleRankingCreated} />
           </div>
         </CardHeader>
         <CardContent>
@@ -115,15 +107,12 @@ const AdminRankingsManagement = () => {
         </CardContent>
       </Card>
 
-      <AdminRankingDialog
-        open={dialogOpen}
-        onOpenChange={setDialogOpen}
-        ranking={editingRanking}
-        onSuccess={() => {
-          setDialogOpen(false);
-          queryClient.invalidateQueries({ queryKey: ["admin-rankings"] });
-        }}
-      />
+      {editingRanking && (
+        <AdminRankingDialog
+          ranking={editingRanking}
+          onRankingCreated={handleRankingCreated}
+        />
+      )}
     </div>
   );
 };
