@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -90,25 +89,23 @@ const BlogPostsTab = ({ onEditPost, onNewPost }: BlogPostsTabProps) => {
   return (
     <Card className="bg-carbon-fiber border border-rap-gold/30">
       <CardHeader>
+        <CardTitle className="text-rap-platinum font-mogra mb-4 text-center text-2xl">Blog Posts</CardTitle>
         <div className="flex justify-between items-center">
-          <CardTitle className="text-rap-platinum font-ceviche">Blog Posts</CardTitle>
-          <div className="flex gap-4 items-center">
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
-              <Input 
-                placeholder="Search posts..." 
-                value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)} 
-                className="pl-10 bg-rap-carbon border-rap-smoke text-rap-platinum" 
-              />
-            </div>
-            <Button 
-              onClick={onNewPost} 
-              className="bg-rap-gold font-mogra"
-            >
-              New Post
-            </Button>
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+            <Input 
+              placeholder="Search posts..." 
+              value={searchTerm} 
+              onChange={(e) => setSearchTerm(e.target.value)} 
+              className="pl-10 bg-rap-carbon border-rap-smoke text-rap-platinum" 
+            />
           </div>
+          <Button 
+            onClick={onNewPost} 
+            className="bg-rap-gold font-mogra ml-4"
+          >
+            New Post
+          </Button>
         </div>
       </CardHeader>
       <CardContent>
