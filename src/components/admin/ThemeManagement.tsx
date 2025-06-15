@@ -39,16 +39,16 @@ const ThemeManagement = () => {
       <ThemeManagementHeader theme={theme} updateTheme={updateTheme} resetTheme={resetTheme} />
 
       <Tabs defaultValue="colors" className="space-y-4">
-        <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full grid grid-cols-3 p-3 gap-1 rounded-lg">
-          <TabsTrigger value="colors" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2 rounded-md">
+        <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full grid grid-cols-3 p-4 gap-2 rounded-lg h-16 items-center">
+          <TabsTrigger value="colors" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2 rounded-md h-10">
             <Palette className="w-4 h-4 mr-2" />
             Colors
           </TabsTrigger>
-          <TabsTrigger value="fonts" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2 rounded-md">
+          <TabsTrigger value="fonts" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2 rounded-md h-10">
             <Type className="w-4 h-4 mr-2" />
             Typography
           </TabsTrigger>
-          <TabsTrigger value="layout" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2 rounded-md">
+          <TabsTrigger value="layout" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-sm px-4 py-2 rounded-md h-10">
             <Layout className="w-4 h-4 mr-2" />
             Layout
           </TabsTrigger>
