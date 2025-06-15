@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,39 +7,34 @@ import ColorPaletteTab from "./theme/ColorPaletteTab";
 import TypographyTab from "./theme/TypographyTab";
 import LayoutTab from "./theme/LayoutTab";
 import ThemePreview from "./theme/ThemePreview";
-
 const ThemeManagement = () => {
-  const { theme, updateTheme, resetTheme } = useTheme();
-
+  const {
+    theme,
+    updateTheme,
+    resetTheme
+  } = useTheme();
   const handleColorChange = (colorKey: string, value: string) => {
     updateTheme({
       colors: {
         ...theme.colors,
-        [colorKey]: value,
-      },
+        [colorKey]: value
+      }
     });
   };
-
   const handleFontChange = (fontKey: string, value: string) => {
     updateTheme({
       fonts: {
         ...theme.fonts,
-        [fontKey]: value,
-      },
+        [fontKey]: value
+      }
     });
   };
-
-  return (
-    <div className="space-y-6">
-      <ThemeManagementHeader 
-        theme={theme}
-        updateTheme={updateTheme}
-        resetTheme={resetTheme}
-      />
+  return <div className="space-y-6">
+      <ThemeManagementHeader theme={theme} updateTheme={updateTheme} resetTheme={resetTheme} />
 
       <Tabs defaultValue="colors" className="space-y-4">
         <div className="overflow-x-auto">
-          <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0">
+          <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full min-w-max flex-nowrap sm:flex-wrap sm:min-w-0 py-[10px]">
             <TabsTrigger value="colors" className="text-rap-platinum data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-xs sm:text-sm px-2 sm:px-3 py-1 sm:py-2 whitespace-nowrap">
               <Palette className="w-4 h-4 mr-2" />
               Colors
@@ -57,30 +51,19 @@ const ThemeManagement = () => {
         </div>
 
         <TabsContent value="colors" className="space-y-4">
-          <ColorPaletteTab 
-            theme={theme}
-            onColorChange={handleColorChange}
-          />
+          <ColorPaletteTab theme={theme} onColorChange={handleColorChange} />
         </TabsContent>
 
         <TabsContent value="fonts" className="space-y-4">
-          <TypographyTab 
-            theme={theme}
-            onFontChange={handleFontChange}
-          />
+          <TypographyTab theme={theme} onFontChange={handleFontChange} />
         </TabsContent>
 
         <TabsContent value="layout" className="space-y-4">
-          <LayoutTab 
-            theme={theme}
-            updateTheme={updateTheme}
-          />
+          <LayoutTab theme={theme} updateTheme={updateTheme} />
         </TabsContent>
       </Tabs>
 
       <ThemePreview />
-    </div>
-  );
+    </div>;
 };
-
 export default ThemeManagement;
