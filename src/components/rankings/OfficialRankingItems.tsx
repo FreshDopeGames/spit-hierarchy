@@ -45,6 +45,10 @@ const OfficialRankingItems = ({
 
   const isHot = (velocity: number) => velocity >= hotThreshold && velocity > 0;
 
+  const formatVoteCount = (count: number) => {
+    return count.toLocaleString();
+  };
+
   return (
     <div className="space-y-4">
       {displayedItems.map((item, index) => (
@@ -69,6 +73,10 @@ const OfficialRankingItems = ({
                     {item.rapper.origin}
                   </p>
                 )}
+                {/* Vote Count Display */}
+                <p className="text-sm text-white font-bold font-kaushan">
+                  Votes: {formatVoteCount(item.rapper?.total_votes || 0)}
+                </p>
                 {item.reason && (
                   <p className="text-sm text-rap-silver mt-1 font-kaushan italic">
                     "{item.reason}"
