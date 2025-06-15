@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,7 +36,7 @@ const BlogManagement = () => {
 
   return (
     <div className="space-y-6">
-      <BlogManagementHeader onNewPost={handleNewPost} />
+      <BlogManagementHeader />
 
       <Tabs defaultValue="posts" className="space-y-4">
         <TabsList className="bg-carbon-fiber border border-rap-gold/30">
