@@ -96,7 +96,7 @@ const BlogCategoryDialog = ({
   return <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="w-[95vw] max-w-md bg-rap-carbon border border-rap-gold/30 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche text-lg sm:text-xl">
+          <DialogTitle className="text-rap-gold font-mogra text-lg sm:text-2xl">
             {category ? 'Edit Category' : 'Create New Category'}
           </DialogTitle>
         </DialogHeader>
