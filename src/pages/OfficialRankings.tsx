@@ -1,10 +1,10 @@
 
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
+import HeaderNavigation from "@/components/HeaderNavigation";
+import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import RankingHeader from "@/components/rankings/RankingHeader";
 import RankingCard from "@/components/rankings/RankingCard";
 
@@ -66,10 +66,6 @@ const OfficialRankings = () => {
     }
   };
 
-  const handleRankingClick = (slug: string) => {
-    // Navigation will be handled by the Link component in RankingCard
-  };
-
   // Transform database data to match RankingCard props
   const transformedRankings = rankings.map((ranking) => ({
     id: ranking.id,
@@ -99,40 +95,34 @@ const OfficialRankings = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      {/* Header */}
-      <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-4 shadow-lg shadow-rap-gold/20">
-        <div className="max-w-6xl mx-auto flex items-center justify-between">
-          <Link to="/rankings">
-            <Button
-              variant="ghost"
-              className="text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan"
-            >
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back to All Rankings
-            </Button>
-          </Link>
-        </div>
-      </header>
+      {/* Main site navigation (like homepage) */}
+      <HeaderNavigation isScrolled={false} />
 
-      <main className="max-w-6xl mx-auto p-6">
-        <RankingHeader
-          title="Official Rankings"
-          description="Curated rankings created by our expert editorial team, featuring the most comprehensive and authoritative lists in hip-hop. Each list now includes every rapper in our database."
-        />
+      {/* Hero section for rankings */}
+      <div className="max-w-7xl mx-auto pt-20 px-4">
+        <RankingsSectionHeader />
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          {transformedRankings.map((ranking) => (
-            <Link key={ranking.id} to={`/rankings/official/${ranking.slug}`}>
-              <RankingCard
-                {...ranking}
-                onClick={() => {}} // Not used since we're using Link
-              />
-            </Link>
-          ))}
-        </div>
-      </main>
+        <main className="max-w-6xl mx-auto p-6">
+          <RankingHeader
+            title="Official Rankings"
+            description="Curated rankings created by our expert editorial team, featuring the most comprehensive and authoritative lists in hip-hop. Each list now includes every rapper in our database."
+          />
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {transformedRankings.map((ranking) => (
+              <Link key={ranking.id} to={`/rankings/official/${ranking.slug}`}>
+                <RankingCard
+                  {...ranking}
+                  onClick={() => {}} // Not used since we're using Link
+                />
+              </Link>
+            ))}
+          </div>
+        </main>
+      </div>
     </div>
   );
 };
 
 export default OfficialRankings;
+
