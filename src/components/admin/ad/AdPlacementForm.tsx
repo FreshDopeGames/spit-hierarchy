@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -177,7 +176,11 @@ const AdPlacementForm = ({
           )}
         />
 
-        <Button type="submit" disabled={isLoading} className="w-full">
+        <Button 
+          type="submit" 
+          disabled={isLoading} 
+          className="w-full bg-rap-gold-light text-black hover:bg-rap-gold hover:text-black"
+        >
           {isLoading ? "Submitting..." : "Save Ad Placement"}
         </Button>
       </form>
