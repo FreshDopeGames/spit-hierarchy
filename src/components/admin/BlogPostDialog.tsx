@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -159,7 +158,7 @@ const BlogPostDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto bg-carbon-fiber border border-rap-gold/30 bg-black">
+      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto bg-rap-carbon border border-rap-gold/30">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-ceviche font-thin text-2xl sm:text-4xl">
             {post ? 'Edit Post' : 'Create New Post'}

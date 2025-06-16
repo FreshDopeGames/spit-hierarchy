@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -134,7 +133,7 @@ const AdminRankingDialog = ({
           </Button>
         )}
       </DialogTrigger>
-      <DialogContent className="bg-carbon-fiber border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
+      <DialogContent className="bg-rap-carbon border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-mogra text-rap-gold">
             {ranking ? "Edit Ranking" : "Create New Ranking"}

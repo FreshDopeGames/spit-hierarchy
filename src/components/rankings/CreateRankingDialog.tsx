@@ -79,7 +79,7 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="bg-carbon-fiber border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
+      <DialogContent className="bg-rap-carbon border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-mogra text-rap-gold">Create New Ranking</DialogTitle>
           <DialogDescription className="text-rap-smoke">
