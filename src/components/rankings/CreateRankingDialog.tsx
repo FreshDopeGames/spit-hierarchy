@@ -25,6 +25,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { CreateUserRankingData } from "@/types/userRanking";
 
 const formSchema = z.object({
   title: z.string().min(5, {
@@ -36,8 +37,10 @@ const formSchema = z.object({
   category: z.string().min(2, {
     message: "Category must be at least 2 characters.",
   }),
-  isPublic: z.boolean().default(true),
+  isPublic: z.boolean(),
 });
+
+type FormData = z.infer<typeof formSchema>;
 
 interface CreateRankingDialogProps {
   children: React.ReactNode;
@@ -47,7 +50,7 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
   const [open, setOpen] = useState(false);
   const { mutate: createRanking, isPending } = useCreateUserRanking();
 
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FormData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
@@ -57,8 +60,15 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    createRanking(values, {
+  function onSubmit(values: FormData) {
+    const rankingData: CreateUserRankingData = {
+      title: values.title,
+      description: values.description,
+      category: values.category,
+      isPublic: values.isPublic,
+    };
+    
+    createRanking(rankingData, {
       onSuccess: () => {
         form.reset();
         setOpen(false);
