@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -151,7 +152,7 @@ const AdminRankingDialog = ({
                     <Input 
                       placeholder="Enter ranking title" 
                       {...field} 
-                      className="bg-rap-charcoal border-rap-gold/30"
+                      className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
                     />
                   </FormControl>
                   <FormMessage />
@@ -168,7 +169,7 @@ const AdminRankingDialog = ({
                     <Textarea 
                       placeholder="Enter ranking description" 
                       {...field} 
-                      className="bg-rap-charcoal border-rap-gold/30"
+                      className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
                     />
                   </FormControl>
                   <FormMessage />
@@ -185,7 +186,7 @@ const AdminRankingDialog = ({
                     <Input 
                       placeholder="Enter category" 
                       {...field} 
-                      className="bg-rap-charcoal border-rap-gold/30"
+                      className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
                     />
                   </FormControl>
                   <FormMessage />
@@ -202,7 +203,7 @@ const AdminRankingDialog = ({
                     <Input 
                       placeholder="Enter URL slug" 
                       {...field} 
-                      className="bg-rap-charcoal border-rap-gold/30"
+                      className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
                     />
                   </FormControl>
                   <FormMessage />

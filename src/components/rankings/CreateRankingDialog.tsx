@@ -95,7 +95,7 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
                 <FormItem>
                   <FormLabel className="font-mogra text-rap-platinum">Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Top 10 Lyrical Rappers" {...field} className="bg-rap-charcoal border-rap-gold/30" />
+                    <Input placeholder="e.g., Top 10 Lyrical Rappers" {...field} className="bg-gray-100 border-rap-gold/30 text-rap-carbon" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -111,7 +111,7 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
                     <Textarea
                       placeholder="Describe what your ranking is about..."
                       {...field}
-                      className="bg-rap-charcoal border-rap-gold/30"
+                      className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
                     />
                   </FormControl>
                   <FormMessage />
@@ -125,7 +125,7 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
                 <FormItem>
                   <FormLabel className="font-mogra text-rap-platinum">Category</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Lyrical Ability" {...field} className="bg-rap-charcoal border-rap-gold/30" />
+                    <Input placeholder="e.g., Lyrical Ability" {...field} className="bg-gray-100 border-rap-gold/30 text-rap-carbon" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

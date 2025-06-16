@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -173,7 +174,7 @@ const BlogPostDialog = ({
                 id="title"
                 value={formData.title}
                 onChange={(e) => handleTitleChange(e.target.value)}
-                className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
+                className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
                 required
               />
             </div>
@@ -184,7 +185,7 @@ const BlogPostDialog = ({
                 id="slug"
                 value={formData.slug}
                 onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
-                className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
+                className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
                 placeholder="auto-generated-from-title"
               />
             </div>
@@ -196,7 +197,7 @@ const BlogPostDialog = ({
               id="excerpt"
               value={formData.excerpt}
               onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
-              className="bg-rap-carbon border-rap-smoke text-rap-platinum min-h-[80px]"
+              className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[80px]"
               rows={3}
             />
           </div>
@@ -207,7 +208,7 @@ const BlogPostDialog = ({
               id="content"
               value={formData.content}
               onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-              className="bg-rap-carbon border-rap-smoke text-rap-platinum min-h-[200px] sm:min-h-[250px]"
+              className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[200px] sm:min-h-[250px]"
               rows={10}
               required
             />
@@ -220,12 +221,12 @@ const BlogPostDialog = ({
                 value={formData.category_id} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, category_id: value }))}
               >
-                <SelectTrigger className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10">
+                <SelectTrigger className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
-                <SelectContent className="bg-rap-carbon border-rap-smoke max-h-[200px]">
+                <SelectContent className="bg-gray-100 border-rap-smoke max-h-[200px]">
                   {categories?.map((category) => (
-                    <SelectItem key={category.id} value={category.id} className="text-rap-platinum">
+                    <SelectItem key={category.id} value={category.id} className="text-rap-carbon">
                       {category.name}
                     </SelectItem>
                   ))}
@@ -239,13 +240,13 @@ const BlogPostDialog = ({
                 value={formData.status} 
                 onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
               >
-                <SelectTrigger className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10">
+                <SelectTrigger className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10">
                   <SelectValue />
                 </SelectTrigger>
-                <SelectContent className="bg-rap-carbon border-rap-smoke">
-                  <SelectItem value="draft" className="text-rap-platinum">Draft</SelectItem>
-                  <SelectItem value="published" className="text-rap-platinum">Published</SelectItem>
-                  <SelectItem value="archived" className="text-rap-platinum">Archived</SelectItem>
+                <SelectContent className="bg-gray-100 border-rap-smoke">
+                  <SelectItem value="draft" className="text-rap-carbon">Draft</SelectItem>
+                  <SelectItem value="published" className="text-rap-carbon">Published</SelectItem>
+                  <SelectItem value="archived" className="text-rap-carbon">Archived</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -257,7 +258,7 @@ const BlogPostDialog = ({
               id="featured_image"
               value={formData.featured_image_url}
               onChange={(e) => setFormData(prev => ({ ...prev, featured_image_url: e.target.value }))}
-              className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
+              className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
               placeholder="https://example.com/image.jpg"
             />
           </div>
@@ -278,7 +279,7 @@ const BlogPostDialog = ({
                 id="meta_title"
                 value={formData.meta_title}
                 onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
-                className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
+                className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
                 placeholder="Defaults to post title"
               />
             </div>
@@ -289,7 +290,7 @@ const BlogPostDialog = ({
                 id="meta_description"
                 value={formData.meta_description}
                 onChange={(e) => setFormData(prev => ({ ...prev, meta_description: e.target.value }))}
-                className="bg-rap-carbon border-rap-smoke text-rap-platinum h-11 sm:h-10"
+                className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
                 placeholder="SEO meta description"
               />
             </div>
