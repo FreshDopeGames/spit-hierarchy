@@ -81,7 +81,7 @@ const RichTextEditor = ({ value, onChange, placeholder, className }: RichTextEdi
           <span>**bold** or *italic*</span>
           <span>- bullet lists</span>
           <span>`inline code`</span>
-          <span>> blockquotes</span>
+          <span>{'>'} blockquotes</span>
           <span>[link text](url)</span>
           <span># Headings</span>
         </div>
