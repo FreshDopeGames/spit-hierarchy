@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ import { useQuery, useMutation } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
+import RichTextEditor from "./RichTextEditor";
 
 interface BlogPostDialogProps {
   open: boolean;
@@ -204,13 +204,11 @@ const BlogPostDialog = ({
 
           <div className="space-y-2">
             <Label htmlFor="content" className="text-rap-platinum text-sm sm:text-base">Content *</Label>
-            <Textarea
-              id="content"
+            <RichTextEditor
               value={formData.content}
-              onChange={(e) => setFormData(prev => ({ ...prev, content: e.target.value }))}
-              className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[200px] sm:min-h-[250px]"
-              rows={10}
-              required
+              onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+              placeholder="Write your blog post content here... You can use Markdown formatting."
+              className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[300px]"
             />
           </div>
 
