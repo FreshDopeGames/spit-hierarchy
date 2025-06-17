@@ -6,6 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import RichTextEditor from "../RichTextEditor";
+import BlogPostImageUpload from "./BlogPostImageUpload";
 import { BlogPostFormData, generateSlug } from "./BlogPostFormData";
 
 interface BlogPostFormFieldsProps {
@@ -108,16 +109,10 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="featured_image" className="text-rap-platinum text-sm sm:text-base">Featured Image URL</Label>
-        <Input
-          id="featured_image"
-          value={formData.featured_image_url}
-          onChange={(e) => setFormData(prev => ({ ...prev, featured_image_url: e.target.value }))}
-          className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
-          placeholder="https://example.com/image.jpg"
-        />
-      </div>
+      <BlogPostImageUpload
+        imageUrl={formData.featured_image_url}
+        onImageChange={(url) => setFormData(prev => ({ ...prev, featured_image_url: url }))}
+      />
 
       <div className="flex items-center space-x-3 p-3 bg-rap-carbon/30 rounded">
         <Switch
