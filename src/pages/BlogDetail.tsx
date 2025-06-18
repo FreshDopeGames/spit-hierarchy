@@ -1,4 +1,3 @@
-
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -162,10 +161,10 @@ const BlogDetail = () => {
   const transformedBlogPost = {
     title: blogPost.title,
     tags: blogPost.blog_post_tags?.map(pt => pt.blog_tags.name) || [],
-    author: "Temple Scribe", // Default author for now
+    author: "Temple Scribe",
     timeAgo: formatDate(blogPost.published_at),
-    readTime: "5 min read", // Default read time
-    imageUrl: blogPost.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1200&h=600&fit=crop"
+    readTime: "5 min read",
+    featured_image_url: blogPost.featured_image_url
   };
 
   const transformedRelatedPosts = relatedPosts?.map(post => ({

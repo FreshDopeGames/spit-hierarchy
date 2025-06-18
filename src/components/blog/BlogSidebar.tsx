@@ -23,20 +23,22 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
         <Card className="bg-carbon-fiber border border-rap-gold/40">
-          <CardHeader>
-            <CardTitle className="text-rap-gold font-ceviche">Related Sacred Scrolls</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-rap-gold font-ceviche text-lg">More Writtens</CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4">
+          <CardContent className="space-y-3 pt-0">
             {relatedPosts.map((post) => (
               <Link key={post.id} to={`/blog/${post.id}`} className="block group">
-                <div className="flex gap-3 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                  <img 
-                    src={post.imageUrl} 
-                    alt={post.title}
-                    className="w-16 h-16 object-cover rounded-md group-hover:opacity-80 transition-opacity"
-                  />
-                  <div className="flex-1 min-w-0">
-                    <h4 className="font-kaushan text-rap-platinum group-hover:text-rap-gold transition-colors line-clamp-2 mb-1">
+                <div className="flex gap-4 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <div className="flex-shrink-0">
+                    <img 
+                      src={post.imageUrl} 
+                      alt={post.title}
+                      className="w-20 h-16 object-cover rounded-md group-hover:opacity-80 transition-opacity"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-0 space-y-1">
+                    <h4 className="font-kaushan text-sm text-rap-platinum group-hover:text-rap-gold transition-colors line-clamp-3 leading-snug">
                       {post.title}
                     </h4>
                     <div className="flex items-center gap-1 text-xs text-rap-smoke">
@@ -54,15 +56,15 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
       {/* Newsletter Signup */}
       {showSignUp && (
         <Card className="bg-gradient-to-br from-rap-burgundy/20 to-rap-forest/20 border border-rap-gold/40">
-          <CardHeader>
-            <CardTitle className="text-rap-gold font-ceviche">Join the Temple</CardTitle>
+          <CardHeader className="pb-4">
+            <CardTitle className="text-rap-gold font-ceviche text-lg">Join the Temple</CardTitle>
           </CardHeader>
-          <CardContent>
-            <p className="text-rap-platinum font-kaushan mb-4">
+          <CardContent className="pt-0">
+            <p className="text-rap-platinum font-kaushan mb-4 text-sm">
               Subscribe to receive the latest sacred scrolls and exclusive insights from the temple.
             </p>
             <Link to="/auth">
-              <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra">
+              <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-sm">
                 Join Now
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
@@ -73,15 +75,15 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
 
       {/* Browse All Posts */}
       <Card className="bg-carbon-fiber border border-rap-gold/40">
-        <CardContent className="p-6 text-center">
-          <h3 className="text-rap-gold font-ceviche mb-2">Explore All Scrolls</h3>
-          <p className="text-rap-silver font-kaushan text-sm mb-4">
-            Discover more wisdom from our sacred archives
+        <CardContent className="p-6 text-center space-y-3">
+          <h3 className="text-rap-gold font-ceviche text-lg">More Articles</h3>
+          <p className="text-rap-silver font-kaushan text-sm">
+            Discover more content from our library
           </p>
           <Link to="/blog">
-            <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20">
-              <ArrowRight className="w-4 h-4 mr-2" />
+            <Button className="bg-rap-gold text-black hover:bg-rap-gold-light font-medium">
               View All
+              <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
         </CardContent>
