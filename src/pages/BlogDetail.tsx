@@ -167,6 +167,9 @@ const BlogDetail = () => {
     featured_image_url: blogPost.featured_image_url
   };
 
+  console.log('BlogDetail - Original blog post:', blogPost);
+  console.log('BlogDetail - Transformed blog post:', transformedBlogPost);
+
   const transformedRelatedPosts = relatedPosts?.map(post => ({
     id: post.id,
     title: post.title,
