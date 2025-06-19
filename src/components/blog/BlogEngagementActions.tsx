@@ -1,20 +1,24 @@
 
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
-import { Heart, Bookmark, Share2 } from "lucide-react";
+import { Heart, Bookmark, Share2, MessageCircle } from "lucide-react";
 
 interface BlogEngagementActionsProps {
   likes: number;
   isLiked: boolean;
   isBookmarked: boolean;
+  commentCount?: number;
   onShare: (platform: string) => void;
+  onCommentsClick?: () => void;
 }
 
 const BlogEngagementActions = ({ 
   likes, 
   isLiked, 
   isBookmarked, 
-  onShare 
+  commentCount = 0,
+  onShare,
+  onCommentsClick
 }: BlogEngagementActionsProps) => {
   return (
     <ThemedCard className="mb-8">
@@ -43,6 +47,15 @@ const BlogEngagementActions = ({
             >
               <Bookmark className={`w-4 h-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
               Save
+            </ThemedButton>
+
+            <ThemedButton
+              variant="outline"
+              size="sm"
+              onClick={onCommentsClick}
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              {commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}
             </ThemedButton>
           </div>
 

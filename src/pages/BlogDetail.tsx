@@ -1,8 +1,10 @@
+
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import CommentBubble from "@/components/CommentBubble";
 import { useAuth } from "@/hooks/useAuth";
+import { useComments } from "@/hooks/useComments";
 import BlogDetailHeader from "@/components/blog/BlogDetailHeader";
 import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
 import BlogArticleContent from "@/components/blog/BlogArticleContent";
@@ -34,6 +36,12 @@ interface BlogPost {
 const BlogDetail = () => {
   const { id } = useParams();
   const { user } = useAuth();
+
+  // Get comment data
+  const { totalComments } = useComments({ 
+    contentType: "blog", 
+    contentId: id || "" 
+  });
 
   // Fetch the blog post
   const { data: blogPost, isLoading, error } = useQuery({
@@ -109,6 +117,14 @@ const BlogDetail = () => {
       case 'copy':
         navigator.clipboard.writeText(url);
         break;
+    }
+  };
+
+  const handleCommentsClick = () => {
+    // Scroll to comment bubble or trigger it to open
+    const commentBubble = document.querySelector('[data-comment-bubble]');
+    if (commentBubble) {
+      commentBubble.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -193,7 +209,9 @@ const BlogDetail = () => {
               likes={0}
               isLiked={false}
               isBookmarked={false}
+              commentCount={totalComments}
               onShare={handleShare}
+              onCommentsClick={handleCommentsClick}
             />
           </div>
 
@@ -208,7 +226,9 @@ const BlogDetail = () => {
       </main>
 
       {/* Comment Bubble */}
-      <CommentBubble contentType="blog" contentId={id || ""} />
+      <div data-comment-bubble>
+        <CommentBubble contentType="blog" contentId={id || ""} />
+      </div>
     </div>
   );
 };

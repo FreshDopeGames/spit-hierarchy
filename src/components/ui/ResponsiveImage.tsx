@@ -18,6 +18,7 @@ interface ResponsiveImageProps {
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   onLoad?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   context?: 'thumbnail' | 'card' | 'hero' | 'carousel';
+  objectFit?: 'cover' | 'contain' | 'fill' | 'scale-down' | 'none';
 }
 
 const ResponsiveImage = ({
@@ -28,9 +29,29 @@ const ResponsiveImage = ({
   loading = 'lazy',
   onError,
   onLoad,
-  context = 'card'
+  context = 'card',
+  objectFit
 }: ResponsiveImageProps) => {
   const [imageError, setImageError] = useState(false);
+
+  // Determine object-fit based on context if not explicitly provided
+  const getObjectFit = () => {
+    if (objectFit) return objectFit;
+    
+    switch (context) {
+      case 'carousel':
+        return 'contain'; // Show full image in carousel
+      case 'hero':
+        return 'cover'; // Cover for hero images
+      case 'thumbnail':
+        return 'cover'; // Cover for thumbnails
+      case 'card':
+      default:
+        return 'cover'; // Default to cover
+    }
+  };
+
+  const objectFitClass = `object-${getObjectFit()}`;
 
   // If src is a string (legacy single image), use it directly
   if (typeof src === 'string') {
@@ -38,7 +59,7 @@ const ResponsiveImage = ({
       <img
         src={src}
         alt={alt}
-        className={cn('object-cover', className)}
+        className={cn(objectFitClass, className)}
         loading={loading}
         onError={(e) => {
           setImageError(true);
@@ -91,7 +112,7 @@ const ResponsiveImage = ({
       srcSet={buildSrcSet()}
       sizes={sizes}
       alt={alt}
-      className={cn('object-cover', className)}
+      className={cn(objectFitClass, className)}
       loading={loading}
       onError={(e) => {
         setImageError(true);

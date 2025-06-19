@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -41,7 +42,7 @@ const BlogCarousel = () => {
   };
 
   const goToNext = () => {
-    setCurrentIndex((prevIndex) => (prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1));
+    setCurrentIndex((prevIndex) => (prevIndex === nextIndex + 1 ? 0 : prevIndex + 1));
   };
 
   const getImageData = (post: any) => {
@@ -84,6 +85,7 @@ const BlogCarousel = () => {
                   alt={post.title}
                   className="w-full h-full"
                   context="carousel"
+                  objectFit="contain"
                   sizes="(max-width: 768px) 100vw, 100vw"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
