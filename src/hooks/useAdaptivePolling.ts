@@ -38,7 +38,7 @@ export const useAdaptivePolling = ({
 
   return {
     refetchInterval: shouldPoll ? intervalRef.current : false,
-    refetchIntervalInBackground: false, // Never poll in background
+    refetchIntervalInBackground: false as const, // Never poll in background
     isActive
   };
 };
