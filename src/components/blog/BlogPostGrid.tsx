@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -6,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Clock, Calendar, ArrowRight, Tag } from "lucide-react";
 import { Link } from "react-router-dom";
 import { format } from "date-fns";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 
 interface BlogPost {
   id: string;
@@ -39,16 +39,30 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
     }
   };
 
+  const getImageData = (post: BlogPost) => {
+    if (!post.featured_image_url) {
+      return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop";
+    }
+    
+    try {
+      return JSON.parse(post.featured_image_url);
+    } catch {
+      return post.featured_image_url;
+    }
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {posts.map(post => (
         <Card key={post.id} className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-xl shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300 group">
           <Link to={`/blog/${post.id}`}>
             <div className="aspect-video overflow-hidden">
-              <img 
-                src={post.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop"} 
-                alt={post.title} 
-                className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" 
+              <ResponsiveImage
+                src={getImageData(post)}
+                alt={post.title}
+                className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                context="card"
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
             </div>
           </Link>

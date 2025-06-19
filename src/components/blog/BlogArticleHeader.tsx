@@ -1,6 +1,6 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 
 interface BlogPost {
   title: string;
@@ -17,6 +17,20 @@ interface BlogArticleHeaderProps {
 
 const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
   console.log('BlogArticleHeader - Featured image URL:', blogPost.featured_image_url);
+
+  // Parse featured image data
+  const getFeaturedImageData = () => {
+    if (!blogPost.featured_image_url) return null;
+    
+    try {
+      return JSON.parse(blogPost.featured_image_url);
+    } catch {
+      // Fallback for single URL format
+      return blogPost.featured_image_url;
+    }
+  };
+
+  const featuredImageData = getFeaturedImageData();
 
   return (
     <div className="mb-8">
@@ -48,15 +62,16 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
       </div>
 
       {/* Featured Image - only show if image exists */}
-      {blogPost.featured_image_url && (
+      {featuredImageData && (
         <div className="relative rounded-xl overflow-hidden mb-8">
-          <img 
-            src={blogPost.featured_image_url} 
-            alt={blogPost.title} 
-            className="w-full h-64 md:h-96 object-cover" 
-            onError={(e) => {
+          <ResponsiveImage
+            src={featuredImageData}
+            alt={blogPost.title}
+            className="w-full h-64 md:h-96"
+            context="hero"
+            sizes="(max-width: 768px) 100vw, 100vw"
+            onError={() => {
               console.error('Failed to load blog post image:', blogPost.featured_image_url);
-              e.currentTarget.style.display = 'none';
             }}
             onLoad={() => {
               console.log('Successfully loaded blog post image:', blogPost.featured_image_url);

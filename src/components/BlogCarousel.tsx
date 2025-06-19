@@ -1,190 +1,153 @@
-import React, { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Clock, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
+import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
-interface BlogPost {
-  id: string;
-  title: string;
-  excerpt: string;
-  featured_image_url: string;
-  published_at: string;
-  blog_categories?: {
-    name: string;
-  };
-}
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
+
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const rotationTime = 8000; // 8 seconds
 
-  // Fetch published blog posts
-  const {
-    data: posts,
-    isLoading
-  } = useQuery({
-    queryKey: ['featured-blog-posts'],
+  const { data: featuredPosts = [], isLoading } = useQuery({
+    queryKey: ["featured-blog-posts"],
     queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from('blog_posts').select(`
+      const { data, error } = await supabase
+        .from("blog_posts")
+        .select(`
           id,
           title,
           excerpt,
           featured_image_url,
           published_at,
           blog_categories(name)
-        `).eq('status', 'published').order('published_at', {
-        ascending: false
-      }).limit(5);
-      if (error) throw error;
-      return data as BlogPost[];
-    }
-  });
-  useEffect(() => {
-    if (!posts || posts.length === 0) return;
-    const interval = setInterval(() => {
-      setProgress(prev => {
-        if (prev >= 100) {
-          setCurrentIndex(current => (current + 1) % posts.length);
-          return 0;
-        }
-        return prev + 100 / (rotationTime / 100);
-      });
-    }, 100);
-    return () => clearInterval(interval);
-  }, [posts]);
-  if (isLoading) {
-    return <div className="mb-12">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-            Slick Talk Chronicles
-          </h2>
-          <p className="text-rap-platinum font-kaushan text-lg">
-            Chronicles from the Temple of Hip-Hop
-          </p>
-        </div>
-        <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20">
-          <CardContent className="p-8 text-center">
-            <div className="text-rap-platinum">Loading slick talk...</div>
-          </CardContent>
-        </Card>
-      </div>;
-  }
-  if (!posts || posts.length === 0) {
-    return <div className="mb-12">
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-ceviche text-rap-gold mb-2 animate-text-glow tracking-wider">
-            Slick Talk Chronicles
-          </h2>
-          <p className="text-rap-platinum font-kaushan text-lg">
-            Chronicles from the Temple of Hip-Hop
-          </p>
-        </div>
-        <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20">
-          <CardContent className="p-8 text-center">
-            <div className="text-rap-platinum mb-4">No published posts yet. Check back soon for wisdom from the temple!</div>
-          </CardContent>
-        </Card>
-        <div className="text-center mt-8">
-          <Link to="/blog">
-            <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30">
-              <ArrowRight className="w-4 h-4 mr-2" />
-              Explore All Slick Talk
-            </Button>
-          </Link>
-        </div>
-      </div>;
-  }
-  const currentPost = posts[currentIndex];
-  const timeAgo = currentPost.published_at ? format(new Date(currentPost.published_at), 'MMMM d, yyyy') : 'Unknown date';
-  return <div className="mb-12">
-      <div className="text-center mb-8 py-0">
-        <h2 className="font-ceviche text-rap-gold mb-2 tracking-wider text-5xl">SLICK TALK</h2>
-        <p className="text-rap-platinum font-merienda text-lg">
-          Chronicles from the Temple of Hip-Hop
-        </p>
-      </div>
+        `)
+        .eq("status", "published")
+        .eq("featured", true)
+        .order("published_at", { ascending: false })
+        .limit(5);
       
-      <Card className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-2xl shadow-rap-gold/20 relative">
-        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
-        
-        <CardContent className="p-0">
-          <div className="flex flex-col md:flex-row">
-            {/* Featured Image */}
-            <div className="md:w-1/2 relative">
-              <Link to={`/blog/${currentPost.id}`}>
-                <img src={currentPost.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=400&fit=crop"} alt={currentPost.title} className="w-full h-64 md:h-80 object-cover hover:opacity-90 transition-opacity cursor-pointer" />
-              </Link>
-              <div className="absolute top-4 left-4">
-                <span className="bg-rap-gold text-black px-3 py-1 rounded-full font-merienda shadow-lg font-extrabold text-xs">Featured Post</span>
-              </div>
-            </div>
+      if (error) throw error;
+      return data;
+    },
+    staleTime: 10 * 60 * 1000, // 10 minutes - blog posts don't change frequently
+    refetchOnWindowFocus: false,
+  });
 
-            {/* Content */}
-            <div className="md:w-1/2 p-6 md:p-8 flex flex-col justify-between bg-gradient-to-br from-rap-carbon/50 to-rap-carbon-light/50 py-[31px]">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2 text-rap-smoke font-kaushan text-sm">
-                  <Clock className="w-4 h-4" />
-                  <span>{timeAgo}</span>
-                  {currentPost.blog_categories?.name && <>
-                      <span>•</span>
-                      <span>{currentPost.blog_categories.name}</span>
-                    </>}
-                </div>
-                
-                <Link to={`/blog/${currentPost.id}`}>
-                  <h2 className="text-2xl text-rap-platinum leading-tight hover:text-rap-gold transition-colors cursor-pointer font-ceviche font-normal md:text-4xl">
-                    {currentPost.title}
-                  </h2>
-                </Link>
-                
-                <p className="text-rap-silver text-lg leading-relaxed font-kaushan">
-                  {currentPost.excerpt || currentPost.title}
-                </p>
-              </div>
+  const goToPrevious = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === 0 ? featuredPosts.length - 1 : prevIndex - 1));
+  };
 
-              <div className="mt-6 text-black font-merienda font-extrabold bg-transparent">
-                <Link to={`/blog/${currentPost.id}`}>
-                  <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon group font-mogra shadow-lg shadow-rap-gold/30">
-                    Read Full Hieroglyphs
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                </Link>
-              </div>
-            </div>
-          </div>
+  const goToNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1));
+  };
 
-          {/* Progress Bar */}
-          <div className="relative h-1 bg-rap-carbon">
-            <div className="absolute top-0 left-0 h-full bg-rap-gold transition-all duration-100" style={{
-            width: `${progress}%`
-          }} />
-          </div>
+  const getImageData = (post: any) => {
+    if (!post.featured_image_url) {
+      return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=400&fit=crop";
+    }
+    
+    try {
+      return JSON.parse(post.featured_image_url);
+    } catch {
+      return post.featured_image_url;
+    }
+  };
 
-          {/* Carousel Indicators */}
-          <div className="flex justify-center gap-2 py-4 bg-carbon-fiber">
-            {posts.map((_, index) => <button key={index} onClick={() => {
-            setCurrentIndex(index);
-            setProgress(0);
-          }} className={`w-3 h-3 rounded-full transition-colors ${index === currentIndex ? 'bg-rap-gold shadow-lg shadow-rap-gold/50' : 'bg-rap-smoke hover:bg-rap-silver'}`} />)}
-          </div>
-        </CardContent>
-      </Card>
+  if (isLoading || featuredPosts.length === 0) return null;
 
-      {/* View All Button - Now positioned below the carousel */}
-      <div className="text-center mt-8">
+  return (
+    <section className="mb-16">
+      <div className="mb-6 flex items-center justify-between">
+        <h2 className="text-2xl font-bold text-rap-platinum font-mogra">
+          Featured Scrolls
+        </h2>
         <Link to="/blog">
-          <Button className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30">
-            <ArrowRight className="w-4 h-4 mr-2" />
-            View All Slick Talk
+          <Button variant="secondary" size="sm" className="bg-rap-gold/10 text-rap-gold hover:bg-rap-gold/20 border-rap-gold/30">
+            More Articles
           </Button>
         </Link>
       </div>
-    </div>;
+      
+      <div className="relative overflow-hidden rounded-xl bg-carbon-fiber border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+        <div 
+          className="flex transition-transform duration-500 ease-in-out"
+          style={{ transform: `translateX(-${currentIndex * 100}%)` }}
+        >
+          {featuredPosts.map((post) => (
+            <div key={post.id} className="w-full flex-shrink-0">
+              <div className="relative h-96 overflow-hidden">
+                <ResponsiveImage
+                  src={getImageData(post)}
+                  alt={post.title}
+                  className="w-full h-full"
+                  context="carousel"
+                  sizes="(max-width: 768px) 100vw, 100vw"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                
+                <div className="absolute bottom-0 left-0 p-6 text-white w-full">
+                  {post.blog_categories?.name && (
+                    <Badge className="mb-2 bg-rap-forest/20 text-rap-forest border-rap-forest/30">
+                      {post.blog_categories.name}
+                    </Badge>
+                  )}
+                  <h3 className="text-2xl font-bold font-ceviche mb-2">{post.title}</h3>
+                  <div className="flex items-center text-sm mb-3">
+                    <Calendar className="w-4 h-4 mr-2 text-rap-smoke" />
+                    <span className="text-rap-smoke">
+                      {format(new Date(post.published_at), "MMMM d, yyyy")}
+                    </span>
+                  </div>
+                  <p className="text-rap-silver line-clamp-2">{post.excerpt}</p>
+                  <Link to={`/blog/${post.id}`}>
+                    <Button variant="link" className="mt-4 text-rap-gold hover:text-rap-gold-light p-0">
+                      Read More
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        
+        <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-black/20 hover:bg-black/50 text-white"
+            onClick={goToPrevious}
+          >
+            <ChevronLeft className="h-6 w-6" />
+            <span className="sr-only">Previous</span>
+          </Button>
+          <Button
+            variant="ghost"
+            size="icon"
+            className="rounded-full bg-black/20 hover:bg-black/50 text-white"
+            onClick={goToNext}
+          >
+            <ChevronRight className="h-6 w-6" />
+            <span className="sr-only">Next</span>
+          </Button>
+        </div>
+
+        <div className="absolute bottom-2 left-0 w-full flex justify-center gap-2">
+          {featuredPosts.map((_, index) => (
+            <button
+              key={index}
+              className={`h-2 w-2 rounded-full transition-colors duration-300 ${
+                currentIndex === index ? "bg-rap-gold" : "bg-gray-500 opacity-50 hover:opacity-75"
+              }`}
+              onClick={() => setCurrentIndex(index)}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
 };
+
 export default BlogCarousel;

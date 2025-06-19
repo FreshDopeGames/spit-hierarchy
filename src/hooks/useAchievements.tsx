@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useAdaptivePolling } from './useAdaptivePolling';
 import { sortAchievementsByRarity } from '@/utils/achievementUtils';
 import { showAchievementToast } from '@/components/achievements/AchievementToast';
 
@@ -10,8 +11,14 @@ export const useAchievements = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
+  
+  const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
+    baseInterval: 60000, // Reduced frequency for achievements - 1 minute
+    maxInterval: 600000, // Max 10 minutes
+    enabled: !!user
+  });
 
-  // Fetch ALL achievements combined with user progress in a single query from the view
+  // Fetch ALL achievements combined with user progress
   const { data: achievementsData, isLoading } = useQuery({
     queryKey: ['user-achievement-progress', user?.id],
     queryFn: async () => {
@@ -26,7 +33,10 @@ export const useAchievements = () => {
       return data;
     },
     enabled: !!user,
-    refetchInterval: 5000, // Check for new achievements/progress every 5 seconds
+    refetchInterval,
+    refetchIntervalInBackground,
+    staleTime: 5 * 60 * 1000, // 5 minutes - achievements don't change frequently
+    refetchOnWindowFocus: false,
   });
 
   // Sort the achievements for consistent display

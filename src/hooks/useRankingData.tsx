@@ -1,7 +1,7 @@
-
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAdaptivePolling } from "./useAdaptivePolling";
 
 export interface RankingItemWithDelta {
   id: string;
@@ -24,6 +24,11 @@ export interface RankingItemWithDelta {
 export const useRankingData = (rankingId: string) => {
   const queryClient = useQueryClient();
   const channelRef = useRef<any>(null);
+  const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
+    baseInterval: 15000, // Increased from 5s to 15s
+    maxInterval: 120000, // Max 2 minutes
+    enabled: !!rankingId
+  });
 
   const query = useQuery({
     queryKey: ["ranking-data-with-deltas", rankingId],
@@ -92,8 +97,10 @@ export const useRankingData = (rankingId: string) => {
 
       return sortedItems;
     },
-    refetchInterval: 5000, // Fallback polling every 5 seconds
-    refetchIntervalInBackground: true,
+    refetchInterval,
+    refetchIntervalInBackground,
+    staleTime: 10 * 60 * 1000, // 10 minutes - longer stale time
+    refetchOnWindowFocus: false, // Disable refetch on window focus
   });
 
   // Set up real-time subscription for both rappers and ranking_votes table updates

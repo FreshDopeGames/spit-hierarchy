@@ -1,7 +1,7 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { useAdaptivePolling } from "@/hooks/useAdaptivePolling";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import HeroSection from "@/components/HeroSection";
 import BlogCarousel from "@/components/BlogCarousel";
@@ -16,6 +16,11 @@ import { Link } from "react-router-dom";
 
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+  const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
+    baseInterval: 30000, // Increased from 5s to 30s for homepage
+    maxInterval: 300000, // Max 5 minutes
+    enabled: true
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -26,7 +31,7 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch the top 3 most active official rankings with real-time vote data
+  // Fetch the top 3 most active official rankings with optimized polling
   const { data: topActiveRankings = [], isLoading } = useQuery({
     queryKey: ["top-active-rankings-for-sections"],
     queryFn: async () => {
@@ -94,8 +99,10 @@ const Index = () => {
 
       return rankingsWithItems;
     },
-    refetchInterval: 5000, // Refresh every 5 seconds to show real-time updates
-    refetchIntervalInBackground: true,
+    refetchInterval,
+    refetchIntervalInBackground,
+    staleTime: 15 * 60 * 1000, // 15 minutes - much longer stale time for homepage
+    refetchOnWindowFocus: false,
   });
 
   return (
