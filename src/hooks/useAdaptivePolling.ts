@@ -1,5 +1,5 @@
 
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import { useUserActivity } from './useUserActivity';
 
 interface AdaptivePollingConfig {
@@ -14,28 +14,28 @@ export const useAdaptivePolling = ({
   enabled = true
 }: AdaptivePollingConfig) => {
   const intervalRef = useRef<number>(baseInterval);
+  const [shouldPoll, setShouldPoll] = useState(enabled);
   const { isActive } = useUserActivity({ idleThreshold: 15000 }); // 15 seconds idle threshold
 
   useEffect(() => {
     if (!enabled) {
-      intervalRef.current = false as any;
+      setShouldPoll(false);
       return;
     }
 
     if (isActive) {
       // User is active, use base interval
       intervalRef.current = baseInterval;
+      setShouldPoll(true);
     } else {
       // User is idle, gradually increase interval
       const currentInterval = intervalRef.current;
       const nextInterval = Math.min(currentInterval * 2, maxInterval);
       intervalRef.current = nextInterval;
+      setShouldPoll(true);
     }
   }, [isActive, baseInterval, maxInterval, enabled]);
 
-  // Return false to disable polling completely when tab is not visible
-  const shouldPoll = enabled && (typeof intervalRef.current === 'number');
-  
   return {
     refetchInterval: shouldPoll ? intervalRef.current : false,
     refetchIntervalInBackground: false, // Never poll in background
