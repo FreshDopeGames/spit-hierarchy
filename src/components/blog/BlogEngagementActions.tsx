@@ -40,6 +40,17 @@ const BlogEngagementActions = ({
     }
   };
 
+  const handleCommentsClick = () => {
+    // First try to find and click the comment bubble to open it
+    const commentBubble = document.querySelector('[data-comment-bubble] button');
+    if (commentBubble && commentBubble instanceof HTMLButtonElement) {
+      commentBubble.click();
+    } else if (onCommentsClick) {
+      // Fallback to the provided handler
+      onCommentsClick();
+    }
+  };
+
   return (
     <ThemedCard className="mb-8">
       <ThemedCardContent className="p-6">
@@ -72,7 +83,7 @@ const BlogEngagementActions = ({
             <ThemedButton
               variant="outline"
               size="sm"
-              onClick={onCommentsClick}
+              onClick={handleCommentsClick}
             >
               <MessageCircle className="w-4 h-4 mr-2" />
               {commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}
