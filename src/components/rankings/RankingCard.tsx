@@ -2,6 +2,7 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Eye, Star, Award } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface Rapper {
   rank: number;
@@ -14,6 +15,7 @@ interface RankingCardProps {
   title: string;
   description: string;
   author: string;
+  authorId?: string;
   timeAgo: string;
   rappers: Rapper[];
   likes: number;
@@ -29,6 +31,7 @@ const RankingCard = ({
   title,
   description,
   author,
+  authorId,
   timeAgo,
   rappers,
   likes,
@@ -46,6 +49,10 @@ const RankingCard = ({
     if (onClick) {
       onClick(slug || id);
     }
+  };
+
+  const handleAuthorClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
   };
 
   return (
@@ -92,7 +99,19 @@ const RankingCard = ({
         
         <div className="flex items-center justify-between text-rap-smoke text-sm border-t border-rap-silver/20 pt-4">
           <div className="flex items-center gap-4 font-kaushan">
-            <span>by {author}</span>
+            <span>
+              by {authorId && !isOfficial ? (
+                <Link 
+                  to={`/user/${authorId}`} 
+                  className="text-rap-gold hover:text-rap-gold-light transition-colors"
+                  onClick={handleAuthorClick}
+                >
+                  {author}
+                </Link>
+              ) : (
+                author
+              )}
+            </span>
             <span>{timeAgo}</span>
           </div>
           

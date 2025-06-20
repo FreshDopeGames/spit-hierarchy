@@ -1,6 +1,6 @@
 
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import RankingHeader from "@/components/rankings/RankingHeader";
@@ -13,6 +13,7 @@ import { transformOfficialRankings, transformUserRankings, transformToLegacyForm
 const Rankings = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
+  const navigate = useNavigate();
   
   const { officialRankings, userRankingData, loading } = useRankingsData();
 
@@ -37,6 +38,18 @@ const Rankings = () => {
   // Combine all rankings for selection
   const allRankings = [...transformedOfficialRankings, ...transformedUserRankings];
   const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
+
+  const handleRankingClick = (rankingId: string) => {
+    // Find the ranking to determine if it's official or user-made
+    const officialRanking = transformedOfficialRankings.find(r => r.id === rankingId);
+    const userRanking = transformedUserRankings.find(r => r.id === rankingId);
+    
+    if (officialRanking) {
+      navigate(`/rankings/official/${officialRanking.slug}`);
+    } else if (userRanking) {
+      navigate(`/rankings/user/${userRanking.slug}`);
+    }
+  };
 
   if (selectedRanking && selectedRankingData) {
     return (
@@ -79,12 +92,12 @@ const Rankings = () => {
 
           <OfficialRankingsSection 
             rankings={legacyOfficialRankings} 
-            onRankingClick={setSelectedRanking} 
+            onRankingClick={handleRankingClick} 
           />
 
           <UserRankingsSection 
             rankings={legacyUserRankings} 
-            onRankingClick={setSelectedRanking} 
+            onRankingClick={handleRankingClick} 
             hasNextPage={userRankingData?.hasMore || false} 
             onLoadMore={() => {}} 
             isLoadingMore={false} 
