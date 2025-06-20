@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -18,7 +19,7 @@ const AdminRapperDialog = ({
   onSuccess
 }: AdminRapperDialogProps) => {
   return <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-carbon-fiber border border-rap-gold/30">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-rap-carbon border border-rap-gold/30">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
             {rapper ? `Edit ${rapper.name}` : "Add New Rapper"}
