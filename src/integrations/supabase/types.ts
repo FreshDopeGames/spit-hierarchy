@@ -1186,24 +1186,39 @@ export type Database = {
           created_at: string | null
           id: string
           position: number | null
-          rapper_name: string
+          rapper_id: string | null
           user_id: string | null
         }
         Insert: {
           created_at?: string | null
           id?: string
           position?: number | null
-          rapper_name: string
+          rapper_id?: string | null
           user_id?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
           position?: number | null
-          rapper_name?: string
+          rapper_id?: string | null
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "user_top_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_top_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       vote_notes: {
         Row: {

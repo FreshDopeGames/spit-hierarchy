@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +7,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import MemberStatusCard from "@/components/profile/MemberStatusCard";
+import MyTopFiveSection from "@/components/profile/MyTopFiveSection";
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileAchievements from "@/components/profile/ProfileAchievements";
 import VoteNotesSection from "@/components/profile/VoteNotesSection";
@@ -108,6 +108,8 @@ const UserProfile = () => {
           
           <MemberStatusCard memberStats={memberStats} />
           
+          <MyTopFiveSection />
+
           <ProfileStats memberStats={memberStats} />
 
           <div className="mb-6 sm:mb-8">
