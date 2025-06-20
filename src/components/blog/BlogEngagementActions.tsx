@@ -2,6 +2,7 @@
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Heart, Bookmark, Share2, MessageCircle } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 
 interface BlogEngagementActionsProps {
   likes: number;
@@ -20,6 +21,25 @@ const BlogEngagementActions = ({
   onShare,
   onCommentsClick
 }: BlogEngagementActionsProps) => {
+  const { toast } = useToast();
+
+  const handleShare = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      toast({
+        title: "Link copied!",
+        description: "The article link has been copied to your clipboard.",
+      });
+    } catch (error) {
+      console.error('Failed to copy link:', error);
+      toast({
+        title: "Copy failed",
+        description: "Unable to copy link. Please try again.",
+        variant: "destructive",
+      });
+    }
+  };
+
   return (
     <ThemedCard className="mb-8">
       <ThemedCardContent className="p-6">
@@ -62,7 +82,7 @@ const BlogEngagementActions = ({
           <ThemedButton
             variant="outline"
             size="sm"
-            onClick={() => onShare('copy')}
+            onClick={handleShare}
           >
             <Share2 className="w-4 h-4 mr-2" />
             Share
