@@ -119,7 +119,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
   return (
     <Card className="bg-carbon-fiber border border-rap-gold/30">
       <CardHeader className="pb-4">
-        <CardTitle className="text-rap-gold font-ceviche text-lg flex items-center gap-2">
+        <CardTitle className="text-rap-gold font-ceviche text-lg font-normal flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
           Avatar Upload
         </CardTitle>
