@@ -1,9 +1,7 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
-
 interface RelatedPost {
   id: string;
   title: string;
@@ -11,33 +9,27 @@ interface RelatedPost {
   imageUrl: string;
   timeAgo: string;
 }
-
 interface BlogSidebarProps {
   relatedPosts: RelatedPost[];
   showSignUp?: boolean;
 }
-
-const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => {
-  return (
-    <div className="space-y-6">
+const BlogSidebar = ({
+  relatedPosts,
+  showSignUp = false
+}: BlogSidebarProps) => {
+  return <div className="space-y-6">
       {/* Related Posts */}
-      {relatedPosts.length > 0 && (
-        <Card className="bg-carbon-fiber border border-rap-gold/40">
+      {relatedPosts.length > 0 && <Card className="bg-carbon-fiber border border-rap-gold/40">
           <CardHeader className="pb-4">
-            <CardTitle className="text-rap-gold font-ceviche text-lg">More Writtens</CardTitle>
+            <CardTitle className="text-rap-gold font-ceviche font-normal text-2xl text-center">More Writtens</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-0">
-            {relatedPosts.map((post) => (
-              <Link key={post.id} to={`/blog/${post.id}`} className="block group">
-                <div className="flex flex-col gap-3 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                  <div className="w-full">
-                    <img 
-                      src={post.imageUrl} 
-                      alt={post.title}
-                      className="w-full h-32 object-cover rounded-md group-hover:opacity-80 transition-opacity"
-                    />
+            {relatedPosts.map(post => <Link key={post.id} to={`/blog/${post.id}`} className="block group">
+                <div className="flex gap-4 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <div className="flex-shrink-0">
+                    <img src={post.imageUrl} alt={post.title} className="w-20 h-16 object-cover rounded-md group-hover:opacity-80 transition-opacity" />
                   </div>
-                  <div className="space-y-2">
+                  <div className="flex-1 min-w-0 space-y-2">
                     <h4 className="font-kaushan text-sm text-rap-platinum group-hover:text-rap-gold transition-colors line-clamp-3 leading-snug">
                       {post.title}
                     </h4>
@@ -47,15 +39,12 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
                     </div>
                   </div>
                 </div>
-              </Link>
-            ))}
+              </Link>)}
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
       {/* Newsletter Signup */}
-      {showSignUp && (
-        <Card className="bg-gradient-to-br from-rap-burgundy/20 to-rap-forest/20 border border-rap-gold/40">
+      {showSignUp && <Card className="bg-gradient-to-br from-rap-burgundy/20 to-rap-forest/20 border border-rap-gold/40">
           <CardHeader className="pb-4">
             <CardTitle className="text-rap-gold font-ceviche text-lg">Join the Temple</CardTitle>
           </CardHeader>
@@ -70,8 +59,7 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
               </Button>
             </Link>
           </CardContent>
-        </Card>
-      )}
+        </Card>}
 
       {/* Browse All Posts */}
       <Card className="bg-carbon-fiber border border-rap-gold/40">
@@ -88,8 +76,6 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
           </Link>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default BlogSidebar;
