@@ -1,6 +1,17 @@
 
 import { RankingWithItems, UnifiedRanking } from "@/types/rankings";
 
+// Helper function to generate deterministic values based on a string ID
+const generateDeterministicValue = (id: string, multiplier: number, base: number): number => {
+  let hash = 0;
+  for (let i = 0; i < id.length; i++) {
+    const char = id.charCodeAt(i);
+    hash = ((hash << 5) - hash) + char;
+    hash = hash & hash; // Convert to 32-bit integer
+  }
+  return Math.abs(hash % multiplier) + base;
+};
+
 export const transformOfficialRankings = (rankings: RankingWithItems[]): UnifiedRanking[] => {
   return rankings.map(ranking => ({
     id: ranking.id,
@@ -15,8 +26,8 @@ export const transformOfficialRankings = (rankings: RankingWithItems[]): Unified
       name: item.rapper?.name || "Unknown",
       reason: item.reason || ""
     })),
-    likes: Math.floor(Math.random() * 1000) + 100, // Mock data for now
-    views: Math.floor(Math.random() * 5000) + 1000, // Mock data for now
+    likes: generateDeterministicValue(ranking.id, 900, 150), // Range: 150-1049
+    views: generateDeterministicValue(ranking.id, 4000, 1200), // Range: 1200-5199
     isOfficial: true,
     tags: ["Official", ranking.category || "General"].filter(Boolean),
     slug: ranking.slug || `official-${ranking.id}`,
@@ -53,8 +64,8 @@ export const transformUserRankings = (userRankingData: any): UnifiedRanking[] =>
         name: item.rapper_name || "Unknown",
         reason: item.item_reason || ""
       })),
-      likes: Math.floor(Math.random() * 500) + 50,
-      views: Math.floor(Math.random() * 2000) + 100,
+      likes: generateDeterministicValue(ranking.id || "unknown", 450, 50), // Range: 50-499
+      views: generateDeterministicValue(ranking.id || "unknown", 1900, 100), // Range: 100-1999
       isOfficial: false,
       tags: ["Community", ranking.category || "General"].filter(Boolean),
       category: ranking.category || "General",
