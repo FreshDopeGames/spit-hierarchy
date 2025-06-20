@@ -29,15 +29,15 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
           <CardContent className="space-y-4 pt-0">
             {relatedPosts.map((post) => (
               <Link key={post.id} to={`/blog/${post.id}`} className="block group">
-                <div className="flex gap-4 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                  <div className="flex-shrink-0">
+                <div className="flex flex-col gap-3 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <div className="w-full">
                     <img 
                       src={post.imageUrl} 
                       alt={post.title}
-                      className="w-20 h-16 object-cover rounded-md group-hover:opacity-80 transition-opacity"
+                      className="w-full h-32 object-cover rounded-md group-hover:opacity-80 transition-opacity"
                     />
                   </div>
-                  <div className="flex-1 min-w-0 space-y-2">
+                  <div className="space-y-2">
                     <h4 className="font-kaushan text-sm text-rap-platinum group-hover:text-rap-gold transition-colors line-clamp-3 leading-snug">
                       {post.title}
                     </h4>
