@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -5,7 +6,6 @@ import { Star, MapPin, Calendar, Verified, Music, Instagram, Twitter } from "luc
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
-import ImageStyleSelector from "@/components/ImageStyleSelector";
 
 type Rapper = Tables<"rappers">;
 
@@ -21,9 +21,6 @@ const RapperHeader = ({ rapper, onVoteClick }: RapperHeaderProps) => {
 
   return (
     <div className="space-y-6">
-      {/* Image Style Selector */}
-      <ImageStyleSelector compact className="flex justify-end" />
-      
       <Card className="bg-carbon-fiber border-rap-burgundy/40 relative overflow-hidden">
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>

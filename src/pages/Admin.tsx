@@ -155,12 +155,6 @@ const Admin = () => {
               </TabsContent>
             )}
 
-            {isAdmin && (
-              <TabsContent value="images" className="mt-0">
-                <RapperImageManagement />
-              </TabsContent>
-            )}
-
             {canManageBlog && (
               <TabsContent value="blog" className="mt-0">
                 <BlogManagement />

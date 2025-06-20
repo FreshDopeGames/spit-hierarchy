@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -7,96 +6,46 @@ import { Database } from "@/integrations/supabase/types";
 
 type ImageStyle = Database["public"]["Enums"]["image_style"];
 
+// Simplified hook that always uses comic_book style
 export const useImageStyle = () => {
   const { user } = useAuth();
-  const queryClient = useQueryClient();
-  const [guestPreference, setGuestPreference] = useState<ImageStyle>("photo_real");
-
-  // Get user's preferred style from profile
-  const { data: userStyle, isLoading } = useQuery({
-    queryKey: ["user-image-style", user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("preferred_image_style")
-        .eq("id", user.id)
-        .single();
-      
-      if (error) throw error;
-      return data.preferred_image_style as ImageStyle;
-    },
-    enabled: !!user?.id
-  });
-
-  // Update user's preferred style
-  const updateStyleMutation = useMutation({
-    mutationFn: async (style: ImageStyle) => {
-      if (!user?.id) throw new Error("User not authenticated");
-      
-      const { error } = await supabase
-        .from("profiles")
-        .update({ preferred_image_style: style })
-        .eq("id", user.id);
-      
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-image-style"] });
-    }
-  });
-
-  // Get current preferred style (user's preference or guest preference)
-  const currentStyle = user ? (userStyle || "photo_real") : guestPreference;
-
-  // Set style preference
+  
+  // Always return comic_book as the current style
+  const currentStyle: ImageStyle = "comic_book";
+  
+  // No-op function for setting style (keeping interface consistent)
   const setImageStyle = (style: ImageStyle) => {
-    if (user) {
-      updateStyleMutation.mutate(style);
-    } else {
-      setGuestPreference(style);
-    }
+    // This is now a no-op since we only use comic_book style
+    console.log("Image style setting disabled - using comic_book by default");
   };
 
   return {
     currentStyle,
     setImageStyle,
-    isLoading,
-    isUpdating: updateStyleMutation.isPending
+    isLoading: false,
+    isUpdating: false
   };
 };
 
-// Optimized hook to get rapper image for specific style
-export const useRapperImage = (rapperId: string, preferredStyle?: ImageStyle) => {
-  const { currentStyle } = useImageStyle();
-  const styleToUse = preferredStyle || currentStyle;
-
+// Optimized hook to get rapper image - now always uses comic_book style
+export const useRapperImage = (rapperId: string) => {
   return useQuery({
-    queryKey: ["rapper-image", rapperId, styleToUse],
+    queryKey: ["rapper-image", rapperId, "comic_book"],
     queryFn: async () => {
-      // Try to get the specific style first, with fallback to photo_real, then legacy image_url
+      // Try to get comic_book style first, then fallback to legacy image_url
       const { data: images } = await supabase
         .from("rapper_images")
         .select("image_url, style")
         .eq("rapper_id", rapperId)
-        .in("style", styleToUse !== "photo_real" ? [styleToUse, "photo_real"] : ["photo_real"]);
+        .eq("style", "comic_book")
+        .limit(1);
 
-      // Find the preferred style first
-      const preferredImage = images?.find(img => img.style === styleToUse);
-      if (preferredImage?.image_url) {
-        return preferredImage.image_url;
+      // Check if we have a comic_book style image
+      if (images && images.length > 0 && images[0].image_url) {
+        return images[0].image_url;
       }
 
-      // Fallback to photo_real if we were looking for a different style
-      if (styleToUse !== "photo_real") {
-        const defaultImage = images?.find(img => img.style === "photo_real");
-        if (defaultImage?.image_url) {
-          return defaultImage.image_url;
-        }
-      }
-
-      // Final fallback to the legacy image_url field
+      // Fallback to the legacy image_url field
       const { data: rapper } = await supabase
         .from("rappers")
         .select("image_url")
@@ -111,24 +60,21 @@ export const useRapperImage = (rapperId: string, preferredStyle?: ImageStyle) =>
   });
 };
 
-// Batch hook for loading multiple rapper images efficiently
-export const useRapperImages = (rapperIds: string[], preferredStyle?: ImageStyle) => {
-  const { currentStyle } = useImageStyle();
-  const styleToUse = preferredStyle || currentStyle;
-
+// Batch hook for loading multiple rapper images efficiently - simplified to comic_book only
+export const useRapperImages = (rapperIds: string[]) => {
   return useQuery({
-    queryKey: ["rapper-images-batch", rapperIds, styleToUse],
+    queryKey: ["rapper-images-batch", rapperIds, "comic_book"],
     queryFn: async () => {
       if (rapperIds.length === 0) return {};
 
-      // Get all images for the requested rappers and styles
+      // Get all comic_book style images for the requested rappers
       const { data: images } = await supabase
         .from("rapper_images")
         .select("rapper_id, image_url, style")
         .in("rapper_id", rapperIds)
-        .in("style", styleToUse !== "photo_real" ? [styleToUse, "photo_real"] : ["photo_real"]);
+        .eq("style", "comic_book");
 
-      // Get legacy image URLs for rappers that don't have styled images
+      // Get legacy image URLs for rappers that don't have comic_book images
       const { data: rappers } = await supabase
         .from("rappers")
         .select("id, image_url")
@@ -138,23 +84,14 @@ export const useRapperImages = (rapperIds: string[], preferredStyle?: ImageStyle
       const imageMap: Record<string, string | null> = {};
       
       rapperIds.forEach(rapperId => {
-        // Try to find the preferred style first
-        const preferredImage = images?.find(img => img.rapper_id === rapperId && img.style === styleToUse);
-        if (preferredImage?.image_url) {
-          imageMap[rapperId] = preferredImage.image_url;
+        // Try to find the comic_book style first
+        const comicBookImage = images?.find(img => img.rapper_id === rapperId && img.style === "comic_book");
+        if (comicBookImage?.image_url) {
+          imageMap[rapperId] = comicBookImage.image_url;
           return;
         }
 
-        // Fallback to photo_real if we were looking for a different style
-        if (styleToUse !== "photo_real") {
-          const defaultImage = images?.find(img => img.rapper_id === rapperId && img.style === "photo_real");
-          if (defaultImage?.image_url) {
-            imageMap[rapperId] = defaultImage.image_url;
-            return;
-          }
-        }
-
-        // Final fallback to legacy image_url
+        // Fallback to legacy image_url
         const rapper = rappers?.find(r => r.id === rapperId);
         imageMap[rapperId] = rapper?.image_url || null;
       });
