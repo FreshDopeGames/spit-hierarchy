@@ -75,7 +75,7 @@ const BlogCarousel = () => {
           >
             {featuredPosts.map((post) => (
               <div key={post.id} className="w-full flex-shrink-0">
-                <div className="relative h-[350px] sm:h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden">
+                <div className="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden">
                   <ResponsiveImage
                     src={getImageData(post)}
                     alt={post.title}
@@ -86,26 +86,26 @@ const BlogCarousel = () => {
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
                   
-                  <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 text-white w-full">
+                  <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
                     {post.blog_categories?.name && (
                       <Badge className="mb-2 sm:mb-3 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
                         {post.blog_categories.name}
                       </Badge>
                     )}
-                    <h3 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-ceviche mb-2 sm:mb-3 leading-tight">
+                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight">
                       {post.title}
                     </h3>
-                    <div className="flex items-center text-xs sm:text-sm mb-2 sm:mb-3">
-                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-rap-smoke" />
+                    <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4">
+                      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
                       <span className="text-rap-smoke">
                         {format(new Date(post.published_at), "MMMM d, yyyy")}
                       </span>
                     </div>
-                    <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-3 sm:mb-4 md:mb-5">
+                    <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
                       {post.excerpt}
                     </p>
                     <Link to={`/blog/${post.id}`}>
-                      <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base h-auto">
+                      <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base md:text-lg h-auto">
                         Read More
                       </Button>
                     </Link>
@@ -119,7 +119,7 @@ const BlogCarousel = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 hover:bg-black/60 text-white h-10 w-10 sm:h-12 sm:w-12 backdrop-blur-sm"
+              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white h-10 w-10 sm:h-12 sm:w-12"
               onClick={goToPrevious}
             >
               <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -128,7 +128,7 @@ const BlogCarousel = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 hover:bg-black/60 text-white h-10 w-10 sm:h-12 sm:w-12 backdrop-blur-sm"
+              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white h-10 w-10 sm:h-12 sm:w-12"
               onClick={goToNext}
             >
               <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
@@ -136,11 +136,11 @@ const BlogCarousel = () => {
             </Button>
           </div>
 
-          <div className="absolute bottom-4 sm:bottom-6 left-0 w-full flex justify-center gap-2">
+          <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-center gap-2 sm:gap-3">
             {featuredPosts.map((_, index) => (
               <button
                 key={index}
-                className={`h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full transition-all duration-300 ${
+                className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 ${
                   currentIndex === index ? "bg-rap-gold scale-110" : "bg-gray-400 opacity-60 hover:opacity-80"
                 }`}
                 onClick={() => setCurrentIndex(index)}
