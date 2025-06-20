@@ -2,12 +2,14 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Calendar, Verified, Music, Instagram, Twitter } from "lucide-react";
+import { Crown, MapPin, Calendar, Verified, Music, Instagram, Twitter } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
 
-type Rapper = Tables<"rappers">;
+type Rapper = Tables<"rappers"> & {
+  top5_count?: number;
+};
 
 interface RapperHeaderProps {
   rapper: Rapper;
@@ -61,9 +63,9 @@ const RapperHeader = ({ rapper, onVoteClick }: RapperHeaderProps) => {
               {/* Stats */}
               <div className="flex flex-wrap gap-4">
                 <div className="flex items-center gap-2 bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-4 py-2 rounded-lg border border-rap-silver/20">
-                  <Star className="w-5 h-5 text-rap-gold" />
+                  <Crown className="w-5 h-5 text-rap-gold" />
                   <span className="text-rap-platinum font-semibold font-ceviche">
-                    {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
+                    {rapper.top5_count || 0} Top 5{(rapper.top5_count || 0) !== 1 ? 's' : ''}
                   </span>
                 </div>
                 <Badge variant="secondary" className="bg-rap-forest/20 text-rap-platinum border-rap-forest/30 px-4 py-2 font-kaushan">

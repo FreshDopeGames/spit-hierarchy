@@ -65,8 +65,12 @@ export const useUserTopRappers = () => {
       if (error) throw error;
       return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
+      // Invalidate the specific rapper's detail page to update the Top 5 count
+      if (data?.rapper_id) {
+        queryClient.invalidateQueries({ queryKey: ["rapper", data.rapper_id] });
+      }
       toast({
         title: "Success",
         description: "Top 5 updated successfully!",
@@ -86,6 +90,14 @@ export const useUserTopRappers = () => {
     mutationFn: async (position: number) => {
       if (!user) throw new Error("User not authenticated");
 
+      // Get the rapper_id before deleting so we can invalidate their detail page
+      const { data: existingEntry } = await supabase
+        .from("user_top_rappers")
+        .select("rapper_id")
+        .eq("user_id", user.id)
+        .eq("position", position)
+        .single();
+
       const { error } = await supabase
         .from("user_top_rappers")
         .delete()
@@ -93,9 +105,14 @@ export const useUserTopRappers = () => {
         .eq("position", position);
 
       if (error) throw error;
+      return existingEntry;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
+      // Invalidate the specific rapper's detail page to update the Top 5 count
+      if (data?.rapper_id) {
+        queryClient.invalidateQueries({ queryKey: ["rapper", data.rapper_id] });
+      }
     },
     onError: (error: any) => {
       console.error("Error removing top rapper:", error);

@@ -15,7 +15,9 @@ import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import { Tables } from "@/integrations/supabase/types";
 
-type Rapper = Tables<"rappers">;
+type Rapper = Tables<"rappers"> & {
+  top5_count?: number;
+};
 
 const RapperDetail = () => {
   const { id } = useParams<{ id: string }>();
@@ -28,14 +30,26 @@ const RapperDetail = () => {
     queryFn: async () => {
       if (!id) throw new Error("No rapper ID provided");
       
-      const { data, error } = await supabase
+      // Fetch rapper data
+      const { data: rapperData, error: rapperError } = await supabase
         .from("rappers")
         .select("*")
         .eq("id", id)
         .single();
       
-      if (error) throw error;
-      return data;
+      if (rapperError) throw rapperError;
+
+      // Fetch Top 5 count using the database function
+      const { data: countData, error: countError } = await supabase
+        .rpc("get_rapper_top5_count", { rapper_uuid: id });
+      
+      if (countError) {
+        console.error("Error fetching Top 5 count:", countError);
+        // Don't throw error, just set count to 0
+        return { ...rapperData, top5_count: 0 };
+      }
+
+      return { ...rapperData, top5_count: countData || 0 };
     },
     enabled: !!id
   });
