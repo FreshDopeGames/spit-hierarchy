@@ -1,6 +1,5 @@
 
 import { useMutation } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
 import { useToast } from "@/hooks/use-toast";
 
@@ -8,6 +7,11 @@ interface RateLimitOptions {
   actionType: string;
   maxRequests?: number;
   windowMinutes?: number;
+}
+
+interface RateLimitRecord {
+  actionType: string;
+  timestamp: number;
 }
 
 export const useRateLimiting = (options: RateLimitOptions) => {
@@ -20,45 +24,36 @@ export const useRateLimiting = (options: RateLimitOptions) => {
         throw new Error("User must be authenticated");
       }
 
-      // Call the rate limit function we created in SQL
-      const { data, error } = await supabase
-        .from('rate_limits')
-        .select('*')
-        .eq('user_id', user.id)
-        .eq('action_type', options.actionType)
-        .gte('window_start', new Date(Date.now() - (options.windowMinutes || 60) * 60 * 1000).toISOString());
+      const storageKey = `rate_limit_${user.id}_${options.actionType}`;
+      const windowMs = (options.windowMinutes || 60) * 60 * 1000;
+      const maxRequests = options.maxRequests || 10;
+      const now = Date.now();
 
-      if (error) {
-        throw error;
-      }
+      // Get existing records from localStorage
+      const existingRecords: RateLimitRecord[] = JSON.parse(
+        localStorage.getItem(storageKey) || '[]'
+      );
 
-      const totalRequests = data?.reduce((sum, record) => sum + record.request_count, 0) || 0;
-      
-      if (totalRequests >= (options.maxRequests || 10)) {
+      // Filter out expired records
+      const validRecords = existingRecords.filter(
+        record => now - record.timestamp < windowMs
+      );
+
+      // Check if limit exceeded
+      if (validRecords.length >= maxRequests) {
         throw new Error("Rate limit exceeded. Please try again later.");
       }
 
-      // Insert new rate limit record
-      const windowStart = new Date();
-      windowStart.setMinutes(Math.floor(windowStart.getMinutes() / (options.windowMinutes || 60)) * (options.windowMinutes || 60));
-      windowStart.setSeconds(0);
-      windowStart.setMilliseconds(0);
-
-      const { error: insertError } = await supabase
-        .from('rate_limits')
-        .upsert({
-          user_id: user.id,
-          action_type: options.actionType,
-          window_start: windowStart.toISOString(),
-          request_count: 1
-        }, {
-          onConflict: 'user_id,action_type,window_start',
-          ignoreDuplicates: false
-        });
-
-      if (insertError) {
-        throw insertError;
-      }
+      // Add new record
+      const newRecord: RateLimitRecord = {
+        actionType: options.actionType,
+        timestamp: now
+      };
+      
+      validRecords.push(newRecord);
+      
+      // Store updated records
+      localStorage.setItem(storageKey, JSON.stringify(validRecords));
 
       return true;
     },

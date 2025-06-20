@@ -44,9 +44,6 @@ const Rankings = () => {
     isLoading: userRankingsLoading,
   } = useOptimizedUserRankings();
 
-  // Get the rankings from the data object
-  const userRankings = userRankingData?.rankings || [];
-
   useEffect(() => {
     fetchOfficialRankings();
   }, []);
@@ -111,8 +108,31 @@ const Rankings = () => {
     slug: ranking.slug
   }));
 
+  // Transform user rankings to match expected format
+  const transformedUserRankings = (userRankingData?.rankings || []).map(ranking => ({
+    id: ranking.id,
+    title: ranking.title,
+    description: ranking.description || "",
+    author: ranking.profiles?.username || "Unknown User",
+    authorId: ranking.user_id,
+    createdAt: ranking.created_at,
+    timeAgo: new Date(ranking.created_at).toLocaleDateString(),
+    rappers: (ranking.preview_items || []).map((item, index) => ({
+      rank: item.item_position,
+      name: item.rapper_name,
+      reason: item.item_reason || ""
+    })),
+    likes: Math.floor(Math.random() * 500) + 50,
+    views: Math.floor(Math.random() * 2000) + 100,
+    isOfficial: false,
+    tags: ["Community", ranking.category],
+    category: ranking.category,
+    isPublic: ranking.is_public || false,
+    slug: `user-${ranking.id}`
+  }));
+
   // Combine all rankings for selection
-  const allRankings = [...transformedOfficialRankings, ...userRankings];
+  const allRankings = [...transformedOfficialRankings, ...transformedUserRankings];
   const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
 
   if (selectedRanking && selectedRankingData) {
@@ -160,7 +180,7 @@ const Rankings = () => {
           />
 
           <UserRankingsSection 
-            rankings={userRankings} 
+            rankings={transformedUserRankings} 
             onRankingClick={setSelectedRanking} 
             hasNextPage={userRankingData?.hasMore || false} 
             onLoadMore={() => {}} 
