@@ -40,8 +40,7 @@ export const useOptimizedUserRankings = ({
           created_at,
           updated_at,
           is_public,
-          user_id,
-          profiles!user_rankings_user_id_fkey(username)
+          user_id
         `)
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);
@@ -56,17 +55,48 @@ export const useOptimizedUserRankings = ({
 
       if (error) throw error;
 
-      // Get preview items for each ranking
+      if (!data || data.length === 0) {
+        return {
+          rankings: [],
+          totalCount: count || 0,
+          hasMore: false
+        };
+      }
+
+      // Get unique user IDs and fetch profiles separately
+      const userIds = [...new Set(data.map(r => r.user_id))];
+      
+      const { data: profiles, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id, username")
+        .in("id", userIds);
+
+      if (profilesError) {
+        console.error("Error fetching profiles:", profilesError);
+      }
+
+      // Create a map for quick profile lookup
+      const profilesMap = new Map();
+      if (profiles) {
+        profiles.forEach((profile) => {
+          profilesMap.set(profile.id, profile);
+        });
+      }
+
+      // Get preview items for each ranking using the RPC function
       const rankingsWithItems = await Promise.all(
-        (data || []).map(async (ranking) => {
+        data.map(async (ranking) => {
           const { data: items } = await supabase.rpc(
             'get_user_ranking_preview_items',
             { ranking_uuid: ranking.id, item_limit: 5 }
           );
 
+          const userProfile = profilesMap.get(ranking.user_id);
+
           return {
             ...ranking,
-            preview_items: items || []
+            preview_items: items || [],
+            profiles: userProfile ? { username: userProfile.username } : null
           };
         })
       );
