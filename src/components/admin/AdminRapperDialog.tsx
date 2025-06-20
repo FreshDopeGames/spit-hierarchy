@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import RapperForm from "./forms/RapperForm";
+import { RapperForm } from "./forms/RapperForm";
 import RapperAvatarUpload from "./RapperAvatarUpload";
 import { Tables } from "@/integrations/supabase/types";
 
@@ -39,7 +39,7 @@ const AdminRapperDialog = ({ open, onOpenChange, rapper, onSuccess }: AdminRappe
             <TabsContent value="details">
               <RapperForm 
                 rapper={rapper} 
-                onSuccess={() => {
+                onClose={() => {
                   onSuccess();
                   onOpenChange(false);
                 }} 
@@ -52,7 +52,8 @@ const AdminRapperDialog = ({ open, onOpenChange, rapper, onSuccess }: AdminRappe
           </Tabs>
         ) : (
           <RapperForm 
-            onSuccess={() => {
+            rapper={null}
+            onClose={() => {
               onSuccess();
               onOpenChange(false);
             }} 

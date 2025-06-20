@@ -180,8 +180,9 @@ const AdminRapperManagement = () => {
 
       <AdminRapperDialog
         rapper={selectedRapper}
-        isOpen={isDialogOpen}
-        onClose={handleDialogClose}
+        open={isDialogOpen}
+        onOpenChange={setIsDialogOpen}
+        onSuccess={handleDialogClose}
       />
     </div>
   );

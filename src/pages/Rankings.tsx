@@ -40,15 +40,12 @@ const Rankings = () => {
 
   // Use the optimized hook for user rankings
   const {
-    data: userRankingPages,
+    data: userRankingData,
     isLoading: userRankingsLoading,
-    fetchNextPage,
-    hasNextPage,
-    isFetchingNextPage
   } = useOptimizedUserRankings();
 
-  // Flatten the paginated data with proper type handling
-  const userRankings = userRankingPages?.pages.flatMap(page => page.rankings) || [];
+  // Get the rankings from the data object
+  const userRankings = userRankingData?.rankings || [];
 
   useEffect(() => {
     fetchOfficialRankings();
@@ -165,9 +162,9 @@ const Rankings = () => {
           <UserRankingsSection 
             rankings={userRankings} 
             onRankingClick={setSelectedRanking} 
-            hasNextPage={hasNextPage} 
-            onLoadMore={fetchNextPage} 
-            isLoadingMore={isFetchingNextPage} 
+            hasNextPage={userRankingData?.hasMore || false} 
+            onLoadMore={() => {}} 
+            isLoadingMore={false} 
           />
         </div>
       </main>

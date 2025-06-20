@@ -20,22 +20,47 @@ export const useRateLimiting = (options: RateLimitOptions) => {
         throw new Error("User must be authenticated");
       }
 
-      const { data, error } = await supabase.rpc('check_rate_limit', {
-        _user_id: user.id,
-        _action_type: options.actionType,
-        _max_requests: options.maxRequests || 10,
-        _window_minutes: options.windowMinutes || 60
-      });
+      // Call the rate limit function we created in SQL
+      const { data, error } = await supabase
+        .from('rate_limits')
+        .select('*')
+        .eq('user_id', user.id)
+        .eq('action_type', options.actionType)
+        .gte('window_start', new Date(Date.now() - (options.windowMinutes || 60) * 60 * 1000).toISOString());
 
       if (error) {
         throw error;
       }
 
-      if (!data) {
+      const totalRequests = data?.reduce((sum, record) => sum + record.request_count, 0) || 0;
+      
+      if (totalRequests >= (options.maxRequests || 10)) {
         throw new Error("Rate limit exceeded. Please try again later.");
       }
 
-      return data;
+      // Insert new rate limit record
+      const windowStart = new Date();
+      windowStart.setMinutes(Math.floor(windowStart.getMinutes() / (options.windowMinutes || 60)) * (options.windowMinutes || 60));
+      windowStart.setSeconds(0);
+      windowStart.setMilliseconds(0);
+
+      const { error: insertError } = await supabase
+        .from('rate_limits')
+        .upsert({
+          user_id: user.id,
+          action_type: options.actionType,
+          window_start: windowStart.toISOString(),
+          request_count: 1
+        }, {
+          onConflict: 'user_id,action_type,window_start',
+          ignoreDuplicates: false
+        });
+
+      if (insertError) {
+        throw insertError;
+      }
+
+      return true;
     },
     onError: (error: any) => {
       toast({
