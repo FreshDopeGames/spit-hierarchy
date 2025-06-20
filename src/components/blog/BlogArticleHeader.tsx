@@ -1,3 +1,4 @@
+
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
@@ -61,7 +62,7 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
         </div>
       </div>
 
-      {/* Featured Image - only show if image exists */}
+      {/* Featured Image - only show if image exists, removed gradient overlay */}
       {featuredImageData && (
         <div className="relative rounded-xl overflow-hidden mb-8">
           <ResponsiveImage
@@ -77,7 +78,6 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
               console.log('Successfully loaded blog post image:', blogPost.featured_image_url);
             }}
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
         </div>
       )}
     </div>
