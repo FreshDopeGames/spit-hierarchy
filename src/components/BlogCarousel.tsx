@@ -151,7 +151,7 @@ const BlogCarousel = () => {
 
       {/* More Articles Button - moved below carousel */}
       <div className="text-center mt-6">
-        <Link to="/blog">
+        <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
           <Button variant="secondary" size="sm" className="bg-rap-gold/10 text-rap-gold hover:bg-rap-gold/20 border-rap-gold/30">
             More Slick Talk
           </Button>
