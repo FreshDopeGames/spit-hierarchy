@@ -8,7 +8,7 @@ import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSecti
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import RankingDetailView from "@/components/rankings/RankingDetailView";
 import { useRankingsData } from "@/hooks/useRankingsData";
-import { transformOfficialRankings, transformUserRankings } from "@/utils/rankingTransformers";
+import { transformOfficialRankings, transformUserRankings, transformToLegacyFormat } from "@/utils/rankingTransformers";
 
 const Rankings = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -26,9 +26,13 @@ const Rankings = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Transform database data to match component props
+  // Transform database data to unified format
   const transformedOfficialRankings = transformOfficialRankings(officialRankings);
   const transformedUserRankings = transformUserRankings(userRankingData);
+
+  // Convert to legacy format for component compatibility
+  const legacyOfficialRankings = transformToLegacyFormat(transformedOfficialRankings);
+  const legacyUserRankings = transformToLegacyFormat(transformedUserRankings);
 
   // Combine all rankings for selection
   const allRankings = [...transformedOfficialRankings, ...transformedUserRankings];
@@ -37,7 +41,7 @@ const Rankings = () => {
   if (selectedRanking && selectedRankingData) {
     return (
       <RankingDetailView 
-        ranking={selectedRankingData} 
+        ranking={transformToLegacyFormat([selectedRankingData])[0]} 
         onBack={() => setSelectedRanking(null)} 
       />
     );
@@ -74,12 +78,12 @@ const Rankings = () => {
           />
 
           <OfficialRankingsSection 
-            rankings={transformedOfficialRankings} 
+            rankings={legacyOfficialRankings} 
             onRankingClick={setSelectedRanking} 
           />
 
           <UserRankingsSection 
-            rankings={transformedUserRankings} 
+            rankings={legacyUserRankings} 
             onRankingClick={setSelectedRanking} 
             hasNextPage={userRankingData?.hasMore || false} 
             onLoadMore={() => {}} 
