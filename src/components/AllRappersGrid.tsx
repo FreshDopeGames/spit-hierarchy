@@ -31,8 +31,8 @@ const RapperCard = ({ rapper, imageUrl }: { rapper: Rapper; imageUrl?: string | 
         <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
         <CardContent className="p-6">
-          {/* Rapper image or placeholder - changed to tall aspect ratio */}
-          <div className="w-full aspect-[3/4] bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300 overflow-hidden">
+          {/* Rapper image or placeholder - changed to 1:1 aspect ratio */}
+          <div className="w-full aspect-square bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300 overflow-hidden">
             {imageUrl ? (
               <img 
                 src={imageUrl} 
