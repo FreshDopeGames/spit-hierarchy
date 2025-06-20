@@ -109,30 +109,35 @@ const Rankings = () => {
   }));
 
   // Transform user rankings to match expected format
-  const transformedUserRankings = (userRankingData?.rankings || []).map(ranking => ({
-    id: ranking.id,
-    title: ranking.title,
-    description: ranking.description || "",
-    author: typeof ranking.profiles === 'object' && ranking.profiles && 'username' in ranking.profiles 
-      ? ranking.profiles.username || "Unknown User" 
-      : "Unknown User",
-    authorId: ranking.user_id,
-    createdAt: ranking.created_at,
-    timeAgo: new Date(ranking.created_at).toLocaleDateString(),
-    rappers: (ranking.preview_items || []).map((item, index) => ({
-      rank: item.item_position,
-      name: item.rapper_name,
-      reason: item.item_reason || ""
-    })),
-    likes: Math.floor(Math.random() * 500) + 50,
-    views: Math.floor(Math.random() * 2000) + 100,
-    isOfficial: false,
-    tags: ["Community", ranking.category],
-    category: ranking.category,
-    isPublic: ranking.is_public || false,
-    slug: `user-${ranking.id}`,
-    comments: 0 // Add missing required property
-  }));
+  const transformedUserRankings = (userRankingData?.rankings || []).map(ranking => {
+    // Type guard to safely access profiles
+    const profileData = ranking.profiles && typeof ranking.profiles === 'object' && 'username' in ranking.profiles 
+      ? ranking.profiles as { username: string | null }
+      : null;
+
+    return {
+      id: ranking.id,
+      title: ranking.title,
+      description: ranking.description || "",
+      author: profileData?.username || "Unknown User",
+      authorId: ranking.user_id,
+      createdAt: ranking.created_at,
+      timeAgo: new Date(ranking.created_at).toLocaleDateString(),
+      rappers: (ranking.preview_items || []).map((item) => ({
+        rank: item.item_position,
+        name: item.rapper_name,
+        reason: item.item_reason || ""
+      })),
+      likes: Math.floor(Math.random() * 500) + 50,
+      views: Math.floor(Math.random() * 2000) + 100,
+      isOfficial: false,
+      tags: ["Community", ranking.category],
+      category: ranking.category,
+      isPublic: ranking.is_public || false,
+      slug: `user-${ranking.id}`,
+      comments: 0 // Add missing required property
+    };
+  });
 
   // Combine all rankings for selection
   const allRankings = [...transformedOfficialRankings, ...transformedUserRankings];
