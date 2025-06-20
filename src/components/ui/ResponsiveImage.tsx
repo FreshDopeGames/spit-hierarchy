@@ -40,14 +40,14 @@ const ResponsiveImage = ({
     
     switch (context) {
       case 'carousel':
-        return 'contain'; // Show full image in carousel
+        return 'cover'; // Changed from contain to cover for better carousel display
       case 'hero':
-        return 'cover'; // Cover for hero images
+        return 'cover';
       case 'thumbnail':
-        return 'cover'; // Cover for thumbnails
+        return 'cover';
       case 'card':
       default:
-        return 'cover'; // Default to cover
+        return 'cover';
     }
   };
 

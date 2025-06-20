@@ -1,51 +1,84 @@
 
-import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
-import { fetchUserRankingsOptimized, fetchUserRankingsCount } from "@/services/optimizedUserRankingService";
-import { UserRanking } from "@/types/userRanking";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { useAdaptivePolling } from "./useAdaptivePolling";
 
-const RANKINGS_PER_PAGE = 12;
-
-interface RankingsPage {
-  rankings: UserRanking[];
-  nextPage?: number;
-  hasMore: boolean;
+interface UseOptimizedUserRankingsOptions {
+  page?: number;
+  limit?: number;
+  userId?: string;
+  isPublic?: boolean;
+  enablePolling?: boolean;
 }
 
-export const useOptimizedUserRankings = () => {
+export const useOptimizedUserRankings = ({
+  page = 1,
+  limit = 12,
+  userId,
+  isPublic = true,
+  enablePolling = false
+}: UseOptimizedUserRankingsOptions = {}) => {
+  
   const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
-    baseInterval: 60000, // 1 minute for user rankings
-    maxInterval: 600000, // Max 10 minutes
-    enabled: true
+    baseInterval: 30000, // 30 seconds
+    maxInterval: 300000, // 5 minutes
+    enabled: enablePolling
   });
 
-  return useInfiniteQuery<RankingsPage, Error>({
-    queryKey: ["optimized-user-rankings"],
-    queryFn: async ({ pageParam }): Promise<RankingsPage> => {
-      const pageNumber = (pageParam as number) || 0;
-      const rankings = await fetchUserRankingsOptimized(RANKINGS_PER_PAGE, pageNumber * RANKINGS_PER_PAGE);
+  return useQuery({
+    queryKey: ["optimized-user-rankings", page, limit, userId, isPublic],
+    queryFn: async () => {
+      const offset = (page - 1) * limit;
+
+      let query = supabase
+        .from("user_rankings")
+        .select(`
+          id,
+          title,
+          description,
+          category,
+          created_at,
+          updated_at,
+          is_public,
+          user_id,
+          profiles!user_rankings_user_id_fkey(username)
+        `)
+        .order("created_at", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      if (userId) {
+        query = query.eq("user_id", userId);
+      } else if (isPublic) {
+        query = query.eq("is_public", true);
+      }
+
+      const { data, error, count } = await query;
+
+      if (error) throw error;
+
+      // Get preview items for each ranking
+      const rankingsWithItems = await Promise.all(
+        (data || []).map(async (ranking) => {
+          const { data: items } = await supabase.rpc(
+            'get_user_ranking_preview_items',
+            { ranking_uuid: ranking.id, item_limit: 5 }
+          );
+
+          return {
+            ...ranking,
+            preview_items: items || []
+          };
+        })
+      );
+
       return {
-        rankings,
-        nextPage: rankings.length === RANKINGS_PER_PAGE ? pageNumber + 1 : undefined,
-        hasMore: rankings.length === RANKINGS_PER_PAGE
+        rankings: rankingsWithItems,
+        totalCount: count || 0,
+        hasMore: (count || 0) > offset + limit
       };
     },
-    getNextPageParam: (lastPage: RankingsPage) => lastPage.nextPage,
-    staleTime: 20 * 60 * 1000, // 20 minutes - user rankings change infrequently
-    gcTime: 30 * 60 * 1000, // 30 minutes
-    initialPageParam: 0,
-    refetchOnWindowFocus: false,
-    refetchOnMount: false,
-    refetchInterval,
+    staleTime: 2 * 60 * 1000, // 2 minutes
+    refetchInterval: enablePolling ? refetchInterval : false,
     refetchIntervalInBackground,
-  });
-};
-
-export const useUserRankingsCount = () => {
-  return useQuery<number, Error>({
-    queryKey: ["user-rankings-count"],
-    queryFn: fetchUserRankingsCount,
-    staleTime: 30 * 60 * 1000, // 30 minutes - count changes very infrequently
-    refetchOnWindowFocus: false,
   });
 };
