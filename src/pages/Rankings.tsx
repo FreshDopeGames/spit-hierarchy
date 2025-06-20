@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -111,7 +110,9 @@ const Rankings = () => {
   // Transform user rankings to match expected format
   const transformedUserRankings = (userRankingData?.rankings || []).map(ranking => {
     // Type guard to safely access profiles
-    const profileData = ranking.profiles && typeof ranking.profiles === 'object' && 'username' in ranking.profiles 
+    const profileData = ranking.profiles && 
+      typeof ranking.profiles === 'object' && 
+      'username' in ranking.profiles 
       ? ranking.profiles as { username: string | null }
       : null;
 
