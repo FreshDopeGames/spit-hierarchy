@@ -58,7 +58,7 @@ const RankingCard = ({
   return (
     <Card className={`bg-carbon-fiber ${borderColor} transition-colors group cursor-pointer relative overflow-hidden`}>
       {/* Rap culture accent bar */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-gold-dark via-rap-gold to-rap-gold-light"></div>
       
       <CardContent className="p-6" onClick={handleClick}>
         <div className="flex items-center gap-2 mb-3">

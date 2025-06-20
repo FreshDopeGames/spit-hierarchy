@@ -13,7 +13,7 @@ interface PublicProfile {
   username: string;
   full_name: string | null;
   created_at: string;
-  member_stats: {
+  member_stats?: {
     total_votes: number;
     status: string;
     consecutive_voting_days: number;
@@ -58,12 +58,7 @@ const PublicUserProfile = () => {
           id,
           username,
           full_name,
-          created_at,
-          member_stats!inner(
-            total_votes,
-            status,
-            consecutive_voting_days
-          )
+          created_at
         `)
         .eq("id", id)
         .single();
@@ -74,7 +69,17 @@ const PublicUserProfile = () => {
         return;
       }
 
-      setProfile(profileData);
+      // Fetch member stats separately to handle potential missing data
+      const { data: memberStatsData } = await supabase
+        .from("member_stats")
+        .select("total_votes, status, consecutive_voting_days")
+        .eq("user_id", id)
+        .single();
+
+      setProfile({
+        ...profileData,
+        member_stats: memberStatsData
+      });
 
       // Fetch user's public rankings
       const { data: rankingsData, error: rankingsError } = await supabase
@@ -174,8 +179,8 @@ const PublicUserProfile = () => {
         <Card className="bg-carbon-fiber border-rap-burgundy/40 mb-8">
           <CardContent className="p-8">
             <div className="flex items-center gap-6 mb-6">
-              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold to-rap-burgundy flex items-center justify-center">
-                <User className="w-8 h-8 text-rap-platinum" />
+              <div className="w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light flex items-center justify-center">
+                <User className="w-8 h-8 text-rap-carbon" />
               </div>
               <div>
                 <h1 className="text-3xl font-bold text-rap-platinum font-mogra">

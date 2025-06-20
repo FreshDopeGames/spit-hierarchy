@@ -17,10 +17,10 @@ interface AchievementToastProps {
 }
 
 const rarityColors = {
-  common: "from-gray-500 to-gray-600",
+  common: "from-rap-gold-dark to-rap-gold",
   rare: "from-blue-500 to-blue-600", 
   epic: "from-purple-500 to-purple-600",
-  legendary: "from-yellow-500 to-yellow-600"
+  legendary: "from-rap-gold via-rap-gold-light to-rap-gold-dark"
 };
 
 const AchievementToast = ({ achievement }: AchievementToastProps) => {
