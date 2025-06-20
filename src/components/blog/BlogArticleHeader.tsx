@@ -62,15 +62,15 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
         </div>
       </div>
 
-      {/* Featured Image - only show if image exists, removed gradient overlay */}
+      {/* Featured Image - show full aspect ratio with optimized sizing */}
       {featuredImageData && (
         <div className="relative rounded-xl overflow-hidden mb-8">
           <ResponsiveImage
             src={featuredImageData}
             alt={blogPost.title}
-            className="w-full h-64 md:h-96"
+            className="w-full h-auto"
             context="hero"
-            sizes="(max-width: 768px) 100vw, 100vw"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
             onError={() => {
               console.error('Failed to load blog post image:', blogPost.featured_image_url);
             }}
