@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -40,16 +41,34 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         .from('rapper-images')
         .getPublicUrl(uploadData.path);
 
-      // Insert or update rapper image in the rapper_images table (always comic_book style)
-      const { error: insertError } = await supabase
+      // Check if a comic_book style image already exists for this rapper
+      const { data: existingImage } = await supabase
         .from("rapper_images")
-        .upsert({
-          rapper_id: rapper.id,
-          style: "comic_book",
-          image_url: publicUrl
-        });
+        .select("id")
+        .eq("rapper_id", rapper.id)
+        .eq("style", "comic_book")
+        .single();
 
-      if (insertError) throw insertError;
+      if (existingImage) {
+        // Update existing record
+        const { error: updateError } = await supabase
+          .from("rapper_images")
+          .update({ image_url: publicUrl })
+          .eq("id", existingImage.id);
+
+        if (updateError) throw updateError;
+      } else {
+        // Insert new record
+        const { error: insertError } = await supabase
+          .from("rapper_images")
+          .insert({
+            rapper_id: rapper.id,
+            style: "comic_book",
+            image_url: publicUrl
+          });
+
+        if (insertError) throw insertError;
+      }
 
       // Also update the legacy image_url field for backwards compatibility
       const { error: updateError } = await supabase
