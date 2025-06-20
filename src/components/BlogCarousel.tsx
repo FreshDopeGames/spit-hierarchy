@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -119,19 +118,19 @@ const BlogCarousel = () => {
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white h-10 w-10 sm:h-12 sm:w-12"
+              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-12 sm:w-12"
               onClick={goToPrevious}
             >
-              <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6" />
+              <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 relative z-10" />
               <span className="sr-only">Previous</span>
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white h-10 w-10 sm:h-12 sm:w-12"
+              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-12 sm:w-12"
               onClick={goToNext}
             >
-              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6" />
+              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 relative z-10" />
               <span className="sr-only">Next</span>
             </Button>
           </div>
