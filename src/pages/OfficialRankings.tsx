@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -67,7 +66,7 @@ const OfficialRankings = () => {
   };
 
   // Transform database data to match RankingCard props
-  const transformedRankings = rankings.map((ranking) => ({
+  const transformedRankings = rankings.map((ranking, index) => ({
     id: ranking.id,
     title: ranking.title,
     description: ranking.description || "",
@@ -78,8 +77,8 @@ const OfficialRankings = () => {
       name: item.rapper?.name || "Unknown",
       reason: item.reason || "",
     })),
-    likes: Math.floor(Math.random() * 1000) + 100, // Mock data for now
-    views: Math.floor(Math.random() * 5000) + 1000, // Mock data for now
+    likes: 150 + (index * 23), // Static values that won't change
+    views: 1200 + (index * 157), // Static values that won't change
     isOfficial: true,
     tags: ["Official", ranking.category],
     slug: ranking.slug,
@@ -125,4 +124,3 @@ const OfficialRankings = () => {
 };
 
 export default OfficialRankings;
-
