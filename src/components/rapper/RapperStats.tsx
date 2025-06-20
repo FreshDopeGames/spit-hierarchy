@@ -10,27 +10,27 @@ interface RapperStatsProps {
 
 const RapperStats = ({ rapper }: RapperStatsProps) => {
   return (
-    <Card className="bg-black/40 border-purple-500/20">
+    <Card className="bg-carbon-fiber border-rap-burgundy/40">
       <CardContent className="p-8">
-        <h2 className="text-2xl font-bold text-white mb-4">Community Stats</h2>
+        <h2 className="text-2xl font-bold text-rap-platinum mb-4 font-mogra">Community Stats</h2>
         <div className="grid md:grid-cols-3 gap-6">
           <div className="text-center">
-            <div className="text-3xl font-bold text-purple-400 mb-2">
+            <div className="text-3xl font-bold text-rap-gold mb-2 font-mogra">
               {rapper.total_votes || 0}
             </div>
-            <div className="text-gray-400">Total Votes</div>
+            <div className="text-rap-smoke font-kaushan">Total Votes</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-yellow-400 mb-2">
+            <div className="text-3xl font-bold text-rap-burgundy mb-2 font-mogra">
               {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
             </div>
-            <div className="text-gray-400">Average Rating</div>
+            <div className="text-rap-smoke font-kaushan">Average Rating</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-blue-400 mb-2">
+            <div className="text-3xl font-bold text-rap-forest mb-2 font-mogra">
               {rapper.verified ? "✓" : "—"}
             </div>
-            <div className="text-gray-400">Verified Status</div>
+            <div className="text-rap-smoke font-kaushan">Verified Status</div>
           </div>
         </div>
       </CardContent>

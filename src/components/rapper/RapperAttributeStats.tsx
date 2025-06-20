@@ -48,14 +48,14 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
 
   if (isLoading) {
     return (
-      <Card className="bg-black/40 border-purple-500/20">
+      <Card className="bg-carbon-fiber border-rap-burgundy/40">
         <CardHeader>
-          <CardTitle className="text-white">Attribute Ratings</CardTitle>
+          <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
             {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-8 bg-gray-700 rounded"></div>
+              <div key={i} className="h-8 bg-rap-carbon rounded"></div>
             ))}
           </div>
         </CardContent>
@@ -82,43 +82,43 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
   const overallScaled = Math.round((displayOverall / 10) * 100);
   
   return (
-    <Card className="bg-black/40 border-purple-500/20">
+    <Card className="bg-carbon-fiber border-rap-burgundy/40">
       <CardHeader>
-        <CardTitle className="text-white">Attribute Ratings</CardTitle>
+        <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Overall Rating - Prominent Display */}
-        <div className="bg-gradient-to-r from-purple-600/20 to-blue-600/20 border border-purple-500/30 rounded-lg p-4">
+        <div className="bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 border border-rap-gold/30 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Trophy className="w-5 h-5 text-yellow-500" />
-            <span className="text-lg font-bold text-white">Overall Rating</span>
+            <Trophy className="w-5 h-5 text-rap-gold" />
+            <span className="text-lg font-bold text-rap-platinum font-mogra">Overall Rating</span>
           </div>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-gray-300">
+              <span className="text-sm text-rap-smoke font-kaushan">
                 {overallCategory && overallCategory.totalVotes > 0 
                   ? "Voted Overall Rating" 
                   : "Calculated from all attributes"}
               </span>
               <div className="text-right">
-                <span className="text-white font-bold text-2xl">
+                <span className="text-rap-platinum font-bold text-2xl font-mogra">
                   {overallScaled}/100
                 </span>
-                <span className="text-gray-400 text-sm ml-2">
+                <span className="text-rap-smoke text-sm ml-2 font-kaushan">
                   ({overallCategory?.totalVotes || 0} direct votes)
                 </span>
               </div>
             </div>
             <Progress 
               value={overallPercentage} 
-              className="h-4 bg-gray-800"
+              className="h-4 bg-rap-carbon"
             />
           </div>
         </div>
 
         {/* Individual Attributes */}
         <div className="space-y-4">
-          <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-rap-smoke uppercase tracking-wider font-kaushan">
             Individual Attributes
           </h3>
           {otherCategories.map((category) => {
@@ -128,21 +128,21 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
             return (
               <div key={category.id} className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-gray-300">
+                  <span className="text-sm font-medium text-rap-platinum font-kaushan">
                     {category.name}
                   </span>
                   <div className="text-right">
-                    <span className="text-white font-bold text-lg">
+                    <span className="text-rap-platinum font-bold text-lg font-merienda">
                       {scaledRating}/100
                     </span>
-                    <span className="text-gray-400 text-sm ml-2">
+                    <span className="text-rap-smoke text-sm ml-2 font-kaushan">
                       ({category.totalVotes} votes)
                     </span>
                   </div>
                 </div>
                 <Progress 
                   value={percentage} 
-                  className="h-3 bg-gray-800"
+                  className="h-3 bg-rap-carbon"
                 />
               </div>
             );

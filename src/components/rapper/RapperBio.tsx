@@ -12,10 +12,10 @@ const RapperBio = ({ rapper }: RapperBioProps) => {
   if (!rapper.bio) return null;
 
   return (
-    <Card className="bg-black/40 border-purple-500/20 mb-8">
+    <Card className="bg-carbon-fiber border-rap-burgundy/40 mb-8">
       <CardContent className="p-8">
-        <h2 className="text-2xl font-bold text-white mb-4">About</h2>
-        <p className="text-gray-300 leading-relaxed">{rapper.bio}</p>
+        <h2 className="text-2xl font-bold text-rap-platinum mb-4 font-mogra">About</h2>
+        <p className="text-rap-smoke leading-relaxed font-kaushan">{rapper.bio}</p>
       </CardContent>
     </Card>
   );
