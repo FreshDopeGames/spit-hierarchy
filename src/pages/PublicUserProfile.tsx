@@ -8,16 +8,18 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import RankingCard from "@/components/rankings/RankingCard";
 
+interface MemberStats {
+  total_votes: number;
+  status: string;
+  consecutive_voting_days: number;
+}
+
 interface PublicProfile {
   id: string;
   username: string;
   full_name: string | null;
   created_at: string;
-  member_stats?: {
-    total_votes: number;
-    status: string;
-    consecutive_voting_days: number;
-  } | null;
+  member_stats: MemberStats | null;
 }
 
 interface UserRanking {
