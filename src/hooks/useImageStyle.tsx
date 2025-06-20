@@ -67,7 +67,7 @@ export const useImageStyle = () => {
   };
 };
 
-// Hook to get rapper image for specific style
+// Optimized hook to get rapper image for specific style
 export const useRapperImage = (rapperId: string, preferredStyle?: ImageStyle) => {
   const { currentStyle } = useImageStyle();
   const styleToUse = preferredStyle || currentStyle;
@@ -75,27 +75,22 @@ export const useRapperImage = (rapperId: string, preferredStyle?: ImageStyle) =>
   return useQuery({
     queryKey: ["rapper-image", rapperId, styleToUse],
     queryFn: async () => {
-      // First try to get the specific style
-      const { data: styledImage } = await supabase
+      // Try to get the specific style first, with fallback to photo_real, then legacy image_url
+      const { data: images } = await supabase
         .from("rapper_images")
-        .select("image_url")
+        .select("image_url, style")
         .eq("rapper_id", rapperId)
-        .eq("style", styleToUse)
-        .single();
+        .in("style", styleToUse !== "photo_real" ? [styleToUse, "photo_real"] : ["photo_real"]);
 
-      if (styledImage?.image_url) {
-        return styledImage.image_url;
+      // Find the preferred style first
+      const preferredImage = images?.find(img => img.style === styleToUse);
+      if (preferredImage?.image_url) {
+        return preferredImage.image_url;
       }
 
-      // Fallback to default style (photo_real)
+      // Fallback to photo_real if we were looking for a different style
       if (styleToUse !== "photo_real") {
-        const { data: defaultImage } = await supabase
-          .from("rapper_images")
-          .select("image_url")
-          .eq("rapper_id", rapperId)
-          .eq("style", "photo_real")
-          .single();
-
+        const defaultImage = images?.find(img => img.style === "photo_real");
         if (defaultImage?.image_url) {
           return defaultImage.image_url;
         }
@@ -110,6 +105,64 @@ export const useRapperImage = (rapperId: string, preferredStyle?: ImageStyle) =>
 
       return rapper?.image_url || null;
     },
-    enabled: !!rapperId
+    enabled: !!rapperId,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnWindowFocus: false,
+  });
+};
+
+// Batch hook for loading multiple rapper images efficiently
+export const useRapperImages = (rapperIds: string[], preferredStyle?: ImageStyle) => {
+  const { currentStyle } = useImageStyle();
+  const styleToUse = preferredStyle || currentStyle;
+
+  return useQuery({
+    queryKey: ["rapper-images-batch", rapperIds, styleToUse],
+    queryFn: async () => {
+      if (rapperIds.length === 0) return {};
+
+      // Get all images for the requested rappers and styles
+      const { data: images } = await supabase
+        .from("rapper_images")
+        .select("rapper_id, image_url, style")
+        .in("rapper_id", rapperIds)
+        .in("style", styleToUse !== "photo_real" ? [styleToUse, "photo_real"] : ["photo_real"]);
+
+      // Get legacy image URLs for rappers that don't have styled images
+      const { data: rappers } = await supabase
+        .from("rappers")
+        .select("id, image_url")
+        .in("id", rapperIds);
+
+      // Build the result map
+      const imageMap: Record<string, string | null> = {};
+      
+      rapperIds.forEach(rapperId => {
+        // Try to find the preferred style first
+        const preferredImage = images?.find(img => img.rapper_id === rapperId && img.style === styleToUse);
+        if (preferredImage?.image_url) {
+          imageMap[rapperId] = preferredImage.image_url;
+          return;
+        }
+
+        // Fallback to photo_real if we were looking for a different style
+        if (styleToUse !== "photo_real") {
+          const defaultImage = images?.find(img => img.rapper_id === rapperId && img.style === "photo_real");
+          if (defaultImage?.image_url) {
+            imageMap[rapperId] = defaultImage.image_url;
+            return;
+          }
+        }
+
+        // Final fallback to legacy image_url
+        const rapper = rappers?.find(r => r.id === rapperId);
+        imageMap[rapperId] = rapper?.image_url || null;
+      });
+
+      return imageMap;
+    },
+    enabled: rapperIds.length > 0,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+    refetchOnWindowFocus: false,
   });
 };

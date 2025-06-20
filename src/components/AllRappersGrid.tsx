@@ -7,7 +7,7 @@ import { Star, MapPin, Calendar, Verified, Mic2, Loader2, Users } from "lucide-r
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import AdUnit from "@/components/AdUnit";
-import { useRapperImage } from "@/hooks/useImageStyle";
+import { useRapperImages } from "@/hooks/useImageStyle";
 import { formatBirthdate } from "@/utils/zodiacUtils";
 
 type Rapper = Tables<"rappers">;
@@ -21,8 +21,7 @@ interface AllRappersGridProps {
   onLoadMore: () => void;
 }
 
-const RapperCard = ({ rapper }: { rapper: Rapper }) => {
-  const { data: imageUrl } = useRapperImage(rapper.id);
+const RapperCard = ({ rapper, imageUrl }: { rapper: Rapper; imageUrl?: string | null }) => {
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (
@@ -114,6 +113,9 @@ const AllRappersGrid = ({
   itemsPerPage,
   onLoadMore,
 }: AllRappersGridProps) => {
+  // Batch load all rapper images for better performance
+  const rapperIds = rappers.map(rapper => rapper.id);
+  const { data: imageMap = {} } = useRapperImages(rapperIds);
 
   return (
     <>
@@ -127,7 +129,7 @@ const AllRappersGrid = ({
           
           return (
             <React.Fragment key={rapper.id}>
-              <RapperCard rapper={rapper} />
+              <RapperCard rapper={rapper} imageUrl={imageMap[rapper.id]} />
               
               {shouldShowMiddleAd && (
                 <div className="col-span-full">

@@ -9,10 +9,14 @@ type Rapper = Tables<"rappers">;
 interface RapperAvatarProps {
   rapper: Rapper;
   size?: "sm" | "md" | "lg";
+  imageUrl?: string | null; // Allow passing image URL directly for batch loading
 }
 
-const RapperAvatar = ({ rapper, size = "md" }: RapperAvatarProps) => {
-  const { data: imageUrl } = useRapperImage(rapper.id);
+const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: RapperAvatarProps) => {
+  const { data: fetchedImageUrl } = useRapperImage(rapper.id);
+  
+  // Use provided imageUrl if available (from batch loading), otherwise use fetched URL
+  const imageUrl = providedImageUrl !== undefined ? providedImageUrl : fetchedImageUrl;
   
   const sizeClasses = {
     sm: "w-12 h-12 sm:w-14 sm:h-14",
