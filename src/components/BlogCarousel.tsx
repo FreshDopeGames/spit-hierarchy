@@ -61,15 +61,10 @@ const BlogCarousel = () => {
 
   return (
     <section className="mb-16">
-      <div className="mb-6 flex items-center justify-between">
+      <div className="mb-6">
         <h2 className="text-2xl font-bold text-rap-platinum font-mogra">
           Featured Scrolls
         </h2>
-        <Link to="/blog">
-          <Button variant="secondary" size="sm" className="bg-rap-gold/10 text-rap-gold hover:bg-rap-gold/20 border-rap-gold/30">
-            More Articles
-          </Button>
-        </Link>
       </div>
       
       {/* Dynamic width carousel container */}
@@ -150,6 +145,15 @@ const BlogCarousel = () => {
             ))}
           </div>
         </div>
+      </div>
+
+      {/* More Articles Button - moved below carousel */}
+      <div className="text-center mt-6">
+        <Link to="/blog">
+          <Button variant="secondary" size="sm" className="bg-rap-gold/10 text-rap-gold hover:bg-rap-gold/20 border-rap-gold/30">
+            More Articles
+          </Button>
+        </Link>
       </div>
     </section>
   );
