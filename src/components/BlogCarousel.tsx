@@ -93,7 +93,7 @@ const BlogCarousel = () => {
                         {post.blog_categories.name}
                       </Badge>
                     )}
-                    <h3 className="text-2xl font-bold font-ceviche mb-2">{post.title}</h3>
+                    <h3 className="text-2xl font-ceviche mb-2">{post.title}</h3>
                     <div className="flex items-center text-sm mb-3">
                       <Calendar className="w-4 h-4 mr-2 text-rap-smoke" />
                       <span className="text-rap-smoke">
