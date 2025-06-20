@@ -22,6 +22,14 @@ interface PublicProfile {
   member_stats: MemberStats | null;
 }
 
+interface RankingItem {
+  position: number;
+  reason: string | null;
+  rapper: {
+    name: string;
+  };
+}
+
 interface UserRanking {
   id: string;
   title: string;
@@ -29,13 +37,7 @@ interface UserRanking {
   category: string;
   created_at: string;
   slug: string;
-  user_ranking_items: Array<{
-    position: number;
-    reason: string | null;
-    rapper: {
-      name: string;
-    };
-  }>;
+  user_ranking_items: RankingItem[];
 }
 
 const PublicUserProfile = () => {
@@ -56,12 +58,7 @@ const PublicUserProfile = () => {
       // Fetch user profile
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
-        .select(`
-          id,
-          username,
-          full_name,
-          created_at
-        `)
+        .select("id, username, full_name, created_at")
         .eq("id", id)
         .single();
 
@@ -71,7 +68,7 @@ const PublicUserProfile = () => {
         return;
       }
 
-      // Fetch member stats separately to handle potential missing data
+      // Fetch member stats separately
       const { data: memberStatsData } = await supabase
         .from("member_stats")
         .select("total_votes, status, consecutive_voting_days")
@@ -83,7 +80,7 @@ const PublicUserProfile = () => {
         member_stats: memberStatsData
       });
 
-      // Fetch user's public rankings
+      // Fetch user's public rankings with explicit typing
       const { data: rankingsData, error: rankingsError } = await supabase
         .from("user_rankings")
         .select(`
@@ -92,12 +89,7 @@ const PublicUserProfile = () => {
           description,
           category,
           created_at,
-          slug,
-          user_ranking_items!inner(
-            position,
-            reason,
-            rapper:rappers!inner(name)
-          )
+          slug
         `)
         .eq("user_id", id)
         .eq("is_public", true)
@@ -105,8 +97,28 @@ const PublicUserProfile = () => {
 
       if (rankingsError) {
         console.error("Error fetching rankings:", rankingsError);
-      } else {
-        setRankings(rankingsData || []);
+      } else if (rankingsData) {
+        // Fetch ranking items separately to avoid deep nesting issues
+        const rankingsWithItems = await Promise.all(
+          rankingsData.map(async (ranking) => {
+            const { data: items } = await supabase
+              .from("user_ranking_items")
+              .select(`
+                position,
+                reason,
+                rapper:rappers!inner(name)
+              `)
+              .eq("ranking_id", ranking.id)
+              .order("position");
+
+            return {
+              ...ranking,
+              user_ranking_items: items || []
+            };
+          })
+        );
+        
+        setRankings(rankingsWithItems);
       }
     } catch (error) {
       console.error("Error:", error);
