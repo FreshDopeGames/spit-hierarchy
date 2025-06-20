@@ -113,7 +113,9 @@ const Rankings = () => {
     id: ranking.id,
     title: ranking.title,
     description: ranking.description || "",
-    author: ranking.profiles?.username || "Unknown User",
+    author: typeof ranking.profiles === 'object' && ranking.profiles && 'username' in ranking.profiles 
+      ? ranking.profiles.username || "Unknown User" 
+      : "Unknown User",
     authorId: ranking.user_id,
     createdAt: ranking.created_at,
     timeAgo: new Date(ranking.created_at).toLocaleDateString(),
@@ -128,7 +130,8 @@ const Rankings = () => {
     tags: ["Community", ranking.category],
     category: ranking.category,
     isPublic: ranking.is_public || false,
-    slug: `user-${ranking.id}`
+    slug: `user-${ranking.id}`,
+    comments: 0 // Add missing required property
   }));
 
   // Combine all rankings for selection

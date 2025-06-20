@@ -5,26 +5,39 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Upload, ImageIcon, Loader2 } from "lucide-react";
-import { Tables } from "@/integrations/supabase/types";
+import { Tables, Database } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
+type ImageStyle = Database["public"]["Enums"]["image_style"];
 
 interface RapperAvatarUploadProps {
   rapper: Rapper;
 }
 
+const styleLabels: Record<ImageStyle, string> = {
+  photo_real: "Photo Real",
+  comic_book: "Comic Book",
+  anime: "Anime", 
+  video_game: "Video Game",
+  hardcore: "Hardcore",
+  minimalist: "Minimalist",
+  retro: "Retro"
+};
+
 const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
   const [uploading, setUploading] = useState(false);
+  const [selectedStyle, setSelectedStyle] = useState<ImageStyle>("photo_real");
   const queryClient = useQueryClient();
   const { toast } = useToast();
 
   const uploadMutation = useMutation({
-    mutationFn: async (file: File) => {
-      // Create a file name with rapper's name
+    mutationFn: async ({ file, style }: { file: File; style: ImageStyle }) => {
+      // Create a file name with rapper's name and style
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
       const fileExt = file.name.split('.').pop();
-      const fileName = `${sanitizedName}-avatar-${Date.now()}.${fileExt}`;
+      const fileName = `${sanitizedName}-${style}-${Date.now()}.${fileExt}`;
 
       // Upload to storage
       const { data: uploadData, error: uploadError } = await supabase.storage
@@ -41,22 +54,42 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         .from('rapper-images')
         .getPublicUrl(uploadData.path);
 
-      // Update rapper's image_url
-      const { error: updateError } = await supabase
-        .from("rappers")
-        .update({ image_url: publicUrl })
-        .eq("id", rapper.id);
+      // Insert or update rapper image in the rapper_images table
+      const { error: insertError } = await supabase
+        .from("rapper_images")
+        .upsert({
+          rapper_id: rapper.id,
+          style: style,
+          image_url: publicUrl
+        });
 
-      if (updateError) throw updateError;
+      if (insertError) throw insertError;
+
+      // Also update the legacy image_url field if this is photo_real style for backwards compatibility
+      if (style === "photo_real") {
+        const { error: updateError } = await supabase
+          .from("rappers")
+          .update({ image_url: publicUrl })
+          .eq("id", rapper.id);
+
+        if (updateError) throw updateError;
+      }
 
       return publicUrl;
     },
     onSuccess: () => {
+      // Invalidate all relevant queries to ensure images update everywhere
       queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-images"] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
+      
+      // Specifically invalidate the image for this rapper and style
+      queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id, selectedStyle] });
+      
       toast({
         title: "Success",
-        description: `Avatar uploaded for ${rapper.name}`,
+        description: `${styleLabels[selectedStyle]} avatar uploaded for ${rapper.name}`,
       });
     },
     onError: (error: any) => {
@@ -95,7 +128,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
     setUploading(true);
     try {
-      await uploadMutation.mutateAsync(file);
+      await uploadMutation.mutateAsync({ file, style: selectedStyle });
     } finally {
       setUploading(false);
     }
@@ -120,36 +153,60 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
           </div>
         )}
         
-        <div className="flex flex-col gap-2">
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleFileSelect}
-            disabled={uploading}
-            className="hidden"
-            id={`avatar-upload-${rapper.id}`}
-          />
-          <label htmlFor={`avatar-upload-${rapper.id}`}>
-            <Button 
-              type="button"
-              variant="outline" 
-              className="w-full cursor-pointer border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/10"
+        <div className="space-y-3">
+          {/* Style Selector */}
+          <div className="space-y-2">
+            <label className="text-sm font-medium text-rap-platinum">Image Style</label>
+            <Select value={selectedStyle} onValueChange={(value: ImageStyle) => setSelectedStyle(value)}>
+              <SelectTrigger className="bg-rap-carbon-light border-rap-gold/30 text-rap-platinum">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent className="bg-rap-carbon-light border-rap-gold/30">
+                {Object.entries(styleLabels).map(([style, label]) => (
+                  <SelectItem 
+                    key={style} 
+                    value={style}
+                    className="text-rap-platinum hover:bg-rap-gold/10"
+                  >
+                    {label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* File Upload */}
+          <div className="flex flex-col gap-2">
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleFileSelect}
               disabled={uploading}
-              asChild
-            >
-              <span className="flex items-center gap-2">
-                {uploading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Upload className="w-4 h-4" />
-                )}
-                {uploading ? 'Uploading...' : 'Upload Avatar'}
-              </span>
-            </Button>
-          </label>
-          <p className="text-xs text-rap-smoke text-center">
-            Max 5MB. Recommended: 1:1 aspect ratio (square images)
-          </p>
+              className="hidden"
+              id={`avatar-upload-${rapper.id}`}
+            />
+            <label htmlFor={`avatar-upload-${rapper.id}`}>
+              <Button 
+                type="button"
+                variant="outline" 
+                className="w-full cursor-pointer border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/10"
+                disabled={uploading}
+                asChild
+              >
+                <span className="flex items-center gap-2">
+                  {uploading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Upload className="w-4 h-4" />
+                  )}
+                  {uploading ? 'Uploading...' : `Upload ${styleLabels[selectedStyle]} Avatar`}
+                </span>
+              </Button>
+            </label>
+            <p className="text-xs text-rap-smoke text-center">
+              Max 5MB. Recommended: 1:1 aspect ratio (square images)
+            </p>
+          </div>
         </div>
       </CardContent>
     </Card>
