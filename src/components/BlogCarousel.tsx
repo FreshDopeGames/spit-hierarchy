@@ -61,9 +61,9 @@ const BlogCarousel = () => {
 
   return (
     <section className="mb-16">
-      <div className="mb-6">
+      <div className="mb-6 text-center">
         <h2 className="text-2xl font-bold text-rap-platinum font-mogra">
-          Featured Scrolls
+          Featured Slick Talk
         </h2>
       </div>
       
