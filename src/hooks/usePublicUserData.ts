@@ -14,10 +14,10 @@ export const usePublicUserData = () => {
       setLoading(true);
       setNotFound(false);
 
-      // Fetch user profile
+      // Fetch user profile with enhanced error handling
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
-        .select("id, username, full_name, created_at")
+        .select("id, username, full_name, created_at, bio, location")
         .eq("id", id)
         .single();
 
@@ -27,19 +27,23 @@ export const usePublicUserData = () => {
         return;
       }
 
-      // Fetch member stats separately
-      const { data: memberStatsData } = await supabase
+      // Fetch member stats separately with better error handling
+      const { data: memberStatsData, error: memberStatsError } = await supabase
         .from("member_stats")
         .select("total_votes, status, consecutive_voting_days")
         .eq("id", id)
         .single();
 
+      if (memberStatsError) {
+        console.log("Member stats not found for user, using defaults");
+      }
+
       setProfile({
         ...profileData,
-        member_stats: memberStatsData
+        member_stats: memberStatsError ? null : memberStatsData
       });
 
-      // Fetch user's public rankings
+      // Fetch user's public rankings with enhanced data
       const { data: rankingsData, error: rankingsError } = await supabase
         .from("user_rankings")
         .select("id, title, description, category, created_at, slug")
@@ -51,7 +55,7 @@ export const usePublicUserData = () => {
         console.error("Error fetching rankings:", rankingsError);
         setRankings([]);
       } else if (rankingsData) {
-        // Fetch ranking items separately
+        // Fetch ranking items with enhanced rapper data
         const rankingsWithItems: RankingWithItems[] = await Promise.all(
           rankingsData.map(async (ranking) => {
             const { data: items } = await supabase
@@ -59,7 +63,7 @@ export const usePublicUserData = () => {
               .select(`
                 position,
                 reason,
-                rapper:rappers!inner(name)
+                rapper:rappers!inner(name, real_name, origin)
               `)
               .eq("ranking_id", ranking.id)
               .order("position");
@@ -67,7 +71,7 @@ export const usePublicUserData = () => {
             const simpleItems: SimpleRankingItem[] = (items || []).map(item => ({
               position: item.position,
               reason: item.reason,
-              rapper_name: (item.rapper as { name: string }).name
+              rapper_name: (item.rapper as { name: string; real_name?: string; origin?: string }).name
             }));
 
             return {

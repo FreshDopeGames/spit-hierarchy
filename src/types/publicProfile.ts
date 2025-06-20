@@ -11,6 +11,8 @@ export interface PublicProfile {
   full_name: string | null;
   created_at: string;
   member_stats: MemberStats | null;
+  bio?: string | null;
+  location?: string | null;
 }
 
 export interface SimpleRanking {
