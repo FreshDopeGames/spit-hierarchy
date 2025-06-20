@@ -56,11 +56,11 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
       {posts.map(post => (
         <Card key={post.id} className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-xl shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300 group">
           <Link to={`/blog/${post.id}`}>
-            <div className="aspect-video overflow-hidden">
+            <div className="overflow-hidden">
               <ResponsiveImage
                 src={getImageData(post)}
                 alt={post.title}
-                className="w-full h-full group-hover:scale-105 transition-transform duration-300"
+                className="w-full h-full"
                 context="card"
                 sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
               />
