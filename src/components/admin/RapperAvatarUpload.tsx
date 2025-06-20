@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -150,7 +149,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
               <Button 
                 type="button"
                 variant="outline" 
-                className="w-full cursor-pointer border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/10"
+                className="w-full cursor-pointer bg-rap-gold text-rap-charcoal border-rap-gold hover:bg-rap-gold/90"
                 disabled={uploading}
                 asChild
               >
