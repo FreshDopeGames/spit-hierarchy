@@ -22,28 +22,29 @@ interface PublicProfile {
   member_stats: MemberStats | null;
 }
 
-interface RankingItem {
-  position: number;
-  reason: string | null;
-  rapper: {
-    name: string;
-  };
-}
-
-interface UserRanking {
+interface SimpleRanking {
   id: string;
   title: string;
   description: string;
   category: string;
   created_at: string;
   slug: string;
-  user_ranking_items: RankingItem[];
+}
+
+interface SimpleRankingItem {
+  position: number;
+  reason: string | null;
+  rapper_name: string;
+}
+
+interface RankingWithItems extends SimpleRanking {
+  items: SimpleRankingItem[];
 }
 
 const PublicUserProfile = () => {
   const { id } = useParams();
   const [profile, setProfile] = useState<PublicProfile | null>(null);
-  const [rankings, setRankings] = useState<UserRanking[]>([]);
+  const [rankings, setRankings] = useState<RankingWithItems[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
@@ -72,7 +73,7 @@ const PublicUserProfile = () => {
       const { data: memberStatsData } = await supabase
         .from("member_stats")
         .select("total_votes, status, consecutive_voting_days")
-        .eq("user_id", id)
+        .eq("id", id)
         .single();
 
       setProfile({
@@ -80,26 +81,20 @@ const PublicUserProfile = () => {
         member_stats: memberStatsData
       });
 
-      // Fetch user's public rankings with explicit typing
+      // Fetch user's public rankings
       const { data: rankingsData, error: rankingsError } = await supabase
         .from("user_rankings")
-        .select(`
-          id,
-          title,
-          description,
-          category,
-          created_at,
-          slug
-        `)
+        .select("id, title, description, category, created_at, slug")
         .eq("user_id", id)
         .eq("is_public", true)
         .order("created_at", { ascending: false });
 
       if (rankingsError) {
         console.error("Error fetching rankings:", rankingsError);
+        setRankings([]);
       } else if (rankingsData) {
-        // Fetch ranking items separately to avoid deep nesting issues
-        const rankingsWithItems = await Promise.all(
+        // Fetch ranking items separately
+        const rankingsWithItems: RankingWithItems[] = await Promise.all(
           rankingsData.map(async (ranking) => {
             const { data: items } = await supabase
               .from("user_ranking_items")
@@ -111,9 +106,15 @@ const PublicUserProfile = () => {
               .eq("ranking_id", ranking.id)
               .order("position");
 
+            const simpleItems: SimpleRankingItem[] = (items || []).map(item => ({
+              position: item.position,
+              reason: item.reason,
+              rapper_name: (item.rapper as { name: string }).name
+            }));
+
             return {
               ...ranking,
-              user_ranking_items: items || []
+              items: simpleItems
             };
           })
         );
@@ -161,12 +162,12 @@ const PublicUserProfile = () => {
     author: profile.username,
     authorId: profile.id,
     timeAgo: new Date(ranking.created_at).toLocaleDateString(),
-    rappers: ranking.user_ranking_items
+    rappers: ranking.items
       .sort((a, b) => a.position - b.position)
       .slice(0, 5)
       .map(item => ({
         rank: item.position,
-        name: item.rapper.name,
+        name: item.rapper_name,
         reason: item.reason || ""
       })),
     likes: Math.floor(Math.random() * 200) + 50,
