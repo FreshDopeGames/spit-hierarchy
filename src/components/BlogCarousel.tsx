@@ -13,7 +13,7 @@ const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const { data: featuredPosts = [], isLoading } = useQuery({
-    queryKey: ["featured-blog-posts"],
+    queryKey: ["latest-blog-posts"],
     queryFn: async () => {
       const { data, error } = await supabase
         .from("blog_posts")
@@ -26,7 +26,6 @@ const BlogCarousel = () => {
           blog_categories(name)
         `)
         .eq("status", "published")
-        .eq("featured", true)
         .order("published_at", { ascending: false })
         .limit(5);
       
@@ -67,7 +66,7 @@ const BlogCarousel = () => {
         </h2>
       </div>
       
-      {/* Dynamic width carousel container */}
+      {/* Dynamic width carousel container with improved mobile layout */}
       <div className="flex justify-center">
         <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-carbon-fiber border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
           <div 
@@ -76,7 +75,7 @@ const BlogCarousel = () => {
           >
             {featuredPosts.map((post) => (
               <div key={post.id} className="w-full flex-shrink-0">
-                <div className="relative aspect-[16/9] overflow-hidden">
+                <div className="relative h-[300px] sm:h-[400px] md:h-[450px] lg:h-[500px] overflow-hidden">
                   <ResponsiveImage
                     src={getImageData(post)}
                     alt={post.title}
@@ -85,24 +84,28 @@ const BlogCarousel = () => {
                     objectFit="cover"
                     sizes="(max-width: 768px) 100vw, 100vw"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-black/20" />
                   
-                  <div className="absolute bottom-0 left-0 p-6 text-white w-full">
+                  <div className="absolute bottom-0 left-0 p-3 sm:p-4 md:p-6 text-white w-full">
                     {post.blog_categories?.name && (
-                      <Badge className="mb-2 bg-rap-forest/20 text-rap-forest border-rap-forest/30">
+                      <Badge className="mb-2 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
                         {post.blog_categories.name}
                       </Badge>
                     )}
-                    <h3 className="text-2xl font-ceviche mb-2">{post.title}</h3>
-                    <div className="flex items-center text-sm mb-3">
-                      <Calendar className="w-4 h-4 mr-2 text-rap-smoke" />
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-ceviche mb-2 leading-tight">
+                      {post.title}
+                    </h3>
+                    <div className="flex items-center text-xs sm:text-sm mb-2 sm:mb-3">
+                      <Calendar className="w-3 h-3 sm:w-4 sm:h-4 mr-1 sm:mr-2 text-rap-smoke" />
                       <span className="text-rap-smoke">
                         {format(new Date(post.published_at), "MMMM d, yyyy")}
                       </span>
                     </div>
-                    <p className="text-rap-silver line-clamp-2">{post.excerpt}</p>
+                    <p className="text-rap-silver text-sm sm:text-base line-clamp-1 sm:line-clamp-2 mb-2 sm:mb-4">
+                      {post.excerpt}
+                    </p>
                     <Link to={`/blog/${post.id}`}>
-                      <Button variant="link" className="mt-4 text-rap-gold hover:text-rap-gold-light p-0">
+                      <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base h-auto">
                         Read More
                       </Button>
                     </Link>
@@ -112,32 +115,32 @@ const BlogCarousel = () => {
             ))}
           </div>
           
-          <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-4">
+          <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-2 sm:px-4">
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/20 hover:bg-black/50 text-white"
+              className="rounded-full bg-black/20 hover:bg-black/50 text-white h-8 w-8 sm:h-10 sm:w-10"
               onClick={goToPrevious}
             >
-              <ChevronLeft className="h-6 w-6" />
+              <ChevronLeft className="h-4 w-4 sm:h-6 sm:w-6" />
               <span className="sr-only">Previous</span>
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="rounded-full bg-black/20 hover:bg-black/50 text-white"
+              className="rounded-full bg-black/20 hover:bg-black/50 text-white h-8 w-8 sm:h-10 sm:w-10"
               onClick={goToNext}
             >
-              <ChevronRight className="h-6 w-6" />
+              <ChevronRight className="h-4 w-4 sm:h-6 sm:w-6" />
               <span className="sr-only">Next</span>
             </Button>
           </div>
 
-          <div className="absolute bottom-2 left-0 w-full flex justify-center gap-2">
+          <div className="absolute bottom-3 sm:bottom-4 left-0 w-full flex justify-center gap-2">
             {featuredPosts.map((_, index) => (
               <button
                 key={index}
-                className={`h-2 w-2 rounded-full transition-colors duration-300 ${
+                className={`h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full transition-colors duration-300 ${
                   currentIndex === index ? "bg-rap-gold" : "bg-gray-500 opacity-50 hover:opacity-75"
                 }`}
                 onClick={() => setCurrentIndex(index)}
