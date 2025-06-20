@@ -24,7 +24,7 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
         {Array.from({ length: 6 }).map((_, i) => (
           <Card key={i} className="bg-rap-carbon-light border-rap-gold/20 animate-pulse">
             <CardContent className="p-4">
-              <AspectRatio ratio={3/4} className="mb-3">
+              <AspectRatio ratio={1} className="mb-3">
                 <div className="w-full h-full bg-rap-charcoal rounded"></div>
               </AspectRatio>
               <div className="h-4 bg-rap-charcoal rounded mb-2"></div>
@@ -65,7 +65,7 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
     <Card className="bg-rap-carbon-light border-rap-gold/20 hover:border-rap-gold/40 transition-all duration-300">
       <CardContent className="p-4">
         {/* Rapper Image */}
-        <AspectRatio ratio={3/4} className="mb-3">
+        <AspectRatio ratio={1} className="mb-3">
           <div className="w-full h-full bg-gradient-to-br from-rap-gold to-rap-burgundy rounded-lg flex items-center justify-center overflow-hidden">
             {imageUrl ? (
               <img 
