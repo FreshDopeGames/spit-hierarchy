@@ -55,18 +55,15 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
     );
   }
 
-  // Separate Overall from other categories
-  const overallCategory = categoryRatings?.find(cat => cat.name === "Overall");
-  const otherCategories = categoryRatings?.filter(cat => cat.name !== "Overall") || [];
+  // Filter out Overall category completely - it should only be calculated, not stored
+  const attributeCategories = categoryRatings?.filter(cat => cat.name !== "Overall") || [];
 
-  // Calculate the average of all other attributes (excluding Overall)
-  const attributesWithVotes = otherCategories.filter(cat => cat.totalVotes > 0);
+  // Calculate the overall rating as average of all attributes with votes
+  const attributesWithVotes = attributeCategories.filter(cat => cat.totalVotes > 0);
   const calculatedOverall = attributesWithVotes.length > 0 ? attributesWithVotes.reduce((sum, cat) => sum + cat.averageRating, 0) / attributesWithVotes.length : 0;
 
-  // Use the calculated average or the actual Overall votes if they exist
-  const displayOverall = overallCategory && overallCategory.totalVotes > 0 ? overallCategory.averageRating : calculatedOverall;
-  const overallPercentage = displayOverall / 10 * 100;
-  const overallScaled = Math.round(displayOverall / 10 * 100);
+  const overallPercentage = calculatedOverall / 10 * 100;
+  const overallScaled = Math.round(calculatedOverall / 10 * 100);
 
   return (
     <Card className="bg-rap-carbon border-rap-burgundy/40">
@@ -74,7 +71,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
         <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Overall Rating - Prominent Display */}
+        {/* Overall Rating - Always calculated from attributes */}
         <div className="bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 via-rap-gold/30 border border-rap-gold/30 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
             <Trophy className="w-5 h-5 text-rap-gold" />
@@ -83,16 +80,14 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-rap-smoke font-kaushan">
-                {overallCategory && overallCategory.totalVotes > 0
-                  ? "Voted Overall Rating"
-                  : "Calculated from all attributes"}
+                Calculated from all attributes
               </span>
               <div className="text-right">
                 <span className="text-rap-platinum font-bold text-2xl font-mogra">
                   {overallScaled}/100
                 </span>
                 <span className="text-rap-smoke text-sm ml-2 font-kaushan">
-                  ({overallCategory?.totalVotes || 0} direct votes)
+                  (Average of {attributesWithVotes.length} attributes)
                 </span>
               </div>
             </div>
@@ -105,7 +100,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
           <h3 className="text-sm font-semibold text-rap-smoke uppercase tracking-wider font-kaushan">
             Individual Attributes
           </h3>
-          {otherCategories.map((category) => {
+          {attributeCategories.map((category) => {
             const percentage = (category.averageRating / 10) * 100;
             const scaledRating = Math.round((category.averageRating / 10) * 100);
 
