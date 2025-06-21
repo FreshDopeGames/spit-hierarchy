@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
@@ -15,7 +14,7 @@ interface InternalPageHeaderProps {
 
 const InternalPageHeader = ({
   backLink = "/",
-  backText = "Return to Dynasty"
+  backText = "Back Home"
 }: InternalPageHeaderProps) => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-rap-gold/30 py-2 sm:py-3">
