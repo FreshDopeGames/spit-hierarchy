@@ -3,6 +3,32 @@ import { useState, useEffect, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
+// Helper function to normalize names for better matching
+const normalizeName = (name: string): string => {
+  return name
+    .toLowerCase()
+    .replace(/[.\s]/g, '') // Remove periods and spaces
+    .replace(/[^a-z0-9]/g, ''); // Remove any other special characters except alphanumeric
+};
+
+// Helper function to create search variations
+const createSearchVariations = (term: string): string[] => {
+  const variations = [term.toLowerCase()];
+  
+  // Add variation without periods
+  if (term.includes('.')) {
+    variations.push(term.replace(/\./g, '').toLowerCase());
+  }
+  
+  // Add variation with periods removed and spaces normalized
+  variations.push(term.replace(/[.\s]+/g, '').toLowerCase());
+  
+  // Add variation with spaces around periods removed
+  variations.push(term.replace(/\s*\.\s*/g, '.').toLowerCase());
+  
+  return [...new Set(variations)]; // Remove duplicates
+};
+
 export const useRapperSearch = (excludeIds: string[] = []) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -21,18 +47,11 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
     queryFn: async () => {
       if (debouncedSearchTerm.length < 2) return [];
 
-      // Create a more flexible search pattern that handles special characters
-      const searchPattern = debouncedSearchTerm
-        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // Escape special regex characters
-        .replace(/\s+/g, '.*') // Replace spaces with .* for flexible matching
-        .replace(/\./g, '\\.?') // Make periods optional
-        .toLowerCase();
-
       let query = supabase
         .from("rappers")
         .select("id, name, image_url")
         .order("name")
-        .limit(10);
+        .limit(20); // Increased limit to get more results for better filtering
 
       // Filter out already selected rappers
       if (excludeIds.length > 0) {
@@ -42,22 +61,52 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
       const { data, error } = await query;
       if (error) throw error;
       
-      // Filter results on the client side for more flexible matching
+      // Enhanced client-side filtering for better matching
+      const searchVariations = createSearchVariations(debouncedSearchTerm);
+      const normalizedSearchTerm = normalizeName(debouncedSearchTerm);
+      
       const filteredData = (data || []).filter(rapper => {
-        const name = rapper.name.toLowerCase();
-        const term = debouncedSearchTerm.toLowerCase();
+        const rapperName = rapper.name.toLowerCase();
+        const normalizedRapperName = normalizeName(rapper.name);
         
-        // Direct match or contains match
-        if (name.includes(term)) return true;
+        // Exact match (highest priority)
+        if (rapperName === debouncedSearchTerm.toLowerCase()) return true;
         
-        // Remove special characters for comparison
-        const cleanName = name.replace(/[^a-zA-Z0-9\s]/g, '');
-        const cleanTerm = term.replace(/[^a-zA-Z0-9\s]/g, '');
+        // Direct contains match
+        if (rapperName.includes(debouncedSearchTerm.toLowerCase())) return true;
         
-        return cleanName.includes(cleanTerm);
+        // Check against search variations
+        for (const variation of searchVariations) {
+          if (rapperName.includes(variation)) return true;
+          if (rapperName.replace(/[.\s]/g, '').includes(variation)) return true;
+        }
+        
+        // Normalized comparison (handles J.I.D vs JID, etc.)
+        if (normalizedRapperName.includes(normalizedSearchTerm)) return true;
+        
+        // Check if normalized search term matches normalized rapper name
+        if (normalizedSearchTerm.length >= 3 && normalizedRapperName.startsWith(normalizedSearchTerm)) return true;
+        
+        return false;
       });
 
-      return filteredData;
+      // Sort results by relevance
+      return filteredData.sort((a, b) => {
+        const aName = a.name.toLowerCase();
+        const bName = b.name.toLowerCase();
+        const searchLower = debouncedSearchTerm.toLowerCase();
+        
+        // Exact matches first
+        if (aName === searchLower && bName !== searchLower) return -1;
+        if (bName === searchLower && aName !== searchLower) return 1;
+        
+        // Starts with matches next
+        if (aName.startsWith(searchLower) && !bName.startsWith(searchLower)) return -1;
+        if (bName.startsWith(searchLower) && !aName.startsWith(searchLower)) return 1;
+        
+        // Then alphabetical
+        return aName.localeCompare(bName);
+      }).slice(0, 10); // Limit final results to 10
     },
     enabled: debouncedSearchTerm.length >= 2,
   });
