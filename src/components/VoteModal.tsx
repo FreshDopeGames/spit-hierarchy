@@ -197,9 +197,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
               <SelectTrigger className="bg-rap-carbon/50 border-rap-gold/30 text-rap-platinum font-kaushan">
                 <SelectValue placeholder="Select an attribute to rate..." />
               </SelectTrigger>
-              <SelectContent className="bg-rap-carbon border-rap-gold/30">
+              <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
                 {categories?.map((category) => (
-                  <SelectItem key={category.id} value={category.id} className="font-kaushan">
+                  <SelectItem key={category.id} value={category.id} className="font-kaushan focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-900 dark:focus:text-gray-100">
                     {category.name}
                   </SelectItem>
                 ))}
@@ -219,14 +219,27 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
               </span>
             </Label>
             <div className="px-2">
-              <Slider
-                value={rating}
-                onValueChange={setRating}
-                max={10}
-                min={1}
-                step={1}
-                className="w-full"
-              />
+              <div className="relative flex w-full touch-none select-none items-center">
+                <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-rap-charcoal">
+                  <div 
+                    className="absolute h-full bg-rap-gold rounded-full" 
+                    style={{ width: `${(rating[0] / 10) * 100}%` }}
+                  />
+                </div>
+                <div 
+                  className="block h-5 w-5 rounded-full border-2 border-rap-gold bg-rap-carbon ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rap-gold focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 absolute"
+                  style={{ left: `calc(${(rating[0] / 10) * 100}% - 10px)` }}
+                />
+                <input
+                  type="range"
+                  min={1}
+                  max={10}
+                  step={1}
+                  value={rating[0]}
+                  onChange={(e) => setRating([parseInt(e.target.value)])}
+                  className="absolute w-full h-5 opacity-0 cursor-pointer"
+                />
+              </div>
               <div className="flex justify-between text-xs text-rap-smoke mt-1 font-kaushan">
                 <span>1</span>
                 <span>5</span>
