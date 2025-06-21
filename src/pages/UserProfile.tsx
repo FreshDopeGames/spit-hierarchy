@@ -5,7 +5,6 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Helmet } from "react-helmet";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import MemberStatusCard from "@/components/profile/MemberStatusCard";
@@ -76,9 +75,6 @@ const UserProfile = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative flex items-center justify-center">
-        <Helmet>
-          <title>Sign In Required - Spit Hierarchy</title>
-        </Helmet>
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         <div className="relative z-10 text-center px-4">
           <h2 className="text-xl sm:text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">
@@ -97,10 +93,6 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
-      <Helmet>
-        <title>My Profile - Spit Hierarchy</title>
-      </Helmet>
-      
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10">
