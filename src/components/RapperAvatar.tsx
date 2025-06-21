@@ -8,7 +8,7 @@ type Rapper = Tables<"rappers">;
 
 interface RapperAvatarProps {
   rapper: Rapper;
-  size?: "sm" | "md" | "lg";
+  size?: "sm" | "md" | "lg" | "xl";
   imageUrl?: string | null; // Allow passing image URL directly for batch loading
 }
 
@@ -21,13 +21,15 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
   const sizeClasses = {
     sm: "w-12 h-12 sm:w-14 sm:h-14",
     md: "w-16 h-16 sm:w-18 sm:h-18",
-    lg: "w-20 h-20 sm:w-24 sm:h-24"
+    lg: "w-20 h-20 sm:w-24 sm:h-24",
+    xl: "w-24 h-24 sm:w-28 sm:h-28"
   };
   
   const iconSizeClasses = {
     sm: "w-6 h-6",
     md: "w-8 h-8",
-    lg: "w-10 h-10"
+    lg: "w-10 h-10",
+    xl: "w-12 h-12"
   };
   
   return (

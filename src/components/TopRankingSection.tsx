@@ -17,28 +17,28 @@ interface TopRankingSectionProps {
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
   return (
     <div className="space-y-8">
-      {/* Top 2 in one row - TALLER CARDS for mobile */}
+      {/* Top 2 in one row - MUCH TALLER CARDS for prominence */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         {rappers.slice(0, 2).map((rapper, index) => 
-          <div key={rapper.id} className="flex items-center space-x-4 sm:space-x-6 p-6 sm:p-4 bg-gradient-to-r from-rap-carbon-light/40 to-transparent rounded-lg border border-rap-gold/30 min-h-[120px] sm:min-h-[100px]">
+          <div key={rapper.id} className="flex flex-col items-center space-y-4 p-6 sm:p-6 bg-gradient-to-r from-rap-carbon-light/40 to-transparent rounded-lg border border-rap-gold/30 min-h-[200px] sm:min-h-[180px]">
             <div className="flex items-center justify-center w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg flex-shrink-0">
               <span className="text-rap-carbon font-mogra text-lg sm:text-base font-bold">
                 {index + 1}
               </span>
             </div>
-            <RapperAvatar rapper={rapper} size="lg" />
-            <div className="flex-1 min-w-0">
+            <RapperAvatar rapper={rapper} size="xl" />
+            <div className="flex-1 text-center w-full">
               <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-                <h3 className="text-xl sm:text-xl font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">
+                <h3 className="text-xl sm:text-2xl font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors leading-tight mb-2">
                   {rapper.name}
                 </h3>
               </Link>
               {rapper.origin && 
-                <p className="text-rap-smoke text-base sm:text-base font-kaushan mt-1 truncate">
+                <p className="text-rap-smoke text-base sm:text-lg font-kaushan mt-2 leading-relaxed">
                   {rapper.origin}
                 </p>
               }
-              <p className="text-rap-silver text-sm font-bold mt-1">
+              <p className="text-rap-silver text-sm sm:text-base font-bold mt-3">
                 Votes: {rankingId && rapper.ranking_votes !== undefined 
                   ? rapper.ranking_votes.toLocaleString()
                   : (rapper.total_votes || 0).toLocaleString()
@@ -49,10 +49,10 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         )}
       </div>
       
-      {/* Next 3 in one row - SHORTER CARDS for mobile */}
+      {/* Next 3 in one row - SMALLER CARDS for contrast */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         {rappers.slice(2, 5).map((rapper, index) => 
-          <div key={rapper.id} className="flex flex-col items-center space-y-2 sm:space-y-3 p-4 sm:p-4 bg-gradient-to-b from-rap-carbon-light/20 to-transparent rounded-lg border border-rap-gold/10 min-h-[100px] sm:min-h-[120px]">
+          <div key={rapper.id} className="flex flex-col items-center space-y-2 sm:space-y-3 p-4 sm:p-4 bg-gradient-to-b from-rap-carbon-light/20 to-transparent rounded-lg border border-rap-gold/10 min-h-[140px] sm:min-h-[160px]">
             <div className="flex items-center justify-center w-8 h-8 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg flex-shrink-0">
               <span className="text-rap-carbon font-mogra text-sm font-bold">
                 {index + 3}
