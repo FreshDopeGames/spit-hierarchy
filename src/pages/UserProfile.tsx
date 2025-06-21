@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,6 +16,11 @@ import VoteNotesSection from "@/components/profile/VoteNotesSection";
 
 const UserProfile = () => {
   const { user } = useAuth();
+
+  // Set page title
+  useEffect(() => {
+    document.title = user ? "My Profile - Spit Hierarchy" : "Sign In Required - Spit Hierarchy";
+  }, [user]);
 
   const { data: profile } = useQuery({
     queryKey: ["user-profile", user?.id],
