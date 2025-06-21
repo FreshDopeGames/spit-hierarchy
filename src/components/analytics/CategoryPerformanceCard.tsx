@@ -20,7 +20,8 @@ const CategoryPerformanceCard = () => {
         error
       } = await supabase.rpc("get_category_voting_analytics");
       if (error) throw error;
-      return data;
+      // Filter out the 'Overall' category
+      return data?.filter(category => category.name !== 'Overall') || [];
     }
   });
 
