@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Vote } from "lucide-react";
@@ -64,9 +65,9 @@ const BlogSidebar = ({
 
       {/* All Rankings Voting Module */}
       <Card className="bg-rap-carbon border border-rap-gold/40">
-        <CardContent className="p-6 text-center space-y-3">
-          <h3 className="text-rap-gold font-ceviche text-lg">All Rankings</h3>
-          <p className="text-rap-silver font-kaushan text-sm">
+        <CardContent className="p-6 text-center space-y-4">
+          <h3 className="text-rap-gold font-ceviche text-3xl">All Rankings</h3>
+          <p className="text-rap-platinum font-kaushan text-base pb-2">
             Your Voice Matters
           </p>
           <Link to="/rankings">
