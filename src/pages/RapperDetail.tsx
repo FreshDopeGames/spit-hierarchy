@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -14,49 +13,59 @@ import RapperBio from "@/components/rapper/RapperBio";
 import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import { Tables } from "@/integrations/supabase/types";
-
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
 };
-
 const RapperDetail = () => {
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const {
+    id
+  } = useParams<{
+    id: string;
+  }>();
+  const {
+    user
+  } = useAuth();
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [selectedCategory] = useState("");
-
-  const { data: rapper, isLoading } = useQuery({
+  const {
+    data: rapper,
+    isLoading
+  } = useQuery({
     queryKey: ["rapper", id],
     queryFn: async () => {
       if (!id) throw new Error("No rapper ID provided");
-      
+
       // Fetch rapper data
-      const { data: rapperData, error: rapperError } = await supabase
-        .from("rappers")
-        .select("*")
-        .eq("id", id)
-        .single();
-      
+      const {
+        data: rapperData,
+        error: rapperError
+      } = await supabase.from("rappers").select("*").eq("id", id).single();
       if (rapperError) throw rapperError;
 
       // Fetch Top 5 count using the database function
-      const { data: countData, error: countError } = await supabase
-        .rpc("get_rapper_top5_count", { rapper_uuid: id });
-      
+      const {
+        data: countData,
+        error: countError
+      } = await supabase.rpc("get_rapper_top5_count", {
+        rapper_uuid: id
+      });
       if (countError) {
         console.error("Error fetching Top 5 count:", countError);
         // Don't throw error, just set count to 0
-        return { ...rapperData, top5_count: 0 };
+        return {
+          ...rapperData,
+          top5_count: 0
+        };
       }
-
-      return { ...rapperData, top5_count: countData || 0 };
+      return {
+        ...rapperData,
+        top5_count: countData || 0
+      };
     },
     enabled: !!id
   });
-
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+    return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
           <div className="animate-pulse">
@@ -66,13 +75,10 @@ const RapperDetail = () => {
             <div className="h-4 bg-rap-carbon-light rounded w-1/2"></div>
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   if (!rapper) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+    return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
           <Link to="/">
@@ -88,12 +94,9 @@ const RapperDetail = () => {
             </CardContent>
           </Card>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10 max-w-4xl mx-auto p-6 pt-24">
@@ -112,7 +115,7 @@ const RapperDetail = () => {
         <RapperBio rapper={rapper} />
 
         {/* Attribute Stats - New sports-style stats */}
-        <div className="mb-8">
+        <div className="mb-8 bg-rap-carbon">
           <RapperAttributeStats rapper={rapper} />
         </div>
 
@@ -121,19 +124,10 @@ const RapperDetail = () => {
       </div>
 
       {/* Vote Modal */}
-      {showVoteModal && (
-        <VoteModal
-          rapper={rapper}
-          isOpen={showVoteModal}
-          onClose={() => setShowVoteModal(false)}
-          selectedCategory={selectedCategory}
-        />
-      )}
+      {showVoteModal && <VoteModal rapper={rapper} isOpen={showVoteModal} onClose={() => setShowVoteModal(false)} selectedCategory={selectedCategory} />}
 
       {/* Comment Bubble - Pinned to bottom */}
       <CommentBubble contentType="rapper" contentId={rapper.id} />
-    </div>
-  );
+    </div>;
 };
-
 export default RapperDetail;
