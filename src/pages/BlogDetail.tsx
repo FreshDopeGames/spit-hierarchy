@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import CommentBubble from "@/components/CommentBubble";
 import { useAuth } from "@/hooks/useAuth";
 import { useComments } from "@/hooks/useComments";
-import BlogDetailHeader from "@/components/blog/BlogDetailHeader";
+import InternalPageHeader from "@/components/InternalPageHeader";
 import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
 import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
@@ -131,8 +131,11 @@ const BlogDetail = () => {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-        <BlogDetailHeader onShare={handleShare} />
-        <main className="max-w-4xl mx-auto p-6">
+        <InternalPageHeader 
+          backLink="/blog" 
+          backText="Back to Blog" 
+        />
+        <main className="max-w-4xl mx-auto p-6 pt-24">
           <div className="animate-pulse">
             <div className="h-8 bg-rap-carbon rounded mb-4"></div>
             <div className="h-64 bg-rap-carbon rounded mb-8"></div>
@@ -150,8 +153,11 @@ const BlogDetail = () => {
   if (error || !blogPost) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-        <BlogDetailHeader onShare={handleShare} />
-        <main className="max-w-4xl mx-auto p-6">
+        <InternalPageHeader 
+          backLink="/blog" 
+          backText="Back to Blog" 
+        />
+        <main className="max-w-4xl mx-auto p-6 pt-24">
           <Card className="bg-carbon-fiber border border-rap-gold/40">
             <CardContent className="p-8 text-center">
               <h1 className="text-2xl font-ceviche text-rap-gold mb-4">Sacred Scroll Not Found</h1>
@@ -196,9 +202,12 @@ const BlogDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      <BlogDetailHeader onShare={handleShare} />
+      <InternalPageHeader 
+        backLink="/blog" 
+        backText="Back to Blog" 
+      />
 
-      <main className="max-w-4xl mx-auto p-6">
+      <main className="max-w-4xl mx-auto p-6 pt-24">
         <BlogArticleHeader blogPost={transformedBlogPost} />
 
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
