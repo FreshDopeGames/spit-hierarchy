@@ -63,34 +63,22 @@ const BlogFilters = ({
         </div>
       )}
 
-      {/* Category Filter */}
+      {/* Category Filter Dropdown */}
       <div className="mb-8">
         <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Category</h2>
-        <div className="flex flex-wrap gap-2">
-          <Button 
-            variant={selectedCategory === 'all' ? 'default' : 'outline'} 
-            onClick={() => onCategoryChange('all')} 
-            className={selectedCategory === 'all' 
-              ? 'bg-rap-carbon-light text-rap-gold border-2 border-rap-gold' 
-              : 'bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20'
-            }
-          >
-            All Posts
-          </Button>
-          {categories?.map(category => (
-            <Button 
-              key={category.id} 
-              variant={selectedCategory === category.id ? 'default' : 'outline'} 
-              onClick={() => onCategoryChange(category.id)} 
-              className={selectedCategory === category.id 
-                ? 'bg-rap-carbon-light text-rap-gold border-2 border-rap-gold' 
-                : 'bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20'
-              }
-            >
-              {category.name}
-            </Button>
-          ))}
-        </div>
+        <Select value={selectedCategory || 'all'} onValueChange={onCategoryChange}>
+          <SelectTrigger className="w-64 bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold">
+            <SelectValue placeholder="Select a category" />
+          </SelectTrigger>
+          <SelectContent className="bg-rap-carbon border-rap-gold/50">
+            <SelectItem value="all" className="text-rap-gold">All Posts</SelectItem>
+            {categories?.map(category => (
+              <SelectItem key={category.id} value={category.id} className="text-rap-gold">
+                {category.name}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Tag Filter Dropdown */}
