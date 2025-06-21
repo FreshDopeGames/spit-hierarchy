@@ -1,8 +1,8 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Vote } from "lucide-react";
 import { Link } from "react-router-dom";
+
 interface RelatedPost {
   id: string;
   title: string;
@@ -72,7 +72,7 @@ const BlogSidebar = ({
           <Link to="/rankings">
             <Button className="bg-rap-gold text-black hover:bg-rap-gold-light font-medium">
               <Vote className="w-4 h-4 mr-2" />
-              Cast Your Vote
+              Vote
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
