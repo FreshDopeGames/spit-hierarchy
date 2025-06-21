@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -5,13 +6,16 @@ import { Crown, MapPin, Calendar, Verified, Music, Instagram, Twitter } from "lu
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
+
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
 };
+
 interface RapperHeaderProps {
   rapper: Rapper;
   onVoteClick: () => void;
 }
+
 const RapperHeader = ({
   rapper,
   onVoteClick
@@ -21,6 +25,7 @@ const RapperHeader = ({
   const {
     data: imageUrl
   } = useRapperImage(rapper.id);
+
   return <div className="space-y-6">
       <Card className="bg-carbon-fiber border-rap-burgundy/40 relative overflow-hidden">
         {/* Rap culture accent bar */}
@@ -92,11 +97,12 @@ const RapperHeader = ({
               </div>
 
               {/* Vote Button */}
-              <Button onClick={onVoteClick} size="lg" className="bg-gradient-to-r from-rap-gold-light to-rap-gold-dark via-rap-gold text-rap-platinum font-mogra shadow-lg shadow-rap-gold/30 text-xl">Rate This Rapper</Button>
+              <Button onClick={onVoteClick} size="lg" className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30 text-xl">Rate This Rapper</Button>
             </div>
           </div>
         </CardContent>
       </Card>
     </div>;
 };
+
 export default RapperHeader;
