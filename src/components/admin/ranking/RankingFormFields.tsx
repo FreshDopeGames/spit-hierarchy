@@ -2,14 +2,25 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { UseFormReturn } from "react-hook-form";
 import { RankingFormData } from "./rankingFormSchema";
+import RankingTagSelector from "../RankingTagSelector";
 
 interface RankingFormFieldsProps {
   form: UseFormReturn<RankingFormData>;
+  selectedTags: string[];
+  onTagsChange: (tagIds: string[]) => void;
 }
 
-const RankingFormFields = ({ form }: RankingFormFieldsProps) => {
+const categoryOptions = [
+  { value: "skills", label: "Skills" },
+  { value: "legacy", label: "Legacy" },
+  { value: "all time", label: "All Time" },
+  { value: "trends", label: "Trends" }
+];
+
+const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFieldsProps) => {
   return (
     <>
       <FormField
@@ -52,13 +63,20 @@ const RankingFormFields = ({ form }: RankingFormFieldsProps) => {
         render={({ field }) => (
           <FormItem>
             <FormLabel className="font-mogra text-rap-platinum">Category</FormLabel>
-            <FormControl>
-              <Input 
-                placeholder="Enter category" 
-                {...field} 
-                className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
-              />
-            </FormControl>
+            <Select onValueChange={field.onChange} defaultValue={field.value}>
+              <FormControl>
+                <SelectTrigger className="bg-gray-100 border-rap-gold/30 text-rap-carbon">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                {categoryOptions.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             <FormMessage />
           </FormItem>
         )}
@@ -80,6 +98,13 @@ const RankingFormFields = ({ form }: RankingFormFieldsProps) => {
           </FormItem>
         )}
       />
+      <FormItem>
+        <FormLabel className="font-mogra text-rap-platinum">Tags</FormLabel>
+        <RankingTagSelector 
+          selectedTags={selectedTags}
+          onTagsChange={onTagsChange}
+        />
+      </FormItem>
     </>
   );
 };

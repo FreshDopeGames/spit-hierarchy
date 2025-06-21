@@ -13,13 +13,15 @@ interface UseRankingSubmissionProps {
   onRankingCreated: () => void;
   form: UseFormReturn<RankingFormData>;
   setOpen: (open: boolean) => void;
+  selectedTags: string[];
 }
 
 export const useRankingSubmission = ({
   ranking,
   onRankingCreated,
   form,
-  setOpen
+  setOpen,
+  selectedTags
 }: UseRankingSubmissionProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -28,7 +30,7 @@ export const useRankingSubmission = ({
     setIsLoading(true);
     try {
       if (ranking) {
-        // Update existing ranking - ensure all required fields are present
+        // Update existing ranking
         const updateData = {
           title: values.title,
           description: values.description || "",
@@ -42,12 +44,15 @@ export const useRankingSubmission = ({
 
         if (error) throw error;
 
+        // Update tag assignments
+        await updateTagAssignments(ranking.id, selectedTags);
+
         toast({
           title: "Success",
           description: "Ranking updated successfully"
         });
       } else {
-        // Create new ranking - ensure all required fields are present
+        // Create new ranking
         const insertData = {
           title: values.title,
           description: values.description || "",
@@ -61,6 +66,11 @@ export const useRankingSubmission = ({
           .single();
 
         if (error) throw error;
+
+        // Add tag assignments for new ranking
+        if (newRanking && selectedTags.length > 0) {
+          await updateTagAssignments(newRanking.id, selectedTags);
+        }
 
         // Automatically populate the new ranking with all rappers
         if (newRanking) {
@@ -96,6 +106,30 @@ export const useRankingSubmission = ({
       });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const updateTagAssignments = async (rankingId: string, tagIds: string[]) => {
+    // Remove existing tag assignments
+    const { error: deleteError } = await supabase
+      .from("ranking_tag_assignments")
+      .delete()
+      .eq("ranking_id", rankingId);
+
+    if (deleteError) throw deleteError;
+
+    // Add new tag assignments
+    if (tagIds.length > 0) {
+      const assignments = tagIds.map(tagId => ({
+        ranking_id: rankingId,
+        tag_id: tagId
+      }));
+
+      const { error: insertError } = await supabase
+        .from("ranking_tag_assignments")
+        .insert(assignments);
+
+      if (insertError) throw insertError;
     }
   };
 

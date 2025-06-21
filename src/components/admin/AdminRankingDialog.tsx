@@ -1,11 +1,13 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 import { rankingFormSchema, RankingFormData } from "./ranking/rankingFormSchema";
 import RankingFormFields from "./ranking/RankingFormFields";
@@ -24,6 +26,7 @@ const AdminRankingDialog = ({
   ranking
 }: AdminRankingDialogProps) => {
   const [open, setOpen] = useState(false);
+  const [selectedTags, setSelectedTags] = useState<string[]>([]);
 
   const form = useForm<RankingFormData>({
     resolver: zodResolver(rankingFormSchema),
@@ -31,15 +34,63 @@ const AdminRankingDialog = ({
       title: ranking?.title || "",
       description: ranking?.description || "",
       category: ranking?.category || "",
-      slug: ranking?.slug || ""
+      slug: ranking?.slug || "",
+      tags: []
     }
   });
+
+  // Load existing tags when editing a ranking
+  const { data: existingTags } = useQuery({
+    queryKey: ["ranking-tags", ranking?.id],
+    queryFn: async () => {
+      if (!ranking?.id) return [];
+      
+      const { data, error } = await supabase
+        .from("ranking_tag_assignments")
+        .select("tag_id")
+        .eq("ranking_id", ranking.id);
+      
+      if (error) throw error;
+      return data.map(assignment => assignment.tag_id);
+    },
+    enabled: !!ranking?.id && open
+  });
+
+  // Set selected tags when data loads
+  useEffect(() => {
+    if (existingTags) {
+      setSelectedTags(existingTags);
+      form.setValue("tags", existingTags);
+    }
+  }, [existingTags, form]);
+
+  // Reset form and tags when dialog opens/closes
+  useEffect(() => {
+    if (!open) {
+      form.reset();
+      setSelectedTags([]);
+    } else if (ranking) {
+      form.reset({
+        title: ranking.title,
+        description: ranking.description || "",
+        category: ranking.category,
+        slug: ranking.slug,
+        tags: []
+      });
+    }
+  }, [open, ranking, form]);
+
+  const handleTagsChange = (tagIds: string[]) => {
+    setSelectedTags(tagIds);
+    form.setValue("tags", tagIds);
+  };
 
   const { onSubmit, isLoading } = useRankingSubmission({
     ranking,
     onRankingCreated,
     form,
-    setOpen
+    setOpen,
+    selectedTags
   });
 
   return (
@@ -53,7 +104,11 @@ const AdminRankingDialog = ({
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 pt-4">
-            <RankingFormFields form={form} />
+            <RankingFormFields 
+              form={form} 
+              selectedTags={selectedTags}
+              onTagsChange={handleTagsChange}
+            />
             <div className="flex justify-end gap-2">
               <Button 
                 type="button" 
@@ -66,7 +121,7 @@ const AdminRankingDialog = ({
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra"
+                className="bg-rap-gold hover:bg-white hover:text-rap-gold-dark text-rap-charcoal font-mogra"
               >
                 {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {ranking ? "Update" : "Create"}
