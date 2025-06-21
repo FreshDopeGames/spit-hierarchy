@@ -1,3 +1,4 @@
+
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { marked } from "marked";
 import { useMemo } from "react";
@@ -42,7 +43,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         <div 
           className="prose prose-invert prose-lg max-w-none 
           prose-headings:text-rap-gold prose-headings:font-ceviche prose-headings:leading-tight
-          prose-p:text-rap-platinum prose-p:leading-relaxed prose-p:text-base prose-p:my-1
+          prose-p:text-rap-platinum prose-p:leading-relaxed prose-p:text-base prose-p:my-8
           prose-strong:text-rap-gold prose-strong:font-bold
           prose-em:text-rap-silver prose-em:italic
           prose-code:text-rap-gold prose-code:bg-rap-carbon/50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
@@ -58,7 +59,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
           [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:mb-5 [&_h3]:mt-8
           [&_ul]:list-disc [&_ul]:ml-6 [&_ul_li]:relative [&_ul_li]:pl-0
           [&_ul_li::marker]:text-rap-gold [&_ul_li::marker]:content-['•']
-          [&_br]:block [&_br]:my-4
+          [&_br]:block [&_br]:my-8
           font-merienda"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
