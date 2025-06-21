@@ -10,11 +10,11 @@ import InternalPageHeader from "@/components/InternalPageHeader";
 
 const Analytics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'stats');
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'platform');
 
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['stats', 'achievements', 'platform'].includes(tab)) {
+    if (tab && ['platform', 'achievements', 'stats'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -35,11 +35,11 @@ const Analytics = () => {
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
           <TabsList className="grid w-full grid-cols-3 bg-rap-carbon-light border border-rap-gold/30 mt-6 md:mt-8 lg:mt-10 relative z-10">
             <TabsTrigger 
-              value="stats" 
+              value="platform" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
             >
-              <User className="w-4 h-4" />
-              My Stats
+              <BarChart3 className="w-4 h-4" />
+              Platform
             </TabsTrigger>
             <TabsTrigger 
               value="achievements" 
@@ -49,24 +49,24 @@ const Analytics = () => {
               Achievements
             </TabsTrigger>
             <TabsTrigger 
-              value="platform" 
+              value="stats" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
             >
-              <BarChart3 className="w-4 h-4" />
-              Platform
+              <User className="w-4 h-4" />
+              My Stats
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="stats" className="space-y-6">
-            <UserVotingDashboard />
+          <TabsContent value="platform" className="space-y-6">
+            <VotingAnalytics />
           </TabsContent>
 
           <TabsContent value="achievements" className="space-y-6">
             <UserAchievements />
           </TabsContent>
 
-          <TabsContent value="platform" className="space-y-6">
-            <VotingAnalytics />
+          <TabsContent value="stats" className="space-y-6">
+            <UserVotingDashboard />
           </TabsContent>
         </Tabs>
       </div>
