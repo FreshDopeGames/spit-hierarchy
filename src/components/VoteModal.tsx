@@ -145,9 +145,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-black/90 border-purple-500/30 text-white max-w-md">
+      <DialogContent className="bg-rap-carbon/95 border-rap-gold/30 text-rap-platinum max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-rap-gold to-rap-gold-light bg-clip-text text-transparent font-mogra">
             Rate {rapper.name}
           </DialogTitle>
         </DialogHeader>
@@ -156,23 +156,23 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           {/* Rapper Info */}
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <h3 className="text-xl font-bold">{rapper.name}</h3>
-              {rapper.verified && <Verified className="w-5 h-5 text-blue-500" />}
+              <h3 className="text-xl font-bold font-kaushan text-rap-platinum">{rapper.name}</h3>
+              {rapper.verified && <Verified className="w-5 h-5 text-rap-forest" />}
             </div>
             
             {rapper.real_name && (
-              <p className="text-gray-400">{rapper.real_name}</p>
+              <p className="text-rap-smoke font-kaushan">{rapper.real_name}</p>
             )}
 
             <div className="flex flex-wrap gap-3 text-sm">
               {rapper.origin && (
-                <div className="flex items-center gap-1 text-gray-300">
+                <div className="flex items-center gap-1 text-rap-smoke font-kaushan">
                   <MapPin className="w-4 h-4" />
                   <span>{rapper.origin}</span>
                 </div>
               )}
               {rapper.birth_year && (
-                <div className="flex items-center gap-1 text-gray-300">
+                <div className="flex items-center gap-1 text-rap-smoke font-kaushan">
                   <Calendar className="w-4 h-4" />
                   <span>{rapper.birth_year}</span>
                 </div>
@@ -180,41 +180,41 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             </div>
 
             <div className="flex items-center gap-2">
-              <Star className="w-4 h-4 text-yellow-500" />
-              <span className="text-white font-semibold">
+              <Star className="w-4 h-4 text-rap-gold" />
+              <span className="text-rap-platinum font-semibold font-kaushan">
                 {rapper.average_rating || "No ratings yet"}
               </span>
-              <span className="text-gray-400">({rapper.total_votes || 0} votes)</span>
+              <span className="text-rap-smoke font-kaushan">({rapper.total_votes || 0} votes)</span>
             </div>
           </div>
 
           {/* Category Selection */}
           <div className="space-y-2">
-            <Label htmlFor="category" className="text-gray-300">
+            <Label htmlFor="category" className="text-rap-smoke font-kaushan">
               Attribute Category
             </Label>
             <Select value={categoryId} onValueChange={setCategoryId}>
-              <SelectTrigger className="bg-black/50 border-purple-500/30">
+              <SelectTrigger className="bg-rap-carbon/50 border-rap-gold/30 text-rap-platinum font-kaushan">
                 <SelectValue placeholder="Select an attribute to rate..." />
               </SelectTrigger>
-              <SelectContent className="bg-black border-purple-500/30">
+              <SelectContent className="bg-rap-carbon border-rap-gold/30">
                 {categories?.map((category) => (
-                  <SelectItem key={category.id} value={category.id}>
+                  <SelectItem key={category.id} value={category.id} className="font-kaushan">
                     {category.name}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
             {selectedCategoryData && (
-              <p className="text-sm text-gray-400">{selectedCategoryData.description}</p>
+              <p className="text-sm text-rap-smoke font-kaushan">{selectedCategoryData.description}</p>
             )}
           </div>
 
           {/* Rating Slider */}
           <div className="space-y-4">
-            <Label className="text-gray-300">
-              Your Rating: <span className="text-white font-bold text-lg">{rating[0]}/10</span>
-              <span className="text-gray-400 text-sm ml-2">
+            <Label className="text-rap-smoke font-kaushan">
+              Your Rating: <span className="text-rap-platinum font-bold text-lg font-mogra">{rating[0]}/10</span>
+              <span className="text-rap-smoke text-sm ml-2">
                 (≈ {Math.round((rating[0] / 10) * 100)}/100)
               </span>
             </Label>
@@ -227,7 +227,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                 step={1}
                 className="w-full"
               />
-              <div className="flex justify-between text-xs text-gray-400 mt-1">
+              <div className="flex justify-between text-xs text-rap-smoke mt-1 font-kaushan">
                 <span>1</span>
                 <span>5</span>
                 <span>10</span>
@@ -236,7 +236,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           </div>
 
           {existingVote && (
-            <div className="text-sm text-purple-400">
+            <div className="text-sm text-rap-gold font-kaushan">
               You previously rated this rapper {existingVote.rating}/10 in this category.
             </div>
           )}
@@ -245,7 +245,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           <Button
             onClick={handleSubmit}
             disabled={voteMutation.isPending || !categoryId}
-            className="w-full bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+            className="w-full bg-gradient-to-r from-rap-gold-dark to-rap-gold-light hover:from-rap-gold to-rap-gold-dark text-rap-carbon font-bold font-mogra"
           >
             {voteMutation.isPending 
               ? "Submitting..." 
