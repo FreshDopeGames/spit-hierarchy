@@ -20,6 +20,7 @@ import AllRappers from "./pages/AllRappers";
 import TermsOfUse from "./pages/TermsOfUse";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import Footer from "./components/Footer";
+import ScrollToTop from "./components/ScrollToTop";
 import AuthGuard from "./components/AuthGuard";
 import { AuthProvider } from "./hooks/useAuth";
 import { AchievementProvider } from "./components/achievements/AchievementProvider";
@@ -29,6 +30,7 @@ function App() {
     <AuthProvider>
       <AchievementProvider>
         <Router>
+          <ScrollToTop />
           <div className="min-h-screen flex flex-col">
             <main className="flex-1">
               <Routes>
