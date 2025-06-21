@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -75,47 +76,47 @@ const BlogCarousel = () => {
           }}>
             {featuredPosts.map(post => (
               <div key={post.id} className="w-full flex-shrink-0">
-                <div className="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden">
-                  <ResponsiveImage 
-                    src={getImageData(post)} 
-                    alt={post.title} 
-                    className="w-full h-full" 
-                    context="carousel" 
-                    objectFit="cover" 
-                    sizes="(max-width: 768px) 100vw, 100vw" 
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
-                  
-                  <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
-                    {post.blog_categories?.name && (
-                      <Badge className="mb-2 sm:mb-3 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
-                        {post.blog_categories.name}
-                      </Badge>
-                    )}
-                    <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
-                      {post.title}
-                    </h3>
-                    <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4">
-                      <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
-                      <span className="text-rap-smoke">
-                        {format(new Date(post.published_at), "MMMM d, yyyy")}
-                      </span>
-                    </div>
-                    <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
-                      {post.excerpt}
-                    </p>
-                    <Link to={`/blog/${post.id}`}>
+                <Link to={`/blog/${post.id}`} className="block">
+                  <div className="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden cursor-pointer">
+                    <ResponsiveImage 
+                      src={getImageData(post)} 
+                      alt={post.title} 
+                      className="w-full h-full" 
+                      context="carousel" 
+                      objectFit="cover" 
+                      sizes="(max-width: 768px) 100vw, 100vw" 
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
+                    
+                    <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
+                      {post.blog_categories?.name && (
+                        <Badge className="mb-2 sm:mb-3 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
+                          {post.blog_categories.name}
+                        </Badge>
+                      )}
+                      <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
+                        {post.title}
+                      </h3>
+                      <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
+                        <span className="text-rap-smoke">
+                          {format(new Date(post.published_at), "MMMM d, yyyy")}
+                        </span>
+                      </div>
+                      <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
+                        {post.excerpt}
+                      </p>
                       <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base md:text-lg h-auto">
                         Read More
                       </Button>
-                    </Link>
+                    </div>
                   </div>
-                </div>
+                </Link>
               </div>
             ))}
           </div>
           
-          <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-3 sm:px-4 drop-shadow">
+          <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-3 sm:px-4 drop-shadow z-10">
             <Button 
               variant="ghost" 
               size="icon" 
@@ -136,7 +137,7 @@ const BlogCarousel = () => {
             </Button>
           </div>
 
-          <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-center gap-2 sm:gap-3">
+          <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-center gap-2 sm:gap-3 z-10">
             {featuredPosts.map((_, index) => (
               <button 
                 key={index} 
