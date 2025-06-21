@@ -9,32 +9,12 @@ interface BlogArticleContentProps {
 
 const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
   const htmlContent = useMemo(() => {
-    // Configure marked options for better rendering
+    // Configure marked with minimal options for better rendering
     marked.setOptions({
       breaks: true, // Convert single line breaks to <br>
       gfm: true, // GitHub Flavored Markdown
       pedantic: false, // Be more forgiving with markdown parsing
     });
-
-    // Custom renderer for better formatting
-    const renderer = new marked.Renderer();
-    
-    // Ensure proper paragraph spacing
-    renderer.paragraph = (text) => {
-      return `<p class="mb-4 leading-relaxed">${text}</p>`;
-    };
-    
-    // Better list item rendering
-    renderer.listitem = (text) => {
-      return `<li class="mb-2 leading-relaxed">${text}</li>`;
-    };
-
-    // Better blockquote rendering
-    renderer.blockquote = (quote) => {
-      return `<blockquote class="border-l-4 border-rap-gold pl-6 py-2 mb-6 italic text-rap-silver bg-rap-carbon/30 rounded-r-lg">${quote}</blockquote>`;
-    };
-
-    marked.setOptions({ renderer });
     
     return marked(content);
   }, [content]);
