@@ -9,6 +9,23 @@ interface BlogArticleContentProps {
 
 const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
   const htmlContent = useMemo(() => {
+    // Preprocess content to handle line breaks properly
+    const preprocessContent = (rawContent: string) => {
+      // Replace multiple consecutive line breaks with double line breaks for proper paragraphs
+      let processed = rawContent
+        // First, normalize different line break types
+        .replace(/\r\n/g, '\n')
+        .replace(/\r/g, '\n')
+        // Convert 3+ consecutive line breaks to double line breaks (paragraph spacing)
+        .replace(/\n{3,}/g, '\n\n')
+        // Ensure single line breaks in lists and after headings are preserved
+        .replace(/([*+-]\s.*?)\n(?!\n|[*+-])/g, '$1  \n') // Add two spaces for line breaks in lists
+        // Ensure proper spacing around headings
+        .replace(/^(#{1,6}\s.*?)\n(?!\n)/gm, '$1\n\n');
+      
+      return processed;
+    };
+
     // Configure marked with enhanced options for better rendering
     marked.setOptions({
       breaks: true, // Convert single line breaks to <br>
@@ -16,7 +33,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
       pedantic: false, // Be more forgiving with markdown parsing
     });
 
-    return marked(content);
+    const processedContent = preprocessContent(content);
+    return marked(processedContent);
   }, [content]);
 
   return (
@@ -42,6 +60,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
           [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:mb-5 [&_h3]:mt-8
           [&_ul]:list-disc [&_ul]:ml-6 [&_ul_li]:relative [&_ul_li]:pl-0
           [&_ul_li::marker]:text-rap-gold [&_ul_li::marker]:content-['•']
+          [&_br]:block [&_br]:my-4
           font-merienda"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
