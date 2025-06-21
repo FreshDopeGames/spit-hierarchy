@@ -128,7 +128,7 @@ const AdminRankingDialog = ({
             Edit
           </Button>
         ) : (
-          <Button className="bg-rap-gold text-rap-carbon">
+          <Button className="bg-rap-gold text-rap-carbon hover:bg-white hover:text-rap-gold-dark">
             <Plus className="w-4 h-4 mr-2" />
             Add Ranking
           </Button>
