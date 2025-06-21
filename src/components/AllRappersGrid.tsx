@@ -3,11 +3,12 @@ import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Calendar, Verified, Mic2, Loader2, Users } from "lucide-react";
+import { Star, MapPin, Calendar, Verified, Mic2, Loader2, Users, Crown, Vote } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import AdUnit from "@/components/AdUnit";
 import { useRapperImages } from "@/hooks/useImageStyle";
+import { useRapperStats } from "@/hooks/useRapperStats";
 import { formatBirthdate } from "@/utils/zodiacUtils";
 
 type Rapper = Tables<"rappers">;
@@ -23,12 +24,19 @@ interface AllRappersGridProps {
 
 const RapperCard = ({
   rapper,
-  imageUrl
+  imageUrl,
+  stats
 }: {
   rapper: Rapper;
   imageUrl?: string | null;
+  stats?: { top5_count: number; ranking_votes: number };
 }) => {
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
+  
+  // Convert average_rating from 1-10 scale to 0-100 scale to match detail page
+  const overallRating = rapper.average_rating 
+    ? Math.round((Number(rapper.average_rating) / 10) * 100) 
+    : 0;
   
   return (
     <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
@@ -37,7 +45,7 @@ const RapperCard = ({
         <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
         <CardContent className="p-6">
-          {/* Rapper image or placeholder - changed to 1:1 aspect ratio */}
+          {/* Rapper image or placeholder - 1:1 aspect ratio */}
           <div className="w-full aspect-square bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300 overflow-hidden">
             {imageUrl ? (
               <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover" />
@@ -84,18 +92,43 @@ const RapperCard = ({
               )}
             </div>
 
-            {/* Stats with enhanced styling - Updated to include overall rating */}
-            <div className="flex items-center justify-between flex-wrap gap-2">
-              <div className="flex items-center gap-1 bg-gradient-to-r from-rap-gold-dark to-rap-gold-light px-3 py-1 rounded-full border border-rap-silver/20">
-                <Star className="w-4 h-4 text-rap-carbon" />
-                <span className="text-rap-carbon font-bold font-ceviche text-sm">
-                  {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
-                </span>
-                <span className="text-rap-carbon/70 text-xs font-kaushan ml-1">Overall</span>
+            {/* Three Equal-Height Stat Indicators */}
+            <div className="grid grid-cols-3 gap-2">
+              {/* Overall Rating */}
+              <div className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light px-2 py-2 rounded-lg border border-rap-silver/20 text-center">
+                <div className="text-rap-carbon font-bold text-lg font-mogra leading-none">
+                  {overallRating}
+                </div>
+                <div className="text-rap-carbon/70 text-xs font-kaushan mt-1">
+                  Overall
+                </div>
               </div>
-              <Badge variant="secondary" className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon border-rap-silver/30 font-kaushan text-xs">
-                {rapper.total_votes || 0} votes
-              </Badge>
+
+              {/* Top 5 Count */}
+              <div className="bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-2 py-2 rounded-lg border border-rap-silver/20 text-center">
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <Crown className="w-4 h-4 text-rap-gold" />
+                  <span className="text-rap-platinum font-bold text-lg font-mogra leading-none">
+                    {stats?.top5_count || 0}
+                  </span>
+                </div>
+                <div className="text-rap-smoke text-xs font-kaushan">
+                  Top 5s
+                </div>
+              </div>
+
+              {/* Ranking Votes */}
+              <div className="bg-gradient-to-r from-rap-forest/30 to-rap-burgundy/30 px-2 py-2 rounded-lg border border-rap-silver/20 text-center">
+                <div className="flex items-center justify-center gap-1 mb-1">
+                  <Vote className="w-4 h-4 text-rap-silver" />
+                  <span className="text-rap-platinum font-bold text-lg font-mogra leading-none">
+                    {stats?.ranking_votes || 0}
+                  </span>
+                </div>
+                <div className="text-rap-smoke text-xs font-kaushan">
+                  Votes
+                </div>
+              </div>
             </div>
           </div>
         </CardContent>
@@ -115,6 +148,7 @@ const AllRappersGrid = ({
   // Batch load all rapper images for better performance
   const rapperIds = rappers.map(rapper => rapper.id);
   const { data: imageMap = {} } = useRapperImages(rapperIds);
+  const { data: statsMap = {} } = useRapperStats(rapperIds);
 
   return (
     <>
@@ -128,7 +162,11 @@ const AllRappersGrid = ({
           
           return (
             <React.Fragment key={rapper.id}>
-              <RapperCard rapper={rapper} imageUrl={imageMap[rapper.id]} />
+              <RapperCard 
+                rapper={rapper} 
+                imageUrl={imageMap[rapper.id]} 
+                stats={statsMap[rapper.id]}
+              />
               
               {shouldShowMiddleAd && (
                 <div className="col-span-full">
