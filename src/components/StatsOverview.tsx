@@ -2,15 +2,15 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Vote, Trophy, TrendingUp } from "lucide-react";
+import { Users, Vote, MessageCircle, TrendingUp } from "lucide-react";
 
 const StatsOverview = () => {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["site-stats"],
     queryFn: async () => {
-      // Get total rappers
-      const { count: totalRappers } = await supabase
-        .from("rappers")
+      // Get total members (registered users)
+      const { count: totalMembers } = await supabase
+        .from("profiles")
         .select("*", { count: "exact", head: true });
 
       // Get total votes
@@ -18,11 +18,10 @@ const StatsOverview = () => {
         .from("votes")
         .select("*", { count: "exact", head: true });
 
-      // Get total categories
-      const { count: totalCategories } = await supabase
-        .from("voting_categories")
-        .select("*", { count: "exact", head: true })
-        .eq("active", true);
+      // Get total comments
+      const { count: totalComments } = await supabase
+        .from("comments")
+        .select("*", { count: "exact", head: true });
 
       // Get top rated rapper
       const { data: topRapper } = await supabase
@@ -34,9 +33,9 @@ const StatsOverview = () => {
         .single();
 
       return {
-        totalRappers: totalRappers || 0,
+        totalMembers: totalMembers || 0,
         totalVotes: totalVotes || 0,
-        totalCategories: totalCategories || 0,
+        totalComments: totalComments || 0,
         topRapper: topRapper?.name || "N/A"
       };
     }
@@ -69,8 +68,8 @@ const StatsOverview = () => {
   const statCards = [
     {
       icon: Users,
-      label: "Artists",
-      value: stats?.totalRappers || 0,
+      label: "Members",
+      value: stats?.totalMembers || 0,
       color: "from-rap-gold to-rap-gold-light"
     },
     {
@@ -80,9 +79,9 @@ const StatsOverview = () => {
       color: "from-rap-gold to-rap-gold-light"
     },
     {
-      icon: Trophy,
-      label: "Categories",
-      value: stats?.totalCategories || 0,
+      icon: MessageCircle,
+      label: "Comments",
+      value: stats?.totalComments || 0,
       color: "from-rap-gold to-rap-gold-light"
     },
     {
