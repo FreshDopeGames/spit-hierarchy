@@ -63,43 +63,46 @@ const BlogFilters = ({
         </div>
       )}
 
-      {/* Category Filter Dropdown */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Category</h2>
-        <Select value={selectedCategory || 'all'} onValueChange={onCategoryChange}>
-          <SelectTrigger className="w-64 bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold">
-            <SelectValue placeholder="Select a category" />
-          </SelectTrigger>
-          <SelectContent className="bg-rap-carbon border-rap-gold/50">
-            <SelectItem value="all" className="text-rap-gold">All Posts</SelectItem>
-            {categories?.map(category => (
-              <SelectItem key={category.id} value={category.id} className="text-rap-gold">
-                {category.name}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-      </div>
-
-      {/* Tag Filter Dropdown */}
-      {tags && tags.length > 0 && (
-        <div className="mb-8">
-          <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Tag</h2>
-          <Select value={selectedTag || 'all'} onValueChange={onTagChange}>
-            <SelectTrigger className="w-64 bg-rap-carbon-light border-2 border-rap-forest/50 text-rap-forest">
-              <SelectValue placeholder="Select a tag" />
+      {/* Filter Dropdowns - Side by side on tablet+ */}
+      <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Category Filter Dropdown */}
+        <div>
+          <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Category</h2>
+          <Select value={selectedCategory || 'all'} onValueChange={onCategoryChange}>
+            <SelectTrigger className="w-full md:w-64 bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold">
+              <SelectValue placeholder="Select a category" />
             </SelectTrigger>
-            <SelectContent className="bg-rap-carbon border-rap-forest/50">
-              <SelectItem value="all" className="text-rap-forest">All Tags</SelectItem>
-              {tags.map(tag => (
-                <SelectItem key={tag.id} value={tag.slug} className="text-rap-forest">
-                  {tag.name}
+            <SelectContent className="bg-rap-carbon border-rap-gold/50">
+              <SelectItem value="all" className="text-rap-gold">All Posts</SelectItem>
+              {categories?.map(category => (
+                <SelectItem key={category.id} value={category.id} className="text-rap-gold">
+                  {category.name}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
         </div>
-      )}
+
+        {/* Tag Filter Dropdown */}
+        {tags && tags.length > 0 && (
+          <div>
+            <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Tag</h2>
+            <Select value={selectedTag || 'all'} onValueChange={onTagChange}>
+              <SelectTrigger className="w-full md:w-64 bg-rap-carbon-light border-2 border-rap-forest/50 text-rap-forest">
+                <SelectValue placeholder="Select a tag" />
+              </SelectTrigger>
+              <SelectContent className="bg-rap-carbon border-rap-forest/50">
+                <SelectItem value="all" className="text-rap-forest">All Tags</SelectItem>
+                {tags.map(tag => (
+                  <SelectItem key={tag.id} value={tag.slug} className="text-rap-forest">
+                    {tag.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </div>
+        )}
+      </div>
     </>
   );
 };
