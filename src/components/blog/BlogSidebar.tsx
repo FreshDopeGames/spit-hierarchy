@@ -1,7 +1,6 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Clock, Vote } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 import { Link } from "react-router-dom";
 interface RelatedPost {
   id: string;
@@ -62,17 +61,16 @@ const BlogSidebar = ({
           </CardContent>
         </Card>}
 
-      {/* All Rankings Voting Module */}
-      <Card className="bg-rap-carbon border border-rap-gold/40">
+      {/* Browse All Posts */}
+      <Card className="bg-carbon-fiber border border-rap-gold/40">
         <CardContent className="p-6 text-center space-y-3">
-          <h3 className="text-rap-gold font-ceviche text-lg">All Rankings</h3>
-          <p className="text-rap-silver font-kaushan text-sm">
-            Your Voice Matters
+          <h3 className="text-rap-gold font-ceviche text-4xl">More Articles</h3>
+          <p className="text-rap-silver font-kaushan text-xl">
+            Discover more content from our library
           </p>
-          <Link to="/rankings">
-            <Button className="bg-rap-gold text-black hover:bg-rap-gold-light font-medium">
-              <Vote className="w-4 h-4 mr-2" />
-              Cast Your Vote
+          <Link to="/blog">
+            <Button className="bg-rap-gold text-black hover:bg-rap-gold-light font-medium my-[20px]">
+              View All
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </Link>
