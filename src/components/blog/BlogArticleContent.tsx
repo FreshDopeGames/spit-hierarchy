@@ -14,7 +14,6 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
       breaks: true, // Convert single line breaks to <br>
       gfm: true, // GitHub Flavored Markdown
       pedantic: false, // Be more forgiving with markdown parsing
-      sanitize: false, // Allow HTML (we're using dangerouslySetInnerHTML anyway)
     });
 
     // Custom renderer for better list handling
@@ -30,13 +29,13 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
       return `<li class="mb-2 leading-relaxed">${text}</li>`;
     };
     
-    // Better unordered list rendering
-    renderer.list = (body, ordered) => {
-      const type = ordered ? 'ol' : 'ul';
-      const className = ordered 
+    // Better list rendering - updated to match current marked API
+    renderer.list = (token) => {
+      const type = token.ordered ? 'ol' : 'ul';
+      const className = token.ordered 
         ? 'list-decimal list-inside mb-6 space-y-2 pl-4' 
         : 'list-disc list-inside mb-6 space-y-2 pl-4';
-      return `<${type} class="${className}">${body}</${type}>`;
+      return `<${type} class="${className}">${token.items.map(item => renderer.listitem(item.text)).join('')}</${type}>`;
     };
 
     // Better blockquote rendering
