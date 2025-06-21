@@ -1525,6 +1525,10 @@ export type Database = {
         Args: { _user_id: string; _role: string }
         Returns: boolean
       }
+      is_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       populate_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
         Returns: undefined
@@ -1543,6 +1547,7 @@ export type Database = {
         | "community"
         | "time_based"
         | "special"
+      app_role: "admin" | "moderator" | "blog_editor" | "user"
       image_style:
         | "photo_real"
         | "comic_book"
@@ -1676,6 +1681,7 @@ export const Constants = {
         "time_based",
         "special",
       ],
+      app_role: ["admin", "moderator", "blog_editor", "user"],
       image_style: [
         "photo_real",
         "comic_book",
