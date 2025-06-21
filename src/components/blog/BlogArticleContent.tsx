@@ -16,7 +16,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
       pedantic: false, // Be more forgiving with markdown parsing
     });
 
-    // Custom renderer for better list handling
+    // Custom renderer for better formatting
     const renderer = new marked.Renderer();
     
     // Ensure proper paragraph spacing
@@ -27,18 +27,6 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
     // Better list item rendering
     renderer.listitem = (text) => {
       return `<li class="mb-2 leading-relaxed">${text}</li>`;
-    };
-    
-    // Better list rendering - updated to match current marked API
-    renderer.list = (token) => {
-      const type = token.ordered ? 'ol' : 'ul';
-      const className = token.ordered 
-        ? 'list-decimal list-inside mb-6 space-y-2 pl-4' 
-        : 'list-disc list-inside mb-6 space-y-2 pl-4';
-      
-      // Generate list items using the token's raw property
-      const items = token.items.map(item => `<li class="mb-2 leading-relaxed">${item.raw}</li>`).join('');
-      return `<${type} class="${className}">${items}</${type}>`;
     };
 
     // Better blockquote rendering
