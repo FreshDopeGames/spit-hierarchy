@@ -74,13 +74,13 @@ const RapperCard = ({
 
             {/* Stats with enhanced styling */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1 bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-3 py-1 rounded-full border border-rap-silver/20">
-                <Star className="w-4 h-4 text-rap-gold" />
-                <span className="text-rap-platinum font-bold font-ceviche">
+              <div className="flex items-center gap-1 bg-gradient-to-r from-rap-gold-dark to-rap-gold-light px-3 py-1 rounded-full border border-rap-silver/20">
+                <Star className="w-4 h-4 text-rap-carbon" />
+                <span className="text-rap-carbon font-bold font-ceviche">
                   {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
                 </span>
               </div>
-              <Badge variant="secondary" className="bg-gradient-to-r from-rap-forest/40 to-rap-burgundy/40 text-rap-platinum border-rap-silver/30 font-kaushan">
+              <Badge variant="secondary" className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon border-rap-silver/30 font-kaushan">
                 {rapper.total_votes || 0} votes
               </Badge>
             </div>
