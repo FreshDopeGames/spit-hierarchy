@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Vote } from "lucide-react";
@@ -21,7 +22,7 @@ const BlogSidebar = ({
 }: BlogSidebarProps) => {
   return <div className="space-y-6">
       {/* Related Posts */}
-      {relatedPosts.length > 0 && <Card className="bg-carbon-fiber border border-rap-gold/40">
+      {relatedPosts.length > 0 && <Card className="bg-rap-carbon border border-rap-gold/40">
           <CardHeader className="pb-4">
             <CardTitle className="text-rap-gold font-ceviche font-normal text-2xl text-center">More Writtens</CardTitle>
           </CardHeader>
@@ -82,3 +83,4 @@ const BlogSidebar = ({
     </div>;
 };
 export default BlogSidebar;
+
