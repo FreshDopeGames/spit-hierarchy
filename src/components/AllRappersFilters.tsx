@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -30,7 +31,7 @@ const AllRappersFilters = ({
   onOrderChange
 }: AllRappersFiltersProps) => {
   return (
-    <div className="bg-carbon-fiber border-2 border-rap-gold rounded-lg p-6 mb-8 backdrop-blur-sm shadow-lg">
+    <div className="bg-rap-carbon border-2 border-rap-gold rounded-lg p-6 mb-8 backdrop-blur-sm shadow-lg">
       <div className="flex items-center gap-3 mb-4">
         <Mic className="text-rap-silver w-6 h-6" />
         <h3 className="text-rap-silver font-graffiti text-xl animate-text-glow">Search The Greatest</h3>

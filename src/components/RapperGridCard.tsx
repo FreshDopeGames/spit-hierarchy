@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -26,7 +27,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
 
   return (
     <>
-      <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20">
+      <Card className="bg-rap-carbon border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20">
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         

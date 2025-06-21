@@ -39,7 +39,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
           return (
             <div 
               key={achievement.id} 
-              className={`bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 ${
+              className={`bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 ${
                 achievement.is_earned ? 'opacity-100' : 'opacity-60'
               }`}
             >

@@ -1,9 +1,10 @@
+
 import React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Trophy, Users, BarChart3, Vote } from "lucide-react";
 const AboutFeatures = () => {
   return <div className="grid md:grid-cols-2 gap-6">
-      <Card className="bg-carbon-fiber border-rap-burgundy/100 shadow-lg shadow-rap-burgundy/20 border-2">
+      <Card className="bg-rap-carbon border-rap-burgundy/100 shadow-lg shadow-rap-burgundy/20 border-2">
         <CardHeader>
           <CardTitle className="text-rap-silver font-ceviche flex items-center font-normal text-4xl">
             <Vote className="w-5 h-5 mr-3 text-rap-burgundy" />
@@ -18,7 +19,7 @@ const AboutFeatures = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-carbon-fiber border-rap-forest/100 shadow-lg border-2 ">
+      <Card className="bg-rap-carbon border-rap-forest/100 shadow-lg border-2 ">
         <CardHeader>
           <CardTitle className="text-rap-silver font-ceviche flex items-center font-normal text-4xl">
             <Trophy className="w-5 h-5 mr-3 text-rap-forest" />
@@ -33,7 +34,7 @@ const AboutFeatures = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-carbon-fiber border-rap-gold/100 shadow-lg shadow-rap-gold/20 border-2 ">
+      <Card className="bg-rap-carbon border-rap-gold/100 shadow-lg shadow-rap-gold/20 border-2 ">
         <CardHeader>
           <CardTitle className="font-ceviche flex items-center font-thin text-4xl text-rap-platinum">
             <Users className="w-5 h-5 mr-3 text-rap-gold" />
@@ -48,7 +49,7 @@ const AboutFeatures = () => {
         </CardContent>
       </Card>
 
-      <Card className="bg-carbon-fiber border-rap-silver/100 shadow-lg shadow-rap-silver/20 border-2">
+      <Card className="bg-rap-carbon border-rap-silver/100 shadow-lg shadow-rap-silver/20 border-2">
         <CardHeader>
           <CardTitle className="font-ceviche flex items-center text-rap-platinum font-normal text-4xl">
             <BarChart3 className="w-5 h-5 mr-3 text-rap-silver" />

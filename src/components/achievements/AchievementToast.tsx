@@ -27,7 +27,7 @@ const AchievementToast = ({ achievement }: AchievementToastProps) => {
   const IconComponent = (LucideIcons as any)[achievement.icon] || LucideIcons.Star;
 
   return (
-    <div className="flex items-center space-x-3 p-4 bg-carbon-fiber border-2 border-rap-gold rounded-lg shadow-xl">
+    <div className="flex items-center space-x-3 p-4 bg-rap-carbon border-2 border-rap-gold rounded-lg shadow-xl">
       <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg animate-pulse`}>
         <IconComponent className="w-6 h-6 text-white" />
       </div>
