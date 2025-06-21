@@ -25,8 +25,10 @@ const RapperCard = ({
   imageUrl?: string | null;
 }) => {
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
-  return <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
-      <Card className="bg-carbon-fiber border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group">
+  
+  return (
+    <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
+      <Card className="bg-rap-carbon border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group">
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
@@ -85,7 +87,8 @@ const RapperCard = ({
           </div>
         </CardContent>
       </Card>
-    </Link>;
+    </Link>
+  );
 };
 const AllRappersGrid = ({
   rappers,
