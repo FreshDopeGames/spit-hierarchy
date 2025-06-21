@@ -27,7 +27,7 @@ const RapperHeader = ({
   } = useRapperImage(rapper.id);
 
   return <div className="space-y-6">
-      <Card className="bg-carbon-fiber border-rap-burgundy/40 relative overflow-hidden">
+      <Card className="bg-rap-carbon border-rap-burgundy/40 relative overflow-hidden">
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
         
