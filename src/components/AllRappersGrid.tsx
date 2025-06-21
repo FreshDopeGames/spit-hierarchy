@@ -53,7 +53,7 @@ const RapperCard = ({
           {/* Rapper Info */}
           <div className="space-y-3">
             <div className="flex items-start justify-between">
-              <h3 className="text-rap-platinum font-mogra text-lg leading-tight group-hover:text-rap-silver transition-colors font-normal">{rapper.name}</h3>
+              <h3 className="font-mogra text-lg leading-tight transition-colors font-normal text-rap-gold">{rapper.name}</h3>
               {rapper.verified && <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />}
             </div>
 
