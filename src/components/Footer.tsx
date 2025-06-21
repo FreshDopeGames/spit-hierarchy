@@ -1,14 +1,12 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Music, Trophy, User, BarChart3, Settings, Info, Home, FileText, Shield } from "lucide-react";
-
 const Footer = () => {
   const handleNavigation = () => {
     window.scrollTo(0, 0);
   };
   return <footer className="bg-rap-carbon border-t border-rap-gold/30 mt-0 relative overflow-hidden">
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest"></div>
+      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-gold-dark via-rap-gold to-rap-gold-light "></div>
       <div className="max-w-7xl mx-auto px-6 py-12">
         {/* Logo and Brand */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
