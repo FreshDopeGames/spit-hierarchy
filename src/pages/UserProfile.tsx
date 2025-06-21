@@ -1,10 +1,13 @@
+
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft } from "lucide-react";
+import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
+import { Helmet } from "react-helmet";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import MemberStatusCard from "@/components/profile/MemberStatusCard";
 import MyTopFiveSection from "@/components/profile/MyTopFiveSection";
@@ -69,6 +72,9 @@ const UserProfile = () => {
   if (!user) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative flex items-center justify-center">
+        <Helmet>
+          <title>Sign In Required - Spit Hierarchy</title>
+        </Helmet>
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         <div className="relative z-10 text-center px-4">
           <h2 className="text-xl sm:text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">
@@ -76,6 +82,7 @@ const UserProfile = () => {
           </h2>
           <Link to="/auth">
             <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40">
+              <LogIn className="w-4 h-4 mr-2" />
               Sign In
             </Button>
           </Link>
@@ -86,24 +93,16 @@ const UserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
+      <Helmet>
+        <title>My Profile - Spit Hierarchy</title>
+      </Helmet>
+      
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10">
-        {/* Header */}
-        <header className="bg-carbon-fiber/90 border-b border-rap-gold/30 p-3 sm:p-4 shadow-lg shadow-rap-gold/20">
-          <div className="max-w-4xl mx-auto flex items-center justify-between">
-            <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan text-sm sm:text-base">
-              <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />
-              <span className="hidden sm:inline">Back to Home</span>
-              <span className="sm:hidden">Back</span>
-            </Link>
-            <h1 className="text-lg sm:text-2xl lg:text-3xl font-merienda bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent font-bold">
-              MY PROFILE
-            </h1>
-          </div>
-        </header>
+        <HeaderNavigation isScrolled={false} />
 
-        <main className="max-w-4xl mx-auto p-3 sm:p-6 pt-16 sm:pt-24">
+        <main className="max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28">
           <ProfileHeader user={user} profile={profile} />
           
           <MemberStatusCard memberStats={memberStats} />
