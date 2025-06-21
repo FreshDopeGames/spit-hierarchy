@@ -9,7 +9,7 @@ const TopVotedRappersCard = () => {
   const { data: topRappers, isLoading } = useQuery({
     queryKey: ["top-voted-rappers"],
     queryFn: async () => {
-      const { data, error } = await supabase.rpc("get_rapper_voting_analytics");
+      const { data, error } = await supabase.rpc("get_public_rapper_voting_stats");
       if (error) throw error;
       return data?.slice(0, 5) || [];
     }

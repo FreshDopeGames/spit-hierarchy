@@ -1340,6 +1340,18 @@ export type Database = {
         Args: { p_ranking_id: string; p_rapper_id: string }
         Returns: number
       }
+      get_public_rapper_voting_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          total_votes: number
+          unique_voters: number
+          average_rating: number
+          votes_last_7_days: number
+          votes_last_30_days: number
+        }[]
+      }
       get_rapper_top5_count: {
         Args: { rapper_uuid: string }
         Returns: number
