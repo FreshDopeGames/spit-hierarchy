@@ -42,7 +42,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         <div 
           className="prose prose-invert prose-lg max-w-none 
           prose-headings:text-rap-gold prose-headings:font-ceviche prose-headings:leading-tight
-          prose-p:text-rap-platinum prose-p:leading-relaxed prose-p:text-base prose-p:my-8
+          prose-p:text-rap-platinum prose-p:leading-relaxed prose-p:text-base prose-p:my-1
           prose-strong:text-rap-gold prose-strong:font-bold
           prose-em:text-rap-silver prose-em:italic
           prose-code:text-rap-gold prose-code:bg-rap-carbon/50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
