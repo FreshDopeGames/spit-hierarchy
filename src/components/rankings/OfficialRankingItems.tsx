@@ -2,7 +2,7 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { TrendingUp, TrendingDown, Minus, Flame, ChevronDown } from "lucide-react";
+import { TrendingUp, TrendingDown, Minus, Flame, ChevronDown, Star, MapPin } from "lucide-react";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import VoteButton from "@/components/VoteButton";
 
@@ -46,8 +46,32 @@ const OfficialRankingItems = ({
   const isHot = (velocity: number) => velocity >= hotThreshold && velocity > 0;
 
   const formatVoteCount = (count: number | undefined) => {
-    if (count === undefined || count === null) return "0";
+    if (count === undefined || count === null || count === 0) return null;
     return count.toLocaleString();
+  };
+
+  const getVoteDisplay = (voteCount: number | undefined) => {
+    const formattedCount = formatVoteCount(voteCount);
+    if (!formattedCount) {
+      return (
+        <div className="flex items-center gap-1">
+          <Star className="w-4 h-4 text-rap-gold/50" />
+          <span className="text-rap-smoke/70 font-kaushan text-sm italic">
+            Be first to vote!
+          </span>
+        </div>
+      );
+    }
+    return (
+      <p className="text-sm text-white font-bold font-kaushan">
+        Votes: {formattedCount}
+      </p>
+    );
+  };
+
+  const hasVelocityData = (item: RankingItemWithDelta) => {
+    return (item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0) || 
+           (item.vote_velocity_7_days && item.vote_velocity_7_days > 0);
   };
 
   return (
@@ -79,19 +103,27 @@ const OfficialRankingItems = ({
                       Hot
                     </Badge>
                   )}
+                  {/* New Artist Badge for zero votes */}
+                  {(!item.ranking_votes || item.ranking_votes === 0) && (
+                    <Badge className="bg-gradient-to-r from-rap-forest to-rap-forest-light text-white border-none text-xs px-2 py-1">
+                      <Star className="w-3 h-3 mr-1" />
+                      Rising
+                    </Badge>
+                  )}
                 </div>
                 
-                {/* Primary: Hometown */}
+                {/* Primary: Hometown with enhanced styling */}
                 {item.rapper?.origin && (
-                  <p className="text-sm text-rap-smoke font-kaushan">
-                    {item.rapper.origin}
-                  </p>
+                  <div className="flex items-center gap-1 mb-1">
+                    <MapPin className="w-4 h-4 text-rap-smoke" />
+                    <p className="text-sm text-rap-smoke font-kaushan">
+                      {item.rapper.origin}
+                    </p>
+                  </div>
                 )}
                 
-                {/* Primary: Vote Count - Always visible */}
-                <p className="text-sm text-white font-bold font-kaushan mt-1">
-                  Votes: {formatVoteCount(item.ranking_votes)}
-                </p>
+                {/* Primary: Vote Count - Enhanced display */}
+                {getVoteDisplay(item.ranking_votes)}
               </div>
 
               {/* Secondary: Position Delta Badge */}
@@ -117,9 +149,8 @@ const OfficialRankingItems = ({
             </div>
           </div>
 
-          {/* Contextual: Vote Velocity Info - Compact and visually integrated */}
-          {((item.vote_velocity_24_hours && item.vote_velocity_24_hours > 0) || 
-            (item.vote_velocity_7_days && item.vote_velocity_7_days > 0)) && (
+          {/* Contextual: Vote Velocity Info - Only show if there's actual data */}
+          {hasVelocityData(item) && (
             <div className="mt-3 pt-2 border-t border-rap-gold/10">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-4 text-xs text-rap-smoke/80">
@@ -138,7 +169,7 @@ const OfficialRankingItems = ({
                 </div>
                 {/* Small indicator for power users */}
                 <span className="text-xs text-rap-smoke/60 font-kaushan italic">
-                  trending data
+                  trending now
                 </span>
               </div>
             </div>

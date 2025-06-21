@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import RapperAvatar from "@/components/RapperAvatar";
+import { Star, MapPin } from "lucide-react";
 
 type Rapper = Tables<"rappers">;
 
@@ -15,6 +16,27 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
+  const getVoteDisplay = (voteCount: number | undefined) => {
+    const count = rankingId && voteCount !== undefined ? voteCount : 0;
+    
+    if (count === 0) {
+      return (
+        <div className="flex items-center gap-1 mt-3">
+          <Star className="w-4 h-4 text-rap-gold/50" />
+          <span className="text-rap-smoke/70 font-kaushan text-sm italic">
+            Vote to rank
+          </span>
+        </div>
+      );
+    }
+    
+    return (
+      <p className="text-rap-silver text-sm sm:text-base font-bold mt-3">
+        Votes: {count.toLocaleString()}
+      </p>
+    );
+  };
+
   return (
     <div className="space-y-8">
       {/* Top 2 in one row - MUCH TALLER CARDS for prominence */}
@@ -34,16 +56,14 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
                 </h3>
               </Link>
               {rapper.origin && 
-                <p className="text-rap-smoke text-base sm:text-lg font-kaushan mt-2 leading-relaxed">
-                  {rapper.origin}
-                </p>
+                <div className="flex items-center justify-center gap-1 mt-2">
+                  <MapPin className="w-4 h-4 text-rap-smoke" />
+                  <p className="text-rap-smoke text-base sm:text-lg font-kaushan leading-relaxed">
+                    {rapper.origin}
+                  </p>
+                </div>
               }
-              <p className="text-rap-silver text-sm sm:text-base font-bold mt-3">
-                Votes: {rankingId && rapper.ranking_votes !== undefined 
-                  ? rapper.ranking_votes.toLocaleString()
-                  : (rapper.total_votes || 0).toLocaleString()
-                }
-              </p>
+              {getVoteDisplay(rapper.ranking_votes)}
             </div>
           </div>
         )}
@@ -66,16 +86,37 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
                 </h4>
               </Link>
               {rapper.origin && 
-                <p className="text-rap-smoke text-sm sm:text-sm font-kaushan mt-1 truncate">
-                  {rapper.origin}
-                </p>
+                <div className="flex items-center justify-center gap-1 mt-1">
+                  <MapPin className="w-3 h-3 text-rap-smoke" />
+                  <p className="text-rap-smoke text-sm sm:text-sm font-kaushan truncate">
+                    {rapper.origin}
+                  </p>
+                </div>
               }
-              <p className="text-rap-silver text-xs font-bold mt-1">
-                Votes: {rankingId && rapper.ranking_votes !== undefined 
-                  ? rapper.ranking_votes.toLocaleString()
-                  : (rapper.total_votes || 0).toLocaleString()
-                }
-              </p>
+              <div className="mt-1">
+                {(() => {
+                  const voteCount = rankingId && rapper.ranking_votes !== undefined 
+                    ? rapper.ranking_votes 
+                    : (rapper.total_votes || 0);
+                  
+                  if (voteCount === 0) {
+                    return (
+                      <div className="flex items-center justify-center gap-1">
+                        <Star className="w-3 h-3 text-rap-gold/50" />
+                        <span className="text-rap-smoke/70 font-kaushan text-xs italic">
+                          Vote now
+                        </span>
+                      </div>
+                    );
+                  }
+                  
+                  return (
+                    <p className="text-rap-silver text-xs font-bold">
+                      Votes: {voteCount.toLocaleString()}
+                    </p>
+                  );
+                })()}
+              </div>
             </div>
           </div>
         )}
