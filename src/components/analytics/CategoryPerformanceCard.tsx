@@ -75,9 +75,12 @@ const CategoryPerformanceCard = () => {
                   <p className="text-rap-platinum font-bold font-mogra">{category.unique_voters}</p>
                   <p className="text-rap-smoke font-kaushan">Voters</p>
                 </div>
-                <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
-                  {Number(category.average_rating || 0).toFixed(1)}
-                </Badge>
+                <div className="text-center">
+                  <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
+                    {Number(category.average_rating || 0).toFixed(1)}
+                  </Badge>
+                  <p className="text-rap-smoke font-kaushan">Avg.</p>
+                </div>
               </div>
             </div>
           ))}
