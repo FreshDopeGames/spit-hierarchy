@@ -1,3 +1,4 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -123,7 +124,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
                     </span>
                   </div>
                 </div>
-                <Progress value={percentage} className="h-3 bg-rap-carbon" />
+                <Progress value={percentage} className="h-3 bg-rap-charcoal" />
               </div>
             );
           })}
