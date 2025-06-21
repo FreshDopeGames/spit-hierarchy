@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { TrendingUp, TrendingDown, Minus, Flame, ChevronDown, Star, MapPin } from "lucide-react";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import VoteButton from "@/components/VoteButton";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface OfficialRankingItemsProps {
   items: RankingItemWithDelta[];
@@ -29,6 +30,7 @@ const OfficialRankingItems = ({
   loading,
   rankingId
 }: OfficialRankingItemsProps) => {
+  const isMobile = useIsMobile();
   const displayedItems = items.slice(0, displayCount);
 
   const getDeltaIcon = (delta: number) => {
@@ -81,33 +83,40 @@ const OfficialRankingItems = ({
           key={item.id}
           className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 shadow-lg shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300"
         >
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-4 flex-1">
+          <div className={isMobile ? "flex flex-col space-y-3" : "flex items-center justify-between"}>
+            <div className={`flex items-center space-x-4 ${isMobile ? "w-full" : "flex-1"}`}>
               {/* Primary: Dynamic Position with enhanced gold gradient circular background */}
-              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg flex-shrink-0">
                 <span className="text-2xl font-bold text-rap-carbon font-mogra">
                   {item.dynamic_position}
                 </span>
               </div>
 
               {/* Primary: Rapper Info */}
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-xl font-bold text-rap-platinum font-kaushan">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className="text-xl font-bold text-rap-platinum font-kaushan truncate">
                     {item.rapper?.name}
                   </h3>
                   {/* Contextual: Hot Badge - smaller and positioned as secondary info */}
                   {isHot(item.vote_velocity_24_hours || 0) && (
-                    <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none text-xs px-2 py-1">
+                    <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none text-xs px-2 py-1 flex-shrink-0">
                       <Flame className="w-3 h-3 mr-1" />
                       Hot
                     </Badge>
                   )}
                   {/* New Artist Badge for zero votes */}
                   {(!item.ranking_votes || item.ranking_votes === 0) && (
-                    <Badge className="bg-gradient-to-r from-rap-forest to-rap-forest-light text-white border-none text-xs px-2 py-1">
+                    <Badge className="bg-gradient-to-r from-rap-forest to-rap-forest-light text-white border-none text-xs px-2 py-1 flex-shrink-0">
                       <Star className="w-3 h-3 mr-1" />
                       Rising
+                    </Badge>
+                  )}
+                  {/* Position Delta Badge - on mobile, show inline with name */}
+                  {isMobile && item.position_delta && item.position_delta !== 0 && (
+                    <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum text-xs flex-shrink-0">
+                      {getDeltaIcon(item.position_delta)}
+                      <span className="ml-1">{getDeltaText(item.position_delta)}</span>
                     </Badge>
                   )}
                 </div>
@@ -115,8 +124,8 @@ const OfficialRankingItems = ({
                 {/* Primary: Hometown with enhanced styling */}
                 {item.rapper?.origin && (
                   <div className="flex items-center gap-1 mb-1">
-                    <MapPin className="w-4 h-4 text-rap-smoke" />
-                    <p className="text-sm text-rap-smoke font-kaushan">
+                    <MapPin className="w-4 h-4 text-rap-smoke flex-shrink-0" />
+                    <p className="text-sm text-rap-smoke font-kaushan truncate">
                       {item.rapper.origin}
                     </p>
                   </div>
@@ -126,19 +135,21 @@ const OfficialRankingItems = ({
                 {getVoteDisplay(item.ranking_votes)}
               </div>
 
-              {/* Secondary: Position Delta Badge */}
-              <div className="flex items-center space-x-2">
-                {item.position_delta && item.position_delta !== 0 && (
-                  <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum">
-                    {getDeltaIcon(item.position_delta)}
-                    <span className="ml-1">{getDeltaText(item.position_delta)}</span>
-                  </Badge>
-                )}
-              </div>
+              {/* Secondary: Position Delta Badge - Desktop only */}
+              {!isMobile && (
+                <div className="flex items-center space-x-2">
+                  {item.position_delta && item.position_delta !== 0 && (
+                    <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum">
+                      {getDeltaIcon(item.position_delta)}
+                      <span className="ml-1">{getDeltaText(item.position_delta)}</span>
+                    </Badge>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Primary: Vote Button */}
-            <div className="ml-4">
+            <div className={isMobile ? "flex justify-center" : "ml-4"}>
               <VoteButton
                 onVote={() => onVote(item.rapper?.name || "")}
                 disabled={!userLoggedIn}
