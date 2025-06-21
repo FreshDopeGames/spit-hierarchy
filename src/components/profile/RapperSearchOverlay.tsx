@@ -28,7 +28,7 @@ const RapperSearchOverlay = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="bg-carbon-fiber border border-rap-gold/30 max-w-md">
+      <DialogContent className="bg-rap-carbon border border-rap-gold/30 max-w-md">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-merienda text-center">
             Select Rapper for Position #{position}

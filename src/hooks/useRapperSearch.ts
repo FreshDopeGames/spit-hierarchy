@@ -33,11 +33,11 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  // Reduce debounce to 300ms for more responsive search
+  // Reduce debounce to 150ms for more responsive search
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
-    }, 300);
+    }, 150);
 
     return () => clearTimeout(timer);
   }, [searchTerm]);
@@ -51,7 +51,7 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         .from("rappers")
         .select("id, name, image_url")
         .order("name")
-        .limit(20); // Increased limit to get more results for better filtering
+        .limit(50); // Increased limit to get more results for better filtering
 
       // Filter out already selected rappers
       if (excludeIds.length > 0) {
@@ -85,7 +85,7 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         if (normalizedRapperName.includes(normalizedSearchTerm)) return true;
         
         // Check if normalized search term matches normalized rapper name
-        if (normalizedSearchTerm.length >= 3 && normalizedRapperName.startsWith(normalizedSearchTerm)) return true;
+        if (normalizedSearchTerm.length >= 2 && normalizedRapperName.startsWith(normalizedSearchTerm)) return true;
         
         return false;
       });
@@ -106,7 +106,7 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         
         // Then alphabetical
         return aName.localeCompare(bName);
-      }).slice(0, 10); // Limit final results to 10
+      }).slice(0, 15); // Limit final results to 15
     },
     enabled: debouncedSearchTerm.length >= 2,
   });
