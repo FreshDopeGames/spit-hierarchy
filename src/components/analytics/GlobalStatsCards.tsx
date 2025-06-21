@@ -8,9 +8,9 @@ const GlobalStatsCards = () => {
   const { data: globalStats } = useQuery({
     queryKey: ["global-voting-stats"],
     queryFn: async () => {
-      const [votesResult, usersResult, rapperTopCounts] = await Promise.all([
+      const [votesResult, userStatsResult, rapperTopCounts] = await Promise.all([
         supabase.from("votes").select("*", { count: "exact", head: true }),
-        supabase.from("user_voting_stats").select("*"),
+        supabase.rpc("get_user_voting_stats"),
         supabase.rpc("get_rapper_top5_counts")
       ]);
 
@@ -21,7 +21,7 @@ const GlobalStatsCards = () => {
 
       return {
         totalVotes: votesResult.count || 0,
-        activeVoters: usersResult.data?.length || 0,
+        activeVoters: userStatsResult.data?.length || 0,
         ratedRappers: activeRappersWithVotes.length,
         avgRating: avgRating
       };

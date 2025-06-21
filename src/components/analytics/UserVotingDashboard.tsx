@@ -15,11 +15,22 @@ const UserVotingDashboard = () => {
       if (!user) return null;
       
       // Try to get user stats from the secure function first (admin only)
-      const { data: adminStats } = await supabase.rpc("get_user_voting_stats");
-      const userStat = adminStats?.find((stat: any) => stat.user_id === user.id);
-      
-      if (userStat) {
-        return userStat;
+      try {
+        const { data: adminStats } = await supabase.rpc("get_user_voting_stats");
+        const userStat = adminStats?.find((stat: any) => stat.user_id === user.id);
+        
+        if (userStat) {
+          return {
+            total_votes: userStat.total_votes || 0,
+            unique_rappers_voted: userStat.unique_rappers_voted || 0,
+            categories_used: userStat.categories_used || 0,
+            average_rating_given: userStat.average_rating_given || 0,
+            first_vote_date: userStat.first_vote_date,
+            last_vote_date: userStat.last_vote_date
+          };
+        }
+      } catch (error) {
+        console.log("Admin stats not accessible, using basic stats");
       }
       
       // Fallback to member_stats for basic info
@@ -30,7 +41,16 @@ const UserVotingDashboard = () => {
         .maybeSingle();
       
       if (error) throw error;
-      return data;
+      
+      // Return data with consistent structure
+      return {
+        total_votes: data?.total_votes || 0,
+        unique_rappers_voted: 0, // Not available in member_stats
+        categories_used: 0, // Not available in member_stats
+        average_rating_given: 0, // Not available in member_stats
+        first_vote_date: null, // Not available in member_stats
+        last_vote_date: data?.last_vote_date || null
+      };
     },
     enabled: !!user
   });
@@ -96,19 +116,19 @@ const UserVotingDashboard = () => {
     {
       icon: Vote,
       label: "Total Votes",
-      value: stats.total_votes || 0,
+      value: stats.total_votes,
       color: "from-purple-500 to-blue-500"
     },
     {
       icon: Users,
       label: "Rappers Voted",
-      value: stats.unique_rappers_voted || 0,
+      value: stats.unique_rappers_voted,
       color: "from-blue-500 to-cyan-500"
     },
     {
       icon: Award,
       label: "Categories Used",
-      value: stats.categories_used || 0,
+      value: stats.categories_used,
       color: "from-cyan-500 to-green-500"
     },
     {
