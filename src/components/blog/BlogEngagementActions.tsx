@@ -53,40 +53,42 @@ const BlogEngagementActions = ({
 
   return (
     <ThemedCard className="mb-8">
-      <ThemedCardContent className="p-6">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+      <ThemedCardContent className="p-4 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-4">
             <ThemedButton
               variant={isLiked ? "default" : "outline"}
               size="sm"
-              className={isLiked 
+              className={`min-w-0 flex-shrink-0 ${isLiked 
                 ? "bg-[var(--theme-error)] hover:bg-[var(--theme-error)]/80" 
                 : ""
-              }
+              }`}
             >
-              <Heart className={`w-4 h-4 mr-2 ${isLiked ? 'fill-current' : ''}`} />
-              {likes}
+              <Heart className={`w-4 h-4 mr-1 sm:mr-2 ${isLiked ? 'fill-current' : ''}`} />
+              <span className="text-xs sm:text-sm">{likes}</span>
             </ThemedButton>
             
             <ThemedButton
               variant={isBookmarked ? "default" : "outline"}
               size="sm"
-              className={isBookmarked 
+              className={`min-w-0 flex-shrink-0 ${isBookmarked 
                 ? "bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/80" 
                 : ""
-              }
+              }`}
             >
-              <Bookmark className={`w-4 h-4 mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
-              Save
+              <Bookmark className={`w-4 h-4 mr-1 sm:mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
+              <span className="hidden sm:inline">Save</span>
             </ThemedButton>
 
             <ThemedButton
               variant="outline"
               size="sm"
               onClick={handleCommentsClick}
+              className="min-w-0 flex-shrink-0"
             >
-              <MessageCircle className="w-4 h-4 mr-2" />
-              {commentCount} {commentCount === 1 ? 'Comment' : 'Comments'}
+              <MessageCircle className="w-4 h-4 mr-1 sm:mr-2" />
+              <span className="text-xs sm:text-sm">{commentCount}</span>
+              <span className="hidden sm:inline ml-1">{commentCount === 1 ? 'Comment' : 'Comments'}</span>
             </ThemedButton>
           </div>
 
@@ -94,9 +96,10 @@ const BlogEngagementActions = ({
             variant="outline"
             size="sm"
             onClick={handleShare}
+            className="min-w-0 flex-shrink-0 self-start sm:self-auto"
           >
-            <Share2 className="w-4 h-4 mr-2" />
-            Share
+            <Share2 className="w-4 h-4 mr-1 sm:mr-2" />
+            <span className="text-xs sm:text-sm">Share</span>
           </ThemedButton>
         </div>
       </ThemedCardContent>
