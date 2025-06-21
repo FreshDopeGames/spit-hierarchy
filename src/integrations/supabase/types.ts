@@ -409,6 +409,7 @@ export type Database = {
           last_vote_date: string | null
           ranking_lists_created: number | null
           status: Database["public"]["Enums"]["member_status"] | null
+          top_five_created: number | null
           total_comments: number | null
           total_upvotes: number | null
           total_votes: number | null
@@ -422,6 +423,7 @@ export type Database = {
           last_vote_date?: string | null
           ranking_lists_created?: number | null
           status?: Database["public"]["Enums"]["member_status"] | null
+          top_five_created?: number | null
           total_comments?: number | null
           total_upvotes?: number | null
           total_votes?: number | null
@@ -435,6 +437,7 @@ export type Database = {
           last_vote_date?: string | null
           ranking_lists_created?: number | null
           status?: Database["public"]["Enums"]["member_status"] | null
+          top_five_created?: number | null
           total_comments?: number | null
           total_upvotes?: number | null
           total_votes?: number | null
