@@ -13,11 +13,22 @@ const UserVotingDashboard = () => {
     queryKey: ["user-voting-stats", user?.id],
     queryFn: async () => {
       if (!user) return null;
+      
+      // Try to get user stats from the secure function first (admin only)
+      const { data: adminStats } = await supabase.rpc("get_user_voting_stats");
+      const userStat = adminStats?.find((stat: any) => stat.user_id === user.id);
+      
+      if (userStat) {
+        return userStat;
+      }
+      
+      // Fallback to member_stats for basic info
       const { data, error } = await supabase
-        .from("user_voting_stats")
+        .from("member_stats")
         .select("*")
-        .eq("user_id", user.id)
+        .eq("id", user.id)
         .maybeSingle();
+      
       if (error) throw error;
       return data;
     },

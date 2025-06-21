@@ -482,20 +482,6 @@ export type Database = {
             foreignKeyName: "official_ranking_items_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_ranking_items_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "official_ranking_items_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
             referencedRelation: "rappers"
             referencedColumns: ["id"]
           },
@@ -660,20 +646,6 @@ export type Database = {
             foreignKeyName: "ranking_items_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ranking_items_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ranking_items_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
             referencedRelation: "rappers"
             referencedColumns: ["id"]
           },
@@ -710,20 +682,6 @@ export type Database = {
             columns: ["ranking_id"]
             isOneToOne: false
             referencedRelation: "official_rankings"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ranking_position_history_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ranking_position_history_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
           {
@@ -841,20 +799,6 @@ export type Database = {
             foreignKeyName: "ranking_votes_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ranking_votes_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "ranking_votes_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
             referencedRelation: "rappers"
             referencedColumns: ["id"]
           },
@@ -889,20 +833,6 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "rapper_images_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "rapper_images_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "rapper_images_rapper_id_fkey"
             columns: ["rapper_id"]
@@ -1093,20 +1023,6 @@ export type Database = {
             foreignKeyName: "user_ranking_items_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_ranking_items_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_ranking_items_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
             referencedRelation: "rappers"
             referencedColumns: ["id"]
           },
@@ -1253,20 +1169,6 @@ export type Database = {
             foreignKeyName: "user_top_rappers_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_top_rappers_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "user_top_rappers_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
             referencedRelation: "rappers"
             referencedColumns: ["id"]
           },
@@ -1301,20 +1203,6 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
-          {
-            foreignKeyName: "vote_notes_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "vote_notes_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "vote_notes_rapper_id_fkey"
             columns: ["rapper_id"]
@@ -1357,28 +1245,7 @@ export type Database = {
             foreignKeyName: "votes_category_id_fkey"
             columns: ["category_id"]
             isOneToOne: false
-            referencedRelation: "category_voting_analytics"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "votes_category_id_fkey"
-            columns: ["category_id"]
-            isOneToOne: false
             referencedRelation: "voting_categories"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "votes_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_top5_counts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "votes_rapper_id_fkey"
-            columns: ["rapper_id"]
-            isOneToOne: false
-            referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
           {
@@ -1416,38 +1283,6 @@ export type Database = {
       }
     }
     Views: {
-      category_voting_analytics: {
-        Row: {
-          average_rating: number | null
-          description: string | null
-          id: string | null
-          name: string | null
-          total_votes: number | null
-          unique_rappers: number | null
-          unique_voters: number | null
-        }
-        Relationships: []
-      }
-      rapper_top5_counts: {
-        Row: {
-          id: string | null
-          name: string | null
-          top5_count: number | null
-        }
-        Relationships: []
-      }
-      rapper_voting_analytics: {
-        Row: {
-          average_rating: number | null
-          id: string | null
-          name: string | null
-          total_votes: number | null
-          unique_voters: number | null
-          votes_last_30_days: number | null
-          votes_last_7_days: number | null
-        }
-        Relationships: []
-      }
       user_achievement_progress: {
         Row: {
           achievement_id: string | null
@@ -1463,18 +1298,6 @@ export type Database = {
           threshold_field: string | null
           threshold_value: number | null
           type: Database["public"]["Enums"]["achievement_type"] | null
-          user_id: string | null
-        }
-        Relationships: []
-      }
-      user_voting_stats: {
-        Row: {
-          average_rating_given: number | null
-          categories_used: number | null
-          first_vote_date: string | null
-          last_vote_date: string | null
-          total_votes: number | null
-          unique_rappers_voted: number | null
           user_id: string | null
         }
         Relationships: []
@@ -1501,6 +1324,18 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      get_category_voting_analytics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          description: string
+          total_votes: number
+          unique_voters: number
+          unique_rappers: number
+          average_rating: number
+        }[]
+      }
       get_position_delta: {
         Args: { p_ranking_id: string; p_rapper_id: string }
         Returns: number
@@ -1509,12 +1344,44 @@ export type Database = {
         Args: { rapper_uuid: string }
         Returns: number
       }
+      get_rapper_top5_counts: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          top5_count: number
+        }[]
+      }
+      get_rapper_voting_analytics: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: string
+          name: string
+          total_votes: number
+          unique_voters: number
+          average_rating: number
+          votes_last_7_days: number
+          votes_last_30_days: number
+        }[]
+      }
       get_user_ranking_preview_items: {
         Args: { ranking_uuid: string; item_limit?: number }
         Returns: {
           item_position: number
           item_reason: string
           rapper_name: string
+        }[]
+      }
+      get_user_voting_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          user_id: string
+          total_votes: number
+          categories_used: number
+          average_rating_given: number
+          first_vote_date: string
+          last_vote_date: string
+          unique_rappers_voted: number
         }[]
       }
       get_vote_weight: {

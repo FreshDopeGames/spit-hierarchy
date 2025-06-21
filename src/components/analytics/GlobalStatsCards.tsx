@@ -8,17 +8,22 @@ const GlobalStatsCards = () => {
   const { data: globalStats } = useQuery({
     queryKey: ["global-voting-stats"],
     queryFn: async () => {
-      const [votesResult, usersResult, rappersResult] = await Promise.all([
+      const [votesResult, usersResult, rapperTopCounts] = await Promise.all([
         supabase.from("votes").select("*", { count: "exact", head: true }),
         supabase.from("user_voting_stats").select("*"),
-        supabase.from("rapper_voting_analytics").select("*").gt("total_votes", 0)
+        supabase.rpc("get_rapper_top5_counts")
       ]);
+
+      const activeRappersWithVotes = rapperTopCounts.data?.filter(r => r.top5_count > 0) || [];
+      const avgRating = activeRappersWithVotes.length > 0 
+        ? activeRappersWithVotes.reduce((sum, r) => sum + (r.top5_count || 0), 0) / activeRappersWithVotes.length 
+        : 0;
 
       return {
         totalVotes: votesResult.count || 0,
         activeVoters: usersResult.data?.length || 0,
-        ratedRappers: rappersResult.data?.length || 0,
-        avgRating: rappersResult.data?.reduce((sum, r) => sum + (r.average_rating || 0), 0) / (rappersResult.data?.length || 1) || 0
+        ratedRappers: activeRappersWithVotes.length,
+        avgRating: avgRating
       };
     }
   });
