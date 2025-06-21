@@ -8,22 +8,44 @@ const GlobalStatsCards = () => {
   const { data: globalStats } = useQuery({
     queryKey: ["global-voting-stats"],
     queryFn: async () => {
-      const [votesResult, userStatsResult, rapperTopCounts] = await Promise.all([
-        supabase.from("votes").select("*", { count: "exact", head: true }),
-        supabase.rpc("get_user_voting_stats"),
-        supabase.rpc("get_rapper_top5_counts")
-      ]);
+      // Get total votes count
+      const { count: totalVotes } = await supabase
+        .from("votes")
+        .select("*", { count: "exact", head: true });
 
-      const activeRappersWithVotes = rapperTopCounts.data?.filter(r => r.top5_count > 0) || [];
-      const avgRating = activeRappersWithVotes.length > 0 
-        ? activeRappersWithVotes.reduce((sum, r) => sum + (r.top5_count || 0), 0) / activeRappersWithVotes.length 
+      // Get active voters (distinct users who have voted)
+      const { data: activeVotersData } = await supabase
+        .from("votes")
+        .select("user_id")
+        .not("user_id", "is", null);
+      
+      const uniqueVoters = new Set(activeVotersData?.map(v => v.user_id) || []);
+      const activeVoters = uniqueVoters.size;
+
+      // Get rated rappers (distinct rappers who have received votes)
+      const { data: ratedRappersData } = await supabase
+        .from("votes")
+        .select("rapper_id")
+        .not("rapper_id", "is", null);
+      
+      const uniqueRappers = new Set(ratedRappersData?.map(v => v.rapper_id) || []);
+      const ratedRappers = uniqueRappers.size;
+
+      // Get average rating from all votes
+      const { data: avgRatingData } = await supabase
+        .from("votes")
+        .select("rating");
+      
+      const ratings = avgRatingData?.map(v => v.rating) || [];
+      const avgRating = ratings.length > 0 
+        ? ratings.reduce((sum, rating) => sum + rating, 0) / ratings.length 
         : 0;
 
       return {
-        totalVotes: votesResult.count || 0,
-        activeVoters: userStatsResult.data?.length || 0,
-        ratedRappers: activeRappersWithVotes.length,
-        avgRating: avgRating
+        totalVotes: totalVotes || 0,
+        activeVoters,
+        ratedRappers,
+        avgRating
       };
     }
   });
