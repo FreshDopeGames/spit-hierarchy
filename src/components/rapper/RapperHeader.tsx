@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -31,7 +30,8 @@ const RapperHeader = ({
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
         
-        <CardContent className="p-8">
+        <CardContent className="p-8 mb-8">
+          
           <div className="grid md:grid-cols-3 gap-8">
             {/* Rapper Image */}
             <div className="md:col-span-1">
