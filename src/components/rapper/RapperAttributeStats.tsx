@@ -4,13 +4,14 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { Trophy } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
+
 type Rapper = Tables<"rappers">;
+
 interface RapperAttributeStatsProps {
   rapper: Rapper;
 }
-const RapperAttributeStats = ({
-  rapper
-}: RapperAttributeStatsProps) => {
+
+const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
   const {
     data: categoryRatings,
     isLoading
@@ -35,19 +36,22 @@ const RapperAttributeStats = ({
       return Promise.all(ratingsPromises);
     }
   });
+
   if (isLoading) {
-    return <Card className="bg-carbon-fiber border-rap-burgundy/40">
+    return (
+      <Card className="bg-rap-carbon border-rap-burgundy/40">
         <CardHeader>
           <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
-            {Array.from({
-            length: 6
-          }).map((_, i) => <div key={i} className="h-8 bg-rap-carbon rounded"></div>)}
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="h-8 bg-rap-carbon rounded"></div>
+            ))}
           </div>
         </CardContent>
-      </Card>;
+      </Card>
+    );
   }
 
   // Separate Overall from other categories
@@ -62,7 +66,9 @@ const RapperAttributeStats = ({
   const displayOverall = overallCategory && overallCategory.totalVotes > 0 ? overallCategory.averageRating : calculatedOverall;
   const overallPercentage = displayOverall / 10 * 100;
   const overallScaled = Math.round(displayOverall / 10 * 100);
-  return <Card className="bg-carbon-fiber border-rap-burgundy/40">
+
+  return (
+    <Card className="bg-rap-carbon border-rap-burgundy/40">
       <CardHeader>
         <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
       </CardHeader>
@@ -76,7 +82,9 @@ const RapperAttributeStats = ({
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-rap-smoke font-kaushan">
-                {overallCategory && overallCategory.totalVotes > 0 ? "Voted Overall Rating" : "Calculated from all attributes"}
+                {overallCategory && overallCategory.totalVotes > 0
+                  ? "Voted Overall Rating"
+                  : "Calculated from all attributes"}
               </span>
               <div className="text-right">
                 <span className="text-rap-platinum font-bold text-2xl font-mogra">
@@ -96,10 +104,12 @@ const RapperAttributeStats = ({
           <h3 className="text-sm font-semibold text-rap-smoke uppercase tracking-wider font-kaushan">
             Individual Attributes
           </h3>
-          {otherCategories.map(category => {
-          const percentage = category.averageRating / 10 * 100;
-          const scaledRating = Math.round(category.averageRating / 10 * 100);
-          return <div key={category.id} className="space-y-2">
+          {otherCategories.map((category) => {
+            const percentage = (category.averageRating / 10) * 100;
+            const scaledRating = Math.round((category.averageRating / 10) * 100);
+
+            return (
+              <div key={category.id} className="space-y-2">
                 <div className="flex justify-between items-center">
                   <span className="text-sm font-medium text-rap-platinum font-kaushan">
                     {category.name}
@@ -114,10 +124,13 @@ const RapperAttributeStats = ({
                   </div>
                 </div>
                 <Progress value={percentage} className="h-3 bg-rap-carbon" />
-              </div>;
-        })}
+              </div>
+            );
+          })}
         </div>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 export default RapperAttributeStats;
