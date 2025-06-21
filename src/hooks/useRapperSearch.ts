@@ -1,39 +1,13 @@
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-
-// Helper function to normalize names for better matching
-const normalizeName = (name: string): string => {
-  return name
-    .toLowerCase()
-    .replace(/[.\s]/g, '') // Remove periods and spaces
-    .replace(/[^a-z0-9]/g, ''); // Remove any other special characters except alphanumeric
-};
-
-// Helper function to create search variations
-const createSearchVariations = (term: string): string[] => {
-  const variations = [term.toLowerCase()];
-  
-  // Add variation without periods
-  if (term.includes('.')) {
-    variations.push(term.replace(/\./g, '').toLowerCase());
-  }
-  
-  // Add variation with periods removed and spaces normalized
-  variations.push(term.replace(/[.\s]+/g, '').toLowerCase());
-  
-  // Add variation with spaces around periods removed
-  variations.push(term.replace(/\s*\.\s*/g, '.').toLowerCase());
-  
-  return [...new Set(variations)]; // Remove duplicates
-};
 
 export const useRapperSearch = (excludeIds: string[] = []) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
 
-  // Reduce debounce to 150ms for more responsive search
+  // Debounce search term
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearchTerm(searchTerm);
@@ -47,54 +21,42 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
     queryFn: async () => {
       if (debouncedSearchTerm.length < 2) return [];
 
+      // Create base query
       let query = supabase
         .from("rappers")
         .select("id, name, image_url")
-        .order("name")
-        .limit(50); // Increased limit to get more results for better filtering
+        .limit(20);
 
       // Filter out already selected rappers
       if (excludeIds.length > 0) {
         query = query.not("id", "in", `(${excludeIds.join(",")})`);
       }
 
-      const { data, error } = await query;
-      if (error) throw error;
-      
-      // Enhanced client-side filtering for better matching
-      const searchVariations = createSearchVariations(debouncedSearchTerm);
-      const normalizedSearchTerm = normalizeName(debouncedSearchTerm);
-      
-      const filteredData = (data || []).filter(rapper => {
-        const rapperName = rapper.name.toLowerCase();
-        const normalizedRapperName = normalizeName(rapper.name);
-        
-        // Exact match (highest priority)
-        if (rapperName === debouncedSearchTerm.toLowerCase()) return true;
-        
-        // Direct contains match
-        if (rapperName.includes(debouncedSearchTerm.toLowerCase())) return true;
-        
-        // Check against search variations
-        for (const variation of searchVariations) {
-          if (rapperName.includes(variation)) return true;
-          if (rapperName.replace(/[.\s]/g, '').includes(variation)) return true;
-        }
-        
-        // Normalized comparison (handles J.I.D vs JID, etc.)
-        if (normalizedRapperName.includes(normalizedSearchTerm)) return true;
-        
-        // Check if normalized search term matches normalized rapper name
-        if (normalizedSearchTerm.length >= 2 && normalizedRapperName.startsWith(normalizedSearchTerm)) return true;
-        
-        return false;
-      });
+      // Create search variations for database-level filtering
+      const searchLower = debouncedSearchTerm.toLowerCase().trim();
+      const searchNoPeriods = searchLower.replace(/\./g, '');
+      const searchNoSpaces = searchLower.replace(/\s+/g, '');
+      const searchNoPuncuation = searchLower.replace(/[.\s]/g, '');
 
-      // Sort results by relevance
-      return filteredData.sort((a, b) => {
+      // Use database-level OR filtering with ilike for case-insensitive partial matches
+      const { data, error } = await query.or(`
+        name.ilike.%${searchLower}%,
+        name.ilike.%${searchNoPeriods}%,
+        name.ilike.%${searchNoSpaces}%,
+        name.ilike.%${searchNoPuncuation}%
+      `);
+
+      if (error) {
+        console.error("Search error:", error);
+        throw error;
+      }
+
+      if (!data) return [];
+
+      // Simple client-side sorting by relevance (exact matches first, then alphabetical)
+      return data.sort((a, b) => {
         const aName = a.name.toLowerCase();
         const bName = b.name.toLowerCase();
-        const searchLower = debouncedSearchTerm.toLowerCase();
         
         // Exact matches first
         if (aName === searchLower && bName !== searchLower) return -1;
@@ -106,7 +68,7 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         
         // Then alphabetical
         return aName.localeCompare(bName);
-      }).slice(0, 15); // Limit final results to 15
+      });
     },
     enabled: debouncedSearchTerm.length >= 2,
   });
