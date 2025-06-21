@@ -35,7 +35,10 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
       const className = token.ordered 
         ? 'list-decimal list-inside mb-6 space-y-2 pl-4' 
         : 'list-disc list-inside mb-6 space-y-2 pl-4';
-      return `<${type} class="${className}">${token.items.map(item => renderer.listitem(item.text)).join('')}</${type}>`;
+      
+      // Generate list items using the token's raw property
+      const items = token.items.map(item => `<li class="mb-2 leading-relaxed">${item.raw}</li>`).join('');
+      return `<${type} class="${className}">${items}</${type}>`;
     };
 
     // Better blockquote rendering
