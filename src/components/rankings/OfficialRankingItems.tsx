@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -116,13 +115,6 @@ const OfficialRankingItems = ({
                         <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none text-xs px-2 py-1 flex-shrink-0">
                           <Flame className="w-3 h-3 mr-1" />
                           Hot
-                        </Badge>
-                      )}
-                      {/* New Artist Badge for zero votes */}
-                      {(!item.ranking_votes || item.ranking_votes === 0) && (
-                        <Badge className="bg-gradient-to-r from-rap-forest to-rap-forest-light text-white border-none text-xs px-2 py-1 flex-shrink-0">
-                          <Star className="w-3 h-3 mr-1" />
-                          Rising
                         </Badge>
                       )}
                       {/* Position Delta Badge - on mobile, show inline with name */}
