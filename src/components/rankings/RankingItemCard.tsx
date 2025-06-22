@@ -93,8 +93,8 @@ const RankingItemCard = ({
           <div className={isMobile ? "flex flex-col space-y-3" : "flex items-center justify-between"}>
             <div className={`flex items-center space-x-4 ${isMobile ? "w-full" : "flex-1"}`}>
               {/* Primary: Rapper Info */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <div className={`${isMobile ? "flex-1 min-w-0 text-center" : "flex-1 min-w-0"}`}>
+                <div className={`flex items-center gap-2 mb-1 flex-wrap ${isMobile ? "justify-center" : ""}`}>
                   <h3 className="text-xl font-bold text-rap-platinum font-kaushan">
                     {item.rapper?.name}
                   </h3>
@@ -116,7 +116,7 @@ const RankingItemCard = ({
                 
                 {/* Primary: Hometown with enhanced styling */}
                 {item.rapper?.origin && (
-                  <div className="flex items-center gap-1 mb-1">
+                  <div className={`flex items-center gap-1 mb-1 ${isMobile ? "justify-center" : ""}`}>
                     <MapPin className="w-4 h-4 text-rap-smoke flex-shrink-0" />
                     <p className="text-sm text-rap-smoke font-kaushan">
                       {item.rapper.origin}
@@ -125,7 +125,9 @@ const RankingItemCard = ({
                 )}
                 
                 {/* Primary: Vote Count - Enhanced display */}
-                {getVoteDisplay(item.ranking_votes)}
+                <div className={isMobile ? "flex justify-center" : ""}>
+                  {getVoteDisplay(item.ranking_votes)}
+                </div>
               </div>
 
               {/* Secondary: Position Delta Badge - Desktop only */}
