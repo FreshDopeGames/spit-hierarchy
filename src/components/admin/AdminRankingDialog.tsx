@@ -19,14 +19,24 @@ type OfficialRanking = Tables<"official_rankings">;
 interface AdminRankingDialogProps {
   onRankingCreated: () => void;
   ranking?: OfficialRanking;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  showTrigger?: boolean;
 }
 
 const AdminRankingDialog = ({
   onRankingCreated,
-  ranking
+  ranking,
+  open: controlledOpen,
+  onOpenChange: controlledOnOpenChange,
+  showTrigger = true
 }: AdminRankingDialogProps) => {
-  const [open, setOpen] = useState(false);
+  const [internalOpen, setInternalOpen] = useState(false);
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+
+  // Use controlled state if provided, otherwise use internal state
+  const open = controlledOpen !== undefined ? controlledOpen : internalOpen;
+  const setOpen = controlledOnOpenChange || setInternalOpen;
 
   const form = useForm<RankingFormData>({
     resolver: zodResolver(rankingFormSchema),
@@ -95,7 +105,7 @@ const AdminRankingDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <RankingDialogTrigger ranking={ranking} />
+      {showTrigger && <RankingDialogTrigger ranking={ranking} />}
       <DialogContent className="bg-rap-carbon border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
         <DialogHeader>
           <DialogTitle className="text-2xl font-mogra text-rap-gold">
