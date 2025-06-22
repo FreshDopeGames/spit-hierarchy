@@ -4,7 +4,11 @@ import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useAchievements } from '@/hooks/useAchievements';
-import { showAchievementToast } from '@/components/achievements/AchievementToast';
+import { toast } from 'sonner';
+import { 
+  markLevelUpNotificationShown, 
+  hasLevelUpNotificationBeenShown 
+} from '@/utils/notificationTracking';
 
 export type MemberStatus = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
@@ -28,6 +32,7 @@ export const useMemberStatus = () => {
   const { user } = useAuth();
   const { getTotalPoints } = useAchievements();
   const [previousStatus, setPreviousStatus] = useState<MemberStatus | null>(null);
+  const [hasShownInitialStatus, setHasShownInitialStatus] = useState(false);
 
   const { data: memberStats, refetch } = useQuery({
     queryKey: ['member-status', user?.id],
@@ -92,28 +97,42 @@ export const useMemberStatus = () => {
     }
   };
 
-  // Check for level up
+  // Check for level up with persistent tracking
   useEffect(() => {
+    if (!user || !hasShownInitialStatus) {
+      // Set initial status without showing notification
+      if (currentStatus && !hasShownInitialStatus) {
+        setPreviousStatus(currentStatus);
+        setHasShownInitialStatus(true);
+      }
+      return;
+    }
+
     if (previousStatus && currentStatus !== previousStatus) {
-      // Show level up notification
+      // Check if this is actually a level up
       const statusOrder: MemberStatus[] = ['bronze', 'silver', 'gold', 'platinum', 'diamond'];
       const previousIndex = statusOrder.indexOf(previousStatus);
       const currentIndex = statusOrder.indexOf(currentStatus);
       
       if (currentIndex > previousIndex) {
-        // Level up!
-        showAchievementToast({
-          id: `level-up-${currentStatus}`,
-          name: `Level Up! ${currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)} Member`,
-          description: `You've reached ${currentStatus} status! Your votes now count ${getVoteMultiplier()}x.`,
-          icon: 'Crown',
-          rarity: 'legendary' as const,
-          points: 0
-        });
+        // This is a level up - check if we've already shown this notification
+        const notificationKey = `${user.id}-${currentStatus}`;
+        
+        if (!hasLevelUpNotificationBeenShown(user.id, currentStatus)) {
+          // Show level up notification using Sonner
+          toast.success(`🎉 Level Up! ${currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)} Member`, {
+            description: `You've reached ${currentStatus} status! Your votes now count ${getVoteMultiplier()}x.`,
+            duration: 5000,
+          });
+          
+          // Mark this notification as shown
+          markLevelUpNotificationShown(user.id, currentStatus);
+        }
       }
     }
+    
     setPreviousStatus(currentStatus);
-  }, [currentStatus, previousStatus, getVoteMultiplier]);
+  }, [currentStatus, previousStatus, user, getVoteMultiplier, hasShownInitialStatus]);
 
   return {
     memberStats,

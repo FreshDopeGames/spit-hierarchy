@@ -1,7 +1,9 @@
 
-import React, { useEffect, useState } from "react";
-import { toast } from "sonner";
-import * as LucideIcons from "lucide-react";
+import React from "react";
+
+// This component is now deprecated in favor of using Sonner toasts directly
+// All achievement notifications now use the centralized Sonner toast system
+// to prevent duplicate notifications and ensure consistent behavior
 
 interface Achievement {
   id: string;
@@ -16,39 +18,14 @@ interface AchievementToastProps {
   achievement: Achievement;
 }
 
-const rarityColors = {
-  common: "from-rap-gold-dark to-rap-gold",
-  rare: "from-blue-500 to-blue-600", 
-  epic: "from-purple-500 to-purple-600",
-  legendary: "from-rap-gold via-rap-gold-light to-rap-gold-dark"
-};
-
+// Deprecated: Use toast() from sonner directly instead
 const AchievementToast = ({ achievement }: AchievementToastProps) => {
-  const IconComponent = (LucideIcons as any)[achievement.icon] || LucideIcons.Star;
-
-  return (
-    <div className="flex items-center space-x-3 p-4 bg-rap-carbon border-2 border-rap-gold rounded-lg shadow-xl">
-      <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg animate-pulse`}>
-        <IconComponent className="w-6 h-6 text-white" />
-      </div>
-      
-      <div className="flex-1">
-        <div className="flex items-center gap-2 mb-1">
-          <h4 className="font-bold text-rap-gold">🎉 Achievement Unlocked!</h4>
-        </div>
-        <h5 className="font-bold text-white">{achievement.name}</h5>
-        <p className="text-rap-platinum text-sm">{achievement.description}</p>
-        <p className="text-rap-gold text-xs font-bold">+{achievement.points} points</p>
-      </div>
-    </div>
-  );
+  return null; // Component disabled to prevent duplicate toasts
 };
 
+// Deprecated: Use toast() from sonner directly instead
 export const showAchievementToast = (achievement: Achievement) => {
-  toast.custom((t) => <AchievementToast achievement={achievement} />, {
-    duration: 5000,
-    position: "bottom-center",
-  });
+  console.warn('showAchievementToast is deprecated. Use toast() from sonner directly.');
 };
 
 export default AchievementToast;

@@ -5,7 +5,11 @@ import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useAdaptivePolling } from './useAdaptivePolling';
 import { sortAchievementsByRarity } from '@/utils/achievementUtils';
-import { showAchievementToast } from '@/components/achievements/AchievementToast';
+import { toast } from 'sonner';
+import { 
+  markAchievementNotificationShown, 
+  hasAchievementNotificationBeenShown 
+} from '@/utils/notificationTracking';
 
 export const useAchievements = () => {
   const { user } = useAuth();
@@ -84,8 +88,18 @@ export const useAchievements = () => {
             .single();
           
           if (achievement) {
-            // Show the toast notification
-            showAchievementToast(achievement);
+            // Check if we've already shown this notification
+            if (!hasAchievementNotificationBeenShown(user.id, achievement.id)) {
+              // Show the toast notification using Sonner
+              toast.success(`🎉 Achievement Unlocked! ${achievement.name}`, {
+                description: `${achievement.description} (+${achievement.points} points)`,
+                duration: 5000,
+              });
+              
+              // Mark this notification as shown
+              markAchievementNotificationShown(user.id, achievement.id);
+            }
+            
             setNewAchievements(prev => [...prev, achievement]);
           }
           
