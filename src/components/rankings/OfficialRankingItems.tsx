@@ -5,6 +5,8 @@ import { TrendingUp, TrendingDown, Minus, Flame, ChevronDown, Star, MapPin } fro
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import VoteButton from "@/components/VoteButton";
 import { useIsMobile } from "@/hooks/use-mobile";
+import RapperAvatar from "@/components/RapperAvatar";
+import { useRapperImages } from "@/hooks/useImageStyle";
 
 interface OfficialRankingItemsProps {
   items: RankingItemWithDelta[];
@@ -31,6 +33,10 @@ const OfficialRankingItems = ({
 }: OfficialRankingItemsProps) => {
   const isMobile = useIsMobile();
   const displayedItems = items.slice(0, displayCount);
+
+  // Batch load rapper images for performance
+  const rapperIds = displayedItems.map(item => item.rapper?.id).filter(Boolean) as string[];
+  const { data: rapperImages = {} } = useRapperImages(rapperIds);
 
   const getDeltaIcon = (delta: number | null | undefined) => {
     // Always return an icon - no null cases
@@ -98,6 +104,17 @@ const OfficialRankingItems = ({
                 <span className="text-2xl font-bold text-rap-carbon font-mogra">
                   {item.dynamic_position}
                 </span>
+              </div>
+            )}
+
+            {/* Avatar Section */}
+            {item.rapper && (
+              <div className={`flex-shrink-0 ${isMobile ? "flex justify-center mb-3" : "flex items-center p-3"}`}>
+                <RapperAvatar 
+                  rapper={item.rapper} 
+                  size={isMobile ? "md" : "lg"}
+                  imageUrl={rapperImages[item.rapper.id]}
+                />
               </div>
             )}
 
