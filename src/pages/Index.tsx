@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,8 +17,8 @@ import { Link } from "react-router-dom";
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
-    baseInterval: 30000, // Increased from 5s to 30s for homepage
-    maxInterval: 300000, // Max 5 minutes
+    baseInterval: 15000, // Reduced from 30s to 15s for more responsive vote data
+    maxInterval: 120000, // Reduced from 5 minutes to 2 minutes
     enabled: true
   });
 
@@ -102,8 +101,8 @@ const Index = () => {
     },
     refetchInterval,
     refetchIntervalInBackground,
-    staleTime: 15 * 60 * 1000, // 15 minutes - much longer stale time for homepage
-    refetchOnWindowFocus: false,
+    staleTime: 2 * 60 * 1000, // Reduced from 15 minutes to 2 minutes for vote data
+    refetchOnWindowFocus: true, // Enable refetch on window focus for vote data
   });
 
   return (

@@ -51,11 +51,11 @@ const TopRappersGrid = ({
       return data;
     },
     enabled: !providedRappers,
-    refetchInterval: 10000, // Refetch every 10 seconds for homepage
+    refetchInterval: 15000, // Reduced from 10 seconds to 15 seconds
     refetchIntervalInBackground: true,
   });
 
-  // Fetch ranking-specific vote counts if rankingId is provided
+  // Fetch ranking-specific vote counts if rankingId is provided with more responsive caching
   const { data: rankingVoteCounts = {} } = useQuery({
     queryKey: ["ranking-vote-counts", rankingId],
     queryFn: async () => {
@@ -76,7 +76,11 @@ const TopRappersGrid = ({
       
       return counts;
     },
-    enabled: !!rankingId
+    enabled: !!rankingId,
+    refetchInterval: 10000, // Refetch every 10 seconds for vote data
+    refetchIntervalInBackground: true,
+    staleTime: 30 * 1000, // Only 30 seconds stale time for vote data
+    refetchOnWindowFocus: true, // Enable refetch on window focus
   });
 
   const rappers = providedRappers || fetchedRappers;

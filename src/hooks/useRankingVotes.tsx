@@ -124,6 +124,10 @@ export const useRankingVotes = () => {
       const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ['daily-votes', user?.id, today, variables.rankingId] });
 
+      // Invalidate homepage data to sync vote counts immediately
+      queryClient.invalidateQueries({ queryKey: ['top-active-rankings-for-sections'] });
+      queryClient.invalidateQueries({ queryKey: ['ranking-vote-counts', variables.rankingId] });
+
       // The real-time subscription will handle the actual data update
       // No need to manually invalidate queries here for ranking data
     }
