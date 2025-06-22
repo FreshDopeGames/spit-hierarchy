@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +38,14 @@ const OfficialRankingItems = ({
   // Batch load rapper images for performance
   const rapperIds = displayedItems.map(item => item.rapper?.id).filter(Boolean) as string[];
   const { data: rapperImages = {} } = useRapperImages(rapperIds);
+
+  // Helper function to get gradient classes based on position
+  const getPositionGradient = (position: number) => {
+    if (position <= 5) {
+      return "bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light";
+    }
+    return "bg-gradient-to-br from-gray-600 via-gray-400 to-gray-300";
+  };
 
   const getDeltaIcon = (delta: number | null | undefined) => {
     // Always return an icon - no null cases
@@ -90,7 +99,7 @@ const OfficialRankingItems = ({
         >
           {/* Mobile: Top Cap */}
           {isMobile && (
-            <div className="bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light h-16 flex items-center justify-center rounded-t-lg">
+            <div className={`${getPositionGradient(item.dynamic_position)} h-16 flex items-center justify-center rounded-t-lg`}>
               <span className="text-2xl font-bold text-rap-carbon font-mogra">
                 {item.dynamic_position}
               </span>
@@ -100,7 +109,7 @@ const OfficialRankingItems = ({
           <div className={`${isMobile ? "p-4" : "flex"}`}>
             {/* Desktop/Tablet: Left Cap */}
             {!isMobile && (
-              <div className="bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light w-16 flex items-center justify-center rounded-l-lg">
+              <div className={`${getPositionGradient(item.dynamic_position)} w-16 flex items-center justify-center rounded-l-lg`}>
                 <span className="text-2xl font-bold text-rap-carbon font-mogra">
                   {item.dynamic_position}
                 </span>
@@ -111,7 +120,7 @@ const OfficialRankingItems = ({
             {item.rapper && (
               <div className={`flex-shrink-0 ${isMobile ? "flex justify-center mb-3" : "flex items-center p-3"}`}>
                 <RapperAvatar 
-                  rapper={item.rapper} 
+                  rapper={item.rapper as any} 
                   size={isMobile ? "md" : "lg"}
                   imageUrl={rapperImages[item.rapper.id]}
                 />
