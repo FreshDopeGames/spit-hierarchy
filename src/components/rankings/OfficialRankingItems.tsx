@@ -95,7 +95,7 @@ const OfficialRankingItems = ({
               {/* Primary: Rapper Info */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h3 className="text-xl font-bold text-rap-platinum font-kaushan truncate">
+                  <h3 className="text-xl font-bold text-rap-platinum font-kaushan">
                     {item.rapper?.name}
                   </h3>
                   {/* Contextual: Hot Badge - smaller and positioned as secondary info */}
@@ -125,7 +125,7 @@ const OfficialRankingItems = ({
                 {item.rapper?.origin && (
                   <div className="flex items-center gap-1 mb-1">
                     <MapPin className="w-4 h-4 text-rap-smoke flex-shrink-0" />
-                    <p className="text-sm text-rap-smoke font-kaushan truncate">
+                    <p className="text-sm text-rap-smoke font-kaushan">
                       {item.rapper.origin}
                     </p>
                   </div>
