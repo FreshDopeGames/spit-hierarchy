@@ -27,17 +27,23 @@ const VoteButton = ({
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(rankingId);
 
   const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
-  const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
+  const isDisabled = disabled || submitRankingVote.isPending || !user;
 
   const handleClick = async () => {
     if (isDisabled || !rapperId || !rankingId) return;
 
     if (showWeightedVoting && user) {
-      // Add to daily tracking optimistically
-      addVoteToTracking(rapperId);
-      
-      // Submit the vote
-      submitRankingVote.mutate({ rankingId, rapperId });
+      // Check if user has already voted today
+      if (hasVoted) {
+        // Still allow the vote (it will update the existing vote)
+        submitRankingVote.mutate({ rankingId, rapperId });
+      } else {
+        // Add to daily tracking optimistically for new votes only
+        addVoteToTracking(rapperId);
+        
+        // Submit the vote
+        submitRankingVote.mutate({ rankingId, rapperId });
+      }
     } else {
       // Use regular vote handler
       onVote();
@@ -54,14 +60,14 @@ const VoteButton = ({
         size="sm"
         className={`${
           hasVoted 
-            ? 'bg-gray-600 hover:bg-gray-600 text-gray-300 cursor-not-allowed' 
+            ? 'bg-gray-600 hover:bg-gray-600 text-gray-300' 
             : 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon'
         } font-bold flex-1 sm:flex-none text-sm px-2 py-2 sm:px-4 sm:py-2 min-w-[80px] w-20 ${className}`}
       >
         {hasVoted ? (
           <>
             <Check className="w-4 h-4 mr-1" />
-            <span className="hidden sm:inline">Voted</span>
+            <span className="hidden sm:inline">Update</span>
             <span className="sm:hidden">✓</span>
           </>
         ) : (
@@ -73,7 +79,7 @@ const VoteButton = ({
         )}
       </Button>
       
-      {showWeightedVoting && user && !hasVoted && voteMultiplier > 1 && (
+      {showWeightedVoting && user && voteMultiplier > 1 && (
         <div className="flex items-center gap-1 text-xs text-rap-gold font-bold">
           <Star className="w-3 h-3" />
           <span>{voteMultiplier}x power ({currentStatus})</span>
@@ -82,7 +88,7 @@ const VoteButton = ({
       
       {hasVoted && (
         <div className="text-xs text-gray-400 font-medium">
-          Vote again tomorrow
+          {hasVoted ? 'Click to update vote' : 'Vote again tomorrow'}
         </div>
       )}
     </div>

@@ -5,6 +5,7 @@ import { useAuth } from '@/hooks/useAuth';
 import { useMemberStatus } from '@/hooks/useMemberStatus';
 import { useToast } from '@/hooks/use-toast';
 import { RankingItemWithDelta } from './useRankingData';
+import { useDailyVoteStatus } from '@/hooks/useDailyVoteStatus';
 
 export const useRankingVotes = () => {
   const { user } = useAuth();
@@ -59,7 +60,24 @@ export const useRankingVotes = () => {
       return voteData;
     },
     onMutate: async ({ rankingId, rapperId }) => {
-      // Optimistic update - immediately show the vote increase
+      // Get daily vote status to check if user has already voted
+      const today = new Date().toISOString().split('T')[0];
+      const dailyVotesKey = ['daily-votes', user?.id, today, rankingId];
+      const dailyVotes = queryClient.getQueryData<any[]>(dailyVotesKey) || [];
+      
+      // Check if user has already voted for this rapper today
+      const hasAlreadyVoted = dailyVotes.some(vote => 
+        vote.rapper_id === rapperId && 
+        vote.ranking_id === rankingId &&
+        vote.vote_date === today
+      );
+
+      // If user has already voted, don't apply optimistic update
+      if (hasAlreadyVoted) {
+        console.log('User has already voted for this rapper today, skipping optimistic update');
+        return { previousData: null, alreadyVoted: true };
+      }
+
       const voteWeight = getVoteMultiplier();
       
       // Cancel outgoing refetches to avoid overwriting optimistic update
@@ -68,7 +86,7 @@ export const useRankingVotes = () => {
       // Snapshot the previous value
       const previousData = queryClient.getQueryData<RankingItemWithDelta[]>(['ranking-data-with-deltas', rankingId]);
 
-      // Optimistically update the cache
+      // Only apply optimistic update if this is a new vote
       queryClient.setQueryData<RankingItemWithDelta[]>(
         ['ranking-data-with-deltas', rankingId],
         (oldData) => {
@@ -86,11 +104,11 @@ export const useRankingVotes = () => {
         }
       );
 
-      return { previousData };
+      return { previousData, alreadyVoted: false };
     },
     onError: (error, variables, context) => {
-      // Rollback optimistic update on error
-      if (context?.previousData) {
+      // Rollback optimistic update on error (only if we applied one)
+      if (context?.previousData && !context?.alreadyVoted) {
         queryClient.setQueryData(
           ['ranking-data-with-deltas', variables.rankingId],
           context.previousData
@@ -104,13 +122,21 @@ export const useRankingVotes = () => {
         variant: "destructive",
       });
     },
-    onSuccess: (_, variables) => {
+    onSuccess: (_, variables, context) => {
       const voteWeight = getVoteMultiplier();
       
-      toast({
-        title: "Vote submitted!",
-        description: `Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`,
-      });
+      // Show different messages based on whether this was a new vote or update
+      if (context?.alreadyVoted) {
+        toast({
+          title: "Vote updated!",
+          description: `Your ${currentStatus} status vote has been updated!`,
+        });
+      } else {
+        toast({
+          title: "Vote submitted!",
+          description: `Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`,
+        });
+      }
 
       // Invalidate member stats and achievements to check for updates
       queryClient.invalidateQueries({ queryKey: ['member-status', user?.id] });
