@@ -85,12 +85,6 @@ const VoteButton = ({
           <span>{voteMultiplier}x power ({currentStatus})</span>
         </div>
       )}
-      
-      {hasVoted && (
-        <div className="text-xs text-gray-400 font-medium">
-          {hasVoted ? 'Click to update vote' : 'Vote again tomorrow'}
-        </div>
-      )}
     </div>
   );
 };
