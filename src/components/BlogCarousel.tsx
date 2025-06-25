@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
@@ -8,9 +8,15 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
+import useEmblaCarousel from 'embla-carousel-react';
 
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ 
+    loop: true,
+    dragFree: false,
+    containScroll: 'trimSnaps'
+  });
   
   const {
     data: featuredPosts = [],
@@ -39,13 +45,45 @@ const BlogCarousel = () => {
     refetchOnWindowFocus: false
   });
 
-  const goToPrevious = () => {
-    setCurrentIndex(prevIndex => prevIndex === 0 ? featuredPosts.length - 1 : prevIndex - 1);
-  };
+  const goToPrevious = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollPrev();
+    } else {
+      setCurrentIndex(prevIndex => prevIndex === 0 ? featuredPosts.length - 1 : prevIndex - 1);
+    }
+  }, [emblaApi, featuredPosts.length]);
 
-  const goToNext = () => {
-    setCurrentIndex(prevIndex => prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1);
-  };
+  const goToNext = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollNext();
+    } else {
+      setCurrentIndex(prevIndex => prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1);
+    }
+  }, [emblaApi, featuredPosts.length]);
+
+  const scrollTo = useCallback((index: number) => {
+    if (emblaApi) {
+      emblaApi.scrollTo(index);
+    } else {
+      setCurrentIndex(index);
+    }
+  }, [emblaApi]);
+
+  // Listen for slide changes
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setCurrentIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  // Set up event listeners
+  useState(() => {
+    if (!emblaApi) return;
+    
+    onSelect();
+    emblaApi.on('select', onSelect);
+    
+    return () => emblaApi.off('select', onSelect);
+  });
 
   const getImageData = (post: any) => {
     if (!post.featured_image_url) {
@@ -68,52 +106,52 @@ const BlogCarousel = () => {
         </h2>
       </div>
       
-      {/* Dynamic width carousel container with improved mobile layout */}
+      {/* Embla carousel container */}
       <div className="flex justify-center">
         <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-carbon-fiber border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
-          <div className="flex transition-transform duration-500 ease-in-out" style={{
-            transform: `translateX(-${currentIndex * 100}%)`
-          }}>
-            {featuredPosts.map(post => (
-              <div key={post.id} className="w-full flex-shrink-0">
-                <Link to={`/blog/${post.id}`} className="block">
-                  <div className="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden cursor-pointer">
-                    <ResponsiveImage 
-                      src={getImageData(post)} 
-                      alt={post.title} 
-                      className="w-full h-full" 
-                      context="carousel" 
-                      objectFit="cover" 
-                      sizes="(max-width: 768px) 100vw, 100vw" 
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
-                    
-                    <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
-                      {post.blog_categories?.name && (
-                        <Badge className="mb-2 sm:mb-3 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
-                          {post.blog_categories.name}
-                        </Badge>
-                      )}
-                      <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
-                        {post.title}
-                      </h3>
-                      <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4">
-                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
-                        <span className="text-rap-smoke">
-                          {format(new Date(post.published_at), "MMMM d, yyyy")}
-                        </span>
+          <div className="overflow-hidden" ref={emblaRef}>
+            <div className="flex">
+              {featuredPosts.map(post => (
+                <div key={post.id} className="flex-[0_0_100%] min-w-0">
+                  <Link to={`/blog/${post.id}`} className="block">
+                    <div className="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden cursor-pointer">
+                      <ResponsiveImage 
+                        src={getImageData(post)} 
+                        alt={post.title} 
+                        className="w-full h-full" 
+                        context="carousel" 
+                        objectFit="cover" 
+                        sizes="(max-width: 768px) 100vw, 100vw" 
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
+                      
+                      <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
+                        {post.blog_categories?.name && (
+                          <Badge className="mb-2 sm:mb-3 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
+                            {post.blog_categories.name}
+                          </Badge>
+                        )}
+                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
+                          {post.title}
+                        </h3>
+                        <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4">
+                          <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
+                          <span className="text-rap-smoke">
+                            {format(new Date(post.published_at), "MMMM d, yyyy")}
+                          </span>
+                        </div>
+                        <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
+                          {post.excerpt}
+                        </p>
+                        <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base md:text-lg h-auto">
+                          Read More
+                        </Button>
                       </div>
-                      <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
-                        {post.excerpt}
-                      </p>
-                      <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base md:text-lg h-auto">
-                        Read More
-                      </Button>
                     </div>
-                  </div>
-                </Link>
-              </div>
-            ))}
+                  </Link>
+                </div>
+              ))}
+            </div>
           </div>
           
           <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-3 sm:px-4 drop-shadow z-10">
@@ -146,7 +184,7 @@ const BlogCarousel = () => {
                     ? "bg-rap-gold scale-110" 
                     : "bg-gray-400 opacity-60 hover:opacity-80"
                 }`} 
-                onClick={() => setCurrentIndex(index)} 
+                onClick={() => scrollTo(index)} 
               />
             ))}
           </div>
