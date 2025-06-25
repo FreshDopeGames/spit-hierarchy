@@ -31,11 +31,11 @@ const RankingItemCard = ({
 
   const getDeltaIcon = (delta: number | null | undefined) => {
     if (delta === null || delta === undefined || delta === 0) {
-      return <Minus className="w-4 h-4 text-rap-gold" />;
+      return <Minus className="w-3 h-3 text-rap-gold" />;
     }
-    if (delta > 0) return <TrendingDown className="w-4 h-4 text-red-400" />;
-    if (delta < 0) return <TrendingUp className="w-4 h-4 text-green-400" />;
-    return <Minus className="w-4 h-4 text-rap-gold" />;
+    if (delta > 0) return <TrendingDown className="w-3 h-3 text-red-400" />;
+    if (delta < 0) return <TrendingUp className="w-3 h-3 text-green-400" />;
+    return <Minus className="w-3 h-3 text-rap-gold" />;
   };
 
   const getDeltaText = (delta: number | null | undefined) => {
@@ -76,11 +76,20 @@ const RankingItemCard = ({
     return (
       <div className="bg-carbon-fiber/90 border border-rap-gold/20 rounded-lg shadow-md shadow-rap-gold/10 hover:shadow-rap-gold/30 transition-all duration-300 relative overflow-hidden">
         <div className="flex items-center p-3 gap-3">
-          {/* Position Badge - Smaller */}
-          <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-rap-silver via-rap-platinum to-rap-smoke shadow-sm">
-            <span className="text-rap-carbon font-mogra text-xs font-bold">
-              {item.dynamic_position}
-            </span>
+          {/* Position Badge with Delta - More compact */}
+          <div className="flex-shrink-0 flex flex-col items-center justify-center">
+            <div className="flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-rap-silver via-rap-platinum to-rap-smoke shadow-sm">
+              <span className="text-rap-carbon font-mogra text-xs font-bold">
+                {item.dynamic_position}
+              </span>
+            </div>
+            {/* Delta icon directly under position */}
+            <div className="flex items-center mt-1">
+              {getDeltaIcon(item.position_delta)}
+              {getDeltaText(item.position_delta) && (
+                <span className="text-xs text-rap-platinum ml-1">{getDeltaText(item.position_delta)}</span>
+              )}
+            </div>
           </div>
 
           {/* Avatar - Smaller */}
@@ -94,10 +103,10 @@ const RankingItemCard = ({
             </div>
           )}
 
-          {/* Content - Compact */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="text-base font-bold text-rap-platinum font-kaushan truncate">
+          {/* Content - More space for name */}
+          <div className="flex-1 min-w-0 mr-2">
+            <div className="flex items-center gap-2 mb-1 flex-wrap">
+              <h3 className="text-base font-bold text-rap-platinum font-kaushan">
                 {item.rapper?.name}
               </h3>
               {/* Hot Badge - Smaller */}
@@ -107,18 +116,13 @@ const RankingItemCard = ({
                   Hot
                 </Badge>
               )}
-              {/* Delta Badge - Smaller */}
-              <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum text-xs px-1 py-0 flex-shrink-0">
-                {getDeltaIcon(item.position_delta)}
-                <span className="ml-1 text-xs">{getDeltaText(item.position_delta)}</span>
-              </Badge>
             </div>
             
             {/* Hometown - Smaller */}
             {item.rapper?.origin && (
               <div className="flex items-center gap-1 mb-1">
                 <MapPin className="w-3 h-3 text-rap-smoke flex-shrink-0" />
-                <p className="text-xs text-rap-smoke font-kaushan truncate">
+                <p className="text-xs text-rap-smoke font-kaushan">
                   {item.rapper.origin}
                 </p>
               </div>
@@ -128,7 +132,7 @@ const RankingItemCard = ({
             {getVoteDisplay(item.ranking_votes)}
           </div>
 
-          {/* Vote Button - Compact */}
+          {/* Vote Button - Much more compact */}
           <div className="flex-shrink-0">
             <VoteButton
               onVote={() => onVote(item.rapper?.name || "")}
@@ -136,7 +140,7 @@ const RankingItemCard = ({
               showWeightedVoting={true}
               rankingId={rankingId}
               rapperId={item.rapper?.id}
-              className="text-xs px-2 py-1 min-w-[80px]"
+              className="text-xs px-2 py-1 min-w-[60px]"
             />
           </div>
         </div>
