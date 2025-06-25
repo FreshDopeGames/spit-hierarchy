@@ -26,6 +26,8 @@ const RankingItemCard = ({
   rapperImageUrl
 }: RankingItemCardProps) => {
   const isMobile = useIsMobile();
+  const isLowRanking = item.dynamic_position > 5;
+  const useCompactMobile = isMobile && isLowRanking;
 
   const getDeltaIcon = (delta: number | null | undefined) => {
     if (delta === null || delta === undefined || delta === 0) {
@@ -55,20 +57,94 @@ const RankingItemCard = ({
     if (!formattedCount) {
       return (
         <div className="flex items-center gap-1">
-          <Star className="w-4 h-4 text-rap-gold/50" />
-          <span className="text-rap-smoke/70 font-kaushan text-sm italic">
+          <Star className={`${useCompactMobile ? 'w-3 h-3' : 'w-4 h-4'} text-rap-gold/50`} />
+          <span className={`text-rap-smoke/70 font-kaushan ${useCompactMobile ? 'text-xs' : 'text-sm'} italic`}>
             Be first to vote!
           </span>
         </div>
       );
     }
     return (
-      <p className="text-sm text-white font-bold font-kaushan">
+      <p className={`text-white font-bold font-kaushan ${useCompactMobile ? 'text-xs' : 'text-sm'}`}>
         Votes: {formattedCount}
       </p>
     );
   };
 
+  // Compact mobile layout for positions 6+
+  if (useCompactMobile) {
+    return (
+      <div className="bg-carbon-fiber/90 border border-rap-gold/20 rounded-lg shadow-md shadow-rap-gold/10 hover:shadow-rap-gold/30 transition-all duration-300 relative overflow-hidden">
+        <div className="flex items-center p-3 gap-3">
+          {/* Position Badge - Smaller */}
+          <div className="flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full bg-gradient-to-br from-rap-silver via-rap-platinum to-rap-smoke shadow-sm">
+            <span className="text-rap-carbon font-mogra text-xs font-bold">
+              {item.dynamic_position}
+            </span>
+          </div>
+
+          {/* Avatar - Smaller */}
+          {item.rapper && (
+            <div className="flex-shrink-0">
+              <RapperAvatar 
+                rapper={item.rapper as any} 
+                size="sm"
+                imageUrl={rapperImageUrl}
+              />
+            </div>
+          )}
+
+          {/* Content - Compact */}
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-1">
+              <h3 className="text-base font-bold text-rap-platinum font-kaushan truncate">
+                {item.rapper?.name}
+              </h3>
+              {/* Hot Badge - Smaller */}
+              {isHot(item.vote_velocity_24_hours || 0) && (
+                <Badge className="bg-gradient-to-r from-orange-500 to-red-500 text-white border-none text-xs px-1 py-0 flex-shrink-0">
+                  <Flame className="w-2 h-2 mr-1" />
+                  Hot
+                </Badge>
+              )}
+              {/* Delta Badge - Smaller */}
+              <Badge variant="outline" className="border-rap-gold/30 text-rap-platinum text-xs px-1 py-0 flex-shrink-0">
+                {getDeltaIcon(item.position_delta)}
+                <span className="ml-1 text-xs">{getDeltaText(item.position_delta)}</span>
+              </Badge>
+            </div>
+            
+            {/* Hometown - Smaller */}
+            {item.rapper?.origin && (
+              <div className="flex items-center gap-1 mb-1">
+                <MapPin className="w-3 h-3 text-rap-smoke flex-shrink-0" />
+                <p className="text-xs text-rap-smoke font-kaushan truncate">
+                  {item.rapper.origin}
+                </p>
+              </div>
+            )}
+            
+            {/* Vote Count - Smaller */}
+            {getVoteDisplay(item.ranking_votes)}
+          </div>
+
+          {/* Vote Button - Compact */}
+          <div className="flex-shrink-0">
+            <VoteButton
+              onVote={() => onVote(item.rapper?.name || "")}
+              disabled={!userLoggedIn}
+              showWeightedVoting={true}
+              rankingId={rankingId}
+              rapperId={item.rapper?.id}
+              className="text-xs px-2 py-1 min-w-[80px]"
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Original layout for positions 1-5 and desktop
   return (
     <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300 relative overflow-hidden">
       {/* Mobile: Top Cap */}

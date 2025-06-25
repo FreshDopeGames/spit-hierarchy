@@ -50,7 +50,7 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
   const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-black/95 backdrop-blur-md border-b border-rap-gold/50 h-16' : 'bg-black border-b border-rap-gold/30 h-20'}`}>
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 will-change-transform ${isScrolled ? 'bg-black/95 backdrop-blur-md border-b border-rap-gold/50 h-16' : 'bg-black border-b border-rap-gold/30 h-20'}`} style={{ transform: 'translateZ(0)' }}>
       <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full">
         <div className="flex items-center">
           <NavigationSidebar />
