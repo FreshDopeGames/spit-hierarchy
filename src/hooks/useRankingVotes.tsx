@@ -1,4 +1,3 @@
-
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
@@ -128,8 +127,8 @@ export const useRankingVotes = () => {
       // Show different messages based on whether this was a new vote or update
       if (context?.alreadyVoted) {
         toast({
-          title: "Vote updated!",
-          description: `Your ${currentStatus} status vote has been updated!`,
+          title: "Vote counted!",
+          description: `Your ${currentStatus} status vote has been counted!`,
         });
       } else {
         toast({
