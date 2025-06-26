@@ -117,6 +117,27 @@ export type Database = {
         }
         Relationships: []
       }
+      blog_post_likes: {
+        Row: {
+          created_at: string
+          id: string
+          post_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          post_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          post_id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       blog_post_tags: {
         Row: {
           id: string
@@ -160,6 +181,7 @@ export type Database = {
           featured: boolean | null
           featured_image_url: string | null
           id: string
+          likes_count: number | null
           meta_description: string | null
           meta_title: string | null
           published_at: string | null
@@ -178,6 +200,7 @@ export type Database = {
           featured?: boolean | null
           featured_image_url?: string | null
           id?: string
+          likes_count?: number | null
           meta_description?: string | null
           meta_title?: string | null
           published_at?: string | null
@@ -196,6 +219,7 @@ export type Database = {
           featured?: boolean | null
           featured_image_url?: string | null
           id?: string
+          likes_count?: number | null
           meta_description?: string | null
           meta_title?: string | null
           published_at?: string | null

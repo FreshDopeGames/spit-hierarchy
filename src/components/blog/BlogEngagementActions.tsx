@@ -1,25 +1,27 @@
 
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
-import { Heart, Bookmark, Share2, MessageCircle } from "lucide-react";
+import { Heart, Share2, MessageCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 interface BlogEngagementActionsProps {
   likes: number;
   isLiked: boolean;
-  isBookmarked: boolean;
   commentCount?: number;
+  onLike: () => void;
   onShare: (platform: string) => void;
   onCommentsClick?: () => void;
+  isLikeLoading?: boolean;
 }
 
 const BlogEngagementActions = ({ 
   likes, 
   isLiked, 
-  isBookmarked, 
   commentCount = 0,
+  onLike,
   onShare,
-  onCommentsClick
+  onCommentsClick,
+  isLikeLoading = false
 }: BlogEngagementActionsProps) => {
   const { toast } = useToast();
 
@@ -59,6 +61,8 @@ const BlogEngagementActions = ({
             <ThemedButton
               variant={isLiked ? "default" : "outline"}
               size="sm"
+              onClick={onLike}
+              disabled={isLikeLoading}
               className={`min-w-0 flex-shrink-0 ${isLiked 
                 ? "bg-[var(--theme-error)] hover:bg-[var(--theme-error)]/80" 
                 : ""
@@ -66,18 +70,6 @@ const BlogEngagementActions = ({
             >
               <Heart className={`w-4 h-4 mr-1 sm:mr-2 ${isLiked ? 'fill-current' : ''}`} />
               <span className="text-xs sm:text-sm">{likes}</span>
-            </ThemedButton>
-            
-            <ThemedButton
-              variant={isBookmarked ? "default" : "outline"}
-              size="sm"
-              className={`min-w-0 flex-shrink-0 ${isBookmarked 
-                ? "bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/80" 
-                : ""
-              }`}
-            >
-              <Bookmark className={`w-4 h-4 mr-1 sm:mr-2 ${isBookmarked ? 'fill-current' : ''}`} />
-              <span className="hidden sm:inline">Save</span>
             </ThemedButton>
 
             <ThemedButton

@@ -3,7 +3,7 @@ import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
 import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
 import BlogSidebar from "@/components/blog/BlogSidebar";
-import { Tables } from "@/integrations/supabase/types";
+import { useBlogPostLikes } from "@/hooks/useBlogPostLikes";
 
 interface BlogPost {
   id: string;
@@ -59,6 +59,8 @@ const BlogDetailContent = ({
   onShare,
   onCommentsClick
 }: BlogDetailContentProps) => {
+  const { likesCount, isLiked, toggleLike, isLoading } = useBlogPostLikes(blogPost.id);
+
   return (
     <main className="max-w-4xl mx-auto p-6 pt-24">
       <BlogArticleHeader blogPost={transformedBlogPost} />
@@ -68,12 +70,13 @@ const BlogDetailContent = ({
         <div className="lg:col-span-3">
           <BlogArticleContent content={blogPost.content} />
           <BlogEngagementActions 
-            likes={0}
-            isLiked={false}
-            isBookmarked={false}
+            likes={likesCount}
+            isLiked={isLiked}
             commentCount={totalComments}
+            onLike={toggleLike}
             onShare={onShare}
             onCommentsClick={onCommentsClick}
+            isLikeLoading={isLoading}
           />
         </div>
 
