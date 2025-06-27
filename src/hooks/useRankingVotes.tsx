@@ -1,10 +1,11 @@
+
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemberStatus } from '@/hooks/useMemberStatus';
 import { toast } from 'sonner';
 import { RankingItemWithDelta } from './useRankingData';
-import { useDailyVoteStatus } from '@/hooks/useDailyVoteStatus';
+import { sanitizeInput } from '@/utils/securityUtils';
 
 export const useRankingVotes = () => {
   const { user } = useAuth();
@@ -19,17 +20,26 @@ export const useRankingVotes = () => {
       rankingId: string;
       rapperId: string;
     }) => {
-      if (!user) throw new Error('User must be logged in to vote');
+      // Security validation
+      if (!user) throw new Error('Authentication required');
+      
+      // Sanitize inputs
+      const cleanRankingId = sanitizeInput(rankingId);
+      const cleanRapperId = sanitizeInput(rapperId);
+      
+      if (!cleanRankingId || !cleanRapperId) {
+        throw new Error('Invalid input parameters');
+      }
 
       const voteWeight = getVoteMultiplier();
 
-      // Insert the ranking vote
+      // Insert the ranking vote with proper error handling
       const { data: voteData, error: voteError } = await supabase
         .from('ranking_votes')
         .upsert({
           user_id: user.id,
-          ranking_id: rankingId,
-          rapper_id: rapperId,
+          ranking_id: cleanRankingId,
+          rapper_id: cleanRapperId,
           vote_weight: voteWeight,
           member_status: currentStatus,
           updated_at: new Date().toISOString()
@@ -39,43 +49,31 @@ export const useRankingVotes = () => {
         .select()
         .single();
 
-      if (voteError) throw voteError;
+      if (voteError) {
+        console.error('Vote submission error:', voteError);
+        throw new Error('Failed to submit vote. Please try again.');
+      }
 
-      // Also insert into daily vote tracking
+      // Also insert into daily vote tracking with error handling
       const { error: dailyError } = await supabase
         .from('daily_vote_tracking')
         .upsert({
           user_id: user.id,
-          ranking_id: rankingId,
-          rapper_id: rapperId,
+          ranking_id: cleanRankingId,
+          rapper_id: cleanRapperId,
           vote_date: new Date().toISOString().split('T')[0]
         }, {
           onConflict: 'user_id,rapper_id,ranking_id,vote_date'
         });
 
-      if (dailyError) throw dailyError;
+      if (dailyError) {
+        console.error('Daily tracking error:', dailyError);
+        // Don't throw here as the main vote succeeded
+      }
 
       return voteData;
     },
     onMutate: async ({ rankingId, rapperId }) => {
-      // Get daily vote status to check if user has already voted
-      const today = new Date().toISOString().split('T')[0];
-      const dailyVotesKey = ['daily-votes', user?.id, today, rankingId];
-      const dailyVotes = queryClient.getQueryData<any[]>(dailyVotesKey) || [];
-      
-      // Check if user has already voted for this rapper today
-      const hasAlreadyVoted = dailyVotes.some(vote => 
-        vote.rapper_id === rapperId && 
-        vote.ranking_id === rankingId &&
-        vote.vote_date === today
-      );
-
-      // If user has already voted, don't apply optimistic update
-      if (hasAlreadyVoted) {
-        console.log('User has already voted for this rapper today, skipping optimistic update');
-        return { previousData: null, alreadyVoted: true };
-      }
-
       const voteWeight = getVoteMultiplier();
       
       // Cancel outgoing refetches to avoid overwriting optimistic update
@@ -84,7 +82,7 @@ export const useRankingVotes = () => {
       // Snapshot the previous value
       const previousData = queryClient.getQueryData<RankingItemWithDelta[]>(['ranking-data-with-deltas', rankingId]);
 
-      // Only apply optimistic update if this is a new vote
+      // Always apply optimistic update for immediate feedback
       queryClient.setQueryData<RankingItemWithDelta[]>(
         ['ranking-data-with-deltas', rankingId],
         (oldData) => {
@@ -92,9 +90,13 @@ export const useRankingVotes = () => {
           
           return oldData.map(item => {
             if (item.rapper?.id === rapperId) {
+              const newVoteCount = item.ranking_votes + voteWeight;
+              console.log(`Optimistic update: ${item.rapper?.name} votes ${item.ranking_votes} -> ${newVoteCount}`);
+              
               return {
                 ...item,
-                ranking_votes: item.ranking_votes + voteWeight
+                ranking_votes: newVoteCount,
+                isPending: true // Add pending state
               };
             }
             return item;
@@ -102,48 +104,71 @@ export const useRankingVotes = () => {
         }
       );
 
-      return { previousData, alreadyVoted: false };
+      // Show immediate feedback toast
+      toast.loading(`Processing your ${currentStatus} vote (${voteWeight}x weight)...`, {
+        id: `vote-${rapperId}`,
+        duration: 2000
+      });
+
+      return { previousData, voteWeight };
     },
     onError: (error, variables, context) => {
-      // Rollback optimistic update on error (only if we applied one)
-      if (context?.previousData && !context?.alreadyVoted) {
+      // Rollback optimistic update on error
+      if (context?.previousData) {
         queryClient.setQueryData(
           ['ranking-data-with-deltas', variables.rankingId],
           context.previousData
         );
       }
       
-      console.error('Error submitting ranking vote:', error);
-      toast.error("Failed to submit vote. Please try again.");
+      // Dismiss loading toast and show error
+      toast.dismiss(`vote-${variables.rapperId}`);
+      toast.error("Failed to submit vote. Please try again.", {
+        duration: 4000
+      });
+      
+      console.error('Vote submission failed:', error);
     },
     onSuccess: (_, variables, context) => {
-      const voteWeight = getVoteMultiplier();
+      const voteWeight = context?.voteWeight || getVoteMultiplier();
       
-      // Show different messages based on whether this was a new vote or update
-      if (context?.alreadyVoted) {
-        toast.success(`Your ${currentStatus} status vote has been counted!`);
-      } else {
-        toast.success(`Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`);
-      }
+      // Dismiss loading toast
+      toast.dismiss(`vote-${variables.rapperId}`);
+      
+      // Show success toast with enhanced information
+      toast.success(`Vote counted! Your ${currentStatus} status gives ${voteWeight}x voting power`, {
+        description: "Rankings updated in real-time",
+        duration: 3000,
+        action: {
+          label: "View Rankings",
+          onClick: () => {
+            // Could scroll to updated position or refresh view
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          }
+        }
+      });
 
-      // Invalidate member stats and achievements to check for updates
+      // Clear pending states
+      queryClient.setQueryData<RankingItemWithDelta[]>(
+        ['ranking-data-with-deltas', variables.rankingId],
+        (oldData) => {
+          if (!oldData) return oldData;
+          return oldData.map(item => ({
+            ...item,
+            isPending: false
+          }));
+        }
+      );
+
+      // Invalidate relevant queries for real-time updates
       queryClient.invalidateQueries({ queryKey: ['member-status', user?.id] });
       queryClient.invalidateQueries({ queryKey: ['user-achievement-progress', user?.id] });
-      queryClient.invalidateQueries({ queryKey: ['all-achievements'] });
-
-      // Invalidate recent ranking votes to show the new vote
       queryClient.invalidateQueries({ queryKey: ['user-recent-ranking-votes', user?.id] });
-
-      // Invalidate daily votes cache to ensure fresh data
+      queryClient.invalidateQueries({ queryKey: ['top-active-rankings-for-sections'] });
+      
+      // Invalidate daily votes cache
       const today = new Date().toISOString().split('T')[0];
       queryClient.invalidateQueries({ queryKey: ['daily-votes', user?.id, today, variables.rankingId] });
-
-      // Invalidate homepage data to sync vote counts immediately
-      queryClient.invalidateQueries({ queryKey: ['top-active-rankings-for-sections'] });
-      queryClient.invalidateQueries({ queryKey: ['ranking-vote-counts', variables.rankingId] });
-
-      // The real-time subscription will handle the actual data update
-      // No need to manually invalidate queries here for ranking data
     }
   });
 

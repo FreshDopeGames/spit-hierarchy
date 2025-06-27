@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,7 +6,6 @@ import CommentBubble from "@/components/CommentBubble";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
 import { useAuth } from "@/hooks/useAuth";
-import { toast } from "sonner";
 
 interface Rapper {
   rank: number;
@@ -35,15 +33,6 @@ interface RankingDetailViewProps {
 
 const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
   const { user } = useAuth();
-
-  const handleVote = (rapperName: string) => {
-    if (!user) {
-      toast.error("Please sign in to vote for rappers.");
-      return;
-    }
-
-    toast.success(`Your vote for ${rapperName} has been recorded.`);
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
@@ -156,8 +145,11 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
                       
                       <div className="flex items-center gap-3">
                         <VoteButton
-                          onVote={() => handleVote(rapper.name)}
+                          onVote={() => {}} // Remove handleVote call - VoteButton handles everything
                           disabled={!user}
+                          rankingId={ranking.id}
+                          rapperId={rapper.rank.toString()} // This should be actual rapper ID in real implementation
+                          showWeightedVoting={true}
                         />
                         <Button
                           variant="ghost"

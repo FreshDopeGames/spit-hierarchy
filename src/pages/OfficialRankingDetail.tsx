@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -59,16 +58,6 @@ const OfficialRankingDetail = () => {
   const { data: rankingItems = [], isLoading: itemsLoading } = useRankingData(ranking?.id || "");
   const hotThreshold = useHotThreshold(rankingItems);
 
-  const handleVote = (rapperName: string) => {
-    if (!user) {
-      toast.error("Please sign in to vote for rappers.");
-      return;
-    }
-
-    // This is now handled by the weighted voting system in VoteButton
-    toast.success(`Your vote for ${rapperName} has been recorded.`);
-  };
-
   const handleLoadMore = () => {
     setDisplayCount(prev => prev + ITEMS_PER_PAGE);
   };
@@ -106,7 +95,7 @@ const OfficialRankingDetail = () => {
 
         <OfficialRankingItems
           items={rankingItems}
-          onVote={handleVote}
+          onVote={() => {}} // Remove handleVote call - VoteButton handles everything
           userLoggedIn={!!user}
           hotThreshold={hotThreshold}
           displayCount={displayCount}
