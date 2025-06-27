@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
 import { RankingFormData } from "./rankingFormSchema";
 
@@ -24,7 +23,6 @@ export const useRankingSubmission = ({
   selectedTags
 }: UseRankingSubmissionProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { toast } = useToast();
 
   const onSubmit = async (values: RankingFormData) => {
     setIsLoading(true);
@@ -47,10 +45,7 @@ export const useRankingSubmission = ({
         // Update tag assignments
         await updateTagAssignments(ranking.id, selectedTags);
 
-        toast({
-          title: "Success",
-          description: "Ranking updated successfully"
-        });
+        toast.success("Ranking updated successfully");
       } else {
         // Create new ranking
         const insertData = {
@@ -80,18 +75,11 @@ export const useRankingSubmission = ({
 
           if (populateError) {
             console.error("Error populating ranking with rappers:", populateError);
-            toast({
-              title: "Warning",
-              description: "Ranking created but failed to populate with rappers. You can add them manually.",
-              variant: "destructive"
-            });
+            toast.error("Ranking created but failed to populate with rappers. You can add them manually.");
           }
         }
 
-        toast({
-          title: "Success",
-          description: "Ranking created successfully and populated with all rappers"
-        });
+        toast.success("Ranking created successfully and populated with all rappers");
       }
 
       setOpen(false);
@@ -99,11 +87,7 @@ export const useRankingSubmission = ({
       onRankingCreated();
     } catch (error) {
       console.error("Error saving ranking:", error);
-      toast({
-        title: "Error",
-        description: "Failed to save ranking",
-        variant: "destructive"
-      });
+      toast.error("Failed to save ranking");
     } finally {
       setIsLoading(false);
     }

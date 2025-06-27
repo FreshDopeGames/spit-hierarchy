@@ -1,11 +1,9 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { AdPlacement, PageTemplate, FormData } from "./types";
 
 export const useAdPlacements = () => {
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: placements, isLoading } = useQuery({
@@ -47,17 +45,10 @@ export const useAdPlacements = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ad-placements"] });
-      toast({
-        title: "Success",
-        description: "Ad placement created successfully",
-      });
+      toast.success("Ad placement created successfully");
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to create ad placement",
-        variant: "destructive",
-      });
+      toast.error("Failed to create ad placement");
     }
   });
 
@@ -75,17 +66,10 @@ export const useAdPlacements = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ad-placements"] });
-      toast({
-        title: "Success",
-        description: "Ad placement updated successfully",
-      });
+      toast.success("Ad placement updated successfully");
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to update ad placement",
-        variant: "destructive",
-      });
+      toast.error("Failed to update ad placement");
     }
   });
 
@@ -100,17 +84,10 @@ export const useAdPlacements = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["ad-placements"] });
-      toast({
-        title: "Success",
-        description: "Ad placement deleted successfully",
-      });
+      toast.success("Ad placement deleted successfully");
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to delete ad placement",
-        variant: "destructive",
-      });
+      toast.error("Failed to delete ad placement");
     }
   });
 

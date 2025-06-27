@@ -4,28 +4,20 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Database, Loader2 } from "lucide-react";
 import { generateTestVotes, generateTestUserRankings } from "@/utils/generateTestData";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 const TestDataGenerator = () => {
   const [isGeneratingVotes, setIsGeneratingVotes] = useState(false);
   const [isGeneratingRankings, setIsGeneratingRankings] = useState(false);
-  const { toast } = useToast();
 
   const handleGenerateVotes = async () => {
     setIsGeneratingVotes(true);
     try {
       const inserted = await generateTestVotes(2000);
-      toast({
-        title: "Test votes generated!",
-        description: `Successfully created ${inserted} test votes.`,
-      });
+      toast.success(`Successfully created ${inserted} test votes.`);
     } catch (error) {
       console.error("Vote generation error:", error);
-      toast({
-        title: "Error generating votes",
-        description: error instanceof Error ? error.message : "Failed to generate test votes.",
-        variant: "destructive",
-      });
+      toast.error(error instanceof Error ? error.message : "Failed to generate test votes.");
     } finally {
       setIsGeneratingVotes(false);
     }
@@ -35,17 +27,10 @@ const TestDataGenerator = () => {
     setIsGeneratingRankings(true);
     try {
       const created = await generateTestUserRankings(30);
-      toast({
-        title: "Test rankings generated!",
-        description: `Successfully created ${created} test user rankings.`,
-      });
+      toast.success(`Successfully created ${created} test user rankings.`);
     } catch (error) {
       console.error("Rankings generation error:", error);
-      toast({
-        title: "Error generating rankings",
-        description: error instanceof Error ? error.message : "Failed to generate test rankings.",
-        variant: "destructive",
-      });
+      toast.error(error instanceof Error ? error.message : "Failed to generate test rankings.");
     } finally {
       setIsGeneratingRankings(false);
     }

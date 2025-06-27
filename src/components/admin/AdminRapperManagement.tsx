@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +8,7 @@ import { Tables } from "@/integrations/supabase/types";
 import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
 import AdminRapperPagination from "./AdminRapperPagination";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 type Rapper = Tables<"rappers">;
 
@@ -22,7 +21,6 @@ const AdminRapperManagement = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   // Debounce search query
   useEffect(() => {
@@ -91,17 +89,10 @@ const AdminRapperManagement = () => {
       queryClient.invalidateQueries({ queryKey: ["admin-rappers-count"] });
       queryClient.invalidateQueries({ queryKey: ["top-rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
-      toast({
-        title: "Success",
-        description: "Rapper deleted successfully",
-      });
+      toast.success("Rapper deleted successfully");
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to delete rapper",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to delete rapper");
     }
   });
 

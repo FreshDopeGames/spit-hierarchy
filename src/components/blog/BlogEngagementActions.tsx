@@ -1,8 +1,7 @@
-
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Heart, Share2, MessageCircle } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface BlogEngagementActionsProps {
   likes: number;
@@ -23,22 +22,13 @@ const BlogEngagementActions = ({
   onCommentsClick,
   isLikeLoading = false
 }: BlogEngagementActionsProps) => {
-  const { toast } = useToast();
-
   const handleShare = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
-      toast({
-        title: "Link copied!",
-        description: "The article link has been copied to your clipboard.",
-      });
+      toast.success("The article link has been copied to your clipboard.");
     } catch (error) {
       console.error('Failed to copy link:', error);
-      toast({
-        title: "Copy failed",
-        description: "Unable to copy link. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Unable to copy link. Please try again.");
     }
   };
 

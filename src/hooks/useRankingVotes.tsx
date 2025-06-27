@@ -2,14 +2,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useMemberStatus } from '@/hooks/useMemberStatus';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { RankingItemWithDelta } from './useRankingData';
 import { useDailyVoteStatus } from '@/hooks/useDailyVoteStatus';
 
 export const useRankingVotes = () => {
   const { user } = useAuth();
   const { currentStatus, getVoteMultiplier } = useMemberStatus();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const submitRankingVote = useMutation({
@@ -115,26 +114,16 @@ export const useRankingVotes = () => {
       }
       
       console.error('Error submitting ranking vote:', error);
-      toast({
-        title: "Error",
-        description: "Failed to submit vote. Please try again.",
-        variant: "destructive",
-      });
+      toast.error("Failed to submit vote. Please try again.");
     },
     onSuccess: (_, variables, context) => {
       const voteWeight = getVoteMultiplier();
       
       // Show different messages based on whether this was a new vote or update
       if (context?.alreadyVoted) {
-        toast({
-          title: "Vote counted!",
-          description: `Your ${currentStatus} status vote has been counted!`,
-        });
+        toast.success(`Your ${currentStatus} status vote has been counted!`);
       } else {
-        toast({
-          title: "Vote submitted!",
-          description: `Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`,
-        });
+        toast.success(`Your ${currentStatus} status vote counts as ${voteWeight} ${voteWeight === 1 ? 'vote' : 'votes'}!`);
       }
 
       // Invalidate member stats and achievements to check for updates

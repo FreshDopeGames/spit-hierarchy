@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Tables, Database } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -21,7 +20,6 @@ const styleLabels: Record<ImageStyle, string> = {
 export const useImageUpload = (rappers?: Rapper[]) => {
   const [uploadingImages, setUploadingImages] = useState<Set<string>>(new Set());
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   const uploadImageMutation = useMutation({
     mutationFn: async ({ rapperId, style, file }: { rapperId: string; style: ImageStyle; file: File }) => {
@@ -76,18 +74,11 @@ export const useImageUpload = (rappers?: Rapper[]) => {
         file
       });
 
-      toast({
-        title: "Success",
-        description: `${styleLabels[style]} image uploaded for ${rapper.name}`,
-      });
+      toast.success(`${styleLabels[style]} image uploaded for ${rapper.name}`);
 
     } catch (error: any) {
       console.error('Upload error:', error);
-      toast({
-        title: "Upload Failed",
-        description: error.message || "Failed to upload image",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to upload image");
     } finally {
       setUploadingImages(prev => {
         const newSet = new Set(prev);
@@ -103,21 +94,13 @@ export const useImageUpload = (rappers?: Rapper[]) => {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid File",
-        description: "Please select an image file",
-        variant: "destructive",
-      });
+      toast.error("Please select an image file");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File Too Large",
-        description: "Please select an image smaller than 5MB",
-        variant: "destructive",
-      });
+      toast.error("Please select an image smaller than 5MB");
       return;
     }
 

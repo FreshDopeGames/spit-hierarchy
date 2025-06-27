@@ -1,10 +1,9 @@
-
 import { useState, useEffect } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Tables } from "@/integrations/supabase/types";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { RapperFormData } from "../types/RapperFormTypes";
 import { RapperFormFields } from "./RapperFormFields";
 
@@ -17,7 +16,6 @@ interface RapperFormProps {
 
 export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
   const queryClient = useQueryClient();
-  const { toast } = useToast();
   
   const [formData, setFormData] = useState<RapperFormData>({
     name: "",
@@ -100,29 +98,18 @@ export const RapperForm = ({ rapper, onClose }: RapperFormProps) => {
       queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
       queryClient.invalidateQueries({ queryKey: ["top-rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
-      toast({
-        title: "Success",
-        description: `Rapper ${rapper ? "updated" : "created"} successfully`,
-      });
+      toast.success(`Rapper ${rapper ? "updated" : "created"} successfully`);
       onClose();
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || `Failed to ${rapper ? "update" : "create"} rapper`,
-        variant: "destructive",
-      });
+      toast.error(error.message || `Failed to ${rapper ? "update" : "create"} rapper`);
     }
   });
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name.trim()) {
-      toast({
-        title: "Error",
-        description: "Rapper name is required",
-        variant: "destructive",
-      });
+      toast.error("Rapper name is required");
       return;
     }
     saveRapperMutation.mutate(formData);

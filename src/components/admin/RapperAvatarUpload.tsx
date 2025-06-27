@@ -1,8 +1,7 @@
-
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, ImageIcon, Loader2 } from "lucide-react";
@@ -17,7 +16,6 @@ interface RapperAvatarUploadProps {
 const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
   const [uploading, setUploading] = useState(false);
   const queryClient = useQueryClient();
-  const { toast } = useToast();
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
@@ -87,18 +85,11 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       
-      toast({
-        title: "Success",
-        description: `Avatar uploaded for ${rapper.name}`,
-      });
+      toast.success(`Avatar uploaded for ${rapper.name}`);
     },
     onError: (error: any) => {
       console.error('Upload error:', error);
-      toast({
-        title: "Upload Failed",
-        description: error.message || "Failed to upload avatar",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to upload avatar");
     }
   });
 
@@ -108,21 +99,13 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      toast({
-        title: "Invalid File",
-        description: "Please select an image file",
-        variant: "destructive",
-      });
+      toast.error("Please select an image file");
       return;
     }
 
     // Validate file size (max 5MB)
     if (file.size > 5 * 1024 * 1024) {
-      toast({
-        title: "File Too Large",
-        description: "Please select an image smaller than 5MB",
-        variant: "destructive",
-      });
+      toast.error("Please select an image smaller than 5MB");
       return;
     }
 
@@ -182,9 +165,6 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
                 </span>
               </Button>
             </label>
-            <p className="text-xs text-rap-smoke text-center">
-              Max 5MB. Recommended: 1:1 aspect ratio (square images)
-            </p>
           </div>
         </div>
       </CardContent>

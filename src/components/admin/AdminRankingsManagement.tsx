@@ -1,18 +1,16 @@
-
 import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Plus, Trophy } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import AdminRankingsTable from "./AdminRankingsTable";
 import AdminRankingDialog from "./AdminRankingDialog";
 
 const AdminRankingsManagement = () => {
   const [editingRanking, setEditingRanking] = useState(null);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: rankings, isLoading } = useQuery({
@@ -50,17 +48,10 @@ const AdminRankingsManagement = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["admin-rankings"] });
-      toast({
-        title: "Success",
-        description: "Ranking deleted successfully"
-      });
+      toast.success("Ranking deleted successfully");
     },
     onError: (error) => {
-      toast({
-        title: "Error", 
-        description: "Failed to delete ranking",
-        variant: "destructive"
-      });
+      toast.error("Failed to delete ranking");
       console.error("Error deleting ranking:", error);
     }
   });
