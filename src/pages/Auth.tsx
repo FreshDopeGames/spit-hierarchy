@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import AuthHeader from "@/components/auth/AuthHeader";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
@@ -18,7 +18,6 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const { toast } = useToast();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -52,11 +51,7 @@ const Auth = () => {
 
       // The redirect will handle the rest
     } catch (error: any) {
-      toast({
-        title: "Authentication Error",
-        description: error.message || `An error occurred during ${provider} authentication.`,
-        variant: "destructive"
-      });
+      toast.error(error.message || `An error occurred during ${provider} authentication.`);
     } finally {
       setSocialLoading(null);
     }
@@ -74,10 +69,7 @@ const Auth = () => {
         });
         if (error) throw error;
         if (data.user) {
-          toast({
-            title: "Welcome back!",
-            description: "You've successfully logged in."
-          });
+          toast.success("You've successfully logged in.");
           window.location.href = '/';
         }
       } else {
@@ -93,19 +85,12 @@ const Auth = () => {
         });
         if (error) throw error;
         if (data.user) {
-          toast({
-            title: "Account created!",
-            description: "Welcome to Spit Hierarchy! You can now start ranking rap legends"
-          });
+          toast.success("Welcome to Spit Hierarchy! You can now start ranking rap legends");
           window.location.href = '/';
         }
       }
     } catch (error: any) {
-      toast({
-        title: "Authentication Error",
-        description: error.message || "An error occurred during authentication.",
-        variant: "destructive"
-      });
+      toast.error(error.message || "An error occurred during authentication.");
     } finally {
       setLoading(false);
     }

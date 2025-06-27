@@ -1,15 +1,13 @@
-
 import { useState, useEffect } from "react";
 import { useOptimizedQuery } from "./useOptimizedQuery";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useSecureRateLimiting } from "@/hooks/useSecureRateLimiting";
 
 export const useBlogPostLikes = (postId: string) => {
   const { user, isAuthenticated } = useSecureAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   
   // Rate limiting for likes
@@ -53,11 +51,7 @@ export const useBlogPostLikes = (postId: string) => {
   const toggleLike = useMutation({
     mutationFn: async () => {
       if (!isAuthenticated) {
-        toast({
-          title: "Login required",
-          description: "Please login to like this post.",
-          variant: "destructive",
-        });
+        toast.error("Please login to like this post.");
         return;
       }
 
@@ -90,11 +84,7 @@ export const useBlogPostLikes = (postId: string) => {
     },
     onError: (error: any) => {
       if (!error.message?.includes('Rate limit')) {
-        toast({
-          title: "Error",
-          description: "Failed to update like status. Please try again.",
-          variant: "destructive",
-        });
+        toast.error("Failed to update like status. Please try again.");
       }
     }
   });

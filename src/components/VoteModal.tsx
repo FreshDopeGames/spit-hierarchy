@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +8,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
 import RapperInfo from "./vote/RapperInfo";
 import CategorySelector from "./vote/CategorySelector";
@@ -27,7 +26,6 @@ interface VoteModalProps {
 
 const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps) => {
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [rating, setRating] = useState([7]);
   const [categoryId, setCategoryId] = useState(selectedCategory);
@@ -98,31 +96,20 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
       }
     },
     onSuccess: () => {
-      toast({
-        title: "Vote Submitted!",
-        description: `Your rating for ${rapper.name} has been ${existingVote ? 'updated' : 'recorded'}.`,
-      });
+      toast.success(`Your rating for ${rapper.name} has been ${existingVote ? 'updated' : 'recorded'}.`);
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       queryClient.invalidateQueries({ queryKey: ["user-vote"] });
       queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings"] });
       onClose();
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to submit vote",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to submit vote");
     }
   });
 
   const handleSubmit = () => {
     if (!categoryId) {
-      toast({
-        title: "Select Category",
-        description: "Please select a voting category first.",
-        variant: "destructive",
-      });
+      toast.error("Please select a voting category first.");
       return;
     }
 

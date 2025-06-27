@@ -2,12 +2,11 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { useRateLimiting } from "./useRateLimiting";
 
 export const useCreateUserRanking = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   
   const { checkRateLimit } = useRateLimiting({
@@ -52,19 +51,12 @@ export const useCreateUserRanking = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["optimized-user-rankings"] });
       queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
-      toast({
-        title: "Success",
-        description: "Ranking created successfully!",
-      });
+      toast.success("Ranking created successfully!");
     },
     onError: (error: any) => {
       console.error("Error creating ranking:", error);
       if (!error.message.includes("Rate limit")) {
-        toast({
-          title: "Error",
-          description: error.message || "Failed to create ranking",
-          variant: "destructive",
-        });
+        toast.error(error.message || "Failed to create ranking");
       }
     },
   });
@@ -72,7 +64,6 @@ export const useCreateUserRanking = () => {
 
 export const useUpdateUserRanking = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   
   const { checkRateLimit } = useRateLimiting({
@@ -115,19 +106,12 @@ export const useUpdateUserRanking = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["optimized-user-rankings"] });
       queryClient.invalidateQueries({ queryKey: ["user-rankings"] });
-      toast({
-        title: "Success",
-        description: "Ranking updated successfully!",
-      });
+      toast.success("Ranking updated successfully!");
     },
     onError: (error: any) => {
       console.error("Error updating ranking:", error);
       if (!error.message.includes("Rate limit")) {
-        toast({
-          title: "Error",
-          description: error.message || "Failed to update ranking",
-          variant: "destructive",
-        });
+        toast.error(error.message || "Failed to update ranking");
       }
     },
   });

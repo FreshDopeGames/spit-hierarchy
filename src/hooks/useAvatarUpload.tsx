@@ -1,7 +1,7 @@
 
 import { useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { generateAvatarSizes } from "@/utils/imageUtils";
 import { validateImageFile, validateImageContent } from "@/utils/contentModeration";
 
@@ -10,7 +10,6 @@ export const useAvatarUpload = (userId: string, onAvatarUpdate: (url: string) =>
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [showCropper, setShowCropper] = useState(false);
   const [moderationError, setModerationError] = useState<string | null>(null);
-  const { toast } = useToast();
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files || event.target.files.length === 0) {
@@ -101,18 +100,11 @@ export const useAvatarUpload = (userId: string, onAvatarUpdate: (url: string) =>
       }
 
       onAvatarUpdate(avatarBasePath);
-      toast({
-        title: "Avatar updated successfully!",
-        description: "Your profile picture has been updated.",
-      });
+      toast.success("Your profile picture has been updated.");
 
     } catch (error) {
       console.error('Avatar upload error:', error);
-      toast({
-        title: "Error uploading avatar",
-        description: error instanceof Error ? error.message : "An error occurred",
-        variant: "destructive",
-      });
+      toast.error(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setUploading(false);
       setSelectedFile(null);

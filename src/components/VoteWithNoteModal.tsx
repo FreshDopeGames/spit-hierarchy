@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { ArrowUp } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface VoteWithNoteModalProps {
   isOpen: boolean;
@@ -26,7 +26,6 @@ interface VoteWithNoteModalProps {
 const VoteWithNoteModal = ({ isOpen, onClose, onSubmit, rapperId, rankingId }: VoteWithNoteModalProps) => {
   const [note, setNote] = useState("");
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const saveVoteNoteMutation = useMutation({
@@ -49,17 +48,10 @@ const VoteWithNoteModal = ({ isOpen, onClose, onSubmit, rapperId, rankingId }: V
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["vote-notes"] });
-      toast({
-        title: "Vote note saved!",
-        description: "Your vote and note have been recorded.",
-      });
+      toast.success("Your vote and note have been recorded.");
     },
     onError: (error: any) => {
-      toast({
-        title: "Error",
-        description: error.message || "Failed to save vote note",
-        variant: "destructive",
-      });
+      toast.error(error.message || "Failed to save vote note");
     }
   });
 

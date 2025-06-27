@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { validateContent } from "@/utils/contentModeration";
 
 interface Comment {
@@ -32,7 +32,6 @@ interface UseCommentsProps {
 
 export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState("");
 
@@ -109,17 +108,10 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["comments", contentType, contentId] });
       setNewComment("");
-      toast({
-        title: "Comment posted!",
-        description: "Your comment has been added successfully.",
-      });
+      toast.success("Your comment has been added successfully.");
     },
     onError: (error) => {
-      toast({
-        title: "Error posting comment",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message);
     }
   });
 
@@ -158,11 +150,7 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
       queryClient.invalidateQueries({ queryKey: ["comments", contentType, contentId] });
     },
     onError: (error) => {
-      toast({
-        title: "Error updating like",
-        description: error.message,
-        variant: "destructive",
-      });
+      toast.error(error.message);
     }
   });
 

@@ -8,7 +8,7 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import OfficialRankingHeader from "@/components/rankings/OfficialRankingHeader";
 import OfficialRankingItems from "@/components/rankings/OfficialRankingItems";
 import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { useRankingData, useHotThreshold } from "@/hooks/useRankingData";
 
 type OfficialRanking = Tables<"official_rankings">;
@@ -18,7 +18,6 @@ const ITEMS_PER_PAGE = 20;
 const OfficialRankingDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const { user } = useAuth();
-  const { toast } = useToast();
   const [ranking, setRanking] = useState<OfficialRanking | null>(null);
   const [loading, setLoading] = useState(true);
   const [displayCount, setDisplayCount] = useState(ITEMS_PER_PAGE);
@@ -51,11 +50,7 @@ const OfficialRankingDetail = () => {
       setRanking(rankingData);
     } catch (error) {
       console.error("Error fetching ranking data:", error);
-      toast({
-        title: "Error",
-        description: "Failed to load ranking data.",
-        variant: "destructive",
-      });
+      toast.error("Failed to load ranking data.");
     } finally {
       setLoading(false);
     }
@@ -66,19 +61,12 @@ const OfficialRankingDetail = () => {
 
   const handleVote = (rapperName: string) => {
     if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to vote for rappers.",
-        variant: "destructive",
-      });
+      toast.error("Please sign in to vote for rappers.");
       return;
     }
 
     // This is now handled by the weighted voting system in VoteButton
-    toast({
-      title: "Vote submitted!",
-      description: `Your vote for ${rapperName} has been recorded.`,
-    });
+    toast.success(`Your vote for ${rapperName} has been recorded.`);
   };
 
   const handleLoadMore = () => {

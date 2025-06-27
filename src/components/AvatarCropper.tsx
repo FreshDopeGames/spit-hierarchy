@@ -3,7 +3,7 @@ import React, { useState, useRef, useCallback } from 'react';
 import ReactCrop, { Crop, PixelCrop, centerCrop, makeAspectCrop } from 'react-image-crop';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import 'react-image-crop/dist/ReactCrop.css';
 
 interface AvatarCropperProps {
@@ -19,7 +19,6 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
   const [imageSrc, setImageSrc] = useState<string>('');
   const imgRef = useRef<HTMLImageElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const { toast } = useToast();
 
   React.useEffect(() => {
     if (imageFile) {
@@ -51,11 +50,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
 
   const getCroppedImg = useCallback(async () => {
     if (!completedCrop || !imgRef.current || !canvasRef.current) {
-      toast({
-        title: "Error",
-        description: "Please select a crop area",
-        variant: "destructive",
-      });
+      toast.error("Please select a crop area");
       return;
     }
 
@@ -64,11 +59,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
     const ctx = canvas.getContext('2d');
 
     if (!ctx) {
-      toast({
-        title: "Error",
-        description: "Unable to create canvas context",
-        variant: "destructive",
-      });
+      toast.error("Unable to create canvas context");
       return;
     }
 
@@ -99,7 +90,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
         resolve(blob);
       }, 'image/jpeg', 0.9);
     });
-  }, [completedCrop, toast]);
+  }, [completedCrop]);
 
   const handleCropComplete = async () => {
     try {
@@ -109,11 +100,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
         onClose();
       }
     } catch (error) {
-      toast({
-        title: "Error cropping image",
-        description: error instanceof Error ? error.message : "Failed to crop image",
-        variant: "destructive",
-      });
+      toast.error(error instanceof Error ? error.message : "Failed to crop image");
     }
   };
 

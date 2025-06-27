@@ -1,12 +1,10 @@
-
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 export const useUserTopRappers = () => {
   const { user } = useAuth();
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: topRappers, isLoading } = useQuery({
@@ -71,18 +69,11 @@ export const useUserTopRappers = () => {
       if (data?.rapper_id) {
         queryClient.invalidateQueries({ queryKey: ["rapper", data.rapper_id] });
       }
-      toast({
-        title: "Success",
-        description: "Top 5 updated successfully!",
-      });
+      toast.success("Top 5 updated successfully!");
     },
     onError: (error: any) => {
       console.error("Error updating top rapper:", error);
-      toast({
-        title: "Error",
-        description: "Failed to update your top 5",
-        variant: "destructive",
-      });
+      toast.error("Failed to update your top 5");
     },
   });
 
@@ -116,11 +107,7 @@ export const useUserTopRappers = () => {
     },
     onError: (error: any) => {
       console.error("Error removing top rapper:", error);
-      toast({
-        title: "Error",
-        description: "Failed to remove rapper",
-        variant: "destructive",
-      });
+      toast.error("Failed to remove rapper");
     },
   });
 
