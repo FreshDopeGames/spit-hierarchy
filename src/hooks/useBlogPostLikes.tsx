@@ -1,17 +1,27 @@
 
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useOptimizedQuery } from "./useOptimizedQuery";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { useToast } from "@/hooks/use-toast";
+import { useSecureRateLimiting } from "@/hooks/useSecureRateLimiting";
 
 export const useBlogPostLikes = (postId: string) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useSecureAuth();
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  
+  // Rate limiting for likes
+  const { checkRateLimit } = useSecureRateLimiting({
+    actionType: 'blog_like',
+    maxRequests: 10,
+    windowMinutes: 5,
+    userSpecific: true
+  });
 
-  // Get like count and user's like status
-  const { data: likeData } = useQuery({
+  // Get like count and user's like status with optimized query
+  const { data: likeData } = useOptimizedQuery({
     queryKey: ['blog-post-likes', postId],
     queryFn: async () => {
       const [likesResult, userLikeResult] = await Promise.all([
@@ -20,11 +30,11 @@ export const useBlogPostLikes = (postId: string) => {
           .select('likes_count')
           .eq('id', postId)
           .single(),
-        user ? supabase
+        isAuthenticated ? supabase
           .from('blog_post_likes')
           .select('id')
           .eq('post_id', postId)
-          .eq('user_id', user.id)
+          .eq('user_id', user!.id)
           .maybeSingle() : Promise.resolve({ data: null, error: null })
       ]);
 
@@ -35,13 +45,14 @@ export const useBlogPostLikes = (postId: string) => {
         isLiked: !!userLikeResult.data
       };
     },
-    enabled: !!postId
+    enabled: !!postId,
+    priority: 'normal',
   });
 
-  // Toggle like mutation
+  // Toggle like mutation with rate limiting
   const toggleLike = useMutation({
     mutationFn: async () => {
-      if (!user) {
+      if (!isAuthenticated) {
         toast({
           title: "Login required",
           description: "Please login to like this post.",
@@ -50,13 +61,16 @@ export const useBlogPostLikes = (postId: string) => {
         return;
       }
 
+      // Check rate limit
+      await checkRateLimit();
+
       if (likeData?.isLiked) {
         // Unlike
         const { error } = await supabase
           .from('blog_post_likes')
           .delete()
           .eq('post_id', postId)
-          .eq('user_id', user.id);
+          .eq('user_id', user!.id);
         
         if (error) throw error;
       } else {
@@ -65,7 +79,7 @@ export const useBlogPostLikes = (postId: string) => {
           .from('blog_post_likes')
           .insert({
             post_id: postId,
-            user_id: user.id
+            user_id: user!.id
           });
         
         if (error) throw error;
@@ -74,13 +88,14 @@ export const useBlogPostLikes = (postId: string) => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['blog-post-likes', postId] });
     },
-    onError: (error) => {
-      console.error('Error toggling like:', error);
-      toast({
-        title: "Error",
-        description: "Failed to update like status. Please try again.",
-        variant: "destructive",
-      });
+    onError: (error: any) => {
+      if (!error.message?.includes('Rate limit')) {
+        toast({
+          title: "Error",
+          description: "Failed to update like status. Please try again.",
+          variant: "destructive",
+        });
+      }
     }
   });
 

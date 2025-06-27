@@ -2,20 +2,21 @@
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import UserProfileDropdown from "./UserProfileDropdown";
 import NavigationSidebar from "./NavigationSidebar";
+import OptimizedImage from "./ui/OptimizedImage";
 
 interface HeaderNavigationProps {
   isScrolled: boolean;
 }
 
 const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useSecureAuth();
 
-  // Check if user has admin role
+  // Check if user has admin role with optimized query
   const { data: userRoles } = useQuery({
     queryKey: ['user-roles', user?.id],
     queryFn: async () => {
@@ -27,10 +28,11 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id
+    enabled: !!user?.id,
+    staleTime: 5 * 60 * 1000, // 5 minutes cache for roles
   });
 
-  // Get user profile for avatar
+  // Get user profile for avatar with optimized query
   const { data: userProfile } = useQuery({
     queryKey: ['user-profile', user?.id],
     queryFn: async () => {
@@ -43,7 +45,8 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
       if (error) throw error;
       return data;
     },
-    enabled: !!user?.id
+    enabled: !!user?.id,
+    staleTime: 10 * 60 * 1000, // 10 minutes cache for profile data
   });
 
   const isAdmin = userRoles?.some(role => role.role === 'admin');
@@ -58,16 +61,19 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
         
         <div className="flex items-center justify-center flex-1">
           <Link to="/" className="flex items-center justify-center">
-            <img 
+            <OptimizedImage 
               src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
               alt="Spit Hierarchy - The Ultimate Rap Rankings Platform" 
-              className={`object-contain transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'}`} 
+              className={`object-contain transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'}`}
+              priority={true}
+              width={isScrolled ? 48 : 64}
+              height={isScrolled ? 48 : 64}
             />
           </Link>
         </div>
         
         <div className="flex items-center space-x-2 md:space-x-4">
-          {user ? (
+          {isAuthenticated ? (
             <UserProfileDropdown 
               userProfile={userProfile} 
               isAdmin={isAdmin} 

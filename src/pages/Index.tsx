@@ -1,5 +1,6 @@
+
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useOptimizedQuery } from "@/hooks/useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdaptivePolling } from "@/hooks/useAdaptivePolling";
 import HeaderNavigation from "@/components/HeaderNavigation";
@@ -13,12 +14,13 @@ import GuestCallToAction from "@/components/GuestCallToAction";
 import AdUnit from "@/components/AdUnit";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import ErrorBoundary from "@/components/ErrorBoundary";
 
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
-    baseInterval: 15000, // Reduced from 30s to 15s for more responsive vote data
-    maxInterval: 120000, // Reduced from 5 minutes to 2 minutes
+    baseInterval: 15000,
+    maxInterval: 120000,
     enabled: true
   });
 
@@ -27,12 +29,12 @@ const Index = () => {
       const scrollTop = window.scrollY;
       setIsScrolled(scrollTop > 100);
     };
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   // Fetch the top 3 most active official rankings with optimized polling
-  const { data: topActiveRankings = [], isLoading } = useQuery({
+  const { data: topActiveRankings = [], isLoading } = useOptimizedQuery({
     queryKey: ["top-active-rankings-for-sections"],
     queryFn: async () => {
       // Get the top 3 most active official rankings
@@ -58,7 +60,6 @@ const Index = () => {
             .eq("ranking_id", ranking.id);
 
           if (itemsError) {
-            console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
             return { ...ranking, items: [], rappers: [] };
           }
 
@@ -69,7 +70,6 @@ const Index = () => {
             .eq("ranking_id", ranking.id);
 
           if (voteError) {
-            console.error(`Error fetching votes for ranking ${ranking.id}:`, voteError);
             return { ...ranking, items: itemsData || [], rappers: [] };
           }
 
@@ -101,73 +101,75 @@ const Index = () => {
     },
     refetchInterval,
     refetchIntervalInBackground,
-    staleTime: 2 * 60 * 1000, // Reduced from 15 minutes to 2 minutes for vote data
-    refetchOnWindowFocus: true, // Enable refetch on window focus for vote data
+    priority: 'high',
+    enableBackground: true,
   });
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
-      {/* Sticky Header */}
-      <HeaderNavigation isScrolled={isScrolled} />
+    <ErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
+        {/* Sticky Header */}
+        <HeaderNavigation isScrolled={isScrolled} />
 
-      {/* Main Content with increased top padding to account for fixed header */}
-      <main className="pt-20 sm:pt-24 w-full overflow-x-hidden">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
-          {/* Hero Section */}
-          <HeroSection />
+        {/* Main Content with increased top padding to account for fixed header */}
+        <main className="pt-20 sm:pt-24 w-full overflow-x-hidden">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+            {/* Hero Section */}
+            <HeroSection />
 
-          {/* Ad placement after hero */}
-          <AdUnit placement="hero-bottom" pageRoute="/" />
+            {/* Ad placement after hero */}
+            <AdUnit placement="hero-bottom" pageRoute="/" />
 
-          {/* Featured Blog Posts Carousel */}
-          <BlogCarousel />
+            {/* Featured Blog Posts Carousel */}
+            <BlogCarousel />
 
-          {/* Ad placement between sections */}
-          <AdUnit placement="between-sections" pageRoute="/" />
+            {/* Ad placement between sections */}
+            <AdUnit placement="between-sections" pageRoute="/" />
 
-          {/* Rankings Section with Prominent Header */}
-          <RankingsSectionHeader />
+            {/* Rankings Section with Prominent Header */}
+            <RankingsSectionHeader />
 
-          {/* Dynamic Ranking Sections with real-time vote data */}
-          {!isLoading && topActiveRankings.length > 0 && (
-            <>
-              {topActiveRankings.map((ranking, index) => (
-                <TopRappersGrid 
-                  key={ranking.id}
-                  title={ranking.title}
-                  description={ranking.description}
-                  rappers={ranking.rappers}
-                  showViewAll={true}
-                  viewAllLink={`/rankings/official/${ranking.slug}`}
-                  rankingId={ranking.id}
-                />
-              ))}
-            </>
-          )}
+            {/* Dynamic Ranking Sections with real-time vote data */}
+            {!isLoading && topActiveRankings.length > 0 && (
+              <>
+                {topActiveRankings.map((ranking, index) => (
+                  <TopRappersGrid 
+                    key={ranking.id}
+                    title={ranking.title}
+                    description={ranking.description}
+                    rappers={ranking.rappers}
+                    showViewAll={true}
+                    viewAllLink={`/rankings/official/${ranking.slug}`}
+                    rankingId={ranking.id}
+                  />
+                ))}
+              </>
+            )}
 
-          {/* All Rankings Button */}
-          <div className="mb-12 text-center">
-            <Link to="/rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
-              <Button 
-                variant="outline" 
-                className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal font-mogra text-sm px-6 py-3"
-              >
-                All Rankings
-              </Button>
-            </Link>
+            {/* All Rankings Button */}
+            <div className="mb-12 text-center">
+              <Link to="/rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
+                <Button 
+                  variant="outline" 
+                  className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal font-mogra text-sm px-6 py-3"
+                >
+                  All Rankings
+                </Button>
+              </Link>
+            </div>
+
+            {/* Stats Overview */}
+            <StatsOverview />
+            
+            {/* View All Stats Button */}
+            <AnalyticsButton />
+
+            {/* Guest user call-to-action */}
+            <GuestCallToAction />
           </div>
-
-          {/* Stats Overview */}
-          <StatsOverview />
-          
-          {/* View All Stats Button */}
-          <AnalyticsButton />
-
-          {/* Guest user call-to-action */}
-          <GuestCallToAction />
-        </div>
-      </main>
-    </div>
+        </main>
+      </div>
+    </ErrorBoundary>
   );
 };
 
