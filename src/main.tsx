@@ -29,13 +29,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Enable React Query DevTools only in development
-if (import.meta.env.DEV) {
-  import('@tanstack/react-query-devtools').then(({ ReactQueryDevtools }) => {
-    // DevTools will be available in development
-  });
-}
-
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
