@@ -83,11 +83,11 @@ const RankingItemCard = ({
             </span>
           </div>
           
-          {item.rapper?.average_rating && (
+          {item.rapper?.total_votes && item.rapper.total_votes > 0 && (
             <div className="flex items-center gap-1">
-              <span className="text-rap-smoke">Rating:</span>
+              <span className="text-rap-smoke">Total votes:</span>
               <span className="text-rap-gold font-bold">
-                {parseFloat(item.rapper.average_rating.toString()).toFixed(1)}
+                {item.rapper.total_votes}
               </span>
             </div>
           )}
