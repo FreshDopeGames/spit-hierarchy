@@ -7,7 +7,7 @@ import CommentBubble from "@/components/CommentBubble";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
 import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 
 interface Rapper {
   rank: number;
@@ -35,22 +35,14 @@ interface RankingDetailViewProps {
 
 const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
   const { user } = useAuth();
-  const { toast } = useToast();
 
   const handleVote = (rapperName: string) => {
     if (!user) {
-      toast({
-        title: "Sign in required",
-        description: "Please sign in to vote for rappers.",
-        variant: "destructive",
-      });
+      toast.error("Please sign in to vote for rappers.");
       return;
     }
 
-    toast({
-      title: "Vote submitted!",
-      description: `Your vote for ${rapperName} has been recorded.`,
-    });
+    toast.success(`Your vote for ${rapperName} has been recorded.`);
   };
 
   return (

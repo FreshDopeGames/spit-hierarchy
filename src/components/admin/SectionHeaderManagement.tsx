@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -21,7 +21,6 @@ interface SectionHeader {
 }
 
 const SectionHeaderManagement = () => {
-  const { toast } = useToast();
   const queryClient = useQueryClient();
   const [editingHeader, setEditingHeader] = useState<SectionHeader | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -60,18 +59,11 @@ const SectionHeaderManagement = () => {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['section-headers'] });
       queryClient.invalidateQueries({ queryKey: ['section-header'] });
-      toast({
-        title: "Header Updated",
-        description: "Section header has been updated successfully."
-      });
+      toast.success("Section header has been updated successfully.");
       setEditingHeader(null);
     },
-    onError: (error) => {
-      toast({
-        title: "Error",
-        description: `Failed to update header: ${error.message}`,
-        variant: "destructive"
-      });
+    onError: (error: any) => {
+      toast.error(`Failed to update header: ${error.message}`);
     }
   });
 
@@ -116,16 +108,9 @@ const SectionHeaderManagement = () => {
 
       setFormData(prev => ({ ...prev, background_image_url: publicUrl }));
       
-      toast({
-        title: "Image Uploaded",
-        description: "Background image has been uploaded successfully."
-      });
+      toast.success("Background image has been uploaded successfully.");
     } catch (error: any) {
-      toast({
-        title: "Upload Error",
-        description: error.message,
-        variant: "destructive"
-      });
+      toast.error(error.message);
     } finally {
       setUploading(false);
     }

@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { X, Plus } from "lucide-react";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 
 interface RankingTag {
   id: string;
@@ -24,7 +24,6 @@ interface RankingTagSelectorProps {
 const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorProps) => {
   const [newTagName, setNewTagName] = useState("");
   const [isCreating, setIsCreating] = useState(false);
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: allTags = [] } = useQuery({
@@ -60,17 +59,10 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
       onTagsChange([...selectedTags, newTag.id]);
       setNewTagName("");
       setIsCreating(false);
-      toast({
-        title: "Success",
-        description: "Tag created successfully",
-      });
+      toast.success("Tag created successfully");
     },
     onError: (error) => {
-      toast({
-        title: "Error",
-        description: "Failed to create tag",
-        variant: "destructive",
-      });
+      toast.error("Failed to create tag");
       console.error("Error creating tag:", error);
     }
   });
