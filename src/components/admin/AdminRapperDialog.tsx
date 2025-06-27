@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -12,13 +13,20 @@ interface AdminRapperDialogProps {
   rapper?: Rapper | null;
   onSuccess: () => void;
 }
+
 const AdminRapperDialog = ({
   open,
   onOpenChange,
   rapper,
   onSuccess
 }: AdminRapperDialogProps) => {
-  return <Dialog open={open} onOpenChange={onOpenChange}>
+  const handleClose = () => {
+    onSuccess();
+    onOpenChange(false);
+  };
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-rap-carbon border border-rap-gold/30">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
@@ -26,7 +34,8 @@ const AdminRapperDialog = ({
           </DialogTitle>
         </DialogHeader>
         
-        {rapper ? <Tabs defaultValue="details" className="w-full">
+        {rapper ? (
+          <Tabs defaultValue="details" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6 bg-rap-carbon/50">
               <TabsTrigger value="details" className="text-rap-platinum data-[state=active]:text-rap-gold">
                 Rapper Details
@@ -37,20 +46,27 @@ const AdminRapperDialog = ({
             </TabsList>
             
             <TabsContent value="details">
-              <RapperForm rapper={rapper} onClose={() => {
-            onSuccess();
-            onOpenChange(false);
-          }} />
+              <RapperForm 
+                rapper={rapper} 
+                onSuccess={handleClose}
+                onCancel={() => onOpenChange(false)}
+              />
             </TabsContent>
             
             <TabsContent value="avatar">
               <RapperAvatarUpload rapper={rapper} />
             </TabsContent>
-          </Tabs> : <RapperForm rapper={null} onClose={() => {
-        onSuccess();
-        onOpenChange(false);
-      }} />}
+          </Tabs>
+        ) : (
+          <RapperForm 
+            rapper={null} 
+            onSuccess={handleClose}
+            onCancel={() => onOpenChange(false)}
+          />
+        )}
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
+
 export default AdminRapperDialog;
