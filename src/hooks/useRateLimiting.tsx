@@ -1,7 +1,7 @@
 
 import { useMutation } from "@tanstack/react-query";
-import { useAuth } from "./useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { useSecureAuth } from "./useSecureAuth";
+import { handleError, createAppError } from "@/utils/errorHandler";
 
 interface RateLimitOptions {
   actionType: string;
@@ -15,13 +15,12 @@ interface RateLimitRecord {
 }
 
 export const useRateLimiting = (options: RateLimitOptions) => {
-  const { user } = useAuth();
-  const { toast } = useToast();
+  const { user } = useSecureAuth();
 
   const checkRateLimit = useMutation({
     mutationFn: async () => {
       if (!user) {
-        throw new Error("User must be authenticated");
+        throw createAppError("User must be authenticated", "AUTH_REQUIRED");
       }
 
       const storageKey = `rate_limit_${user.id}_${options.actionType}`;
@@ -41,7 +40,10 @@ export const useRateLimiting = (options: RateLimitOptions) => {
 
       // Check if limit exceeded
       if (validRecords.length >= maxRequests) {
-        throw new Error("Rate limit exceeded. Please try again later.");
+        throw createAppError(
+          "Rate limit exceeded. Please try again later.", 
+          "RATE_LIMIT_EXCEEDED"
+        );
       }
 
       // Add new record
@@ -57,12 +59,8 @@ export const useRateLimiting = (options: RateLimitOptions) => {
 
       return true;
     },
-    onError: (error: any) => {
-      toast({
-        title: "Rate Limit Exceeded",
-        description: error.message || "You're making too many requests. Please slow down.",
-        variant: "destructive",
-      });
+    onError: (error) => {
+      handleError(error, 'rate limiting');
     }
   });
 

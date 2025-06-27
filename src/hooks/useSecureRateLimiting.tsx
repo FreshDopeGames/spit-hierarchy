@@ -1,7 +1,7 @@
 
 import { useMutation } from "@tanstack/react-query";
 import { useSecureAuth } from "./useSecureAuth";
-import { useToast } from "@/hooks/use-toast";
+import { handleError, createAppError } from "@/utils/errorHandler";
 
 interface RateLimitOptions {
   actionType: string;
@@ -21,7 +21,6 @@ const rateLimitCache = new Map<string, RateLimitRecord[]>();
 
 export const useSecureRateLimiting = (options: RateLimitOptions) => {
   const { user, isAuthenticated } = useSecureAuth();
-  const { toast } = useToast();
 
   const checkRateLimit = useMutation({
     mutationFn: async () => {
@@ -49,7 +48,10 @@ export const useSecureRateLimiting = (options: RateLimitOptions) => {
       // Check if limit exceeded
       if (validRecords.length >= maxRequests) {
         const resetTime = Math.ceil((windowMs - (now - Math.min(...validRecords.map(r => r.timestamp)))) / 1000 / 60);
-        throw new Error(`Rate limit exceeded. Try again in ${resetTime} minutes.`);
+        throw createAppError(
+          `Rate limit exceeded. Try again in ${resetTime} minutes.`,
+          "RATE_LIMIT_EXCEEDED"
+        );
       }
 
       // Add new record
@@ -67,12 +69,8 @@ export const useSecureRateLimiting = (options: RateLimitOptions) => {
 
       return true;
     },
-    onError: (error: any) => {
-      toast({
-        title: "Rate Limit Exceeded",
-        description: error.message || "Too many requests. Please slow down.",
-        variant: "destructive",
-      });
+    onError: (error) => {
+      handleError(error, 'secure rate limiting');
     }
   });
 

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useSecurityContext } from './useSecurityContext';
+import { handleError, createAppError } from '@/utils/errorHandler';
 import { toast } from 'sonner';
 
 interface VoteData {
@@ -21,10 +22,15 @@ export const useOptimizedVoting = () => {
       // Check rate limit before voting
       const canVote = await checkRateLimit('vote', 20, 3600); // 20 votes per hour
       if (!canVote) {
-        throw new Error('Rate limit exceeded. Please wait before voting again.');
+        throw createAppError('Rate limit exceeded. Please wait before voting again.', 'RATE_LIMIT_EXCEEDED');
       }
 
       setIsVoting(true);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        throw createAppError('You must be logged in to vote', 'AUTH_REQUIRED');
+      }
 
       const { data, error } = await supabase
         .from('votes')
@@ -32,7 +38,7 @@ export const useOptimizedVoting = () => {
           rapper_id: voteData.rapper_id,
           category_id: voteData.category_id,
           rating: voteData.rating,
-          user_id: (await supabase.auth.getUser()).data.user?.id
+          user_id: user.id
         })
         .select()
         .single();
@@ -48,9 +54,8 @@ export const useOptimizedVoting = () => {
       
       toast.success('Vote submitted successfully!');
     },
-    onError: (error: Error) => {
-      console.error('Voting error:', error);
-      toast.error(error.message || 'Failed to submit vote');
+    onError: (error) => {
+      handleError(error, 'voting');
     },
     onSettled: () => {
       setIsVoting(false);

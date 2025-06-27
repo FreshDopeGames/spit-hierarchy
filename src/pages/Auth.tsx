@@ -42,7 +42,7 @@ const Auth = () => {
   const handleSocialAuth = async (provider: 'google' | 'facebook' | 'twitter') => {
     setSocialLoading(provider);
     try {
-      const { data, error } = await supabase.auth.signInWithOAuth({
+      const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
           redirectTo: window.location.origin
@@ -52,7 +52,6 @@ const Auth = () => {
 
       // The redirect will handle the rest
     } catch (error: any) {
-      console.error(`${provider} auth error:`, error);
       toast({
         title: "Authentication Error",
         description: error.message || `An error occurred during ${provider} authentication.`,
@@ -102,7 +101,6 @@ const Auth = () => {
         }
       }
     } catch (error: any) {
-      console.error('Auth error:', error);
       toast({
         title: "Authentication Error",
         description: error.message || "An error occurred during authentication.",

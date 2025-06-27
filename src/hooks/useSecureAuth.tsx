@@ -52,7 +52,6 @@ export const SecureAuthProvider = ({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     let mounted = true;
 
-    // Set up auth state listener with security improvements
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
         if (!mounted) return;
@@ -78,7 +77,10 @@ export const SecureAuthProvider = ({ children }: { children: React.ReactNode }) 
     const initializeAuth = async () => {
       try {
         const { data: { session }, error } = await supabase.auth.getSession();
-        if (error) throw error;
+        if (error) {
+          console.error('Auth initialization error:', error);
+          return;
+        }
         
         if (mounted) {
           setSession(session);
@@ -86,7 +88,7 @@ export const SecureAuthProvider = ({ children }: { children: React.ReactNode }) 
           setLoading(false);
         }
       } catch (error) {
-        console.error('Auth initialization error:', error);
+        console.error('Auth initialization failed:', error);
         if (mounted) {
           setLoading(false);
         }
@@ -110,6 +112,7 @@ export const SecureAuthProvider = ({ children }: { children: React.ReactNode }) 
         await supabase.auth.signOut({ scope: 'global' });
       } catch (err) {
         // Continue even if global signout fails
+        console.error('Global signout failed:', err);
       }
       
       // Force page reload for clean state
