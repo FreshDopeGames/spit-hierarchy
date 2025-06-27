@@ -102,3 +102,80 @@
 .animate-text-glow {
   animation: text-glow 3s ease-in-out infinite;
 }
+
+/* Toast styling improvements for mobile */
+.toaster-wrapper {
+  z-index: 9999;
+}
+
+/* Ensure toast containers are properly positioned on mobile */
+@media (max-width: 640px) {
+  .toaster-wrapper {
+    padding: 16px;
+    max-width: calc(100vw - 32px);
+  }
+  
+  .toast-container {
+    max-width: 100% !important;
+    min-width: 280px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+}
+
+/* Style the toast elements to ensure proper containment */
+[data-sonner-toast] {
+  position: relative !important;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+[data-sonner-toast] [data-close-button] {
+  position: absolute !important;
+  top: 8px !important;
+  right: 8px !important;
+  width: 20px !important;
+  height: 20px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 4px !important;
+  border: none !important;
+  cursor: pointer !important;
+  opacity: 0.7 !important;
+  transition: opacity 0.2s ease !important;
+}
+
+[data-sonner-toast] [data-close-button]:hover {
+  opacity: 1 !important;
+  background: rgba(255, 255, 255, 0.2) !important;
+}
+
+/* Success toast specific styling */
+[data-sonner-toast][data-type="success"] [data-icon] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+  margin-right: 8px !important;
+}
+
+/* Error toast specific styling */
+[data-sonner-toast][data-type="error"] [data-icon] {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 20px !important;
+  height: 20px !important;
+  flex-shrink: 0 !important;
+  margin-right: 8px !important;
+}
+
+/* Toast content area */
+[data-sonner-toast] [data-content] {
+  flex: 1 !important;
+  padding-right: 32px !important;
+  line-height: 1.4 !important;
+}
