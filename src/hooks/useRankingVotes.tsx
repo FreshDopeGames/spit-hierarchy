@@ -20,10 +20,10 @@ export const useRankingVotes = () => {
       rankingId: string;
       rapperId: string;
     }) => {
-      // Security validation
+      // Enhanced security validation
       if (!user) throw new Error('Authentication required');
       
-      // Sanitize inputs
+      // Sanitize and validate inputs
       const cleanRankingId = sanitizeInput(rankingId);
       const cleanRapperId = sanitizeInput(rapperId);
       
@@ -31,7 +31,27 @@ export const useRankingVotes = () => {
         throw new Error('Invalid input parameters');
       }
 
+      // Additional UUID format validation
+      const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+      if (!uuidRegex.test(cleanRankingId) || !uuidRegex.test(cleanRapperId)) {
+        throw new Error('Invalid ID format');
+      }
+
       const voteWeight = getVoteMultiplier();
+
+      // Enhanced security: Check if user is trying to vote too frequently
+      const { data: recentVotes, error: voteCheckError } = await supabase
+        .from('ranking_votes')
+        .select('created_at')
+        .eq('user_id', user.id)
+        .gte('created_at', new Date(Date.now() - 60000).toISOString()) // Last minute
+        .limit(10);
+
+      if (voteCheckError) {
+        console.error('Vote check error:', voteCheckError);
+      } else if (recentVotes && recentVotes.length >= 5) {
+        throw new Error('Too many votes in a short time. Please wait a moment.');
+      }
 
       // Insert the ranking vote with proper error handling
       const { data: voteData, error: voteError } = await supabase
@@ -104,7 +124,7 @@ export const useRankingVotes = () => {
         }
       );
 
-      // Show immediate feedback toast
+      // Show immediate feedback toast with enhanced security context
       toast.loading(`Processing your ${currentStatus} vote (${voteWeight}x weight)...`, {
         id: `vote-${rapperId}`,
         duration: 2000
@@ -121,9 +141,18 @@ export const useRankingVotes = () => {
         );
       }
       
-      // Dismiss loading toast and show error
+      // Dismiss loading toast and show error with security-aware messaging
       toast.dismiss(`vote-${variables.rapperId}`);
-      toast.error("Failed to submit vote. Please try again.", {
+      
+      const errorMessage = error.message.includes('Authentication') 
+        ? "Please sign in to vote"
+        : error.message.includes('Invalid') 
+          ? "Invalid request. Please refresh and try again."
+          : error.message.includes('Too many')
+            ? "Please wait a moment before voting again"
+            : "Failed to submit vote. Please try again.";
+      
+      toast.error(errorMessage, {
         duration: 4000
       });
       
@@ -178,3 +207,4 @@ export const useRankingVotes = () => {
     currentStatus
   };
 };
+

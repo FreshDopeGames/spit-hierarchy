@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -102,12 +103,81 @@
   animation: text-glow 3s ease-in-out infinite;
 }
 
-/* Optimized toast styling for security and UX */
+/* Enhanced security-focused toast styling */
 .toaster-wrapper {
   z-index: 9999;
+  pointer-events: none;
 }
 
-/* Mobile positioning - bottom center for better UX */
+.toaster-wrapper [data-sonner-toaster] {
+  pointer-events: auto;
+}
+
+/* Security toast classes to prevent content injection */
+.security-toast {
+  word-break: break-word;
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.security-toast * {
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-width: 100%;
+}
+
+.security-toast-title {
+  font-weight: 600;
+  color: inherit;
+}
+
+.security-toast-description {
+  opacity: 0.9;
+  color: inherit;
+}
+
+.security-toast-action,
+.security-toast-cancel,
+.security-toast-close {
+  pointer-events: auto;
+  cursor: pointer;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 12px;
+  transition: all 0.2s;
+}
+
+.security-toast-action:hover,
+.security-toast-cancel:hover,
+.security-toast-close:hover {
+  opacity: 0.8;
+}
+
+.security-toast-error {
+  border-color: #ef4444;
+  background-color: #fef2f2;
+  color: #991b1b;
+}
+
+.security-toast-success {
+  border-color: #22c55e;
+  background-color: #f0fdf4;
+  color: #166534;
+}
+
+.security-toast-warning {
+  border-color: #f59e0b;
+  background-color: #fffbeb;
+  color: #92400e;
+}
+
+.security-toast-info {
+  border-color: #3b82f6;
+  background-color: #eff6ff;
+  color: #1e40af;
+}
+
+/* Mobile positioning - bottom center for better UX and security */
 @media (max-width: 640px) {
   .toaster-wrapper {
     padding: 0 16px 16px 16px;
@@ -132,6 +202,7 @@
   [data-sonner-toaster] {
     bottom: 16px !important;
     right: 16px !important;
+    max-width: 400px !important;
   }
 }
 
@@ -141,3 +212,22 @@
   word-break: break-word;
   max-width: 100%;
 }
+
+/* Security: Disable potentially dangerous CSS features in toast content */
+[data-sonner-toast] *:not(button):not(a) {
+  pointer-events: none;
+}
+
+[data-sonner-toast] button,
+[data-sonner-toast] a {
+  pointer-events: auto;
+}
+
+/* Additional security hardening */
+[data-sonner-toast] img,
+[data-sonner-toast] iframe,
+[data-sonner-toast] object,
+[data-sonner-toast] embed {
+  display: none !important;
+}
+

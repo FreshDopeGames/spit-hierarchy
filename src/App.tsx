@@ -1,93 +1,132 @@
 
 import { Toaster } from "@/components/ui/toaster";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import { Suspense, lazy } from "react";
+import { Toaster as Sonner } from "@/components/ui/sonner";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { SecureAuthProvider } from "@/hooks/useSecureAuth";
+import { SecurityProvider } from "@/hooks/useSecurityContext";
+import { AchievementProvider } from "@/components/achievements/AchievementProvider";
+import AuthGuard from "@/components/AuthGuard";
+import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
+import UserProfile from "./pages/UserProfile";
+import Analytics from "./pages/Analytics";
+import AllRappers from "./pages/AllRappers";
+import RapperDetail from "./pages/RapperDetail";
+import Rankings from "./pages/Rankings";
+import OfficialRankings from "./pages/OfficialRankings";
+import OfficialRankingDetail from "./pages/OfficialRankingDetail";
+import UserRankingDetail from "./pages/UserRankingDetail";
+import PublicUserProfile from "./pages/PublicUserProfile";
 import About from "./pages/About";
+import Blog from "./pages/Blog";
+import BlogDetail from "./pages/BlogDetail";
+import Admin from "./pages/Admin";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
-import Footer from "./components/Footer";
-import ScrollToTop from "./components/ScrollToTop";
-import AuthGuard from "./components/AuthGuard";
-import ErrorBoundary from "./components/ErrorBoundary";
-import ContentSecurityPolicy from "./components/security/ContentSecurityPolicy";
-import PerformanceMonitor from "./components/performance/PerformanceMonitor";
-import { SecureAuthProvider } from "./hooks/useSecureAuth";
-import { AchievementProvider } from "./components/achievements/AchievementProvider";
 
-// Lazy load heavy components for better performance
-const Rankings = lazy(() => import("./pages/Rankings"));
-const OfficialRankings = lazy(() => import("./pages/OfficialRankings"));
-const OfficialRankingDetail = lazy(() => import("./pages/OfficialRankingDetail"));
-const UserRankingDetail = lazy(() => import("./pages/UserRankingDetail"));
-const Analytics = lazy(() => import("./pages/Analytics"));
-const Admin = lazy(() => import("./pages/Admin"));
-const RapperDetail = lazy(() => import("./pages/RapperDetail"));
-const BlogDetail = lazy(() => import("./pages/BlogDetail"));
-const Blog = lazy(() => import("./pages/Blog"));
-const UserProfile = lazy(() => import("./pages/UserProfile"));
-const PublicUserProfile = lazy(() => import("./pages/PublicUserProfile"));
-const AllRappers = lazy(() => import("./pages/AllRappers"));
-const TermsOfUse = lazy(() => import("./pages/TermsOfUse"));
-const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
-
-// Loading component for suspense fallbacks
-const PageLoader = () => (
-  <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-    <div className="text-rap-gold text-xl font-mogra animate-pulse">Loading...</div>
-  </div>
-);
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes
+      gcTime: 10 * 60 * 1000, // 10 minutes
+      retry: (failureCount, error: any) => {
+        // Don't retry on authentication errors
+        if (error?.message?.includes('auth') || error?.status === 401) {
+          return false;
+        }
+        // Don't retry on rate limit errors
+        if (error?.message?.includes('rate limit') || error?.status === 429) {
+          return false;
+        }
+        return failureCount < 3;
+      },
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+    },
+    mutations: {
+      retry: (failureCount, error: any) => {
+        // Don't retry mutations on authentication or validation errors
+        if (error?.message?.includes('auth') || 
+            error?.message?.includes('Invalid') ||
+            error?.status === 401 || 
+            error?.status === 400) {
+          return false;
+        }
+        return failureCount < 2;
+      },
+    },
+  },
+});
 
 function App() {
   return (
-    <ErrorBoundary>
-      <ContentSecurityPolicy />
-      <PerformanceMonitor />
+    <QueryClientProvider client={queryClient}>
       <SecureAuthProvider>
-        <AchievementProvider>
-          <Router>
-            <ScrollToTop />
-            <div className="min-h-screen flex flex-col">
-              <main className="flex-1">
-                <Suspense fallback={<PageLoader />}>
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/auth" element={<Auth />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/rankings" element={<Rankings />} />
-                    <Route path="/official-rankings" element={<OfficialRankings />} />
-                    <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
-                    <Route path="/rankings/user/:slug" element={<UserRankingDetail />} />
-                    <Route path="/analytics" element={
-                      <AuthGuard requireAuth={true}>
+        <SecurityProvider>
+          <TooltipProvider>
+            <AchievementProvider>
+              <Toaster />
+              <Sonner />
+              <ContentSecurityPolicy />
+              <BrowserRouter>
+                <Routes>
+                  <Route path="/" element={<Index />} />
+                  <Route path="/auth" element={<Auth />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/privacy" element={<PrivacyPolicy />} />
+                  <Route path="/terms" element={<TermsOfUse />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/blog/:slug" element={<BlogDetail />} />
+                  <Route path="/rappers" element={<AllRappers />} />
+                  <Route path="/rapper/:id" element={<RapperDetail />} />
+                  <Route path="/rankings" element={<Rankings />} />
+                  <Route path="/rankings/official" element={<OfficialRankings />} />
+                  <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
+                  <Route path="/rankings/user/:id" element={<UserRankingDetail />} />
+                  <Route path="/user/:username" element={<PublicUserProfile />} />
+                  
+                  {/* Protected Routes */}
+                  <Route 
+                    path="/profile" 
+                    element={
+                      <AuthGuard requireAuth>
+                        <UserProfile />
+                      </AuthGuard>
+                    } 
+                  />
+                  <Route 
+                    path="/analytics" 
+                    element={
+                      <AuthGuard requireAuth>
                         <Analytics />
                       </AuthGuard>
-                    } />
-                    <Route path="/admin" element={
-                      <AuthGuard requireAuth={true} adminOnly={true}>
+                    } 
+                  />
+                  
+                  {/* Admin Routes */}
+                  <Route 
+                    path="/admin" 
+                    element={
+                      <AuthGuard requireAuth adminOnly>
                         <Admin />
                       </AuthGuard>
-                    } />
-                    <Route path="/rapper/:id" element={<RapperDetail />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/blog/:id" element={<BlogDetail />} />
-                    <Route path="/profile" element={<UserProfile />} />
-                    <Route path="/user/:id" element={<PublicUserProfile />} />
-                    <Route path="/all-rappers" element={<AllRappers />} />
-                    <Route path="/terms" element={<TermsOfUse />} />
-                    <Route path="/privacy" element={<PrivacyPolicy />} />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </Suspense>
-              </main>
-              <Footer />
-            </div>
-            <Toaster />
-          </Router>
-        </AchievementProvider>
+                    } 
+                  />
+                  
+                  {/* Catch all route */}
+                  <Route path="*" element={<NotFound />} />
+                </Routes>
+              </BrowserRouter>
+            </AchievementProvider>
+          </TooltipProvider>
+        </SecurityProvider>
       </SecureAuthProvider>
-    </ErrorBoundary>
+    </QueryClientProvider>
   );
 }
 
 export default App;
+
