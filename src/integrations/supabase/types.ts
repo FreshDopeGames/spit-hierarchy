@@ -90,6 +90,45 @@ export type Database = {
         }
         Relationships: []
       }
+      audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          new_values: Json | null
+          old_values: Json | null
+          record_id: string | null
+          table_name: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          new_values?: Json | null
+          old_values?: Json | null
+          record_id?: string | null
+          table_name?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       blog_categories: {
         Row: {
           created_at: string | null
@@ -1413,9 +1452,22 @@ export type Database = {
         Args: { _user_id: string }
         Returns: boolean
       }
+      can_manage_blog_content: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       check_and_award_achievements: {
         Args: { target_user_id: string }
         Returns: undefined
+      }
+      check_rate_limit: {
+        Args: {
+          action_type: string
+          user_uuid?: string
+          max_requests?: number
+          window_seconds?: number
+        }
+        Returns: boolean
       }
       create_weekly_ranking_snapshot: {
         Args: Record<PropertyKey, never>
@@ -1501,7 +1553,15 @@ export type Database = {
         Args: { _user_id: string; _role: string }
         Returns: boolean
       }
+      is_admin: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
       is_admin_user: {
+        Args: Record<PropertyKey, never>
+        Returns: boolean
+      }
+      is_moderator_or_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }

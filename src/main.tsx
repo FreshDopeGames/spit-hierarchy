@@ -4,10 +4,14 @@ import { createRoot } from "react-dom/client";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { SecureAuthProvider } from "@/hooks/useSecureAuth";
+import { SecurityProvider } from "@/hooks/useSecurityContext";
+import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
+import PerformanceMonitor from "@/components/performance/PerformanceMonitor";
 import App from "./App.tsx";
 import "./index.css";
 
-// Optimized QueryClient configuration
+// Optimized QueryClient configuration with better performance settings
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -31,10 +35,16 @@ const queryClient = new QueryClient({
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
+    <ContentSecurityPolicy />
+    <PerformanceMonitor />
     <QueryClientProvider client={queryClient}>
       <ThemeProvider>
-        <App />
-        <Toaster />
+        <SecureAuthProvider>
+          <SecurityProvider>
+            <App />
+            <Toaster />
+          </SecurityProvider>
+        </SecureAuthProvider>
       </ThemeProvider>
     </QueryClientProvider>
   </StrictMode>

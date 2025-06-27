@@ -5,42 +5,42 @@ import { cn } from '@/lib/utils';
 interface LazyImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   src: string;
   alt: string;
-  fallbackSrc?: string;
-  className?: string;
   containerClassName?: string;
   lazy?: boolean;
+  fallback?: string;
 }
 
 const LazyImage: React.FC<LazyImageProps> = ({
   src,
   alt,
-  fallbackSrc = '/placeholder.svg',
   className,
   containerClassName,
   lazy = true,
+  fallback = '/placeholder-image.jpg',
   ...props
 }) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isInView, setIsInView] = useState(!lazy);
   const [hasError, setHasError] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!lazy) return;
 
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsInView(true);
-          observer.disconnect();
-        }
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.unobserve(entry.target);
+          }
+        });
       },
-      { threshold: 0.1, rootMargin: '50px' }
+      { threshold: 0.1 }
     );
 
-    if (containerRef.current) {
-      observer.observe(containerRef.current);
+    if (imgRef.current) {
+      observer.observe(imgRef.current);
     }
 
     return () => observer.disconnect();
@@ -55,35 +55,26 @@ const LazyImage: React.FC<LazyImageProps> = ({
     setIsLoaded(true);
   };
 
-  const imageSrc = hasError ? fallbackSrc : src;
-
   return (
-    <div 
-      ref={containerRef}
-      className={cn("relative overflow-hidden", containerClassName)}
-    >
-      {/* Loading skeleton */}
-      {!isLoaded && (
-        <div className="absolute inset-0 bg-gray-200 animate-pulse" />
-      )}
-      
-      {/* Actual image */}
+    <div ref={imgRef} className={cn("relative overflow-hidden", containerClassName)}>
       {isInView && (
-        <img
-          ref={imgRef}
-          src={imageSrc}
-          alt={alt}
-          onLoad={handleLoad}
-          onError={handleError}
-          className={cn(
-            "transition-opacity duration-300",
-            isLoaded ? "opacity-100" : "opacity-0",
-            className
+        <>
+          {!isLoaded && (
+            <div className="absolute inset-0 bg-gray-200 animate-pulse" />
           )}
-          loading={lazy ? "lazy" : "eager"}
-          decoding="async"
-          {...props}
-        />
+          <img
+            src={hasError ? fallback : src}
+            alt={alt}
+            className={cn(
+              "transition-opacity duration-300",
+              isLoaded ? "opacity-100" : "opacity-0",
+              className
+            )}
+            onLoad={handleLoad}
+            onError={handleError}
+            {...props}
+          />
+        </>
       )}
     </div>
   );
