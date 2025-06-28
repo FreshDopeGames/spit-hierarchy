@@ -37,6 +37,16 @@ const VoteButton = ({
   const isDisabled = disabled || submitRankingVote.isPending || !user;
   const voteMultiplier = getVoteMultiplier();
 
+  // Debug logging for voting state
+  console.log('VoteButton Debug:', {
+    rapperId,
+    rankingId,
+    hasVoted,
+    currentStatus,
+    voteMultiplier,
+    user: !!user
+  });
+
   const handleClick = async () => {
     if (isDisabled || !rapperId || !rankingId) {
       if (!user) {
@@ -80,7 +90,7 @@ const VoteButton = ({
 
   const getButtonColor = () => {
     if (hasVoted) {
-      return 'bg-gray-400 hover:bg-gray-500 text-white'; // Silver color when voted
+      return 'bg-gradient-to-r from-rap-silver to-gray-300 hover:from-gray-300 hover:to-rap-silver text-rap-carbon border border-rap-silver/50 shadow-lg'; // Silver gradient when voted
     }
     if (isPending) {
       return 'bg-yellow-600 hover:bg-yellow-600 text-white';
