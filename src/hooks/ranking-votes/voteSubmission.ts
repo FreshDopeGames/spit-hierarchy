@@ -2,6 +2,8 @@
 import { supabase } from '@/integrations/supabase/client';
 import { validateVoteInputs, checkRateLimit } from './validation';
 
+type MemberStatus = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
+
 export const submitVote = async (
   rankingId: string,
   rapperId: string,
@@ -13,6 +15,11 @@ export const submitVote = async (
   
   await checkRateLimit(supabase, user.id);
 
+  // Ensure currentStatus is a valid member_status
+  const memberStatus = ['bronze', 'silver', 'gold', 'platinum', 'diamond'].includes(currentStatus) 
+    ? currentStatus as MemberStatus 
+    : 'bronze' as MemberStatus;
+
   // Insert the ranking vote with proper error handling
   const { data: voteData, error: voteError } = await supabase
     .from('ranking_votes')
@@ -21,7 +28,7 @@ export const submitVote = async (
       ranking_id: cleanRankingId,
       rapper_id: cleanRapperId,
       vote_weight: voteWeight,
-      member_status: currentStatus,
+      member_status: memberStatus,
       updated_at: new Date().toISOString()
     }, {
       onConflict: 'user_id,ranking_id,rapper_id'

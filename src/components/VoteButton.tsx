@@ -1,8 +1,10 @@
+
 import { Button } from "@/components/ui/button";
-import { ThumbsUp, Star, Check, Clock } from "lucide-react";
+import { ThumbsUp, Star, Check, Clock, Plus } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
 import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 
 interface VoteButtonProps {
@@ -29,6 +31,7 @@ const VoteButton = ({
   const { user } = useAuth();
   const { submitRankingVote, getVoteMultiplier, currentStatus } = useRankingVotes();
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(rankingId);
+  const isMobile = useIsMobile();
 
   const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
   const isDisabled = disabled || submitRankingVote.isPending || !user;
@@ -75,38 +78,71 @@ const VoteButton = ({
     return "text-xs px-2 py-0.5 sm:px-3 sm:py-1 min-w-[55px] sm:min-w-[110px]";
   };
 
-  return (
-    <Button
-      onClick={handleClick}
-      disabled={isDisabled}
-      size="sm"
-      className={`${
-        hasVoted 
-          ? 'bg-gray-600 hover:bg-gray-600 text-gray-300' 
-          : isPending
-            ? 'bg-yellow-600 hover:bg-yellow-600 text-white'
-            : 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon'
-      } font-bold flex-1 sm:flex-none ${getButtonSizing()} transition-all duration-200 ${className}`}
-    >
-      {isPending ? (
+  const getButtonColor = () => {
+    if (hasVoted) {
+      return 'bg-gray-400 hover:bg-gray-500 text-white'; // Silver color when voted
+    }
+    if (isPending) {
+      return 'bg-yellow-600 hover:bg-yellow-600 text-white';
+    }
+    return 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon';
+  };
+
+  const renderButtonContent = () => {
+    if (isPending) {
+      return (
         <>
           <Clock className="w-4 h-4 mr-1 animate-spin" />
           <span className="hidden sm:inline">Processing</span>
           <span className="sm:hidden">...</span>
         </>
-      ) : hasVoted ? (
+      );
+    }
+    
+    if (hasVoted) {
+      if (isMobile) {
+        return (
+          <>
+            <ThumbsUp className="w-4 h-4 mr-1" />
+            <Check className="w-3 h-3" />
+          </>
+        );
+      }
+      return (
         <>
           <Check className="w-4 h-4 mr-1" />
           <span className="hidden sm:inline">Voted</span>
           <span className="sm:hidden">✓</span>
         </>
-      ) : (
+      );
+    }
+    
+    // Not voted state
+    if (isMobile) {
+      return (
         <>
           <ThumbsUp className="w-4 h-4 mr-1" />
-          <span className="hidden sm:inline">Vote</span>
-          <span className="sm:hidden">+</span>
+          <Plus className="w-3 h-3" />
         </>
-      )}
+      );
+    }
+    return (
+      <>
+        <ThumbsUp className="w-4 h-4 mr-1" />
+        <span className="hidden sm:inline">Vote</span>
+        <span className="sm:hidden">+</span>
+      </>
+    );
+  };
+
+  return (
+    <Button
+      onClick={handleClick}
+      disabled={isDisabled}
+      size="sm"
+      className={`${getButtonColor()} font-bold flex-1 sm:flex-none ${getButtonSizing()} transition-all duration-200 ${className}`}
+    >
+      {renderButtonContent()}
     </Button>
   );
 };

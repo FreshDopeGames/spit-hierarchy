@@ -1,8 +1,9 @@
 
+import { QueryClient } from "@tanstack/react-query";
 import { RankingItemWithDelta } from '@/hooks/useRankingData';
 
 export const applyOptimisticUpdate = (
-  queryClient: any,
+  queryClient: QueryClient,
   rankingId: string,
   rapperId: string,
   voteWeight: number
@@ -30,7 +31,7 @@ export const applyOptimisticUpdate = (
 };
 
 export const clearPendingStates = (
-  queryClient: any,
+  queryClient: QueryClient,
   rankingId: string
 ) => {
   queryClient.setQueryData<RankingItemWithDelta[]>(
@@ -46,7 +47,7 @@ export const clearPendingStates = (
 };
 
 export const invalidateRelatedQueries = (
-  queryClient: any,
+  queryClient: QueryClient,
   userId: string,
   rankingId: string
 ) => {
