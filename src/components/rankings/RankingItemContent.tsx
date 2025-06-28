@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -64,7 +65,8 @@ const RankingItemContent = ({
       // Remove padding on desktop/tablet for top 5 to allow cap to align properly
       return isMobile ? "gap-3 p-2" : "gap-4 pl-3 pr-3 py-3";
     }
-    return "gap-2 px-3 py-1 pt-3";
+    // Reduced vertical padding for 6+ rankings on mobile to prevent cutoff
+    return isMobile ? "gap-2 px-3 py-2" : "gap-2 px-3 py-1 pt-3";
   };
 
   const textSizes = getTextSizes();
@@ -84,7 +86,7 @@ const RankingItemContent = ({
       )}
       
       {/* Main Content */}
-      <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : 'space-y-1'}`}>
+      <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
         <div className={`flex ${isTopFive && isMobile ? 'flex-col items-center' : 'items-center'} gap-2 flex-wrap`}>
           <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra truncate hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
