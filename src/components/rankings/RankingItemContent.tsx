@@ -40,9 +40,9 @@ const RankingItemContent = ({
       };
     }
     return {
-      name: "text-base text-rap-platinum", // Increased from text-sm (30% larger)
-      reason: "text-sm text-rap-smoke", // Increased from text-xs (30% larger)
-      votes: "text-sm text-rap-gold/70" // Increased from text-xs (30% larger)
+      name: "text-sm text-rap-platinum leading-tight", // Reduced from text-base for better mobile fit
+      reason: "text-xs text-rap-smoke leading-tight", // Reduced from text-sm for better mobile fit
+      votes: "text-xs text-rap-gold/70" // Reduced from text-sm for better mobile fit
     };
   };
 
@@ -50,8 +50,8 @@ const RankingItemContent = ({
     if (isTopFive) {
       return "w-20 h-20 sm:w-32 sm:h-32";
     }
-    // Increased image size for 6+ rankings to better utilize the extra 30px height
-    return "w-12 h-12 sm:w-14 sm:h-14";
+    // Reduced image size for 6+ rankings on mobile to fit in shorter height
+    return "w-10 h-10 sm:w-14 sm:h-14";
   };
 
   const getContentAlignment = () => {
@@ -67,8 +67,8 @@ const RankingItemContent = ({
       // On mobile, keep centered padding; on desktop/tablet, use left margin to align after badge
       return isMobile ? "gap-3 p-2" : "gap-4 ml-20 pr-3 py-3";
     }
-    // Increased vertical padding and gap for 6+ rankings to accommodate text wrapping
-    return isMobile ? "gap-3 px-3 py-3" : "gap-2 px-3 py-2";
+    // Reduced padding for 6+ rankings on mobile to fit in shorter height
+    return isMobile ? "gap-2 px-2 py-1" : "gap-2 px-3 py-2";
   };
 
   const textSizes = getTextSizes();
@@ -99,7 +99,7 @@ const RankingItemContent = ({
       </Link>
       
       {/* Main Content */}
-      <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-2' : 'space-y-1'}`}>
+      <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
         <div className={`flex ${isTopFive && isMobile ? 'flex-col items-center' : 'items-start'} gap-2 flex-wrap`}>
           <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
