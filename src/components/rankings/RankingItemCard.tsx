@@ -50,22 +50,22 @@ const RankingItemCard = ({
     return "flex-row";
   };
 
-  const getRoundedCorners = () => {
+  const getContentRoundedCorners = () => {
     if (isMobile) {
-      return "rounded-b-lg"; // Bottom corners rounded on mobile
+      return "rounded-b-lg"; // Bottom corners rounded on mobile to match cap's top corners
     }
-    return "rounded-r-lg"; // Right corners rounded on desktop
+    return "rounded-r-lg"; // Right corners rounded on desktop to match cap's left corners
   };
 
   return (
     <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
-    } overflow-hidden`}>
+    } overflow-hidden rounded-lg`}>
       {/* Position Cap - NO padding/margin, perfect edge alignment */}
       <RankingItemPositionCap position={item.dynamic_position} isTopFive={isTopFive} />
       
       {/* Content with rounded corners to match */}
-      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getRoundedCorners()} ${getCardStyling()}`}>
+      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentRoundedCorners()}`}>
         <RankingItemContent
           item={item}
           isTopFive={isTopFive}
