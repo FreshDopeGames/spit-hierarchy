@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -25,6 +26,12 @@ const RapperHeader = ({
     data: imageUrl
   } = useRapperImage(rapper.id);
 
+  // Placeholder image from Supabase Storage
+  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
+  
+  // Use rapper image if available and not empty, otherwise use placeholder
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
+
   return <div className="space-y-6">
       <Card className="bg-rap-carbon border-rap-burgundy/40 relative overflow-hidden mb-8">
         {/* Rap culture accent bar */}
@@ -36,7 +43,18 @@ const RapperHeader = ({
             {/* Rapper Image */}
             <div className="md:col-span-1">
               <div className="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center">
-                {imageUrl ? <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover" /> : <Music className="w-24 h-24 text-rap-platinum/70" />}
+                <img 
+                  src={imageToDisplay} 
+                  alt={rapper.name} 
+                  className="w-full h-full object-cover" 
+                  onError={(e) => {
+                    // Fallback to placeholder if image fails to load
+                    const target = e.target as HTMLImageElement;
+                    if (target.src !== PLACEHOLDER_IMAGE) {
+                      target.src = PLACEHOLDER_IMAGE;
+                    }
+                  }}
+                />
               </div>
             </div>
 

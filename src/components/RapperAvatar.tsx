@@ -32,8 +32,8 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
     xl: "w-12 h-12"
   };
   
-  // Placeholder image from Supabase Storage - same as used in RankingItemContent
-  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/spit-hierarchy-logo.png";
+  // Placeholder image from Supabase Storage
+  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
   
   // Use rapper image if available and not empty, otherwise use placeholder
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;

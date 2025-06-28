@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,6 +36,12 @@ const RapperCard = ({
   const overallRating = rapper.average_rating 
     ? Math.round((Number(rapper.average_rating) / 10) * 100) 
     : 0;
+
+  // Placeholder image from Supabase Storage
+  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
+  
+  // Use rapper image if available and not empty, otherwise use placeholder
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
   
   return (
     <Link key={rapper.id} to={`/rapper/${rapper.id}`}>
@@ -47,25 +52,19 @@ const RapperCard = ({
         <CardContent className="p-6">
           {/* Rapper image or placeholder - 1:1 aspect ratio */}
           <div className="w-full aspect-square bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg mb-4 flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300 overflow-hidden">
-            {imageUrl ? (
-              <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover" />
-            ) : (
-              <>
-                <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-transparent to-rap-carbon/50 rounded-lg"></div>
-                
-                {/* Stage spotlight effect */}
-                <div className="absolute top-2 left-1/2 transform -translate-x-1/2 w-8 h-8 bg-gradient-to-b from-rap-silver/30 to-transparent rounded-full blur-sm"></div>
-                
-                {/* Rapper silhouette with microphone */}
-                <div className="relative z-10 flex flex-col items-center">
-                  <Mic2 className="w-8 h-8 text-rap-silver/70 group-hover:text-rap-platinum transition-colors mb-1" />
-                  <Users className="w-4 h-4 text-rap-silver/50 group-hover:text-rap-platinum/70 transition-colors" />
-                </div>
-                
-                {/* Stage floor effect */}
-                <div className="absolute bottom-0 left-0 right-0 h-2 bg-gradient-to-t from-rap-carbon to-transparent rounded-b-lg"></div>
-              </>
-            )}
+            <img 
+              src={imageToDisplay}
+              alt={rapper.name || "Rapper"}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                // Fallback to placeholder if image fails to load
+                const target = e.target as HTMLImageElement;
+                if (target.src !== PLACEHOLDER_IMAGE) {
+                  target.src = PLACEHOLDER_IMAGE;
+                }
+              }}
+            />
           </div>
 
           {/* Rapper Info */}

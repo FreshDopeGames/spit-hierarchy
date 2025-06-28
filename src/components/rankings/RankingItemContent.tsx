@@ -67,8 +67,8 @@ const RankingItemContent = ({
 
   const textSizes = getTextSizes();
 
-  // Placeholder image from Supabase Storage - update this URL after uploading your logo
-  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/spit-hierarchy-logo.png";
+  // Placeholder image from Supabase Storage
+  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
   
   // Use rapper image if available and not empty, otherwise use placeholder
   const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : PLACEHOLDER_IMAGE;
