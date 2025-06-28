@@ -62,7 +62,7 @@ const RankingItemCard = ({
     if (isTopFive) {
       return "min-h-[120px] sm:min-h-[140px]"; // Prominent height for top 5
     }
-    return "min-h-[80px] sm:min-h-[100px]"; // Compact height for 6+ positions
+    return "min-h-[50px] sm:min-h-[60px]"; // Ultra-compact height for 6+ positions
   };
 
   const getMobileLayout = () => {
@@ -76,7 +76,7 @@ const RankingItemCard = ({
     if (isTopFive) {
       return "gap-4 p-4 sm:gap-6 sm:p-6"; // More generous spacing for top 5
     }
-    return "gap-3 p-3 sm:gap-4 sm:p-4"; // Compact spacing for 6+ positions
+    return "gap-2 p-2 sm:gap-3 sm:p-3"; // Ultra-compact spacing for 6+ positions
   };
 
   const getTextSizes = () => {
@@ -88,20 +88,20 @@ const RankingItemCard = ({
       };
     }
     return {
-      name: "text-lg sm:text-xl text-rap-platinum",
-      reason: "text-sm sm:text-base text-rap-smoke",
-      votes: "text-sm sm:text-base text-rap-gold/70"
+      name: "text-sm sm:text-base text-rap-platinum",
+      reason: "text-xs sm:text-sm text-rap-smoke",
+      votes: "text-xs sm:text-sm text-rap-gold/70"
     };
   };
 
   const textSizes = getTextSizes();
 
-  // Position cap component integrated into card structure
+  // Position cap component that truly caps the card edges
   const PositionCap = () => {
     if (isMobile) {
       return (
-        <div className={`${getPositionGradient(item.dynamic_position)} h-16 flex items-center justify-center rounded-t-lg`}>
-          <span className="text-2xl font-bold text-rap-carbon font-mogra">
+        <div className={`${getPositionGradient(item.dynamic_position)} ${isTopFive ? 'h-16' : 'h-12'} flex items-center justify-center`}>
+          <span className={`${isTopFive ? 'text-2xl' : 'text-lg'} font-bold text-rap-carbon font-mogra`}>
             {item.dynamic_position}
           </span>
         </div>
@@ -109,8 +109,8 @@ const RankingItemCard = ({
     }
 
     return (
-      <div className={`${getPositionGradient(item.dynamic_position)} w-16 flex items-center justify-center rounded-l-lg`}>
-        <span className="text-2xl font-bold text-rap-carbon font-mogra">
+      <div className={`${getPositionGradient(item.dynamic_position)} ${isTopFive ? 'w-16' : 'w-12'} flex items-center justify-center`}>
+        <span className={`${isTopFive ? 'text-2xl' : 'text-lg'} font-bold text-rap-carbon font-mogra`}>
           {item.dynamic_position}
         </span>
       </div>
@@ -121,38 +121,40 @@ const RankingItemCard = ({
     <div className={`flex ${getMobileLayout()} ${getContentSpacing()} ${getCardHeight()} ${isMobile ? 'rounded-b-lg' : 'rounded-r-lg'} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     } overflow-hidden`}>
-      {/* Integrated Position Cap - Top on mobile, Left on desktop */}
+      {/* Position Cap - Flush with card edges */}
       <PositionCap />
       
       {/* Content Container */}
       <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
-        {/* Rapper Image */}
+        {/* Clickable Rapper Image */}
         {rapperImageUrl && (
-          <div className={`${isTopFive ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-12 h-12 sm:w-16 sm:h-16'} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 ${isTopFive ? 'mx-auto sm:mx-0' : ''}`}>
+          <Link to={`/rapper/${item.rapper?.id}`} className={`${isTopFive ? 'w-16 h-16 sm:w-20 sm:h-20' : 'w-8 h-8 sm:w-12 sm:h-12'} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 ${isTopFive ? 'mx-auto sm:mx-0' : ''} hover:opacity-80 transition-opacity`}>
             <img 
               src={rapperImageUrl} 
               alt={item.rapper?.name}
               className="w-full h-full object-cover"
               loading="lazy"
             />
-          </div>
+          </Link>
         )}
         
         {/* Main Content */}
-        <div className="flex-1 min-w-0 space-y-2">
+        <div className="flex-1 min-w-0 space-y-1">
           <div className="flex items-center justify-center sm:justify-start gap-2 flex-wrap">
-            <h3 className={`font-semibold ${textSizes.name} font-mogra truncate`}>
+            <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra truncate hover:opacity-80 transition-opacity`}>
               {item.rapper?.name}
-            </h3>
+            </Link>
             {getTrendingIcon()}
             {isHot && (
               <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
             )}
           </div>
           
-          <p className={`font-merienda ${textSizes.reason} ${isTopFive ? 'text-center sm:text-left' : ''}`}>
-            {item.reason || `Origin: ${item.rapper?.origin || 'Unknown'}`}
-          </p>
+          {(isTopFive || item.reason) && (
+            <p className={`font-merienda ${textSizes.reason} ${isTopFive ? 'text-center sm:text-left' : ''}`}>
+              {item.reason || `Origin: ${item.rapper?.origin || 'Unknown'}`}
+            </p>
+          )}
           
           <div className={`flex items-center gap-4 text-sm ${isTopFive ? 'justify-center sm:justify-start' : 'justify-start'}`}>
             <div className="flex items-center gap-2">
@@ -176,29 +178,17 @@ const RankingItemCard = ({
           </div>
         </div>
         
-        {/* Action Buttons */}
-        <div className={`flex ${isTopFive ? 'flex-col sm:flex-row items-center' : 'flex-row items-center'} gap-2 sm:gap-3 ${isTopFive ? 'w-full sm:w-auto' : 'flex-shrink-0'}`}>
+        {/* Vote Button Only */}
+        <div className={`flex items-center ${isTopFive ? 'w-full sm:w-auto' : 'flex-shrink-0'}`}>
           <VoteButton
             onVote={() => onVote(item.rapper?.name || '')}
             disabled={!userLoggedIn}
-            className={`${isTopFive ? 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold' : 'bg-rap-gold/80 hover:bg-rap-gold text-rap-carbon'} ${isTopFive ? 'text-lg px-6 py-3' : 'text-sm px-4 py-2'} transition-all duration-200 ${isTopFive ? 'w-full sm:w-auto' : ''}`}
+            className={`${isTopFive ? 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold' : 'bg-rap-gold/80 hover:bg-rap-gold text-rap-carbon'} ${isTopFive ? 'text-lg px-6 py-3' : 'text-xs px-3 py-1'} transition-all duration-200 ${isTopFive ? 'w-full sm:w-auto' : ''}`}
             rankingId={rankingId}
             rapperId={item.rapper?.id}
             showWeightedVoting={true}
             isPending={isPending}
           />
-          
-          {item.rapper?.id && (
-            <Link to={`/rapper/${item.rapper.id}`} className={isTopFive ? "w-full sm:w-auto" : ""}>
-              <Button
-                variant="ghost"
-                size="sm"
-                className={`${isTopFive ? 'text-rap-gold hover:text-rap-gold-light' : 'text-rap-silver hover:text-rap-platinum'} font-kaushan transition-colors duration-200 ${isTopFive ? 'w-full sm:w-auto' : ''}`}
-              >
-                View Profile
-              </Button>
-            </Link>
-          )}
         </div>
       </div>
       
