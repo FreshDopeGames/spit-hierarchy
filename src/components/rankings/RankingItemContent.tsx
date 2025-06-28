@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -50,7 +49,8 @@ const RankingItemContent = ({
     if (isTopFive) {
       return "w-20 h-20 sm:w-32 sm:h-32";
     }
-    return "w-8 h-8";
+    // Increased image size for 6+ rankings to better utilize the extra 30px height
+    return "w-12 h-12 sm:w-14 sm:h-14";
   };
 
   const getContentAlignment = () => {
@@ -65,8 +65,8 @@ const RankingItemContent = ({
       // Remove padding on desktop/tablet for top 5 to allow cap to align properly
       return isMobile ? "gap-3 p-2" : "gap-4 pl-3 pr-3 py-3";
     }
-    // Reduced vertical padding for 6+ rankings on mobile to prevent cutoff
-    return isMobile ? "gap-2 px-3 py-2" : "gap-2 px-3 py-1 pt-3";
+    // Adjusted vertical padding for 6+ rankings to work with increased height
+    return isMobile ? "gap-2 px-3 py-3" : "gap-2 px-3 py-2";
   };
 
   const textSizes = getTextSizes();

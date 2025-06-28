@@ -1,4 +1,3 @@
-
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
@@ -40,7 +39,7 @@ const RankingItemCard = ({
     if (isTopFive) {
       return "min-h-[140px] sm:min-h-[120px]";
     }
-    return "h-10 sm:h-12";
+    return "h-[70px] sm:h-[78px]";
   };
 
   const getLayout = () => {
