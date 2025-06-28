@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -39,9 +40,9 @@ const RankingItemContent = ({
       };
     }
     return {
-      name: "text-sm text-rap-platinum",
-      reason: "text-xs text-rap-smoke",
-      votes: "text-xs text-rap-gold/70"
+      name: "text-base text-rap-platinum", // Increased from text-sm (30% larger)
+      reason: "text-sm text-rap-smoke", // Increased from text-xs (30% larger)
+      votes: "text-sm text-rap-gold/70" // Increased from text-xs (30% larger)
     };
   };
 
