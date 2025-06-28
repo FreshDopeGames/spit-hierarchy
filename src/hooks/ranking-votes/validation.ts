@@ -1,0 +1,39 @@
+
+import { sanitizeInput } from '@/utils/securityUtils';
+
+export const validateVoteInputs = (rankingId: string, rapperId: string, user: any) => {
+  // Enhanced security validation
+  if (!user) throw new Error('Authentication required');
+  
+  // Sanitize and validate inputs
+  const cleanRankingId = sanitizeInput(rankingId);
+  const cleanRapperId = sanitizeInput(rapperId);
+  
+  if (!cleanRankingId || !cleanRapperId) {
+    throw new Error('Invalid input parameters');
+  }
+
+  // Additional UUID format validation
+  const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  if (!uuidRegex.test(cleanRankingId) || !uuidRegex.test(cleanRapperId)) {
+    throw new Error('Invalid ID format');
+  }
+
+  return { cleanRankingId, cleanRapperId };
+};
+
+export const checkRateLimit = async (supabase: any, userId: string) => {
+  // Enhanced security: Check if user is trying to vote too frequently
+  const { data: recentVotes, error: voteCheckError } = await supabase
+    .from('ranking_votes')
+    .select('created_at')
+    .eq('user_id', userId)
+    .gte('created_at', new Date(Date.now() - 60000).toISOString()) // Last minute
+    .limit(10);
+
+  if (voteCheckError) {
+    console.error('Vote check error:', voteCheckError);
+  } else if (recentVotes && recentVotes.length >= 5) {
+    throw new Error('Too many votes in a short time. Please wait a moment.');
+  }
+};
