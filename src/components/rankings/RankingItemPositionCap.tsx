@@ -28,6 +28,7 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
     if (isMobile) {
       return isTopFive ? 'h-20 w-full' : 'h-10 w-full';
     }
+    // On desktop/tablet, top 5 caps take full height, others are narrow
     return isTopFive ? 'w-20 h-full' : 'w-10 h-full';
   };
 
