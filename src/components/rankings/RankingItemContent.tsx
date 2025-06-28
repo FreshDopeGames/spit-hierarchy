@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -64,8 +63,8 @@ const RankingItemContent = ({
 
   const getContentSpacing = () => {
     if (isTopFive) {
-      // Remove padding on desktop/tablet for top 5 to allow cap to align properly
-      return isMobile ? "gap-3 p-2" : "gap-4 pl-3 pr-3 py-3";
+      // On mobile, keep centered padding; on desktop/tablet, use left margin to align after badge
+      return isMobile ? "gap-3 p-2" : "gap-4 ml-20 pr-3 py-3";
     }
     // Increased vertical padding and gap for 6+ rankings to accommodate text wrapping
     return isMobile ? "gap-3 px-3 py-3" : "gap-2 px-3 py-2";
@@ -73,11 +72,11 @@ const RankingItemContent = ({
 
   const textSizes = getTextSizes();
 
-  // Default placeholder image path
-  const placeholderImage = "/lovable-uploads/9f09a262-481b-4abc-bdbe-93477926649b.png";
+  // Default placeholder image
+  const PLACEHOLDER_IMAGE = "/lovable-uploads/9f09a262-481b-4abc-bdbe-93477926649b.png";
   
-  // Use rapper image if available, otherwise use placeholder
-  const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : placeholderImage;
+  // Use rapper image if available and not empty, otherwise use placeholder
+  const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : PLACEHOLDER_IMAGE;
 
   return (
     <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
@@ -91,8 +90,8 @@ const RankingItemContent = ({
           onError={(e) => {
             // Fallback to placeholder if image fails to load
             const target = e.target as HTMLImageElement;
-            if (target.src !== placeholderImage) {
-              target.src = placeholderImage;
+            if (target.src !== PLACEHOLDER_IMAGE) {
+              target.src = PLACEHOLDER_IMAGE;
             }
           }}
         />
