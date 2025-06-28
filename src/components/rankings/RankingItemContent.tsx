@@ -2,7 +2,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
-import HotBadge from "@/components/analytics/HotBadge";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -91,9 +90,6 @@ const RankingItemContent = ({
             {item.rapper?.name}
           </Link>
           {!isTopFive && getTrendingIcon()}
-          {isHot && (
-            <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
-          )}
         </div>
         
         {isTopFive && (

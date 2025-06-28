@@ -28,8 +28,8 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
     if (isMobile) {
       return isTopFive ? 'h-20 w-full' : 'h-10 w-full';
     }
-    // On desktop/tablet, top 5 caps match content height, others are narrow
-    return isTopFive ? 'h-full w-20' : 'w-10 h-full';
+    // On desktop/tablet, all caps match content height with appropriate width
+    return isTopFive ? 'h-full w-20' : 'h-full w-10';
   };
 
   return (
