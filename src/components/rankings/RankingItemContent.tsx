@@ -58,6 +58,7 @@ const RankingItemContent = ({
     if (isTopFive && isMobile) {
       return "items-center text-center";
     }
+    // Left-align for both top-5 and 6+ on desktop/tablet
     return "items-center text-left";
   };
 
