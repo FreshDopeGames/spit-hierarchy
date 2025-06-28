@@ -36,13 +36,11 @@ const RankingItemContent = ({
       return {
         name: "text-xl sm:text-2xl text-rap-gold",
         reason: "text-base sm:text-lg text-rap-platinum",
-        votes: "text-base sm:text-lg text-rap-gold font-bold"
       };
     }
     return {
-      name: "text-sm text-rap-platinum leading-tight", // Reduced from text-base for better mobile fit
-      reason: "text-xs text-rap-smoke leading-tight", // Reduced from text-sm for better mobile fit
-      votes: "text-xs text-rap-gold/70" // Reduced from text-sm for better mobile fit
+      name: "text-sm text-rap-platinum leading-tight",
+      reason: "text-xs text-rap-smoke leading-tight",
     };
   };
 
@@ -50,7 +48,6 @@ const RankingItemContent = ({
     if (isTopFive) {
       return "w-20 h-20 sm:w-32 sm:h-32";
     }
-    // Reduced image size for 6+ rankings on mobile to fit in shorter height
     return "w-10 h-10 sm:w-14 sm:h-14";
   };
 
@@ -58,16 +55,13 @@ const RankingItemContent = ({
     if (isTopFive && isMobile) {
       return "items-center text-center";
     }
-    // Left-align for both top-5 and 6+ on desktop/tablet
     return "items-center text-left";
   };
 
   const getContentSpacing = () => {
     if (isTopFive) {
-      // On mobile, keep centered padding; on desktop/tablet, use left margin to align after badge
       return isMobile ? "gap-3 p-2" : "gap-4 ml-20 pr-3 py-3";
     }
-    // Reduced padding for 6+ rankings on mobile to fit in shorter height
     return isMobile ? "gap-2 px-2 py-1" : "gap-2 px-3 py-2";
   };
 
@@ -104,12 +98,12 @@ const RankingItemContent = ({
           <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
           </Link>
-          {!isTopFive && getTrendingIcon()}
+          {/* Only show trending icon next to name for top 5 */}
+          {isTopFive && getTrendingIcon()}
         </div>
         
         {isTopFive && (
           <>
-            {getTrendingIcon()}
             {(item.reason || item.rapper?.origin) && (
               <p className={`font-merienda ${textSizes.reason} ${isMobile ? 'text-center' : 'text-left'}`}>
                 {item.reason || `Origin: ${item.rapper?.origin || 'Unknown'}`}
@@ -120,9 +114,11 @@ const RankingItemContent = ({
         
         <div className={`flex items-center gap-2 text-sm ${isTopFive && isMobile ? 'justify-center' : 'justify-start'}`}>
           <div className="flex items-center gap-1">
+            {/* For rankings 6+, show trending icon before the vote count */}
+            {!isTopFive && getTrendingIcon()}
             <Star className={`w-3 h-3 ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`} />
-            <span className={`font-merienda ${textSizes.votes}`}>
-              {item.ranking_votes} votes
+            <span className={`font-merienda ${isTopFive ? 'text-base sm:text-lg text-rap-gold font-bold' : 'text-xs text-rap-gold/70'}`}>
+              {item.ranking_votes} vote{item.ranking_votes !== 1 ? 's' : ''}
               {isPending && (
                 <span className="text-yellow-400 ml-1">(processing...)</span>
               )}
