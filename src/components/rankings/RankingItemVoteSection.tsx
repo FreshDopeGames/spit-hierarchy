@@ -62,6 +62,7 @@ const RankingItemVoteSection = ({
         rapperId={rapperId}
         showWeightedVoting={true}
         isPending={isPending}
+        isTopFive={isTopFive}
       />
     </div>
   );

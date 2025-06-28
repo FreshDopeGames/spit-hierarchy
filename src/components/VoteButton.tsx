@@ -14,6 +14,7 @@ interface VoteButtonProps {
   rapperId?: string;
   showWeightedVoting?: boolean;
   isPending?: boolean;
+  isTopFive?: boolean;
 }
 
 const VoteButton = ({ 
@@ -23,7 +24,8 @@ const VoteButton = ({
   rankingId,
   rapperId,
   showWeightedVoting = false,
-  isPending = false
+  isPending = false,
+  isTopFive = false
 }: VoteButtonProps) => {
   const { user } = useAuth();
   const { submitRankingVote, getVoteMultiplier, currentStatus } = useRankingVotes();
@@ -66,6 +68,14 @@ const VoteButton = ({
     }
   };
 
+  const getButtonSizing = () => {
+    if (isTopFive) {
+      return "text-sm px-3 py-2 sm:px-5 sm:py-2 min-w-[110px]";
+    }
+    // For 6+ rankings on mobile: shorter (4px less padding) and thinner (half width)
+    return "text-xs px-2 py-1 sm:px-3 sm:py-1 min-w-[55px] sm:min-w-[110px]";
+  };
+
   return (
     <Button
       onClick={handleClick}
@@ -77,7 +87,7 @@ const VoteButton = ({
           : isPending
             ? 'bg-yellow-600 hover:bg-yellow-600 text-white'
             : 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon'
-      } font-bold flex-1 sm:flex-none text-sm px-3 py-2 sm:px-5 sm:py-2 min-w-[110px] transition-all duration-200 ${className}`}
+      } font-bold flex-1 sm:flex-none ${getButtonSizing()} transition-all duration-200 ${className}`}
     >
       {isPending ? (
         <>
