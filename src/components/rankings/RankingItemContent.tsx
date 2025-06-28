@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -72,8 +73,8 @@ const RankingItemContent = ({
 
   const textSizes = getTextSizes();
 
-  // Default placeholder image
-  const PLACEHOLDER_IMAGE = "/lovable-uploads/9f09a262-481b-4abc-bdbe-93477926649b.png";
+  // Placeholder image from Supabase Storage - update this URL after uploading your logo
+  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/spit-hierarchy-logo.png";
   
   // Use rapper image if available and not empty, otherwise use placeholder
   const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : PLACEHOLDER_IMAGE;
