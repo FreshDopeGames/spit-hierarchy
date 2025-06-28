@@ -81,6 +81,7 @@ function App() {
                   <Route path="/blog" element={<Blog />} />
                   <Route path="/blog/:slug" element={<BlogDetail />} />
                   <Route path="/rappers" element={<AllRappers />} />
+                  <Route path="/all-rappers" element={<AllRappers />} />
                   <Route path="/rapper/:id" element={<RapperDetail />} />
                   <Route path="/rankings" element={<Rankings />} />
                   <Route path="/rankings/official" element={<OfficialRankings />} />
@@ -129,4 +130,3 @@ function App() {
 }
 
 export default App;
-
