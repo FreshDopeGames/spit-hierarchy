@@ -45,16 +45,9 @@ const RankingItemCard = ({
 
   const getLayout = () => {
     if (isTopFive && isMobile) {
-      return "flex-col items-center text-center";
+      return "flex-col";
     }
-    return "flex-row items-center text-left";
-  };
-
-  const getContentSpacing = () => {
-    if (isTopFive) {
-      return "gap-4 p-4 sm:gap-6 sm:p-6";
-    }
-    return "gap-0 p-0";
+    return "flex-row";
   };
 
   const getRoundedCorners = () => {
@@ -65,32 +58,33 @@ const RankingItemCard = ({
   };
 
   return (
-    <div className={`flex ${getLayout()} ${getContentSpacing()} ${getCardHeight()} ${getRoundedCorners()} border transition-all duration-300 relative ${getCardStyling()} ${
+    <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     } overflow-hidden`}>
-      {/* Position Cap */}
+      {/* Position Cap - NO padding/margin, perfect edge alignment */}
       <RankingItemPositionCap position={item.dynamic_position} isTopFive={isTopFive} />
       
-      {/* Content */}
-      <RankingItemContent
-        item={item}
-        isTopFive={isTopFive}
-        isHot={isHot}
-        voteVelocity={voteVelocity}
-        rapperImageUrl={rapperImageUrl}
-        isPending={isPending}
-      />
-      
-      {/* Vote Section */}
-      <RankingItemVoteSection
-        onVote={onVote}
-        userLoggedIn={userLoggedIn}
-        isTopFive={isTopFive}
-        rankingId={rankingId}
-        rapperId={item.rapper?.id}
-        rapperName={item.rapper?.name}
-        isPending={isPending}
-      />
+      {/* Content with rounded corners to match */}
+      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getRoundedCorners()} ${getCardStyling()}`}>
+        <RankingItemContent
+          item={item}
+          isTopFive={isTopFive}
+          isHot={isHot}
+          voteVelocity={voteVelocity}
+          rapperImageUrl={rapperImageUrl}
+          isPending={isPending}
+        />
+        
+        <RankingItemVoteSection
+          onVote={onVote}
+          userLoggedIn={userLoggedIn}
+          isTopFive={isTopFive}
+          rankingId={rankingId}
+          rapperId={item.rapper?.id}
+          rapperName={item.rapper?.name}
+          isPending={isPending}
+        />
+      </div>
       
       {/* Pending Indicator */}
       {isPending && (
