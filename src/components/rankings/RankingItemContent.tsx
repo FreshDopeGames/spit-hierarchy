@@ -62,7 +62,8 @@ const RankingItemContent = ({
 
   const getContentSpacing = () => {
     if (isTopFive) {
-      return "gap-3 p-2 sm:gap-4 sm:p-3";
+      // Remove padding on desktop/tablet for top 5 to allow cap to align properly
+      return isMobile ? "gap-3 p-2" : "gap-4 pl-3 pr-3 py-3";
     }
     return "gap-2 px-3 py-1";
   };
