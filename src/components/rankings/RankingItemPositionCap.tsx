@@ -18,17 +18,18 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
   };
 
   const getRoundedCorners = () => {
-    if (isMobile) {
-      return "rounded-t-lg"; // Top corners rounded on mobile
+    if (isMobile && isTopFive) {
+      return "rounded-t-lg"; // Top corners rounded on mobile for top 5
     }
-    return "rounded-l-lg"; // Left corners rounded on desktop
+    return "rounded-l-lg"; // Left corners rounded for desktop top 5 and all 6+ rankings
   };
 
   const getSizing = () => {
-    if (isMobile) {
-      return isTopFive ? 'h-10 w-full' : 'h-10 w-full'; // Half height for mobile top 5
+    if (isMobile && isTopFive) {
+      return 'h-10 w-full'; // Half height, full width for mobile top 5
     }
     // On desktop/tablet, all caps match content height with appropriate width
+    // On mobile, rankings 6+ get left-side caps (not full width)
     return isTopFive ? 'h-full w-20' : 'h-full w-10';
   };
 
