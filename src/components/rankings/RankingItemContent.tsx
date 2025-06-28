@@ -65,7 +65,7 @@ const RankingItemContent = ({
       // Remove padding on desktop/tablet for top 5 to allow cap to align properly
       return isMobile ? "gap-3 p-2" : "gap-4 pl-3 pr-3 py-3";
     }
-    return "gap-2 px-3 py-1";
+    return "gap-2 px-3 py-1 pt-3";
   };
 
   const textSizes = getTextSizes();
