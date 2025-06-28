@@ -60,7 +60,7 @@ const RankingItemContent = ({
 
   const getContentSpacing = () => {
     if (isTopFive) {
-      return isMobile ? "gap-3 p-2" : "gap-4 ml-20 pr-3 py-3";
+      return isMobile ? "gap-3 p-2" : "gap-4 pr-3 py-3";
     }
     return isMobile ? "gap-2 px-2 py-1" : "gap-2 px-3 py-2";
   };
