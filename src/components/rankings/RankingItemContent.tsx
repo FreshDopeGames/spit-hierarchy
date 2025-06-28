@@ -1,5 +1,4 @@
 
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -75,17 +74,15 @@ const RankingItemContent = ({
 
   return (
     <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
-      {/* Rapper Image */}
-      {rapperImageUrl && (
-        <Link to={`/rapper/${item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity`}>
-          <img 
-            src={rapperImageUrl} 
-            alt={item.rapper?.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-        </Link>
-      )}
+      {/* Rapper Image - Always displayed with placeholder fallback */}
+      <Link to={`/rapper/${item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity`}>
+        <img 
+          src={rapperImageUrl || "/lovable-uploads/9f09a262-481b-4abc-bdbe-93477926649b.png"} 
+          alt={item.rapper?.name || "Rapper"}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+      </Link>
       
       {/* Main Content */}
       <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-2' : 'space-y-1'}`}>
@@ -133,4 +130,3 @@ const RankingItemContent = ({
 };
 
 export default RankingItemContent;
-
