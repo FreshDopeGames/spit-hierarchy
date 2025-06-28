@@ -32,13 +32,27 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
     xl: "w-12 h-12"
   };
   
+  // Placeholder image from Supabase Storage - same as used in RankingItemContent
+  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/spit-hierarchy-logo.png";
+  
+  // Use rapper image if available and not empty, otherwise use placeholder
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
+  
   return (
     <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
       <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
-        {imageUrl ? 
-          <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300" /> : 
-          <Music className={`${iconSizeClasses[size]} text-rap-platinum/50`} />
-        }
+        <img 
+          src={imageToDisplay}
+          alt={rapper.name} 
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            const target = e.target as HTMLImageElement;
+            if (target.src !== PLACEHOLDER_IMAGE) {
+              target.src = PLACEHOLDER_IMAGE;
+            }
+          }}
+        />
       </div>
     </Link>
   );
