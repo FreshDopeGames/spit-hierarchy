@@ -39,8 +39,8 @@ const RankingItemCard = ({
   // Check if item is in pending state (for optimistic updates)
   const isPending = (item as any).isPending || false;
 
-  // Position-based styling functions
-  const isTopFive = item.position <= 5;
+  // Position-based styling functions - use dynamic_position for accurate ranking
+  const isTopFive = item.dynamic_position <= 5;
   
   const getCardStyling = () => {
     if (isTopFive) {
@@ -91,8 +91,8 @@ const RankingItemCard = ({
     <div className={`flex ${getMobileLayout()} ${getContentSpacing()} ${getCardHeight()} rounded-lg border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     }`}>
-      {/* Position Cap - Top on mobile, Left on desktop */}
-      <RankingPositionCap position={item.position} />
+      {/* Position Cap - Top on mobile, Left on desktop - use dynamic_position for correct ranking display */}
+      <RankingPositionCap position={item.dynamic_position} />
       
       {/* Content Container */}
       <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
