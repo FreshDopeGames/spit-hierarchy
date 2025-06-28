@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, Star, Check, Clock } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
@@ -72,8 +71,8 @@ const VoteButton = ({
     if (isTopFive) {
       return "text-sm px-3 py-2 sm:px-5 sm:py-2 min-w-[110px]";
     }
-    // For 6+ rankings on mobile: shorter height with better spacing
-    return "text-xs px-2 py-1 sm:px-3 sm:py-1 min-w-[55px] sm:min-w-[110px]";
+    // For 6+ rankings on mobile: 20% shorter height for better proportions
+    return "text-xs px-2 py-0.5 sm:px-3 sm:py-1 min-w-[55px] sm:min-w-[110px]";
   };
 
   return (
