@@ -141,9 +141,7 @@ export const useRankingVotes = () => {
         );
       }
       
-      // Dismiss loading toast and show error with security-aware messaging
-      toast.dismiss(`vote-${variables.rapperId}`);
-      
+      // Update the existing toast to show error instead of dismissing and creating new
       const errorMessage = error.message.includes('Authentication') 
         ? "Please sign in to vote"
         : error.message.includes('Invalid') 
@@ -153,6 +151,7 @@ export const useRankingVotes = () => {
             : "Failed to submit vote. Please try again.";
       
       toast.error(errorMessage, {
+        id: `vote-${variables.rapperId}`,
         duration: 4000
       });
       
@@ -161,11 +160,9 @@ export const useRankingVotes = () => {
     onSuccess: (_, variables, context) => {
       const voteWeight = context?.voteWeight || getVoteMultiplier();
       
-      // Dismiss loading toast
-      toast.dismiss(`vote-${variables.rapperId}`);
-      
-      // Show success toast with enhanced information
+      // Update the existing toast to show success instead of dismissing and creating new
       toast.success(`Vote counted! Your ${currentStatus} status gives ${voteWeight}x voting power`, {
+        id: `vote-${variables.rapperId}`,
         description: "Rankings updated in real-time",
         duration: 3000,
         action: {
@@ -207,4 +204,3 @@ export const useRankingVotes = () => {
     currentStatus
   };
 };
-
