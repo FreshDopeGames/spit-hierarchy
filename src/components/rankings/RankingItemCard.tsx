@@ -65,10 +65,15 @@ const RankingItemCard = ({
     return "";
   };
 
+  // Use consistent border radius for the main container
+  const getContainerRadius = () => {
+    return "rounded-lg"; // Use lg consistently for both cap and content
+  };
+
   return (
     <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
-    } overflow-hidden rounded-lg`}>
+    } overflow-hidden ${getContainerRadius()}`}>
       {/* Position Cap - Absolute positioning for desktop/tablet top-5 to cover full height */}
       <RankingItemPositionCap position={item.dynamic_position} isTopFive={isTopFive} />
       
