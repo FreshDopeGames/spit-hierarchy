@@ -57,15 +57,23 @@ const RankingItemCard = ({
     return "rounded-r-lg"; // Right corners rounded on desktop to match cap's left corners
   };
 
+  const getContentMargin = () => {
+    // On desktop/tablet for top-5, add left margin to account for absolute positioned cap
+    if (!isMobile && isTopFive) {
+      return "ml-20"; // Match the cap width
+    }
+    return "";
+  };
+
   return (
     <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     } overflow-hidden rounded-lg`}>
-      {/* Position Cap - NO padding/margin, perfect edge alignment */}
+      {/* Position Cap - Absolute positioning for desktop/tablet top-5 to cover full height */}
       <RankingItemPositionCap position={item.dynamic_position} isTopFive={isTopFive} />
       
-      {/* Content with rounded corners to match */}
-      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentRoundedCorners()}`}>
+      {/* Content with appropriate margin for absolute positioned cap */}
+      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentRoundedCorners()} ${getContentMargin()}`}>
         <RankingItemContent
           item={item}
           isTopFive={isTopFive}

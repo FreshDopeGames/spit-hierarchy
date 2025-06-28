@@ -28,14 +28,24 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
     if (isMobile && isTopFive) {
       return 'h-10 w-full'; // Half height, full width for mobile top 5
     }
-    // On desktop/tablet, all caps match content height with appropriate width
-    // On mobile, rankings 6+ get left-side caps (not full width)
-    return isTopFive ? 'h-full w-20' : 'h-full w-10';
+    // On desktop/tablet, ensure the cap covers the full height including padding
+    // Use absolute positioning to stretch the full height of the parent container
+    if (isTopFive) {
+      return 'absolute left-0 top-0 bottom-0 w-20'; // Absolute positioning to cover full height
+    }
+    return 'h-full w-10'; // For 6+ rankings, keep existing behavior
+  };
+
+  const getPositioning = () => {
+    if (!isMobile && isTopFive) {
+      return 'relative'; // Make parent relative for absolute positioning
+    }
+    return '';
   };
 
   return (
-    <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0`}>
-      <span className={`${isTopFive ? 'text-3xl' : 'text-lg'} font-bold text-rap-carbon font-mogra`}>
+    <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0 ${getPositioning()}`}>
+      <span className={`${isTopFive ? 'text-3xl' : 'text-lg'} font-bold text-rap-carbon font-mogra relative z-10`}>
         {position}
       </span>
     </div>
