@@ -31,34 +31,41 @@ const RankingItemCard = ({
 
   const getCardStyling = () => {
     if (isTopFive) {
-      return "bg-rap-carbon/40 border-rap-gold/30 shadow-lg hover:bg-rap-carbon/60 hover:shadow-xl hover:border-rap-gold/50";
+      return "bg-rap-carbon/50 border-rap-gold/40 shadow-xl hover:bg-rap-carbon/70 hover:shadow-2xl hover:border-rap-gold/60";
     }
-    return "bg-rap-carbon/20 border-rap-platinum/20 hover:bg-rap-carbon/30 hover:border-rap-platinum/30";
+    return "bg-rap-carbon/30 border-rap-platinum/30 hover:bg-rap-carbon/40 hover:border-rap-platinum/40";
   };
 
   const getCardHeight = () => {
     if (isTopFive) {
-      return "min-h-[120px] sm:min-h-[140px]";
+      return "min-h-[140px] sm:min-h-[120px]";
     }
-    return "min-h-[32px] sm:min-h-[40px]";
+    return "h-10 sm:h-12";
   };
 
-  const getMobileLayout = () => {
-    if (isTopFive) {
-      return "flex-col items-center text-center sm:flex-row sm:items-start sm:text-left";
+  const getLayout = () => {
+    if (isTopFive && isMobile) {
+      return "flex-col items-center text-center";
     }
-    return "flex-row items-center";
+    return "flex-row items-center text-left";
   };
 
   const getContentSpacing = () => {
     if (isTopFive) {
       return "gap-4 p-4 sm:gap-6 sm:p-6";
     }
-    return "gap-1 p-1 sm:gap-2 sm:p-2";
+    return "gap-0 p-0";
+  };
+
+  const getRoundedCorners = () => {
+    if (isMobile) {
+      return "rounded-b-lg"; // Bottom corners rounded on mobile
+    }
+    return "rounded-r-lg"; // Right corners rounded on desktop
   };
 
   return (
-    <div className={`flex ${getMobileLayout()} ${getContentSpacing()} ${getCardHeight()} ${isMobile ? 'rounded-b-lg' : 'rounded-r-lg'} border transition-all duration-300 relative ${getCardStyling()} ${
+    <div className={`flex ${getLayout()} ${getContentSpacing()} ${getCardHeight()} ${getRoundedCorners()} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     } overflow-hidden`}>
       {/* Position Cap */}

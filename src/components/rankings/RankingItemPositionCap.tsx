@@ -14,7 +14,7 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
     if (position <= 5) {
       return "bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light";
     }
-    return "bg-gradient-to-br from-gray-600 via-gray-400 to-gray-300";
+    return "bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400";
   };
 
   const getRoundedCorners = () => {
@@ -24,19 +24,16 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
     return "rounded-l-lg"; // Left corners rounded on desktop
   };
 
-  if (isMobile) {
-    return (
-      <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${isTopFive ? 'h-16' : 'h-8'} flex items-center justify-center`}>
-        <span className={`${isTopFive ? 'text-2xl' : 'text-sm'} font-bold text-rap-carbon font-mogra`}>
-          {position}
-        </span>
-      </div>
-    );
-  }
+  const getSizing = () => {
+    if (isMobile) {
+      return isTopFive ? 'h-20 w-full' : 'h-10 w-full';
+    }
+    return isTopFive ? 'w-20 h-full' : 'w-10 h-full';
+  };
 
   return (
-    <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${isTopFive ? 'w-16' : 'w-8'} flex items-center justify-center`}>
-      <span className={`${isTopFive ? 'text-2xl' : 'text-sm'} font-bold text-rap-carbon font-mogra`}>
+    <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0`}>
+      <span className={`${isTopFive ? 'text-3xl' : 'text-lg'} font-bold text-rap-carbon font-mogra`}>
         {position}
       </span>
     </div>
