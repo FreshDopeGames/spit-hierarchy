@@ -26,7 +26,7 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
 
   const getSizing = () => {
     if (isMobile) {
-      return isTopFive ? 'h-20 w-full' : 'h-10 w-full';
+      return isTopFive ? 'h-10 w-full' : 'h-10 w-full'; // Half height for mobile top 5
     }
     // On desktop/tablet, all caps match content height with appropriate width
     return isTopFive ? 'h-full w-20' : 'h-full w-10';
