@@ -10,9 +10,7 @@ import { applyOptimisticUpdate, clearPendingStates, invalidateRelatedQueries } f
 export const useRankingVotes = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
-  const { data: memberData } = useMemberStatus(user?.id);
-  
-  const currentStatus = memberData?.status || 'bronze';
+  const { currentStatus } = useMemberStatus();
 
   const getVoteMultiplier = () => {
     switch (currentStatus) {
