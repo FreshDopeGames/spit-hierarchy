@@ -72,22 +72,35 @@ const RankingItemContent = ({
 
   const textSizes = getTextSizes();
 
+  // Default placeholder image path
+  const placeholderImage = "/lovable-uploads/9f09a262-481b-4abc-bdbe-93477926649b.png";
+  
+  // Use rapper image if available, otherwise use placeholder
+  const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : placeholderImage;
+
   return (
     <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
       {/* Rapper Image - Always displayed with placeholder fallback */}
       <Link to={`/rapper/${item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity`}>
         <img 
-          src={rapperImageUrl || "/lovable-uploads/9f09a262-481b-4abc-bdbe-93477926649b.png"} 
+          src={imageToDisplay}
           alt={item.rapper?.name || "Rapper"}
           className="w-full h-full object-cover"
           loading="lazy"
+          onError={(e) => {
+            // Fallback to placeholder if image fails to load
+            const target = e.target as HTMLImageElement;
+            if (target.src !== placeholderImage) {
+              target.src = placeholderImage;
+            }
+          }}
         />
       </Link>
       
       {/* Main Content */}
       <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-2' : 'space-y-1'}`}>
         <div className={`flex ${isTopFive && isMobile ? 'flex-col items-center' : 'items-start'} gap-2 flex-wrap`}>
-          <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? 'truncate' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
+          <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
           </Link>
           {!isTopFive && getTrendingIcon()}
