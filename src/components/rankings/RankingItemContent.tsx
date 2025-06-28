@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
@@ -48,7 +47,7 @@ const RankingItemContent = ({
 
   const getImageSize = () => {
     if (isTopFive) {
-      return "w-20 h-20 sm:w-16 sm:h-16";
+      return "w-20 h-20 sm:w-32 sm:h-32";
     }
     return "w-8 h-8";
   };
