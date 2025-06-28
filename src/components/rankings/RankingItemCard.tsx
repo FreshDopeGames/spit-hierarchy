@@ -5,8 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import VoteButton from "@/components/VoteButton";
 import HotBadge from "@/components/analytics/HotBadge";
-import RankingPositionCap from "./RankingPositionCap";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 interface RankingItemCardProps {
   item: RankingItemWithDelta;
@@ -25,6 +25,7 @@ const RankingItemCard = ({
   rankingId,
   rapperImageUrl
 }: RankingItemCardProps) => {
+  const isMobile = useIsMobile();
   const isHot = item.ranking_votes >= hotThreshold;
   const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
   
@@ -42,6 +43,14 @@ const RankingItemCard = ({
   // Position-based styling functions - use dynamic_position for accurate ranking
   const isTopFive = item.dynamic_position <= 5;
   
+  // Helper function to get gradient classes based on position
+  const getPositionGradient = (position: number) => {
+    if (position <= 5) {
+      return "bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light";
+    }
+    return "bg-gradient-to-br from-gray-600 via-gray-400 to-gray-300";
+  };
+
   const getCardStyling = () => {
     if (isTopFive) {
       return "bg-rap-carbon/40 border-rap-gold/30 shadow-lg hover:bg-rap-carbon/60 hover:shadow-xl hover:border-rap-gold/50";
@@ -87,12 +96,33 @@ const RankingItemCard = ({
 
   const textSizes = getTextSizes();
 
+  // Position cap component integrated into card structure
+  const PositionCap = () => {
+    if (isMobile) {
+      return (
+        <div className={`${getPositionGradient(item.dynamic_position)} h-16 flex items-center justify-center rounded-t-lg`}>
+          <span className="text-2xl font-bold text-rap-carbon font-mogra">
+            {item.dynamic_position}
+          </span>
+        </div>
+      );
+    }
+
+    return (
+      <div className={`${getPositionGradient(item.dynamic_position)} w-16 flex items-center justify-center rounded-l-lg`}>
+        <span className="text-2xl font-bold text-rap-carbon font-mogra">
+          {item.dynamic_position}
+        </span>
+      </div>
+    );
+  };
+
   return (
-    <div className={`flex ${getMobileLayout()} ${getContentSpacing()} ${getCardHeight()} rounded-lg border transition-all duration-300 relative ${getCardStyling()} ${
+    <div className={`flex ${getMobileLayout()} ${getContentSpacing()} ${getCardHeight()} ${isMobile ? 'rounded-b-lg' : 'rounded-r-lg'} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
-    }`}>
-      {/* Position Cap - Top on mobile, Left on desktop - use dynamic_position for correct ranking display */}
-      <RankingPositionCap position={item.dynamic_position} />
+    } overflow-hidden`}>
+      {/* Integrated Position Cap - Top on mobile, Left on desktop */}
+      <PositionCap />
       
       {/* Content Container */}
       <div className="flex-1 flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4 w-full">
