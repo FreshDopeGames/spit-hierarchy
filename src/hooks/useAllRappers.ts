@@ -1,21 +1,21 @@
-
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface UseAllRappersOptions {
   itemsPerPage?: number;
+  initialPage?: number;
 }
 
-export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) => {
+export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRappersOptions = {}) => {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchInput, setSearchInput] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [locationInput, setLocationInput] = useState("");     // NEW: store city/state as raw input
-  const [locationFilter, setLocationFilter] = useState("");   // NEW: debounced city/state   
+  const [locationInput, setLocationInput] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
   const [allRappers, setAllRappers] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState(0);
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
   // Debounce search input with 2 second delay
   useEffect(() => {
@@ -110,7 +110,6 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     setSearchInput(value);
   };
 
-  // This is now "locationInput", not "locationFilter"
   const handleLocationInput = (value: string) => {
     setLocationInput(value);
   };

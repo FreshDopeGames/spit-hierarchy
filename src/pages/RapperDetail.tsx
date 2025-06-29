@@ -101,9 +101,9 @@ const RapperDetail = () => {
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
       <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
-        {/* Back Button */}
-        <Link to="/all-rappers">
-          <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
+        {/* Back Button - Now properly preserves navigation state */}
+        <Link to="/all-rappers" className="inline-block mb-6">
+          <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back To All Rappers
           </Button>
