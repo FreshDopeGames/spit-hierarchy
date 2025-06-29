@@ -3,7 +3,6 @@ import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trophy, Users, Plus } from "lucide-react";
 import HeaderNavigation from "@/components/HeaderNavigation";
-import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import CreateRankingDialog from "@/components/rankings/CreateRankingDialog";
 import { Button } from "@/components/ui/button";
@@ -62,7 +61,11 @@ const Rankings = () => {
 
           {/* Tab Content */}
           <TabsContent value="official" className="mt-0">
-            <OfficialRankingsSection />
+            <div className="text-center py-8">
+              <p className="text-rap-platinum font-merienda">
+                Official rankings coming soon! Check out our <a href="/official-rankings" className="text-rap-gold hover:underline">existing official rankings</a>.
+              </p>
+            </div>
           </TabsContent>
 
           <TabsContent value="community" className="mt-0">

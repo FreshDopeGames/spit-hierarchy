@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +7,7 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import RankingHeader from "@/components/rankings/RankingHeader";
 import RankingCard from "@/components/rankings/RankingCard";
+import { transformOfficialRankings } from "@/utils/rankingTransformers";
 
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
@@ -66,23 +68,7 @@ const OfficialRankings = () => {
   };
 
   // Transform database data to match RankingCard props
-  const transformedRankings = rankings.map((ranking, index) => ({
-    id: ranking.id,
-    title: ranking.title,
-    description: ranking.description || "",
-    author: "Editorial Team",
-    timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
-    rappers: ranking.items.map((item) => ({
-      rank: item.position,
-      name: item.rapper?.name || "Unknown",
-      reason: item.reason || "",
-    })),
-    likes: 150 + (index * 23), // Static values that won't change
-    views: 1200 + (index * 157), // Static values that won't change
-    isOfficial: true,
-    tags: ["Official", ranking.category],
-    slug: ranking.slug,
-  }));
+  const transformedRankings = transformOfficialRankings(rankings);
 
   if (loading) {
     return (
@@ -110,10 +96,7 @@ const OfficialRankings = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {transformedRankings.map((ranking) => (
               <Link key={ranking.id} to={`/rankings/official/${ranking.slug}`}>
-                <RankingCard
-                  {...ranking}
-                  onClick={() => {}} // Not used since we're using Link
-                />
+                <RankingCard ranking={ranking} isUserRanking={false} />
               </Link>
             ))}
           </div>

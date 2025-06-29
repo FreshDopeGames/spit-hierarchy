@@ -3,7 +3,6 @@ import { Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import RankingCard from "./RankingCard";
 
 interface Rapper {
@@ -27,11 +26,10 @@ interface OfficialRanking {
 }
 
 interface OfficialRankingsSectionProps {
-  rankings: OfficialRanking[];
-  onRankingClick: (id: string) => void;
+  rankings?: OfficialRanking[];
 }
 
-const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsSectionProps) => {
+const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps) => {
   // Don't render if no rankings
   if (!rankings || rankings.length === 0) {
     return null;
@@ -63,16 +61,10 @@ const OfficialRankingsSection = ({ rankings, onRankingClick }: OfficialRankingsS
           <div key={ranking.id}>
             {ranking.slug ? (
               <Link to={`/rankings/official/${ranking.slug}`}>
-                <RankingCard
-                  {...ranking}
-                  onClick={() => {}} // Not used since we're using Link
-                />
+                <RankingCard ranking={ranking} isUserRanking={false} />
               </Link>
             ) : (
-              <RankingCard
-                {...ranking}
-                onClick={onRankingClick}
-              />
+              <RankingCard ranking={ranking} isUserRanking={false} />
             )}
           </div>
         ))}

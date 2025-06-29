@@ -1,19 +1,21 @@
 
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
 import { Users, Filter, Calendar, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import RankingCard from "./RankingCard";
 import { useOptimizedUserRankings } from "@/hooks/useOptimizedUserRankings";
+import { transformUserRankings } from "@/utils/rankingTransformers";
 
 const UserRankingsSection = () => {
   const [sortBy, setSortBy] = useState<"newest" | "popular" | "trending">("newest");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   
-  const { data: userRankings, isLoading, error } = useOptimizedUserRankings();
+  const { data: userRankingData, isLoading, error } = useOptimizedUserRankings();
+
+  // Transform the data to unified format
+  const userRankings = transformUserRankings(userRankingData);
 
   // Get unique categories for filtering
   const uniqueCategories = Array.from(

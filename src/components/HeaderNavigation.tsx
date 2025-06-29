@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
@@ -65,7 +66,12 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
           {/* User Menu */}
           <div className="flex items-center space-x-4">
             {user ? (
-              <UserProfileDropdown />
+              <UserProfileDropdown 
+                userProfile={null}
+                isAdmin={false}
+                canManageBlog={false}
+                isScrolled={isScrolled}
+              />
             ) : (
               <Link 
                 to="/auth" 
