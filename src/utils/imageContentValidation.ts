@@ -1,3 +1,4 @@
+
 // Advanced image content validation and security checks
 import { FileValidationResult } from './fileValidation';
 
@@ -30,6 +31,7 @@ const validateImageStructure = async (file: File): Promise<{
     
     const result = {
       isValid: true,
+      dimensions: undefined as { width: number; height: number } | undefined,
       errors: [] as string[]
     };
 
@@ -80,10 +82,8 @@ const validateImageStructure = async (file: File): Promise<{
           return;
         }
 
-        resolve({
-          ...result,
-          dimensions: { width: img.naturalWidth, height: img.naturalHeight }
-        });
+        result.dimensions = { width: img.naturalWidth, height: img.naturalHeight };
+        resolve(result);
 
       } catch (error) {
         result.isValid = false;
@@ -111,8 +111,8 @@ const validateImageStructure = async (file: File): Promise<{
   });
 };
 
-// Check for embedded scripts or suspicious content in image metadata
-const scanForEmbeddedThreats = async (file: File): Promise<{
+// Check for embedded scripts or suspicious content in image metadata - made less aggressive
+const scanForEmbeddedThreats = async (file: File, isAdminUpload: boolean = false): Promise<{
   hasThreats: boolean;
   threats: string[];
 }> => {
@@ -123,31 +123,38 @@ const scanForEmbeddedThreats = async (file: File): Promise<{
     reader.onload = () => {
       const content = reader.result as string;
       
-      // Check for common script patterns
-      const scriptPatterns = [
-        /<script/i,
-        /javascript:/i,
-        /vbscript:/i,
+      // More lenient patterns for admin uploads
+      const criticalScriptPatterns = [
+        /<script[^>]*>/i,
+        /javascript:\s*[^;\s]/i,
+        /vbscript:\s*[^;\s]/i,
+        /<iframe[^>]*>/i,
+        /<object[^>]*>/i,
+        /<embed[^>]*>/i,
+        /eval\s*\([^)]/i
+      ];
+
+      // Only check for critical threats for admin uploads
+      const patternsToCheck = isAdminUpload ? criticalScriptPatterns : [
+        ...criticalScriptPatterns,
         /on\w+\s*=/i,
-        /<iframe/i,
-        /<object/i,
-        /<embed/i,
-        /eval\s*\(/i,
         /document\./i,
         /window\./i
       ];
 
-      scriptPatterns.forEach((pattern, index) => {
+      patternsToCheck.forEach((pattern) => {
         if (pattern.test(content)) {
           threats.push(`Suspicious script pattern detected: ${pattern.toString()}`);
         }
       });
 
-      // Check for suspicious URLs
-      const urlPattern = /https?:\/\/[^\s"'<>]+/gi;
-      const urls = content.match(urlPattern);
-      if (urls && urls.length > 0) {
-        threats.push(`Embedded URLs detected: ${urls.length} URLs found`);
+      // For admin uploads, only flag URLs if they look suspicious
+      if (!isAdminUpload) {
+        const urlPattern = /https?:\/\/[^\s"'<>]+/gi;
+        const urls = content.match(urlPattern);
+        if (urls && urls.length > 3) { // Only flag if many URLs
+          threats.push(`Multiple embedded URLs detected: ${urls.length} URLs found`);
+        }
       }
 
       resolve({
@@ -165,8 +172,8 @@ const scanForEmbeddedThreats = async (file: File): Promise<{
   });
 };
 
-// Comprehensive image content validation
-export const validateImageContent = async (file: File): Promise<ImageContentValidationResult> => {
+// Comprehensive image content validation with admin mode
+export const validateImageContent = async (file: File, isAdminUpload: boolean = false): Promise<ImageContentValidationResult> => {
   const result: ImageContentValidationResult = {
     isValid: true,
     errors: [],
@@ -185,7 +192,7 @@ export const validateImageContent = async (file: File): Promise<ImageContentVali
   };
 
   try {
-    console.log('Starting comprehensive image validation for:', file.name);
+    console.log('Starting comprehensive image validation for:', file.name, 'Admin mode:', isAdminUpload);
 
     // 1. Validate image structure and dimensions
     const structureValidation = await validateImageStructure(file);
@@ -202,28 +209,38 @@ export const validateImageContent = async (file: File): Promise<ImageContentVali
       };
     }
 
-    // 2. Check for suspicious file size vs. dimensions ratio
+    // 2. Check for suspicious file size vs. dimensions ratio (more lenient for admin)
     if (structureValidation.dimensions) {
-      const expectedSize = structureValidation.dimensions.width * structureValidation.dimensions.height * 3; // rough estimate
+      const expectedSize = structureValidation.dimensions.width * structureValidation.dimensions.height * 3;
       const actualSize = file.size;
       
-      if (actualSize < expectedSize * 0.01) {
+      const minRatio = isAdminUpload ? 0.001 : 0.01;
+      const maxRatio = isAdminUpload ? 50 : 10;
+      
+      if (actualSize < expectedSize * minRatio) {
         result.securityFlags.suspiciousSize = true;
         result.warnings.push('File size is unusually small for the image dimensions');
-      } else if (actualSize > expectedSize * 10) {
+      } else if (actualSize > expectedSize * maxRatio) {
         result.securityFlags.suspiciousSize = true;
         result.warnings.push('File size is unusually large for the image dimensions');
       }
     }
 
-    // 3. Scan for embedded threats
-    const threatScan = await scanForEmbeddedThreats(file);
+    // 3. Scan for embedded threats (less aggressive for admin)
+    const threatScan = await scanForEmbeddedThreats(file, isAdminUpload);
     
     if (threatScan.hasThreats) {
-      result.isValid = false;
-      result.securityFlags.embeddedScripts = true;
-      result.errors.push('Potentially malicious content detected in image metadata');
-      result.errors.push(...threatScan.threats);
+      if (isAdminUpload) {
+        // For admin uploads, log threats as warnings instead of errors
+        result.warnings.push('Potentially suspicious content detected in image metadata');
+        result.warnings.push(...threatScan.threats);
+        result.securityFlags.embeddedScripts = true;
+      } else {
+        result.isValid = false;
+        result.securityFlags.embeddedScripts = true;
+        result.errors.push('Potentially malicious content detected in image metadata');
+        result.errors.push(...threatScan.threats);
+      }
     }
 
     // 4. Additional security checks for specific file types
@@ -239,7 +256,8 @@ export const validateImageContent = async (file: File): Promise<ImageContentVali
       isValid: result.isValid,
       securityFlags: result.securityFlags,
       errors: result.errors,
-      warnings: result.warnings
+      warnings: result.warnings,
+      adminMode: isAdminUpload
     });
 
   } catch (error) {

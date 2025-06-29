@@ -10,6 +10,7 @@ export interface SecurityValidationOptions {
   maxFileSize: number;
   allowedTypes: string[];
   blockSuspiciousFiles: boolean;
+  isAdminUpload?: boolean;
 }
 
 export const DEFAULT_SECURITY_OPTIONS: SecurityValidationOptions = {
@@ -18,7 +19,8 @@ export const DEFAULT_SECURITY_OPTIONS: SecurityValidationOptions = {
   enableEntropyAnalysis: false, // Can be performance intensive
   maxFileSize: 10 * 1024 * 1024, // 10MB
   allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-  blockSuspiciousFiles: true
+  blockSuspiciousFiles: true,
+  isAdminUpload: false
 };
 
 // Comprehensive file security validation
@@ -73,8 +75,13 @@ export const validateFileSecurely = async (
       const headerResult = await validateFileHeader(file);
       
       if (!headerResult.isValid) {
-        result.isValid = false;
-        result.errors.push(...headerResult.errors);
+        if (config.isAdminUpload) {
+          // For admin uploads, convert errors to warnings
+          result.warnings.push(...headerResult.errors);
+        } else {
+          result.isValid = false;
+          result.errors.push(...headerResult.errors);
+        }
       }
       
       result.warnings.push(...headerResult.warnings);
@@ -85,14 +92,34 @@ export const validateFileSecurely = async (
       }
     }
 
-    // 3. Content validation
+    // 3. Content validation (with admin mode support)
     if (config.enableContentValidation && result.isValid) {
       console.log('Running content validation...');
-      const contentResult = await validateImageContent(file);
+      const contentResult = await validateImageContent(file, config.isAdminUpload);
       
       if (!contentResult.isValid) {
-        result.isValid = false;
-        result.errors.push(...contentResult.errors);
+        if (config.isAdminUpload) {
+          // For admin uploads, be more lenient - convert some errors to warnings
+          const criticalErrors = contentResult.errors.filter(error => 
+            error.includes('corrupted') || 
+            error.includes('malformed') ||
+            error.includes('zero dimensions')
+          );
+          
+          if (criticalErrors.length > 0) {
+            result.isValid = false;
+            result.errors.push(...criticalErrors);
+          }
+          
+          // Non-critical errors become warnings for admin
+          const nonCriticalErrors = contentResult.errors.filter(error => 
+            !criticalErrors.includes(error)
+          );
+          result.warnings.push(...nonCriticalErrors);
+        } else {
+          result.isValid = false;
+          result.errors.push(...contentResult.errors);
+        }
       }
       
       result.warnings.push(...contentResult.warnings);
@@ -103,17 +130,20 @@ export const validateFileSecurely = async (
       }
     }
 
-    // 4. Entropy analysis for advanced threat detection
+    // 4. Entropy analysis for advanced threat detection (more lenient for admin)
     if (config.enableEntropyAnalysis && result.isValid) {
       console.log('Running entropy analysis...');
       const entropy = await calculateFileEntropy(file);
       
-      // Typical image entropy is between 6-8 bits per byte
-      if (entropy < 4 || entropy > 8.5) {
+      // More lenient thresholds for admin uploads
+      const minEntropy = config.isAdminUpload ? 2 : 4;
+      const maxEntropy = config.isAdminUpload ? 9 : 8.5;
+      
+      if (entropy < minEntropy || entropy > maxEntropy) {
         result.securityFlags.unusualEntropy = true;
         result.warnings.push(`Unusual file entropy detected: ${entropy.toFixed(2)} bits/byte`);
         
-        if (config.blockSuspiciousFiles && (entropy < 2 || entropy > 8.8)) {
+        if (config.blockSuspiciousFiles && !config.isAdminUpload && (entropy < 2 || entropy > 8.8)) {
           result.isValid = false;
           result.errors.push('File has suspicious entropy patterns that may indicate malicious content');
         }
@@ -125,14 +155,20 @@ export const validateFileSecurely = async (
     const suspiciousExtensions = ['.php', '.asp', '.jsp', '.exe', '.scr', '.bat', '.cmd', '.js', '.vbs'];
     
     if (suspiciousExtensions.some(ext => filename.includes(ext))) {
-      result.isValid = false;
-      result.errors.push('Filename contains potentially dangerous extensions');
+      if (config.isAdminUpload) {
+        result.warnings.push('Filename contains potentially dangerous extensions');
+      } else {
+        result.isValid = false;
+        result.errors.push('Filename contains potentially dangerous extensions');
+      }
     }
 
-    // 6. Final security assessment
-    const securityScore = calculateSecurityScore(result);
+    // 6. Final security assessment (more lenient for admin)
+    const securityScore = calculateSecurityScore(result, config.isAdminUpload);
     
-    if (securityScore < 70 && config.blockSuspiciousFiles) {
+    const minScore = config.isAdminUpload ? 50 : 70;
+    
+    if (securityScore < minScore && config.blockSuspiciousFiles && !config.isAdminUpload) {
       result.isValid = false;
       result.errors.push(`File failed security assessment (score: ${securityScore}/100)`);
     } else if (securityScore < 85) {
@@ -144,7 +180,8 @@ export const validateFileSecurely = async (
       isValid: result.isValid,
       securityScore,
       errors: result.errors.length,
-      warnings: result.warnings.length
+      warnings: result.warnings.length,
+      adminMode: config.isAdminUpload
     });
 
   } catch (error) {
@@ -156,21 +193,24 @@ export const validateFileSecurely = async (
   return result;
 };
 
-// Calculate a security score based on validation results
-const calculateSecurityScore = (result: ImageContentValidationResult): number => {
+// Calculate a security score based on validation results (adjusted for admin mode)
+const calculateSecurityScore = (result: ImageContentValidationResult, isAdminUpload: boolean = false): number => {
   let score = 100;
   
+  // More lenient scoring for admin uploads
+  const multiplier = isAdminUpload ? 0.5 : 1;
+  
   // Deduct points for each security flag
-  if (result.securityFlags.malformedStructure) score -= 30;
-  if (result.securityFlags.embeddedScripts) score -= 40;
-  if (result.securityFlags.suspiciousSize) score -= 10;
-  if (result.securityFlags.unusualEntropy) score -= 15;
+  if (result.securityFlags.malformedStructure) score -= 30 * multiplier;
+  if (result.securityFlags.embeddedScripts) score -= 40 * multiplier;
+  if (result.securityFlags.suspiciousSize) score -= 10 * multiplier;
+  if (result.securityFlags.unusualEntropy) score -= 15 * multiplier;
   
   // Deduct points for each error
-  score -= result.errors.length * 5;
+  score -= result.errors.length * 5 * multiplier;
   
-  // Deduct points for each warning
-  score -= result.warnings.length * 2;
+  // Deduct points for each warning (less for admin)
+  score -= result.warnings.length * (isAdminUpload ? 1 : 2);
   
   return Math.max(0, score);
 };

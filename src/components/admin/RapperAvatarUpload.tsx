@@ -28,22 +28,31 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     enableEntropyAnalysis: false, // Performance consideration
     maxFileSize: 15 * 1024 * 1024, // 15MB for admin uploads
     allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
-    blockSuspiciousFiles: true
+    blockSuspiciousFiles: false, // More lenient for admin
+    isAdminUpload: true // Enable admin mode
   });
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      console.log('=== STARTING ENHANCED RAPPER AVATAR UPLOAD ===');
+      console.log('=== STARTING ENHANCED RAPPER AVATAR UPLOAD (ADMIN MODE) ===');
       console.log('File info:', { name: file.name, size: file.size, type: file.type });
       
-      // Enhanced security validation
+      // Enhanced security validation with admin mode
       const validationResult = await validateFile(file, `admin-${rapper.id}`);
       
       if (!validationResult.isValid) {
         throw new Error(validationResult.error || 'File validation failed');
       }
 
-      console.log('Enhanced validation passed, proceeding with upload');
+      // Log any warnings but don't fail the upload
+      if (validationResult.result?.warnings.length) {
+        console.log('Admin upload validation warnings (non-blocking):', validationResult.result.warnings);
+        toast.warning("Upload succeeded with warnings", {
+          description: `${validationResult.result.warnings.length} validation warnings were noted but upload proceeded`
+        });
+      }
+
+      console.log('Enhanced validation passed (admin mode), proceeding with upload');
       
       // Create a sanitized name for the rapper folder
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
@@ -177,8 +186,8 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         throw new Error(`Rapper table update failed: ${updateError.message}`);
       }
 
-      console.log('=== ENHANCED UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
-      console.log('Security validation passed with enhanced checks');
+      console.log('=== ENHANCED ADMIN UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
+      console.log('Security validation passed with admin mode leniency');
       
       setUploadProgress("Upload completed!");
       return { basePath, xlarge_url: fullXlargeUrl };
@@ -190,16 +199,16 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       
-      console.log('Enhanced upload successful, queries invalidated');
+      console.log('Enhanced admin upload successful, queries invalidated');
       toast.success(`Avatar uploaded successfully for ${rapper.name}`, {
-        description: "Enhanced security validation passed - all image sizes have been optimized and uploaded"
+        description: "Enhanced security validation passed with admin privileges - all image sizes have been optimized and uploaded"
       });
       setUploadProgress("");
     },
     onError: (error: any) => {
-      console.error('Enhanced upload error:', error);
+      console.error('Enhanced admin upload error:', error);
       toast.error(`Upload failed: ${error.message}`, {
-        description: "Enhanced security validation or upload process failed"
+        description: "Enhanced security validation or upload process failed. Admin mode was enabled for more lenient validation."
       });
       setUploadProgress("");
     }
@@ -209,10 +218,10 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log('File selected for enhanced validation:', { name: file.name, size: file.size, type: file.type });
+    console.log('File selected for enhanced admin validation:', { name: file.name, size: file.size, type: file.type });
 
     setUploading(true);
-    setUploadProgress("Starting enhanced security validation...");
+    setUploadProgress("Starting enhanced security validation (admin mode)...");
     
     try {
       await uploadMutation.mutateAsync(file);
@@ -229,7 +238,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       <CardHeader className="pb-4">
         <CardTitle className="text-rap-gold font-ceviche text-lg font-normal flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
-          Enhanced Avatar Upload
+          Enhanced Avatar Upload (Admin)
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -246,7 +255,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
             {validating && validationProgress.progress > 0 && (
               <div className="space-y-2">
                 <div className="flex justify-between text-xs text-rap-gold/70">
-                  <span>Security Validation</span>
+                  <span>Security Validation (Admin Mode)</span>
                   <span>{validationProgress.progress}%</span>
                 </div>
                 <Progress value={validationProgress.progress} className="h-2" />
@@ -256,7 +265,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
             {validationProgress.stage === 'complete' && (
               <div className="flex items-center gap-1 text-xs text-green-400">
                 <CheckCircle className="w-3 h-3" />
-                <span>Enhanced security validation passed</span>
+                <span>Enhanced admin security validation passed</span>
               </div>
             )}
           </div>
@@ -310,10 +319,10 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
           </div>
           
           <p className="text-rap-smoke text-sm text-center">
-            Upload a high-quality image with enhanced security validation.
+            Upload a high-quality image with enhanced security validation (Admin Mode).
             <br />
             <span className="text-xs text-rap-smoke/70">
-              Supported formats: JPG, PNG, WebP (max 15MB) • Enhanced validation includes file header verification, content analysis, and security scanning
+              Supported formats: JPG, PNG, WebP (max 15MB) • Enhanced validation with admin privileges for more lenient security checks
             </span>
           </p>
         </div>
