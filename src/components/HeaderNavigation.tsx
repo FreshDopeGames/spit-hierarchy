@@ -4,9 +4,8 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { useSecurityContext } from '@/hooks/useSecurityContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
-import { useSidebar } from '@/components/ui/sidebar';
-import { Button } from '@/components/ui/button';
 import UserProfileDropdown from './UserProfileDropdown';
+import NavigationSidebar from './NavigationSidebar';
 
 interface HeaderNavigationProps {
   isScrolled: boolean;
@@ -16,7 +15,6 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
   const { user } = useAuth();
   const { isAdmin, canManageBlog, isLoading } = useSecurityContext();
   const { userProfile } = useUserProfile();
-  const { toggleSidebar } = useSidebar();
 
   return (
     <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
@@ -24,27 +22,21 @@ const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
     }`}>
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
-          {/* Left: Hamburger Menu */}
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={toggleSidebar}
-            className="text-rap-platinum hover:text-rap-gold hover:bg-rap-gold/10 transition-colors"
-          >
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M3 12H21M3 6H21M3 18H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span className="sr-only">Toggle navigation menu</span>
-          </Button>
+          {/* Left: Hamburger Menu using NavigationSidebar */}
+          <NavigationSidebar />
 
           {/* Center: Spit Hierarchy Logo */}
           <Link to="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 bg-gradient-to-br from-rap-gold via-rap-gold-light to-rap-gold-dark rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-rap-gold/30 transition-all">
-              <span className="text-rap-carbon font-mogra font-bold text-lg">S</span>
+            <img 
+              src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
+              alt="Spit Hierarchy Logo" 
+              className="w-12 h-8" 
+            />
+            <div>
+              <h1 className="font-ceviche bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-3xl group-hover:opacity-80 transition-opacity">
+                Spit Hierarchy
+              </h1>
             </div>
-            <span className="text-rap-gold font-mogra text-xl font-bold group-hover:text-rap-gold-light transition-colors">
-              Spit Hierarchy
-            </span>
           </Link>
 
           {/* Right: User Menu */}
