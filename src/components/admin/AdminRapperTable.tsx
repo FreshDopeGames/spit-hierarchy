@@ -1,4 +1,5 @@
 
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +10,9 @@ import { useRapperImage } from "@/hooks/useImageStyle";
 import { formatBirthdate } from "@/utils/zodiacUtils";
 
 type Rapper = Tables<"rappers">;
+
+// Use the same placeholder image that's used throughout the app
+const PLACEHOLDER_IMAGE = "/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png";
 
 interface AdminRapperTableProps {
   rappers: Rapper[];
@@ -67,15 +71,11 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
         {/* Rapper Image */}
         <AspectRatio ratio={1} className="mb-3">
           <div className="w-full h-full bg-gradient-to-br from-rap-gold to-rap-burgundy rounded-lg flex items-center justify-center overflow-hidden">
-            {imageUrl ? (
-              <img 
-                src={imageUrl} 
-                alt={rapper.name}
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <Music className="w-8 h-8 text-white/70" />
-            )}
+            <img 
+              src={imageUrl || PLACEHOLDER_IMAGE} 
+              alt={rapper.name}
+              className="w-full h-full object-cover"
+            />
           </div>
         </AspectRatio>
 
@@ -147,3 +147,4 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
 };
 
 export default AdminRapperTable;
+

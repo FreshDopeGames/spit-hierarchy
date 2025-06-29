@@ -10,9 +10,7 @@ import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement"
 import BlogManagement from "@/components/admin/BlogManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
 import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement";
-import RapperImageManagement from "@/components/admin/RapperImageManagement";
 import AdManagement from "@/components/admin/AdManagement";
-import PlaceholderImageUpload from "@/components/admin/PlaceholderImageUpload";
 
 const Admin = () => {
   const { user } = useAuth();
@@ -35,12 +33,10 @@ const Admin = () => {
         </h1>
 
         <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 bg-rap-carbon-light/50 gap-1">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 bg-rap-carbon-light/50 gap-1">
             <TabsTrigger value="rappers">Rappers</TabsTrigger>
             <TabsTrigger value="rankings">Rankings</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
-            <TabsTrigger value="images">Images</TabsTrigger>
-            <TabsTrigger value="placeholder">Placeholder</TabsTrigger>
             <TabsTrigger value="headers">Headers</TabsTrigger>
             <TabsTrigger value="theme">Theme</TabsTrigger>
             <TabsTrigger value="ads">Ads</TabsTrigger>
@@ -56,14 +52,6 @@ const Admin = () => {
 
           <TabsContent value="blog">
             <BlogManagement />
-          </TabsContent>
-
-          <TabsContent value="images">
-            <RapperImageManagement />
-          </TabsContent>
-
-          <TabsContent value="placeholder">
-            <PlaceholderImageUpload />
           </TabsContent>
 
           <TabsContent value="headers">
