@@ -39,7 +39,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
 
   return (
     <div className="space-y-8">
-      {/* Top 2 in one row - MUCH TALLER CARDS for prominence */}
+      {/* Top 2 in one row - Use xlarge for prominence */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
         {rappers.slice(0, 2).map((rapper, index) => 
           <div key={rapper.id} className="flex flex-col items-center space-y-4 p-6 sm:p-6 bg-black rounded-lg border border-rap-gold/30 min-h-[200px] sm:min-h-[180px]">
@@ -69,7 +69,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         )}
       </div>
       
-      {/* Next 3 in one row - SMALLER CARDS for contrast */}
+      {/* Next 3 in one row - Use medium for smaller cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         {rappers.slice(2, 5).map((rapper, index) => 
           <div key={rapper.id} className="flex flex-col items-center space-y-2 sm:space-y-3 p-4 sm:p-4 bg-black rounded-lg border border-rap-gold/10 min-h-[140px] sm:min-h-[160px]">
@@ -78,7 +78,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
                 {index + 3}
               </span>
             </div>
-            <RapperAvatar rapper={rapper} size="sm" />
+            <RapperAvatar rapper={rapper} size="md" />
             <div className="text-center min-w-0 w-full">
               <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
                 <h4 className="text-base sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">

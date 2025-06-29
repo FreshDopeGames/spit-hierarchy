@@ -13,7 +13,15 @@ interface RapperAvatarProps {
 }
 
 const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: RapperAvatarProps) => {
-  const { data: fetchedImageUrl } = useRapperImage(rapper.id);
+  // Map avatar sizes to image sizes
+  const imageSizeMap = {
+    sm: 'thumb' as const,
+    md: 'medium' as const,
+    lg: 'large' as const,
+    xl: 'xlarge' as const
+  };
+  
+  const { data: fetchedImageUrl } = useRapperImage(rapper.id, imageSizeMap[size]);
   
   // Use provided imageUrl if available (from batch loading), otherwise use fetched URL
   const imageUrl = providedImageUrl !== undefined ? providedImageUrl : fetchedImageUrl;

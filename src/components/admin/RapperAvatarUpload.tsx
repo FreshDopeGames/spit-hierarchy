@@ -37,14 +37,14 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       const originalFile = new File([blob], originalFileName, { type: 'image/jpeg' });
 
       console.log('Uploading original to:', originalFileName);
-      const { data: uploadData, error: uploadError } = await supabase.storage
+      const { error: originalUploadError } = await supabase.storage
         .from('rapper-images')
         .upload(originalFileName, originalFile, {
           cacheControl: '3600',
           upsert: true
         });
 
-      if (uploadError) throw uploadError;
+      if (originalUploadError) throw originalUploadError;
 
       // Upload resized versions
       console.log('Uploading resized versions...');
@@ -68,7 +68,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         })
       );
 
-      // Get public URL for the base path (we'll use this to construct size-specific URLs)
+      // Store the base path (folder name) in rapper_images table
       const basePath = sanitizedName;
 
       // Check if a comic_book style image already exists for this rapper
@@ -78,9 +78,6 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         .eq("rapper_id", rapper.id)
         .eq("style", "comic_book")
         .single();
-
-      // Construct the full URL for the original image for backward compatibility
-      const fullOriginalUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${originalFileName}`;
 
       if (existingImage) {
         // Update existing record with base path
@@ -103,7 +100,8 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         if (insertError) throw insertError;
       }
 
-      // Also update the legacy image_url field for backwards compatibility
+      // Update the legacy image_url field for backwards compatibility (full URL to original)
+      const fullOriginalUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${originalFileName}`;
       const { error: updateError } = await supabase
         .from("rappers")
         .update({ image_url: fullOriginalUrl })

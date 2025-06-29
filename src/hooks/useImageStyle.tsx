@@ -35,13 +35,13 @@ const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large'
   }
   
   // If no size specified, default to xlarge for best quality
-  const sizeFolder = size || 'xlarge';
+  const sizeFile = size || 'xlarge';
   
   // Construct the full Supabase storage URL with size
-  return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${basePath}/${sizeFolder}.jpg`;
+  return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${basePath}/${sizeFile}.jpg`;
 };
 
-// Optimized hook to get rapper image - now with size support
+// Optimized hook to get rapper image - now with size support and proper fallbacks
 export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
   return useQuery({
     queryKey: ["rapper-image", rapperId, "comic_book", size],
@@ -56,7 +56,36 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
 
       // Check if we have a comic_book style image
       if (images && images.length > 0 && images[0].image_url) {
-        return getRapperImageUrl(images[0].image_url, size);
+        const basePath = images[0].image_url;
+        
+        // If it's already a full URL (legacy), return as-is
+        if (basePath.startsWith('http')) {
+          return basePath;
+        }
+        
+        // Otherwise, construct the URL with the requested size
+        const imageUrl = getRapperImageUrl(basePath, size);
+        
+        // Test if the specific size exists by making a HEAD request
+        try {
+          const response = await fetch(imageUrl, { method: 'HEAD' });
+          if (response.ok) {
+            return imageUrl;
+          }
+        } catch (error) {
+          console.log(`Size ${size} not found for rapper ${rapperId}, trying original`);
+        }
+        
+        // If specific size doesn't exist, try original
+        const originalUrl = getRapperImageUrl(basePath, 'xlarge');
+        try {
+          const response = await fetch(originalUrl, { method: 'HEAD' });
+          if (response.ok) {
+            return originalUrl;
+          }
+        } catch (error) {
+          console.log(`Original size not found for rapper ${rapperId}`);
+        }
       }
 
       // Fallback to the legacy image_url field
@@ -75,7 +104,7 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
   });
 };
 
-// Batch hook for loading multiple rapper images efficiently - simplified to comic_book only
+// Batch hook for loading multiple rapper images efficiently
 export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
   return useQuery({
     queryKey: ["rapper-images-batch", rapperIds, "comic_book", size],
@@ -98,18 +127,28 @@ export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' |
       // Build the result map
       const imageMap: Record<string, string | null> = {};
       
-      rapperIds.forEach(rapperId => {
+      for (const rapperId of rapperIds) {
         // Try to find the comic_book style first
         const comicBookImage = images?.find(img => img.rapper_id === rapperId && img.style === "comic_book");
+        
         if (comicBookImage?.image_url) {
-          imageMap[rapperId] = getRapperImageUrl(comicBookImage.image_url, size);
-          return;
+          const basePath = comicBookImage.image_url;
+          
+          // If it's already a full URL (legacy), use as-is
+          if (basePath.startsWith('http')) {
+            imageMap[rapperId] = basePath;
+            continue;
+          }
+          
+          // Otherwise, construct the URL with the requested size
+          imageMap[rapperId] = getRapperImageUrl(basePath, size);
+          continue;
         }
 
         // Fallback to legacy image_url (already full URLs)
         const rapper = rappers?.find(r => r.id === rapperId);
         imageMap[rapperId] = rapper?.image_url || null;
-      });
+      }
 
       return imageMap;
     },

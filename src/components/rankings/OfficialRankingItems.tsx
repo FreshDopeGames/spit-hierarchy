@@ -30,9 +30,9 @@ const OfficialRankingItems = ({
 }: OfficialRankingItemsProps) => {
   const displayedItems = items.slice(0, displayCount);
 
-  // Batch load rapper images for performance
+  // Batch load rapper images for performance - use medium size for ranking items
   const rapperIds = displayedItems.map(item => item.rapper?.id).filter(Boolean) as string[];
-  const { data: rapperImages = {} } = useRapperImages(rapperIds);
+  const { data: rapperImages = {} } = useRapperImages(rapperIds, 'medium');
 
   return (
     <div className="space-y-4">

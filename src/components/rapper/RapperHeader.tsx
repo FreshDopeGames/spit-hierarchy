@@ -22,9 +22,7 @@ const RapperHeader = ({
 }: RapperHeaderProps) => {
   const zodiacSign = getZodiacSign(rapper.birth_month, rapper.birth_day);
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
-  const {
-    data: imageUrl
-  } = useRapperImage(rapper.id);
+  const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge for profile detail
 
   // Placeholder image from Supabase Storage
   const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
@@ -32,13 +30,13 @@ const RapperHeader = ({
   // Use rapper image if available and not empty, otherwise use placeholder
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
 
-  return <div className="space-y-6">
+  return (
+    <div className="space-y-6">
       <Card className="bg-rap-carbon border-rap-burgundy/40 relative overflow-hidden mb-8">
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
         
         <CardContent className="p-8 mb-8">
-          
           <div className="grid md:grid-cols-3 gap-8">
             {/* Rapper Image */}
             <div className="md:col-span-1">
@@ -81,46 +79,65 @@ const RapperHeader = ({
                 <Badge variant="secondary" className="bg-rap-forest/20 text-rap-platinum border-rap-forest/30 px-4 py-2 font-kaushan">
                   {rapper.total_votes || 0} votes
                 </Badge>
-                {zodiacSign && <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 px-4 py-2 font-kaushan">
+                {zodiacSign && (
+                  <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 px-4 py-2 font-kaushan">
                     {zodiacSign}
-                  </Badge>}
+                  </Badge>
+                )}
               </div>
 
               {/* Location, Birth Info & Zodiac */}
               <div className="flex flex-wrap gap-4 text-rap-smoke font-kaushan">
-                {rapper.origin && <div className="flex items-center gap-2">
+                {rapper.origin && (
+                  <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
                     <span>{rapper.origin}</span>
-                  </div>}
-                {birthdate && <div className="flex items-center gap-2">
+                  </div>
+                )}
+                {birthdate && (
+                  <div className="flex items-center gap-2">
                     <Calendar className="w-4 h-4" />
                     <span>{birthdate}</span>
-                  </div>}
+                  </div>
+                )}
               </div>
 
               {/* Social Links */}
               <div className="flex flex-wrap gap-3">
-                {rapper.instagram_handle && <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
+                {rapper.instagram_handle && (
+                  <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
                     <Instagram className="w-4 h-4 mr-2" />
                     Instagram
-                  </Button>}
-                {rapper.twitter_handle && <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
+                  </Button>
+                )}
+                {rapper.twitter_handle && (
+                  <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
                     <Twitter className="w-4 h-4 mr-2" />
                     Twitter
-                  </Button>}
-                {rapper.spotify_id && <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
+                  </Button>
+                )}
+                {rapper.spotify_id && (
+                  <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
                     <Music className="w-4 h-4 mr-2" />
                     Spotify
-                  </Button>}
+                  </Button>
+                )}
               </div>
 
               {/* Vote Button */}
-              <Button onClick={onVoteClick} size="lg" className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30 text-xl">Rate This Rapper</Button>
+              <Button 
+                onClick={onVoteClick} 
+                size="lg" 
+                className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30 text-xl"
+              >
+                Rate This Rapper
+              </Button>
             </div>
           </div>
         </CardContent>
       </Card>
-    </div>;
+    </div>
+  );
 };
 
 export default RapperHeader;
