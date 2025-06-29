@@ -4,29 +4,11 @@ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import RankingCard from "./RankingCard";
-
-interface Rapper {
-  rank: number;
-  name: string;
-  reason: string;
-}
-
-interface OfficialRanking {
-  id: string;
-  title: string;
-  description: string;
-  author: string;
-  timeAgo: string;
-  rappers: Rapper[];
-  likes: number;
-  views: number;
-  isOfficial: boolean;
-  tags: string[];
-  slug?: string;
-}
+import { RankingWithItems } from "@/types/rankings";
+import { transformOfficialRankings } from "@/utils/rankingTransformers";
 
 interface OfficialRankingsSectionProps {
-  rankings?: OfficialRanking[];
+  rankings?: RankingWithItems[];
 }
 
 const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps) => {
@@ -34,6 +16,9 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
   if (!rankings || rankings.length === 0) {
     return null;
   }
+
+  // Transform rankings to unified format
+  const transformedRankings = transformOfficialRankings(rankings);
 
   return (
     <div className="mb-12">
@@ -57,15 +42,11 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-        {rankings.map((ranking) => (
+        {transformedRankings.map((ranking) => (
           <div key={ranking.id}>
-            {ranking.slug ? (
-              <Link to={`/rankings/official/${ranking.slug}`}>
-                <RankingCard ranking={ranking} isUserRanking={false} />
-              </Link>
-            ) : (
+            <Link to={`/rankings/official/${ranking.slug}`}>
               <RankingCard ranking={ranking} isUserRanking={false} />
-            )}
+            </Link>
           </div>
         ))}
       </div>
