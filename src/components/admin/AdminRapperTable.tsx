@@ -62,7 +62,7 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
 };
 
 const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onEdit: (rapper: Rapper) => void; onDelete: (id: string) => void; }) => {
-  const { data: imageUrl } = useRapperImage(rapper.id);
+  const { data: imageUrl } = useRapperImage(rapper.id, 'large'); // Request large size for admin table
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (

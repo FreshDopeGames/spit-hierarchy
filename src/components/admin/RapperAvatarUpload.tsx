@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -6,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, ImageIcon, Loader2 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
+import { generateRapperImageSizes } from "@/utils/imageUtils";
 
 type Rapper = Tables<"rappers">;
 
@@ -19,25 +21,55 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      // Create a file name with rapper's name and comic_book style
+      // Create a sanitized name for the rapper folder
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${sanitizedName}-comic_book-${Date.now()}.${fileExt}`;
+      
+      // Convert file to blob for processing
+      const blob = new Blob([file], { type: file.type });
+      
+      // Generate multiple resolutions
+      console.log('Generating rapper image sizes...');
+      const resizedImages = await generateRapperImageSizes(blob);
+      console.log('Generated sizes:', resizedImages.map(img => img.name));
 
-      // Upload to storage
+      // Upload original image
+      const originalFileName = `${sanitizedName}/original.jpg`;
+      const originalFile = new File([blob], originalFileName, { type: 'image/jpeg' });
+
+      console.log('Uploading original to:', originalFileName);
       const { data: uploadData, error: uploadError } = await supabase.storage
         .from('rapper-images')
-        .upload(fileName, file, {
+        .upload(originalFileName, originalFile, {
           cacheControl: '3600',
-          upsert: false
+          upsert: true
         });
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: { publicUrl } } = supabase.storage
-        .from('rapper-images')
-        .getPublicUrl(uploadData.path);
+      // Upload resized versions
+      console.log('Uploading resized versions...');
+      await Promise.all(
+        resizedImages.map(async ({ name, blob: resizedBlob }) => {
+          const fileName = `${sanitizedName}/${name}.jpg`;
+          const file = new File([resizedBlob], fileName, { type: 'image/jpeg' });
+          
+          console.log(`Uploading ${name} to:`, fileName);
+          const { error } = await supabase.storage
+            .from('rapper-images')
+            .upload(fileName, file, {
+              cacheControl: '3600',
+              upsert: true
+            });
+          
+          if (error) {
+            console.error(`Upload failed for ${name}:`, error);
+            throw error;
+          }
+        })
+      );
+
+      // Get public URL for the base path (we'll use this to construct size-specific URLs)
+      const basePath = sanitizedName;
 
       // Check if a comic_book style image already exists for this rapper
       const { data: existingImage } = await supabase
@@ -47,22 +79,25 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         .eq("style", "comic_book")
         .single();
 
+      // Construct the full URL for the original image for backward compatibility
+      const fullOriginalUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${originalFileName}`;
+
       if (existingImage) {
-        // Update existing record
+        // Update existing record with base path
         const { error: updateError } = await supabase
           .from("rapper_images")
-          .update({ image_url: publicUrl })
+          .update({ image_url: basePath })
           .eq("id", existingImage.id);
 
         if (updateError) throw updateError;
       } else {
-        // Insert new record
+        // Insert new record with base path
         const { error: insertError } = await supabase
           .from("rapper_images")
           .insert({
             rapper_id: rapper.id,
             style: "comic_book",
-            image_url: publicUrl
+            image_url: basePath
           });
 
         if (insertError) throw insertError;
@@ -71,12 +106,12 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       // Also update the legacy image_url field for backwards compatibility
       const { error: updateError } = await supabase
         .from("rappers")
-        .update({ image_url: publicUrl })
+        .update({ image_url: fullOriginalUrl })
         .eq("id", rapper.id);
 
       if (updateError) throw updateError;
 
-      return publicUrl;
+      return basePath;
     },
     onSuccess: () => {
       // Invalidate all relevant queries to ensure images update everywhere

@@ -27,10 +27,24 @@ export const useImageStyle = () => {
   };
 };
 
-// Optimized hook to get rapper image - now always uses comic_book style
-export const useRapperImage = (rapperId: string) => {
+// Helper function to construct rapper image URLs with size support
+const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
+  // If basePath is already a full URL, return as is (backward compatibility)
+  if (basePath.startsWith('http')) {
+    return basePath;
+  }
+  
+  // If no size specified, default to xlarge for best quality
+  const sizeFolder = size || 'xlarge';
+  
+  // Construct the full Supabase storage URL with size
+  return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${basePath}/${sizeFolder}.jpg`;
+};
+
+// Optimized hook to get rapper image - now with size support
+export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
   return useQuery({
-    queryKey: ["rapper-image", rapperId, "comic_book"],
+    queryKey: ["rapper-image", rapperId, "comic_book", size],
     queryFn: async () => {
       // Try to get comic_book style first, then fallback to legacy image_url
       const { data: images } = await supabase
@@ -42,7 +56,7 @@ export const useRapperImage = (rapperId: string) => {
 
       // Check if we have a comic_book style image
       if (images && images.length > 0 && images[0].image_url) {
-        return images[0].image_url;
+        return getRapperImageUrl(images[0].image_url, size);
       }
 
       // Fallback to the legacy image_url field
@@ -52,6 +66,7 @@ export const useRapperImage = (rapperId: string) => {
         .eq("id", rapperId)
         .single();
 
+      // For legacy URLs, return as-is since they're already full URLs
       return rapper?.image_url || null;
     },
     enabled: !!rapperId,
@@ -61,9 +76,9 @@ export const useRapperImage = (rapperId: string) => {
 };
 
 // Batch hook for loading multiple rapper images efficiently - simplified to comic_book only
-export const useRapperImages = (rapperIds: string[]) => {
+export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
   return useQuery({
-    queryKey: ["rapper-images-batch", rapperIds, "comic_book"],
+    queryKey: ["rapper-images-batch", rapperIds, "comic_book", size],
     queryFn: async () => {
       if (rapperIds.length === 0) return {};
 
@@ -87,11 +102,11 @@ export const useRapperImages = (rapperIds: string[]) => {
         // Try to find the comic_book style first
         const comicBookImage = images?.find(img => img.rapper_id === rapperId && img.style === "comic_book");
         if (comicBookImage?.image_url) {
-          imageMap[rapperId] = comicBookImage.image_url;
+          imageMap[rapperId] = getRapperImageUrl(comicBookImage.image_url, size);
           return;
         }
 
-        // Fallback to legacy image_url
+        // Fallback to legacy image_url (already full URLs)
         const rapper = rappers?.find(r => r.id === rapperId);
         imageMap[rapperId] = rapper?.image_url || null;
       });

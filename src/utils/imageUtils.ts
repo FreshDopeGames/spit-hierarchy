@@ -30,12 +30,32 @@ export const resizeImage = (blob: Blob, width: number, height: number): Promise<
   });
 };
 
+// User avatar sizes - kept as is for user profile avatars
 export const generateAvatarSizes = async (originalBlob: Blob) => {
   const sizes = [
     { name: 'thumb', size: 32 },
     { name: 'medium', size: 64 },
     { name: 'large', size: 128 },
     { name: 'xlarge', size: 140 }
+  ];
+
+  const resizedImages = await Promise.all(
+    sizes.map(async ({ name, size }) => {
+      const resizedBlob = await resizeImage(originalBlob, size, size);
+      return { name, blob: resizedBlob };
+    })
+  );
+
+  return resizedImages;
+};
+
+// Rapper image sizes - optimized for rapper displays and admin interface
+export const generateRapperImageSizes = async (originalBlob: Blob) => {
+  const sizes = [
+    { name: 'thumb', size: 64 },    // Small cards/lists
+    { name: 'medium', size: 128 },  // Medium cards
+    { name: 'large', size: 256 },   // Large cards and admin table
+    { name: 'xlarge', size: 400 }   // Detail views (matches 366x354 display area)
   ];
 
   const resizedImages = await Promise.all(
