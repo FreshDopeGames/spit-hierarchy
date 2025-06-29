@@ -24,15 +24,17 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       // Create a sanitized name for the rapper folder
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
       
+      console.log('Starting upload for rapper:', rapper.name, 'Folder:', sanitizedName);
+      
       // Convert file to blob for processing
       const blob = new Blob([file], { type: file.type });
       
-      // Generate multiple resolutions
+      // Generate multiple resolutions with enhanced quality
       console.log('Generating rapper image sizes...');
       const resizedImages = await generateRapperImageSizes(blob);
       console.log('Generated sizes:', resizedImages.map(img => img.name));
 
-      // Upload original image
+      // Upload original image first
       const originalFileName = `${sanitizedName}/original.jpg`;
       const originalFile = new File([blob], originalFileName, { type: 'image/jpeg' });
 
@@ -44,31 +46,52 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
           upsert: true
         });
 
-      if (originalUploadError) throw originalUploadError;
+      if (originalUploadError) {
+        console.error('Original upload failed:', originalUploadError);
+        throw originalUploadError;
+      }
 
-      // Upload resized versions
+      // Upload all resized versions with proper error handling
       console.log('Uploading resized versions...');
-      await Promise.all(
-        resizedImages.map(async ({ name, blob: resizedBlob }) => {
-          const fileName = `${sanitizedName}/${name}.jpg`;
-          const file = new File([resizedBlob], fileName, { type: 'image/jpeg' });
-          
-          console.log(`Uploading ${name} to:`, fileName);
-          const { error } = await supabase.storage
-            .from('rapper-images')
-            .upload(fileName, file, {
-              cacheControl: '3600',
-              upsert: true
-            });
-          
-          if (error) {
-            console.error(`Upload failed for ${name}:`, error);
-            throw error;
-          }
-        })
-      );
+      const uploadPromises = resizedImages.map(async ({ name, blob: resizedBlob }) => {
+        const fileName = `${sanitizedName}/${name}.jpg`;
+        const file = new File([resizedBlob], fileName, { type: 'image/jpeg' });
+        
+        console.log(`Uploading ${name} size to:`, fileName);
+        const { error } = await supabase.storage
+          .from('rapper-images')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: true
+          });
+        
+        if (error) {
+          console.error(`Upload failed for ${name}:`, error);
+          throw new Error(`Failed to upload ${name} size: ${error.message}`);
+        }
+        
+        return { size: name, fileName };
+      });
 
-      // Store the base path (folder name) in rapper_images table
+      // Wait for all uploads to complete
+      const uploadResults = await Promise.all(uploadPromises);
+      console.log('All uploads completed:', uploadResults);
+
+      // Verify uploads by checking if files exist
+      for (const { size, fileName } of uploadResults) {
+        const { data: fileData, error: checkError } = await supabase.storage
+          .from('rapper-images')
+          .list(sanitizedName);
+        
+        if (checkError) {
+          console.warn(`Could not verify ${size} upload:`, checkError);
+        } else {
+          const fileExists = fileData?.some(f => f.name === `${size}.jpg`);
+          console.log(`${size} file exists:`, fileExists);
+        }
+      }
+
+      // Store the base path in rapper_images table
       const basePath = sanitizedName;
 
       // Check if a comic_book style image already exists for this rapper
@@ -83,10 +106,16 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         // Update existing record with base path
         const { error: updateError } = await supabase
           .from("rapper_images")
-          .update({ image_url: basePath })
+          .update({ 
+            image_url: basePath,
+            updated_at: new Date().toISOString()
+          })
           .eq("id", existingImage.id);
 
-        if (updateError) throw updateError;
+        if (updateError) {
+          console.error('Database update failed:', updateError);
+          throw updateError;
+        }
       } else {
         // Insert new record with base path
         const { error: insertError } = await supabase
@@ -97,28 +126,39 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
             image_url: basePath
           });
 
-        if (insertError) throw insertError;
+        if (insertError) {
+          console.error('Database insert failed:', insertError);
+          throw insertError;
+        }
       }
 
-      // Update the legacy image_url field for backwards compatibility (full URL to original)
-      const fullOriginalUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${originalFileName}`;
+      // Update the legacy image_url field for backwards compatibility (use xlarge for best quality)
+      const fullXlargeUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${sanitizedName}/xlarge.jpg`;
       const { error: updateError } = await supabase
         .from("rappers")
-        .update({ image_url: fullOriginalUrl })
+        .update({ 
+          image_url: fullXlargeUrl,
+          updated_at: new Date().toISOString()
+        })
         .eq("id", rapper.id);
 
-      if (updateError) throw updateError;
+      if (updateError) {
+        console.error('Rapper table update failed:', updateError);
+        throw updateError;
+      }
 
-      return basePath;
+      console.log('Upload process completed successfully');
+      return { basePath, xlarge_url: fullXlargeUrl };
     },
-    onSuccess: () => {
+    onSuccess: (result) => {
       // Invalidate all relevant queries to ensure images update everywhere
       queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rapper-images"] });
-      queryClient.invalidateQueries({ queryKey: ["rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
+      queryClient.invalidateQueries({ queryKey: ["rappers"] });
       
-      toast.success(`Avatar uploaded for ${rapper.name}`);
+      console.log('Upload successful, queries invalidated');
+      toast.success(`Avatar uploaded successfully for ${rapper.name}`);
     },
     onError: (error: any) => {
       console.error('Upload error:', error);
@@ -136,9 +176,9 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       return;
     }
 
-    // Validate file size (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("Please select an image smaller than 5MB");
+    // Validate file size (max 10MB for better quality)
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Please select an image smaller than 10MB");
       return;
     }
 
@@ -164,7 +204,12 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
             <img 
               src={rapper.image_url} 
               alt={rapper.name}
-              className="w-64 h-64 object-cover border-2 border-rap-gold/30"
+              className="w-64 h-64 object-cover border-2 border-rap-gold/30 rounded-lg"
+              onError={(e) => {
+                console.error('Image failed to load:', rapper.image_url);
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
             />
           </div>
         )}
@@ -194,11 +239,15 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
                   ) : (
                     <Upload className="w-4 h-4" />
                   )}
-                  {uploading ? 'Uploading...' : 'Upload Avatar'}
+                  {uploading ? 'Uploading & Optimizing...' : 'Upload Avatar'}
                 </span>
               </Button>
             </label>
           </div>
+          
+          <p className="text-rap-smoke text-sm text-center">
+            Upload a high-quality image. Multiple optimized sizes will be generated automatically.
+          </p>
         </div>
       </CardContent>
     </Card>
