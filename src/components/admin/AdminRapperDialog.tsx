@@ -1,11 +1,9 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RapperForm from "./forms/RapperForm";
 import RapperAvatarUpload from "./RapperAvatarUpload";
 import { Tables } from "@/integrations/supabase/types";
-
 type Rapper = Tables<"rappers">;
 interface AdminRapperDialogProps {
   open: boolean;
@@ -13,7 +11,6 @@ interface AdminRapperDialogProps {
   rapper?: Rapper | null;
   onSuccess: () => void;
 }
-
 const AdminRapperDialog = ({
   open,
   onOpenChange,
@@ -24,18 +21,15 @@ const AdminRapperDialog = ({
     onSuccess();
     onOpenChange(false);
   };
-
-  return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-rap-carbon border border-rap-gold/30">
+  return <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-black border border-rap-gold/30">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
             {rapper ? `Edit ${rapper.name}` : "Add New Rapper"}
           </DialogTitle>
         </DialogHeader>
         
-        {rapper ? (
-          <Tabs defaultValue="details" className="w-full">
+        {rapper ? <Tabs defaultValue="details" className="w-full">
             <TabsList className="grid w-full grid-cols-2 mb-6 bg-rap-carbon/50">
               <TabsTrigger value="details" className="text-rap-platinum data-[state=active]:text-rap-gold">
                 Rapper Details
@@ -46,27 +40,14 @@ const AdminRapperDialog = ({
             </TabsList>
             
             <TabsContent value="details">
-              <RapperForm 
-                rapper={rapper} 
-                onSuccess={handleClose}
-                onCancel={() => onOpenChange(false)}
-              />
+              <RapperForm rapper={rapper} onSuccess={handleClose} onCancel={() => onOpenChange(false)} />
             </TabsContent>
             
             <TabsContent value="avatar">
               <RapperAvatarUpload rapper={rapper} />
             </TabsContent>
-          </Tabs>
-        ) : (
-          <RapperForm 
-            rapper={null} 
-            onSuccess={handleClose}
-            onCancel={() => onOpenChange(false)}
-          />
-        )}
+          </Tabs> : <RapperForm rapper={null} onSuccess={handleClose} onCancel={() => onOpenChange(false)} />}
       </DialogContent>
-    </Dialog>
-  );
+    </Dialog>;
 };
-
 export default AdminRapperDialog;
