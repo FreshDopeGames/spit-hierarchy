@@ -23,7 +23,7 @@ const MemberStatusCard = ({ memberStats }: MemberStatusCardProps) => {
   const voteMultiplier = getVoteMultiplier();
 
   return (
-    <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 shadow-lg shadow-rap-gold/20">
+    <div className="bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 shadow-lg shadow-rap-gold/20">
       <div className="flex items-center justify-center">
         <div className="text-center w-full">
           <div className="flex items-center justify-center mb-2">
@@ -70,7 +70,7 @@ const MemberStatusCard = ({ memberStats }: MemberStatusCardProps) => {
               </div>
               <Progress 
                 value={progress.percentage} 
-                className="w-full bg-rap-carbon"
+                className="w-full"
               />
               <div className="text-xs text-rap-smoke text-center font-merienda">
                 {Math.round(progress.percentage)}% complete
