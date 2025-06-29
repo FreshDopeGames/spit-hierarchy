@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -48,6 +49,9 @@ const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large'
   
   return imageUrl;
 };
+
+// Centralized placeholder image URL
+const PLACEHOLDER_IMAGE_URL = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
 
 // Enhanced hook to get rapper image with better error handling and fallbacks
 export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
@@ -121,17 +125,23 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
 
         if (rapperError) {
           console.error('Error fetching rapper legacy image:', rapperError);
-          return null;
+          return PLACEHOLDER_IMAGE_URL;
         }
 
         // For legacy URLs, return as-is since they're already full URLs
-        const legacyUrl = rapper?.image_url || null;
-        console.log('Using legacy image URL:', legacyUrl);
-        return legacyUrl;
+        const legacyUrl = rapper?.image_url;
+        if (legacyUrl && legacyUrl.trim() !== "") {
+          console.log('Using legacy image URL:', legacyUrl);
+          return legacyUrl;
+        }
+
+        // Final fallback to placeholder
+        console.log('No rapper image found, using placeholder');
+        return PLACEHOLDER_IMAGE_URL;
         
       } catch (error) {
         console.error('Unexpected error in useRapperImage:', error);
-        return null;
+        return PLACEHOLDER_IMAGE_URL;
       }
     },
     enabled: !!rapperId,
@@ -176,7 +186,7 @@ export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' |
         }
 
         // Build the result map
-        const imageMap: Record<string, string | null> = {};
+        const imageMap: Record<string, string> = {};
         
         for (const rapperId of rapperIds) {
           // Try to find the comic_book style first
@@ -198,7 +208,12 @@ export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' |
 
           // Fallback to legacy image_url (already full URLs)
           const rapper = rappers?.find(r => r.id === rapperId);
-          imageMap[rapperId] = rapper?.image_url || null;
+          if (rapper?.image_url && rapper.image_url.trim() !== "") {
+            imageMap[rapperId] = rapper.image_url;
+          } else {
+            // Final fallback to placeholder
+            imageMap[rapperId] = PLACEHOLDER_IMAGE_URL;
+          }
         }
 
         console.log(`Batch loading completed for ${Object.keys(imageMap).length} rappers`);
@@ -206,7 +221,12 @@ export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' |
         
       } catch (error) {
         console.error('Unexpected error in batch image loading:', error);
-        return {};
+        // Return placeholder for all rappers on error
+        const errorMap: Record<string, string> = {};
+        rapperIds.forEach(id => {
+          errorMap[id] = PLACEHOLDER_IMAGE_URL;
+        });
+        return errorMap;
       }
     },
     enabled: rapperIds.length > 0,

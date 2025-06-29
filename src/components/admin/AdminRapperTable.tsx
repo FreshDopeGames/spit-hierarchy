@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -71,7 +70,7 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
         <AspectRatio ratio={1} className="mb-3">
           <div className="w-full h-full bg-gradient-to-br from-rap-gold to-rap-burgundy rounded-lg flex items-center justify-center overflow-hidden">
             <img 
-              src={imageUrl || PLACEHOLDER_IMAGE} 
+              src={imageUrl} 
               alt={rapper.name}
               className="w-full h-full object-cover"
             />

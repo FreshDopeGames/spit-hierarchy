@@ -1,9 +1,8 @@
-
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Star, MapPin, Calendar, Verified, Music } from "lucide-react";
+import { Star, MapPin, Calendar, Verified } from "lucide-react";
 import { Link } from "react-router-dom";
 import VoteModal from "./VoteModal";
 import HotBadge from "./analytics/HotBadge";
@@ -49,15 +48,11 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           {/* Rapper Image - Make it clickable */}
           <Link to={`/rapper/${rapper.id}`}>
             <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
-              {imageUrl ? (
-                <img 
-                  src={imageUrl} 
-                  alt={rapper.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                />
-              ) : (
-                <Music className="w-16 h-16 text-rap-platinum/70" />
-              )}
+              <img 
+                src={imageUrl} 
+                alt={rapper.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
             </div>
           </Link>
 
