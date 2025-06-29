@@ -1,4 +1,5 @@
 
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
@@ -34,7 +35,7 @@ const Admin = () => {
         </h1>
 
         <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-8 bg-rap-carbon-light/50">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 bg-rap-carbon-light/50 gap-1">
             <TabsTrigger value="rappers">Rappers</TabsTrigger>
             <TabsTrigger value="rankings">Rankings</TabsTrigger>
             <TabsTrigger value="blog">Blog</TabsTrigger>
@@ -83,3 +84,4 @@ const Admin = () => {
 };
 
 export default Admin;
+
