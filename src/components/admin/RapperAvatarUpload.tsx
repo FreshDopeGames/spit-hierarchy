@@ -131,7 +131,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
             <img 
               src={rapper.image_url} 
               alt={rapper.name}
-              className="w-24 h-24 rounded-full object-cover border-2 border-rap-gold/30"
+              className="w-64 h-64 object-cover border-2 border-rap-gold/30"
             />
           </div>
         )}
