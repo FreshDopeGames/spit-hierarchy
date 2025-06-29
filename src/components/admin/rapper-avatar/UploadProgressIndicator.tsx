@@ -29,7 +29,7 @@ const UploadProgressIndicator = ({
       {validating && validationProgress.progress > 0 && (
         <div className="space-y-2">
           <div className="flex justify-between text-xs text-rap-gold/70">
-            <span>Security Validation (Admin Mode)</span>
+            <span>Processing</span>
             <span>{validationProgress.progress}%</span>
           </div>
           <Progress value={validationProgress.progress} className="h-2" />
@@ -39,7 +39,7 @@ const UploadProgressIndicator = ({
       {validationProgress.stage === 'complete' && (
         <div className="flex items-center gap-1 text-xs text-green-400">
           <CheckCircle className="w-3 h-3" />
-          <span>Enhanced admin security validation passed</span>
+          <span>Upload ready</span>
         </div>
       )}
     </div>

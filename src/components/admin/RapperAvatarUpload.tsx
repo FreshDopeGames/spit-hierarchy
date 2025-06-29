@@ -28,7 +28,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       <CardHeader className="pb-4">
         <CardTitle className="text-rap-gold font-ceviche text-lg font-normal flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
-          Enhanced Avatar Upload (Admin)
+          Avatar Upload
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">

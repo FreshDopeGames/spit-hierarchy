@@ -18,7 +18,7 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
     enableHeaderValidation: true,
     enableContentValidation: true,
     enableEntropyAnalysis: false,
-    maxFileSize: 15 * 1024 * 1024,
+    maxFileSize: 5 * 1024 * 1024, // Changed to 5MB
     allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
     blockSuspiciousFiles: false,
     isAdminUpload: true
@@ -26,7 +26,7 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      console.log('=== STARTING ENHANCED RAPPER AVATAR UPLOAD (ADMIN MODE) ===');
+      console.log('=== STARTING RAPPER AVATAR UPLOAD ===');
       console.log('File info:', { name: file.name, size: file.size, type: file.type });
       
       const validationResult = await validateFile(file, `admin-${rapper.id}`);
@@ -36,13 +36,13 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
       }
 
       if (validationResult.result?.warnings.length) {
-        console.log('Admin upload validation warnings (non-blocking):', validationResult.result.warnings);
+        console.log('Upload validation warnings (non-blocking):', validationResult.result.warnings);
         toast.warning("Upload succeeded with warnings", {
           description: `${validationResult.result.warnings.length} validation warnings were noted but upload proceeded`
         });
       }
 
-      console.log('Enhanced validation passed (admin mode), proceeding with upload');
+      console.log('Validation passed, proceeding with upload');
       
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
       console.log('Sanitized folder name:', sanitizedName);
@@ -166,8 +166,7 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
         throw new Error(`Rapper table update failed: ${updateError.message}`);
       }
 
-      console.log('=== ENHANCED ADMIN UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
-      console.log('Security validation passed with admin mode leniency');
+      console.log('=== UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
       
       setUploadProgress("Upload completed!");
       return { basePath, xlarge_url: fullXlargeUrl };
@@ -178,16 +177,16 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       
-      console.log('Enhanced admin upload successful, queries invalidated');
+      console.log('Upload successful, queries invalidated');
       toast.success(`Avatar uploaded successfully for ${rapper.name}`, {
-        description: "Enhanced security validation passed with admin privileges - all image sizes have been optimized and uploaded"
+        description: "All image sizes have been optimized and uploaded"
       });
       setUploadProgress("");
     },
     onError: (error: any) => {
-      console.error('Enhanced admin upload error:', error);
+      console.error('Upload error:', error);
       toast.error(`Upload failed: ${error.message}`, {
-        description: "Enhanced security validation or upload process failed. Admin mode was enabled for more lenient validation."
+        description: "Please try again or contact support if the issue persists."
       });
       setUploadProgress("");
     }
@@ -197,10 +196,10 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log('File selected for enhanced admin validation:', { name: file.name, size: file.size, type: file.type });
+    console.log('File selected for upload:', { name: file.name, size: file.size, type: file.type });
 
     setUploading(true);
-    setUploadProgress("Starting enhanced security validation (admin mode)...");
+    setUploadProgress("Starting upload...");
     
     try {
       await uploadMutation.mutateAsync(file);

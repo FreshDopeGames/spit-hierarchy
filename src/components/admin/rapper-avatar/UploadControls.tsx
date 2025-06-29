@@ -42,10 +42,10 @@ const UploadControls = ({ rapperId, isProcessing, onFileSelect }: UploadControls
       </div>
       
       <p className="text-rap-smoke text-sm text-center">
-        Upload a high-quality image with enhanced security validation (Admin Mode).
+        Upload a high-quality image for this rapper.
         <br />
         <span className="text-xs text-rap-smoke/70">
-          Supported formats: JPG, PNG, WebP (max 15MB) • Enhanced validation with admin privileges for more lenient security checks
+          Supported formats: JPG, PNG, WebP (max 5MB)
         </span>
       </p>
     </div>
