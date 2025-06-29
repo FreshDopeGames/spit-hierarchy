@@ -8,6 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Upload, ImageIcon, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { generateRapperImageSizes } from "@/utils/imageUtils";
+import { useEnhancedFileValidation } from "@/hooks/useEnhancedFileValidation";
+import { Progress } from "@/components/ui/progress";
 
 type Rapper = Tables<"rappers">;
 
@@ -20,25 +22,34 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
   const [uploadProgress, setUploadProgress] = useState<string>("");
   const queryClient = useQueryClient();
 
+  const { validating, validationProgress, validateFile } = useEnhancedFileValidation({
+    enableHeaderValidation: true,
+    enableContentValidation: true,
+    enableEntropyAnalysis: false, // Performance consideration
+    maxFileSize: 15 * 1024 * 1024, // 15MB for admin uploads
+    allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+    blockSuspiciousFiles: true
+  });
+
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
-      console.log('=== STARTING RAPPER AVATAR UPLOAD ===');
+      console.log('=== STARTING ENHANCED RAPPER AVATAR UPLOAD ===');
       console.log('File info:', { name: file.name, size: file.size, type: file.type });
+      
+      // Enhanced security validation
+      const validationResult = await validateFile(file, `admin-${rapper.id}`);
+      
+      if (!validationResult.isValid) {
+        throw new Error(validationResult.error || 'File validation failed');
+      }
+
+      console.log('Enhanced validation passed, proceeding with upload');
       
       // Create a sanitized name for the rapper folder
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
       console.log('Sanitized folder name:', sanitizedName);
       
       setUploadProgress("Validating image...");
-      
-      // Validate file
-      if (!file.type.startsWith('image/')) {
-        throw new Error('File is not an image');
-      }
-      
-      if (file.size > 10 * 1024 * 1024) {
-        throw new Error('File is too large (max 10MB)');
-      }
       
       // Convert file to blob for processing
       const blob = new Blob([file], { type: file.type });
@@ -106,41 +117,6 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       }
 
       console.log('All uploads completed:', uploadResults);
-      setUploadProgress("Verifying uploads...");
-
-      // Verify uploads by checking if files exist and are accessible
-      for (const { size, fileName } of uploadResults) {
-        try {
-          const { data: fileData, error: listError } = await supabase.storage
-            .from('rapper-images')
-            .list(sanitizedName);
-          
-          if (listError) {
-            console.warn(`Could not list files for verification:`, listError);
-            continue;
-          }
-          
-          const fileExists = fileData?.some(f => f.name === `${size}.jpg`);
-          console.log(`${size} file exists in storage:`, fileExists);
-          
-          if (!fileExists) {
-            console.warn(`${size} file not found in storage listing`);
-          }
-          
-          // Test direct access to the file
-          const testUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${fileName}`;
-          try {
-            const response = await fetch(testUrl, { method: 'HEAD' });
-            console.log(`${size} accessibility test:`, response.ok, response.status);
-          } catch (fetchError) {
-            console.warn(`${size} accessibility test failed:`, fetchError);
-          }
-          
-        } catch (verifyError) {
-          console.warn(`Verification failed for ${size}:`, verifyError);
-        }
-      }
-
       setUploadProgress("Updating database...");
 
       // Store the base path in rapper_images table
@@ -201,15 +177,8 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         throw new Error(`Rapper table update failed: ${updateError.message}`);
       }
 
-      console.log('=== UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
-      console.log('Final URLs:', {
-        basePath,
-        xlarge_url: fullXlargeUrl,
-        all_sizes: uploadResults.map(r => ({
-          size: r.size,
-          url: `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${sanitizedName}/${r.size}.jpg`
-        }))
-      });
+      console.log('=== ENHANCED UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
+      console.log('Security validation passed with enhanced checks');
       
       setUploadProgress("Upload completed!");
       return { basePath, xlarge_url: fullXlargeUrl };
@@ -221,16 +190,16 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       
-      console.log('Upload successful, queries invalidated');
+      console.log('Enhanced upload successful, queries invalidated');
       toast.success(`Avatar uploaded successfully for ${rapper.name}`, {
-        description: "All image sizes have been optimized and uploaded"
+        description: "Enhanced security validation passed - all image sizes have been optimized and uploaded"
       });
       setUploadProgress("");
     },
     onError: (error: any) => {
-      console.error('Upload error:', error);
+      console.error('Enhanced upload error:', error);
       toast.error(`Upload failed: ${error.message}`, {
-        description: "Please check the console for detailed error information"
+        description: "Enhanced security validation or upload process failed"
       });
       setUploadProgress("");
     }
@@ -240,22 +209,10 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
-    console.log('File selected:', { name: file.name, size: file.size, type: file.type });
-
-    // Validate file type
-    if (!file.type.startsWith('image/')) {
-      toast.error("Please select an image file");
-      return;
-    }
-
-    // Validate file size (max 10MB for better quality)
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("Please select an image smaller than 10MB");
-      return;
-    }
+    console.log('File selected for enhanced validation:', { name: file.name, size: file.size, type: file.type });
 
     setUploading(true);
-    setUploadProgress("Starting upload...");
+    setUploadProgress("Starting enhanced security validation...");
     
     try {
       await uploadMutation.mutateAsync(file);
@@ -265,20 +222,43 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     }
   };
 
+  const isProcessing = uploading || validating;
+
   return (
     <Card className="bg-carbon-fiber border border-rap-gold/30">
       <CardHeader className="pb-4">
         <CardTitle className="text-rap-gold font-ceviche text-lg font-normal flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
-          Avatar Upload
+          Enhanced Avatar Upload
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
-        {/* Progress indicator */}
-        {uploadProgress && (
-          <div className="flex items-center gap-2 p-3 bg-rap-gold/10 rounded-lg border border-rap-gold/30">
-            <Loader2 className="w-4 h-4 animate-spin text-rap-gold" />
-            <span className="text-rap-gold text-sm">{uploadProgress}</span>
+        {/* Enhanced Progress indicator */}
+        {(uploadProgress || validating) && (
+          <div className="space-y-3 p-4 bg-rap-gold/10 rounded-lg border border-rap-gold/30">
+            <div className="flex items-center gap-2">
+              <Loader2 className="w-4 h-4 animate-spin text-rap-gold" />
+              <span className="text-rap-gold text-sm">
+                {uploadProgress || validationProgress.message}
+              </span>
+            </div>
+            
+            {validating && validationProgress.progress > 0 && (
+              <div className="space-y-2">
+                <div className="flex justify-between text-xs text-rap-gold/70">
+                  <span>Security Validation</span>
+                  <span>{validationProgress.progress}%</span>
+                </div>
+                <Progress value={validationProgress.progress} className="h-2" />
+              </div>
+            )}
+            
+            {validationProgress.stage === 'complete' && (
+              <div className="flex items-center gap-1 text-xs text-green-400">
+                <CheckCircle className="w-3 h-3" />
+                <span>Enhanced security validation passed</span>
+              </div>
+            )}
           </div>
         )}
 
@@ -305,7 +285,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
               type="file"
               accept="image/*"
               onChange={handleFileSelect}
-              disabled={uploading}
+              disabled={isProcessing}
               className="hidden"
               id={`avatar-upload-${rapper.id}`}
             />
@@ -314,26 +294,26 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
                 type="button"
                 variant="outline" 
                 className="w-full cursor-pointer bg-rap-gold text-rap-charcoal border-rap-gold hover:bg-rap-gold/90"
-                disabled={uploading}
+                disabled={isProcessing}
                 asChild
               >
                 <span className="flex items-center gap-2">
-                  {uploading ? (
+                  {isProcessing ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <Upload className="w-4 h-4" />
                   )}
-                  {uploading ? 'Processing...' : 'Upload Avatar'}
+                  {isProcessing ? 'Processing...' : 'Upload Avatar'}
                 </span>
               </Button>
             </label>
           </div>
           
           <p className="text-rap-smoke text-sm text-center">
-            Upload a high-quality image. Multiple optimized sizes will be generated automatically.
+            Upload a high-quality image with enhanced security validation.
             <br />
             <span className="text-xs text-rap-smoke/70">
-              Supported formats: JPG, PNG, WebP (max 10MB)
+              Supported formats: JPG, PNG, WebP (max 15MB) • Enhanced validation includes file header verification, content analysis, and security scanning
             </span>
           </p>
         </div>

@@ -1,4 +1,8 @@
 
+// Enhanced content moderation with security integration
+import { validateFileSecurely, SecurityValidationOptions } from './enhancedSecurity';
+import { quickImageValidation } from './imageContentValidation';
+
 // Simple profanity filter - you can enhance this with external APIs
 const PROFANITY_WORDS = [
   // Add your list of inappropriate words here
@@ -44,6 +48,7 @@ export const validateContent = (content: string): { isValid: boolean; message?: 
   return { isValid: true };
 };
 
+// Basic file validation (kept for backward compatibility)
 export const validateImageFile = (file: File): { isValid: boolean; message?: string } => {
   // Check file type
   const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
@@ -66,43 +71,45 @@ export const validateImageFile = (file: File): { isValid: boolean; message?: str
   return { isValid: true };
 };
 
-// Detect potentially inappropriate image content (basic checks)
-export const validateImageContent = async (file: File): Promise<{ isValid: boolean; message?: string }> => {
-  return new Promise((resolve) => {
-    const img = new Image();
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    img.onload = () => {
-      canvas.width = img.width;
-      canvas.height = img.height;
-      
-      if (!ctx) {
-        resolve({ isValid: false, message: "Unable to process image" });
-        return;
-      }
-      
-      ctx.drawImage(img, 0, 0);
-      
-      // Basic checks - you could integrate with AI services here
-      // For now, just check dimensions and basic properties
-      if (img.width < 50 || img.height < 50) {
-        resolve({ isValid: false, message: "Image is too small (minimum 50x50 pixels)" });
-        return;
-      }
-      
-      if (img.width > 2000 || img.height > 2000) {
-        resolve({ isValid: false, message: "Image is too large (maximum 2000x2000 pixels)" });
-        return;
-      }
-      
-      resolve({ isValid: true });
+// Enhanced image validation (replaces the old validateImageContent)
+export const validateImageContent = async (file: File, useEnhancedValidation: boolean = false): Promise<{ isValid: boolean; message?: string }> => {
+  if (useEnhancedValidation) {
+    // Use the new enhanced validation system
+    const options: Partial<SecurityValidationOptions> = {
+      enableHeaderValidation: true,
+      enableContentValidation: true,
+      enableEntropyAnalysis: false, // Keep disabled for performance
+      maxFileSize: 10 * 1024 * 1024, // 10MB
+      allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
+      blockSuspiciousFiles: true
     };
-    
-    img.onerror = () => {
-      resolve({ isValid: false, message: "Invalid image file" });
-    };
-    
-    img.src = URL.createObjectURL(file);
-  });
+
+    try {
+      const result = await validateFileSecurely(file, options);
+      
+      if (!result.isValid) {
+        const mainError = result.errors[0] || 'Enhanced validation failed';
+        return { isValid: false, message: mainError };
+      }
+
+      // Log any warnings but don't fail validation
+      if (result.warnings.length > 0) {
+        console.log('Image validation warnings:', result.warnings);
+      }
+
+      return { isValid: true };
+      
+    } catch (error) {
+      console.error('Enhanced validation error:', error);
+      return { isValid: false, message: 'Enhanced validation failed due to an error' };
+    }
+  } else {
+    // Use quick validation for backward compatibility
+    try {
+      const result = await quickImageValidation(file);
+      return result;
+    } catch (error) {
+      return { isValid: false, message: 'Image validation failed' };
+    }
+  }
 };
