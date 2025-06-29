@@ -1,109 +1,75 @@
 
-import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Trophy, Users, Plus } from "lucide-react";
 import HeaderNavigation from "@/components/HeaderNavigation";
-import RankingHeader from "@/components/rankings/RankingHeader";
 import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
-import RankingDetailView from "@/components/rankings/RankingDetailView";
-import { useRankingsData } from "@/hooks/useRankingsData";
-import { transformOfficialRankings, transformUserRankings, transformToLegacyFormat } from "@/utils/rankingTransformers";
+import CreateRankingDialog from "@/components/rankings/CreateRankingDialog";
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/useAuth";
 
 const Rankings = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [selectedRanking, setSelectedRanking] = useState<string | null>(null);
-  const navigate = useNavigate();
-  
-  const { officialRankings, userRankingData, loading } = useRankingsData();
-
-  // Add scroll detection for header
-  useEffect(() => {
-    const handleScroll = () => {
-      const scrollTop = window.scrollY;
-      setIsScrolled(scrollTop > 100);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-  // Transform database data to unified format
-  const transformedOfficialRankings = transformOfficialRankings(officialRankings);
-  const transformedUserRankings = transformUserRankings(userRankingData);
-
-  // Convert to legacy format for component compatibility
-  const legacyOfficialRankings = transformToLegacyFormat(transformedOfficialRankings);
-  const legacyUserRankings = transformToLegacyFormat(transformedUserRankings);
-
-  // Combine all rankings for selection
-  const allRankings = [...transformedOfficialRankings, ...transformedUserRankings];
-  const selectedRankingData = allRankings.find(r => r.id === selectedRanking);
-
-  const handleRankingClick = (rankingId: string) => {
-    // Find the ranking to determine if it's official or user-made
-    const officialRanking = transformedOfficialRankings.find(r => r.id === rankingId);
-    const userRanking = transformedUserRankings.find(r => r.id === rankingId);
-    
-    if (officialRanking) {
-      navigate(`/rankings/official/${officialRanking.slug}`);
-    } else if (userRanking) {
-      navigate(`/rankings/user/${userRanking.slug}`);
-    }
-  };
-
-  if (selectedRanking && selectedRankingData) {
-    return (
-      <RankingDetailView 
-        ranking={transformToLegacyFormat([selectedRankingData])[0]} 
-        onBack={() => setSelectedRanking(null)} 
-      />
-    );
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <div className="text-rap-gold font-mogra text-xl">Loading rankings...</div>
-      </div>
-    );
-  }
+  const [activeTab, setActiveTab] = useState("official");
+  const { user } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
-      {/* Sticky Header - same as home page */}
-      <HeaderNavigation isScrolled={isScrolled} />
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <HeaderNavigation isScrolled={false} />
+      
+      <div className="max-w-7xl mx-auto pt-20 px-4 pb-12">
+        {/* Page Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-6xl font-mogra text-rap-gold mb-4">
+            Hip-Hop Rankings
+          </h1>
+          <p className="text-lg text-rap-smoke font-merienda max-w-3xl mx-auto">
+            Explore comprehensive rankings that showcase the best in hip-hop culture, 
+            from official editorial picks to unique community perspectives.
+          </p>
+        </div>
 
-      {/* Main Content with increased top padding to account for fixed header */}
-      <main className="pt-20 sm:pt-24 w-full overflow-x-hidden">
-        <div className="max-w-6xl mx-auto px-3 sm:px-4 lg:px-6 pt-8 sm:pt-12 lg:pt-16">
-          
-          {/* Back to Home Link */}
-          <div className="mb-8">
-            <Link to="/" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
-              <ArrowLeft className="w-5 h-5" />
-              <span>Back to Home</span>
-            </Link>
+        {/* Tabs Navigation */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
+            <TabsList className="grid w-full sm:w-auto grid-cols-2 bg-rap-carbon border border-rap-gold/20">
+              <TabsTrigger 
+                value="official" 
+                className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra"
+              >
+                <Trophy className="w-4 h-4 mr-2" />
+                Official Rankings
+              </TabsTrigger>
+              <TabsTrigger 
+                value="community" 
+                className="data-[state=active]:bg-rap-burgundy data-[state=active]:text-white font-mogra"
+              >
+                <Users className="w-4 h-4 mr-2" />
+                Community Rankings
+              </TabsTrigger>
+            </TabsList>
+
+            {/* Create Ranking Button - Only show for authenticated users on community tab */}
+            {user && activeTab === "community" && (
+              <CreateRankingDialog>
+                <Button className="bg-rap-burgundy hover:bg-rap-burgundy-dark text-white font-mogra">
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Ranking
+                </Button>
+              </CreateRankingDialog>
+            )}
           </div>
 
-          <RankingHeader 
-            title="Top Rapper Rankings" 
-            description="Discover comprehensive rapper rankings with every artist in our database. Official rankings now include all 112+ rappers, while community rankings let you create your own complete lists." 
-          />
+          {/* Tab Content */}
+          <TabsContent value="official" className="mt-0">
+            <OfficialRankingsSection />
+          </TabsContent>
 
-          <OfficialRankingsSection 
-            rankings={legacyOfficialRankings} 
-            onRankingClick={handleRankingClick} 
-          />
-
-          <UserRankingsSection 
-            rankings={legacyUserRankings} 
-            onRankingClick={handleRankingClick} 
-            hasNextPage={userRankingData?.hasMore || false} 
-            onLoadMore={() => {}} 
-            isLoadingMore={false} 
-          />
-        </div>
-      </main>
+          <TabsContent value="community" className="mt-0">
+            <UserRankingsSection />
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 };

@@ -1,133 +1,113 @@
 
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Eye, Star, Award } from "lucide-react";
 import { Link } from "react-router-dom";
-
-interface Rapper {
-  rank: number;
-  name: string;
-  reason: string;
-}
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Crown, Users, Eye, Star, Calendar, User } from "lucide-react";
+import { UnifiedRanking } from "@/types/rankings";
 
 interface RankingCardProps {
-  id: string;
-  title: string;
-  description: string;
-  author: string;
-  authorId?: string;
-  timeAgo: string;
-  rappers: Rapper[];
-  likes: number;
-  views: number;
-  isOfficial: boolean;
-  tags: string[];
-  onClick?: (id: string) => void;
-  slug?: string;
+  ranking: UnifiedRanking;
+  isUserRanking?: boolean;
 }
 
-const RankingCard = ({
-  id,
-  title,
-  description,
-  author,
-  authorId,
-  timeAgo,
-  rappers,
-  likes,
-  views,
-  isOfficial,
-  tags,
-  onClick,
-  slug
-}: RankingCardProps) => {
-  const borderColor = isOfficial ? "border-rap-gold/40 hover:border-rap-gold/70" : "border-rap-burgundy/40 hover:border-rap-burgundy/70";
-  const hoverColor = isOfficial ? "group-hover:text-rap-gold-light" : "group-hover:text-rap-silver";
-  const rankColor = isOfficial ? "text-rap-gold" : "text-rap-burgundy";
-
-  const handleClick = () => {
-    if (onClick) {
-      onClick(slug || id);
-    }
-  };
-
-  const handleAuthorClick = (e: React.MouseEvent) => {
-    e.stopPropagation();
-  };
+const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
+  // Construct the proper link based on ranking type
+  const rankingLink = isUserRanking && !ranking.isOfficial 
+    ? `/rankings/user/${ranking.slug}` 
+    : `/rankings/official/${ranking.slug}`;
 
   return (
-    <Card className={`bg-carbon-fiber ${borderColor} transition-colors group cursor-pointer relative overflow-hidden`}>
-      {/* Rap culture accent bar */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-gold-dark via-rap-gold to-rap-gold-light"></div>
-      
-      <CardContent className="p-6" onClick={handleClick}>
-        <div className="flex items-center gap-2 mb-3">
-          {isOfficial && (
-            <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-xs font-kaushan">
-              <Award className="w-3 h-3 mr-1" />
-              Official
-            </Badge>
-          )}
-          {tags.filter(tag => tag !== "Official").map((tag) => (
-            <Badge key={tag} variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 text-xs font-kaushan">
-              {tag}
-            </Badge>
-          ))}
-        </div>
-        
-        <h2 className={`text-xl font-bold text-rap-platinum mb-2 ${hoverColor} transition-colors font-mogra`}>
-          {title}
-        </h2>
-        
-        <p className="text-rap-smoke mb-4 line-clamp-2 font-kaushan">
-          {description}
-        </p>
-        
-        <div className="space-y-2 mb-4">
-          {rappers.slice(0, 3).map((rapper) => (
-            <div key={rapper.rank} className="flex items-center gap-2 text-sm">
-              <span className={`${rankColor} font-semibold font-ceviche`}>#{rapper.rank}</span>
-              <span className="text-rap-platinum font-kaushan">{rapper.name}</span>
-            </div>
-          ))}
-          {rappers.length > 3 && (
-            <div className="text-rap-smoke text-sm font-kaushan">
-              +{rappers.length - 3} more...
-            </div>
-          )}
-        </div>
-        
-        <div className="flex items-center justify-between text-rap-smoke text-sm border-t border-rap-silver/20 pt-4">
-          <div className="flex items-center gap-4 font-kaushan">
-            <span>
-              by {authorId && !isOfficial ? (
-                <Link 
-                  to={`/user/${authorId}`} 
-                  className="text-rap-gold hover:text-rap-gold-light transition-colors"
-                  onClick={handleAuthorClick}
-                >
-                  {author}
-                </Link>
+    <Link to={rankingLink} className="block group">
+      <Card className="h-full bg-carbon-fiber border-rap-silver/30 hover:border-rap-gold/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-rap-gold/20">
+        <CardHeader className="pb-3">
+          <div className="flex items-start justify-between gap-2 mb-2">
+            <div className="flex items-center gap-2 flex-wrap">
+              {ranking.isOfficial ? (
+                <Badge variant="default" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
+                  <Crown className="w-3 h-3 mr-1" />
+                  Official
+                </Badge>
               ) : (
-                author
+                <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
+                  <Users className="w-3 h-3 mr-1" />
+                  Community
+                </Badge>
               )}
-            </span>
-            <span>{timeAgo}</span>
+              
+              {ranking.category && (
+                <Badge variant="outline" className="border-rap-smoke/30 text-rap-smoke font-kaushan text-xs">
+                  {ranking.category}
+                </Badge>
+              )}
+            </div>
           </div>
           
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1">
-              <Eye className="w-4 h-4" />
-              <span className="font-kaushan">{views}</span>
+          <h3 className="text-xl font-bold text-rap-platinum group-hover:text-rap-gold transition-colors font-mogra line-clamp-2">
+            {ranking.title}
+          </h3>
+          
+          {ranking.description && (
+            <p className="text-rap-smoke text-sm font-kaushan line-clamp-2 leading-relaxed">
+              {ranking.description}
+            </p>
+          )}
+        </CardHeader>
+        
+        <CardContent className="pt-0">
+          {/* Top Rappers Preview */}
+          {ranking.rappers && ranking.rappers.length > 0 && (
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-rap-silver mb-2 font-merienda">
+                Top {Math.min(ranking.rappers.length, 3)}:
+              </h4>
+              <div className="space-y-1">
+                {ranking.rappers.slice(0, 3).map((rapper, index) => (
+                  <div key={index} className="flex items-center gap-2 text-sm">
+                    <span className="w-5 h-5 rounded-full bg-rap-gold text-rap-carbon text-xs font-bold flex items-center justify-center font-mogra">
+                      {rapper.rank}
+                    </span>
+                    <span className="text-rap-platinum font-merienda truncate">
+                      {rapper.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 text-rap-gold" />
-              <span className="font-kaushan">{likes}</span>
+          )}
+          
+          {/* Stats and Meta Information */}
+          <div className="flex items-center justify-between text-xs text-rap-smoke border-t border-rap-smoke/20 pt-3">
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-1">
+                <Eye className="w-3 h-3" />
+                <span className="font-merienda">{ranking.views || 0}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <Star className="w-3 h-3 text-rap-gold" />
+                <span className="font-merienda">{ranking.likes || 0}</span>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2 text-right">
+              {!ranking.isOfficial && (
+                <div className="flex items-center gap-1">
+                  <User className="w-3 h-3" />
+                  <span className="font-merienda truncate max-w-20">
+                    {ranking.author}
+                  </span>
+                </div>
+              )}
+              <div className="flex items-center gap-1">
+                <Calendar className="w-3 h-3" />
+                <span className="font-merienda">
+                  {ranking.timeAgo}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 

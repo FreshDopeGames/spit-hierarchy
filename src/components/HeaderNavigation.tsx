@@ -1,94 +1,132 @@
-
-import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
-import { LogIn } from "lucide-react";
-import { useSecureAuth } from "@/hooks/useSecureAuth";
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import UserProfileDropdown from "./UserProfileDropdown";
-import NavigationSidebar from "./NavigationSidebar";
-import OptimizedImage from "./ui/OptimizedImage";
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Menu, X } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import UserProfileDropdown from './UserProfileDropdown';
 
 interface HeaderNavigationProps {
   isScrolled: boolean;
 }
 
 const HeaderNavigation = ({ isScrolled }: HeaderNavigationProps) => {
-  const { user, isAuthenticated } = useSecureAuth();
-
-  // Check if user has admin role with optimized query
-  const { data: userRoles } = useQuery({
-    queryKey: ['user-roles', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from('user_roles')
-        .select('role')
-        .eq('user_id', user.id);
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id,
-    staleTime: 5 * 60 * 1000, // 5 minutes cache for roles
-  });
-
-  // Get user profile for avatar with optimized query
-  const { data: userProfile } = useQuery({
-    queryKey: ['user-profile', user?.id],
-    queryFn: async () => {
-      if (!user?.id) return null;
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('username, full_name, avatar_url')
-        .eq('id', user.id)
-        .single();
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user?.id,
-    staleTime: 10 * 60 * 1000, // 10 minutes cache for profile data
-  });
-
-  const isAdmin = userRoles?.some(role => role.role === 'admin');
-  const canManageBlog = userRoles?.some(role => role.role === 'admin' || role.role === 'blog_editor');
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user } = useAuth();
 
   return (
-    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 will-change-transform ${isScrolled ? 'bg-black/95 backdrop-blur-md border-b border-rap-gold/50 h-16' : 'bg-black border-b border-rap-gold/30 h-20'}`} style={{ transform: 'translateZ(0)' }}>
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-full">
-        <div className="flex items-center">
-          <NavigationSidebar />
-        </div>
-        
-        <div className="flex items-center justify-center flex-1">
-          <Link to="/" className="flex items-center justify-center">
-            <OptimizedImage 
-              src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
-              alt="Spit Hierarchy - The Ultimate Rap Rankings Platform" 
-              className={`object-contain transition-all duration-300 ${isScrolled ? 'h-12' : 'h-16'}`}
-              priority={true}
-              width={isScrolled ? 48 : 64}
-              height={isScrolled ? 48 : 64}
-            />
+    <header className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      isScrolled ? 'bg-rap-carbon/95 backdrop-blur-sm border-b border-rap-gold/20' : 'bg-transparent'
+    }`}>
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="flex items-center space-x-3 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-rap-gold via-rap-gold-light to-rap-gold-dark rounded-lg flex items-center justify-center shadow-lg group-hover:shadow-rap-gold/30 transition-all">
+              <span className="text-rap-carbon font-mogra font-bold text-lg">R</span>
+            </div>
+            <span className="text-rap-gold font-mogra text-xl font-bold group-hover:text-rap-gold-light transition-colors">
+              RapRankings
+            </span>
           </Link>
-        </div>
-        
-        <div className="flex items-center space-x-2 md:space-x-4">
-          {isAuthenticated ? (
-            <UserProfileDropdown 
-              userProfile={userProfile} 
-              isAdmin={isAdmin} 
-              canManageBlog={canManageBlog} 
-              isScrolled={isScrolled} 
-            />
-          ) : (
-            <Link to="/auth">
-              <Button className={`bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra transition-all duration-300 shadow-lg shadow-rap-gold/30 ${isScrolled ? 'text-xs px-3 py-1' : ''}`}>
-                <LogIn className="w-4 h-4 mr-2" />
-                Join In
-              </Button>
+
+          {/* Desktop Navigation */}
+          <nav className="hidden md:flex items-center space-x-8">
+            <Link 
+              to="/" 
+              className="text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+            >
+              Home
             </Link>
-          )}
+            <Link 
+              to="/rankings" 
+              className="text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+            >
+              Rankings
+            </Link>
+            <Link 
+              to="/all-rappers" 
+              className="text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+            >
+              All Rappers
+            </Link>
+            <Link 
+              to="/blog" 
+              className="text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+            >
+              Blog
+            </Link>
+            <Link 
+              to="/about" 
+              className="text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+            >
+              About
+            </Link>
+          </nav>
+
+          {/* User Menu */}
+          <div className="flex items-center space-x-4">
+            {user ? (
+              <UserProfileDropdown />
+            ) : (
+              <Link 
+                to="/auth" 
+                className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon px-4 py-2 rounded-lg font-kaushan font-medium transition-colors"
+              >
+                Sign In
+              </Link>
+            )}
+
+            {/* Mobile Menu Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 text-rap-platinum hover:text-rap-gold transition-colors"
+            >
+              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
+
+        {/* Mobile Navigation */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-rap-gold/20 bg-rap-carbon/95 backdrop-blur-sm">
+            <nav className="py-4 space-y-3">
+              <Link 
+                to="/" 
+                className="block px-4 py-2 text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/rankings" 
+                className="block px-4 py-2 text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Rankings
+              </Link>
+              <Link 
+                to="/all-rappers" 
+                className="block px-4 py-2 text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                All Rappers
+              </Link>
+              <Link 
+                to="/blog" 
+                className="block px-4 py-2 text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                Blog
+              </Link>
+              <Link 
+                to="/about" 
+                className="block px-4 py-2 text-rap-platinum hover:text-rap-gold transition-colors font-kaushan font-medium"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                About
+              </Link>
+            </nav>
+          </div>
+        )}
       </div>
     </header>
   );

@@ -1,12 +1,13 @@
 
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Crown, Star, Trophy, Eye, Users } from "lucide-react";
+import { useParams, Link, Navigate } from "react-router-dom";
+import { ArrowLeft, Crown, Star, Trophy, Eye, Users, Lock, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import RapperCard from "@/components/RapperCard";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface UserRankingData {
   id: string;
@@ -33,19 +34,23 @@ interface UserRankingData {
 
 const UserRankingDetail = () => {
   const { slug } = useParams();
+  const { user } = useAuth();
   const [ranking, setRanking] = useState<UserRankingData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [notFound, setNotFound] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (slug) {
       fetchUserRanking();
     }
-  }, [slug]);
+  }, [slug, user]);
 
   const fetchUserRanking = async () => {
     try {
-      const { data, error } = await supabase
+      setLoading(true);
+      setError(null);
+
+      const { data, error: fetchError } = await supabase
         .from("user_rankings")
         .select(`
           id,
@@ -68,19 +73,34 @@ const UserRankingDetail = () => {
           )
         `)
         .eq("slug", slug)
-        .eq("is_public", true)
         .single();
 
-      if (error) {
-        console.error("Error fetching user ranking:", error);
-        setNotFound(true);
+      if (fetchError) {
+        console.error("Error fetching user ranking:", fetchError);
+        
+        if (fetchError.code === 'PGRST116') {
+          setError("Ranking not found or you don't have permission to view it.");
+        } else {
+          setError("Failed to load ranking. Please try again later.");
+        }
+        return;
+      }
+
+      if (!data) {
+        setError("Ranking not found.");
+        return;
+      }
+
+      // Check if user can access this ranking
+      if (!data.is_public && (!user || user.id !== data.user_id)) {
+        setError("This ranking is private and you don't have permission to view it.");
         return;
       }
 
       setRanking(data);
     } catch (error) {
       console.error("Error:", error);
-      setNotFound(true);
+      setError("An unexpected error occurred. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -94,24 +114,49 @@ const UserRankingDetail = () => {
     );
   }
 
-  if (notFound || !ranking) {
+  if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
         <HeaderNavigation isScrolled={false} />
         <div className="max-w-4xl mx-auto pt-20 px-4">
-          <div className="text-center py-12">
-            <h1 className="text-3xl font-bold text-rap-platinum mb-4 font-mogra">Ranking Not Found</h1>
-            <p className="text-rap-smoke mb-6 font-kaushan">This ranking doesn't exist or is private.</p>
-            <Link to="/rankings" className="text-rap-gold hover:text-rap-gold-light font-kaushan">
-              ← Back to Rankings
+          <div className="mb-8">
+            <Link to="/rankings" className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan">
+              <ArrowLeft className="w-5 h-5" />
+              <span>Back to Rankings</span>
             </Link>
           </div>
+          
+          <Alert className="bg-red-900/20 border-red-500/30">
+            <AlertCircle className="h-4 w-4 text-red-400" />
+            <AlertDescription className="text-red-200 font-merienda">
+              {error}
+            </AlertDescription>
+          </Alert>
+
+          {error.includes("permission") && !user && (
+            <div className="mt-6 text-center">
+              <p className="text-rap-smoke font-merienda mb-4">
+                This content may require you to be logged in.
+              </p>
+              <Link 
+                to="/auth" 
+                className="text-rap-gold hover:text-rap-gold-light font-kaushan underline"
+              >
+                Sign in to continue
+              </Link>
+            </div>
+          )}
         </div>
       </div>
     );
   }
 
+  if (!ranking) {
+    return <Navigate to="/rankings" replace />;
+  }
+
   const sortedItems = ranking.user_ranking_items.sort((a, b) => a.position - b.position);
+  const isOwner = user && user.id === ranking.user_id;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
@@ -130,10 +175,16 @@ const UserRankingDetail = () => {
         <Card className="bg-carbon-fiber border-rap-burgundy/40 mb-8">
           <CardContent className="p-8">
             <div className="flex items-center gap-2 mb-4">
-              <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 font-kaushan">
+              <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
                 <Users className="w-3 h-3 mr-1" />
                 Community
               </Badge>
+              {!ranking.is_public && (
+                <Badge variant="secondary" className="bg-amber-500/20 text-amber-400 border-amber-500/30 font-kaushan">
+                  <Lock className="w-3 h-3 mr-1" />
+                  Private
+                </Badge>
+              )}
               <Badge variant="secondary" className="bg-rap-forest/20 text-rap-forest border-rap-forest/30 font-kaushan">
                 {ranking.category}
               </Badge>
@@ -152,7 +203,8 @@ const UserRankingDetail = () => {
             <div className="flex items-center justify-between text-rap-smoke border-t border-rap-smoke/20 pt-6">
               <div className="flex items-center gap-6">
                 <span className="font-kaushan">
-                  by <Link to={`/user/${ranking.user_id}`} className="text-rap-gold hover:text-rap-gold-light">{ranking.profiles?.username || "Unknown User"}</Link>
+                  by <span className="text-rap-gold">{ranking.profiles?.username || "Unknown User"}</span>
+                  {isOwner && <span className="text-rap-smoke ml-2">(You)</span>}
                 </span>
                 <span className="font-kaushan">
                   {new Date(ranking.created_at).toLocaleDateString()}
@@ -179,8 +231,8 @@ const UserRankingDetail = () => {
             <Card key={item.rapper.id} className="bg-carbon-fiber border-rap-silver/30 hover:border-rap-gold/50 transition-colors">
               <CardContent className="p-6">
                 <div className="flex items-center gap-6">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg">
-                    <span className="text-rap-carbon font-mogra text-lg font-bold">
+                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-rap-burgundy-dark via-rap-burgundy to-rap-burgundy-light shadow-lg">
+                    <span className="text-white font-mogra text-lg font-bold">
                       {item.position}
                     </span>
                   </div>
