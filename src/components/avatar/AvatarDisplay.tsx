@@ -10,6 +10,10 @@ interface AvatarDisplayProps {
 const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [placeholderError, setPlaceholderError] = useState(false);
+
+  // Placeholder image URL
+  const placeholderImageUrl = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
 
   const getSizeClass = () => {
     switch (size) {
@@ -64,6 +68,15 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
     setImageError(false);
   };
 
+  const handlePlaceholderError = () => {
+    console.error('Placeholder image failed to load');
+    setPlaceholderError(true);
+  };
+
+  const handlePlaceholderLoad = () => {
+    console.log('Placeholder image loaded successfully');
+  };
+
   return (
     <div className={`relative ${getSizeClass()} bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50`}>
       {displayUrl && !imageError ? (
@@ -77,6 +90,14 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
             opacity: imageLoaded ? 1 : 0.5,
             transition: 'opacity 0.3s ease'
           }}
+        />
+      ) : !placeholderError ? (
+        <img 
+          src={placeholderImageUrl} 
+          alt="Default Avatar" 
+          className="w-full h-full rounded-full object-cover"
+          onError={handlePlaceholderError}
+          onLoad={handlePlaceholderLoad}
         />
       ) : (
         <User className="w-1/2 h-1/2 text-rap-silver" />
