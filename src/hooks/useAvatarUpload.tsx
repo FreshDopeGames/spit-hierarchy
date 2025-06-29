@@ -47,6 +47,8 @@ export const useAvatarUpload = (userId: string, onAvatarUpdate: (url: string) =>
       setUploading(true);
       setModerationError(null);
 
+      console.log('Starting avatar upload for user:', userId);
+
       // Additional validation on cropped image
       const croppedFile = new File([croppedBlob], `${userId}-cropped.jpg`, { type: 'image/jpeg' });
       const finalValidation = await validateImageContent(croppedFile);
@@ -57,36 +59,47 @@ export const useAvatarUpload = (userId: string, onAvatarUpdate: (url: string) =>
       }
 
       // Generate multiple resolutions
+      console.log('Generating avatar sizes...');
       const resizedImages = await generateAvatarSizes(croppedBlob);
+      console.log('Generated sizes:', resizedImages.map(img => img.name));
 
       // Upload original cropped image
       const originalFile = new File([croppedBlob], `${userId}-original.jpg`, { type: 'image/jpeg' });
       const originalPath = `${userId}/original.jpg`;
 
+      console.log('Uploading original to:', originalPath);
       const { error: originalUploadError } = await supabase.storage
         .from('avatars')
         .upload(originalPath, originalFile, { upsert: true });
 
       if (originalUploadError) {
+        console.error('Original upload failed:', originalUploadError);
         throw originalUploadError;
       }
 
       // Upload resized versions
+      console.log('Uploading resized versions...');
       await Promise.all(
         resizedImages.map(async ({ name, blob }) => {
           const file = new File([blob], `${userId}-${name}.jpg`, { type: 'image/jpeg' });
           const path = `${userId}/${name}.jpg`;
           
+          console.log(`Uploading ${name} to:`, path);
           const { error } = await supabase.storage
             .from('avatars')
             .upload(path, file, { upsert: true });
           
-          if (error) throw error;
+          if (error) {
+            console.error(`Upload failed for ${name}:`, error);
+            throw error;
+          }
         })
       );
 
       // Update user profile with new avatar URL base path
       const avatarBasePath = userId;
+      console.log('Updating profile with avatar base path:', avatarBasePath);
+      
       const { error: updateError } = await supabase
         .from('profiles')
         .update({ 
@@ -96,9 +109,11 @@ export const useAvatarUpload = (userId: string, onAvatarUpdate: (url: string) =>
         .eq('id', userId);
 
       if (updateError) {
+        console.error('Profile update failed:', updateError);
         throw updateError;
       }
 
+      console.log('Avatar upload completed successfully');
       onAvatarUpdate(avatarBasePath);
       toast.success("Your profile picture has been updated.");
 

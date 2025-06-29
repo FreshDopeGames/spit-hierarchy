@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { User } from "lucide-react";
 
 interface AvatarDisplayProps {
@@ -8,6 +8,9 @@ interface AvatarDisplayProps {
 }
 
 const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
+  const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   const getSizeClass = () => {
     switch (size) {
       case 'small': return 'w-8 h-8';
@@ -35,21 +38,55 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
     const sizeName = sizeMap[size];
     
     // Construct the full Supabase storage URL
-    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg`;
+    const fullUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg`;
+    
+    // Debug logging
+    console.log('Avatar URL Debug:', {
+      baseUrl,
+      size,
+      sizeName,
+      fullUrl
+    });
+    
+    return fullUrl;
   };
 
   const displayUrl = getAvatarUrl(avatarUrl);
 
+  const handleImageError = () => {
+    console.error('Avatar image failed to load:', displayUrl);
+    setImageError(true);
+  };
+
+  const handleImageLoad = () => {
+    console.log('Avatar image loaded successfully:', displayUrl);
+    setImageLoaded(true);
+    setImageError(false);
+  };
+
   return (
     <div className={`relative ${getSizeClass()} bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full flex items-center justify-center shadow-lg border-2 border-rap-gold/50`}>
-      {displayUrl ? (
+      {displayUrl && !imageError ? (
         <img 
           src={displayUrl} 
           alt="Avatar" 
           className="w-full h-full rounded-full object-cover"
+          onError={handleImageError}
+          onLoad={handleImageLoad}
+          style={{ 
+            opacity: imageLoaded ? 1 : 0.5,
+            transition: 'opacity 0.3s ease'
+          }}
         />
       ) : (
         <User className="w-1/2 h-1/2 text-rap-silver" />
+      )}
+      
+      {/* Loading indicator */}
+      {displayUrl && !imageLoaded && !imageError && (
+        <div className="absolute inset-0 flex items-center justify-center bg-rap-carbon/50 rounded-full">
+          <div className="w-4 h-4 border-2 border-rap-gold border-t-transparent rounded-full animate-spin"></div>
+        </div>
       )}
     </div>
   );
