@@ -1,16 +1,20 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RapperForm from "./forms/RapperForm";
 import RapperAvatarUpload from "./RapperAvatarUpload";
 import { Tables } from "@/integrations/supabase/types";
+
 type Rapper = Tables<"rappers">;
+
 interface AdminRapperDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   rapper?: Rapper | null;
   onSuccess: () => void;
 }
+
 const AdminRapperDialog = ({
   open,
   onOpenChange,
@@ -21,7 +25,9 @@ const AdminRapperDialog = ({
     onSuccess();
     onOpenChange(false);
   };
-  return <Dialog open={open} onOpenChange={onOpenChange}>
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-black border border-rap-gold/30">
         <DialogHeader>
           <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
@@ -29,12 +35,19 @@ const AdminRapperDialog = ({
           </DialogTitle>
         </DialogHeader>
         
-        {rapper ? <Tabs defaultValue="details" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 bg-rap-carbon/50">
-              <TabsTrigger value="details" className="text-rap-platinum data-[state=active]:text-rap-gold">
+        {rapper ? (
+          <Tabs defaultValue="details" className="w-full">
+            <TabsList className="grid w-full grid-cols-2 mb-6 bg-transparent">
+              <TabsTrigger 
+                value="details" 
+                className="bg-rap-gold text-rap-carbon data-[state=active]:bg-white data-[state=active]:text-rap-carbon"
+              >
                 Rapper Details
               </TabsTrigger>
-              <TabsTrigger value="avatar" className="text-rap-platinum data-[state=active]:text-rap-gold">
+              <TabsTrigger 
+                value="avatar" 
+                className="bg-rap-gold text-rap-carbon data-[state=active]:bg-white data-[state=active]:text-rap-carbon"
+              >
                 Avatar Upload
               </TabsTrigger>
             </TabsList>
@@ -46,8 +59,13 @@ const AdminRapperDialog = ({
             <TabsContent value="avatar">
               <RapperAvatarUpload rapper={rapper} />
             </TabsContent>
-          </Tabs> : <RapperForm rapper={null} onSuccess={handleClose} onCancel={() => onOpenChange(false)} />}
+          </Tabs>
+        ) : (
+          <RapperForm rapper={null} onSuccess={handleClose} onCancel={() => onOpenChange(false)} />
+        )}
       </DialogContent>
-    </Dialog>;
+    </Dialog>
+  );
 };
+
 export default AdminRapperDialog;
