@@ -45,6 +45,7 @@ const AdminRankingDialog = ({
       description: ranking?.description || "",
       category: ranking?.category || "",
       slug: ranking?.slug || "",
+      display_order: ranking?.display_order || 0,
       tags: []
     }
   });
@@ -85,6 +86,7 @@ const AdminRankingDialog = ({
         description: ranking.description || "",
         category: ranking.category,
         slug: ranking.slug,
+        display_order: ranking.display_order || 0,
         tags: []
       });
     }

@@ -98,6 +98,27 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
           </FormItem>
         )}
       />
+      <FormField
+        control={form.control}
+        name="display_order"
+        render={({ field }) => (
+          <FormItem>
+            <FormLabel className="font-mogra text-rap-platinum">Display Order</FormLabel>
+            <FormControl>
+              <Input 
+                type="number"
+                min="0"
+                placeholder="Enter display order (0 = first)" 
+                {...field}
+                onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                value={field.value || 0}
+                className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
+              />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        )}
+      />
       <FormItem>
         <FormLabel className="font-mogra text-rap-platinum">Tags</FormLabel>
         <RankingTagSelector 

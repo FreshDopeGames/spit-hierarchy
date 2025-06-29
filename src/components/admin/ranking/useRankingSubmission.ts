@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
 import { supabase } from "@/integrations/supabase/client";
@@ -33,7 +34,8 @@ export const useRankingSubmission = ({
           title: values.title,
           description: values.description || "",
           category: values.category,
-          slug: values.slug
+          slug: values.slug,
+          display_order: values.display_order || 0
         };
         const { error } = await supabase
           .from("official_rankings")
@@ -52,7 +54,8 @@ export const useRankingSubmission = ({
           title: values.title,
           description: values.description || "",
           category: values.category,
-          slug: values.slug
+          slug: values.slug,
+          display_order: values.display_order || 0
         };
         const { data: newRanking, error } = await supabase
           .from("official_rankings")
