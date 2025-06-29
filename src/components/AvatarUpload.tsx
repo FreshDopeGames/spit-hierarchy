@@ -10,10 +10,10 @@ interface AvatarUploadProps {
   currentAvatarUrl?: string;
   onAvatarUpdate: (url: string) => void;
   userId: string;
-  size?: 'small' | 'medium' | 'large';
+  size?: 'small' | 'medium' | 'large' | 'xlarge';
 }
 
-const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large' }: AvatarUploadProps) => {
+const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'xlarge' }: AvatarUploadProps) => {
   const [avatarUrl, setAvatarUrl] = useState(currentAvatarUrl);
   
   const {
@@ -44,7 +44,7 @@ const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'large'
         
         <AvatarDisplay avatarUrl={avatarUrl} size={size} />
         
-        {size === 'large' && (
+        {(size === 'large' || size === 'xlarge') && (
           <AvatarUploadControls 
             uploading={uploading}
             onFileSelect={handleFileSelect}

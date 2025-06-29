@@ -34,7 +34,8 @@ export const generateAvatarSizes = async (originalBlob: Blob) => {
   const sizes = [
     { name: 'thumb', size: 32 },
     { name: 'medium', size: 64 },
-    { name: 'large', size: 128 }
+    { name: 'large', size: 128 },
+    { name: 'xlarge', size: 140 }
   ];
 
   const resizedImages = await Promise.all(

@@ -4,7 +4,7 @@ import { User } from "lucide-react";
 
 interface AvatarDisplayProps {
   avatarUrl?: string;
-  size: 'small' | 'medium' | 'large';
+  size: 'small' | 'medium' | 'large' | 'xlarge';
 }
 
 const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
@@ -13,6 +13,7 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
       case 'small': return 'w-8 h-8';
       case 'medium': return 'w-16 h-16';
       case 'large': return 'w-24 h-24';
+      case 'xlarge': return 'w-36 h-36';
       default: return 'w-24 h-24';
     }
   };
@@ -27,7 +28,8 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
     const sizeMap = {
       small: 'thumb',
       medium: 'medium', 
-      large: 'large'
+      large: 'large',
+      xlarge: 'xlarge'
     };
     
     const sizeName = sizeMap[size];
