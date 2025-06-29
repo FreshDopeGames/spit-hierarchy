@@ -1,4 +1,3 @@
-
 // Advanced image content validation and security checks
 import { FileValidationResult } from './fileValidation';
 
