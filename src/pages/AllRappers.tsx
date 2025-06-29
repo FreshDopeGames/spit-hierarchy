@@ -7,7 +7,7 @@ import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import BlogPageHeader from "@/components/blog/BlogPageHeader";
-import AllRappersPage from "./AllRappersPage";
+
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
   const [sortOrder, setSortOrder] = useState("asc");
@@ -161,7 +161,7 @@ const AllRappers = () => {
         {/* Filters and Search */}
         <AllRappersFilters searchInput={searchInput} searchTerm={searchTerm} locationInput={locationInput} locationFilter={locationFilter} sortBy={sortBy} sortOrder={sortOrder} onSearchInput={handleSearchInput} onLocationInput={handleLocationInput} onSortChange={handleSortChange} onOrderChange={handleOrderChange} />
         {/* Rappers Grid with Ads */}
-        {allRappers.length === 0 && !isLoading ? <AllRappersEmptyState /> : <AllRappersGrid rappers={allRappers} total={total} hasMore={hasMore} isFetching={isFetching} itemsPerPage={itemsPerPage} onLoadMore={handleLoadMore} />}
+        {allRappers.length === 0 && !isLoading ? <AllRappersEmptyState /> : <AllRappersGrid rappers={allRappers} total={total} hasMore={hasMore} isFetching={isFetching} itemsPerPage={itemsPerPage} onLoadMore={handleLoadMore} currentPage={currentPage} />}
       </main>
     </div>;
 };
