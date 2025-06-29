@@ -127,8 +127,8 @@ const RankingItemContent = ({
           
           {item.rapper?.total_votes && item.rapper.total_votes > 0 && isTopFive && (
             <div className="flex items-center gap-1">
-              <span className="text-rap-smoke text-xs">Total:</span>
-              <span className={`font-bold text-xs ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`}>
+              <span className="text-rap-smoke text-xs font-merienda">Total:</span>
+              <span className={`font-bold text-xs font-merienda ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`}>
                 {item.rapper.total_votes}
               </span>
             </div>
