@@ -66,18 +66,12 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
       </SheetTrigger>
       <SheetContent side="left" className="w-80 bg-black border-rap-gold/50 shadow-2xl shadow-rap-gold/20">
         <SheetHeader className="pb-6">
-          <SheetTitle className="flex items-center space-x-3">
+          <SheetTitle className="flex items-center justify-center">
             <img 
               src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
-              alt="Spit Hierarchy Logo" 
+              alt="Logo" 
               className="w-12 h-8" 
             />
-            <div>
-              <h1 className="font-ceviche bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold bg-clip-text text-transparent text-3xl">
-                Spit Hierarchy
-              </h1>
-              <span className="text-xs text-rap-gold/60 font-merienda tracking-widest font-extrabold">The Ultimate Rankings</span>
-            </div>
           </SheetTitle>
         </SheetHeader>
 
