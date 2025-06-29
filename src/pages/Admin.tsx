@@ -33,13 +33,13 @@ const Admin = () => {
         </h1>
 
         <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 bg-rap-carbon-light/50 gap-1">
-            <TabsTrigger value="rappers">Rappers</TabsTrigger>
-            <TabsTrigger value="rankings">Rankings</TabsTrigger>
-            <TabsTrigger value="blog">Blog</TabsTrigger>
-            <TabsTrigger value="headers">Headers</TabsTrigger>
-            <TabsTrigger value="theme">Theme</TabsTrigger>
-            <TabsTrigger value="ads">Ads</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 bg-rap-carbon-light/50 gap-1 h-auto p-2">
+            <TabsTrigger value="rappers" className="text-xs sm:text-sm py-3">Rappers</TabsTrigger>
+            <TabsTrigger value="rankings" className="text-xs sm:text-sm py-3">Rankings</TabsTrigger>
+            <TabsTrigger value="blog" className="text-xs sm:text-sm py-3">Blog</TabsTrigger>
+            <TabsTrigger value="headers" className="text-xs sm:text-sm py-3">Headers</TabsTrigger>
+            <TabsTrigger value="theme" className="text-xs sm:text-sm py-3">Theme</TabsTrigger>
+            <TabsTrigger value="ads" className="text-xs sm:text-sm py-3">Ads</TabsTrigger>
           </TabsList>
 
           <TabsContent value="rappers">

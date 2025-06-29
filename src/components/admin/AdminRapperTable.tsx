@@ -11,8 +11,8 @@ import { formatBirthdate } from "@/utils/zodiacUtils";
 
 type Rapper = Tables<"rappers">;
 
-// Use the same placeholder image that's used throughout the app
-const PLACEHOLDER_IMAGE = "/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png";
+// Use the correct placeholder image path from the database
+const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
 
 interface AdminRapperTableProps {
   rappers: Rapper[];
