@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Upload, ImageIcon, Loader2 } from "lucide-react";
+import { Upload, ImageIcon, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { generateRapperImageSizes } from "@/utils/imageUtils";
 
@@ -17,23 +17,47 @@ interface RapperAvatarUploadProps {
 
 const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState<string>("");
   const queryClient = useQueryClient();
 
   const uploadMutation = useMutation({
     mutationFn: async (file: File) => {
+      console.log('=== STARTING RAPPER AVATAR UPLOAD ===');
+      console.log('File info:', { name: file.name, size: file.size, type: file.type });
+      
       // Create a sanitized name for the rapper folder
       const sanitizedName = rapper.name.toLowerCase().replace(/[^a-z0-9]/g, '-');
+      console.log('Sanitized folder name:', sanitizedName);
       
-      console.log('Starting upload for rapper:', rapper.name, 'Folder:', sanitizedName);
+      setUploadProgress("Validating image...");
+      
+      // Validate file
+      if (!file.type.startsWith('image/')) {
+        throw new Error('File is not an image');
+      }
+      
+      if (file.size > 10 * 1024 * 1024) {
+        throw new Error('File is too large (max 10MB)');
+      }
       
       // Convert file to blob for processing
       const blob = new Blob([file], { type: file.type });
+      console.log('Created blob:', blob.size, 'bytes');
+      
+      setUploadProgress("Generating optimized image sizes...");
       
       // Generate multiple resolutions with enhanced quality
-      console.log('Generating rapper image sizes...');
-      const resizedImages = await generateRapperImageSizes(blob);
-      console.log('Generated sizes:', resizedImages.map(img => img.name));
-
+      let resizedImages;
+      try {
+        resizedImages = await generateRapperImageSizes(blob);
+        console.log('Generated sizes:', resizedImages.map(img => `${img.name}: ${img.blob.size} bytes`));
+      } catch (error) {
+        console.error('Image generation failed:', error);
+        throw new Error(`Image optimization failed: ${error.message}`);
+      }
+      
+      setUploadProgress("Uploading original image...");
+      
       // Upload original image first
       const originalFileName = `${sanitizedName}/original.jpg`;
       const originalFile = new File([blob], originalFileName, { type: 'image/jpeg' });
@@ -48,16 +72,23 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
       if (originalUploadError) {
         console.error('Original upload failed:', originalUploadError);
-        throw originalUploadError;
+        throw new Error(`Original upload failed: ${originalUploadError.message}`);
       }
+      
+      console.log('Original upload successful');
+      setUploadProgress("Uploading optimized sizes...");
 
-      // Upload all resized versions with proper error handling
-      console.log('Uploading resized versions...');
-      const uploadPromises = resizedImages.map(async ({ name, blob: resizedBlob }) => {
+      // Upload all resized versions with detailed progress tracking
+      const uploadResults = [];
+      
+      for (let i = 0; i < resizedImages.length; i++) {
+        const { name, blob: resizedBlob } = resizedImages[i];
         const fileName = `${sanitizedName}/${name}.jpg`;
         const file = new File([resizedBlob], fileName, { type: 'image/jpeg' });
         
-        console.log(`Uploading ${name} size to:`, fileName);
+        setUploadProgress(`Uploading ${name} size (${i + 1}/${resizedImages.length})...`);
+        console.log(`Uploading ${name} (${resizedBlob.size} bytes) to:`, fileName);
+        
         const { error } = await supabase.storage
           .from('rapper-images')
           .upload(fileName, file, {
@@ -70,26 +101,47 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
           throw new Error(`Failed to upload ${name} size: ${error.message}`);
         }
         
-        return { size: name, fileName };
-      });
+        console.log(`${name} upload successful`);
+        uploadResults.push({ size: name, fileName, blobSize: resizedBlob.size });
+      }
 
-      // Wait for all uploads to complete
-      const uploadResults = await Promise.all(uploadPromises);
       console.log('All uploads completed:', uploadResults);
+      setUploadProgress("Verifying uploads...");
 
-      // Verify uploads by checking if files exist
+      // Verify uploads by checking if files exist and are accessible
       for (const { size, fileName } of uploadResults) {
-        const { data: fileData, error: checkError } = await supabase.storage
-          .from('rapper-images')
-          .list(sanitizedName);
-        
-        if (checkError) {
-          console.warn(`Could not verify ${size} upload:`, checkError);
-        } else {
+        try {
+          const { data: fileData, error: listError } = await supabase.storage
+            .from('rapper-images')
+            .list(sanitizedName);
+          
+          if (listError) {
+            console.warn(`Could not list files for verification:`, listError);
+            continue;
+          }
+          
           const fileExists = fileData?.some(f => f.name === `${size}.jpg`);
-          console.log(`${size} file exists:`, fileExists);
+          console.log(`${size} file exists in storage:`, fileExists);
+          
+          if (!fileExists) {
+            console.warn(`${size} file not found in storage listing`);
+          }
+          
+          // Test direct access to the file
+          const testUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${fileName}`;
+          try {
+            const response = await fetch(testUrl, { method: 'HEAD' });
+            console.log(`${size} accessibility test:`, response.ok, response.status);
+          } catch (fetchError) {
+            console.warn(`${size} accessibility test failed:`, fetchError);
+          }
+          
+        } catch (verifyError) {
+          console.warn(`Verification failed for ${size}:`, verifyError);
         }
       }
+
+      setUploadProgress("Updating database...");
 
       // Store the base path in rapper_images table
       const basePath = sanitizedName;
@@ -114,8 +166,9 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
         if (updateError) {
           console.error('Database update failed:', updateError);
-          throw updateError;
+          throw new Error(`Database update failed: ${updateError.message}`);
         }
+        console.log('Updated existing rapper_images record');
       } else {
         // Insert new record with base path
         const { error: insertError } = await supabase
@@ -128,8 +181,9 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
         if (insertError) {
           console.error('Database insert failed:', insertError);
-          throw insertError;
+          throw new Error(`Database insert failed: ${insertError.message}`);
         }
+        console.log('Inserted new rapper_images record');
       }
 
       // Update the legacy image_url field for backwards compatibility (use xlarge for best quality)
@@ -144,10 +198,20 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
 
       if (updateError) {
         console.error('Rapper table update failed:', updateError);
-        throw updateError;
+        throw new Error(`Rapper table update failed: ${updateError.message}`);
       }
 
-      console.log('Upload process completed successfully');
+      console.log('=== UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');
+      console.log('Final URLs:', {
+        basePath,
+        xlarge_url: fullXlargeUrl,
+        all_sizes: uploadResults.map(r => ({
+          size: r.size,
+          url: `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${sanitizedName}/${r.size}.jpg`
+        }))
+      });
+      
+      setUploadProgress("Upload completed!");
       return { basePath, xlarge_url: fullXlargeUrl };
     },
     onSuccess: (result) => {
@@ -158,17 +222,25 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       
       console.log('Upload successful, queries invalidated');
-      toast.success(`Avatar uploaded successfully for ${rapper.name}`);
+      toast.success(`Avatar uploaded successfully for ${rapper.name}`, {
+        description: "All image sizes have been optimized and uploaded"
+      });
+      setUploadProgress("");
     },
     onError: (error: any) => {
       console.error('Upload error:', error);
-      toast.error(error.message || "Failed to upload avatar");
+      toast.error(`Upload failed: ${error.message}`, {
+        description: "Please check the console for detailed error information"
+      });
+      setUploadProgress("");
     }
   });
 
   const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (!file) return;
+
+    console.log('File selected:', { name: file.name, size: file.size, type: file.type });
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
@@ -183,10 +255,13 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     }
 
     setUploading(true);
+    setUploadProgress("Starting upload...");
+    
     try {
       await uploadMutation.mutateAsync(file);
     } finally {
       setUploading(false);
+      setUploadProgress("");
     }
   };
 
@@ -199,12 +274,21 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
+        {/* Progress indicator */}
+        {uploadProgress && (
+          <div className="flex items-center gap-2 p-3 bg-rap-gold/10 rounded-lg border border-rap-gold/30">
+            <Loader2 className="w-4 h-4 animate-spin text-rap-gold" />
+            <span className="text-rap-gold text-sm">{uploadProgress}</span>
+          </div>
+        )}
+
         {rapper.image_url && (
           <div className="flex justify-center">
             <img 
               src={rapper.image_url} 
               alt={rapper.name}
               className="w-64 h-64 object-cover border-2 border-rap-gold/30 rounded-lg"
+              onLoad={() => console.log('Current image loaded successfully:', rapper.image_url)}
               onError={(e) => {
                 console.error('Image failed to load:', rapper.image_url);
                 const target = e.target as HTMLImageElement;
@@ -239,7 +323,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
                   ) : (
                     <Upload className="w-4 h-4" />
                   )}
-                  {uploading ? 'Uploading & Optimizing...' : 'Upload Avatar'}
+                  {uploading ? 'Processing...' : 'Upload Avatar'}
                 </span>
               </Button>
             </label>
@@ -247,6 +331,10 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
           
           <p className="text-rap-smoke text-sm text-center">
             Upload a high-quality image. Multiple optimized sizes will be generated automatically.
+            <br />
+            <span className="text-xs text-rap-smoke/70">
+              Supported formats: JPG, PNG, WebP (max 10MB)
+            </span>
           </p>
         </div>
       </CardContent>
