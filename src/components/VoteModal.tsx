@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -89,6 +90,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
       queryClient.invalidateQueries({ queryKey: ["rapper", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["user-vote", rapper.id, categoryId] });
       queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings", rapper.id] });
+      
+      // CRITICAL: Invalidate all-rappers queries to update the All Rappers page
+      queryClient.invalidateQueries({ queryKey: ["all-rappers"] });
       
       toast.success(`Your rating for ${rapper.name} has been ${existingVote ? 'updated' : 'recorded'}.`);
       onClose();

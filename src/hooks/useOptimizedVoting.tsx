@@ -86,6 +86,9 @@ export const useOptimizedVoting = () => {
       queryClient.invalidateQueries({ queryKey: ['user-achievements'] });
       queryClient.invalidateQueries({ queryKey: ['rappers'] });
       
+      // CRITICAL: Invalidate all-rappers queries to update the All Rappers page immediately
+      queryClient.invalidateQueries({ queryKey: ['all-rappers'] });
+      
       // Don't show success toast here - let the calling component handle it
       console.log('Vote submitted successfully:', result.data);
     },

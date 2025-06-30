@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -81,7 +82,35 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         hasMore: (count || 0) > (currentPage + 1) * itemsPerPage,
       };
     },
+    staleTime: 30000, // Reduced from default 5 minutes to 30 seconds for fresher data
+    refetchInterval: 60000, // Refetch every minute to keep data fresh
   });
+
+  // Real-time subscription for rapper updates
+  useEffect(() => {
+    const channel = supabase
+      .channel('rappers-realtime')
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'rappers'
+        },
+        (payload) => {
+          console.log('Rapper updated via realtime:', payload);
+          // Update the specific rapper in our local state
+          setAllRappers(prev => prev.map(rapper => 
+            rapper.id === payload.new.id ? { ...rapper, ...payload.new } : rapper
+          ));
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
 
   useEffect(() => {
     if (rappersData?.rappers) {
