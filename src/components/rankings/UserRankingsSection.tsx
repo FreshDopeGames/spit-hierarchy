@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Users, Filter, Calendar, TrendingUp } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -81,7 +82,7 @@ const UserRankingsSection = () => {
         
         <div className="flex flex-wrap gap-3">
           <Select value={sortBy} onValueChange={(value: any) => setSortBy(value)}>
-            <SelectTrigger className="w-40 bg-rap-carbon border-rap-smoke/30 text-rap-platinum">
+            <SelectTrigger className="w-40 bg-gray-900 border-rap-smoke/30 text-rap-platinum">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -107,7 +108,7 @@ const UserRankingsSection = () => {
           </Select>
 
           <Select value={categoryFilter} onValueChange={setCategoryFilter}>
-            <SelectTrigger className="w-40 bg-rap-carbon border-rap-smoke/30 text-rap-platinum">
+            <SelectTrigger className="w-40 bg-gray-900 border-rap-smoke/30 text-rap-platinum">
               <SelectValue placeholder="All Categories" />
             </SelectTrigger>
             <SelectContent>
