@@ -106,7 +106,7 @@ const RankingItemContent = ({
           <>
             {(item.reason || item.rapper?.origin) && (
               <p className={`font-merienda ${textSizes.reason} ${isMobile ? 'text-center' : 'text-left'}`}>
-                {item.reason || `Origin: ${item.rapper?.origin || 'Unknown'}`}
+                {item.reason || item.rapper?.origin || 'Unknown'}
               </p>
             )}
           </>
