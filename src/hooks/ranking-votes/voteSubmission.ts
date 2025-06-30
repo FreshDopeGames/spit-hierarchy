@@ -20,18 +20,18 @@ export const submitVote = async (
     ? currentStatus as MemberStatus 
     : 'bronze' as MemberStatus;
 
-  // Insert the ranking vote with proper error handling
+  // Insert a new ranking vote (no longer using upsert for cumulative daily voting)
   const { data: voteData, error: voteError } = await supabase
     .from('ranking_votes')
-    .upsert({
+    .insert({
       user_id: user.id,
       ranking_id: cleanRankingId,
       rapper_id: cleanRapperId,
       vote_weight: voteWeight,
       member_status: memberStatus,
+      vote_date: new Date().toISOString().split('T')[0], // Store as date only
+      created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
-    }, {
-      onConflict: 'user_id,ranking_id,rapper_id'
     })
     .select()
     .single();

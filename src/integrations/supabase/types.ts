@@ -849,6 +849,7 @@ export type Database = {
           rapper_id: string
           updated_at: string
           user_id: string
+          vote_date: string | null
           vote_weight: number
         }
         Insert: {
@@ -859,6 +860,7 @@ export type Database = {
           rapper_id: string
           updated_at?: string
           user_id: string
+          vote_date?: string | null
           vote_weight?: number
         }
         Update: {
@@ -869,6 +871,7 @@ export type Database = {
           rapper_id?: string
           updated_at?: string
           user_id?: string
+          vote_date?: string | null
           vote_weight?: number
         }
         Relationships: [

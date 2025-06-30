@@ -24,16 +24,20 @@ export const validateVoteInputs = (rankingId: string, rapperId: string, user: an
 
 export const checkRateLimit = async (supabase: any, userId: string) => {
   // Enhanced security: Check if user is trying to vote too frequently
-  const { data: recentVotes, error: voteCheckError } = await supabase
+  // For daily voting, we check if they've voted for the same rapper today
+  const today = new Date().toISOString().split('T')[0];
+  
+  const { data: todayVotes, error: voteCheckError } = await supabase
     .from('ranking_votes')
-    .select('created_at')
+    .select('created_at, rapper_id, ranking_id')
     .eq('user_id', userId)
-    .gte('created_at', new Date(Date.now() - 60000).toISOString()) // Last minute
-    .limit(10);
+    .eq('vote_date', today)
+    .gte('created_at', new Date(Date.now() - 60000).toISOString()) // Last minute check for spam
+    .limit(20);
 
   if (voteCheckError) {
     console.error('Vote check error:', voteCheckError);
-  } else if (recentVotes && recentVotes.length >= 5) {
-    throw new Error('Too many votes in a short time. Please wait a moment.');
+  } else if (todayVotes && todayVotes.length >= 10) {
+    throw new Error('Too many votes in a short time. Please slow down.');
   }
 };

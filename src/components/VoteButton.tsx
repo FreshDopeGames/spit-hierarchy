@@ -34,7 +34,7 @@ const VoteButton = ({
   const isMobile = useIsMobile();
 
   const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
-  const isDisabled = disabled || submitRankingVote.isPending || !user;
+  const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
   const voteMultiplier = getVoteMultiplier();
 
   // Debug logging for voting state
@@ -42,6 +42,7 @@ const VoteButton = ({
     rapperId,
     rankingId,
     hasVoted,
+    hasVotedToday: hasVoted,
     currentStatus,
     voteMultiplier,
     user: !!user
@@ -51,6 +52,8 @@ const VoteButton = ({
     if (isDisabled || !rapperId || !rankingId) {
       if (!user) {
         toast.error("Please sign in to vote for rappers.");
+      } else if (hasVoted) {
+        toast.error("You've already voted for this rapper today. Come back tomorrow!");
       }
       return;
     }
@@ -63,10 +66,8 @@ const VoteButton = ({
       }
 
       try {
-        // Add to daily tracking for new votes only
-        if (!hasVoted) {
-          addVoteToTracking(rapperId);
-        }
+        // Add to daily tracking for optimistic updates
+        addVoteToTracking(rapperId);
         
         // Submit the vote with enhanced error handling
         await submitRankingVote.mutateAsync({ rankingId, rapperId });
@@ -90,7 +91,7 @@ const VoteButton = ({
 
   const getButtonColor = () => {
     if (hasVoted) {
-      return 'bg-gradient-to-r from-rap-silver to-gray-300 hover:from-gray-300 hover:to-rap-silver text-rap-carbon border border-rap-silver/50 shadow-lg'; // Silver gradient when voted
+      return 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white border border-green-500/50 shadow-lg'; // Green gradient when voted today
     }
     if (isPending) {
       return 'bg-yellow-600 hover:bg-yellow-600 text-white';
@@ -113,15 +114,15 @@ const VoteButton = ({
       if (isMobile) {
         return (
           <>
-            <ThumbsUp className="w-4 h-4 mr-1" />
-            <Check className="w-3 h-3" />
+            <Check className="w-4 h-4 mr-1" />
+            <span className="text-xs">Today</span>
           </>
         );
       }
       return (
         <>
           <Check className="w-4 h-4 mr-1" />
-          <span className="hidden sm:inline">Voted</span>
+          <span className="hidden sm:inline">Voted Today</span>
           <span className="sm:hidden">✓</span>
         </>
       );

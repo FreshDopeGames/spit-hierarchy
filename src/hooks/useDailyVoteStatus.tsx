@@ -55,39 +55,54 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     }
   };
 
-  // Fetch today's votes from database
+  // Fetch today's votes from database - check both tables for today's votes
   const { data: dailyVotes = [], isLoading } = useQuery({
     queryKey: ['daily-votes', user?.id, getTodayKey(), rankingId],
     queryFn: async () => {
       if (!user || !rankingId) return [];
 
-      const { data, error } = await supabase
-        .from('daily_vote_tracking')
+      const today = getTodayKey();
+
+      // Check ranking_votes table for today's votes (primary source)
+      const { data: rankingVotes, error: rankingError } = await supabase
+        .from('ranking_votes')
         .select('user_id, rapper_id, ranking_id, vote_date')
         .eq('user_id', user.id)
         .eq('ranking_id', rankingId)
-        .eq('vote_date', getTodayKey());
+        .eq('vote_date', today);
 
-      if (error) throw error;
+      if (rankingError) {
+        console.error('Error fetching ranking votes:', rankingError);
+        throw rankingError;
+      }
+
+      // Transform to match the expected format
+      const votesData = rankingVotes.map(vote => ({
+        user_id: vote.user_id,
+        rapper_id: vote.rapper_id,
+        ranking_id: vote.ranking_id,
+        vote_date: vote.vote_date
+      }));
       
       // Store in localStorage for caching
-      storeVotes(data);
+      storeVotes(votesData);
       
-      return data;
+      return votesData;
     },
     enabled: !!user && !!rankingId,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 2 * 60 * 1000, // 2 minutes - shorter for daily voting
     initialData: getStoredVotes,
   });
 
-  // Check if user has voted for a specific rapper today
+  // Check if user has voted for a specific rapper TODAY
   const hasVotedToday = (rapperId: string): boolean => {
     if (!user || !rankingId) return false;
     
+    const today = getTodayKey();
     return dailyVotes.some(vote => 
       vote.rapper_id === rapperId && 
       vote.ranking_id === rankingId &&
-      vote.vote_date === getTodayKey()
+      vote.vote_date === today
     );
   };
 
@@ -95,16 +110,17 @@ export const useDailyVoteStatus = (rankingId?: string) => {
   const addVoteToTracking = (rapperId: string) => {
     if (!user || !rankingId) return;
 
+    const today = getTodayKey();
     const newVote: DailyVoteRecord = {
       user_id: user.id,
       rapper_id: rapperId,
       ranking_id: rankingId,
-      vote_date: getTodayKey()
+      vote_date: today
     };
 
     // Update query cache optimistically
     queryClient.setQueryData<DailyVoteRecord[]>(
-      ['daily-votes', user.id, getTodayKey(), rankingId],
+      ['daily-votes', user.id, today, rankingId],
       (oldData = []) => [...oldData, newVote]
     );
 
