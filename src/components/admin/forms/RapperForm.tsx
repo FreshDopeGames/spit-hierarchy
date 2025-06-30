@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -198,7 +197,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="name">Stage Name *</Label>
+          <Label htmlFor="name" className="text-white">Stage Name *</Label>
           <Input
             id="name"
             type="text"
@@ -212,7 +211,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="real_name">Real Name</Label>
+          <Label htmlFor="real_name" className="text-white">Real Name</Label>
           <Input
             id="real_name"
             type="text"
@@ -226,7 +225,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="origin">Origin</Label>
+        <Label htmlFor="origin" className="text-white">Origin</Label>
         <Input
           id="origin"
           type="text"
@@ -239,7 +238,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="bio">Biography</Label>
+        <Label htmlFor="bio" className="text-white">Biography</Label>
         <Textarea
           id="bio"
           value={formData.bio}
@@ -252,7 +251,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 
       <div className="grid grid-cols-3 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="birth_year">Birth Year</Label>
+          <Label htmlFor="birth_year" className="text-white">Birth Year</Label>
           <Input
             id="birth_year"
             type="number"
@@ -266,7 +265,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="birth_month">Birth Month</Label>
+          <Label htmlFor="birth_month" className="text-white">Birth Month</Label>
           <Input
             id="birth_month"
             type="number"
@@ -280,7 +279,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="birth_day">Birth Day</Label>
+          <Label htmlFor="birth_day" className="text-white">Birth Day</Label>
           <Input
             id="birth_day"
             type="number"
@@ -296,7 +295,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="twitter_handle">Twitter Handle</Label>
+          <Label htmlFor="twitter_handle" className="text-white">Twitter Handle</Label>
           <Input
             id="twitter_handle"
             type="text"
@@ -309,7 +308,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="instagram_handle">Instagram Handle</Label>
+          <Label htmlFor="instagram_handle" className="text-white">Instagram Handle</Label>
           <Input
             id="instagram_handle"
             type="text"
@@ -323,7 +322,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="spotify_id">Spotify Artist ID</Label>
+        <Label htmlFor="spotify_id" className="text-white">Spotify Artist ID</Label>
         <Input
           id="spotify_id"
           type="text"
@@ -357,4 +356,3 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 };
 
 export default RapperForm;
-
