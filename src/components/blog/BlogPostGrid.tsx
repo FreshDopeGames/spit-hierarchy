@@ -56,7 +56,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
       {posts.map(post => (
         <Card key={post.id} className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-xl shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300 group">
           <Link to={`/blog/${post.id}`}>
-            <div className="overflow-hidden">
+            <div className="overflow-hidden hover:invert transition-all duration-300">
               <ResponsiveImage
                 src={getImageData(post)}
                 alt={post.title}
