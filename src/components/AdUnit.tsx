@@ -100,7 +100,7 @@ const AdUnit = ({ placement, pageRoute, className = "" }: AdUnitProps) => {
       return (
         <div className="admob-container" data-ad-unit-id={ad_unit_id}>
           {/* AdMob integration would go here */}
-          <div className="bg-carbon-fiber border border-rap-gold/30 p-4 text-center">
+          <div className="bg-carbon-gradient border border-rap-gold/30 p-4 text-center">
             <span className="text-xs text-rap-smoke uppercase tracking-wider">Advertisement</span>
             <div className="text-rap-platinum text-sm mt-2">AdMob Unit: {ad_unit_id}</div>
           </div>
@@ -110,7 +110,7 @@ const AdUnit = ({ placement, pageRoute, className = "" }: AdUnitProps) => {
       // Generic third-party ad placeholder
       return (
         <div className="generic-ad-container" data-ad-unit-id={ad_unit_id}>
-          <div className="bg-carbon-fiber border border-rap-gold/30 p-4 text-center">
+          <div className="bg-carbon-gradient border border-rap-gold/30 p-4 text-center">
             <span className="text-xs text-rap-smoke uppercase tracking-wider">Advertisement</span>
             <div className="text-rap-platinum text-sm mt-2">Ad Unit: {ad_unit_id}</div>
           </div>

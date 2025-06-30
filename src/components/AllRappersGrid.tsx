@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -56,7 +55,7 @@ const RapperCard = ({
   
   return (
     <Card 
-      className="bg-rap-carbon border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group"
+      className="bg-carbon-gradient border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group"
       onClick={handleCardClick}
     >
       {/* Rap culture accent bar */}
