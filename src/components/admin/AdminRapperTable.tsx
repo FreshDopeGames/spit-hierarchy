@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,7 +25,7 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <Card key={i} className="bg-rap-carbon-light border-rap-gold/20 animate-pulse">
+          <Card key={i} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/20 animate-pulse">
             <CardContent className="p-4">
               <AspectRatio ratio={1} className="mb-3">
                 <div className="w-full h-full bg-rap-charcoal rounded"></div>
@@ -40,7 +41,7 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
 
   if (rappers.length === 0) {
     return (
-      <Card className="bg-rap-carbon-light border-rap-gold/20">
+      <Card className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/20">
         <CardContent className="p-8 text-center">
           <Music className="w-16 h-16 text-rap-gold mx-auto mb-4" />
           <h3 className="text-xl font-bold text-rap-platinum mb-2">No Rappers Yet</h3>
@@ -64,7 +65,7 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (
-    <Card className="bg-rap-carbon-light border-rap-gold/20 hover:border-rap-gold/40 transition-all duration-300">
+    <Card className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/20 hover:border-rap-gold/40 transition-all duration-300">
       <CardContent className="p-4">
         {/* Rapper Image */}
         <AspectRatio ratio={1} className="mb-3">
