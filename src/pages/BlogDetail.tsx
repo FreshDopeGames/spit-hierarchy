@@ -1,6 +1,7 @@
 
 import { useParams } from "react-router-dom";
 import CommentBubble from "@/components/CommentBubble";
+import BackToTopButton from "@/components/BackToTopButton";
 import { useAuth } from "@/hooks/useAuth";
 import { useComments } from "@/hooks/useComments";
 import InternalPageHeader from "@/components/InternalPageHeader";
@@ -82,6 +83,9 @@ const BlogDetail = () => {
         onShare={handleShare}
         onCommentsClick={handleCommentsClick}
       />
+
+      {/* Back to Top Button - positioned for pages with CommentBubble */}
+      <BackToTopButton hasCommentBubble={true} />
 
       {/* Comment Bubble */}
       <div data-comment-bubble>

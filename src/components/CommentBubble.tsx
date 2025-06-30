@@ -62,12 +62,12 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
 
   return (
     <>
-      {/* Collapsed Comment Bubble */}
+      {/* Collapsed Comment Bubble - reduced horizontal padding */}
       {!isExpanded && (
         <div className="fixed bottom-6 right-6 z-50">
           <Button
             onClick={() => setIsExpanded(true)}
-            className={`bg-rap-gold text-black hover:bg-rap-gold/80 rounded-full h-14 px-6 shadow-lg shadow-rap-gold/30 transition-transform duration-300 font-merienda ${
+            className={`bg-rap-gold text-black hover:bg-rap-gold/80 rounded-full h-14 px-4 shadow-lg shadow-rap-gold/30 transition-transform duration-300 font-merienda ${
               shouldAnimate ? 'animate-bounce' : ''
             }`}
           >

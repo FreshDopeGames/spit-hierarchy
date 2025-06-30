@@ -8,6 +8,7 @@ import BlogPostGrid from "@/components/blog/BlogPostGrid";
 import BlogLoadingState from "@/components/blog/BlogLoadingState";
 import BlogEmptyState from "@/components/blog/BlogEmptyState";
 import BlogLoadMoreButton from "@/components/blog/BlogLoadMoreButton";
+import BackToTopButton from "@/components/BackToTopButton";
 
 interface BlogPost {
   id: string;
@@ -151,6 +152,7 @@ const Blog = () => {
             <p className="text-rap-platinum">Error loading blog posts. Please try again later.</p>
           </div>
         </main>
+        <BackToTopButton hasCommentBubble={false} />
       </div>
     );
   }
@@ -195,6 +197,9 @@ const Blog = () => {
           />
         )}
       </main>
+
+      {/* Back to Top Button - positioned for pages without CommentBubble */}
+      <BackToTopButton hasCommentBubble={false} />
     </div>
   );
 };
