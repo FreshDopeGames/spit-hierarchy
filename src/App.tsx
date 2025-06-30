@@ -1,3 +1,4 @@
+
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -7,6 +8,7 @@ import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import AuthGuard from "@/components/AuthGuard";
 import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
+import BackToTopButton from "@/components/BackToTopButton";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import UserProfile from "./pages/UserProfile";
@@ -115,6 +117,7 @@ function App() {
                   {/* Catch all route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
+                <BackToTopButton />
               </BrowserRouter>
             </AchievementProvider>
           </TooltipProvider>

@@ -7,6 +7,7 @@ import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import BlogPageHeader from "@/components/blog/BlogPageHeader";
+import BackToTopButton from "@/components/BackToTopButton";
 
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
@@ -142,6 +143,7 @@ const AllRappers = () => {
             <AllRappersLoadingSkeleton />
           </div>
         </main>
+        <BackToTopButton />
       </div>;
   }
   const total = rappersData?.total || 0;
@@ -163,6 +165,7 @@ const AllRappers = () => {
         {/* Rappers Grid with Ads */}
         {allRappers.length === 0 && !isLoading ? <AllRappersEmptyState /> : <AllRappersGrid rappers={allRappers} total={total} hasMore={hasMore} isFetching={isFetching} itemsPerPage={itemsPerPage} onLoadMore={handleLoadMore} currentPage={currentPage} />}
       </main>
+      <BackToTopButton />
     </div>;
 };
 export default AllRappers;
