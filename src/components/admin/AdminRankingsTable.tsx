@@ -42,7 +42,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
     return (
       <div className="space-y-4">
         {rankings.map((ranking) => (
-          <Card key={ranking.id} className="bg-rap-carbon border border-rap-gold/30">
+          <Card key={ranking.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-gold/30">
             <CardContent className="p-4">
               <div className="space-y-3">
                 {/* Header with title and featured status */}
