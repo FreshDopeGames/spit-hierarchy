@@ -11,8 +11,6 @@ interface DailyVoteRecord {
   vote_date: string;
 }
 
-const STORAGE_KEY = 'daily_votes';
-
 export const useDailyVoteStatus = (rankingId?: string) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -22,10 +20,16 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     return new Date().toISOString().split('T')[0];
   };
 
-  // Get stored votes from localStorage
-  const getStoredVotes = (): DailyVoteRecord[] => {
+  // Create ranking-specific storage key to prevent contamination
+  const getStorageKey = (rankingId: string) => {
+    return `daily_votes_${rankingId}`;
+  };
+
+  // Get stored votes from localStorage for a specific ranking
+  const getStoredVotes = (rankingId: string): DailyVoteRecord[] => {
     try {
-      const stored = localStorage.getItem(STORAGE_KEY);
+      const storageKey = getStorageKey(rankingId);
+      const stored = localStorage.getItem(storageKey);
       if (!stored) return [];
       
       const data = JSON.parse(stored);
@@ -33,22 +37,35 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       
       // Clear old data if it's from a different day
       if (data.date !== today) {
-        localStorage.removeItem(STORAGE_KEY);
+        localStorage.removeItem(storageKey);
         return [];
       }
       
-      return data.votes || [];
+      // Additional validation: ensure votes are for the correct ranking
+      const validVotes = (data.votes || []).filter((vote: DailyVoteRecord) => 
+        vote.ranking_id === rankingId && vote.vote_date === today
+      );
+      
+      return validVotes;
     } catch {
       return [];
     }
   };
 
-  // Store votes in localStorage
-  const storeVotes = (votes: DailyVoteRecord[]) => {
+  // Store votes in localStorage for a specific ranking
+  const storeVotes = (rankingId: string, votes: DailyVoteRecord[]) => {
     try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        date: getTodayKey(),
-        votes
+      const storageKey = getStorageKey(rankingId);
+      // Filter votes to ensure they're only for this ranking and today
+      const today = getTodayKey();
+      const filteredVotes = votes.filter(vote => 
+        vote.ranking_id === rankingId && vote.vote_date === today
+      );
+      
+      localStorage.setItem(storageKey, JSON.stringify({
+        date: today,
+        ranking_id: rankingId,
+        votes: filteredVotes
       }));
     } catch (error) {
       console.error('Failed to store votes in localStorage:', error);
@@ -84,17 +101,17 @@ export const useDailyVoteStatus = (rankingId?: string) => {
         vote_date: vote.vote_date
       }));
       
-      // Store in localStorage for caching
-      storeVotes(votesData);
+      // Store in localStorage for caching - ranking-specific
+      storeVotes(rankingId, votesData);
       
       return votesData;
     },
     enabled: !!user && !!rankingId,
     staleTime: 2 * 60 * 1000, // 2 minutes - shorter for daily voting
-    initialData: getStoredVotes,
+    initialData: rankingId ? getStoredVotes(rankingId) : [],
   });
 
-  // Check if user has voted for a specific rapper TODAY
+  // Check if user has voted for a specific rapper TODAY in THIS ranking
   const hasVotedToday = (rapperId: string): boolean => {
     if (!user || !rankingId) return false;
     
@@ -106,7 +123,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     );
   };
 
-  // Add a vote to today's tracking for a SPECIFIC rapper (for optimistic updates)
+  // Add a vote to today's tracking for a SPECIFIC rapper in THIS ranking (for optimistic updates)
   const addVoteToTracking = (rapperId: string) => {
     if (!user || !rankingId) return;
 
@@ -122,7 +139,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     queryClient.setQueryData<DailyVoteRecord[]>(
       ['daily-votes', user.id, today, rankingId],
       (oldData = []) => {
-        // Only add if not already present for this rapper
+        // Only add if not already present for this rapper in this ranking
         const existingVote = oldData.find(vote => 
           vote.rapper_id === rapperId && 
           vote.ranking_id === rankingId &&
@@ -134,8 +151,8 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       }
     );
 
-    // Update localStorage with the new vote
-    const currentStored = getStoredVotes();
+    // Update localStorage with the new vote - ranking-specific
+    const currentStored = getStoredVotes(rankingId);
     const existingVote = currentStored.find(vote => 
       vote.rapper_id === rapperId && 
       vote.ranking_id === rankingId &&
@@ -144,26 +161,39 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     
     if (!existingVote) {
       const updatedVotes = [...currentStored, newVote];
-      storeVotes(updatedVotes);
+      storeVotes(rankingId, updatedVotes);
     }
   };
 
-  // Clean up old localStorage data on mount
+  // Clean up old localStorage data on mount and migrate from old global format
   useEffect(() => {
     const today = getTodayKey();
-    const stored = localStorage.getItem(STORAGE_KEY);
     
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        if (data.date !== today) {
-          localStorage.removeItem(STORAGE_KEY);
+    if (rankingId) {
+      // Clean up ranking-specific old data
+      const storageKey = getStorageKey(rankingId);
+      const stored = localStorage.getItem(storageKey);
+      
+      if (stored) {
+        try {
+          const data = JSON.parse(stored);
+          if (data.date !== today) {
+            localStorage.removeItem(storageKey);
+          }
+        } catch {
+          localStorage.removeItem(storageKey);
         }
-      } catch {
-        localStorage.removeItem(STORAGE_KEY);
       }
     }
-  }, []);
+
+    // Clean up old global storage key that was causing contamination
+    const oldGlobalKey = 'daily_votes';
+    const oldGlobalData = localStorage.getItem(oldGlobalKey);
+    if (oldGlobalData) {
+      console.log('Cleaning up old global vote storage that was causing contamination');
+      localStorage.removeItem(oldGlobalKey);
+    }
+  }, [rankingId]);
 
   return {
     hasVotedToday,
