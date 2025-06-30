@@ -28,9 +28,9 @@ const NotFound = () => {
         </div>
         
         <h1 className="text-6xl font-mogra text-rap-gold mb-4 animate-text-glow">404</h1>
-        <h2 className="text-4xl sm:text-5xl font-ceviche text-rap-silver mb-4">Lost in the Tomb</h2>
+        <h2 className="text-4xl sm:text-5xl font-ceviche text-rap-silver mb-4">...but not the ATL</h2>
         <p className="text-rap-platinum font-kaushan text-lg mb-8 max-w-md tracking-wide">
-          This scroll has been lost to time. Return to the dynasty and continue your reign.
+          This scroll has been lost to time. Return to your expedition...expeditiously.
         </p>
         
         <Link to="/">
