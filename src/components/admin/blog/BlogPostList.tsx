@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -28,7 +27,7 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
   return (
     <div className="space-y-4">
       {posts?.map(post => (
-        <div key={post.id} className="border border-rap-smoke/30 rounded-lg p-4 hover:border-rap-gold/50 transition-colors">
+        <div key={post.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-smoke/30 rounded-lg p-4 hover:border-rap-gold/50 transition-colors">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div className="flex-1 min-w-0">
               <h3 className="text-lg font-semibold text-rap-platinum mb-2">{post.title}</h3>
