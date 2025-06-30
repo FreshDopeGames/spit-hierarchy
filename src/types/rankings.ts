@@ -26,6 +26,7 @@ export interface UnifiedRanking {
   }>;
   likes: number;
   views: number;
+  totalVotes: number; // Add totalVotes field
   isOfficial: boolean;
   tags: string[];
   slug: string; // Always required

@@ -1,48 +1,68 @@
 
 import { RankingWithItems, UnifiedRanking } from "@/types/rankings";
+import { supabase } from "@/integrations/supabase/client";
 
-// Helper function to generate deterministic values based on a string ID
-const generateDeterministicValue = (id: string, multiplier: number, base: number): number => {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    const char = id.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
+// Helper function to get actual vote count for a ranking
+const getRankingVoteCount = async (rankingId: string, isOfficial: boolean): Promise<number> => {
+  try {
+    if (isOfficial) {
+      // For official rankings, count votes from ranking_votes table
+      const { count, error } = await supabase
+        .from("ranking_votes")
+        .select("*", { count: 'exact', head: true })
+        .in("ranking_id", [rankingId]);
+      
+      if (error) {
+        console.error("Error fetching official ranking votes:", error);
+        return 0;
+      }
+      return count || 0;
+    } else {
+      // For user rankings, we don't have vote tracking yet
+      return 0;
+    }
+  } catch (error) {
+    console.error("Error fetching ranking vote count:", error);
+    return 0;
   }
-  return Math.abs(hash % multiplier) + base;
 };
 
-export const transformOfficialRankings = (rankings: RankingWithItems[]): UnifiedRanking[] => {
-  return rankings.map(ranking => ({
-    id: ranking.id,
-    title: ranking.title || "Untitled Ranking",
-    description: ranking.description || "",
-    author: "Editorial Team",
-    authorId: "editorial-team", // Default ID for official rankings
-    timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
-    createdAt: ranking.created_at || new Date().toISOString(),
-    rappers: (ranking.items || []).map(item => ({
-      rank: item.position || 0,
-      name: item.rapper?.name || "Unknown",
-      reason: item.reason || ""
-    })),
-    likes: generateDeterministicValue(ranking.id, 900, 150), // Range: 150-1049
-    views: generateDeterministicValue(ranking.id, 4000, 1200), // Range: 1200-5199
-    isOfficial: true,
-    tags: ["Official", ranking.category || "General"].filter(Boolean),
-    slug: ranking.slug || `official-${ranking.id}`,
-    comments: 0,
-    category: ranking.category || "General",
-    isPublic: true // Official rankings are always public
+export const transformOfficialRankings = (rankings: RankingWithItems[]): Promise<UnifiedRanking[]> => {
+  return Promise.all(rankings.map(async (ranking) => {
+    const totalVotes = await getRankingVoteCount(ranking.id, true);
+    
+    return {
+      id: ranking.id,
+      title: ranking.title || "Untitled Ranking",
+      description: ranking.description || "",
+      author: "Editorial Team",
+      authorId: "editorial-team", // Default ID for official rankings
+      timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
+      createdAt: ranking.created_at || new Date().toISOString(),
+      rappers: (ranking.items || []).map(item => ({
+        rank: item.position || 0,
+        name: item.rapper?.name || "Unknown",
+        reason: item.reason || ""
+      })),
+      likes: 0, // Remove fake likes
+      views: 0, // Set to 0 until we implement view tracking
+      totalVotes,
+      isOfficial: true,
+      tags: ["Official", ranking.category || "General"].filter(Boolean),
+      slug: ranking.slug || `official-${ranking.id}`,
+      comments: 0,
+      category: ranking.category || "General",
+      isPublic: true // Official rankings are always public
+    };
   }));
 };
 
-export const transformUserRankings = (userRankingData: any): UnifiedRanking[] => {
+export const transformUserRankings = async (userRankingData: any): Promise<UnifiedRanking[]> => {
   if (!userRankingData?.rankings) {
     return [];
   }
 
-  return userRankingData.rankings.map((ranking: any) => {
+  return Promise.all(userRankingData.rankings.map(async (ranking: any) => {
     // Type guard to safely access profiles
     const profileData = ranking.profiles && 
       typeof ranking.profiles === 'object' && 
@@ -50,6 +70,8 @@ export const transformUserRankings = (userRankingData: any): UnifiedRanking[] =>
       'username' in ranking.profiles 
       ? ranking.profiles as { username: string | null }
       : null;
+
+    const totalVotes = await getRankingVoteCount(ranking.id || "", false);
 
     return {
       id: ranking.id || "",
@@ -64,8 +86,9 @@ export const transformUserRankings = (userRankingData: any): UnifiedRanking[] =>
         name: item.rapper_name || "Unknown",
         reason: item.item_reason || ""
       })),
-      likes: generateDeterministicValue(ranking.id || "unknown", 450, 50), // Range: 50-499
-      views: generateDeterministicValue(ranking.id || "unknown", 1900, 100), // Range: 100-1999
+      likes: 0, // Remove fake likes
+      views: 0, // Set to 0 until we implement view tracking
+      totalVotes,
       isOfficial: false,
       tags: ["Community", ranking.category || "General"].filter(Boolean),
       category: ranking.category || "General",
@@ -73,7 +96,7 @@ export const transformUserRankings = (userRankingData: any): UnifiedRanking[] =>
       slug: ranking.slug || `user-${ranking.id}`,
       comments: 0
     };
-  });
+  }));
 };
 
 // Legacy transformer for backwards compatibility

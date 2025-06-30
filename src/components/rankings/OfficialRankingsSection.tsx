@@ -1,4 +1,5 @@
 
+import { useState, useEffect } from "react";
 import { Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
@@ -13,13 +14,24 @@ interface OfficialRankingsSectionProps {
 }
 
 const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps) => {
-  // Transform rankings to unified format
-  const transformedRankings = transformOfficialRankings(rankings);
+  const [transformedRankings, setTransformedRankings] = useState<any[]>([]);
+  const [loading, setLoading] = useState(false);
+
+  // Transform rankings when data changes
+  useEffect(() => {
+    if (rankings.length > 0) {
+      setLoading(true);
+      transformOfficialRankings(rankings).then((transformed) => {
+        setTransformedRankings(transformed);
+        setLoading(false);
+      });
+    }
+  }, [rankings]);
 
   // Show loading state or empty state if no rankings
   if (rankings.length === 0) {
     return (
-      <Card className="bg-carbon-fiber border-rap-gold/30">
+      <Card className="bg-gradient-to-br from-black via-rap-carbon to-rap-charcoal border-rap-gold/30">
         <CardContent className="p-8 text-center">
           <Award className="w-12 h-12 text-rap-gold mx-auto mb-4" />
           <h3 className="text-xl font-mogra text-rap-platinum mb-2">
@@ -38,6 +50,16 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
           </Link>
         </CardContent>
       </Card>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-rap-platinum font-merienda">
+          Loading official rankings...
+        </p>
+      </div>
     );
   }
 
@@ -64,11 +86,7 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
       
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
         {transformedRankings.map((ranking) => (
-          <div key={ranking.id}>
-            <Link to={`/rankings/official/${ranking.slug}`}>
-              <RankingCard ranking={ranking} isUserRanking={false} />
-            </Link>
-          </div>
+          <RankingCard key={ranking.id} ranking={ranking} isUserRanking={false} />
         ))}
       </div>
     </div>
