@@ -88,9 +88,19 @@ export const useRankingData = (rankingId: string) => {
         })
       );
 
-      // Sort by weighted votes (descending) and assign dynamic positions
+      // Enhanced sorting: by vote count (descending), then alphabetically by name for ties
       const sortedItems = itemsWithVotesAndDeltas
-        .sort((a, b) => b.ranking_votes - a.ranking_votes)
+        .sort((a, b) => {
+          // First, sort by vote count (descending)
+          if (a.ranking_votes !== b.ranking_votes) {
+            return b.ranking_votes - a.ranking_votes;
+          }
+          
+          // For ties (including 0 votes), sort alphabetically by rapper name
+          const nameA = a.rapper?.name || '';
+          const nameB = b.rapper?.name || '';
+          return nameA.localeCompare(nameB);
+        })
         .map((item, index) => ({
           ...item,
           dynamic_position: index + 1

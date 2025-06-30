@@ -1,5 +1,6 @@
 
-import React from "react";
+import React, { useState, useMemo } from "react";
+import { Search, X } from "lucide-react";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import { useRapperImages } from "@/hooks/useImageStyle";
 import RankingItemCard from "./RankingItemCard";
@@ -28,14 +29,66 @@ const OfficialRankingItems = ({
   loading,
   rankingId
 }: OfficialRankingItemsProps) => {
-  const displayedItems = items.slice(0, displayCount);
+  const [searchKeyword, setSearchKeyword] = useState("");
+
+  // Filter items based on search keyword
+  const filteredItems = useMemo(() => {
+    if (!searchKeyword.trim()) {
+      return items;
+    }
+    
+    return items.filter(item => 
+      item.rapper?.name.toLowerCase().includes(searchKeyword.toLowerCase())
+    );
+  }, [items, searchKeyword]);
+
+  const displayedItems = filteredItems.slice(0, displayCount);
 
   // Batch load rapper images for performance - use medium size for ranking items
   const rapperIds = displayedItems.map(item => item.rapper?.id).filter(Boolean) as string[];
   const { data: rapperImages = {} } = useRapperImages(rapperIds, 'medium');
 
+  const clearSearch = () => {
+    setSearchKeyword("");
+  };
+
+  // Determine if we should show the load more button
+  const showLoadMore = !searchKeyword.trim() && hasMore;
+
   return (
     <div className="space-y-4">
+      {/* Keyword Filter */}
+      <div className="relative">
+        <div className="relative flex items-center">
+          <Search className="absolute left-3 h-4 w-4 text-rap-smoke" />
+          <input
+            type="text"
+            placeholder="Search rappers..."
+            value={searchKeyword}
+            onChange={(e) => setSearchKeyword(e.target.value)}
+            className="w-full pl-10 pr-10 py-3 bg-rap-carbon/30 border border-rap-platinum/30 rounded-lg text-rap-platinum placeholder-rap-smoke focus:outline-none focus:ring-2 focus:ring-rap-gold/50 focus:border-rap-gold/50 transition-all"
+          />
+          {searchKeyword && (
+            <button
+              onClick={clearSearch}
+              className="absolute right-3 h-4 w-4 text-rap-smoke hover:text-rap-platinum transition-colors"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          )}
+        </div>
+        
+        {searchKeyword && (
+          <div className="mt-2 text-sm text-rap-smoke">
+            {filteredItems.length === 0 
+              ? "No rappers found matching your search"
+              : `Found ${filteredItems.length} rapper${filteredItems.length === 1 ? '' : 's'}`
+            }
+          </div>
+        )}
+      </div>
+
+      {/* Ranking Items */}
       {displayedItems.map((item) => (
         <RankingItemCard
           key={item.id}
@@ -48,13 +101,23 @@ const OfficialRankingItems = ({
         />
       ))}
 
-      <RankingLoadMore
-        hasMore={hasMore}
-        loading={loading}
-        onLoadMore={onLoadMore}
-        totalItems={items.length}
-        displayCount={displayCount}
-      />
+      {/* Load More Button - only show when not searching */}
+      {showLoadMore && (
+        <RankingLoadMore
+          hasMore={hasMore}
+          loading={loading}
+          onLoadMore={onLoadMore}
+          totalItems={items.length}
+          displayCount={displayCount}
+        />
+      )}
+
+      {/* Show message if no items to display */}
+      {displayedItems.length === 0 && !loading && (
+        <div className="text-center py-8 text-rap-smoke">
+          {searchKeyword ? "No rappers found matching your search." : "No rappers to display."}
+        </div>
+      )}
     </div>
   );
 };
