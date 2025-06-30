@@ -4,13 +4,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trophy, Users, Plus } from "lucide-react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
+import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import CreateRankingDialog from "@/components/rankings/CreateRankingDialog";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
+import { useRankingsData } from "@/hooks/useRankingsData";
 
 const Rankings = () => {
   const [activeTab, setActiveTab] = useState("official");
   const { user } = useAuth();
+  const { officialRankings, loading } = useRankingsData();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
@@ -61,11 +64,15 @@ const Rankings = () => {
 
           {/* Tab Content */}
           <TabsContent value="official" className="mt-0">
-            <div className="text-center py-8">
-              <p className="text-rap-platinum font-merienda">
-                Official rankings coming soon! Check out our <a href="/official-rankings" className="text-rap-gold hover:underline">existing official rankings</a>.
-              </p>
-            </div>
+            {loading ? (
+              <div className="text-center py-8">
+                <p className="text-rap-platinum font-merienda">
+                  Loading official rankings...
+                </p>
+              </div>
+            ) : (
+              <OfficialRankingsSection rankings={officialRankings} />
+            )}
           </TabsContent>
 
           <TabsContent value="community" className="mt-0">

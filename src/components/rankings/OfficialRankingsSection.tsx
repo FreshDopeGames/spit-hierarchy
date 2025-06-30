@@ -3,6 +3,7 @@ import { Award } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import RankingCard from "./RankingCard";
 import { RankingWithItems } from "@/types/rankings";
 import { transformOfficialRankings } from "@/utils/rankingTransformers";
@@ -12,13 +13,33 @@ interface OfficialRankingsSectionProps {
 }
 
 const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps) => {
-  // Don't render if no rankings
-  if (!rankings || rankings.length === 0) {
-    return null;
-  }
-
   // Transform rankings to unified format
   const transformedRankings = transformOfficialRankings(rankings);
+
+  // Show loading state or empty state if no rankings
+  if (rankings.length === 0) {
+    return (
+      <Card className="bg-carbon-fiber border-rap-gold/30">
+        <CardContent className="p-8 text-center">
+          <Award className="w-12 h-12 text-rap-gold mx-auto mb-4" />
+          <h3 className="text-xl font-mogra text-rap-platinum mb-2">
+            Official Rankings
+          </h3>
+          <p className="text-rap-smoke font-merienda mb-4">
+            Our official editorial rankings are being prepared. Check back soon for comprehensive lists curated by our expert team.
+          </p>
+          <Link to="/official-rankings">
+            <Button 
+              variant="outline" 
+              className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan"
+            >
+              View All Official Rankings
+            </Button>
+          </Link>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <div className="mb-12">
