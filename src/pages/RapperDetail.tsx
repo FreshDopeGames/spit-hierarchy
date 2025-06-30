@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
 import VoteModal from "@/components/VoteModal";
 import CommentBubble from "@/components/CommentBubble";
+import BackToTopButton from "@/components/BackToTopButton";
 import RapperHeader from "@/components/rapper/RapperHeader";
 import RapperBio from "@/components/rapper/RapperBio";
 import RapperStats from "@/components/rapper/RapperStats";
@@ -133,6 +133,9 @@ const RapperDetail = () => {
           selectedCategory={selectedCategory} 
         />
       )}
+
+      {/* Back to Top Button - positioned for pages with CommentBubble */}
+      <BackToTopButton hasCommentBubble={true} />
 
       {/* Comment Bubble - Pinned to bottom */}
       <CommentBubble contentType="rapper" contentId={rapper.id} />

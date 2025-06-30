@@ -7,7 +7,6 @@ import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import AuthGuard from "@/components/AuthGuard";
 import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
-import BackToTopButton from "@/components/BackToTopButton";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import UserProfile from "./pages/UserProfile";
@@ -116,7 +115,6 @@ function App() {
                   {/* Catch all route */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
-                <BackToTopButton />
               </BrowserRouter>
             </AchievementProvider>
           </TooltipProvider>

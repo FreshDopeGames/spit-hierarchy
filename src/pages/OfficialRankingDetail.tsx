@@ -1,8 +1,10 @@
+
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 import CommentBubble from "@/components/CommentBubble";
+import BackToTopButton from "@/components/BackToTopButton";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import OfficialRankingHeader from "@/components/rankings/OfficialRankingHeader";
 import OfficialRankingItems from "@/components/rankings/OfficialRankingItems";
@@ -105,6 +107,9 @@ const OfficialRankingDetail = () => {
           rankingId={ranking.id}
         />
       </main>
+
+      {/* Back to Top Button - positioned for pages with CommentBubble */}
+      <BackToTopButton hasCommentBubble={true} />
 
       <CommentBubble contentType="ranking" contentId={ranking.id} />
     </div>

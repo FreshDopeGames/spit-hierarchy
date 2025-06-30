@@ -17,8 +17,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Convert headings to bold text with line breaks
         .replace(/^#{1,6}\s+(.+)$/gm, '<strong>$1</strong><br><br>')
         
-        // Convert unordered lists to inline text with bullet characters
-        .replace(/^\s*[-*+]\s+(.+)$/gm, '● $1<br>')
+        // Convert unordered lists to inline text with rap-gold bullet characters
+        .replace(/^\s*[-*+]\s+(.+)$/gm, '<span class="text-rap-gold">●</span> $1<br>')
         
         // Convert ordered lists to inline text with numbers
         .replace(/^\s*\d+\.\s+(.+)$/gm, (match, text, offset, string) => {

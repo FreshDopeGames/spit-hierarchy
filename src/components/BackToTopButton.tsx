@@ -34,9 +34,9 @@ const BackToTopButton = ({ hasCommentBubble = false }: BackToTopButtonProps) => 
 
   if (!isVisible) return null;
 
-  // Adjust positioning based on whether CommentBubble is present
+  // Improved positioning with better spacing for comment bubble
   const positionClasses = hasCommentBubble 
-    ? "fixed bottom-6 right-20 z-40" 
+    ? "fixed bottom-6 right-24 z-40" 
     : "fixed bottom-6 right-6 z-40";
 
   return (
