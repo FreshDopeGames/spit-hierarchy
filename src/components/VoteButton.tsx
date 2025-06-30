@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, Star, Check, Clock, Plus } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
@@ -33,11 +32,12 @@ const VoteButton = ({
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(rankingId);
   const isMobile = useIsMobile();
 
+  // Only check if this specific rapper has been voted for today
   const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
   const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
   const voteMultiplier = getVoteMultiplier();
 
-  // Debug logging for voting state
+  // Debug logging for voting state - only for this specific rapper
   console.log('VoteButton Debug:', {
     rapperId,
     rankingId,
@@ -66,7 +66,7 @@ const VoteButton = ({
       }
 
       try {
-        // Add to daily tracking for optimistic updates
+        // Add to daily tracking for optimistic updates - only for this specific rapper
         addVoteToTracking(rapperId);
         
         // Submit the vote with enhanced error handling

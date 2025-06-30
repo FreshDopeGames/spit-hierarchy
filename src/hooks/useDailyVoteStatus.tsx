@@ -106,7 +106,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     );
   };
 
-  // Add a vote to today's tracking (for optimistic updates)
+  // Add a vote to today's tracking for a SPECIFIC rapper (for optimistic updates)
   const addVoteToTracking = (rapperId: string) => {
     if (!user || !rankingId) return;
 
@@ -118,15 +118,34 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       vote_date: today
     };
 
-    // Update query cache optimistically
+    // Update query cache optimistically - only for this specific query
     queryClient.setQueryData<DailyVoteRecord[]>(
       ['daily-votes', user.id, today, rankingId],
-      (oldData = []) => [...oldData, newVote]
+      (oldData = []) => {
+        // Only add if not already present for this rapper
+        const existingVote = oldData.find(vote => 
+          vote.rapper_id === rapperId && 
+          vote.ranking_id === rankingId &&
+          vote.vote_date === today
+        );
+        
+        if (existingVote) return oldData;
+        return [...oldData, newVote];
+      }
     );
 
-    // Update localStorage
-    const updatedVotes = [...dailyVotes, newVote];
-    storeVotes(updatedVotes);
+    // Update localStorage with the new vote
+    const currentStored = getStoredVotes();
+    const existingVote = currentStored.find(vote => 
+      vote.rapper_id === rapperId && 
+      vote.ranking_id === rankingId &&
+      vote.vote_date === today
+    );
+    
+    if (!existingVote) {
+      const updatedVotes = [...currentStored, newVote];
+      storeVotes(updatedVotes);
+    }
   };
 
   // Clean up old localStorage data on mount
