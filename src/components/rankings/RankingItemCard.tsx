@@ -59,7 +59,10 @@ const RankingItemCard = ({
   };
 
   const getContentMargin = () => {
-    // Remove left margin - the absolutely positioned cap doesn't need additional spacing
+    // Add consistent spacing for desktop/tablet top-5 to match 6+ rankings spacing
+    if (!isMobile && isTopFive) {
+      return "ml-3"; // 12px spacing to match the visual spacing of 6+ rankings
+    }
     return "";
   };
 
