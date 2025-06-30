@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,11 +21,20 @@ const AllRappers = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
 
+  // Helper function to merge rappers without duplicates
+  const mergeRappersWithoutDuplicates = (existingRappers: any[], newRappers: any[]) => {
+    const existingIds = new Set(existingRappers.map(rapper => rapper.id));
+    const uniqueNewRappers = newRappers.filter(rapper => !existingIds.has(rapper.id));
+    console.log(`Merging rappers: ${existingRappers.length} existing + ${newRappers.length} new = ${uniqueNewRappers.length} unique new rappers`);
+    return [...existingRappers, ...uniqueNewRappers];
+  };
+
   // Debounce search input with 2 second delay
   useEffect(() => {
     const timer = setTimeout(() => {
       // Only reset if the search term actually changed
       if (searchTerm !== searchInput) {
+        console.log(`Search term changing from "${searchTerm}" to "${searchInput}"`);
         setSearchTerm(searchInput);
         setCurrentPage(0); // Reset to first page when search changes
         setAllRappers([]); // Clear existing rappers only when search actually changes
@@ -37,6 +47,7 @@ const AllRappers = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (locationFilter !== locationInput) {
+        console.log(`Location filter changing from "${locationFilter}" to "${locationInput}"`);
         setLocationFilter(locationInput);
         setCurrentPage(0);
         setAllRappers([]);
@@ -44,6 +55,7 @@ const AllRappers = () => {
     }, 2000);
     return () => clearTimeout(timer);
   }, [locationInput, locationFilter]);
+
   const {
     data: rappersData,
     isLoading,
@@ -51,6 +63,11 @@ const AllRappers = () => {
   } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, currentPage],
     queryFn: async () => {
+      const startRange = currentPage * itemsPerPage;
+      const endRange = (currentPage + 1) * itemsPerPage - 1;
+      
+      console.log(`Fetching page ${currentPage}: range ${startRange}-${endRange}`);
+      
       let query = supabase.from("rappers").select("*", {
         count: "exact"
       });
@@ -86,13 +103,17 @@ const AllRappers = () => {
         });
       }
 
-      // Apply pagination - only fetch the current page
+      // Apply pagination - fetch the specific range
       const {
         data,
         error,
         count
-      } = await query.range(currentPage * itemsPerPage, (currentPage + 1) * itemsPerPage - 1);
+      } = await query.range(startRange, endRange);
+      
       if (error) throw error;
+      
+      console.log(`Received ${data?.length || 0} rappers for page ${currentPage}, total count: ${count}`);
+      
       return {
         rappers: data || [],
         total: count || 0,
@@ -106,23 +127,30 @@ const AllRappers = () => {
     if (rappersData?.rappers) {
       if (currentPage === 0) {
         // First page or reset - replace all rappers
+        console.log(`Setting initial rappers: ${rappersData.rappers.length} items`);
         setAllRappers(rappersData.rappers);
       } else {
-        // Subsequent pages - append to existing rappers
-        setAllRappers(prev => [...prev, ...rappersData.rappers]);
+        // Subsequent pages - merge without duplicates
+        console.log(`Appending page ${currentPage} rappers`);
+        setAllRappers(prev => mergeRappersWithoutDuplicates(prev, rappersData.rappers));
       }
     }
   }, [rappersData, currentPage]);
+
   const handleSortChange = (value: string) => {
+    console.log(`Sort changing to: ${value}`);
     setSortBy(value);
     setCurrentPage(0);
     setAllRappers([]);
   };
+
   const handleOrderChange = (value: string) => {
+    console.log(`Sort order changing to: ${value}`);
     setSortOrder(value);
     setCurrentPage(0);
     setAllRappers([]);
   };
+
   const handleSearchInput = (value: string) => {
     setSearchInput(value);
   };
@@ -131,9 +159,12 @@ const AllRappers = () => {
   const handleLocationInput = (value: string) => {
     setLocationInput(value);
   };
+
   const handleLoadMore = () => {
+    console.log(`Loading more: current page ${currentPage} -> ${currentPage + 1}`);
     setCurrentPage(prev => prev + 1);
   };
+
   if (isLoading && currentPage === 0) {
     return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
         <HeaderNavigation isScrolled={false} />
@@ -146,8 +177,10 @@ const AllRappers = () => {
         <BackToTopButton />
       </div>;
   }
+
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
+
   return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
       <HeaderNavigation isScrolled={false} />
       <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
@@ -168,4 +201,5 @@ const AllRappers = () => {
       <BackToTopButton />
     </div>;
 };
+
 export default AllRappers;
