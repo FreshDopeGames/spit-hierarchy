@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -126,12 +125,6 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           />
 
           <RatingSlider rating={rating} setRating={setRating} />
-
-          {existingVote && (
-            <div className="text-sm text-rap-gold font-kaushan bg-rap-carbon/50 p-3 rounded-lg border border-rap-gold/20">
-              You previously rated this rapper {existingVote.rating}/10 in this category. Your new rating will replace the previous one.
-            </div>
-          )}
 
           <VoteSubmission
             onSubmit={handleSubmit}
