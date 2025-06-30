@@ -15,12 +15,6 @@ interface VoteSubmissionProps {
 const VoteSubmission = ({ onSubmit, isPending, categoryId, existingVote }: VoteSubmissionProps) => {
   return (
     <div className="space-y-4">
-      {existingVote && (
-        <div className="text-sm text-rap-gold font-kaushan">
-          You previously rated this rapper {existingVote.rating}/10 in this category.
-        </div>
-      )}
-
       <Button
         onClick={onSubmit}
         disabled={isPending || !categoryId}
