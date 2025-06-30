@@ -22,10 +22,10 @@ const Rankings = () => {
       <div className="max-w-7xl mx-auto pt-20 px-4 pb-12">
         {/* Page Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-mogra text-rap-gold mb-4">
-            Hip-Hop Rankings
+          <h1 className="text-6xl md:text-8xl lg:text-9xl font-ceviche text-rap-gold mb-4">
+            Top Rapper Rankings
           </h1>
-          <p className="text-lg text-rap-smoke font-merienda max-w-3xl mx-auto">
+          <p className="text-lg text-rap-platinum font-merienda max-w-3xl mx-auto">
             Explore comprehensive rankings that showcase the best in hip-hop culture, 
             from official editorial picks to unique community perspectives.
           </p>
@@ -34,7 +34,7 @@ const Rankings = () => {
         {/* Tabs Navigation */}
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-            <TabsList className="grid w-full sm:w-auto grid-cols-2 bg-rap-carbon border border-rap-gold/20">
+            <TabsList className="grid w-full sm:w-auto grid-cols-2 bg-black/50 border border-rap-gold/20">
               <TabsTrigger 
                 value="official" 
                 className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra"
