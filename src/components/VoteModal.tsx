@@ -1,7 +1,9 @@
+
 import React, { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useOptimizedVoting } from "@/hooks/useOptimizedVoting";
 import {
   Dialog,
   DialogContent,
@@ -29,6 +31,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
   const queryClient = useQueryClient();
   const [rating, setRating] = useState([7]);
   const [categoryId, setCategoryId] = useState(selectedCategory);
+  const { submitVote, isVoting } = useOptimizedVoting();
 
   const { data: categories } = useQuery({
     queryKey: ["voting-categories"],
@@ -63,57 +66,36 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     enabled: !!user && !!categoryId
   });
 
-  const voteMutation = useMutation({
-    mutationFn: async ({ rating, categoryId }: { rating: number; categoryId: string }) => {
-      if (!user) throw new Error("Must be logged in to vote");
-
-      const voteData = {
-        user_id: user.id,
-        rapper_id: rapper.id,
-        category_id: categoryId,
-        rating: rating
-      };
-
-      if (existingVote) {
-        const { data, error } = await supabase
-          .from("votes")
-          .update({ rating })
-          .eq("id", existingVote.id)
-          .select()
-          .single();
-
-        if (error) throw error;
-        return data;
-      } else {
-        const { data, error } = await supabase
-          .from("votes")
-          .insert(voteData)
-          .select()
-          .single();
-
-        if (error) throw error;
-        return data;
-      }
-    },
-    onSuccess: () => {
-      toast.success(`Your rating for ${rapper.name} has been ${existingVote ? 'updated' : 'recorded'}.`);
-      queryClient.invalidateQueries({ queryKey: ["rappers"] });
-      queryClient.invalidateQueries({ queryKey: ["user-vote"] });
-      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings"] });
-      onClose();
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to submit vote");
+  const handleSubmit = async () => {
+    if (!user) {
+      toast.error("You must be logged in to vote");
+      return;
     }
-  });
 
-  const handleSubmit = () => {
     if (!categoryId) {
       toast.error("Please select a voting category first.");
       return;
     }
 
-    voteMutation.mutate({ rating: rating[0], categoryId });
+    try {
+      // Use the optimized voting hook for security and rate limiting
+      await submitVote({
+        rapper_id: rapper.id,
+        category_id: categoryId,
+        rating: rating[0]
+      });
+
+      // Invalidate specific queries for better performance
+      queryClient.invalidateQueries({ queryKey: ["rappers"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper", rapper.id] });
+      queryClient.invalidateQueries({ queryKey: ["user-vote", rapper.id, categoryId] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings", rapper.id] });
+      
+      toast.success(`Your rating for ${rapper.name} has been ${existingVote ? 'updated' : 'recorded'}.`);
+      onClose();
+    } catch (error: any) {
+      toast.error(error.message || "Failed to submit vote");
+    }
   };
 
   React.useEffect(() => {
@@ -145,9 +127,15 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
           <RatingSlider rating={rating} setRating={setRating} />
 
+          {existingVote && (
+            <div className="text-sm text-rap-gold font-kaushan bg-rap-carbon/50 p-3 rounded-lg border border-rap-gold/20">
+              You previously rated this rapper {existingVote.rating}/10 in this category. Your new rating will replace the previous one.
+            </div>
+          )}
+
           <VoteSubmission
             onSubmit={handleSubmit}
-            isPending={voteMutation.isPending}
+            isPending={isVoting}
             categoryId={categoryId}
             existingVote={existingVote}
           />

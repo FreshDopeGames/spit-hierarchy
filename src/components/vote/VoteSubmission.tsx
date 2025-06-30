@@ -18,15 +18,21 @@ const VoteSubmission = ({ onSubmit, isPending, categoryId, existingVote }: VoteS
       <Button
         onClick={onSubmit}
         disabled={isPending || !categoryId}
-        className="w-full bg-gradient-to-r from-rap-gold-dark to-rap-gold-light hover:from-rap-gold to-rap-gold-dark text-rap-carbon font-bold font-mogra"
+        className="w-full bg-gradient-to-r from-rap-gold-dark to-rap-gold-light hover:from-rap-gold to-rap-gold-dark text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30"
       >
         {isPending 
           ? "Submitting..." 
           : existingVote 
-            ? "Update Vote" 
-            : "Submit Vote"
+            ? "Update Rating" 
+            : "Submit Rating"
         }
       </Button>
+      
+      {!categoryId && (
+        <p className="text-sm text-rap-burgundy font-kaushan text-center">
+          Please select a category to rate this rapper
+        </p>
+      )}
     </div>
   );
 };

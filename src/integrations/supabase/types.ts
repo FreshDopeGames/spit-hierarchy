@@ -1444,6 +1444,14 @@ export type Database = {
         Args: { total_points: number }
         Returns: Database["public"]["Enums"]["member_status"]
       }
+      calculate_rapper_attribute_votes: {
+        Args: { rapper_uuid: string }
+        Returns: number
+      }
+      calculate_rapper_average_rating: {
+        Args: { rapper_uuid: string }
+        Returns: number
+      }
       calculate_rapper_total_votes: {
         Args: { rapper_uuid: string }
         Returns: number

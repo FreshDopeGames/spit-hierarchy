@@ -23,6 +23,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
         data: categories
       } = await supabase.from("voting_categories").select("*").eq("active", true).order("name");
       if (!categories) return [];
+      
       const ratingsPromises = categories.map(async category => {
         const {
           data: votes
@@ -35,7 +36,9 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
         };
       });
       return Promise.all(ratingsPromises);
-    }
+    },
+    refetchOnWindowFocus: false,
+    staleTime: 30000, // Cache for 30 seconds to allow for real-time updates
   });
 
   if (isLoading) {
@@ -124,6 +127,12 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
             );
           })}
         </div>
+
+        {attributeCategories.length === 0 && (
+          <div className="text-center py-8">
+            <p className="text-rap-smoke font-kaushan">No attribute ratings yet. Be the first to rate this rapper!</p>
+          </div>
+        )}
       </CardContent>
     </Card>
   );
