@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,6 +7,7 @@ import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import RankingHeader from "@/components/rankings/RankingHeader";
 import RankingCard from "@/components/rankings/RankingCard";
 import { transformOfficialRankings } from "@/utils/rankingTransformers";
+import { UnifiedRanking } from "@/types/rankings";
 
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
@@ -20,11 +20,23 @@ interface RankingWithItems extends OfficialRanking {
 
 const OfficialRankings = () => {
   const [rankings, setRankings] = useState<RankingWithItems[]>([]);
+  const [transformedRankings, setTransformedRankings] = useState<UnifiedRanking[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchOfficialRankings();
   }, []);
+
+  // Transform rankings when raw data changes
+  useEffect(() => {
+    const transformData = async () => {
+      if (rankings.length > 0) {
+        const transformed = await transformOfficialRankings(rankings);
+        setTransformedRankings(transformed);
+      }
+    };
+    transformData();
+  }, [rankings]);
 
   const fetchOfficialRankings = async () => {
     try {
@@ -66,9 +78,6 @@ const OfficialRankings = () => {
       setLoading(false);
     }
   };
-
-  // Transform database data to match RankingCard props
-  const transformedRankings = transformOfficialRankings(rankings);
 
   if (loading) {
     return (
