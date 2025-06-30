@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Award } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,12 +7,12 @@ import { Card, CardContent } from "@/components/ui/card";
 import RankingCard from "./RankingCard";
 import { RankingWithItems } from "@/types/rankings";
 import { transformOfficialRankings } from "@/utils/rankingTransformers";
-
 interface OfficialRankingsSectionProps {
   rankings?: RankingWithItems[];
 }
-
-const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps) => {
+const OfficialRankingsSection = ({
+  rankings = []
+}: OfficialRankingsSectionProps) => {
   const [transformedRankings, setTransformedRankings] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -21,7 +20,7 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
   useEffect(() => {
     if (rankings.length > 0) {
       setLoading(true);
-      transformOfficialRankings(rankings).then((transformed) => {
+      transformOfficialRankings(rankings).then(transformed => {
         setTransformedRankings(transformed);
         setLoading(false);
       });
@@ -30,8 +29,7 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
 
   // Show loading state or empty state if no rankings
   if (rankings.length === 0) {
-    return (
-      <Card className="bg-gradient-to-br from-black via-rap-carbon to-rap-charcoal border-rap-gold/30">
+    return <Card className="bg-gradient-to-br from-black via-rap-carbon to-rap-charcoal border-rap-gold/30">
         <CardContent className="p-8 text-center">
           <Award className="w-12 h-12 text-rap-gold mx-auto mb-4" />
           <h3 className="text-xl font-mogra text-rap-platinum mb-2">
@@ -41,30 +39,21 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
             Our official editorial rankings are being prepared. Check back soon for comprehensive lists curated by our expert team.
           </p>
           <Link to="/official-rankings">
-            <Button 
-              variant="outline" 
-              className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan"
-            >
+            <Button variant="outline" className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan">
               View All Official Rankings
             </Button>
           </Link>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
   if (loading) {
-    return (
-      <div className="text-center py-8">
+    return <div className="text-center py-8">
         <p className="text-rap-platinum font-merienda">
           Loading official rankings...
         </p>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="mb-12">
+  return <div className="mb-12">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div className="flex items-center gap-3">
           <Award className="w-6 h-6 text-rap-gold flex-shrink-0" />
@@ -75,22 +64,15 @@ const OfficialRankingsSection = ({ rankings = [] }: OfficialRankingsSectionProps
         </div>
         
         <Link to="/official-rankings" className="w-full sm:w-auto">
-          <Button 
-            variant="outline" 
-            className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-kaushan text-sm px-3 py-2"
-          >
+          <Button variant="outline" className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon font-mogra text-sm px-3 py-2">
             See All Official Rankings
           </Button>
         </Link>
       </div>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6 mb-8">
-        {transformedRankings.map((ranking) => (
-          <RankingCard key={ranking.id} ranking={ranking} isUserRanking={false} />
-        ))}
+        {transformedRankings.map(ranking => <RankingCard key={ranking.id} ranking={ranking} isUserRanking={false} />)}
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default OfficialRankingsSection;
