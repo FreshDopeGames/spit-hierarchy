@@ -17,7 +17,7 @@ const TopVotedRappersCard = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 animate-pulse border-2 border-rap-gold">
+      <Card className="bg-carbon-gradient border-rap-gold/30 shadow-lg shadow-rap-gold/20 animate-pulse border-2 border-rap-gold">
         <CardContent className="p-6">
           <div className="h-32 bg-rap-carbon-light rounded"></div>
         </CardContent>
@@ -28,7 +28,7 @@ const TopVotedRappersCard = () => {
   if (!topRappers || topRappers.length === 0) return null;
 
   return (
-    <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 border-2 border-rap-gold">
+    <Card className="bg-carbon-gradient border-rap-gold/30 shadow-lg shadow-rap-gold/20 border-2 border-rap-gold">
       <CardHeader>
         <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 font-extrabold text-3xl">
           <Users className="w-5 h-5" />

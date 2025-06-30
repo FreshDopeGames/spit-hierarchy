@@ -82,7 +82,7 @@ const GlobalStatsCards = () => {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {statCards.map((stat, index) => (
-        <Card key={index} className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
+        <Card key={index} className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg`}>

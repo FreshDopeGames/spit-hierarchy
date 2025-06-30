@@ -31,7 +31,7 @@ const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: 
   const hasImage = !!imageUrl;
 
   return (
-    <Card className={`bg-rap-carbon transition-all duration-300 ${
+    <Card className={`bg-carbon-gradient transition-all duration-300 ${
       hasImage 
         ? 'border-rap-forest/40 hover:border-rap-forest/70' 
         : 'border-rap-burgundy/40 hover:border-rap-burgundy/70'

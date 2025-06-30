@@ -34,10 +34,10 @@ const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRap
       
       <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 sm:items-center">
         <Select value={selectedStyle} onValueChange={(value) => onStyleChange(value as ImageStyle)}>
-          <SelectTrigger className="w-full sm:w-48 bg-carbon-fiber border-rap-gold/30 text-rap-platinum">
+          <SelectTrigger className="w-full sm:w-48 bg-carbon-gradient border-rap-gold/30 text-rap-platinum">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-carbon-fiber border-rap-gold/30">
+          <SelectContent className="bg-carbon-gradient border-rap-gold/30">
             {sortedStyles.map(([style, label]) => (
               <SelectItem key={style} value={style} className="text-rap-platinum hover:bg-rap-gold/20">
                 {label}

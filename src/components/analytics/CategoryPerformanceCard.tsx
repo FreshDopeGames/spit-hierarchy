@@ -26,7 +26,7 @@ const CategoryPerformanceCard = () => {
   });
 
   if (isLoading) {
-    return <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20 animate-pulse">
+    return <Card className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20 animate-pulse">
         <CardContent className="p-6">
           <div className="h-32 bg-rap-carbon-light rounded"></div>
         </CardContent>
@@ -35,7 +35,7 @@ const CategoryPerformanceCard = () => {
 
   if (!categoryAnalytics || categoryAnalytics.length === 0) return null;
 
-  return <Card className="bg-carbon-fiber/90 border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
       <CardHeader>
         <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-3xl font-extrabold">
           <TrendingUp className="w-5 h-5" />

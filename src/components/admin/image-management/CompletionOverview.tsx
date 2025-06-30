@@ -22,7 +22,7 @@ const CompletionOverview = ({ completionStats }: CompletionOverviewProps) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-7 gap-2 sm:gap-3">
       {Object.entries(styleLabels).map(([style, label]) => (
-        <Card key={style} className="bg-carbon-fiber border-rap-gold/30">
+        <Card key={style} className="bg-carbon-gradient border-rap-gold/30">
           <CardContent className="p-2 sm:p-3 text-center">
             <div className="text-base sm:text-lg font-bold text-rap-gold">{completionStats[style as ImageStyle] || 0}</div>
             <div className="text-xs sm:text-sm text-rap-platinum font-kaushan leading-tight">{label}</div>
