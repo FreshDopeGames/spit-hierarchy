@@ -1,6 +1,5 @@
 
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
-import { marked } from "marked";
 import { useMemo } from "react";
 
 interface BlogArticleContentProps {
@@ -8,61 +7,61 @@ interface BlogArticleContentProps {
 }
 
 const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
-  const htmlContent = useMemo(() => {
-    // Preprocess content to handle line breaks properly
-    const preprocessContent = (rawContent: string) => {
-      // Replace multiple consecutive line breaks with double line breaks for proper paragraphs
+  const processedContent = useMemo(() => {
+    const processContentAsSingleParagraph = (rawContent: string) => {
       let processed = rawContent
-        // First, normalize different line break types
+        // Normalize line breaks
         .replace(/\r\n/g, '\n')
         .replace(/\r/g, '\n')
-        // Convert 3+ consecutive line breaks to double line breaks (paragraph spacing)
-        .replace(/\n{3,}/g, '\n\n')
-        // Ensure single line breaks in lists and after headings are preserved
-        .replace(/([*+-]\s.*?)\n(?!\n|[*+-])/g, '$1  \n') // Add two spaces for line breaks in lists
-        // Ensure proper spacing around headings
-        .replace(/^(#{1,6}\s.*?)\n(?!\n)/gm, '$1\n\n');
-      
+        
+        // Convert headings to bold text with line breaks
+        .replace(/^#{1,6}\s+(.+)$/gm, '<strong>$1</strong><br><br>')
+        
+        // Convert unordered lists to inline text with bullet characters
+        .replace(/^\s*[-*+]\s+(.+)$/gm, '● $1<br>')
+        
+        // Convert ordered lists to inline text with numbers
+        .replace(/^\s*\d+\.\s+(.+)$/gm, (match, text, offset, string) => {
+          const beforeMatch = string.substring(0, offset);
+          const listNumber = (beforeMatch.match(/^\s*\d+\.\s+/gm) || []).length + 1;
+          return `${listNumber}. ${text}<br>`;
+        })
+        
+        // Convert **bold** to <strong>
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        
+        // Convert *italic* to <em>
+        .replace(/\*(.+?)\*/g, '<em>$1</em>')
+        
+        // Convert single line breaks to <br> tags, but preserve double line breaks as paragraph spacing
+        .replace(/\n{3,}/g, '<br><br><br>') // Multiple line breaks
+        .replace(/\n{2}/g, '<br><br>') // Double line breaks
+        .replace(/\n/g, '<br>') // Single line breaks
+        
+        // Clean up excessive line breaks
+        .replace(/(<br>\s*){4,}/g, '<br><br><br>')
+        
+        // Clean up any remaining whitespace issues
+        .trim();
+
       return processed;
     };
 
-    // Configure marked with enhanced options for better rendering
-    marked.setOptions({
-      breaks: true, // Convert single line breaks to <br>
-      gfm: true, // GitHub Flavored Markdown
-      pedantic: false, // Be more forgiving with markdown parsing
-    });
-
-    const processedContent = preprocessContent(content);
-    return marked(processedContent);
+    return processContentAsSingleParagraph(content);
   }, [content]);
 
   return (
     <ThemedCard className="mb-8">
       <ThemedCardContent className="p-8">
-        <div 
-          className="prose prose-invert prose-lg max-w-none 
-          prose-headings:text-rap-gold prose-headings:font-ceviche prose-headings:leading-tight
-          prose-p:text-rap-platinum prose-p:leading-relaxed prose-p:text-base prose-p:my-8
-          prose-strong:text-rap-gold prose-strong:font-bold
-          prose-em:text-rap-silver prose-em:italic
-          prose-code:text-rap-gold prose-code:bg-rap-carbon/50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-          prose-pre:bg-rap-carbon prose-pre:border prose-pre:border-rap-smoke/30 prose-pre:rounded-lg prose-pre:p-4 prose-pre:mb-6
-          prose-ul:text-rap-platinum prose-ul:my-4 prose-ul:space-y-3
-          prose-ol:text-rap-platinum prose-ol:my-4 prose-ol:space-y-3 prose-ol:list-decimal
-          prose-li:text-rap-platinum prose-li:leading-relaxed prose-li:mb-3
-          prose-a:text-rap-gold prose-a:underline prose-a:decoration-rap-gold/50 hover:prose-a:decoration-rap-gold
-          prose-hr:border-rap-smoke/30 prose-hr:my-8
-          prose-blockquote:border-l-4 prose-blockquote:border-rap-gold prose-blockquote:pl-6 prose-blockquote:py-4 prose-blockquote:italic prose-blockquote:text-rap-silver prose-blockquote:bg-rap-carbon/30 prose-blockquote:rounded-r-lg
-          [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:mb-8 [&_h1]:mt-12
-          [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:mb-6 [&_h2]:mt-10
-          [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:mb-5 [&_h3]:mt-8
-          [&_ul]:list-disc [&_ul]:ml-6 [&_ul_li]:relative [&_ul_li]:pl-3
-          [&_ul_li::marker]:text-rap-gold [&_ul_li::marker]:content-['●'] [&_ul_li::marker]:text-lg [&_ul_li::marker]:mr-2
-          [&_br]:block [&_br]:my-4
-          font-merienda"
-          dangerouslySetInnerHTML={{ __html: htmlContent }}
-        />
+        <div className="font-merienda">
+          <p 
+            className="text-rap-platinum leading-relaxed text-base
+            [&_strong]:text-rap-gold [&_strong]:font-bold [&_strong]:font-ceviche [&_strong]:text-lg
+            [&_em]:text-rap-silver [&_em]:italic
+            [&_br]:block [&_br]:my-2"
+            dangerouslySetInnerHTML={{ __html: processedContent }}
+          />
+        </div>
       </ThemedCardContent>
     </ThemedCard>
   );
