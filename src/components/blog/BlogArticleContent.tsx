@@ -48,8 +48,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
           prose-em:text-rap-silver prose-em:italic
           prose-code:text-rap-gold prose-code:bg-rap-carbon/50 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
           prose-pre:bg-rap-carbon prose-pre:border prose-pre:border-rap-smoke/30 prose-pre:rounded-lg prose-pre:p-4 prose-pre:mb-6
-          prose-ul:text-rap-platinum prose-ul:mb-8 prose-ul:space-y-3
-          prose-ol:text-rap-platinum prose-ol:mb-8 prose-ol:space-y-3 prose-ol:list-decimal
+          prose-ul:text-rap-platinum prose-ul:my-4 prose-ul:space-y-3
+          prose-ol:text-rap-platinum prose-ol:my-4 prose-ol:space-y-3 prose-ol:list-decimal
           prose-li:text-rap-platinum prose-li:leading-relaxed prose-li:mb-3
           prose-a:text-rap-gold prose-a:underline prose-a:decoration-rap-gold/50 hover:prose-a:decoration-rap-gold
           prose-hr:border-rap-smoke/30 prose-hr:my-8
@@ -57,8 +57,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
           [&_h1]:text-4xl [&_h1]:md:text-5xl [&_h1]:mb-8 [&_h1]:mt-12
           [&_h2]:text-3xl [&_h2]:md:text-4xl [&_h2]:mb-6 [&_h2]:mt-10
           [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:mb-5 [&_h3]:mt-8
-          [&_ul]:list-disc [&_ul]:ml-6 [&_ul_li]:relative [&_ul_li]:pl-0
-          [&_ul_li::marker]:text-rap-gold [&_ul_li::marker]:content-['•']
+          [&_ul]:list-disc [&_ul]:ml-6 [&_ul_li]:relative [&_ul_li]:pl-3
+          [&_ul_li::marker]:text-rap-gold [&_ul_li::marker]:content-['●'] [&_ul_li::marker]:text-lg [&_ul_li::marker]:mr-2
           [&_br]:block [&_br]:my-4
           font-merienda"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
