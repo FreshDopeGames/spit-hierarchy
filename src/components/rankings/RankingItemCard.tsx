@@ -59,10 +59,7 @@ const RankingItemCard = ({
   };
 
   const getContentMargin = () => {
-    // On desktop/tablet for top-5, add left margin to account for absolute positioned cap
-    if (!isMobile && isTopFive) {
-      return "ml-20"; // Match the cap width
-    }
+    // Remove left margin - the absolutely positioned cap doesn't need additional spacing
     return "";
   };
 
