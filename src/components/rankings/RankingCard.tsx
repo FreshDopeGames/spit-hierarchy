@@ -19,7 +19,7 @@ const RankingCard = ({
   
   return (
     <Link to={rankingLink} className="block group">
-      <Card className="h-full bg-gradient-to-br from-black via-rap-carbon to-rap-charcoal border-rap-silver/30 hover:border-rap-gold/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-rap-gold/20">
+      <Card className="h-full bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-rap-silver/30 hover:border-rap-gold/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-rap-gold/20">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex items-center gap-2 flex-wrap">

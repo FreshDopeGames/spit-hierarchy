@@ -46,7 +46,7 @@ const RapperCard = ({
   
   return (
     <Card 
-      className="bg-carbon-gradient border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group"
+      className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group"
       onClick={handleCardClick}
     >
       {/* Rap culture accent bar */}
@@ -61,7 +61,7 @@ const RapperCard = ({
       
       <CardContent className={compact ? "p-4" : "p-6"}>
         {/* Rapper image or placeholder - 1:1 aspect ratio */}
-        <div className={`w-full aspect-square bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-burgundy/30 rounded-lg ${compact ? "mb-3" : "mb-4"} flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-carbon transition-all duration-300 overflow-hidden`}>
+        <div className={`w-full aspect-square bg-gradient-to-br from-gray-800 via-gray-700 to-gray-800 rounded-lg ${compact ? "mb-3" : "mb-4"} flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-gray-800 transition-all duration-300 overflow-hidden`}>
           <img 
             src={imageToDisplay}
             alt={rapper.name || "Rapper"}
@@ -89,13 +89,13 @@ const RapperCard = ({
           {!compact && (
             <div className="flex flex-wrap gap-2 text-xs">
               {rapper.origin && (
-                <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
+                <div className="flex items-center gap-1 text-rap-platinum bg-gray-800/60 px-2 py-1 rounded-full font-kaushan">
                   <MapPin className="w-3 h-3" />
                   <span>{rapper.origin}</span>
                 </div>
               )}
               {birthdate && (
-                <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
+                <div className="flex items-center gap-1 text-rap-platinum bg-gray-800/60 px-2 py-1 rounded-full font-kaushan">
                   <Calendar className="w-3 h-3" />
                   <span>{birthdate}</span>
                 </div>
