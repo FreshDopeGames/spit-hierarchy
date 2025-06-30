@@ -59,7 +59,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
           [&_h3]:text-2xl [&_h3]:md:text-3xl [&_h3]:mb-5 [&_h3]:mt-8
           [&_ul]:list-disc [&_ul]:ml-6 [&_ul_li]:relative [&_ul_li]:pl-0
           [&_ul_li::marker]:text-rap-gold [&_ul_li::marker]:content-['•']
-          [&_br]:block [&_br]:my-8
+          [&_br]:block [&_br]:my-4
           font-merienda"
           dangerouslySetInnerHTML={{ __html: htmlContent }}
         />
