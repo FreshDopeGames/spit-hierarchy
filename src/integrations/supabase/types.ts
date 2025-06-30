@@ -1452,6 +1452,10 @@ export type Database = {
         Args: { rapper_uuid: string }
         Returns: number
       }
+      calculate_rapper_percentile: {
+        Args: { rapper_uuid: string }
+        Returns: number
+      }
       calculate_rapper_total_votes: {
         Args: { rapper_uuid: string }
         Returns: number

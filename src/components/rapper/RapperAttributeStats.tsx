@@ -3,8 +3,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { Trophy } from "lucide-react";
+import { Trophy, TrendingUp } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
+import { useRapperPercentile } from "@/hooks/useRapperPercentile";
 
 type Rapper = Tables<"rappers">;
 
@@ -13,6 +14,8 @@ interface RapperAttributeStatsProps {
 }
 
 const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
+  const { data: percentile, isLoading: percentileLoading } = useRapperPercentile(rapper.id);
+
   const {
     data: categoryRatings,
     isLoading
@@ -40,6 +43,17 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
     refetchOnWindowFocus: false,
     staleTime: 30000, // Cache for 30 seconds to allow for real-time updates
   });
+
+  const formatPercentileText = (percentile: number | null) => {
+    if (percentile === null) return "";
+    
+    let suffix = "th";
+    if (percentile % 10 === 1 && percentile % 100 !== 11) suffix = "st";
+    else if (percentile % 10 === 2 && percentile % 100 !== 12) suffix = "nd";
+    else if (percentile % 10 === 3 && percentile % 100 !== 13) suffix = "rd";
+    
+    return `${percentile}${suffix} percentile`;
+  };
 
   if (isLoading) {
     return (
@@ -86,10 +100,20 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
                 Calculated from all attributes
               </span>
               <div className="text-right">
-                <span className="text-rap-platinum font-bold text-2xl font-mogra">
-                  {overallScaled}/100
-                </span>
-                <span className="text-rap-smoke text-sm ml-2 font-kaushan">
+                <div className="flex items-center gap-2">
+                  <span className="text-rap-platinum font-bold text-2xl font-mogra">
+                    {overallScaled}/100
+                  </span>
+                  {percentile !== null && !percentileLoading && overallScaled > 0 && (
+                    <div className="flex items-center gap-1">
+                      <TrendingUp className="w-4 h-4 text-rap-gold" />
+                      <span className="text-rap-gold text-sm font-kaushan">
+                        ({formatPercentileText(percentile)})
+                      </span>
+                    </div>
+                  )}
+                </div>
+                <span className="text-rap-smoke text-sm font-kaushan">
                   (Average of {attributesWithVotes.length} attributes)
                 </span>
               </div>

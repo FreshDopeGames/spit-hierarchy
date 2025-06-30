@@ -1,7 +1,8 @@
 
 import React from "react";
-import { Star, MapPin, Calendar, Verified } from "lucide-react";
+import { Star, MapPin, Calendar, Verified, TrendingUp } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
+import { useRapperPercentile } from "@/hooks/useRapperPercentile";
 
 type Rapper = Tables<"rappers">;
 
@@ -10,6 +11,19 @@ interface RapperInfoProps {
 }
 
 const RapperInfo = ({ rapper }: RapperInfoProps) => {
+  const { data: percentile, isLoading: percentileLoading } = useRapperPercentile(rapper.id);
+
+  const formatPercentileText = (percentile: number | null) => {
+    if (percentile === null) return "";
+    
+    let suffix = "th";
+    if (percentile % 10 === 1 && percentile % 100 !== 11) suffix = "st";
+    else if (percentile % 10 === 2 && percentile % 100 !== 12) suffix = "nd";
+    else if (percentile % 10 === 3 && percentile % 100 !== 13) suffix = "rd";
+    
+    return `${percentile}${suffix} percentile`;
+  };
+
   return (
     <div className="space-y-3">
       <div className="flex items-center justify-between">
@@ -41,6 +55,14 @@ const RapperInfo = ({ rapper }: RapperInfoProps) => {
         <span className="text-rap-platinum font-semibold font-kaushan">
           {rapper.average_rating || "No ratings yet"}
         </span>
+        {rapper.average_rating && percentile !== null && !percentileLoading && (
+          <div className="flex items-center gap-1">
+            <TrendingUp className="w-3 h-3 text-rap-gold" />
+            <span className="text-rap-gold text-sm font-kaushan">
+              ({formatPercentileText(percentile)})
+            </span>
+          </div>
+        )}
         <span className="text-rap-smoke font-kaushan">({rapper.total_votes || 0} votes)</span>
       </div>
     </div>
