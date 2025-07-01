@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { ThumbsUp, Star, Check, Clock, Plus } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
@@ -37,15 +38,17 @@ const VoteButton = ({
   const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
   const voteMultiplier = getVoteMultiplier();
 
-  // Debug logging for voting state - only for this specific rapper
-  console.log('VoteButton Debug:', {
+  // Enhanced debug logging for voting state - only for this specific rapper
+  console.log(`🎯 VoteButton Debug for rapper ${rapperId}:`, {
     rapperId,
     rankingId,
     hasVoted,
     hasVotedToday: hasVoted,
     currentStatus,
     voteMultiplier,
-    user: !!user
+    user: !!user,
+    isDisabled,
+    isPending
   });
 
   const handleClick = async () => {
@@ -66,13 +69,17 @@ const VoteButton = ({
       }
 
       try {
+        console.log(`🎯 Starting vote submission for rapper ${rapperId} in ranking ${rankingId}`);
+        
         // Add to daily tracking for optimistic updates - only for this specific rapper
         addVoteToTracking(rapperId);
         
         // Submit the vote with enhanced error handling
         await submitRankingVote.mutateAsync({ rankingId, rapperId });
+        
+        console.log(`✅ Vote submission completed successfully for rapper ${rapperId}`);
       } catch (error) {
-        console.error('Vote submission error:', error);
+        console.error(`❌ Vote submission error for rapper ${rapperId}:`, error);
         // Error toast is handled by the mutation
       }
     } else {
