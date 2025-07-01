@@ -20,8 +20,14 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     validating,
     validationProgress,
     isProcessing,
-    handleFileSelect
+    handleFileSelect,
+    newImageUrl
   } = useRapperAvatarUpload(rapper);
+
+  // Create a temporary rapper object with the new image URL for immediate display
+  const displayRapper = newImageUrl 
+    ? { ...rapper, image_url: newImageUrl }
+    : rapper;
 
   return (
     <Card className="bg-carbon-fiber border border-rap-gold/30">
@@ -29,6 +35,9 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
         <CardTitle className="text-rap-gold font-ceviche text-lg font-normal flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
           Avatar Upload
+          {newImageUrl && (
+            <span className="text-sm text-green-400 font-normal">✓ Updated</span>
+          )}
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -38,7 +47,7 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
           validationProgress={validationProgress}
         />
 
-        <RapperImageDisplay rapper={rapper} />
+        <RapperImageDisplay rapper={displayRapper} />
         
         <UploadControls
           rapperId={rapper.id}

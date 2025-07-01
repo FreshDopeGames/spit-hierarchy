@@ -1,3 +1,4 @@
+
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
@@ -44,13 +45,25 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
   // Use rapper image if available and not empty, otherwise use placeholder
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
   
+  // Add cache busting for better image refresh
+  const cacheBustingUrl = imageToDisplay.includes('?') 
+    ? `${imageToDisplay}&cb=${Date.now()}` 
+    : `${imageToDisplay}?cb=${Date.now()}`;
+  
   return (
     <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
       <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
         <img 
-          src={imageUrl}
+          src={cacheBustingUrl}
           alt={rapper.name} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          onError={(e) => {
+            // If cache-busted URL fails, try original
+            const target = e.target as HTMLImageElement;
+            if (!target.src.includes(PLACEHOLDER_IMAGE)) {
+              target.src = PLACEHOLDER_IMAGE;
+            }
+          }}
         />
       </div>
     </Link>

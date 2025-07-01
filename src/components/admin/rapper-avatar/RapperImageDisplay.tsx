@@ -1,6 +1,7 @@
 
 import React from "react";
 import { Tables } from "@/integrations/supabase/types";
+import { useRapperImage } from "@/hooks/useImageStyle";
 
 type Rapper = Tables<"rappers">;
 
@@ -9,17 +10,36 @@ interface RapperImageDisplayProps {
 }
 
 const RapperImageDisplay = ({ rapper }: RapperImageDisplayProps) => {
-  if (!rapper.image_url) return null;
+  const { data: imageUrl, isLoading, error } = useRapperImage(rapper.id, 'xlarge');
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center">
+        <div className="w-64 h-64 border-2 border-rap-gold/30 rounded-lg bg-rap-carbon animate-pulse flex items-center justify-center">
+          <div className="text-rap-smoke">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    console.error('Error loading rapper image:', error);
+  }
+
+  if (!imageUrl) return null;
+
+  // Add cache-busting timestamp to force refresh
+  const cacheBustingUrl = `${imageUrl}?t=${Date.now()}`;
 
   return (
     <div className="flex justify-center">
       <img 
-        src={rapper.image_url} 
+        src={cacheBustingUrl} 
         alt={rapper.name}
         className="w-64 h-64 object-cover border-2 border-rap-gold/30 rounded-lg"
-        onLoad={() => console.log('Current image loaded successfully:', rapper.image_url)}
+        onLoad={() => console.log('Image loaded successfully:', cacheBustingUrl)}
         onError={(e) => {
-          console.error('Image failed to load:', rapper.image_url);
+          console.error('Image failed to load:', cacheBustingUrl);
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
         }}

@@ -12,13 +12,14 @@ type Rapper = Tables<"rappers">;
 export const useRapperAvatarUpload = (rapper: Rapper) => {
   const [uploading, setUploading] = useState(false);
   const [uploadProgress, setUploadProgress] = useState<string>("");
+  const [newImageUrl, setNewImageUrl] = useState<string | null>(null);
   const queryClient = useQueryClient();
 
   const { validating, validationProgress, validateFile } = useEnhancedFileValidation({
     enableHeaderValidation: true,
     enableContentValidation: true,
     enableEntropyAnalysis: false,
-    maxFileSize: 5 * 1024 * 1024, // Changed to 5MB
+    maxFileSize: 5 * 1024 * 1024,
     allowedTypes: ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'],
     blockSuspiciousFiles: false,
     isAdminUpload: true
@@ -172,14 +173,24 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
       return { basePath, xlarge_url: fullXlargeUrl };
     },
     onSuccess: (result) => {
+      // Set the new image URL for immediate display
+      setNewImageUrl(result.xlarge_url);
+      
+      // Invalidate all related queries with more specific cache busting
       queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
       queryClient.invalidateQueries({ queryKey: ["rapper-images"] });
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id, "comic_book"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id, "comic_book", "xlarge"] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper", rapper.id] });
+      
+      // Force refetch of the specific rapper image
+      queryClient.refetchQueries({ queryKey: ["rapper-image", rapper.id, "comic_book", "xlarge"] });
       
       console.log('Upload successful, queries invalidated');
       toast.success(`Avatar uploaded successfully for ${rapper.name}`, {
-        description: "All image sizes have been optimized and uploaded"
+        description: "All image sizes have been optimized and uploaded. The new image should appear immediately."
       });
       setUploadProgress("");
     },
@@ -200,6 +211,7 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
 
     setUploading(true);
     setUploadProgress("Starting upload...");
+    setNewImageUrl(null); // Reset any previous new image
     
     try {
       await uploadMutation.mutateAsync(file);
@@ -217,6 +229,7 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
     validating,
     validationProgress,
     isProcessing,
-    handleFileSelect
+    handleFileSelect,
+    newImageUrl // Expose the new image URL for immediate display
   };
 };
