@@ -26,7 +26,7 @@ export const useRankingData = (rankingId: string) => {
   const queryClient = useQueryClient();
   const channelRef = useRef<any>(null);
   const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
-    baseInterval: 15000, // Increased from 5s to 15s
+    baseInterval: 15000, // 15 seconds
     maxInterval: 120000, // Max 2 minutes
     enabled: !!rankingId
   });
@@ -34,7 +34,7 @@ export const useRankingData = (rankingId: string) => {
   const query = useQuery({
     queryKey: ["ranking-data-with-deltas", rankingId],
     queryFn: async () => {
-      // Get all ranking items with rapper data and calculate weighted votes
+      // Get all ranking items with rapper data - positions are now maintained by the database
       const { data: items, error } = await supabase
         .from("ranking_items")
         .select(`
@@ -51,7 +51,8 @@ export const useRankingData = (rankingId: string) => {
             total_votes
           )
         `)
-        .eq("ranking_id", rankingId);
+        .eq("ranking_id", rankingId)
+        .order("position", { ascending: true }); // Use database position which is now properly sorted
 
       if (error) throw error;
 
@@ -83,63 +84,27 @@ export const useRankingData = (rankingId: string) => {
             ...item,
             position_delta: deltaResult || 0,
             ranking_votes,
-            dynamic_position: 0 // Will be set after sorting
+            dynamic_position: item.position // Use the database position directly
           } as RankingItemWithDelta;
         })
       );
 
-      // Enhanced sorting: by vote count (descending), then alphabetically by name for ties
-      const sortedItems = itemsWithVotesAndDeltas
-        .sort((a, b) => {
-          // First, sort by vote count (descending)
-          if (a.ranking_votes !== b.ranking_votes) {
-            return b.ranking_votes - a.ranking_votes;
-          }
-          
-          // For ties (including 0 votes), sort alphabetically by rapper name
-          const nameA = a.rapper?.name || '';
-          const nameB = b.rapper?.name || '';
-          return nameA.localeCompare(nameB);
-        })
-        .map((item, index) => ({
-          ...item,
-          dynamic_position: index + 1
-        }));
-
-      return sortedItems;
+      // Return items in their database-sorted order (no need to re-sort)
+      return itemsWithVotesAndDeltas;
     },
     refetchInterval,
     refetchIntervalInBackground,
-    staleTime: 10 * 60 * 1000, // 10 minutes - longer stale time
-    refetchOnWindowFocus: false, // Disable refetch on window focus
+    staleTime: 5 * 60 * 1000, // 5 minutes - shorter since positions are now database-maintained
+    refetchOnWindowFocus: true, // Enable refetch on window focus for real-time feel
   });
 
-  // Set up real-time subscription for both rappers and ranking_votes table updates
+  // Set up real-time subscription for ranking_votes table updates
   useEffect(() => {
     if (!rankingId || !query.data) return;
-
-    // Get rapper IDs from current ranking
-    const rapperIds = query.data.map(item => item.rapper?.id).filter(Boolean);
-    
-    if (rapperIds.length === 0) return;
 
     // Create a channel for real-time updates
     channelRef.current = supabase
       .channel(`ranking-${rankingId}-updates`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'UPDATE',
-          schema: 'public',
-          table: 'rappers',
-          filter: `id=in.(${rapperIds.join(',')})`
-        },
-        (payload) => {
-          console.log('Real-time rapper update received:', payload);
-          // Invalidate and refetch to get updated ordering
-          queryClient.invalidateQueries({ queryKey: ["ranking-data-with-deltas", rankingId] });
-        }
-      )
       .on(
         'postgres_changes',
         {
@@ -151,6 +116,20 @@ export const useRankingData = (rankingId: string) => {
         (payload) => {
           console.log('Real-time ranking vote update received:', payload);
           // Invalidate and refetch to get updated ordering
+          queryClient.invalidateQueries({ queryKey: ["ranking-data-with-deltas", rankingId] });
+        }
+      )
+      .on(
+        'postgres_changes',
+        {
+          event: 'UPDATE',
+          schema: 'public',
+          table: 'ranking_items',
+          filter: `ranking_id=eq.${rankingId}`
+        },
+        (payload) => {
+          console.log('Real-time ranking items update received:', payload);
+          // Invalidate and refetch when positions are updated
           queryClient.invalidateQueries({ queryKey: ["ranking-data-with-deltas", rankingId] });
         }
       )

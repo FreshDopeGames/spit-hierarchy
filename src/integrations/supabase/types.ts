@@ -1488,6 +1488,10 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: undefined
       }
+      daily_ranking_maintenance: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       get_category_voting_analytics: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -1580,12 +1584,20 @@ export type Database = {
         Args: Record<PropertyKey, never>
         Returns: boolean
       }
+      populate_all_rankings_with_missing_rappers: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
+      }
       populate_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
         Returns: undefined
       }
       populate_user_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
+        Returns: undefined
+      }
+      recalculate_ranking_positions: {
+        Args: { target_ranking_id?: string }
         Returns: undefined
       }
     }

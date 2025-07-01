@@ -72,4 +72,15 @@ export const invalidateRelatedQueries = (
     queryKey: ['ranking-data-with-deltas', rankingId],
     exact: true
   });
+
+  // IMPORTANT: Since we now rely on database-maintained positions,
+  // we should trigger a position recalculation after votes
+  // This will be handled by the daily maintenance, but for immediate updates
+  // we can invalidate after a short delay to let the database triggers process
+  setTimeout(() => {
+    queryClient.invalidateQueries({ 
+      queryKey: ['ranking-data-with-deltas', rankingId],
+      exact: true
+    });
+  }, 1000); // 1 second delay
 };
