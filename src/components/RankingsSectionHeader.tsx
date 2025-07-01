@@ -1,6 +1,8 @@
+
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Crown, TrendingUp } from "lucide-react";
+
 interface SectionHeader {
   id: string;
   section_name: string;
@@ -9,6 +11,7 @@ interface SectionHeader {
   background_image_url: string | null;
   is_active: boolean;
 }
+
 const RankingsSectionHeader = () => {
   const {
     data: headerData
@@ -26,9 +29,11 @@ const RankingsSectionHeader = () => {
       return data as SectionHeader;
     }
   });
-  const title = headerData?.title || "The Ultimate Rap Hierarchy";
+
+  const title = headerData?.title || "The Original Rap GOAT Hierarchy";
   const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
   const backgroundImage = headerData?.background_image_url;
+
   return <div className="relative mb-12 overflow-hidden rounded-2xl">
       {/* Background Image Container */}
       <div className="absolute inset-0 bg-gradient-to-br from-rap-gold/20 via-rap-carbon to-rap-burgundy/30" style={{
@@ -71,4 +76,5 @@ const RankingsSectionHeader = () => {
       <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-rap-carbon to-transparent" />
     </div>;
 };
+
 export default RankingsSectionHeader;
