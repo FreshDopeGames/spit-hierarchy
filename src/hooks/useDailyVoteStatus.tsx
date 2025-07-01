@@ -41,10 +41,23 @@ export const useDailyVoteStatus = (rankingId?: string) => {
         return [];
       }
       
-      // Additional validation: ensure votes are for the correct ranking
-      const validVotes = (data.votes || []).filter((vote: DailyVoteRecord) => 
-        vote.ranking_id === rankingId && vote.vote_date === today
-      );
+      // ENHANCED VALIDATION: Triple-check that votes are for the correct ranking
+      const validVotes = (data.votes || []).filter((vote: DailyVoteRecord) => {
+        const isValidVote = vote.ranking_id === rankingId && 
+                           vote.vote_date === today &&
+                           vote.user_id === user?.id; // Extra user validation
+        
+        if (!isValidVote) {
+          console.warn(`Filtering out invalid vote:`, {
+            vote,
+            expectedRankingId: rankingId,
+            expectedDate: today,
+            expectedUserId: user?.id
+          });
+        }
+        
+        return isValidVote;
+      });
       
       return validVotes;
     } catch {
@@ -58,13 +71,27 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       const storageKey = getStorageKey(rankingId);
       // Filter votes to ensure they're only for this ranking and today
       const today = getTodayKey();
-      const filteredVotes = votes.filter(vote => 
-        vote.ranking_id === rankingId && vote.vote_date === today
-      );
+      const filteredVotes = votes.filter(vote => {
+        const isValid = vote.ranking_id === rankingId && 
+                       vote.vote_date === today &&
+                       vote.user_id === user?.id;
+        
+        if (!isValid) {
+          console.warn(`Not storing invalid vote:`, {
+            vote,
+            expectedRankingId: rankingId,
+            expectedDate: today,
+            expectedUserId: user?.id
+          });
+        }
+        
+        return isValid;
+      });
       
       localStorage.setItem(storageKey, JSON.stringify({
         date: today,
         ranking_id: rankingId,
+        user_id: user?.id, // Store user ID for additional validation
         votes: filteredVotes
       }));
     } catch (error) {
@@ -79,6 +106,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       if (!user || !rankingId) return [];
 
       const today = getTodayKey();
+      console.log(`Fetching daily votes for ranking ${rankingId} on ${today}`);
 
       // Check ranking_votes table for today's votes (primary source)
       const { data: rankingVotes, error: rankingError } = await supabase
@@ -93,13 +121,32 @@ export const useDailyVoteStatus = (rankingId?: string) => {
         throw rankingError;
       }
 
-      // Transform to match the expected format
-      const votesData = rankingVotes.map(vote => ({
-        user_id: vote.user_id,
-        rapper_id: vote.rapper_id,
-        ranking_id: vote.ranking_id,
-        vote_date: vote.vote_date
-      }));
+      // Transform to match the expected format with STRICT validation
+      const votesData = rankingVotes
+        .filter(vote => {
+          const isValid = vote.user_id === user.id &&
+                         vote.ranking_id === rankingId &&
+                         vote.vote_date === today;
+          
+          if (!isValid) {
+            console.error(`Database returned invalid vote:`, {
+              vote,
+              expectedUserId: user.id,
+              expectedRankingId: rankingId,
+              expectedDate: today
+            });
+          }
+          
+          return isValid;
+        })
+        .map(vote => ({
+          user_id: vote.user_id,
+          rapper_id: vote.rapper_id,
+          ranking_id: vote.ranking_id,
+          vote_date: vote.vote_date
+        }));
+      
+      console.log(`Found ${votesData.length} votes for ranking ${rankingId}`);
       
       // Store in localStorage for caching - ranking-specific
       storeVotes(rankingId, votesData);
@@ -111,23 +158,34 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     initialData: rankingId ? getStoredVotes(rankingId) : [],
   });
 
-  // Check if user has voted for a specific rapper TODAY in THIS ranking
+  // ENHANCED: Check if user has voted for a specific rapper TODAY in THIS ranking
   const hasVotedToday = (rapperId: string): boolean => {
     if (!user || !rankingId) return false;
     
     const today = getTodayKey();
-    return dailyVotes.some(vote => 
-      vote.rapper_id === rapperId && 
-      vote.ranking_id === rankingId &&
-      vote.vote_date === today
-    );
+    const hasVoted = dailyVotes.some(vote => {
+      const match = vote.rapper_id === rapperId && 
+                   vote.ranking_id === rankingId &&
+                   vote.vote_date === today &&
+                   vote.user_id === user.id; // Triple validation
+      
+      if (match) {
+        console.log(`User ${user.id} has voted for rapper ${rapperId} in ranking ${rankingId} today`);
+      }
+      
+      return match;
+    });
+    
+    return hasVoted;
   };
 
-  // Add a vote to today's tracking for a SPECIFIC rapper in THIS ranking (for optimistic updates)
+  // ENHANCED: Add a vote to today's tracking for a SPECIFIC rapper in THIS ranking
   const addVoteToTracking = (rapperId: string) => {
     if (!user || !rankingId) return;
 
     const today = getTodayKey();
+    console.log(`Adding vote tracking for rapper ${rapperId} in ranking ${rankingId}`);
+    
     const newVote: DailyVoteRecord = {
       user_id: user.id,
       rapper_id: rapperId,
@@ -135,7 +193,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       vote_date: today
     };
 
-    // Update query cache optimistically - only for this specific query
+    // Update query cache optimistically - ONLY for this specific query
     queryClient.setQueryData<DailyVoteRecord[]>(
       ['daily-votes', user.id, today, rankingId],
       (oldData = []) => {
@@ -143,10 +201,16 @@ export const useDailyVoteStatus = (rankingId?: string) => {
         const existingVote = oldData.find(vote => 
           vote.rapper_id === rapperId && 
           vote.ranking_id === rankingId &&
-          vote.vote_date === today
+          vote.vote_date === today &&
+          vote.user_id === user.id
         );
         
-        if (existingVote) return oldData;
+        if (existingVote) {
+          console.log(`Vote already tracked for rapper ${rapperId} in ranking ${rankingId}`);
+          return oldData;
+        }
+        
+        console.log(`Adding new vote to cache for rapper ${rapperId} in ranking ${rankingId}`);
         return [...oldData, newVote];
       }
     );
@@ -156,12 +220,14 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     const existingVote = currentStored.find(vote => 
       vote.rapper_id === rapperId && 
       vote.ranking_id === rankingId &&
-      vote.vote_date === today
+      vote.vote_date === today &&
+      vote.user_id === user.id
     );
     
     if (!existingVote) {
       const updatedVotes = [...currentStored, newVote];
       storeVotes(rankingId, updatedVotes);
+      console.log(`Updated localStorage for ranking ${rankingId} with new vote`);
     }
   };
 
@@ -177,7 +243,8 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       if (stored) {
         try {
           const data = JSON.parse(stored);
-          if (data.date !== today) {
+          if (data.date !== today || data.user_id !== user?.id) {
+            console.log(`Cleaning up old vote data for ranking ${rankingId}`);
             localStorage.removeItem(storageKey);
           }
         } catch {
@@ -193,7 +260,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       console.log('Cleaning up old global vote storage that was causing contamination');
       localStorage.removeItem(oldGlobalKey);
     }
-  }, [rankingId]);
+  }, [rankingId, user?.id]);
 
   return {
     hasVotedToday,

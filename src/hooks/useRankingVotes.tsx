@@ -33,6 +33,8 @@ export const useRankingVotes = () => {
     onMutate: async ({ rankingId, rapperId }) => {
       const voteWeight = getVoteMultiplier();
       
+      console.log(`Starting vote submission for rapper ${rapperId} in ranking ${rankingId}`);
+      
       // Show loading toast
       toast.loading("Submitting your vote...", {
         id: 'vote-submission'
@@ -41,31 +43,44 @@ export const useRankingVotes = () => {
       // Apply optimistic update
       applyOptimisticUpdate(queryClient, rankingId, rapperId, voteWeight);
       
-      return { voteWeight };
+      return { voteWeight, rankingId, rapperId };
     },
-    onSuccess: (data) => {
+    onSuccess: (data, variables) => {
+      console.log(`Vote submission successful for rapper ${variables.rapperId} in ranking ${variables.rankingId}`);
+      
       // Update loading toast to success
       toast.success("Vote submitted successfully!", {
         id: 'vote-submission'
       });
       
-      // Clear pending states
+      // Clear pending states and invalidate ONLY relevant queries
       if (user) {
         clearPendingStates(queryClient, data.ranking_id);
         invalidateRelatedQueries(queryClient, user.id, data.ranking_id);
       }
     },
-    onError: (error) => {
-      console.error('Vote submission failed:', error);
+    onError: (error, variables) => {
+      console.error(`Vote submission failed for rapper ${variables.rapperId} in ranking ${variables.rankingId}:`, error);
       
       // Update loading toast to error
       toast.error(error instanceof Error ? error.message : "Failed to submit vote", {
         id: 'vote-submission'
       });
       
-      // Revert optimistic updates by invalidating queries
-      if (user) {
-        queryClient.invalidateQueries({ queryKey: ['ranking-data-with-deltas'] });
+      // FIXED: Only revert optimistic updates for the SPECIFIC ranking that failed
+      if (user && variables.rankingId) {
+        console.log(`Reverting optimistic updates for ranking ${variables.rankingId}`);
+        queryClient.invalidateQueries({ 
+          queryKey: ['ranking-data-with-deltas', variables.rankingId],
+          exact: true 
+        });
+        
+        // Also invalidate the specific daily votes cache
+        const today = new Date().toISOString().split('T')[0];
+        queryClient.invalidateQueries({ 
+          queryKey: ['daily-votes', user.id, today, variables.rankingId],
+          exact: true
+        });
       }
     }
   });
