@@ -30,7 +30,7 @@ const HeaderNavigation = ({
             <img 
               src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
               alt="Logo" 
-              className="w-12 h-8" 
+              className="h-10 sm:h-12 w-auto" 
             />
           </Link>
 
