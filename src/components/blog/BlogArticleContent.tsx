@@ -56,7 +56,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         <div className="font-merienda">
           <p 
             className="text-rap-platinum leading-relaxed text-base
-            [&_strong]:text-rap-gold [&_strong]:font-bold [&_strong]:font-ceviche [&_strong]:text-lg
+            [&_strong]:font-bold
             [&_em]:text-rap-silver [&_em]:italic
             [&_br]:block [&_br]:my-2"
             dangerouslySetInnerHTML={{ __html: processedContent }}
