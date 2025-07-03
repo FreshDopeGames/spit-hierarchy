@@ -2,6 +2,7 @@
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 type Rapper = Tables<"rappers">;
 
@@ -39,11 +40,11 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
     xl: "w-12 h-12"
   };
   
-  // Placeholder image from Supabase Storage
-  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
+  // Use optimized placeholder based on size
+  const placeholderImage = getOptimizedPlaceholder(imageSizeMap[size]);
   
-  // Use rapper image if available and not empty, otherwise use placeholder
-  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
+  // Use rapper image if available and not empty, otherwise use optimized placeholder
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
   
   // Add cache busting for better image refresh
   const cacheBustingUrl = imageToDisplay.includes('?') 
@@ -57,11 +58,12 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
           src={cacheBustingUrl}
           alt={rapper.name} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+          loading="lazy"
           onError={(e) => {
-            // If cache-busted URL fails, try original
+            // If cache-busted URL fails, try optimized placeholder
             const target = e.target as HTMLImageElement;
-            if (!target.src.includes(PLACEHOLDER_IMAGE)) {
-              target.src = PLACEHOLDER_IMAGE;
+            if (!target.src.includes(placeholderImage)) {
+              target.src = placeholderImage;
             }
           }}
         />

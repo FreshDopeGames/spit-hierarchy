@@ -1,9 +1,11 @@
+
 import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Verified, MapPin, Calendar, Crown, Vote } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { formatBirthdate } from "@/utils/zodiacUtils";
 import { useNavigationState } from "@/hooks/useNavigationState";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 type Rapper = Tables<"rappers">;
 
@@ -32,11 +34,12 @@ const RapperCard = ({
     ? Math.round((Number(rapper.average_rating) / 10) * 100) 
     : 0;
 
-  // Placeholder image from Supabase Storage
-  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
+  // Use optimized placeholder based on compact mode
+  const placeholderSize = compact ? 'medium' : 'large';
+  const placeholderImage = getOptimizedPlaceholder(placeholderSize);
   
-  // Use rapper image if available and not empty, otherwise use placeholder
-  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
+  // Use rapper image if available and not empty, otherwise use optimized placeholder
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
   
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -67,10 +70,10 @@ const RapperCard = ({
             className="w-full h-full object-cover"
             loading="lazy"
             onError={(e) => {
-              // Fallback to placeholder if image fails to load
+              // Fallback to optimized placeholder if image fails to load
               const target = e.target as HTMLImageElement;
-              if (target.src !== PLACEHOLDER_IMAGE) {
-                target.src = PLACEHOLDER_IMAGE;
+              if (!target.src.includes(placeholderImage)) {
+                target.src = placeholderImage;
               }
             }}
           />

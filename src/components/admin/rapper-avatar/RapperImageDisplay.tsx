@@ -2,6 +2,7 @@
 import React from "react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 type Rapper = Tables<"rappers">;
 
@@ -26,10 +27,12 @@ const RapperImageDisplay = ({ rapper }: RapperImageDisplayProps) => {
     console.error('Error loading rapper image:', error);
   }
 
-  if (!imageUrl) return null;
+  // Use optimized placeholder for xlarge size
+  const placeholderImage = getOptimizedPlaceholder('xlarge');
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
 
   // Add cache-busting timestamp to force refresh
-  const cacheBustingUrl = `${imageUrl}?t=${Date.now()}`;
+  const cacheBustingUrl = `${imageToDisplay}?t=${Date.now()}`;
 
   return (
     <div className="flex justify-center">
@@ -37,11 +40,14 @@ const RapperImageDisplay = ({ rapper }: RapperImageDisplayProps) => {
         src={cacheBustingUrl} 
         alt={rapper.name}
         className="w-64 h-64 object-cover border-2 border-rap-gold/30 rounded-lg"
+        loading="lazy"
         onLoad={() => console.log('Image loaded successfully:', cacheBustingUrl)}
         onError={(e) => {
           console.error('Image failed to load:', cacheBustingUrl);
           const target = e.target as HTMLImageElement;
-          target.style.display = 'none';
+          if (!target.src.includes(placeholderImage)) {
+            target.src = placeholderImage;
+          }
         }}
       />
     </div>
