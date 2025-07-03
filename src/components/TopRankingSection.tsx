@@ -79,16 +79,16 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               </span>
             </div>
             <RapperAvatar rapper={rapper} size="md" />
-            <div className="text-center min-w-0 w-full">
+            <div className="text-center min-w-0 w-full px-2">
               <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-                <h4 className="text-base sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors truncate">
+                <h4 className="text-base sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors leading-tight">
                   {rapper.name}
                 </h4>
               </Link>
               {rapper.origin && 
                 <div className="flex items-center justify-center gap-1 mt-1">
-                  <MapPin className="w-3 h-3 text-rap-smoke" />
-                  <p className="text-rap-smoke text-sm sm:text-sm font-kaushan truncate">
+                  <MapPin className="w-3 h-3 text-rap-smoke flex-shrink-0" />
+                  <p className="text-rap-smoke text-xs sm:text-sm font-kaushan leading-tight text-center">
                     {rapper.origin}
                   </p>
                 </div>
