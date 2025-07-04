@@ -44,7 +44,7 @@ const Auth = () => {
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: window.location.origin
+          redirectTo: `${window.location.origin}/`
         }
       });
       if (error) throw error;
@@ -77,6 +77,7 @@ const Auth = () => {
           email,
           password,
           options: {
+            emailRedirectTo: `${window.location.origin}/`,
             data: {
               username,
               full_name: fullName
@@ -84,12 +85,18 @@ const Auth = () => {
           }
         });
         if (error) throw error;
+        
         if (data.user) {
-          toast.success("Welcome to Spit Hierarchy! You can now start ranking rap legends");
-          window.location.href = '/';
+          if (data.user.email_confirmed_at) {
+            toast.success("Welcome to Spit Hierarchy! You can now start ranking rap legends");
+            window.location.href = '/';
+          } else {
+            toast.success("Please check your email and click the confirmation link to complete your registration.");
+          }
         }
       }
     } catch (error: any) {
+      console.error('Auth error:', error);
       toast.error(error.message || "An error occurred during authentication.");
     } finally {
       setLoading(false);

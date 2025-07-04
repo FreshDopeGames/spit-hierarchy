@@ -1,8 +1,7 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { User, Mail, Lock, AlertCircle } from "lucide-react";
+import { User, Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { validatePassword, validateEmail, validateUsername, sanitizeInput } from "@/utils/securityUtils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -36,6 +35,7 @@ const AuthForm = ({
 }: AuthFormProps) => {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleEmailChange = (value: string) => {
     const sanitized = sanitizeInput(value);
@@ -178,7 +178,7 @@ const AuthForm = ({
           <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
           <Input 
             id="password" 
-            type="password" 
+            type={showPassword ? "text" : "password"}
             placeholder={isLogin ? "Enter your password" : "Enter a strong password"} 
             value={password} 
             onChange={(e) => handlePasswordChange(e.target.value)} 
@@ -186,8 +186,15 @@ const AuthForm = ({
             onBlur={() => setShowPasswordRequirements(false)}
             required 
             maxLength={128}
-            className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-merienda" 
+            className="pl-10 pr-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-merienda" 
           />
+          <button
+            type="button"
+            onClick={() => setShowPassword(!showPassword)}
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-rap-smoke hover:text-rap-silver transition-colors"
+          >
+            {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+          </button>
         </div>
         
         {!isLogin && showPasswordRequirements && (
@@ -216,4 +223,3 @@ const AuthForm = ({
 };
 
 export default AuthForm;
-
