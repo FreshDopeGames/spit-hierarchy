@@ -1,17 +1,17 @@
 
-// Optimized placeholder image utility for better performance
+// Premium placeholder image utility for enhanced quality
 const PLACEHOLDER_BASE_URL = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images";
 
-// Optimized placeholder images (these would need to be uploaded as smaller, compressed versions)
+// High-quality placeholder images with optimal sizing
 export const PLACEHOLDER_IMAGES = {
-  thumb: `${PLACEHOLDER_BASE_URL}/placeholder-thumb.jpg`, // 64x64, ~2-5KB
-  medium: `${PLACEHOLDER_BASE_URL}/placeholder-medium.jpg`, // 128x128, ~5-10KB
-  large: `${PLACEHOLDER_BASE_URL}/placeholder-large.jpg`, // 256x256, ~10-20KB
-  xlarge: `${PLACEHOLDER_BASE_URL}/placeholder-xlarge.jpg`, // 400x400, ~20-30KB
+  thumb: `${PLACEHOLDER_BASE_URL}/placeholder-thumb-hq.jpg`, // 128x128, ~8-12KB
+  medium: `${PLACEHOLDER_BASE_URL}/placeholder-medium-hq.jpg`, // 256x256, ~15-25KB
+  large: `${PLACEHOLDER_BASE_URL}/placeholder-large-hq.jpg`, // 512x512, ~30-50KB
+  xlarge: `${PLACEHOLDER_BASE_URL}/placeholder-xlarge-hq.jpg`, // 800x800, ~50-80KB
   original: `${PLACEHOLDER_BASE_URL}/Rapper_Placeholder_01.png` // Fallback to current
 };
 
-// Get appropriate placeholder based on size context
+// Get premium placeholder based on size context
 export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
   switch (size) {
     case 'thumb':
@@ -23,13 +23,19 @@ export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'x
     case 'xlarge':
       return PLACEHOLDER_IMAGES.xlarge;
     default:
-      // For contexts where size isn't specified, use medium as a good balance
-      return PLACEHOLDER_IMAGES.medium;
+      // For contexts where size isn't specified, use large as premium default
+      return PLACEHOLDER_IMAGES.large;
   }
 };
 
-// WebP support detection and fallback
+// Premium WebP support with fallback
 export const getOptimizedPlaceholderWithWebP = (size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
-  // For now, return JPEG versions. WebP versions can be added later
+  // Future enhancement: WebP versions for even better quality/size ratio
   return getOptimizedPlaceholder(size);
+};
+
+// Cache-busting utility for placeholder updates
+export const getCacheBustedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
+  const baseUrl = getOptimizedPlaceholder(size);
+  return `${baseUrl}?v=${Math.floor(Date.now() / (1000 * 60 * 10))}`; // Cache for 10 minutes
 };

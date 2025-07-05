@@ -66,19 +66,32 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
     const scaleX = image.naturalWidth / image.width;
     const scaleY = image.naturalHeight / image.height;
 
-    canvas.width = completedCrop.width;
-    canvas.height = completedCrop.height;
+    // Use high resolution canvas for maximum quality
+    const cropWidth = completedCrop.width * scaleX;
+    const cropHeight = completedCrop.height * scaleY;
+    
+    // Set canvas to high resolution for crisp output
+    canvas.width = Math.max(cropWidth, 800); // Minimum 800px for quality
+    canvas.height = Math.max(cropHeight, 800);
 
+    // Enable highest quality rendering
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = 'high';
+
+    // Clear canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Draw the cropped image at high resolution
     ctx.drawImage(
       image,
       completedCrop.x * scaleX,
       completedCrop.y * scaleY,
-      completedCrop.width * scaleX,
-      completedCrop.height * scaleY,
+      cropWidth,
+      cropHeight,
       0,
       0,
-      completedCrop.width,
-      completedCrop.height
+      canvas.width,
+      canvas.height
     );
 
     return new Promise<Blob>((resolve, reject) => {
@@ -88,7 +101,7 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
           return;
         }
         resolve(blob);
-      }, 'image/jpeg', 0.9);
+      }, 'image/jpeg', 0.98); // Maximum quality for cropped output
     });
   }, [completedCrop]);
 

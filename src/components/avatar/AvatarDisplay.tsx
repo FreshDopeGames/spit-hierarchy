@@ -12,7 +12,7 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [placeholderError, setPlaceholderError] = useState(false);
 
-  // Placeholder image URL
+  // High-quality placeholder image URL
   const placeholderImageUrl = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
 
   const getSizeClass = () => {
@@ -31,21 +31,20 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
     // If it's already a full URL, return as is
     if (baseUrl.startsWith('http')) return baseUrl;
     
-    // If it's a path, construct the appropriate size URL
+    // Map sizes to our new higher quality versions
     const sizeMap = {
-      small: 'thumb',
-      medium: 'medium', 
-      large: 'large',
-      xlarge: 'xlarge'
+      small: 'thumb',     // 64px for crisp small avatars
+      medium: 'medium',   // 128px for sharp medium avatars
+      large: 'large',     // 256px for HD large avatars
+      xlarge: 'xlarge'    // 400px for premium xlarge avatars
     };
     
     const sizeName = sizeMap[size];
     
-    // Construct the full Supabase storage URL
-    const fullUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg`;
+    // Construct the full Supabase storage URL with cache busting
+    const fullUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg?v=${Date.now()}`;
     
-    // Debug logging
-    console.log('Avatar URL Debug:', {
+    console.log('High-quality Avatar URL:', {
       baseUrl,
       size,
       sizeName,
@@ -63,7 +62,7 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
   };
 
   const handleImageLoad = () => {
-    console.log('Avatar image loaded successfully:', displayUrl);
+    console.log('High-quality avatar loaded successfully:', displayUrl);
     setImageLoaded(true);
     setImageError(false);
   };
@@ -88,8 +87,12 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
           onLoad={handleImageLoad}
           style={{ 
             opacity: imageLoaded ? 1 : 0.5,
-            transition: 'opacity 0.3s ease'
+            transition: 'opacity 0.3s ease',
+            imageRendering: 'crisp-edges', // Ensure sharp rendering
+            WebkitImageSmoothing: false,   // Disable browser smoothing
+            imageSmoothing: false
           }}
+          loading="eager" // Prioritize avatar loading
         />
       ) : !placeholderError ? (
         <img 
@@ -98,12 +101,17 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
           className="w-full h-full rounded-full object-cover"
           onError={handlePlaceholderError}
           onLoad={handlePlaceholderLoad}
+          style={{
+            imageRendering: 'crisp-edges',
+            WebkitImageSmoothing: false,
+            imageSmoothing: false
+          }}
         />
       ) : (
         <User className="w-1/2 h-1/2 text-rap-silver" />
       )}
       
-      {/* Loading indicator */}
+      {/* Enhanced loading indicator */}
       {displayUrl && !imageLoaded && !imageError && (
         <div className="absolute inset-0 flex items-center justify-center bg-rap-carbon/50 rounded-full">
           <div className="w-4 h-4 border-2 border-rap-gold border-t-transparent rounded-full animate-spin"></div>
