@@ -29,7 +29,7 @@ const ProfileHeader = ({ user, profile }: ProfileHeaderProps) => {
         
         <div className="flex-1 text-center sm:text-left w-full">
           <h2 className="font-merienda text-rap-gold mb-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words">
-            {profile?.full_name || profile?.username || user.email}
+            {profile?.username || profile?.full_name || user.email}
           </h2>
           
           {profile?.bio && (
