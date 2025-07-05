@@ -88,11 +88,9 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
           style={{ 
             opacity: imageLoaded ? 1 : 0.5,
             transition: 'opacity 0.3s ease',
-            imageRendering: 'crisp-edges', // Ensure sharp rendering
-            WebkitImageSmoothing: false,   // Disable browser smoothing
-            imageSmoothing: false
+            imageRendering: 'crisp-edges'
           }}
-          loading="eager" // Prioritize avatar loading
+          loading="eager"
         />
       ) : !placeholderError ? (
         <img 
@@ -102,9 +100,7 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
           onError={handlePlaceholderError}
           onLoad={handlePlaceholderLoad}
           style={{
-            imageRendering: 'crisp-edges',
-            WebkitImageSmoothing: false,
-            imageSmoothing: false
+            imageRendering: 'crisp-edges'
           }}
         />
       ) : (
