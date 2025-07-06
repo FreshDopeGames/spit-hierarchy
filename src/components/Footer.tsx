@@ -20,10 +20,10 @@ const Footer = () => {
                 className="h-8 w-auto mr-3" 
               />
               <span className="text-rap-gold font-ceviche text-xl tracking-wider">
-                RapRanker
+                Spit Hierarchy
               </span>
             </div>
-            <p className="text-rap-platinum/80 font-merienda text-sm">
+            <p className="text-white/90 font-merienda text-sm">
               The ultimate destination for ranking and discovering the greatest rappers of all time.
             </p>
           </div>
@@ -35,7 +35,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/rankings" 
-                  className="flex items-center text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   <Trophy className="w-4 h-4 mr-2" />
                   Rankings
@@ -44,7 +44,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/all-rappers" 
-                  className="flex items-center text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   <Music className="w-4 h-4 mr-2" />
                   All Rappers
@@ -53,7 +53,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/blog" 
-                  className="flex items-center text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   <Calendar className="w-4 h-4 mr-2" />
                   Slick Talk
@@ -62,7 +62,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/community-cypher" 
-                  className="flex items-center text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   <CypherIcon className="w-4 h-4 mr-2" />
                   Community Cypher
@@ -78,15 +78,15 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/auth" 
-                  className="text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
-                  Join RapRanker
+                  Join Spit Hierarchy
                 </Link>
               </li>
               <li>
                 <Link 
                   to="/community-cypher" 
-                  className="text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   Drop Bars
                 </Link>
@@ -94,7 +94,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/analytics" 
-                  className="text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   Analytics
                 </Link>
@@ -109,7 +109,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="flex items-center text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   <Info className="w-4 h-4 mr-2" />
                   About
@@ -118,7 +118,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/privacy" 
-                  className="text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   Privacy Policy
                 </Link>
@@ -126,7 +126,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/terms" 
-                  className="text-rap-platinum/80 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
                 >
                   Terms of Use
                 </Link>
@@ -136,8 +136,8 @@ const Footer = () => {
         </div>
 
         <div className="border-t border-rap-gold/30 mt-8 pt-8 text-center">
-          <p className="text-rap-platinum/60 font-merienda text-sm">
-            © 2024 RapRanker. All rights reserved. Keep the culture alive.
+          <p className="text-white/80 font-merienda text-sm">
+            © 2025 Spit Hierarchy. All rights reserved. Keep the culture alive.
           </p>
         </div>
       </div>

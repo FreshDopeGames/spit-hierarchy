@@ -9,6 +9,7 @@ import BlogLoadingState from "@/components/blog/BlogLoadingState";
 import BlogEmptyState from "@/components/blog/BlogEmptyState";
 import BlogLoadMoreButton from "@/components/blog/BlogLoadMoreButton";
 import BackToTopButton from "@/components/BackToTopButton";
+import Footer from "@/components/Footer";
 
 interface BlogPost {
   id: string;
@@ -153,6 +154,7 @@ const Blog = () => {
           </div>
         </main>
         <BackToTopButton hasCommentBubble={false} />
+        <Footer />
       </div>
     );
   }
@@ -200,6 +202,7 @@ const Blog = () => {
 
       {/* Back to Top Button - positioned for pages without CommentBubble */}
       <BackToTopButton hasCommentBubble={false} />
+      <Footer />
     </div>
   );
 };

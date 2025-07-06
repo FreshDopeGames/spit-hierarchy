@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,6 +8,7 @@ import AllRappersEmptyState from "@/components/AllRappersEmptyState";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import BlogPageHeader from "@/components/blog/BlogPageHeader";
 import BackToTopButton from "@/components/BackToTopButton";
+import Footer from "@/components/Footer";
 
 const AllRappers = () => {
   const [sortBy, setSortBy] = useState("name");
@@ -175,6 +175,7 @@ const AllRappers = () => {
           </div>
         </main>
         <BackToTopButton />
+        <Footer />
       </div>;
   }
 
@@ -199,6 +200,7 @@ const AllRappers = () => {
         {allRappers.length === 0 && !isLoading ? <AllRappersEmptyState /> : <AllRappersGrid rappers={allRappers} total={total} hasMore={hasMore} isFetching={isFetching} itemsPerPage={itemsPerPage} onLoadMore={handleLoadMore} currentPage={currentPage} />}
       </main>
       <BackToTopButton />
+      <Footer />
     </div>;
 };
 

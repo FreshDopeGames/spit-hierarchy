@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -8,6 +7,7 @@ import UserAchievements from "@/components/analytics/UserAchievements";
 import VotingAnalytics from "@/components/analytics/VotingAnalytics";
 import MemberAnalytics from "@/components/analytics/MemberAnalytics";
 import InternalPageHeader from "@/components/InternalPageHeader";
+import Footer from "@/components/Footer";
 
 const Analytics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -82,6 +82,8 @@ const Analytics = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Footer />
     </div>
   );
 };

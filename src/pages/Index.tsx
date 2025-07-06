@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useOptimizedQuery } from "@/hooks/useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,6 +11,7 @@ import StatsOverview from "@/components/StatsOverview";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
 import AdUnit from "@/components/AdUnit";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -168,6 +168,8 @@ const Index = () => {
             <GuestCallToAction />
           </div>
         </main>
+
+        <Footer />
       </div>
     </ErrorBoundary>
   );

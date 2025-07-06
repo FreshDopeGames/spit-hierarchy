@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Trophy, Users, Plus } from "lucide-react";
@@ -6,6 +5,7 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
 import CreateRankingDialog from "@/components/rankings/CreateRankingDialog";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRankingsData } from "@/hooks/useRankingsData";
@@ -80,6 +80,8 @@ const Rankings = () => {
           </TabsContent>
         </Tabs>
       </div>
+
+      <Footer />
     </div>
   );
 };
