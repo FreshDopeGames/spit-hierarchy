@@ -11,22 +11,52 @@ const TopMembersCards = () => {
   const { data: topCommenters, isLoading: loadingCommenters } = useQuery({
     queryKey: ['top-commenters'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      console.log('Fetching top commenters...');
+      
+      // First get member stats for users with comments
+      const { data: memberStats, error: statsError } = await supabase
         .from('member_stats')
-        .select(`
-          id,
-          total_comments,
-          profiles!inner (
-            username,
-            avatar_url
-          )
-        `)
+        .select('id, total_comments')
         .gt('total_comments', 0)
         .order('total_comments', { ascending: false })
         .limit(5);
       
-      if (error) throw error;
-      return data;
+      if (statsError) {
+        console.error('Error fetching member stats:', statsError);
+        throw statsError;
+      }
+      
+      if (!memberStats || memberStats.length === 0) {
+        console.log('No member stats found');
+        return [];
+      }
+      
+      // Get user IDs
+      const userIds = memberStats.map(stat => stat.id);
+      console.log('User IDs for commenters:', userIds);
+      
+      // Fetch profiles for these users
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, username, avatar_url')
+        .in('id', userIds);
+      
+      if (profilesError) {
+        console.error('Error fetching profiles:', profilesError);
+        throw profilesError;
+      }
+      
+      console.log('Profiles found:', profiles);
+      
+      // Merge the data
+      const merged = memberStats.map(stat => ({
+        id: stat.id,
+        total_comments: stat.total_comments,
+        profiles: profiles?.find(p => p.id === stat.id) || null
+      }));
+      
+      console.log('Merged commenters data:', merged);
+      return merged;
     }
   });
 
@@ -34,22 +64,52 @@ const TopMembersCards = () => {
   const { data: topVoters, isLoading: loadingVoters } = useQuery({
     queryKey: ['top-voters'],
     queryFn: async () => {
-      const { data, error } = await supabase
+      console.log('Fetching top voters...');
+      
+      // First get member stats for users with votes
+      const { data: memberStats, error: statsError } = await supabase
         .from('member_stats')
-        .select(`
-          id,
-          total_votes,
-          profiles!inner (
-            username,
-            avatar_url
-          )
-        `)
+        .select('id, total_votes')
         .gt('total_votes', 0)
         .order('total_votes', { ascending: false })
         .limit(5);
       
-      if (error) throw error;
-      return data;
+      if (statsError) {
+        console.error('Error fetching member stats for voters:', statsError);
+        throw statsError;
+      }
+      
+      if (!memberStats || memberStats.length === 0) {
+        console.log('No member stats found for voters');
+        return [];
+      }
+      
+      // Get user IDs
+      const userIds = memberStats.map(stat => stat.id);
+      console.log('User IDs for voters:', userIds);
+      
+      // Fetch profiles for these users
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, username, avatar_url')
+        .in('id', userIds);
+      
+      if (profilesError) {
+        console.error('Error fetching profiles for voters:', profilesError);
+        throw profilesError;
+      }
+      
+      console.log('Profiles found for voters:', profiles);
+      
+      // Merge the data
+      const merged = memberStats.map(stat => ({
+        id: stat.id,
+        total_votes: stat.total_votes,
+        profiles: profiles?.find(p => p.id === stat.id) || null
+      }));
+      
+      console.log('Merged voters data:', merged);
+      return merged;
     }
   });
 
@@ -57,36 +117,72 @@ const TopMembersCards = () => {
   const { data: topJudges, isLoading: loadingJudges } = useQuery({
     queryKey: ['top-skill-judges'],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('votes')
-        .select(`
-          user_id,
-          profiles!inner (
-            username,
-            avatar_url
-          )
-        `);
+      console.log('Fetching top skill judges...');
       
-      if (error) throw error;
+      // Get all votes and count by user
+      const { data: votes, error: votesError } = await supabase
+        .from('votes')
+        .select('user_id');
+      
+      if (votesError) {
+        console.error('Error fetching votes:', votesError);
+        throw votesError;
+      }
+      
+      if (!votes || votes.length === 0) {
+        console.log('No votes found');
+        return [];
+      }
+      
+      console.log(`Found ${votes.length} total votes`);
       
       // Group by user and count votes
-      const userVoteCounts = data.reduce((acc: any, vote: any) => {
+      const userVoteCounts = votes.reduce((acc: any, vote: any) => {
         const userId = vote.user_id;
         if (!acc[userId]) {
-          acc[userId] = {
-            user_id: userId,
-            vote_count: 0,
-            profiles: vote.profiles
-          };
+          acc[userId] = { user_id: userId, vote_count: 0 };
         }
         acc[userId].vote_count++;
         return acc;
       }, {});
 
       // Convert to array and sort
-      return Object.values(userVoteCounts)
+      const sortedUsers = Object.values(userVoteCounts)
         .sort((a: any, b: any) => b.vote_count - a.vote_count)
         .slice(0, 5);
+      
+      console.log('Top skill judges (sorted):', sortedUsers);
+      
+      if (sortedUsers.length === 0) {
+        return [];
+      }
+      
+      // Get user IDs
+      const userIds = sortedUsers.map((user: any) => user.user_id);
+      console.log('User IDs for judges:', userIds);
+      
+      // Fetch profiles for these users
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('id, username, avatar_url')
+        .in('id', userIds);
+      
+      if (profilesError) {
+        console.error('Error fetching profiles for judges:', profilesError);
+        throw profilesError;
+      }
+      
+      console.log('Profiles found for judges:', profiles);
+      
+      // Merge the data
+      const merged = sortedUsers.map((user: any) => ({
+        user_id: user.user_id,
+        vote_count: user.vote_count,
+        profiles: profiles?.find(p => p.id === user.user_id) || null
+      }));
+      
+      console.log('Merged judges data:', merged);
+      return merged;
     }
   });
 
