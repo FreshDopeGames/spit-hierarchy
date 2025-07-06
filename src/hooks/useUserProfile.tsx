@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { useAuth } from './useAuth';
 import { supabase } from '@/integrations/supabase/client';
@@ -11,21 +10,31 @@ interface UserProfile {
 }
 
 export const useUserProfile = () => {
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
+      // If auth is still loading, keep loading state
+      if (authLoading) {
+        setLoading(true);
+        return;
+      }
+
+      // If no user, clear profile and stop loading
       if (!user) {
         setUserProfile(null);
         setLoading(false);
+        setError(null);
         return;
       }
 
       try {
         setLoading(true);
+        setError(null);
+        
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
@@ -35,6 +44,7 @@ export const useUserProfile = () => {
         if (error) {
           console.error('Error fetching user profile:', error);
           setError(error.message);
+          setUserProfile(null);
           return;
         }
 
@@ -42,13 +52,18 @@ export const useUserProfile = () => {
       } catch (err) {
         console.error('Error fetching user profile:', err);
         setError('Failed to fetch user profile');
+        setUserProfile(null);
       } finally {
         setLoading(false);
       }
     };
 
     fetchUserProfile();
-  }, [user]);
+  }, [user, authLoading]);
 
-  return { userProfile, loading, error };
+  return { 
+    userProfile, 
+    loading: authLoading || loading, // Combined loading state
+    error 
+  };
 };

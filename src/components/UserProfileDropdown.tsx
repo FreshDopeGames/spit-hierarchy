@@ -31,19 +31,25 @@ const UserProfileDropdown = ({
   };
 
   const avatarUrl = getAvatarUrl(userProfile?.avatar_url);
+  const displayName = userProfile?.username || userProfile?.full_name || user?.email;
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="flex items-center space-x-3 cursor-pointer hover:opacity-80 transition-opacity">
           <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
-            <AvatarImage src={avatarUrl} alt={userProfile?.username || 'User'} />
+            <AvatarImage 
+              src={avatarUrl} 
+              alt={displayName || 'User'}
+              style={{ imageRendering: 'crisp-edges' }}
+              loading="eager"
+            />
             <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
               <User className="w-4 h-4" />
             </AvatarFallback>
           </Avatar>
           <span className="text-rap-gold font-kaushan text-sm">
-            {userProfile?.username || user?.email}
+            {displayName}
           </span>
         </div>
       </DropdownMenuTrigger>

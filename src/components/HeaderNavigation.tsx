@@ -6,6 +6,7 @@ import { useSecurityContext } from '@/hooks/useSecurityContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import UserProfileDropdown from './UserProfileDropdown';
 import NavigationSidebar from './NavigationSidebar';
+import { AvatarSkeleton, TextSkeleton } from '@/components/ui/skeleton';
 
 interface HeaderNavigationProps {
   isScrolled: boolean;
@@ -14,9 +15,12 @@ interface HeaderNavigationProps {
 const HeaderNavigation = ({
   isScrolled
 }: HeaderNavigationProps) => {
-  const { user } = useAuth();
-  const { isAdmin, canManageBlog, isLoading } = useSecurityContext();
-  const { userProfile } = useUserProfile();
+  const { user, loading: authLoading } = useAuth();
+  const { isAdmin, canManageBlog, isLoading: securityLoading } = useSecurityContext();
+  const { userProfile, loading: profileLoading } = useUserProfile();
+
+  // Combined loading state - show skeleton until all data is loaded
+  const isLoading = authLoading || (user && profileLoading) || securityLoading;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-black border-b border-rap-gold transition-all duration-300">
@@ -36,7 +40,12 @@ const HeaderNavigation = ({
 
           {/* Right: User Menu */}
           <div className="flex items-center">
-            {user ? (
+            {isLoading ? (
+              <div className="flex items-center space-x-3">
+                <AvatarSkeleton size={isScrolled ? 'sm' : 'md'} />
+                <TextSkeleton width="w-16" height="h-4" />
+              </div>
+            ) : user ? (
               <UserProfileDropdown 
                 userProfile={userProfile} 
                 isAdmin={isAdmin} 

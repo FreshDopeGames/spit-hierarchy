@@ -8,18 +8,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
 interface NavigationSidebarProps {
   trigger?: React.ReactNode;
 }
 
 const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
-  const { user, signOut } = useAuth();
+  const { user, signOut, loading: authLoading } = useAuth();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
   // Get user profile for avatar and username
-  const { data: userProfile } = useQuery({
+  const { data: userProfile, isLoading: profileLoading } = useQuery({
     queryKey: ['user-profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
@@ -33,6 +34,9 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     },
     enabled: !!user?.id
   });
+
+  // Combined loading state
+  const isUserDataLoading = authLoading || (user && profileLoading);
 
   const getAvatarUrl = (baseUrl?: string) => {
     if (!baseUrl) return undefined;
@@ -119,7 +123,15 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
 
           {/* User Section */}
           <div className="border-t border-rap-gold/30 pt-4 space-y-2">
-            {user ? (
+            {isUserDataLoading ? (
+              <>
+                <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">Loading...</h3>
+                <div className="flex items-center space-x-3 p-3">
+                  <AvatarSkeleton size="sm" />
+                  <TextSkeleton width="w-24" height="h-4" />
+                </div>
+              </>
+            ) : user ? (
               <>
                 <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">User Menu</h3>
                 <Link to="/profile" onClick={() => handleNavClick('/profile')}>
