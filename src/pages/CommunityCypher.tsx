@@ -79,7 +79,7 @@ const CommunityCypher = () => {
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
                 <h2 className="text-yellow-400 font-mogra text-xl">
-                  The Cypher ({totalComments} bars dropped)
+                  The Cypher
                 </h2>
               </div>
               
