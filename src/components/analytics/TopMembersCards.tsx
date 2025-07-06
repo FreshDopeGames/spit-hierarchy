@@ -5,6 +5,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import SmallAvatar from "@/components/avatar/SmallAvatar";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { MessageCircle, Vote, Trophy } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const TopMembersCards = () => {
   // Top Commenters Query
@@ -229,15 +230,35 @@ const TopMembersCards = () => {
                 <span className="text-rap-gold font-bold text-sm w-4">
                   {index + 1}
                 </span>
-                <SmallAvatar
-                  avatarUrl={member.profiles?.avatar_url}
-                  username={member.profiles?.username || 'Unknown'}
-                  size="sm"
-                />
+                {member.profiles?.username ? (
+                  <Link to={`/user/${member.profiles.username}`}>
+                    <SmallAvatar
+                      avatarUrl={member.profiles?.avatar_url}
+                      username={member.profiles?.username || 'Unknown'}
+                      size="sm"
+                      className="hover:opacity-80 transition-opacity cursor-pointer"
+                    />
+                  </Link>
+                ) : (
+                  <SmallAvatar
+                    avatarUrl={member.profiles?.avatar_url}
+                    username={member.profiles?.username || 'Unknown'}
+                    size="sm"
+                  />
+                )}
                 <div className="flex-1 min-w-0">
-                  <p className="text-rap-platinum font-medium text-sm truncate">
-                    {member.profiles?.username || 'Unknown User'}
-                  </p>
+                  {member.profiles?.username ? (
+                    <Link 
+                      to={`/user/${member.profiles.username}`}
+                      className="text-rap-platinum font-medium text-sm truncate hover:text-rap-gold transition-colors cursor-pointer block"
+                    >
+                      {member.profiles.username}
+                    </Link>
+                  ) : (
+                    <p className="text-rap-platinum font-medium text-sm truncate">
+                      Unknown User
+                    </p>
+                  )}
                   <p className="text-rap-gold/70 text-xs">
                     {member[metricKey] || member.vote_count} {metricLabel}
                   </p>

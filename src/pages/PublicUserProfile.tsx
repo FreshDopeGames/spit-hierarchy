@@ -10,14 +10,14 @@ import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
 import { usePublicUserData } from "@/hooks/usePublicUserData";
 
 const PublicUserProfile = () => {
-  const { id } = useParams();
+  const { username } = useParams();
   const { profile, rankings, loading, notFound, fetchUserData } = usePublicUserData();
 
   useEffect(() => {
-    if (id) {
-      fetchUserData(id);
+    if (username) {
+      fetchUserData(username);
     }
-  }, [id, fetchUserData]);
+  }, [username, fetchUserData]);
 
   if (loading) {
     return <PublicProfileLoading />;

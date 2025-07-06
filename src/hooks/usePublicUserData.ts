@@ -9,16 +9,16 @@ export const usePublicUserData = () => {
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
 
-  const fetchUserData = useCallback(async (id: string) => {
+  const fetchUserData = useCallback(async (username: string) => {
     try {
       setLoading(true);
       setNotFound(false);
 
-      // Fetch user profile with enhanced error handling
+      // Fetch user profile by username with enhanced error handling
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
         .select("id, username, full_name, created_at, bio, location")
-        .eq("id", id)
+        .eq("username", username)
         .single();
 
       if (profileError) {
@@ -31,7 +31,7 @@ export const usePublicUserData = () => {
       const { data: memberStatsData, error: memberStatsError } = await supabase
         .from("member_stats")
         .select("total_votes, status, consecutive_voting_days")
-        .eq("id", id)
+        .eq("id", profileData.id)
         .single();
 
       if (memberStatsError) {
@@ -47,7 +47,7 @@ export const usePublicUserData = () => {
       const { data: rankingsData, error: rankingsError } = await supabase
         .from("user_rankings")
         .select("id, title, description, category, created_at, slug")
-        .eq("user_id", id)
+        .eq("user_id", profileData.id)
         .eq("is_public", true)
         .order("created_at", { ascending: false });
 
