@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -15,7 +16,7 @@ const Analytics = () => {
 
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['platform', 'achievements', 'stats', 'members'].includes(tab)) {
+    if (tab && ['platform', 'members', 'achievements', 'stats'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -43,6 +44,13 @@ const Analytics = () => {
               <span className="hidden sm:inline">Platform</span>
             </TabsTrigger>
             <TabsTrigger 
+              value="members" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
+            >
+              <Users className="w-4 h-4" />
+              <span className="hidden sm:inline">Members</span>
+            </TabsTrigger>
+            <TabsTrigger 
               value="achievements" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
             >
@@ -56,17 +64,14 @@ const Analytics = () => {
               <User className="w-4 h-4" />
               <span className="hidden sm:inline">My Stats</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="members" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
-            >
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Members</span>
-            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="platform" className="space-y-6">
             <VotingAnalytics />
+          </TabsContent>
+
+          <TabsContent value="members" className="space-y-6">
+            <MemberAnalytics />
           </TabsContent>
 
           <TabsContent value="achievements" className="space-y-6">
@@ -75,10 +80,6 @@ const Analytics = () => {
 
           <TabsContent value="stats" className="space-y-6">
             <UserVotingDashboard />
-          </TabsContent>
-
-          <TabsContent value="members" className="space-y-6">
-            <MemberAnalytics />
           </TabsContent>
         </Tabs>
       </div>

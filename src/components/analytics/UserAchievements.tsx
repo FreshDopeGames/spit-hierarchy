@@ -1,62 +1,85 @@
 
 import React, { useState } from "react";
 import { useAchievements } from "@/hooks/useAchievements";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import AchievementCard from "@/components/achievements/AchievementCard";
 import AchievementTable from "@/components/achievements/AchievementTable";
-import AchievementStatsCards from "./AchievementStatsCards";
+import AchievementGallery from "@/components/achievements/AchievementGallery";
 import AchievementViewModeSelector from "./AchievementViewModeSelector";
-import AchievementTabsContent from "./AchievementTabsContent";
+import AchievementStatsCards from "./AchievementStatsCards";
+import AchievementEmptyState from "./AchievementEmptyState";
+import { Trophy, Award, Target } from "lucide-react";
 
 const UserAchievements = () => {
-  const { achievements, isLoading, getEarnedAchievements, getUnlockedAchievements, getTotalPoints } = useAchievements();
-  const [viewMode, setViewMode] = useState<'cards' | 'table'>('table');
+  const { achievements, getEarnedAchievements, getTotalPoints, isLoading } = useAchievements();
+  const [viewMode, setViewMode] = useState<'cards' | 'table' | 'gallery'>('cards');
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        <div className="h-24 sm:h-32 bg-carbon-fiber/40 rounded-lg animate-pulse" />
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="h-20 sm:h-24 bg-carbon-fiber/40 rounded-lg animate-pulse" />
-          ))}
+      <div className="space-y-4 sm:space-y-6">
+        <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+          Your Achievements
+        </h3>
+        <div className="animate-pulse space-y-4">
+          <div className="h-12 sm:h-16 bg-rap-carbon/50 rounded" />
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="h-16 sm:h-20 bg-rap-carbon/50 rounded" />
+            <div className="h-16 sm:h-20 bg-rap-carbon/50 rounded" />
+          </div>
         </div>
       </div>
     );
   }
 
   const earnedAchievements = getEarnedAchievements();
-  const unlockedAchievements = getUnlockedAchievements();
-
-  const stats = {
-    earnedCount: earnedAchievements.length,
-    totalCount: achievements.length,
-    totalPoints: getTotalPoints()
-  };
+  const totalPoints = getTotalPoints();
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h3 className="text-lg sm:text-2xl mb-0 text-rap-gold font-extrabold">
-          Your Achievements
-        </h3>
-        
-        <AchievementViewModeSelector 
-          viewMode={viewMode} 
-          onViewModeChange={setViewMode} 
-        />
-      </div>
-      
-      <AchievementStatsCards stats={stats} />
+      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+        Your Achievements
+      </h3>
 
-      {viewMode === 'table' ? (
-        <div className="space-y-4">
-          <AchievementTable achievements={achievements} showProgress={true} />
+      {/* Achievement Stats */}
+      <AchievementStatsCards 
+        earnedCount={earnedAchievements.length}
+        totalCount={achievements.length}
+        totalPoints={totalPoints}
+      />
+
+      {/* View Mode Selector */}
+      <div className="flex justify-between items-center">
+        <div className="text-rap-silver text-sm">
+          Showing {achievements.length} achievements
         </div>
+        <AchievementViewModeSelector viewMode={viewMode} onViewModeChange={setViewMode} />
+      </div>
+
+      {/* Achievement Content */}
+      {achievements.length > 0 ? (
+        <>
+          {viewMode === 'cards' && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {achievements.map((achievement) => (
+                <AchievementCard 
+                  key={achievement.id} 
+                  achievement={achievement} 
+                  showProgress={true}
+                />
+              ))}
+            </div>
+          )}
+
+          {viewMode === 'table' && (
+            <AchievementTable achievements={achievements} showProgress={true} />
+          )}
+
+          {viewMode === 'gallery' && (
+            <AchievementGallery achievements={achievements} />
+          )}
+        </>
       ) : (
-        <AchievementTabsContent 
-          achievements={achievements}
-          earnedAchievements={earnedAchievements}
-          unlockedAchievements={unlockedAchievements}
-        />
+        <AchievementEmptyState />
       )}
     </div>
   );

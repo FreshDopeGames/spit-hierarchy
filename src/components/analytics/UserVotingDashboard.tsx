@@ -1,238 +1,95 @@
 
-import { useQuery } from "@tanstack/react-query";
-import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/hooks/useAuth";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Vote, Users, Star, Calendar, TrendingUp, Award } from "lucide-react";
+import { TrendingUp, Vote, Trophy, Calendar } from "lucide-react";
+import VotingTrends from "./VotingTrends";
+import TopVoters from "./TopVoters";
 
 const UserVotingDashboard = () => {
-  const { user } = useAuth();
-
-  const { data: userStats, isLoading } = useQuery({
-    queryKey: ["user-voting-stats", user?.id],
-    queryFn: async () => {
-      if (!user) return null;
-      
-      // Try to get user stats from the secure function first (admin only)
-      try {
-        const { data: adminStats } = await supabase.rpc("get_user_voting_stats");
-        const userStat = adminStats?.find((stat: any) => stat.user_id === user.id);
-        
-        if (userStat) {
-          return {
-            total_votes: userStat.total_votes || 0,
-            unique_rappers_voted: userStat.unique_rappers_voted || 0,
-            categories_used: userStat.categories_used || 0,
-            average_rating_given: userStat.average_rating_given || 0,
-            first_vote_date: userStat.first_vote_date,
-            last_vote_date: userStat.last_vote_date
-          };
-        }
-      } catch (error) {
-        console.log("Admin stats not accessible, using basic stats");
-      }
-      
-      // Fallback to member_stats for basic info
-      const { data, error } = await supabase
-        .from("member_stats")
-        .select("*")
-        .eq("id", user.id)
-        .maybeSingle();
-      
-      if (error) throw error;
-      
-      // Return data with consistent structure
-      return {
-        total_votes: data?.total_votes || 0,
-        unique_rappers_voted: 0, // Not available in member_stats
-        categories_used: 0, // Not available in member_stats
-        average_rating_given: 0, // Not available in member_stats
-        first_vote_date: null, // Not available in member_stats
-        last_vote_date: data?.last_vote_date || null
-      };
-    },
-    enabled: !!user
-  });
-
-  const { data: recentVotes, isLoading: loadingRecent } = useQuery({
-    queryKey: ["user-recent-ranking-votes", user?.id],
-    queryFn: async () => {
-      if (!user) return [];
-      const { data, error } = await supabase
-        .from("ranking_votes")
-        .select(`
-          *,
-          rapper:rappers (
-            name
-          ),
-          ranking:official_rankings (
-            title
-          )
-        `)
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false })
-        .limit(5);
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!user
-  });
-
-  if (!user) {
-    return (
-      <Card className="bg-black/40 border-2 border-rap-gold">
-        <CardContent className="p-6 text-center">
-          <p className="text-gray-400">Please log in to view your voting statistics.</p>
-        </CardContent>
-      </Card>
-    );
-  }
+  const { profile, isLoading } = useUserProfile();
 
   if (isLoading) {
     return (
-      <div className="space-y-4">
-        {Array.from({ length: 3 }).map((_, i) => (
-          <Card key={i} className="bg-black/40 border-2 border-rap-gold animate-pulse">
-            <CardContent className="p-6">
-              <div className="h-16 bg-gray-700 rounded"></div>
-            </CardContent>
-          </Card>
-        ))}
+      <div className="space-y-4 sm:space-y-6">
+        <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+          Your Voting Statistics
+        </h3>
+        <div className="animate-pulse space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="h-24 bg-rap-carbon/50 rounded" />
+            ))}
+          </div>
+          <div className="h-64 bg-rap-carbon/50 rounded" />
+        </div>
       </div>
     );
   }
 
-  const stats = userStats || {
-    total_votes: 0,
-    unique_rappers_voted: 0,
-    categories_used: 0,
-    average_rating_given: 0,
-    last_vote_date: null,
-    first_vote_date: null
-  };
-
-  const statCards = [
-    {
-      icon: Vote,
-      label: "Total Votes",
-      value: stats.total_votes,
-      color: "from-purple-500 to-blue-500"
-    },
-    {
-      icon: Users,
-      label: "Rappers Voted",
-      value: stats.unique_rappers_voted,
-      color: "from-blue-500 to-cyan-500"
-    },
-    {
-      icon: Award,
-      label: "Categories Used",
-      value: stats.categories_used,
-      color: "from-cyan-500 to-green-500"
-    },
-    {
-      icon: Star,
-      label: "Avg Rating Given",
-      value: stats.average_rating_given ? Number(stats.average_rating_given).toFixed(1) : "0.0",
-      color: "from-green-500 to-yellow-500"
-    }
-  ];
+  const memberStats = profile?.member_stats;
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-2xl mb-4 text-rap-gold font-extrabold">Your Voting Statistics</h3>
-      
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {statCards.map((stat, index) => (
-          <Card key={index} className="bg-black/40 border-2 border-rap-gold">
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-3">
-                <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center`}>
-                  <stat.icon className="w-5 h-5 text-white" />
-                </div>
-                <div>
-                  <p className="font-extrabold text-rap-gold-light text-xs">{stat.label}</p>
-                  <p className="font-bold text-lg text-white">{stat.value}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+    <div className="space-y-4 sm:space-y-6">
+      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+        Your Voting Statistics
+      </h3>
+
+      {/* User Stats Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <Card className="bg-carbon-fiber/90 border border-rap-gold/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-rap-silver">Total Votes</CardTitle>
+            <Vote className="h-4 w-4 text-rap-gold" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-rap-gold">
+              {memberStats?.total_votes?.toLocaleString() || 0}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-carbon-fiber/90 border border-rap-gold/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-rap-silver">Rankings Created</CardTitle>
+            <Trophy className="h-4 w-4 text-rap-gold" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-rap-gold">
+              {memberStats?.ranking_lists_created || 0}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-carbon-fiber/90 border border-rap-gold/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-rap-silver">Consecutive Days</CardTitle>
+            <Calendar className="h-4 w-4 text-rap-gold" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-rap-gold">
+              {memberStats?.consecutive_voting_days || 0}
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-carbon-fiber/90 border border-rap-gold/30">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+            <CardTitle className="text-sm font-medium text-rap-silver">Upvotes Received</CardTitle>
+            <TrendingUp className="h-4 w-4 text-rap-gold" />
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-rap-gold">
+              {memberStats?.total_upvotes || 0}
+            </div>
+          </CardContent>
+        </Card>
       </div>
 
-      {/* Voting Timeline */}
-      {stats.first_vote_date && (
-        <Card className="bg-black/40 border-2 border-rap-gold">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-rap-gold">
-              <Calendar className="w-5 h-5" />
-              Voting Timeline
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="flex flex-col sm:flex-row gap-4 text-sm">
-              <div className="flex items-center gap-2">
-                <span className="text-gray-400 text-base">First Vote:</span>
-                <span className="text-white text-xl">
-                  {new Date(stats.first_vote_date).toLocaleDateString()}
-                </span>
-              </div>
-              {stats.last_vote_date && (
-                <div className="flex items-center gap-2">
-                  <span className="text-gray-400 text-base">Last Vote:</span>
-                  <span className="text-white text-xl">
-                    {new Date(stats.last_vote_date).toLocaleDateString()}
-                  </span>
-                </div>
-              )}
-            </div>
-          </CardContent>
-        </Card>
-      )}
+      {/* Voting Trends Chart */}
+      <VotingTrends />
 
-      {/* Recent Votes */}
-      {recentVotes && recentVotes.length > 0 && (
-        <Card className="bg-black/40 border-2 border-rap-gold">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-rap-gold">
-              <TrendingUp className="w-5 h-5" />
-              Recent Ranking Votes
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-3">
-              {recentVotes.map((vote: any) => (
-                <div key={vote.id} className="flex items-center gap-5 text-rap-gold bg-rap-gold px-[10px] py-[11px] rounded">
-                  <div className="flex-1">
-                    <p className="text-black font-extrabold text-xl">{vote.rapper?.name}</p>
-                    <p className="text-rap-carbon font-bold">{vote.ranking?.title}</p>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className="text-rap-gold-dark bg-black">
-                      {vote.vote_weight}x vote ({vote.member_status})
-                    </Badge>
-                    <span className="text-xs font-normal text-black">
-                      {new Date(vote.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-      )}
-
-      {stats.total_votes === 0 && (
-        <Card className="bg-black/40 border-2 border-rap-gold">
-          <CardContent className="p-6 text-center">
-            <Vote className="w-16 h-16 text-purple-500 mx-auto mb-4" />
-            <h3 className="text-xl font-bold text-white mb-2">No Votes Yet</h3>
-            <p className="text-gray-400">Start voting for your favorite rappers to see your statistics here!</p>
-          </CardContent>
-        </Card>
-      )}
+      {/* Top Voters Leaderboard */}
+      <TopVoters />
     </div>
   );
 };
