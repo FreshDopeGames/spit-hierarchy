@@ -34,7 +34,7 @@ const Analytics = () => {
       
       <div className="container mx-auto px-4 py-8 md:py-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-rap-carbon-light border border-rap-gold/30 mt-6 md:mt-8 lg:mt-10 relative z-10">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 bg-rap-carbon-light border border-rap-gold/30 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[80px] sm:min-h-[60px] py-3 sm:py-2">
             <TabsTrigger 
               value="platform" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
