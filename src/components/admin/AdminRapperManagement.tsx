@@ -1,179 +1,101 @@
 import { useState, useEffect } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
-import { Tables } from "@/integrations/supabase/types";
+import { Label } from "@/components/ui/label";
+import { Users } from "lucide-react";
 import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
 import AdminRapperPagination from "./AdminRapperPagination";
-import { toast } from "sonner";
-
-type Rapper = Tables<"rappers">;
+import AdminTabHeader from "./AdminTabHeader";
 
 const ITEMS_PER_PAGE = 20;
 
 const AdminRapperManagement = () => {
-  const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [debouncedSearchQuery, setDebouncedSearchQuery] = useState("");
-  const queryClient = useQueryClient();
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Debounce search query
+  const { data: rappers, isLoading, refetch, isFetching } = useQuery(
+    ["rappers", currentPage, searchTerm],
+    async () => {
+      let query = supabase
+        .from("profiles")
+        .select("*", { count: "exact" })
+        .order("created_at", { ascending: false })
+        .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+
+      if (searchTerm) {
+        query = query.ilike("username", `%${searchTerm}%`);
+      }
+
+      const { data, error, count } = await query;
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
+      return { data, count };
+    },
+    { keepPreviousData: true }
+  );
+
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebouncedSearchQuery(searchQuery);
-      setCurrentPage(1); // Reset to first page when search changes
-    }, 300);
+    refetch();
+  }, [currentPage, searchTerm, refetch]);
 
-    return () => clearTimeout(timer);
-  }, [searchQuery]);
+  const totalItems = rappers?.count || 0;
+  const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
 
-  // Query for total count with search filter
-  const { data: totalCount } = useQuery({
-    queryKey: ["admin-rappers-count", debouncedSearchQuery],
-    queryFn: async () => {
-      let query = supabase
-        .from("rappers")
-        .select("*", { count: "exact", head: true });
-      
-      if (debouncedSearchQuery) {
-        query = query.ilike("name", `%${debouncedSearchQuery}%`);
-      }
-      
-      const { count, error } = await query;
-      
-      if (error) throw error;
-      return count || 0;
-    }
-  });
-
-  // Query for paginated rappers with search filter
-  const { data: rappers, isLoading } = useQuery({
-    queryKey: ["admin-rappers", currentPage, debouncedSearchQuery],
-    queryFn: async () => {
-      const from = (currentPage - 1) * ITEMS_PER_PAGE;
-      const to = from + ITEMS_PER_PAGE - 1;
-      
-      let query = supabase
-        .from("rappers")
-        .select("*")
-        .order("name", { ascending: true })
-        .range(from, to);
-      
-      if (debouncedSearchQuery) {
-        query = query.ilike("name", `%${debouncedSearchQuery}%`);
-      }
-      
-      const { data, error } = await query;
-      
-      if (error) throw error;
-      return data;
-    }
-  });
-
-  const deleteRapperMutation = useMutation({
-    mutationFn: async (id: string) => {
-      const { error } = await supabase
-        .from("rappers")
-        .delete()
-        .eq("id", id);
-      
-      if (error) throw error;
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
-      queryClient.invalidateQueries({ queryKey: ["admin-rappers-count"] });
-      queryClient.invalidateQueries({ queryKey: ["top-rappers"] });
-      queryClient.invalidateQueries({ queryKey: ["rappers"] });
-      toast.success("Rapper deleted successfully");
-    },
-    onError: (error: any) => {
-      toast.error(error.message || "Failed to delete rapper");
-    }
-  });
-
-  const handleAddRapper = () => {
-    setSelectedRapper(null);
-    setIsDialogOpen(true);
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
   };
 
-  const handleEditRapper = (rapper: Rapper) => {
-    setSelectedRapper(rapper);
-    setIsDialogOpen(true);
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1); // Reset to first page on search
   };
-
-  const handleDeleteRapper = (id: string) => {
-    if (confirm("Are you sure you want to delete this rapper?")) {
-      deleteRapperMutation.mutate(id);
-    }
-  };
-
-  const handleDialogClose = () => {
-    setIsDialogOpen(false);
-    setSelectedRapper(null);
-    // Refresh the queries to get updated data
-    queryClient.invalidateQueries({ queryKey: ["admin-rappers"] });
-    queryClient.invalidateQueries({ queryKey: ["admin-rappers-count"] });
-  };
-
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
-
-  const totalPages = Math.ceil((totalCount || 0) / ITEMS_PER_PAGE);
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h3 className="text-xl font-semibold text-rap-platinum">
-          Manage Rappers ({totalCount || 0})
-        </h3>
-        <Button
-          onClick={handleAddRapper}
-          className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra"
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Add Rapper
-        </Button>
-      </div>
+      <AdminTabHeader 
+        title="Rapper Management" 
+        icon={Users}
+        description="Add, edit, and manage rapper profiles and information"
+      >
+        <AdminRapperDialog />
+      </AdminTabHeader>
 
-      {/* Search Filter */}
-      <div className="relative max-w-md">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
-        <Input
-          placeholder="Search rappers by name..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-10 bg-rap-carbon-light border-rap-gold/30 text-rap-platinum placeholder:text-rap-smoke focus:border-rap-gold"
-        />
-      </div>
+      <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
+        <CardContent className="p-6">
+          <div className="mb-4">
+            <Label htmlFor="search" className="text-[var(--theme-text-muted)]">
+              Search Rappers:
+            </Label>
+            <Input
+              type="search"
+              id="search"
+              placeholder="Enter rapper username..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]"
+            />
+          </div>
 
-      <AdminRapperTable
-        rappers={rappers || []}
-        isLoading={isLoading}
-        onEdit={handleEditRapper}
-        onDelete={handleDeleteRapper}
-      />
+          {isLoading ? (
+            <div className="text-center py-8">
+              <div className="text-[var(--theme-text)]">Loading rappers...</div>
+            </div>
+          ) : (
+            <AdminRapperTable rappers={rappers?.data || []} />
+          )}
+        </CardContent>
+      </Card>
 
-      {totalCount && totalCount > ITEMS_PER_PAGE && (
-        <AdminRapperPagination
-          currentPage={currentPage}
-          totalPages={totalPages}
-          totalItems={totalCount}
-          itemsPerPage={ITEMS_PER_PAGE}
-          onPageChange={handlePageChange}
-        />
-      )}
-
-      <AdminRapperDialog
-        rapper={selectedRapper}
-        open={isDialogOpen}
-        onOpenChange={setIsDialogOpen}
-        onSuccess={handleDialogClose}
+      <AdminRapperPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onPageChange={handlePageChange}
       />
     </div>
   );

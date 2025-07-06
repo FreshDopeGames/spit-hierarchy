@@ -7,6 +7,7 @@ import { Plus, Trophy } from "lucide-react";
 import { toast } from "sonner";
 import AdminRankingsTable from "./AdminRankingsTable";
 import AdminRankingDialog from "./AdminRankingDialog";
+import AdminTabHeader from "./AdminTabHeader";
 
 const AdminRankingsManagement = () => {
   const [editingRanking, setEditingRanking] = useState(null);
@@ -82,22 +83,19 @@ const AdminRankingsManagement = () => {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-carbon-fiber border border-rap-gold/30">
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-            <div className="flex items-center gap-3">
-              <Trophy className="w-6 h-6 text-rap-gold" />
-              <CardTitle className="text-rap-gold font-mogra text-xl font-medium sm:text-3xl">
-                Rankings Management
-              </CardTitle>
-            </div>
-            <AdminRankingDialog onRankingCreated={handleRankingCreated} />
-          </div>
-        </CardHeader>
-        <CardContent>
+      <AdminTabHeader 
+        title="Rankings Management" 
+        icon={Trophy}
+        description="Manage official rankings and their display order"
+      >
+        <AdminRankingDialog onRankingCreated={handleRankingCreated} />
+      </AdminTabHeader>
+
+      <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
+        <CardContent className="p-6">
           {isLoading ? (
             <div className="text-center py-8">
-              <div className="text-rap-platinum">Loading rankings...</div>
+              <div className="text-[var(--theme-text)]">Loading rankings...</div>
             </div>
           ) : (
             <AdminRankingsTable 

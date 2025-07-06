@@ -51,30 +51,30 @@ export interface ThemeConfig {
 
 export const defaultTheme: ThemeConfig = {
   colors: {
-    primary: '#D4AF37', // rap-gold
+    primary: '#D4AF37', // rap-gold - matches current site
     primaryLight: '#F7DC6F',
     primaryDark: '#B7950B',
-    secondary: '#800020', // rap-burgundy
+    secondary: '#800020', // rap-burgundy - matches current site
     secondaryLight: '#A0002A',
     secondaryDark: '#600018',
     accent: '#4CAF50', // rap-forest
     accentLight: '#66BB6A',
     accentDark: '#388E3C',
-    background: '#0D0D0D', // rap-carbon
-    backgroundLight: '#1A1A1A',
+    background: '#0D0D0D', // rap-carbon - matches current site
+    backgroundLight: '#1A1A1A', // rap-carbon-light
     backgroundDark: '#000000',
     surface: '#2A2A2A',
-    text: '#E5E4E2', // rap-platinum
+    text: '#E5E4E2', // rap-platinum - matches current site
     textLight: '#FFFFFF',
-    textMuted: '#848884', // rap-smoke
-    border: '#404040',
+    textMuted: '#848884', // rap-smoke - matches current site
+    border: '#D4AF37', // Use primary gold for borders to match current site
     success: '#4CAF50',
     warning: '#FF9800',
     error: '#F44336',
   },
   fonts: {
-    heading: 'Mogra, cursive',
-    body: 'Merienda, serif', // Changed from Kaushan Script to match site usage
+    heading: 'Mogra, cursive', // Matches current site usage
+    body: 'Merienda, serif', // Matches current site usage
     display: 'Ceviche One, cursive',
     code: 'JetBrains Mono, monospace',
   },

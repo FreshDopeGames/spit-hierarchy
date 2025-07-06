@@ -1,11 +1,15 @@
 
 import React from "react";
+import AdminTabHeader from "../AdminTabHeader";
+import { PenTool } from "lucide-react";
 
 const BlogManagementHeader = () => {
   return (
-    <div className="flex justify-between items-center">
-      <h2 className="text-3xl font-mogra text-rap-gold">Blog Management</h2>
-    </div>
+    <AdminTabHeader 
+      title="Blog Management" 
+      icon={PenTool}
+      description="Create and manage blog posts and categories"
+    />
   );
 };
 
