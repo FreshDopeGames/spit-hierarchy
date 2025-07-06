@@ -6,9 +6,9 @@ import VotingTrends from "./VotingTrends";
 import TopVoters from "./TopVoters";
 
 const UserVotingDashboard = () => {
-  const { profile, isLoading } = useUserProfile();
+  const { userProfile, loading } = useUserProfile();
 
-  if (isLoading) {
+  if (loading) {
     return (
       <div className="space-y-4 sm:space-y-6">
         <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
@@ -26,7 +26,14 @@ const UserVotingDashboard = () => {
     );
   }
 
-  const memberStats = profile?.member_stats;
+  // Note: Since userProfile doesn't have member_stats, we'll need to get this data differently
+  // For now, showing placeholder values until the proper data structure is available
+  const memberStats = {
+    total_votes: 0,
+    ranking_lists_created: 0,
+    consecutive_voting_days: 0,
+    total_upvotes: 0
+  };
 
   return (
     <div className="space-y-4 sm:space-y-6">

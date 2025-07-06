@@ -12,7 +12,7 @@ import { Trophy, Award, Target } from "lucide-react";
 
 const UserAchievements = () => {
   const { achievements, getEarnedAchievements, getTotalPoints, isLoading } = useAchievements();
-  const [viewMode, setViewMode] = useState<'cards' | 'table' | 'gallery'>('cards');
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
 
   if (isLoading) {
     return (
@@ -42,9 +42,11 @@ const UserAchievements = () => {
 
       {/* Achievement Stats */}
       <AchievementStatsCards 
-        earnedCount={earnedAchievements.length}
-        totalCount={achievements.length}
-        totalPoints={totalPoints}
+        stats={{
+          earnedCount: earnedAchievements.length,
+          totalCount: achievements.length,
+          totalPoints: totalPoints
+        }}
       />
 
       {/* View Mode Selector */}
@@ -73,13 +75,9 @@ const UserAchievements = () => {
           {viewMode === 'table' && (
             <AchievementTable achievements={achievements} showProgress={true} />
           )}
-
-          {viewMode === 'gallery' && (
-            <AchievementGallery achievements={achievements} />
-          )}
         </>
       ) : (
-        <AchievementEmptyState />
+        <AchievementEmptyState type="earned" />
       )}
     </div>
   );
