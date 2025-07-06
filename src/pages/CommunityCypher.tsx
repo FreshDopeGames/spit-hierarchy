@@ -9,6 +9,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import CommentItem from "@/components/CommentItem";
+import ResponsiveInstructions from "@/components/ResponsiveInstructions";
 import { useAuth } from "@/hooks/useAuth";
 import { useCypherComments } from "@/hooks/useCypherComments";
 
@@ -107,10 +108,17 @@ const CommunityCypher = () => {
             {/* Comment Input - Only for authenticated users */}
             {user ? (
               <div className="bg-black/50 border border-yellow-400/30 rounded-lg p-4 mb-6">
+                <ResponsiveInstructions />
                 <Textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥"
+                  placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥
+
+Example:
+Started from the bottom now I'm here
+Every single bar that I drop is sincere
+Building up my legacy year after year
+Making sure my message is crystal clear"
                   className="w-full bg-transparent text-yellow-400 placeholder-yellow-400/60 border-none resize-none focus:outline-none font-merienda min-h-32"
                   maxLength={maxCharacters}
                 />

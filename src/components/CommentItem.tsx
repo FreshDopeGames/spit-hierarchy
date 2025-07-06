@@ -69,7 +69,7 @@ const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth 
                 {formatTimeAgo(comment.created_at)}
               </span>
             </div>
-            <p className="text-rap-platinum font-merienda mb-3">
+            <p className="text-rap-platinum font-merienda mb-3 whitespace-pre-wrap">
               {comment.comment_text}
             </p>
             <div className="flex items-center gap-4">

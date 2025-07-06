@@ -6,6 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/hooks/useAuth";
 import { useComments } from "@/hooks/useComments";
 import CommentItem from "./CommentItem";
+import ResponsiveInstructions from "./ResponsiveInstructions";
 
 interface CommentBubbleProps {
   contentType: "rapper" | "blog" | "ranking";
@@ -121,6 +122,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                 <div className="space-y-4">
                   {/* Comment Input */}
                   <div className="bg-rap-carbon/50 border border-rap-gold/30 rounded-lg p-4">
+                    <ResponsiveInstructions className="text-rap-gold/80 mb-2" />
                     <textarea
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
