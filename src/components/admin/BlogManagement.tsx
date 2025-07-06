@@ -7,6 +7,31 @@ import BlogCategoriesTab from "./blog/BlogCategoriesTab";
 import AdminTabHeader from "./AdminTabHeader";
 
 const BlogManagement = () => {
+  const [selectedPost, setSelectedPost] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [showPostDialog, setShowPostDialog] = useState(false);
+  const [showCategoryDialog, setShowCategoryDialog] = useState(false);
+
+  const handleEditPost = (post: any) => {
+    setSelectedPost(post);
+    setShowPostDialog(true);
+  };
+
+  const handleNewPost = () => {
+    setSelectedPost(null);
+    setShowPostDialog(true);
+  };
+
+  const handleEditCategory = (category: any) => {
+    setSelectedCategory(category);
+    setShowCategoryDialog(true);
+  };
+
+  const handleNewCategory = () => {
+    setSelectedCategory(null);
+    setShowCategoryDialog(true);
+  };
+
   return (
     <div className="space-y-6">
       <AdminTabHeader 
@@ -32,11 +57,17 @@ const BlogManagement = () => {
         </TabsList>
 
         <TabsContent value="posts">
-          <BlogPostsTab />
+          <BlogPostsTab 
+            onEditPost={handleEditPost}
+            onNewPost={handleNewPost}
+          />
         </TabsContent>
 
         <TabsContent value="categories">
-          <BlogCategoriesTab />
+          <BlogCategoriesTab 
+            onEditCategory={handleEditCategory}
+            onNewCategory={handleNewCategory}
+          />
         </TabsContent>
       </Tabs>
     </div>

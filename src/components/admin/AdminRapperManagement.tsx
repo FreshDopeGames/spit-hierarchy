@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,24 +10,29 @@ import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
 import AdminRapperPagination from "./AdminRapperPagination";
 import AdminTabHeader from "./AdminTabHeader";
+import { Tables } from "@/integrations/supabase/types";
+
+type Rapper = Tables<"rappers">;
 
 const ITEMS_PER_PAGE = 20;
 
 const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
+  const [dialogOpen, setDialogOpen] = useState(false);
 
-  const { data: rappers, isLoading, refetch, isFetching } = useQuery(
-    ["rappers", currentPage, searchTerm],
-    async () => {
+  const { data: rappers, isLoading, refetch, isFetching } = useQuery({
+    queryKey: ["rappers", currentPage, searchTerm],
+    queryFn: async () => {
       let query = supabase
-        .from("profiles")
+        .from("rappers")
         .select("*", { count: "exact" })
         .order("created_at", { ascending: false })
         .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
 
       if (searchTerm) {
-        query = query.ilike("username", `%${searchTerm}%`);
+        query = query.ilike("name", `%${searchTerm}%`);
       }
 
       const { data, error, count } = await query;
@@ -37,8 +43,8 @@ const AdminRapperManagement = () => {
 
       return { data, count };
     },
-    { keepPreviousData: true }
-  );
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
 
   useEffect(() => {
     refetch();
@@ -56,6 +62,27 @@ const AdminRapperManagement = () => {
     setCurrentPage(1); // Reset to first page on search
   };
 
+  const handleEdit = (rapper: Rapper) => {
+    setSelectedRapper(rapper);
+    setDialogOpen(true);
+  };
+
+  const handleDelete = (id: string) => {
+    // TODO: Implement delete functionality
+    console.log("Delete rapper:", id);
+  };
+
+  const handleDialogSuccess = () => {
+    refetch();
+    setSelectedRapper(null);
+    setDialogOpen(false);
+  };
+
+  const handleNewRapper = () => {
+    setSelectedRapper(null);
+    setDialogOpen(true);
+  };
+
   return (
     <div className="space-y-6">
       <AdminTabHeader 
@@ -63,7 +90,12 @@ const AdminRapperManagement = () => {
         icon={Users}
         description="Add, edit, and manage rapper profiles and information"
       >
-        <AdminRapperDialog />
+        <button
+          onClick={handleNewRapper}
+          className="bg-[var(--theme-primary)] text-[var(--theme-background)] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+        >
+          Add New Rapper
+        </button>
       </AdminTabHeader>
 
       <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
@@ -75,7 +107,7 @@ const AdminRapperManagement = () => {
             <Input
               type="search"
               id="search"
-              placeholder="Enter rapper username..."
+              placeholder="Enter rapper name..."
               value={searchTerm}
               onChange={handleSearchChange}
               className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]"
@@ -87,7 +119,12 @@ const AdminRapperManagement = () => {
               <div className="text-[var(--theme-text)]">Loading rappers...</div>
             </div>
           ) : (
-            <AdminRapperTable rappers={rappers?.data || []} />
+            <AdminRapperTable 
+              rappers={rappers?.data || []} 
+              isLoading={isLoading}
+              onEdit={handleEdit}
+              onDelete={handleDelete}
+            />
           )}
         </CardContent>
       </Card>
@@ -95,7 +132,16 @@ const AdminRapperManagement = () => {
       <AdminRapperPagination
         currentPage={currentPage}
         totalPages={totalPages}
+        totalItems={totalItems}
+        itemsPerPage={ITEMS_PER_PAGE}
         onPageChange={handlePageChange}
+      />
+
+      <AdminRapperDialog
+        open={dialogOpen}
+        onOpenChange={setDialogOpen}
+        rapper={selectedRapper}
+        onSuccess={handleDialogSuccess}
       />
     </div>
   );
