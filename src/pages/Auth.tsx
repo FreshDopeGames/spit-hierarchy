@@ -5,7 +5,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import AuthHeader from "@/components/auth/AuthHeader";
-import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
+// SOCIAL_AUTH_RESTORATION_POINT: Uncomment the line below to restore social auth
+// import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import AuthForm from "@/components/auth/AuthForm";
 import AuthToggle from "@/components/auth/AuthToggle";
 
@@ -16,7 +17,8 @@ const Auth = () => {
   const [username, setUsername] = useState("");
   const [fullName, setFullName] = useState("");
   const [loading, setLoading] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<string | null>(null);
+  // SOCIAL_AUTH_RESTORATION_POINT: Uncomment the line below to restore social auth
+  // const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -38,6 +40,8 @@ const Auth = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  /* SOCIAL_AUTH_DISABLED - Social authentication function preserved for future restoration
+  // SOCIAL_AUTH_RESTORATION_POINT: Uncomment this function to restore social auth
   const handleSocialAuth = async (provider: 'google' | 'facebook' | 'twitter') => {
     setSocialLoading(provider);
     try {
@@ -56,6 +60,7 @@ const Auth = () => {
       setSocialLoading(null);
     }
   };
+  SOCIAL_AUTH_DISABLED */
 
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -112,6 +117,9 @@ const Auth = () => {
           <AuthHeader isLogin={isLogin} />
           
           <CardContent className="space-y-6">
+            {/* SOCIAL_AUTH_DISABLED - Social authentication buttons temporarily removed
+            SOCIAL_AUTH_RESTORATION_POINT: Uncomment the section below to restore social auth buttons
+            
             <SocialAuthButtons 
               socialLoading={socialLoading}
               onSocialAuth={handleSocialAuth}
@@ -124,6 +132,8 @@ const Auth = () => {
               </span>
               <div className="flex-grow border-t border-rap-smoke/50"></div>
             </div>
+            
+            SOCIAL_AUTH_DISABLED */}
 
             <AuthForm
               isLogin={isLogin}

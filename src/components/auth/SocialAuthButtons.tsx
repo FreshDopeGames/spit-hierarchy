@@ -1,4 +1,8 @@
 
+/* SOCIAL_AUTH_DISABLED - This component is temporarily disabled but preserved for future restoration
+   See docs/SOCIAL_AUTH_RESTORATION.md for re-integration instructions */
+
+/* 
 import { Button } from "@/components/ui/button";
 
 interface SocialAuthButtonsProps {
@@ -6,6 +10,7 @@ interface SocialAuthButtonsProps {
   onSocialAuth: (provider: 'google' | 'facebook' | 'twitter') => void;
 }
 
+// FUTURE_USE: This component structure is preserved for when social auth is re-enabled
 const SocialAuthButtons = ({ socialLoading, onSocialAuth }: SocialAuthButtonsProps) => {
   return (
     <div className="space-y-3">
@@ -64,3 +69,17 @@ const SocialAuthButtons = ({ socialLoading, onSocialAuth }: SocialAuthButtonsPro
 };
 
 export default SocialAuthButtons;
+SOCIAL_AUTH_DISABLED */
+
+// FUTURE_USE: SocialAuthButtonsProps interface preserved for restoration
+export interface SocialAuthButtonsProps {
+  socialLoading: string | null;
+  onSocialAuth: (provider: 'google' | 'facebook' | 'twitter') => void;
+}
+
+// Temporary placeholder component - remove this when restoring social auth
+const SocialAuthButtonsDisabled = () => {
+  return null;
+};
+
+export default SocialAuthButtonsDisabled;
