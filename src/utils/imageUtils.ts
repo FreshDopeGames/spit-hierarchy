@@ -133,10 +133,10 @@ const applySharpeningFilter = (imageData: ImageData): ImageData => {
 
 // Premium quality settings optimized for avatar sharpness
 const getPremiumQuality = (size: number): number => {
-  if (size <= 64) return 0.98;       // Maximum quality for thumbnails
-  if (size <= 128) return 0.95;     // Very high quality for small images
-  if (size <= 256) return 0.92;     // High quality for medium images
-  return 0.88;                      // Good quality for large images
+  if (size <= 128) return 0.98;     // Maximum quality for small sizes
+  if (size <= 256) return 0.95;    // Very high quality for medium images
+  if (size <= 400) return 0.92;    // High quality for large images
+  return 0.88;                     // Good quality for xlarge images
 };
 
 // User avatar sizes - optimized progression for better quality
@@ -144,10 +144,10 @@ export const generateAvatarSizes = async (originalBlob: Blob) => {
   console.log('Generating premium avatar sizes from blob:', originalBlob.size, 'bytes');
   
   const sizes = [
-    { name: 'thumb', size: 64 },    // Increased from 32 for better quality
-    { name: 'medium', size: 128 },  // Doubled from 64 for sharper medium
-    { name: 'large', size: 256 },   // Doubled from 128 for crisp large
-    { name: 'xlarge', size: 400 }   // Increased from 140 for premium quality
+    { name: 'thumb', size: 128 },   // Increased from 64 for crisp small displays
+    { name: 'medium', size: 256 },  // Doubled from 128 for sharper medium
+    { name: 'large', size: 400 },   // Increased from 256 for crisp large
+    { name: 'xlarge', size: 600 }   // Increased from 400 for premium quality
   ];
 
   const resizedImages = [];

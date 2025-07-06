@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,7 +40,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     // If it's already a full URL, return as is
     if (baseUrl.startsWith('http')) return baseUrl;
 
-    // Construct the thumb size URL for sidebar
+    // Construct the thumb size URL for sidebar (128px for crisp quality)
     return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/thumb.jpg`;
   };
 
@@ -124,7 +125,11 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                 <Link to="/profile" onClick={() => handleNavClick('/profile')}>
                   <div className="flex items-center space-x-3 p-3 hover:bg-rap-gold/20 rounded-lg transition-colors cursor-pointer">
                     <Avatar className="w-8 h-8 border-2 border-rap-gold/50">
-                      <AvatarImage src={avatarUrl} alt={displayName || 'User'} />
+                      <AvatarImage 
+                        src={avatarUrl} 
+                        alt={displayName || 'User'}
+                        style={{ imageRendering: 'crisp-edges' }}
+                      />
                       <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
                         <User className="w-4 h-4" />
                       </AvatarFallback>

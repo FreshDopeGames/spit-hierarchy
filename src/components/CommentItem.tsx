@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Mic, Reply, Edit2, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import SmallAvatar from "./avatar/SmallAvatar";
 
 interface Comment {
   id: string;
@@ -36,12 +37,6 @@ const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth 
   const isLiked = comment.comment_likes.some(like => like.user_id === currentUserId);
   const likeCount = comment.comment_likes.length;
 
-  const getAvatarUrl = (baseUrl?: string | null) => {
-    if (!baseUrl) return undefined;
-    if (baseUrl.startsWith('http')) return baseUrl;
-    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/thumb.jpg`;
-  };
-
   const handleReplySubmit = () => {
     if (replyText.trim()) {
       onReply(comment.id, replyText);
@@ -62,17 +57,11 @@ const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth 
     <div className={`${depth > 0 ? 'ml-8 border-l border-rap-gold/30 pl-4' : ''}`}>
       <div className="bg-rap-carbon/30 border border-rap-gold/20 rounded-lg p-4 mb-4">
         <div className="flex items-start gap-3">
-          <div className="w-8 h-8 bg-rap-gold rounded-full flex items-center justify-center text-black text-sm font-bold">
-            {comment.profiles.avatar_url ? (
-              <img 
-                src={getAvatarUrl(comment.profiles.avatar_url)} 
-                alt={comment.profiles.username}
-                className="w-full h-full rounded-full object-cover"
-              />
-            ) : (
-              comment.profiles.username.charAt(0).toUpperCase()
-            )}
-          </div>
+          <SmallAvatar 
+            avatarUrl={comment.profiles.avatar_url} 
+            username={comment.profiles.username}
+            size="sm"
+          />
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-1">
               <span className="text-rap-gold font-mogra">{comment.profiles.username}</span>

@@ -4,10 +4,10 @@ const PLACEHOLDER_BASE_URL = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v
 
 // High-quality placeholder images with optimal sizing
 export const PLACEHOLDER_IMAGES = {
-  thumb: `${PLACEHOLDER_BASE_URL}/placeholder-thumb-hq.jpg`, // 128x128, ~8-12KB
+  thumb: `${PLACEHOLDER_BASE_URL}/placeholder-thumb-hq.jpg`, // 128x128, ~12-18KB
   medium: `${PLACEHOLDER_BASE_URL}/placeholder-medium-hq.jpg`, // 256x256, ~15-25KB
-  large: `${PLACEHOLDER_BASE_URL}/placeholder-large-hq.jpg`, // 512x512, ~30-50KB
-  xlarge: `${PLACEHOLDER_BASE_URL}/placeholder-xlarge-hq.jpg`, // 800x800, ~50-80KB
+  large: `${PLACEHOLDER_BASE_URL}/placeholder-large-hq.jpg`, // 400x400, ~25-40KB
+  xlarge: `${PLACEHOLDER_BASE_URL}/placeholder-xlarge-hq.jpg`, // 600x600, ~40-60KB
   original: `${PLACEHOLDER_BASE_URL}/Rapper_Placeholder_01.png` // Fallback to current
 };
 
