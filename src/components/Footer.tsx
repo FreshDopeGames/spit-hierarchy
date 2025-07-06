@@ -64,12 +64,12 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/community-cypher" 
+                  to="/about" 
                   className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
                   onClick={() => window.scrollTo(0, 0)}
                 >
-                  <CypherIcon className="w-4 h-4 mr-2" />
-                  Community Cypher
+                  <Info className="w-4 h-4 mr-2" />
+                  About
                 </Link>
               </li>
             </ul>
@@ -81,20 +81,21 @@ const Footer = () => {
             <ul className="space-y-2">
               <li>
                 <Link 
+                  to="/community-cypher" 
+                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  <CypherIcon className="w-4 h-4 mr-2" />
+                  Community Cypher
+                </Link>
+              </li>
+              <li>
+                <Link 
                   to="/auth" 
                   className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Join Spit Hierarchy
-                </Link>
-              </li>
-              <li>
-                <Link 
-                  to="/community-cypher" 
-                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
-                  onClick={() => window.scrollTo(0, 0)}
-                >
-                  Drop Bars
                 </Link>
               </li>
               <li>
@@ -113,16 +114,6 @@ const Footer = () => {
           <div>
             <h3 className="text-rap-gold font-mogra text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
-              <li>
-                <Link 
-                  to="/about" 
-                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
-                  onClick={() => window.scrollTo(0, 0)}
-                >
-                  <Info className="w-4 h-4 mr-2" />
-                  About
-                </Link>
-              </li>
               <li>
                 <Link 
                   to="/privacy" 
