@@ -2,8 +2,6 @@
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { TrendingUp, Vote, Trophy, Calendar } from "lucide-react";
-import VotingTrends from "./VotingTrends";
-import TopVoters from "./TopVoters";
 
 const UserVotingDashboard = () => {
   const { userProfile, loading } = useUserProfile();
@@ -20,7 +18,6 @@ const UserVotingDashboard = () => {
               <div key={i} className="h-24 bg-rap-carbon/50 rounded" />
             ))}
           </div>
-          <div className="h-64 bg-rap-carbon/50 rounded" />
         </div>
       </div>
     );
@@ -91,12 +88,6 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
       </div>
-
-      {/* Voting Trends Chart */}
-      <VotingTrends />
-
-      {/* Top Voters Leaderboard */}
-      <TopVoters />
     </div>
   );
 };
