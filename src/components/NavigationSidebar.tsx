@@ -5,7 +5,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar, PenTool, Pen, MessageSquare } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
@@ -64,6 +64,9 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     window.scrollTo(0, 0);
   };
 
+  // Get Community Cypher icon with priority: PenTool > Pen > MessageSquare
+  const CypherIcon = PenTool || Pen || MessageSquare;
+
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
@@ -110,6 +113,13 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
                 <Calendar className="w-4 h-4 mr-3" />
                 Slick Talk
+              </Button>
+            </Link>
+
+            <Link to="/community-cypher" onClick={() => handleNavClick('/community-cypher')}>
+              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+                <CypherIcon className="w-4 h-4 mr-3" />
+                Community Cypher
               </Button>
             </Link>
 

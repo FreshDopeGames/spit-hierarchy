@@ -3,10 +3,15 @@
 import { validateFileSecurely, SecurityValidationOptions } from './enhancedSecurity';
 import { quickImageValidation } from './imageContentValidation';
 
-// Simple profanity filter - you can enhance this with external APIs
+// Enhanced profanity filter with additional variations
 const PROFANITY_WORDS = [
-  // Add your list of inappropriate words here
-  'badword1', 'badword2', 'inappropriate', 'offensive'
+  // Basic inappropriate words
+  'badword1', 'badword2', 'inappropriate', 'offensive',
+  
+  // Racial slurs and variations - Community Cypher specific filtering
+  'nigger', 'nigga', 'n1gger', 'n1gga', 'ni99er', 'ni99a', 'ni66er', 'ni66a',
+  'nibber', 'nibba', 'nig9er', 'nig6er', 'nig', 'n1g', 'ni9', 'ni6',
+  
   // Note: This is a basic example - consider using services like:
   // - Perspective API by Google
   // - Azure Content Moderator
@@ -32,7 +37,7 @@ export const filterProfanity = (text: string): string => {
   return filteredText;
 };
 
-export const validateContent = (content: string): { isValid: boolean; message?: string } => {
+export const validateContent = (content: string, maxLength: number = 1000): { isValid: boolean; message?: string } => {
   if (!content.trim()) {
     return { isValid: false, message: "Content cannot be empty" };
   }
@@ -41,11 +46,16 @@ export const validateContent = (content: string): { isValid: boolean; message?: 
     return { isValid: false, message: "Content contains inappropriate language" };
   }
   
-  if (content.length > 1000) {
-    return { isValid: false, message: "Content is too long (max 1000 characters)" };
+  if (content.length > maxLength) {
+    return { isValid: false, message: `Content is too long (max ${maxLength} characters)` };
   }
   
   return { isValid: true };
+};
+
+// Community Cypher specific validation with higher character limit
+export const validateCypherContent = (content: string): { isValid: boolean; message?: string } => {
+  return validateContent(content, 2000);
 };
 
 // Basic file validation (kept for backward compatibility)
