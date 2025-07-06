@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
@@ -40,10 +40,15 @@ export const useCypherComments = ({
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newComment, setNewComment] = useState("");
-  const [offset, setOffset] = useState(0);
 
-  // Fetch comments with time decay for top sorting
-  const { data: commentsData, isLoading, hasNextPage, fetchNextPage } = useQuery({
+  // Fetch comments with infinite query for pagination
+  const { 
+    data: commentsData, 
+    isLoading, 
+    hasNextPage, 
+    fetchNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
     queryKey: ["cypher-comments", sortBy, limit],
     queryFn: async ({ pageParam = 0 }) => {
       console.log('Fetching cypher comments with sort:', sortBy, 'offset:', pageParam);
@@ -101,11 +106,12 @@ export const useCypherComments = ({
     },
     getNextPageParam: (lastPage, pages) => {
       return lastPage.hasMore ? pages.length * limit : undefined;
-    }
+    },
+    initialPageParam: 0
   });
 
   const comments = commentsData?.pages.flatMap(page => page.comments) || [];
-  const hasMore = commentsData?.pages[commentsData.pages.length - 1]?.hasMore || false;
+  const hasMore = hasNextPage;
 
   // Create comment mutation with enhanced validation
   const createCommentMutation = useMutation({
@@ -187,7 +193,7 @@ export const useCypherComments = ({
   }, 0);
 
   const loadMore = () => {
-    if (hasMore) {
+    if (hasMore && !isFetchingNextPage) {
       fetchNextPage();
     }
   };
@@ -205,6 +211,7 @@ export const useCypherComments = ({
     user,
     hasMore,
     loadMore,
+    isLoadingMore: isFetchingNextPage,
     sortBy
   };
 };
