@@ -1,4 +1,3 @@
-
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -9,6 +8,7 @@ import { AchievementProvider } from "@/components/achievements/AchievementProvid
 import AuthGuard from "@/components/AuthGuard";
 import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
 import EmailConfirmationHandler from "@/components/auth/EmailConfirmationHandler";
+import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import UserProfile from "./pages/UserProfile";
@@ -72,6 +72,7 @@ function App() {
               <ContentSecurityPolicy />
               <EmailConfirmationHandler />
               <BrowserRouter>
+                <ScrollToTop />
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/auth" element={<Auth />} />

@@ -46,23 +46,29 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
   // Use rapper image if available and not empty, otherwise use optimized placeholder
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
   
-  // Add cache busting for better image refresh
-  const cacheBustingUrl = imageToDisplay.includes('?') 
-    ? `${imageToDisplay}&cb=${Date.now()}` 
-    : `${imageToDisplay}?cb=${Date.now()}`;
+  console.log('RapperAvatar loading:', {
+    rapperId: rapper.id,
+    rapperName: rapper.name,
+    size: imageSizeMap[size],
+    imageUrl,
+    imageToDisplay,
+    placeholderImage
+  });
   
   return (
     <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
       <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
         <img 
-          src={cacheBustingUrl}
+          src={imageToDisplay}
           alt={rapper.name} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           loading="lazy"
+          onLoad={() => console.log('Image loaded successfully:', imageToDisplay)}
           onError={(e) => {
-            // If cache-busted URL fails, try optimized placeholder
+            console.error('Image failed to load:', imageToDisplay);
             const target = e.target as HTMLImageElement;
             if (!target.src.includes(placeholderImage)) {
+              console.log('Falling back to placeholder:', placeholderImage);
               target.src = placeholderImage;
             }
           }}

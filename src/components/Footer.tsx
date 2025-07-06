@@ -36,6 +36,7 @@ const Footer = () => {
                 <Link 
                   to="/rankings" 
                   className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   <Trophy className="w-4 h-4 mr-2" />
                   Rankings
@@ -45,6 +46,7 @@ const Footer = () => {
                 <Link 
                   to="/all-rappers" 
                   className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   <Music className="w-4 h-4 mr-2" />
                   All Rappers
@@ -54,6 +56,7 @@ const Footer = () => {
                 <Link 
                   to="/blog" 
                   className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   <Calendar className="w-4 h-4 mr-2" />
                   Slick Talk
@@ -63,6 +66,7 @@ const Footer = () => {
                 <Link 
                   to="/community-cypher" 
                   className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   <CypherIcon className="w-4 h-4 mr-2" />
                   Community Cypher
@@ -79,6 +83,7 @@ const Footer = () => {
                 <Link 
                   to="/auth" 
                   className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   Join Spit Hierarchy
                 </Link>
@@ -87,6 +92,7 @@ const Footer = () => {
                 <Link 
                   to="/community-cypher" 
                   className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   Drop Bars
                 </Link>
@@ -95,6 +101,7 @@ const Footer = () => {
                 <Link 
                   to="/analytics" 
                   className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   Analytics
                 </Link>
@@ -110,6 +117,7 @@ const Footer = () => {
                 <Link 
                   to="/about" 
                   className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   <Info className="w-4 h-4 mr-2" />
                   About
@@ -119,6 +127,7 @@ const Footer = () => {
                 <Link 
                   to="/privacy" 
                   className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   Privacy Policy
                 </Link>
@@ -127,6 +136,7 @@ const Footer = () => {
                 <Link 
                   to="/terms" 
                   className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  onClick={() => window.scrollTo(0, 0)}
                 >
                   Terms of Use
                 </Link>

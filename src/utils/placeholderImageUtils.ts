@@ -2,12 +2,12 @@
 // Premium placeholder image utility for enhanced quality
 const PLACEHOLDER_BASE_URL = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images";
 
-// High-quality placeholder images with optimal sizing
+// High-quality placeholder images with optimal sizing - corrected URLs
 export const PLACEHOLDER_IMAGES = {
-  thumb: `${PLACEHOLDER_BASE_URL}/placeholder-thumb-hq.jpg`, // 128x128, ~12-18KB
-  medium: `${PLACEHOLDER_BASE_URL}/placeholder-medium-hq.jpg`, // 256x256, ~15-25KB
-  large: `${PLACEHOLDER_BASE_URL}/placeholder-large-hq.jpg`, // 400x400, ~25-40KB
-  xlarge: `${PLACEHOLDER_BASE_URL}/placeholder-xlarge-hq.jpg`, // 600x600, ~40-60KB
+  thumb: `${PLACEHOLDER_BASE_URL}/placeholder-thumb.jpg`, // Corrected filename
+  medium: `${PLACEHOLDER_BASE_URL}/placeholder-medium.jpg`, // Corrected filename
+  large: `${PLACEHOLDER_BASE_URL}/placeholder-large.jpg`, // Corrected filename
+  xlarge: `${PLACEHOLDER_BASE_URL}/placeholder-xlarge.jpg`, // Corrected filename
   original: `${PLACEHOLDER_BASE_URL}/Rapper_Placeholder_01.png` // Fallback to current
 };
 
@@ -23,8 +23,8 @@ export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'x
     case 'xlarge':
       return PLACEHOLDER_IMAGES.xlarge;
     default:
-      // For contexts where size isn't specified, use large as premium default
-      return PLACEHOLDER_IMAGES.large;
+      // For contexts where size isn't specified, use original as fallback
+      return PLACEHOLDER_IMAGES.original;
   }
 };
 
