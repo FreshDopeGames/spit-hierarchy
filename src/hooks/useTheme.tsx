@@ -1,38 +1,86 @@
 
 import { createContext, useContext, useEffect, useState, ReactNode } from 'react';
-import { ThemeConfig, getCurrentTheme, saveTheme, applyThemeToDOM } from '@/config/theme';
+import { ThemeConfig, getCurrentTheme, saveTheme, applyThemeToDOM, defaultTheme } from '@/config/theme';
 
 interface ThemeContextType {
   theme: ThemeConfig;
+  previewTheme: ThemeConfig | null;
+  isPreviewMode: boolean;
   updateTheme: (updates: Partial<ThemeConfig>) => void;
+  applyTheme: () => void;
   resetTheme: () => void;
+  enterPreviewMode: () => void;
+  exitPreviewMode: () => void;
+  hasUnsavedChanges: boolean;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider = ({ children }: { children: ReactNode }) => {
   const [theme, setTheme] = useState<ThemeConfig>(getCurrentTheme);
+  const [previewTheme, setPreviewTheme] = useState<ThemeConfig | null>(null);
+  const [isPreviewMode, setIsPreviewMode] = useState(false);
 
   useEffect(() => {
     // Apply theme to DOM on mount and when theme changes
-    applyThemeToDOM(theme);
-  }, [theme]);
+    applyThemeToDOM(previewTheme || theme);
+  }, [theme, previewTheme]);
 
   const updateTheme = (updates: Partial<ThemeConfig>) => {
-    const newTheme = { ...theme, ...updates };
-    setTheme(newTheme);
-    saveTheme(newTheme);
+    if (isPreviewMode) {
+      const newPreviewTheme = { ...(previewTheme || theme), ...updates };
+      setPreviewTheme(newPreviewTheme);
+    } else {
+      const newTheme = { ...theme, ...updates };
+      setPreviewTheme(newTheme);
+      setIsPreviewMode(true);
+    }
+  };
+
+  const applyTheme = () => {
+    if (previewTheme) {
+      setTheme(previewTheme);
+      saveTheme(previewTheme);
+      setPreviewTheme(null);
+      setIsPreviewMode(false);
+    }
   };
 
   const resetTheme = () => {
-    const defaultTheme = getCurrentTheme();
     setTheme(defaultTheme);
+    setPreviewTheme(null);
+    setIsPreviewMode(false);
     localStorage.removeItem('spit-hierarchy-theme');
     applyThemeToDOM(defaultTheme);
   };
 
+  const enterPreviewMode = () => {
+    if (!isPreviewMode) {
+      setPreviewTheme(theme);
+      setIsPreviewMode(true);
+    }
+  };
+
+  const exitPreviewMode = () => {
+    setPreviewTheme(null);
+    setIsPreviewMode(false);
+    applyThemeToDOM(theme);
+  };
+
+  const hasUnsavedChanges = isPreviewMode && previewTheme !== null;
+
   return (
-    <ThemeContext.Provider value={{ theme, updateTheme, resetTheme }}>
+    <ThemeContext.Provider value={{ 
+      theme: previewTheme || theme, 
+      previewTheme,
+      isPreviewMode,
+      updateTheme, 
+      applyTheme,
+      resetTheme,
+      enterPreviewMode,
+      exitPreviewMode,
+      hasUnsavedChanges
+    }}>
       {children}
     </ThemeContext.Provider>
   );

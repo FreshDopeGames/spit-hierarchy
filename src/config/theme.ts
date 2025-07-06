@@ -74,7 +74,7 @@ export const defaultTheme: ThemeConfig = {
   },
   fonts: {
     heading: 'Mogra, cursive',
-    body: 'Kaushan Script, cursive',
+    body: 'Merienda, serif', // Changed from Kaushan Script to match site usage
     display: 'Ceviche One, cursive',
     code: 'JetBrains Mono, monospace',
   },
@@ -118,19 +118,18 @@ export const getCurrentTheme = (): ThemeConfig => {
   return defaultTheme;
 };
 
-// Save theme to localStorage
+// Save theme to localStorage (no longer auto-applies)
 export const saveTheme = (theme: Partial<ThemeConfig>): void => {
   try {
     const currentTheme = getCurrentTheme();
     const newTheme = { ...currentTheme, ...theme };
     localStorage.setItem(THEME_STORAGE_KEY, JSON.stringify(newTheme));
-    applyThemeToDOM(newTheme);
   } catch (error) {
     console.error('Error saving theme to storage:', error);
   }
 };
 
-// Apply theme to DOM as CSS custom properties
+// Apply theme to DOM as CSS custom properties (now separate from saving)
 export const applyThemeToDOM = (theme: ThemeConfig): void => {
   if (typeof document === 'undefined') return;
   

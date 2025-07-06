@@ -13,12 +13,15 @@ interface TypographyTabProps {
 const TypographyTab = ({ theme, onFontChange }: TypographyTabProps) => {
   const fontOptions = [
     { value: 'Mogra, cursive', label: 'Mogra (Display)' },
+    { value: 'Merienda, serif', label: 'Merienda (Body/Serif)' },
     { value: 'Kaushan Script, cursive', label: 'Kaushan Script (Script)' },
     { value: 'Ceviche One, cursive', label: 'Ceviche One (Fun)' },
     { value: 'Inter, sans-serif', label: 'Inter (Clean)' },
     { value: 'Roboto, sans-serif', label: 'Roboto (Modern)' },
     { value: 'Playfair Display, serif', label: 'Playfair Display (Elegant)' },
     { value: 'JetBrains Mono, monospace', label: 'JetBrains Mono (Code)' },
+    { value: 'Arial, sans-serif', label: 'Arial (System)' },
+    { value: 'Georgia, serif', label: 'Georgia (System Serif)' },
   ];
 
   return (

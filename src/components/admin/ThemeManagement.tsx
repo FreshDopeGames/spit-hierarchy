@@ -1,3 +1,4 @@
+
 import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -7,12 +8,20 @@ import ColorPaletteTab from "./theme/ColorPaletteTab";
 import TypographyTab from "./theme/TypographyTab";
 import LayoutTab from "./theme/LayoutTab";
 import ThemePreview from "./theme/ThemePreview";
+
 const ThemeManagement = () => {
   const {
     theme,
+    previewTheme,
+    isPreviewMode,
+    hasUnsavedChanges,
     updateTheme,
-    resetTheme
+    applyTheme,
+    resetTheme,
+    enterPreviewMode,
+    exitPreviewMode
   } = useTheme();
+
   const handleColorChange = (colorKey: string, value: string) => {
     updateTheme({
       colors: {
@@ -21,6 +30,7 @@ const ThemeManagement = () => {
       }
     });
   };
+
   const handleFontChange = (fontKey: string, value: string) => {
     updateTheme({
       fonts: {
@@ -29,8 +39,20 @@ const ThemeManagement = () => {
       }
     });
   };
-  return <div className="space-y-6">
-      <ThemeManagementHeader theme={theme} updateTheme={updateTheme} resetTheme={resetTheme} />
+
+  return (
+    <div className="space-y-6">
+      <ThemeManagementHeader 
+        theme={theme}
+        previewTheme={previewTheme}
+        isPreviewMode={isPreviewMode}
+        hasUnsavedChanges={hasUnsavedChanges}
+        updateTheme={updateTheme}
+        applyTheme={applyTheme}
+        resetTheme={resetTheme}
+        enterPreviewMode={enterPreviewMode}
+        exitPreviewMode={exitPreviewMode}
+      />
 
       <Tabs defaultValue="colors" className="space-y-4">
         <TabsList className="bg-rap-carbon-light border border-rap-gold/30 w-full grid grid-cols-3 p-2 gap-1 rounded-lg py-0 px-[10px]">
@@ -62,6 +84,8 @@ const ThemeManagement = () => {
       </Tabs>
 
       <ThemePreview />
-    </div>;
+    </div>
+  );
 };
+
 export default ThemeManagement;
