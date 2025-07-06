@@ -101,7 +101,7 @@ const AdminRapperManagement = () => {
       <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
         <CardContent className="p-6">
           <div className="mb-4">
-            <Label htmlFor="search" className="text-[var(--theme-text-muted)]">
+            <Label htmlFor="search" className="text-[var(--theme-text)]">
               Search Rappers:
             </Label>
             <Input

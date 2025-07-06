@@ -19,7 +19,7 @@ const AdminTabHeader = ({ title, icon: Icon, description, children }: AdminTabHe
             {title}
           </h2>
           {description && (
-            <p className="text-[var(--theme-text-muted)] font-[var(--theme-font-body)] text-sm mt-1">
+            <p className="text-[var(--theme-text)] font-[var(--theme-font-body)] text-sm mt-1">
               {description}
             </p>
           )}

@@ -66,7 +66,7 @@ export const defaultTheme: ThemeConfig = {
     surface: '#2A2A2A',
     text: '#E5E4E2', // rap-platinum - matches current site
     textLight: '#FFFFFF',
-    textMuted: '#848884', // rap-smoke - matches current site
+    textMuted: '#C0C0C0', // Changed from #848884 to bright silver
     border: '#D4AF37', // Use primary gold for borders to match current site
     success: '#4CAF50',
     warning: '#FF9800',
