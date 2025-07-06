@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { Star, TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 interface RankingItemContentProps {
   item: RankingItemWithDelta;
@@ -67,29 +68,39 @@ const RankingItemContent = ({
 
   const textSizes = getTextSizes();
 
-  // Placeholder image from Supabase Storage
-  const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
+  // Use optimized placeholder system
+  const placeholderImage = getOptimizedPlaceholder('medium');
   
-  // Use rapper image if available and not empty, otherwise use placeholder
-  const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : PLACEHOLDER_IMAGE;
+  // Use rapper image if available and not empty, otherwise use optimized placeholder
+  const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : placeholderImage;
 
   return (
     <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
       {/* Rapper Image - Always displayed with placeholder fallback */}
-      <Link to={`/rapper/${item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity`}>
+      <Link to={`/rapper/${item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity relative`}>
         <img 
           src={imageToDisplay}
-          alt={item.rapper?.name || "Rapper"}
+          alt=""
           className="w-full h-full object-cover"
           loading="lazy"
+          style={{ 
+            fontSize: '0px', // Hide alt text completely
+            color: 'transparent' // Make alt text invisible
+          }}
           onError={(e) => {
             // Fallback to placeholder if image fails to load
             const target = e.target as HTMLImageElement;
-            if (target.src !== PLACEHOLDER_IMAGE) {
-              target.src = PLACEHOLDER_IMAGE;
+            if (target.src !== placeholderImage) {
+              target.src = placeholderImage;
             }
           }}
         />
+        {/* Fallback content in case image completely fails */}
+        <div className="absolute inset-0 bg-rap-carbon-light/80 flex items-center justify-center opacity-0 transition-opacity">
+          <span className="text-rap-gold text-xs font-bold">
+            {item.rapper?.name?.charAt(0)?.toUpperCase() || '?'}
+          </span>
+        </div>
       </Link>
       
       {/* Main Content */}
