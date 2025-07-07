@@ -10,13 +10,17 @@ import AdminRapperDialog from "./AdminRapperDialog";
 import AdminRapperPagination from "./AdminRapperPagination";
 import AdminTabHeader from "./AdminTabHeader";
 import { Tables } from "@/integrations/supabase/types";
+
 type Rapper = Tables<"rappers">;
+
 const ITEMS_PER_PAGE = 20;
+
 const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+
   const {
     data: rappers,
     isLoading,
@@ -48,35 +52,44 @@ const AdminRapperManagement = () => {
     },
     staleTime: 5 * 60 * 1000 // 5 minutes
   });
+
   useEffect(() => {
     refetch();
   }, [currentPage, searchTerm, refetch]);
+
   const totalItems = rappers?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
   };
+
   const handleEdit = (rapper: Rapper) => {
     setSelectedRapper(rapper);
     setDialogOpen(true);
   };
+
   const handleDelete = (id: string) => {
     // TODO: Implement delete functionality
     console.log("Delete rapper:", id);
   };
+
   const handleDialogSuccess = () => {
     refetch();
     setSelectedRapper(null);
     setDialogOpen(false);
   };
+
   const handleNewRapper = () => {
     setSelectedRapper(null);
     setDialogOpen(true);
   };
+
   return <div className="space-y-6">
       <AdminTabHeader title="Rapper Management" icon={Users} description="Add, edit, and manage rapper profiles and information">
         <button onClick={handleNewRapper} className="bg-[var(--theme-primary)] text-[var(--theme-background)] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
@@ -87,7 +100,7 @@ const AdminRapperManagement = () => {
       <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
         <CardContent className="p-6">
           <div className="mb-4">
-            <Label htmlFor="search" className="text-[var(--theme-text-muted)]">
+            <Label htmlFor="search" className="text-rap-platinum font-bold">
               Search Rappers:
             </Label>
             <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] bg-rap-platinum" />
@@ -104,4 +117,5 @@ const AdminRapperManagement = () => {
       <AdminRapperDialog open={dialogOpen} onOpenChange={setDialogOpen} rapper={selectedRapper} onSuccess={handleDialogSuccess} />
     </div>;
 };
+
 export default AdminRapperManagement;
