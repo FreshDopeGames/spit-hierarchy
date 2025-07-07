@@ -1,6 +1,5 @@
 
 import React from "react";
-import AdUnit from "@/components/AdUnit";
 import RapperCard from "@/components/RapperCard";
 import LoadMoreButton from "@/components/LoadMoreButton";
 import { useRapperImages } from "@/hooks/useImageStyle";
@@ -35,31 +34,16 @@ const AllRappersGrid = ({
 
   return (
     <>
-      {/* Top ad placement */}
-      <AdUnit placement="grid-top" pageRoute="/all-rappers" />
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
-        {rappers.map((rapper, index) => {
-          // Show middle ad after every 20 rappers
-          const shouldShowMiddleAd = (index + 1) % 20 === 0 && index < rappers.length - 1;
-          
-          return (
-            <React.Fragment key={rapper.id}>
-              <RapperCard 
-                rapper={rapper} 
-                imageUrl={imageMap[rapper.id]} 
-                stats={statsMap[rapper.id]}
-                currentPage={currentPage}
-              />
-              
-              {shouldShowMiddleAd && (
-                <div className="col-span-full">
-                  <AdUnit placement="grid-middle" pageRoute="/all-rappers" />
-                </div>
-              )}
-            </React.Fragment>
-          );
-        })}
+        {rappers.map((rapper) => (
+          <RapperCard 
+            key={rapper.id}
+            rapper={rapper} 
+            imageUrl={imageMap[rapper.id]} 
+            stats={statsMap[rapper.id]}
+            currentPage={currentPage}
+          />
+        ))}
       </div>
 
       {/* Load More Button */}
@@ -70,9 +54,6 @@ const AllRappersGrid = ({
         total={total}
         currentCount={rappers.length}
       />
-
-      {/* Bottom ad placement */}
-      <AdUnit placement="grid-bottom" pageRoute="/all-rappers" />
     </>
   );
 };

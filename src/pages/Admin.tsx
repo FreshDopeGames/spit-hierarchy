@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
@@ -8,7 +9,6 @@ import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement"
 import BlogManagement from "@/components/admin/BlogManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
 import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement";
-import AdManagement from "@/components/admin/AdManagement";
 
 const Admin = () => {
   const { user } = useAuth();
@@ -31,13 +31,12 @@ const Admin = () => {
         </h1>
 
         <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 bg-rap-carbon-light/50 gap-1 h-auto p-2">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 bg-rap-carbon-light/50 gap-1 h-auto p-2">
             <TabsTrigger value="rappers" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Rappers</TabsTrigger>
             <TabsTrigger value="rankings" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Rankings</TabsTrigger>
             <TabsTrigger value="blog" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Blog</TabsTrigger>
             <TabsTrigger value="headers" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Headers</TabsTrigger>
             <TabsTrigger value="theme" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Theme</TabsTrigger>
-            <TabsTrigger value="ads" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Ads</TabsTrigger>
           </TabsList>
 
           <TabsContent value="rappers">
@@ -58,10 +57,6 @@ const Admin = () => {
 
           <TabsContent value="theme">
             <ThemeManagement />
-          </TabsContent>
-
-          <TabsContent value="ads">
-            <AdManagement />
           </TabsContent>
         </Tabs>
       </main>

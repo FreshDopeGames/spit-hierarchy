@@ -10,7 +10,6 @@ import TopRappersGrid from "@/components/TopRappersGrid";
 import StatsOverview from "@/components/StatsOverview";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
-import AdUnit from "@/components/AdUnit";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
@@ -117,14 +116,8 @@ const Index = () => {
             {/* Hero Section */}
             <HeroSection />
 
-            {/* Ad placement after hero */}
-            <AdUnit placement="hero-bottom" pageRoute="/" />
-
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
-
-            {/* Ad placement between sections */}
-            <AdUnit placement="between-sections" pageRoute="/" />
 
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
