@@ -260,11 +260,11 @@
   color: hsl(210 60% 15%) !important;
 }
 
-/* Fix input field text visibility */
-input, textarea, select {
+/* Fix input field text visibility - only apply to inputs and selects, not textareas */
+input, select {
   color: hsl(0 0% 5%) !important; /* Dark text */
 }
 
-input::placeholder, textarea::placeholder {
+input::placeholder {
   color: hsl(0 0% 40%) !important; /* Darker placeholder text */
 }
