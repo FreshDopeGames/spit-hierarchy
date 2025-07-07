@@ -42,7 +42,7 @@ const AllRappersFilters = ({
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-silver w-4 h-4" />
-          <Input placeholder="Search the culture..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-10 bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street" />
+          <Input placeholder="Search the culture..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-10 bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street !text-rap-platinum" />
           {searchInput !== searchTerm && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-rap-silver animate-spin" />
             </div>}
@@ -50,7 +50,7 @@ const AllRappersFilters = ({
 
         {/* Location Filter (Debounced now) */}
         <div className="relative">
-          <Input placeholder="Filter by city/state..." value={locationInput} onChange={e => onLocationInput(e.target.value)} className="bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street" />
+          <Input placeholder="Filter by city/state..." value={locationInput} onChange={e => onLocationInput(e.target.value)} className="bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 font-street !text-rap-platinum" />
           {locationInput !== locationFilter && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-rap-silver animate-spin" />
             </div>}
