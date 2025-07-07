@@ -115,7 +115,7 @@ const CommunityCypher = () => {
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
                   placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥"
-                  className="w-full bg-transparent text-yellow-400 placeholder-yellow-400/60 border-none resize-none focus:outline-none font-merienda min-h-32"
+                  className="w-full bg-transparent text-rap-platinum placeholder-yellow-400/60 border-none resize-none focus:outline-none font-merienda min-h-32"
                   maxLength={maxCharacters}
                 />
                 
