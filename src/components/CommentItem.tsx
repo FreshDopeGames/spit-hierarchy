@@ -1,9 +1,21 @@
 
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Mic, Reply, Edit2, Trash2 } from "lucide-react";
+import { Mic, Reply, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import SmallAvatar from "./avatar/SmallAvatar";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Comment {
   id: string;
@@ -25,14 +37,26 @@ interface CommentItemProps {
   comment: Comment;
   onReply: (commentId: string, text: string) => void;
   onLike: (commentId: string) => void;
+  onDelete?: (commentId: string) => void;
   currentUserId?: string;
   isLiking: boolean;
+  isDeletingComment?: boolean;
   depth?: number;
 }
 
-const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth = 0 }: CommentItemProps) => {
+const CommentItem = ({ 
+  comment, 
+  onReply, 
+  onLike, 
+  onDelete, 
+  currentUserId, 
+  isLiking, 
+  isDeletingComment = false,
+  depth = 0 
+}: CommentItemProps) => {
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState("");
+  const { isAdmin } = useSecurityContext();
 
   const isLiked = comment.comment_likes.some(like => like.user_id === currentUserId);
   const likeCount = comment.comment_likes.length;
@@ -50,6 +74,12 @@ const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth 
       return formatDistanceToNow(new Date(dateString), { addSuffix: true });
     } catch {
       return 'Unknown time';
+    }
+  };
+
+  const handleDelete = () => {
+    if (onDelete) {
+      onDelete(comment.id);
     }
   };
 
@@ -97,6 +127,43 @@ const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth 
                   Reply
                 </Button>
               )}
+
+              {isAdmin && onDelete && (
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      disabled={isDeletingComment}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-400/20 h-auto p-1 font-merienda"
+                    >
+                      <Trash2 className="w-4 h-4 mr-1" />
+                      Delete
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent className="bg-rap-carbon border-rap-gold/50">
+                    <AlertDialogHeader>
+                      <AlertDialogTitle className="text-rap-gold font-mogra">
+                        Delete Comment
+                      </AlertDialogTitle>
+                      <AlertDialogDescription className="text-rap-platinum font-merienda">
+                        Are you sure you want to delete this comment? This action cannot be undone.
+                      </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel className="bg-rap-smoke text-rap-carbon hover:bg-rap-smoke/80">
+                        Cancel
+                      </AlertDialogCancel>
+                      <AlertDialogAction 
+                        onClick={handleDelete}
+                        className="bg-red-600 text-white hover:bg-red-700"
+                      >
+                        Delete
+                      </AlertDialogAction>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              )}
             </div>
 
             {/* Reply Form */}
@@ -142,8 +209,10 @@ const CommentItem = ({ comment, onReply, onLike, currentUserId, isLiking, depth 
               comment={reply}
               onReply={onReply}
               onLike={onLike}
+              onDelete={onDelete}
               currentUserId={currentUserId}
               isLiking={isLiking}
+              isDeletingComment={isDeletingComment}
               depth={depth + 1}
             />
           ))}

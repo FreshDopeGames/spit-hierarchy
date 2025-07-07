@@ -149,6 +149,27 @@ export const useCypherComments = ({
     }
   });
 
+  // Delete comment mutation (admin only)
+  const deleteCommentMutation = useMutation({
+    mutationFn: async (commentId: string) => {
+      if (!user) throw new Error("Must be logged in to delete comments");
+
+      const { error } = await supabase
+        .from("comments")
+        .delete()
+        .eq("id", commentId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["cypher-comments"] });
+      toast.success("Comment deleted successfully");
+    },
+    onError: (error) => {
+      toast.error(error.message || "Failed to delete comment");
+    }
+  });
+
   // Toggle like mutation
   const toggleLikeMutation = useMutation({
     mutationFn: async (commentId: string) => {
@@ -206,6 +227,8 @@ export const useCypherComments = ({
     setNewComment,
     createComment: createCommentMutation.mutate,
     isCreatingComment: createCommentMutation.isPending,
+    deleteComment: deleteCommentMutation.mutate,
+    isDeletingComment: deleteCommentMutation.isPending,
     toggleLike: toggleLikeMutation.mutate,
     isTogglingLike: toggleLikeMutation.isPending,
     user,

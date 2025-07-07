@@ -25,6 +25,8 @@ const CommunityCypher = () => {
     setNewComment,
     createComment,
     isCreatingComment,
+    deleteComment,
+    isDeletingComment,
     toggleLike,
     isTogglingLike,
     hasMore,
@@ -112,13 +114,7 @@ const CommunityCypher = () => {
                 <Textarea
                   value={newComment}
                   onChange={(e) => setNewComment(e.target.value)}
-                  placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥
-
-Example:
-Started from the bottom now I'm here
-Every single bar that I drop is sincere
-Building up my legacy year after year
-Making sure my message is crystal clear"
+                  placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥"
                   className="w-full bg-transparent text-yellow-400 placeholder-yellow-400/60 border-none resize-none focus:outline-none font-merienda min-h-32"
                   maxLength={maxCharacters}
                 />
@@ -177,8 +173,10 @@ Making sure my message is crystal clear"
                       comment={comment}
                       onReply={handleReply}
                       onLike={toggleLike}
+                      onDelete={deleteComment}
                       currentUserId={user?.id}
                       isLiking={isTogglingLike}
+                      isDeletingComment={isDeletingComment}
                     />
                   ))}
                   
