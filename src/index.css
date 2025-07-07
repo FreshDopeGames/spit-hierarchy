@@ -1,3 +1,4 @@
+
 @import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap');
 @tailwind base;
 @tailwind components;
@@ -6,19 +7,19 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 45 15% 90%;
+    --foreground: 0 0% 5%; /* Dark text for light backgrounds */
     --card: 0 0% 100%;
-    --card-foreground: 45 15% 90%;
+    --card-foreground: 0 0% 5%; /* Dark text for cards */
     --popover: 0 0% 100%;
-    --popover-foreground: 45 15% 90%;
+    --popover-foreground: 0 0% 5%; /* Dark text for popovers */
     --primary: 45 85% 55%;
     --primary-foreground: 0 0% 0%;
     --secondary: 0 0% 95%;
-    --secondary-foreground: 45 15% 90%;
+    --secondary-foreground: 0 0% 5%; /* Dark text for secondary elements */
     --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 75%;
+    --muted-foreground: 0 0% 40%; /* Darker muted text for better contrast */
     --accent: 0 0% 95%;
-    --accent-foreground: 45 15% 90%;
+    --accent-foreground: 0 0% 5%; /* Dark text for accent elements */
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
     --border: 45 85% 55%;
@@ -44,7 +45,7 @@
     --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 90%;
     --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 75%;
+    --muted-foreground: 0 0% 65%; /* Lighter muted text for dark backgrounds */
     --accent: 0 0% 15%;
     --accent-foreground: 0 0% 90%;
     --destructive: 0 84.2% 60.2%;
@@ -228,4 +229,42 @@
 [data-sonner-toast] object,
 [data-sonner-toast] embed {
   display: none !important;
+}
+
+/* Fix toast text visibility - ensure dark text on light backgrounds */
+[data-sonner-toast] {
+  color: hsl(0 0% 5%) !important; /* Dark text */
+}
+
+[data-sonner-toast][data-type="success"] {
+  background-color: hsl(120 60% 95%) !important;
+  border-color: hsl(120 60% 80%) !important;
+  color: hsl(120 60% 15%) !important;
+}
+
+[data-sonner-toast][data-type="error"] {
+  background-color: hsl(0 60% 95%) !important;
+  border-color: hsl(0 60% 80%) !important;
+  color: hsl(0 60% 15%) !important;
+}
+
+[data-sonner-toast][data-type="warning"] {
+  background-color: hsl(45 60% 95%) !important;
+  border-color: hsl(45 60% 80%) !important;
+  color: hsl(45 60% 15%) !important;
+}
+
+[data-sonner-toast][data-type="info"] {
+  background-color: hsl(210 60% 95%) !important;
+  border-color: hsl(210 60% 80%) !important;
+  color: hsl(210 60% 15%) !important;
+}
+
+/* Fix input field text visibility */
+input, textarea, select {
+  color: hsl(0 0% 5%) !important; /* Dark text */
+}
+
+input::placeholder, textarea::placeholder {
+  color: hsl(0 0% 40%) !important; /* Darker placeholder text */
 }
