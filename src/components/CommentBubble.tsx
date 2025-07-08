@@ -1,5 +1,6 @@
 
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { MessageCircle, X, ChevronUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -114,9 +115,11 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                   <p className="text-rap-platinum mb-4 font-merienda">
                     Sign in to read and share your thoughts about this {getContentTypeLabel()}.
                   </p>
-                  <Button className="bg-rap-gold text-black hover:bg-rap-gold/80 font-mogra">
-                    Sign In to Comment
-                  </Button>
+                  <Link to="/auth">
+                    <Button className="bg-rap-gold text-black hover:bg-rap-gold/80 font-mogra">
+                      Sign In to Comment
+                    </Button>
+                  </Link>
                 </div>
               ) : (
                 <div className="space-y-4">
