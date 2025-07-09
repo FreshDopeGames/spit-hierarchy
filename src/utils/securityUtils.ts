@@ -1,4 +1,3 @@
-
 // Enhanced security utility functions for input validation and sanitization
 
 export const sanitizeInput = (input: string): string => {
@@ -7,8 +6,17 @@ export const sanitizeInput = (input: string): string => {
     .replace(/[<>\"'&]/g, '') // Remove potential XSS characters
     .replace(/javascript:/gi, '') // Remove javascript: protocol
     .replace(/on\w+=/gi, '') // Remove event handlers
+    .slice(0, 1000); // Limit length (removed trim)
+};
+
+export const sanitizeForSubmission = (input: string): string => {
+  if (!input) return '';
+  return input
+    .replace(/[<>\"'&]/g, '') // Remove potential XSS characters
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
     .trim()
-    .slice(0, 1000); // Limit length
+    .slice(0, 1000); // Limit length and trim for submission
 };
 
 export const validateEmail = (email: string): boolean => {
@@ -178,4 +186,3 @@ export const getSecurityHeaders = () => ({
   'Permissions-Policy': 'camera=(), microphone=(), geolocation=()',
   'Strict-Transport-Security': 'max-age=31536000; includeSubDomains'
 });
-

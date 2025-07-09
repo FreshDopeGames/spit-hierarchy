@@ -24,7 +24,7 @@ interface AchievementNotificationProps {
 const rarityColors = {
   common: "from-rap-gold-dark to-rap-gold",
   rare: "from-blue-500 to-blue-600",
-  epic: "from-purple-500 to-purple-600",
+  epic: "from-rap-gold to-rap-gold-light",
   legendary: "from-rap-gold via-rap-gold-light to-rap-gold-dark"
 };
 

@@ -25,15 +25,15 @@ interface AchievementCardProps {
 const rarityColors = {
   common: "bg-gray-500",
   rare: "bg-blue-500", 
-  epic: "bg-purple-500",
-  legendary: "bg-yellow-500"
+  epic: "bg-rap-gold",
+  legendary: "bg-rap-gold-light"
 };
 
 const rarityBorders = {
   common: "border-gray-500/30",
   rare: "border-blue-500/30",
-  epic: "border-purple-500/30", 
-  legendary: "border-yellow-500/30"
+  epic: "border-rap-gold/30", 
+  legendary: "border-rap-gold-light/30"
 };
 
 const AchievementCard = ({ achievement, showProgress = true }: AchievementCardProps) => {
