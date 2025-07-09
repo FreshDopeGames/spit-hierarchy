@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -9,7 +10,9 @@ import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
 import AdminRapperPagination from "./AdminRapperPagination";
 import AdminTabHeader from "./AdminTabHeader";
+import AdminRapperDeleteDialog from "./AdminRapperDeleteDialog";
 import { Tables } from "@/integrations/supabase/types";
+import { toast } from "sonner";
 
 type Rapper = Tables<"rappers">;
 
@@ -20,6 +23,9 @@ const AdminRapperManagement = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+  const [rapperToDelete, setRapperToDelete] = useState<Rapper | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const {
     data: rappers,
@@ -75,8 +81,37 @@ const AdminRapperManagement = () => {
   };
 
   const handleDelete = (id: string) => {
-    // TODO: Implement delete functionality
-    console.log("Delete rapper:", id);
+    const rapper = rappers?.data?.find(r => r.id === id);
+    if (rapper) {
+      setRapperToDelete(rapper);
+      setDeleteDialogOpen(true);
+    }
+  };
+
+  const confirmDelete = async () => {
+    if (!rapperToDelete) return;
+    
+    setIsDeleting(true);
+    try {
+      const { error } = await supabase
+        .from("rappers")
+        .delete()
+        .eq("id", rapperToDelete.id);
+
+      if (error) {
+        throw error;
+      }
+
+      toast.success(`${rapperToDelete.name} has been deleted successfully`);
+      setDeleteDialogOpen(false);
+      setRapperToDelete(null);
+      refetch(); // Refresh the list
+    } catch (error: any) {
+      console.error("Error deleting rapper:", error);
+      toast.error(`Failed to delete ${rapperToDelete.name}: ${error.message}`);
+    } finally {
+      setIsDeleting(false);
+    }
   };
 
   const handleDialogSuccess = () => {
@@ -115,6 +150,14 @@ const AdminRapperManagement = () => {
       <AdminRapperPagination currentPage={currentPage} totalPages={totalPages} totalItems={totalItems} itemsPerPage={ITEMS_PER_PAGE} onPageChange={handlePageChange} />
 
       <AdminRapperDialog open={dialogOpen} onOpenChange={setDialogOpen} rapper={selectedRapper} onSuccess={handleDialogSuccess} />
+      
+      <AdminRapperDeleteDialog 
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        rapper={rapperToDelete}
+        onConfirm={confirmDelete}
+        isDeleting={isDeleting}
+      />
     </div>;
 };
 
