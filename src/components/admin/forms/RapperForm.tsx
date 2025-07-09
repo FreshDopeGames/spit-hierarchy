@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
-import { sanitizeInput, sanitizeForSubmission, validateTextInput, validateSlug } from "@/utils/securityUtils";
+import { sanitizeAdminInput, sanitizeAdminContent, sanitizeInput, validateTextInput } from "@/utils/securityUtils";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
 
@@ -38,29 +38,29 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
   const validateForm = () => {
     const errors: string[] = [];
     
-    // Validate required fields using sanitized values
-    const nameValidation = validateTextInput(sanitizeForSubmission(formData.name), 2, 100);
+    // Validate required fields using admin-sanitized values
+    const nameValidation = validateTextInput(sanitizeAdminInput(formData.name), 2, 100);
     if (!nameValidation.isValid) {
       errors.push(`Name: ${nameValidation.errors.join(', ')}`);
     }
     
     // Validate optional fields if provided
     if (formData.real_name) {
-      const realNameValidation = validateTextInput(sanitizeForSubmission(formData.real_name), 2, 100);
+      const realNameValidation = validateTextInput(sanitizeAdminInput(formData.real_name), 2, 100);
       if (!realNameValidation.isValid) {
         errors.push(`Real Name: ${realNameValidation.errors.join(', ')}`);
       }
     }
     
     if (formData.origin) {
-      const originValidation = validateTextInput(sanitizeForSubmission(formData.origin), 2, 100);
+      const originValidation = validateTextInput(sanitizeAdminInput(formData.origin), 2, 100);
       if (!originValidation.isValid) {
         errors.push(`Origin: ${originValidation.errors.join(', ')}`);
       }
     }
     
     if (formData.bio) {
-      const bioValidation = validateTextInput(sanitizeForSubmission(formData.bio), 10, 2000);
+      const bioValidation = validateTextInput(sanitizeAdminContent(formData.bio), 10, 2000);
       if (!bioValidation.isValid) {
         errors.push(`Bio: ${bioValidation.errors.join(', ')}`);
       }
@@ -110,8 +110,22 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    // Sanitize input without trimming for real-time input
-    const sanitizedValue = sanitizeInput(value);
+    // Use appropriate sanitization based on field type
+    let sanitizedValue: string;
+    
+    if (field === 'bio') {
+      // Most permissive for bio content
+      sanitizedValue = sanitizeAdminContent(value);
+    } else if (field === 'name' || field === 'real_name' || field === 'origin') {
+      // Permissive for content fields but not as much as bio
+      sanitizedValue = sanitizeAdminInput(value);
+    } else if (field === 'spotify_id' || field === 'twitter_handle' || field === 'instagram_handle') {
+      // Strict for technical fields
+      sanitizedValue = sanitizeInput(value);
+    } else {
+      // Default to admin input sanitization
+      sanitizedValue = sanitizeAdminInput(value);
+    }
     
     setFormData(prev => ({
       ...prev,
@@ -139,16 +153,16 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 
     try {
       const rapperData = {
-        name: sanitizeForSubmission(formData.name),
-        real_name: sanitizeForSubmission(formData.real_name) || null,
-        origin: sanitizeForSubmission(formData.origin) || null,
-        bio: sanitizeForSubmission(formData.bio) || null,
+        name: sanitizeAdminInput(formData.name).trim(),
+        real_name: sanitizeAdminInput(formData.real_name).trim() || null,
+        origin: sanitizeAdminInput(formData.origin).trim() || null,
+        bio: sanitizeAdminContent(formData.bio).trim() || null,
         birth_year: formData.birth_year ? parseInt(formData.birth_year) : null,
         birth_month: formData.birth_month ? parseInt(formData.birth_month) : null,
         birth_day: formData.birth_day ? parseInt(formData.birth_day) : null,
         twitter_handle: formData.twitter_handle?.replace('@', '').trim() || null,
         instagram_handle: formData.instagram_handle?.replace('@', '').trim() || null,
-        spotify_id: sanitizeForSubmission(formData.spotify_id) || null,
+        spotify_id: sanitizeInput(formData.spotify_id).trim() || null,
         updated_at: new Date().toISOString()
       };
 

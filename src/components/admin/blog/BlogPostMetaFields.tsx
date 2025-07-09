@@ -3,6 +3,7 @@ import React from "react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { BlogPostFormData } from "./BlogPostFormData";
+import { sanitizeAdminInput } from "@/utils/securityUtils";
 
 interface BlogPostMetaFieldsProps {
   formData: BlogPostFormData;
@@ -10,6 +11,11 @@ interface BlogPostMetaFieldsProps {
 }
 
 const BlogPostMetaFields = ({ formData, setFormData }: BlogPostMetaFieldsProps) => {
+  const handleMetaChange = (field: 'meta_title' | 'meta_description', value: string) => {
+    const sanitizedValue = sanitizeAdminInput(value);
+    setFormData(prev => ({ ...prev, [field]: sanitizedValue }));
+  };
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       <div className="space-y-2">
@@ -17,7 +23,7 @@ const BlogPostMetaFields = ({ formData, setFormData }: BlogPostMetaFieldsProps) 
         <Input
           id="meta_title"
           value={formData.meta_title}
-          onChange={(e) => setFormData(prev => ({ ...prev, meta_title: e.target.value }))}
+          onChange={(e) => handleMetaChange('meta_title', e.target.value)}
           className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
           placeholder="Defaults to post title"
         />
@@ -28,7 +34,7 @@ const BlogPostMetaFields = ({ formData, setFormData }: BlogPostMetaFieldsProps) 
         <Input
           id="meta_description"
           value={formData.meta_description}
-          onChange={(e) => setFormData(prev => ({ ...prev, meta_description: e.target.value }))}
+          onChange={(e) => handleMetaChange('meta_description', e.target.value)}
           className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
           placeholder="SEO meta description"
         />

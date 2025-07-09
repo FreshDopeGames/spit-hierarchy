@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UseFormReturn } from "react-hook-form";
 import { RankingFormData } from "./rankingFormSchema";
 import RankingTagSelector from "../RankingTagSelector";
+import { sanitizeAdminContent, sanitizeAdminInput } from "@/utils/securityUtils";
 
 interface RankingFormFieldsProps {
   form: UseFormReturn<RankingFormData>;
@@ -32,7 +33,8 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
             <FormControl>
               <Input 
                 placeholder="Enter ranking title" 
-                {...field} 
+                {...field}
+                onChange={(e) => field.onChange(sanitizeAdminContent(e.target.value))}
                 className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>
@@ -49,7 +51,8 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
             <FormControl>
               <Textarea 
                 placeholder="Enter ranking description" 
-                {...field} 
+                {...field}
+                onChange={(e) => field.onChange(sanitizeAdminContent(e.target.value))}
                 className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>
@@ -90,7 +93,8 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
             <FormControl>
               <Input 
                 placeholder="Enter URL slug" 
-                {...field} 
+                {...field}
+                onChange={(e) => field.onChange(sanitizeAdminInput(e.target.value))}
                 className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>

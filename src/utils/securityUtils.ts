@@ -19,6 +19,32 @@ export const sanitizeForSubmission = (input: string): string => {
     .slice(0, 1000); // Limit length and trim for submission
 };
 
+// Admin-specific sanitization - more permissive for trusted users
+export const sanitizeAdminInput = (input: string): string => {
+  if (!input) return '';
+  return input
+    .replace(/<script[^>]*>.*?<\/script>/gi, '') // Remove script tags
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // Remove iframe tags
+    .replace(/<object[^>]*>.*?<\/object>/gi, '') // Remove object tags
+    .replace(/<embed[^>]*>.*?<\/embed>/gi, '') // Remove embed tags
+    .slice(0, 2000); // Higher limit for admin content
+};
+
+// Admin content sanitization - very permissive for rich text content
+export const sanitizeAdminContent = (input: string): string => {
+  if (!input) return '';
+  return input
+    .replace(/<script[^>]*>.*?<\/script>/gi, '') // Remove script tags
+    .replace(/javascript:/gi, '') // Remove javascript: protocol
+    .replace(/on\w+=/gi, '') // Remove event handlers
+    .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // Remove iframe tags
+    .replace(/<object[^>]*>.*?<\/object>/gi, '') // Remove object tags
+    .replace(/<embed[^>]*>.*?<\/embed>/gi, '') // Remove embed tags
+    .slice(0, 5000); // Much higher limit for rich content
+};
+
 export const validateEmail = (email: string): boolean => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email) && email.length <= 254 && !email.includes('<') && !email.includes('>');

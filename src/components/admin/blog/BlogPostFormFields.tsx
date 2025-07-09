@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +7,7 @@ import { Switch } from "@/components/ui/switch";
 import RichTextEditor from "../RichTextEditor";
 import BlogPostImageUpload from "./BlogPostImageUpload";
 import { BlogPostFormData, generateSlug } from "./BlogPostFormData";
+import { sanitizeAdminContent, sanitizeAdminInput } from "@/utils/securityUtils";
 
 interface BlogPostFormFieldsProps {
   formData: BlogPostFormData;
@@ -17,11 +17,29 @@ interface BlogPostFormFieldsProps {
 
 const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormFieldsProps) => {
   const handleTitleChange = (title: string) => {
+    const sanitizedTitle = sanitizeAdminContent(title);
     setFormData(prev => ({
       ...prev,
-      title,
-      slug: prev.slug || generateSlug(title)
+      title: sanitizedTitle,
+      slug: prev.slug || generateSlug(sanitizedTitle)
     }));
+  };
+
+  const handleInputChange = (field: keyof BlogPostFormData, value: string) => {
+    let sanitizedValue: string;
+    
+    if (field === 'content' || field === 'excerpt') {
+      // Most permissive for rich content
+      sanitizedValue = sanitizeAdminContent(value);
+    } else if (field === 'slug' || field === 'meta_title' || field === 'meta_description') {
+      // Admin input sanitization for meta fields
+      sanitizedValue = sanitizeAdminInput(value);
+    } else {
+      // Default to admin content sanitization
+      sanitizedValue = sanitizeAdminContent(value);
+    }
+    
+    setFormData(prev => ({ ...prev, [field]: sanitizedValue }));
   };
 
   return (
@@ -43,7 +61,7 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
           <Input
             id="slug"
             value={formData.slug}
-            onChange={(e) => setFormData(prev => ({ ...prev, slug: e.target.value }))}
+            onChange={(e) => handleInputChange('slug', e.target.value)}
             className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
             placeholder="auto-generated-from-title"
           />
@@ -55,7 +73,7 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
         <Textarea
           id="excerpt"
           value={formData.excerpt}
-          onChange={(e) => setFormData(prev => ({ ...prev, excerpt: e.target.value }))}
+          onChange={(e) => handleInputChange('excerpt', e.target.value)}
           className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[80px]"
           rows={3}
         />
@@ -65,7 +83,7 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
         <Label htmlFor="content" className="text-rap-platinum text-sm sm:text-base">Content *</Label>
         <RichTextEditor
           value={formData.content}
-          onChange={(content) => setFormData(prev => ({ ...prev, content }))}
+          onChange={(content) => handleInputChange('content', content)}
           placeholder="Write your blog post content here... You can use Markdown formatting."
           className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[300px]"
         />
