@@ -66,7 +66,7 @@ const OfficialRankingItems = ({
             placeholder="Search rappers..."
             value={searchKeyword}
             onChange={(e) => setSearchKeyword(e.target.value)}
-            className="w-full pl-10 pr-10 py-3 bg-rap-carbon/30 border border-rap-platinum/30 rounded-lg text-rap-platinum placeholder-rap-smoke focus:outline-none focus:ring-2 focus:ring-rap-gold/50 focus:border-rap-gold/50 transition-all"
+            className="w-full pl-10 pr-10 py-3 bg-rap-carbon/90 border-rap-forest/60 text-rap-platinum placeholder-rap-smoke focus:border-rap-burgundy focus:ring-rap-burgundy/30 focus:outline-none transition-all rounded-lg font-street !text-rap-platinum"
           />
           {searchKeyword && (
             <button
