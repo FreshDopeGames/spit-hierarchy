@@ -11,6 +11,7 @@ import CommentItem from "@/components/CommentItem";
 import ResponsiveInstructions from "@/components/ResponsiveInstructions";
 import { useAuth } from "@/hooks/useAuth";
 import { useCypherComments } from "@/hooks/useCypherComments";
+
 const CommunityCypher = () => {
   const {
     user
@@ -33,6 +34,7 @@ const CommunityCypher = () => {
   } = useCypherComments({
     sortBy
   });
+
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
       createComment({
@@ -40,16 +42,19 @@ const CommunityCypher = () => {
       });
     }
   };
+
   const handleReply = (parentId: string, text: string) => {
     createComment({
       text,
       parentId
     });
   };
+
   const characterCount = newComment.length;
   const maxCharacters = 2000;
   const isNearLimit = characterCount > maxCharacters * 0.8;
   const isOverLimit = characterCount > maxCharacters;
+
   return <div className="min-h-screen bg-gradient-to-br from-primary via-primary-foreground to-rap-gold-dark ">
       <HeaderNavigation isScrolled={false} />
       
@@ -59,7 +64,7 @@ const CommunityCypher = () => {
           <h1 className="text-4xl md:text-6xl font-ceviche text-primary mb-4 tracking-wider drop-shadow-md ">
             Community Cypher
           </h1>
-          <p className="text-lg md:text-xl font-merienda text-black/80 mb-6 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl font-merienda text-white mb-6 max-w-2xl mx-auto">
             Prove you know what a good bar is, and put yourself to the test. Drop a crazy 16 or go bar-for-bar with a friend.
           </p>
           
@@ -161,4 +166,5 @@ const CommunityCypher = () => {
       <Footer />
     </div>;
 };
+
 export default CommunityCypher;
