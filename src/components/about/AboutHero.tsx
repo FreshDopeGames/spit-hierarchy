@@ -1,7 +1,10 @@
 
 import React from "react";
+import { useTheme } from "@/hooks/useTheme";
 
 const AboutHero = () => {
+  const { theme } = useTheme();
+
   return (
     <div className="text-center space-y-4 mb-12">
       <div className="flex flex-col items-center space-y-4 mb-6">
@@ -11,7 +14,12 @@ const AboutHero = () => {
           src="/lovable-uploads/8a42312a-e1dc-4889-ae2a-9eaed3baede1.png" 
         />
         <div>
-          <h1 className="font-ceviche bg-gradient-to-r from-rap-gold to-rap-silver bg-clip-text text-transparent text-7xl">
+          <h1 
+            className="font-ceviche bg-clip-text text-transparent text-7xl"
+            style={{
+              backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primaryLight})`
+            }}
+          >
             ABOUT SPIT HIERARCHY
           </h1>
           <p className="text-rap-smoke font-merienda text-sm">The Culture's Voice</p>
