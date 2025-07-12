@@ -1,7 +1,7 @@
-
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
+import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -16,6 +16,7 @@ interface NavigationSidebarProps {
 
 const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
   const { user, signOut, loading: authLoading } = useAuth();
+  const { theme } = useTheme();
   const location = useLocation();
   const [open, setOpen] = useState(false);
 
@@ -40,17 +41,21 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
 
   const getAvatarUrl = (baseUrl?: string) => {
     if (!baseUrl) return undefined;
-
-    // If it's already a full URL, return as is
     if (baseUrl.startsWith('http')) return baseUrl;
-
-    // Construct the thumb size URL for sidebar (128px for crisp quality)
     return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/thumb.jpg`;
   };
 
   const avatarUrl = getAvatarUrl(userProfile?.avatar_url);
   const defaultTrigger = (
-    <Button variant="outline" size="icon" className="bg-rap-gold border-2 border-black text-black hover:bg-rap-gold/80 shadow-lg">
+    <Button 
+      variant="outline" 
+      size="icon" 
+      className="border-2 text-black hover:opacity-80 shadow-lg"
+      style={{ 
+        backgroundColor: theme.colors.primary, 
+        borderColor: 'black'
+      }}
+    >
       <Menu className="h-4 w-4" />
     </Button>
   );
@@ -58,9 +63,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
   const displayName = userProfile?.username || userProfile?.full_name || user?.email;
 
   const handleNavClick = (path: string) => {
-    // Close sidebar when clicking any nav item
     setOpen(false);
-    // Scroll to top
     window.scrollTo(0, 0);
   };
 
@@ -72,7 +75,11 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
       <SheetTrigger asChild>
         {trigger || defaultTrigger}
       </SheetTrigger>
-      <SheetContent side="left" className="w-80 bg-black border-rap-gold/50 shadow-2xl shadow-rap-gold/20">
+      <SheetContent 
+        side="left" 
+        className="w-80 bg-black shadow-2xl"
+        style={{ borderColor: `${theme.colors.primary}50` }}
+      >
         <SheetHeader className="pb-6">
           <SheetTitle className="flex items-center justify-center">
             <img 
@@ -86,45 +93,83 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
         <nav className="space-y-4">
           {/* Main Navigation */}
           <div className="space-y-2">
-            <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">Navigate</h3>
+            <h3 
+              className="font-ceviche mb-3 tracking-wider text-3xl"
+              style={{ color: theme.colors.primary }}
+            >
+              Navigate
+            </h3>
             
             <Link to="/" onClick={() => handleNavClick('/')}>
-              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                style={{ 
+                  '--hover-color': theme.colors.primary 
+                } as React.CSSProperties}
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 <Home className="w-4 h-4 mr-3" />
                 Home
               </Button>
             </Link>
 
             <Link to="/rankings" onClick={() => handleNavClick('/rankings')}>
-              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 <Trophy className="w-4 h-4 mr-3" />
                 Rankings
               </Button>
             </Link>
 
             <Link to="/all-rappers" onClick={() => handleNavClick('/all-rappers')}>
-              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 <Music className="w-4 h-4 mr-3" />
                 All Rappers
               </Button>
             </Link>
 
             <Link to="/blog" onClick={() => handleNavClick('/blog')}>
-              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 <Calendar className="w-4 h-4 mr-3" />
                 Slick Talk
               </Button>
             </Link>
 
             <Link to="/community-cypher" onClick={() => handleNavClick('/community-cypher')}>
-              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 <CypherIcon className="w-4 h-4 mr-3" />
                 Community Cypher
               </Button>
             </Link>
 
             <Link to="/about" onClick={() => handleNavClick('/about')}>
-              <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
                 <Info className="w-4 h-4 mr-3" />
                 About
               </Button>
@@ -132,10 +177,18 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
           </div>
 
           {/* User Section */}
-          <div className="border-t border-rap-gold/30 pt-4 space-y-2">
+          <div 
+            className="pt-4 space-y-2"
+            style={{ borderTopColor: `${theme.colors.primary}30`, borderTopWidth: '1px', borderTopStyle: 'solid' }}
+          >
             {isUserDataLoading ? (
               <>
-                <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">Loading...</h3>
+                <h3 
+                  className="font-ceviche mb-3 tracking-wider text-3xl"
+                  style={{ color: theme.colors.primary }}
+                >
+                  Loading...
+                </h3>
                 <div className="flex items-center space-x-3 p-3">
                   <AvatarSkeleton size="sm" />
                   <TextSkeleton width="w-24" height="h-4" />
@@ -143,10 +196,25 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               </>
             ) : user ? (
               <>
-                <h3 className="text-rap-gold font-ceviche mb-3 tracking-wider text-3xl">User Menu</h3>
+                <h3 
+                  className="font-ceviche mb-3 tracking-wider text-3xl"
+                  style={{ color: theme.colors.primary }}
+                >
+                  User Menu
+                </h3>
                 <Link to="/profile" onClick={() => handleNavClick('/profile')}>
-                  <div className="flex items-center space-x-3 p-3 hover:bg-rap-gold/20 rounded-lg transition-colors cursor-pointer">
-                    <Avatar className="w-8 h-8 border-2 border-rap-gold/50">
+                  <div 
+                    className="flex items-center space-x-3 p-3 rounded-lg transition-colors cursor-pointer"
+                    style={{ 
+                      '--hover-bg': `${theme.colors.primary}20` 
+                    } as React.CSSProperties}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = `${theme.colors.primary}20`}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = ''}
+                  >
+                    <Avatar 
+                      className="w-8 h-8 border-2"
+                      style={{ borderColor: `${theme.colors.primary}50` }}
+                    >
                       <AvatarImage 
                         src={avatarUrl} 
                         alt={displayName || 'User'}
@@ -156,19 +224,34 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                         <User className="w-4 h-4" />
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-rap-gold/70 font-kaushan text-sm">{displayName}</span>
+                    <span 
+                      className="font-kaushan text-sm"
+                      style={{ color: `${theme.colors.primary}70` }}
+                    >
+                      {displayName}
+                    </span>
                   </div>
                 </Link>
 
                 <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
-                  <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                    onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                  >
                     <BarChart3 className="w-4 h-4 mr-3" />
                     Analytics
                   </Button>
                 </Link>
 
                 <Link to="/admin" onClick={() => handleNavClick('/admin')}>
-                  <Button variant="ghost" className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent">
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                    onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                  >
                     <Settings className="w-4 h-4 mr-3" />
                     Admin
                   </Button>
@@ -180,7 +263,9 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                     signOut();
                   }} 
                   variant="ghost" 
-                  className="w-full justify-start text-rap-platinum hover:text-rap-gold font-merienda bg-transparent"
+                  className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                  onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
                 >
                   <LogIn className="w-4 h-4 mr-3" />
                   Sign Out
@@ -191,7 +276,13 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                 <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
                 
                 <Link to="/auth" onClick={() => handleNavClick('/auth')}>
-                  <Button className="w-full font-merienda shadow-lg shadow-rap-gold/30 bg-rap-gold text-black font-extrabold text-xl">
+                  <Button 
+                    className="w-full font-merienda shadow-lg text-black font-extrabold text-xl"
+                    style={{ 
+                      backgroundColor: theme.colors.primary,
+                      boxShadow: `0 10px 25px ${theme.colors.primary}30`
+                    }}
+                  >
                     <LogIn className="w-4 h-4 mr-3" />
                     Sign In
                   </Button>
