@@ -56,7 +56,7 @@ const CommunityCypher = () => {
       <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
         {/* Page Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-ceviche text-white mb-4 tracking-wider">
+          <h1 className="text-4xl md:text-6xl font-ceviche text-primary mb-4 tracking-wider">
             Community Cypher
           </h1>
           <p className="text-lg md:text-xl font-merienda text-black/80 mb-6 max-w-2xl mx-auto">
