@@ -8,6 +8,7 @@ import BackToTopButton from "@/components/BackToTopButton";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import OfficialRankingHeader from "@/components/rankings/OfficialRankingHeader";
 import OfficialRankingItems from "@/components/rankings/OfficialRankingItems";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useRankingData, useHotThreshold } from "@/hooks/useRankingData";
@@ -107,6 +108,9 @@ const OfficialRankingDetail = () => {
           rankingId={ranking.id}
         />
       </main>
+
+      {/* Footer - positioned at the bottom of all page content */}
+      <Footer />
 
       {/* Back to Top Button - positioned for pages with CommentBubble */}
       <BackToTopButton hasCommentBubble={true} />

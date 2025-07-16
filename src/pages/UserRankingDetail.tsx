@@ -263,12 +263,10 @@ const UserRankingDetail = () => {
             </Card>
           ))}
         </div>
-
-        {/* Footer - positioned at the end of ranking items */}
-        <div className="mb-8">
-          <Footer />
-        </div>
       </div>
+
+      {/* Footer - positioned at the bottom of all page content */}
+      <Footer />
     </div>
   );
 };
