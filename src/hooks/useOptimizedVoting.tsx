@@ -1,10 +1,9 @@
 
-import { useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/integrations/supabase/client';
-import { useSecurityContext } from './useSecurityContext';
-import { handleError, createAppError } from '@/utils/errorHandler';
-import { toast } from 'sonner';
+import { useState, useCallback } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/useAuth";
+import { toast } from "sonner";
 
 interface VoteData {
   rapper_id: string;
@@ -13,96 +12,82 @@ interface VoteData {
 }
 
 export const useOptimizedVoting = () => {
-  const [isVoting, setIsVoting] = useState(false);
-  const { checkRateLimit } = useSecurityContext();
+  const { user } = useAuth();
   const queryClient = useQueryClient();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const voteMutation = useMutation({
-    mutationFn: async (voteData: VoteData) => {
-      // Check rate limit before voting
-      const canVote = await checkRateLimit('vote', 20, 3600); // 20 votes per hour
-      if (!canVote) {
-        throw createAppError('Rate limit exceeded. Please wait before voting again.', 'RATE_LIMIT_EXCEEDED');
-      }
+  const submitVote = useMutation({
+    mutationFn: async ({ rapper_id, category_id, rating }: VoteData) => {
+      if (!user) throw new Error("Authentication required");
 
-      setIsVoting(true);
-
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) {
-        throw createAppError('You must be logged in to vote', 'AUTH_REQUIRED');
-      }
-
-      // Validate rating range
-      if (voteData.rating < 1 || voteData.rating > 10) {
-        throw createAppError('Rating must be between 1 and 10', 'INVALID_RATING');
-      }
-
-      // Check if user already voted for this rapper in this category
-      const { data: existingVote, error: checkError } = await supabase
-        .from('votes')
-        .select('id')
-        .eq('user_id', user.id)
-        .eq('rapper_id', voteData.rapper_id)
-        .eq('category_id', voteData.category_id)
+      // Check if vote already exists
+      const { data: existingVote } = await supabase
+        .from("votes")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("rapper_id", rapper_id)
+        .eq("category_id", category_id)
         .maybeSingle();
-
-      if (checkError) throw checkError;
 
       if (existingVote) {
         // Update existing vote
-        const { data, error } = await supabase
-          .from('votes')
-          .update({
-            rating: voteData.rating,
+        const { error } = await supabase
+          .from("votes")
+          .update({ 
+            rating,
             updated_at: new Date().toISOString()
           })
-          .eq('id', existingVote.id)
-          .select()
-          .single();
-
+          .eq("id", existingVote.id);
+        
         if (error) throw error;
-        return { data, isUpdate: true };
+        return { action: 'updated' };
       } else {
-        // Insert new vote
-        const { data, error } = await supabase
-          .from('votes')
+        // Create new vote
+        const { error } = await supabase
+          .from("votes")
           .insert({
-            rapper_id: voteData.rapper_id,
-            category_id: voteData.category_id,
-            rating: voteData.rating,
-            user_id: user.id
-          })
-          .select()
-          .single();
-
+            user_id: user.id,
+            rapper_id,
+            category_id,
+            rating,
+          });
+        
         if (error) throw error;
-        return { data, isUpdate: false };
+        return { action: 'created' };
       }
     },
     onSuccess: (result) => {
-      // Invalidate relevant queries for performance
-      queryClient.invalidateQueries({ queryKey: ['votes'] });
-      queryClient.invalidateQueries({ queryKey: ['rapper-stats', result.data.rapper_id] });
-      queryClient.invalidateQueries({ queryKey: ['user-achievements'] });
-      queryClient.invalidateQueries({ queryKey: ['rappers'] });
-      
-      // CRITICAL: Invalidate all-rappers queries to update the All Rappers page immediately
-      queryClient.invalidateQueries({ queryKey: ['all-rappers'] });
-      
-      // Don't show success toast here - let the calling component handle it
-      console.log('Vote submitted successfully:', result.data);
+      toast.success(result.action === 'updated' ? "Vote updated successfully!" : "Vote submitted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings"] });
+      queryClient.invalidateQueries({ queryKey: ["existing-vote"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper"] });
     },
-    onError: (error) => {
-      handleError(error, 'voting');
+    onError: (error: any) => {
+      console.error("Vote submission error:", error);
+      toast.error("Failed to submit vote. Please try again.");
     },
-    onSettled: () => {
-      setIsVoting(false);
-    }
   });
 
+  const handleVoteSubmission = useCallback(async (voteData: VoteData) => {
+    if (!user) {
+      toast.error("Please sign in to vote");
+      return false;
+    }
+
+    setIsSubmitting(true);
+    
+    try {
+      await submitVote.mutateAsync(voteData);
+      return true;
+    } catch (error) {
+      return false;
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [user, submitVote]);
+
   return {
-    submitVote: voteMutation.mutateAsync, // Use mutateAsync for better error handling
-    isVoting: isVoting || voteMutation.isPending,
-    error: voteMutation.error
+    handleVoteSubmission,
+    isSubmitting: isSubmitting || submitVote.isPending,
   };
 };

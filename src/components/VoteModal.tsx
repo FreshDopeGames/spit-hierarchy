@@ -1,21 +1,21 @@
 
-import React, { useState } from "react";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { useOptimizedVoting } from "@/hooks/useOptimizedVoting";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Card, CardContent } from "@/components/ui/card";
+import { X, Star } from "lucide-react";
 import { toast } from "sonner";
-import { Tables } from "@/integrations/supabase/types";
-import RapperInfo from "./vote/RapperInfo";
-import CategorySelector from "./vote/CategorySelector";
+import CategorySelector from "./CategorySelector";
 import RatingSlider from "./vote/RatingSlider";
-import VoteSubmission from "./vote/VoteSubmission";
+import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
 
@@ -28,10 +28,9 @@ interface VoteModalProps {
 
 const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps) => {
   const { user } = useAuth();
+  const [category, setCategory] = useState(selectedCategory);
+  const [rating, setRating] = useState(5);
   const queryClient = useQueryClient();
-  const [rating, setRating] = useState([7]);
-  const [categoryId, setCategoryId] = useState(selectedCategory);
-  const { submitVote, isVoting } = useOptimizedVoting();
 
   const { data: categories } = useQuery({
     queryKey: ["voting-categories"],
@@ -41,101 +40,156 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
         .select("*")
         .eq("active", true)
         .order("name");
-
+      
       if (error) throw error;
       return data;
-    }
+    },
   });
 
   const { data: existingVote } = useQuery({
-    queryKey: ["user-vote", rapper.id, categoryId],
+    queryKey: ["existing-vote", rapper.id, category, user?.id],
     queryFn: async () => {
-      if (!user || !categoryId) return null;
+      if (!user || !category) return null;
       
       const { data, error } = await supabase
         .from("votes")
         .select("*")
         .eq("user_id", user.id)
         .eq("rapper_id", rapper.id)
-        .eq("category_id", categoryId)
+        .eq("category_id", category)
         .maybeSingle();
-
+      
       if (error) throw error;
       return data;
     },
-    enabled: !!user && !!categoryId
+    enabled: !!user && !!category,
   });
 
-  const handleSubmit = async () => {
-    if (!user) {
-      toast.error("You must be logged in to vote");
-      return;
-    }
+  const voteMutation = useMutation({
+    mutationFn: async () => {
+      if (!user || !category) throw new Error("Missing required data");
 
-    if (!categoryId) {
-      toast.error("Please select a voting category first.");
-      return;
-    }
-
-    try {
-      // Use the optimized voting hook for security and rate limiting
-      await submitVote({
-        rapper_id: rapper.id,
-        category_id: categoryId,
-        rating: rating[0]
-      });
-
-      // Invalidate specific queries for better performance
-      queryClient.invalidateQueries({ queryKey: ["rappers"] });
-      queryClient.invalidateQueries({ queryKey: ["rapper", rapper.id] });
-      queryClient.invalidateQueries({ queryKey: ["user-vote", rapper.id, categoryId] });
-      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings", rapper.id] });
-      
-      // CRITICAL: Invalidate all-rappers queries to update the All Rappers page
-      queryClient.invalidateQueries({ queryKey: ["all-rappers"] });
-      
-      toast.success(`Your rating for ${rapper.name} has been ${existingVote ? 'updated' : 'recorded'}.`);
+      if (existingVote) {
+        // Update existing vote
+        const { error } = await supabase
+          .from("votes")
+          .update({ 
+            rating,
+            updated_at: new Date().toISOString()
+          })
+          .eq("id", existingVote.id);
+        
+        if (error) throw error;
+      } else {
+        // Create new vote
+        const { error } = await supabase
+          .from("votes")
+          .insert({
+            user_id: user.id,
+            rapper_id: rapper.id,
+            category_id: category,
+            rating,
+          });
+        
+        if (error) throw error;
+      }
+    },
+    onSuccess: () => {
+      toast.success(existingVote ? "Vote updated successfully!" : "Vote submitted successfully!");
+      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings"] });
+      queryClient.invalidateQueries({ queryKey: ["existing-vote"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper"] });
       onClose();
-    } catch (error: any) {
-      toast.error(error.message || "Failed to submit vote");
+    },
+    onError: (error: any) => {
+      console.error("Vote submission error:", error);
+      toast.error("Failed to submit vote. Please try again.");
+    },
+  });
+
+  const handleSubmit = () => {
+    if (!user) {
+      toast.error("Please sign in to vote");
+      return;
     }
+    
+    if (!category) {
+      toast.error("Please select a category");
+      return;
+    }
+
+    voteMutation.mutate();
   };
 
-  React.useEffect(() => {
+  // Set initial rating when existing vote loads
+  useState(() => {
     if (existingVote) {
-      setRating([existingVote.rating]);
+      setRating(existingVote.rating);
     }
   }, [existingVote]);
 
-  const selectedCategoryData = categories?.find(cat => cat.id === categoryId);
+  if (!categories) {
+    return null;
+  }
+
+  const selectedCategoryData = categories.find(cat => cat.id === category);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-rap-carbon/95 border-rap-gold/30 text-rap-platinum max-w-md">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-rap-gold to-rap-gold-light bg-clip-text text-transparent font-mogra">
+      <DialogContent className="max-w-md mx-auto bg-rap-carbon border-rap-burgundy/30">
+        <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+          <DialogTitle className="text-rap-platinum font-mogra text-xl">
             Rate {rapper.name}
           </DialogTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={onClose}
+            className="h-6 w-6 p-0 text-rap-smoke hover:text-rap-platinum"
+          >
+            <X className="h-4 w-4" />
+          </Button>
         </DialogHeader>
 
         <div className="space-y-6">
-          <RapperInfo rapper={rapper} />
-          
           <CategorySelector
-            categoryId={categoryId}
-            setCategoryId={setCategoryId}
             categories={categories}
-            selectedCategoryData={selectedCategoryData}
+            selectedCategory={category}
+            onCategoryChange={setCategory}
           />
 
-          <RatingSlider rating={rating} setRating={setRating} />
+          {selectedCategoryData && (
+            <Card className="bg-rap-carbon-light border-rap-burgundy/20">
+              <CardContent className="p-4">
+                <h3 className="font-semibold text-rap-platinum mb-2 font-kaushan">
+                  {selectedCategoryData.name}
+                </h3>
+                <p className="text-sm text-rap-smoke font-kaushan">
+                  {selectedCategoryData.description}
+                </p>
+              </CardContent>
+            </Card>
+          )}
 
-          <VoteSubmission
-            onSubmit={handleSubmit}
-            isPending={isVoting}
-            categoryId={categoryId}
-            existingVote={existingVote}
+          <RatingSlider
+            rating={rating}
+            onRatingChange={setRating}
           />
+
+          <div className="flex items-center gap-2 text-rap-gold">
+            <Star className="w-5 h-5 fill-current" />
+            <span className="font-semibold font-kaushan">
+              {rating}/10
+            </span>
+          </div>
+
+          <Button
+            onClick={handleSubmit}
+            disabled={!category || voteMutation.isPending}
+            className="w-full bg-rap-burgundy hover:bg-rap-burgundy/80 text-rap-platinum font-kaushan"
+          >
+            {voteMutation.isPending ? "Submitting..." : existingVote ? "Update Vote" : "Submit Vote"}
+          </Button>
         </div>
       </DialogContent>
     </Dialog>

@@ -1,38 +1,31 @@
 
-import React from "react";
 import { Button } from "@/components/ui/button";
-import { Tables } from "@/integrations/supabase/types";
-
-type Vote = Tables<"votes">;
+import { Star } from "lucide-react";
 
 interface VoteSubmissionProps {
+  rating: number;
   onSubmit: () => void;
-  isPending: boolean;
-  categoryId: string;
-  existingVote: Vote | null | undefined;
+  isSubmitting: boolean;
+  existingVote?: any;
 }
 
-const VoteSubmission = ({ onSubmit, isPending, categoryId, existingVote }: VoteSubmissionProps) => {
+const VoteSubmission = ({ rating, onSubmit, isSubmitting, existingVote }: VoteSubmissionProps) => {
   return (
     <div className="space-y-4">
+      <div className="flex items-center gap-2 text-rap-gold justify-center">
+        <Star className="w-5 h-5 fill-current" />
+        <span className="font-semibold font-kaushan text-lg">
+          {rating}/10
+        </span>
+      </div>
+
       <Button
         onClick={onSubmit}
-        disabled={isPending || !categoryId}
-        className="w-full bg-gradient-to-r from-rap-gold-dark to-rap-gold-light hover:from-rap-gold to-rap-gold-dark text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30"
+        disabled={isSubmitting}
+        className="w-full bg-rap-burgundy hover:bg-rap-burgundy/80 text-rap-platinum font-kaushan"
       >
-        {isPending 
-          ? "Submitting..." 
-          : existingVote 
-            ? "Update Rating" 
-            : "Submit Rating"
-        }
+        {isSubmitting ? "Submitting..." : existingVote ? "Update Vote" : "Submit Vote"}
       </Button>
-      
-      {!categoryId && (
-        <p className="text-sm text-rap-burgundy font-kaushan text-center">
-          Please select a category to rate this rapper
-        </p>
-      )}
     </div>
   );
 };
