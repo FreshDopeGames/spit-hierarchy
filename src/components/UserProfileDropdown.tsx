@@ -48,7 +48,7 @@ const UserProfileDropdown = ({
               <User className="w-4 h-4" />
             </AvatarFallback>
           </Avatar>
-          <span className="text-rap-gold font-kaushan text-sm">
+          <span className="text-[var(--theme-primary)] font-kaushan text-sm">
             {displayName}
           </span>
         </div>
