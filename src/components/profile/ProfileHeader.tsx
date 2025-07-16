@@ -42,7 +42,7 @@ const ProfileHeader = ({ user, profile, memberStats }: ProfileHeaderProps) => {
         </div>
         
         <div className="flex-1 text-center lg:text-left w-full">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-10">
             {/* User Info Section */}
             <div className="flex-1">
               <h2 className="font-merienda text-rap-gold mb-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words">
