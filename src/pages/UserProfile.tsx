@@ -1,4 +1,3 @@
-
 import React, { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -8,7 +7,6 @@ import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import ProfileHeader from "@/components/profile/ProfileHeader";
-import MemberStatusCard from "@/components/profile/MemberStatusCard";
 import MyTopFiveSection from "@/components/profile/MyTopFiveSection";
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileAchievements from "@/components/profile/ProfileAchievements";
@@ -179,9 +177,7 @@ const UserProfile = () => {
           ) : (
             // Show actual content when loaded
             <>
-              <ProfileHeader user={user} profile={profile} />
-              
-              <MemberStatusCard memberStats={memberStats} />
+              <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
               
               <MyTopFiveSection />
 

@@ -1,9 +1,9 @@
-
 import React, { useState } from "react";
 import AvatarCropper from "./AvatarCropper";
 import ModerationAlert from "./ModerationAlert";
 import AvatarDisplay from "./avatar/AvatarDisplay";
 import AvatarUploadControls from "./avatar/AvatarUploadControls";
+import AvatarUploadOverlay from "./avatar/AvatarUploadOverlay";
 import { useAvatarUpload } from "@/hooks/useAvatarUpload";
 
 interface AvatarUploadProps {
@@ -11,9 +11,23 @@ interface AvatarUploadProps {
   onAvatarUpdate: (url: string) => void;
   userId: string;
   size?: 'small' | 'medium' | 'large' | 'xlarge';
+  variant?: 'default' | 'overlay';
 }
 
-const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'xlarge' }: AvatarUploadProps) => {
+const AvatarUpload = ({ currentAvatarUrl, onAvatarUpdate, userId, size = 'xlarge', variant = 'overlay' }: AvatarUploadProps) => {
+  // Use overlay variant for profile pages
+  if (variant === 'overlay') {
+    return (
+      <AvatarUploadOverlay
+        currentAvatarUrl={currentAvatarUrl}
+        onAvatarUpdate={onAvatarUpdate}
+        userId={userId}
+        size={size}
+      />
+    );
+  }
+
+  // Keep existing implementation for other uses
   const [avatarUrl, setAvatarUrl] = useState(currentAvatarUrl);
   
   const {
