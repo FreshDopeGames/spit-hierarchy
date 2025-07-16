@@ -11,7 +11,6 @@ import CommentItem from "@/components/CommentItem";
 import ResponsiveInstructions from "@/components/ResponsiveInstructions";
 import { useAuth } from "@/hooks/useAuth";
 import { useCypherComments } from "@/hooks/useCypherComments";
-
 const CommunityCypher = () => {
   const {
     user
@@ -34,7 +33,6 @@ const CommunityCypher = () => {
   } = useCypherComments({
     sortBy
   });
-
   const handleCommentSubmit = () => {
     if (newComment.trim()) {
       createComment({
@@ -42,26 +40,23 @@ const CommunityCypher = () => {
       });
     }
   };
-
   const handleReply = (parentId: string, text: string) => {
     createComment({
       text,
       parentId
     });
   };
-
   const characterCount = newComment.length;
   const maxCharacters = 2000;
   const isNearLimit = characterCount > maxCharacters * 0.8;
   const isOverLimit = characterCount > maxCharacters;
-
   return <div className="min-h-screen bg-gradient-to-br from-primary via-primary-foreground to-rap-gold-dark ">
       <HeaderNavigation isScrolled={false} />
       
       <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
         {/* Page Header */}
         <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-6xl font-ceviche text-primary mb-4 tracking-wider drop-shadow-md ">
+          <h1 className="text-4xl md:text-6xl font-ceviche text-primary mb-4 tracking-wider drop-shadow-lg ">
             Community Cypher
           </h1>
           <p className="text-lg md:text-xl font-merienda text-white mb-6 max-w-2xl mx-auto">
@@ -166,5 +161,4 @@ const CommunityCypher = () => {
       <Footer />
     </div>;
 };
-
 export default CommunityCypher;
