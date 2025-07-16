@@ -1,4 +1,5 @@
 
+
 import { Card, CardContent } from "@/components/ui/card";
 import { Tables } from "@/integrations/supabase/types";
 
@@ -10,7 +11,7 @@ interface RapperStatsProps {
 
 const RapperStats = ({ rapper }: RapperStatsProps) => {
   return (
-    <Card className="bg-rap-carbon border-rap-burgundy/40">
+    <Card className="bg-black border-rap-burgundy/40">
       <CardContent className="p-8">
         <h2 className="text-2xl font-bold text-rap-platinum mb-4 font-mogra">Community Stats</h2>
         <div className="grid md:grid-cols-3 gap-6">
@@ -39,3 +40,4 @@ const RapperStats = ({ rapper }: RapperStatsProps) => {
 };
 
 export default RapperStats;
+
