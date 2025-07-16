@@ -57,7 +57,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
 
   if (isLoading) {
     return (
-      <Card className="bg-rap-carbon border-rap-burgundy/40">
+      <Card className="bg-black border-rap-burgundy/40">
         <CardHeader>
           <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
         </CardHeader>
@@ -83,7 +83,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
   const overallScaled = Math.round(calculatedOverall / 10 * 100);
 
   return (
-    <Card className="bg-rap-carbon border-rap-burgundy/40">
+    <Card className="bg-black border-rap-burgundy/40">
       <CardHeader>
         <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
       </CardHeader>

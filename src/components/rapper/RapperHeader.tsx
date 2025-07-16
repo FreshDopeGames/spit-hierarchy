@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -32,7 +31,7 @@ const RapperHeader = ({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-rap-carbon border-rap-burgundy/40 relative overflow-hidden mb-8">
+      <Card className="bg-black border-rap-burgundy/40 relative overflow-hidden mb-8">
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
         
