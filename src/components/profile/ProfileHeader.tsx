@@ -44,7 +44,7 @@ const ProfileHeader = ({ user, profile, memberStats }: ProfileHeaderProps) => {
         <div className="flex-1 text-center lg:text-left w-full">
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-10">
             {/* User Info Section */}
-            <div className="flex-1">
+            <div className="flex-1 lg:flex-shrink">
               <h2 className="font-merienda text-rap-gold mb-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words">
                 {profile?.username || profile?.full_name || user.email}
               </h2>
@@ -71,7 +71,7 @@ const ProfileHeader = ({ user, profile, memberStats }: ProfileHeaderProps) => {
 
             {/* Member Status Section */}
             {memberStats && (
-              <div className="flex-shrink-0 text-center lg:text-right">
+              <div className="flex-shrink-0 text-center lg:text-right lg:min-w-72">
                 <div className="flex items-center justify-center lg:justify-end mb-2">
                   <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-rap-gold mr-2" />
                   <h3 className="text-sm sm:text-base font-bold text-rap-gold font-merienda">
@@ -105,7 +105,7 @@ const ProfileHeader = ({ user, profile, memberStats }: ProfileHeaderProps) => {
 
                 {/* Progress to Next Level */}
                 {progress.nextLevel && (
-                  <div className="space-y-2 max-w-48 mx-auto lg:mx-0 lg:ml-auto">
+                  <div className="space-y-2 max-w-64 mx-auto lg:mx-0 lg:ml-auto">
                     <div className="flex justify-between text-xs">
                       <span className="text-rap-platinum font-merienda truncate">
                         To {progress.nextLevel}
@@ -116,7 +116,7 @@ const ProfileHeader = ({ user, profile, memberStats }: ProfileHeaderProps) => {
                     </div>
                     <Progress 
                       value={progress.percentage} 
-                      className="w-full h-2"
+                      className="w-full h-3"
                     />
                     <div className="text-xs text-rap-smoke text-center font-merienda">
                       {Math.round(progress.percentage)}% complete
