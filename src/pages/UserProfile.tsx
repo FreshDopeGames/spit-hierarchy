@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { LogIn } from "lucide-react";
 import { Link } from "react-router-dom";
 import HeaderNavigation from "@/components/HeaderNavigation";
+import Footer from "@/components/Footer";
 import ProfileHeader from "@/components/profile/ProfileHeader";
 import MyTopFiveSection from "@/components/profile/MyTopFiveSection";
 import ProfileStats from "@/components/profile/ProfileStats";
@@ -109,6 +110,8 @@ const UserProfile = () => {
             </div>
           </div>
         </div>
+        
+        <Footer />
       </div>
     );
   }
@@ -116,18 +119,23 @@ const UserProfile = () => {
   // Show sign-in prompt if not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-        <div className="relative z-10 text-center px-4">
-          <h2 className="text-xl sm:text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">
-            Please sign in to view your profile
-          </h2>
-          <Link to="/auth">
-            <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40">
-              <LogIn className="w-4 h-4 mr-2" />
-              Sign In
-            </Button>
-          </Link>
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <div className="flex-1 flex items-center justify-center px-4">
+            <div className="text-center">
+              <h2 className="text-xl sm:text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">
+                Please sign in to view your profile
+              </h2>
+              <Link to="/auth">
+                <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40">
+                  <LogIn className="w-4 h-4 mr-2" />
+                  Sign In
+                </Button>
+              </Link>
+            </div>
+          </div>
+          <Footer />
         </div>
       </div>
     );
@@ -140,10 +148,10 @@ const UserProfile = () => {
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col min-h-screen">
         <HeaderNavigation isScrolled={false} />
 
-        <main className="max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28">
+        <main className="flex-1 max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28">
           {isDataLoading ? (
             // Show skeleton while profile data loads
             <>
@@ -191,6 +199,8 @@ const UserProfile = () => {
             </>
           )}
         </main>
+
+        <Footer />
       </div>
     </div>
   );
