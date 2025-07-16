@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -13,7 +13,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import { X, Star } from "lucide-react";
 import { toast } from "sonner";
-import CategorySelector from "./CategorySelector";
+import CategorySelector from "./vote/CategorySelector";
 import RatingSlider from "./vote/RatingSlider";
 import { Tables } from "@/integrations/supabase/types";
 
@@ -29,7 +29,7 @@ interface VoteModalProps {
 const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps) => {
   const { user } = useAuth();
   const [category, setCategory] = useState(selectedCategory);
-  const [rating, setRating] = useState(5);
+  const [rating, setRating] = useState([5]);
   const queryClient = useQueryClient();
 
   const { data: categories } = useQuery({
@@ -74,7 +74,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
         const { error } = await supabase
           .from("votes")
           .update({ 
-            rating,
+            rating: rating[0],
             updated_at: new Date().toISOString()
           })
           .eq("id", existingVote.id);
@@ -88,7 +88,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             user_id: user.id,
             rapper_id: rapper.id,
             category_id: category,
-            rating,
+            rating: rating[0],
           });
         
         if (error) throw error;
@@ -122,9 +122,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
   };
 
   // Set initial rating when existing vote loads
-  useState(() => {
+  useEffect(() => {
     if (existingVote) {
-      setRating(existingVote.rating);
+      setRating([existingVote.rating]);
     }
   }, [existingVote]);
 
@@ -153,9 +153,10 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
         <div className="space-y-6">
           <CategorySelector
+            categoryId={category}
+            setCategoryId={setCategory}
             categories={categories}
-            selectedCategory={category}
-            onCategoryChange={setCategory}
+            selectedCategoryData={selectedCategoryData}
           />
 
           {selectedCategoryData && (
@@ -173,13 +174,13 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
           <RatingSlider
             rating={rating}
-            onRatingChange={setRating}
+            setRating={setRating}
           />
 
           <div className="flex items-center gap-2 text-rap-gold">
             <Star className="w-5 h-5 fill-current" />
             <span className="font-semibold font-kaushan">
-              {rating}/10
+              {rating[0]}/10
             </span>
           </div>
 
