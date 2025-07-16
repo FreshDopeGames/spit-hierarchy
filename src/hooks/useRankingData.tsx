@@ -1,3 +1,4 @@
+
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,6 +69,9 @@ export const useRankingData = (rankingId: string) => {
   const query = useQuery({
     queryKey: ["ranking-data-with-deltas", rankingId],
     queryFn: async () => {
+      // First, recalculate positions to ensure they're up to date
+      await supabase.rpc('recalculate_ranking_positions', { target_ranking_id: rankingId });
+
       // Get all ranking items with rapper data - positions are now maintained by the database
       const { data: items, error } = await supabase
         .from("ranking_items")
