@@ -60,7 +60,7 @@ const AchievementGallery = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-32 bg-rap-carbon/50 rounded-lg animate-pulse" />
+          <div key={i} className="h-32 bg-gray-800 rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -112,15 +112,15 @@ const AchievementGallery = () => {
       {/* Stats Overview */}
       {stats && (
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 text-center">
+          <div className="bg-gray-900 border border-rap-gold/30 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-rap-gold">{stats.earned}</div>
             <div className="text-sm text-rap-platinum">Earned</div>
           </div>
-          <div className="bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 text-center">
+          <div className="bg-gray-900 border border-rap-gold/30 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-rap-silver">{stats.total}</div>
             <div className="text-sm text-rap-platinum">Total</div>
           </div>
-          <div className="bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 text-center">
+          <div className="bg-gray-900 border border-rap-gold/30 rounded-lg p-4 text-center">
             <div className="text-2xl font-bold text-rap-forest">{stats.points}</div>
             <div className="text-sm text-rap-platinum">Points</div>
           </div>
@@ -129,7 +129,7 @@ const AchievementGallery = () => {
 
       {/* Achievement Categories */}
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 bg-rap-carbon border border-rap-gold/30">
+        <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 bg-gray-900 border border-rap-gold/30">
           <TabsTrigger value="all" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
             All
           </TabsTrigger>

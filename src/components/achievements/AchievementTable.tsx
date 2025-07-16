@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -39,7 +38,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
           return (
             <div 
               key={achievement.id} 
-              className={`bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 ${
+              className={`bg-gray-900 border border-rap-gold/30 rounded-lg p-4 ${
                 achievement.is_earned ? 'opacity-100' : 'opacity-60'
               }`}
             >
@@ -80,7 +79,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
                     <div className="mt-2">
                       <Progress 
                         value={achievement.progress_percentage} 
-                        className="h-1.5 bg-rap-carbon"
+                        className="h-1.5 bg-gray-800"
                       />
                     </div>
                   )}
@@ -148,7 +147,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
                         <div className="w-full max-w-20 mx-auto">
                           <Progress 
                             value={achievement.progress_percentage} 
-                            className="h-2 bg-rap-carbon"
+                            className="h-2 bg-gray-800"
                           />
                           <span className="text-xs text-rap-silver mt-1 block">
                             {Math.round(achievement.progress_percentage)}%

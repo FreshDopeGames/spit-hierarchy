@@ -40,7 +40,7 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
   const IconComponent = (LucideIcons as any)[achievement.icon] || LucideIcons.Star;
   
   return (
-    <Card className={`bg-rap-carbon/90 border-2 ${rarityBorders[achievement.rarity]} ${
+    <Card className={`bg-gray-900 border-2 ${rarityBorders[achievement.rarity]} ${
       achievement.is_earned ? 'opacity-100' : 'opacity-60'
     } transition-all hover:scale-105`}>
       <CardContent className="p-4">
@@ -79,7 +79,7 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
                 </div>
                 <Progress 
                   value={achievement.progress_percentage} 
-                  className="h-2 bg-rap-carbon"
+                  className="h-2 bg-gray-800"
                 />
               </div>
             )}
