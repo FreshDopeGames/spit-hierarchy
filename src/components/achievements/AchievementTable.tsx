@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
@@ -24,7 +25,7 @@ const rarityColors = {
   common: "bg-gray-500",
   rare: "bg-blue-500",
   epic: "bg-purple-500", 
-  legendary: "bg-yellow-500"
+  legendary: "bg-indigo-600"
 };
 
 const AchievementTable = ({ achievements, showProgress = true }: AchievementTableProps) => {

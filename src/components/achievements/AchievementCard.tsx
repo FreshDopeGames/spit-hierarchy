@@ -26,14 +26,14 @@ const rarityColors = {
   common: "bg-gray-500",
   rare: "bg-blue-500", 
   epic: "bg-rap-gold",
-  legendary: "bg-rap-gold-light"
+  legendary: "bg-indigo-600"
 };
 
 const rarityBorders = {
   common: "border-gray-500/30",
   rare: "border-blue-500/30",
   epic: "border-rap-gold/30", 
-  legendary: "border-rap-gold-light/30"
+  legendary: "border-indigo-600/30"
 };
 
 const AchievementCard = ({ achievement, showProgress = true }: AchievementCardProps) => {
