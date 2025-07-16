@@ -5,6 +5,7 @@ import { ArrowLeft, Crown, Star, Trophy, Eye, Users, Lock, AlertCircle } from "l
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import HeaderNavigation from "@/components/HeaderNavigation";
+import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -261,6 +262,11 @@ const UserRankingDetail = () => {
               </CardContent>
             </Card>
           ))}
+        </div>
+
+        {/* Footer - positioned at the end of ranking items */}
+        <div className="mb-8">
+          <Footer />
         </div>
       </div>
     </div>

@@ -5,6 +5,7 @@ import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import { useRapperImages } from "@/hooks/useImageStyle";
 import RankingItemCard from "./RankingItemCard";
 import RankingLoadMore from "./RankingLoadMore";
+import Footer from "@/components/Footer";
 
 interface OfficialRankingItemsProps {
   items: RankingItemWithDelta[];
@@ -101,6 +102,20 @@ const OfficialRankingItems = ({
         />
       ))}
 
+      {/* Show message if no items to display */}
+      {displayedItems.length === 0 && !loading && (
+        <div className="text-center py-8 text-rap-smoke">
+          {searchKeyword ? "No rappers found matching your search." : "No rappers to display."}
+        </div>
+      )}
+
+      {/* Footer - positioned before Load More button */}
+      {displayedItems.length > 0 && (
+        <div className="mt-8">
+          <Footer />
+        </div>
+      )}
+
       {/* Load More Button - only show when not searching */}
       {showLoadMore && (
         <RankingLoadMore
@@ -110,13 +125,6 @@ const OfficialRankingItems = ({
           totalItems={items.length}
           displayCount={displayCount}
         />
-      )}
-
-      {/* Show message if no items to display */}
-      {displayedItems.length === 0 && !loading && (
-        <div className="text-center py-8 text-rap-smoke">
-          {searchKeyword ? "No rappers found matching your search." : "No rappers to display."}
-        </div>
       )}
     </div>
   );
