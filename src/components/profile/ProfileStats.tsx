@@ -9,7 +9,7 @@ const ProfileStats = ({ memberStats }: ProfileStatsProps) => {
   if (!memberStats) return null;
 
   return (
-    <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+    <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
       <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda mb-4 text-center">
         Stats
       </h3>

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useUserTopRappers } from "@/hooks/useUserTopRappers";
 import TopFiveSlot from "./TopFiveSlot";
@@ -39,7 +38,7 @@ const MyTopFiveSection = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+      <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
         <div className="animate-pulse">
           <div className="h-6 bg-rap-carbon-light rounded mb-4 w-32 mx-auto"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -54,7 +53,7 @@ const MyTopFiveSection = () => {
 
   return (
     <>
-      <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+      <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
         <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda mb-4 text-center">
           My Top 5
         </h3>

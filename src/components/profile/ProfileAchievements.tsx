@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useAchievements } from "@/hooks/useAchievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -14,7 +13,7 @@ const ProfileAchievements = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
+      <Card className="bg-black border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
         <CardHeader>
           <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-lg sm:text-xl">
             <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -51,7 +50,7 @@ const ProfileAchievements = () => {
   });
 
   return (
-    <Card className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
+    <Card className="bg-black border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-lg sm:text-xl">

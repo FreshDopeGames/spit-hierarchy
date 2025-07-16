@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Calendar, MapPin, Crown, Star } from "lucide-react";
 import { format } from "date-fns";
@@ -31,7 +30,7 @@ const ProfileHeader = ({ user, profile, memberStats }: ProfileHeaderProps) => {
   const voteMultiplier = getVoteMultiplier();
 
   return (
-    <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+    <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
       <div className="flex flex-col lg:flex-row items-start lg:items-start space-y-6 lg:space-y-0 lg:space-x-8">
         <div className="flex-shrink-0 mx-auto lg:mx-0">
           <AvatarUpload 
