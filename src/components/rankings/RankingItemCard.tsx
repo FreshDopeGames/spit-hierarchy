@@ -75,8 +75,13 @@ const RankingItemCard = ({
     <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
       isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     } overflow-hidden ${getContainerRadius()}`}>
-      {/* Position Cap - Absolute positioning for desktop/tablet top-5 to cover full height */}
-      <RankingItemPositionCap position={item.dynamic_position} isTopFive={isTopFive} />
+      {/* Position Cap - Pass vote count and visual rank */}
+      <RankingItemPositionCap 
+        position={item.dynamic_position} 
+        isTopFive={isTopFive} 
+        voteCount={item.ranking_votes}
+        visualRank={item.visual_rank}
+      />
       
       {/* Content with appropriate margin for absolute positioned cap */}
       <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentRoundedCorners()} ${getContentMargin()}`}>

@@ -1,4 +1,3 @@
-
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
@@ -20,7 +19,42 @@ export interface RankingItemWithDelta {
   position_delta: number;
   ranking_votes: number;
   dynamic_position: number;
+  visual_rank: number | null; // New field for visual ranking
 }
+
+// Function to calculate visual ranks based on vote counts
+const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
+  // Sort by vote count descending, then by position (which now uses earliest vote for tie-breaking)
+  const sortedItems = [...items].sort((a, b) => {
+    if (b.ranking_votes !== a.ranking_votes) {
+      return b.ranking_votes - a.ranking_votes;
+    }
+    return a.position - b.position; // Use database position for tie-breaking order
+  });
+
+  let currentVisualRank = 1;
+  let previousVoteCount = -1;
+  let itemsWithSameVoteCount = 0;
+
+  return sortedItems.map((item, index) => {
+    if (item.ranking_votes === 0) {
+      // Rappers with 0 votes get null visual rank (will display as "–")
+      return { ...item, visual_rank: null };
+    }
+
+    if (item.ranking_votes !== previousVoteCount) {
+      // New vote count group - set visual rank to current position
+      currentVisualRank = index + 1;
+      previousVoteCount = item.ranking_votes;
+      itemsWithSameVoteCount = 1;
+    } else {
+      // Same vote count as previous - keep same visual rank
+      itemsWithSameVoteCount++;
+    }
+
+    return { ...item, visual_rank: currentVisualRank };
+  }).sort((a, b) => a.position - b.position); // Return to original database order
+};
 
 export const useRankingData = (rankingId: string) => {
   const queryClient = useQueryClient();
@@ -84,13 +118,16 @@ export const useRankingData = (rankingId: string) => {
             ...item,
             position_delta: deltaResult || 0,
             ranking_votes,
-            dynamic_position: item.position // Use the database position directly
+            dynamic_position: item.position, // Use the database position directly
+            visual_rank: null // Will be calculated below
           } as RankingItemWithDelta;
         })
       );
 
-      // Return items in their database-sorted order (no need to re-sort)
-      return itemsWithVotesAndDeltas;
+      // Calculate visual ranks for items with tied vote counts
+      const itemsWithVisualRanks = calculateVisualRanks(itemsWithVotesAndDeltas);
+
+      return itemsWithVisualRanks;
     },
     refetchInterval,
     refetchIntervalInBackground,

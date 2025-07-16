@@ -5,9 +5,11 @@ import { useIsMobile } from "@/hooks/use-mobile";
 interface RankingItemPositionCapProps {
   position: number;
   isTopFive: boolean;
+  voteCount: number;
+  visualRank: number | null;
 }
 
-const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapProps) => {
+const RankingItemPositionCap = ({ position, isTopFive, voteCount, visualRank }: RankingItemPositionCapProps) => {
   const isMobile = useIsMobile();
 
   const getPositionGradient = (position: number) => {
@@ -43,10 +45,13 @@ const RankingItemPositionCap = ({ position, isTopFive }: RankingItemPositionCapP
     return '';
   };
 
+  // Display logic: show "–" for 0 votes, otherwise show visual rank
+  const displayText = voteCount === 0 ? "–" : (visualRank?.toString() || position.toString());
+
   return (
     <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0 ${getPositioning()}`}>
       <span className={`${isTopFive ? 'text-3xl' : 'text-lg'} font-bold text-rap-carbon font-mogra relative z-10`}>
-        {position}
+        {displayText}
       </span>
     </div>
   );
