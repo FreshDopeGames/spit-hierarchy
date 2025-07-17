@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -23,8 +22,8 @@ interface AdminRapperTableProps {
 const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperTableProps) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {Array.from({ length: 6 }).map((_, i) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({ length: 8 }).map((_, i) => (
           <Card key={i} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/20 animate-pulse">
             <CardContent className="p-4">
               <AspectRatio ratio={1} className="mb-3">
@@ -52,7 +51,7 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {rappers.map((rapper) => (
         <RapperCardWithImage key={rapper.id} rapper={rapper} onEdit={onEdit} onDelete={onDelete} />
       ))}

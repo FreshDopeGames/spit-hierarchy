@@ -16,7 +16,7 @@ import { toast } from "sonner";
 
 type Rapper = Tables<"rappers">;
 
-const ITEMS_PER_PAGE = 20;
+const ITEMS_PER_PAGE = 28; // 4 rappers per row × 7 rows = 28 rappers per page
 
 const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
