@@ -24,7 +24,7 @@ interface AchievementTableProps {
 const rarityColors = {
   common: "bg-gray-500",
   rare: "bg-blue-500",
-  epic: "bg-purple-500", 
+  epic: "bg-rap-gold", 
   legendary: "bg-indigo-600"
 };
 
