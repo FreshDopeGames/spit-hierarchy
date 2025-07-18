@@ -1,4 +1,5 @@
 
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -136,7 +137,15 @@ export default {
 						transform: 'translateY(0)',
 						animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)'
 					},
+					'25%': { 
+						transform: 'translateY(-15px)',
+						animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
+					},
 					'50%': { 
+						transform: 'translateY(0)',
+						animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)'
+					},
+					'75%': { 
 						transform: 'translateY(-15px)',
 						animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
 					}
@@ -148,9 +157,10 @@ export default {
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
-				'slow-bounce': 'slow-bounce 2s ease-in-out infinite'
+				'slow-bounce': 'slow-bounce 2s ease-in-out'
 			}
 		}
 	},
 	plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
