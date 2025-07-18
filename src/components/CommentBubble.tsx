@@ -31,14 +31,14 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
     isTogglingLike
   } = useComments({ contentType, contentId });
 
-  // Animation effect - hop every 10 seconds when collapsed
+  // Animation effect - hop every 20 seconds when collapsed
   useEffect(() => {
     if (isExpanded) return;
 
     const interval = setInterval(() => {
       setShouldAnimate(true);
-      setTimeout(() => setShouldAnimate(false), 600); // Animation duration
-    }, 10000); // Every 10 seconds
+      setTimeout(() => setShouldAnimate(false), 2000); // Animation duration - increased to match slower animation
+    }, 20000); // Every 20 seconds - doubled from 10 seconds
 
     return () => clearInterval(interval);
   }, [isExpanded]);
@@ -70,7 +70,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
           <Button
             onClick={() => setIsExpanded(true)}
             className={`bg-rap-gold text-black hover:bg-rap-gold/80 rounded-full h-14 px-4 shadow-lg shadow-rap-gold/30 transition-transform duration-300 font-merienda ${
-              shouldAnimate ? 'animate-bounce' : ''
+              shouldAnimate ? 'animate-slow-bounce' : ''
             }`}
           >
             <MessageCircle className="w-5 h-5 mr-2" />

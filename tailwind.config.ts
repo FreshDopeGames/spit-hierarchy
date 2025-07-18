@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -129,6 +130,16 @@ export default {
 					'0%, 100%': { transform: 'translateY(0px) rotate(0deg)' },
 					'33%': { transform: 'translateY(-10px) rotate(1deg)' },
 					'66%': { transform: 'translateY(5px) rotate(-1deg)' }
+				},
+				'slow-bounce': {
+					'0%, 100%': { 
+						transform: 'translateY(0)',
+						animationTimingFunction: 'cubic-bezier(0.8, 0, 1, 1)'
+					},
+					'50%': { 
+						transform: 'translateY(-15px)',
+						animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
+					}
 				}
 			},
 			animation: {
@@ -136,7 +147,8 @@ export default {
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
-				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite'
+				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
+				'slow-bounce': 'slow-bounce 2s ease-in-out infinite'
 			}
 		}
 	},
