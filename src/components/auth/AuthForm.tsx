@@ -123,7 +123,7 @@ const AuthForm = ({
           <div className="space-y-2">
             <Label htmlFor="username" className="text-rap-platinum font-kaushan">Username *</Label>
             <div className="relative">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <Input 
                 id="username" 
                 type="text" 
@@ -132,7 +132,7 @@ const AuthForm = ({
                 onChange={(e) => handleUsernameChange(e.target.value)} 
                 required={!isLogin} 
                 maxLength={30}
-                className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan" 
+                className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-kaushan" 
               />
             </div>
           </div>
@@ -140,7 +140,7 @@ const AuthForm = ({
           <div className="space-y-2">
             <Label htmlFor="fullName" className="text-rap-platinum font-kaushan">Full Name</Label>
             <div className="relative font-merienda text-rap-gold">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <Input 
                 id="fullName" 
                 type="text" 
@@ -148,7 +148,7 @@ const AuthForm = ({
                 value={fullName} 
                 onChange={(e) => handleFullNameChange(e.target.value)} 
                 maxLength={100}
-                className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-kaushan" 
+                className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-kaushan" 
               />
             </div>
           </div>
@@ -158,7 +158,7 @@ const AuthForm = ({
       <div className="space-y-2">
         <Label htmlFor="email" className="text-rap-platinum font-kaushan">Email *</Label>
         <div className="relative">
-          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+          <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input 
             id="email" 
             type="email" 
@@ -167,7 +167,7 @@ const AuthForm = ({
             onChange={(e) => handleEmailChange(e.target.value)} 
             required 
             maxLength={254}
-            className="pl-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-merienda" 
+            className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-merienda" 
           />
         </div>
       </div>
@@ -175,7 +175,7 @@ const AuthForm = ({
       <div className="space-y-2">
         <Label htmlFor="password" className="text-rap-platinum font-kaushan">Password *</Label>
         <div className="relative">
-          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+          <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input 
             id="password" 
             type={showPassword ? "text" : "password"}
@@ -186,12 +186,12 @@ const AuthForm = ({
             onBlur={() => setShowPasswordRequirements(false)}
             required 
             maxLength={128}
-            className="pl-10 pr-10 bg-rap-carbon/50 border-rap-burgundy/30 text-rap-silver placeholder-rap-smoke focus:border-rap-burgundy font-merienda" 
+            className="pl-10 pr-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-merienda" 
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-rap-smoke hover:text-rap-silver transition-colors"
+            className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 hover:text-gray-700 transition-colors"
           >
             {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
           </button>
