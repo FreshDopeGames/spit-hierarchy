@@ -26,7 +26,7 @@ const BlogSidebar = ({
             <CardTitle className="text-rap-gold font-ceviche font-normal text-2xl text-center">More Writtens</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-0">
-            {relatedPosts.map(post => <Link key={post.id} to={`/blog/${post.id}`} className="block group">
+            {relatedPosts.map(post => <Link key={post.id} to={`/blog/${post.slug}`} className="block group">
                 <div className="flex lg:flex-col gap-4 lg:gap-3 p-3 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                   <div className="flex-shrink-0 lg:w-full">
                     <img src={post.imageUrl} alt={post.title} className="w-20 h-16 lg:w-full lg:h-32 object-cover rounded-md group-hover:opacity-80 transition-opacity" />
@@ -46,7 +46,7 @@ const BlogSidebar = ({
         </Card>}
 
       {/* Newsletter Signup */}
-      {showSignUp && <Card className="bg-gradient-to-br from-rap-burgundy/20 to-rap-forest/20 border border-rap-gold/40">
+      {showSignUp && <Card className="bg-rap-carbon border border-rap-gold/40">
           <CardHeader className="pb-4">
             <CardTitle className="text-rap-gold font-ceviche text-lg">Join the Temple</CardTitle>
           </CardHeader>
@@ -55,7 +55,7 @@ const BlogSidebar = ({
               Subscribe to receive the latest sacred scrolls and exclusive insights from the temple.
             </p>
             <Link to="/auth">
-              <Button className="w-full bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-sm">
+              <Button className="w-full bg-rap-gold text-black hover:bg-rap-gold-light font-mogra text-sm">
                 Join Now
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Button>
