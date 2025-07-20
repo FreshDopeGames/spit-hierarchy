@@ -1,3 +1,4 @@
+
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import { useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +19,7 @@ interface BlogPost {
   featured_image_url: string;
   published_at: string;
   author_id: string;
+  slug: string;
   blog_categories?: {
     name: string;
   };
@@ -82,6 +84,7 @@ const Blog = () => {
           featured_image_url,
           published_at,
           author_id,
+          slug,
           blog_categories(name),
           blog_post_tags(
             blog_tags(

@@ -8,22 +8,22 @@ import InternalPageHeader from "@/components/InternalPageHeader";
 import BlogDetailLoading from "@/components/blog/BlogDetailLoading";
 import BlogDetailError from "@/components/blog/BlogDetailError";
 import BlogDetailContent from "@/components/blog/BlogDetailContent";
-import { useBlogPost } from "@/hooks/useBlogPost";
+import { useBlogPostBySlug } from "@/hooks/useBlogPostBySlug";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { transformBlogPost, transformRelatedPosts } from "@/utils/blogPostTransformers";
 
 const BlogDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const { user } = useAuth();
 
-  // Get comment data
+  // Fetch the blog post by slug
+  const { data: blogPost, isLoading, error } = useBlogPostBySlug(slug);
+
+  // Get comment data - use blog post ID when available
   const { totalComments } = useComments({ 
     contentType: "blog", 
-    contentId: id || "" 
+    contentId: blogPost?.id || "" 
   });
-
-  // Fetch the blog post
-  const { data: blogPost, isLoading, error } = useBlogPost(id);
 
   // Fetch related posts
   const { data: relatedPosts } = useRelatedPosts(blogPost?.category_id, blogPost?.id);
@@ -89,7 +89,7 @@ const BlogDetail = () => {
 
       {/* Comment Bubble */}
       <div data-comment-bubble>
-        <CommentBubble contentType="blog" contentId={id || ""} />
+        <CommentBubble contentType="blog" contentId={blogPost?.id || ""} />
       </div>
     </div>
   );

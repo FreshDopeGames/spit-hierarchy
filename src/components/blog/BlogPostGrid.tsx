@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,6 +15,7 @@ interface BlogPost {
   featured_image_url: string;
   published_at: string;
   author_id: string;
+  slug: string;
   blog_categories?: {
     name: string;
   };
@@ -55,7 +57,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {posts.map(post => (
         <Card key={post.id} className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-xl shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300 group">
-          <Link to={`/blog/${post.id}`}>
+          <Link to={`/blog/${post.slug}`}>
             <div className="overflow-hidden hover:invert transition-all duration-300">
               <ResponsiveImage
                 src={getImageData(post)}
@@ -81,7 +83,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
               )}
             </div>
             
-            <Link to={`/blog/${post.id}`}>
+            <Link to={`/blog/${post.slug}`}>
               <h3 className="font-ceviche text-rap-platinum hover:text-rap-gold transition-colors cursor-pointer mb-3 leading-tight text-4xl">
                 {post.title}
               </h3>
@@ -111,7 +113,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
               </div>
             )}
             
-            <Link to={`/blog/${post.id}`}>
+            <Link to={`/blog/${post.slug}`}>
               <Button 
                 variant="outline" 
                 className="bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 group"

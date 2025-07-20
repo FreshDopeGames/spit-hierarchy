@@ -1,3 +1,4 @@
+
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -80,7 +81,7 @@ function App() {
                   <Route path="/privacy" element={<PrivacyPolicy />} />
                   <Route path="/terms" element={<TermsOfUse />} />
                   <Route path="/blog" element={<Blog />} />
-                  <Route path="/blog/:id" element={<BlogDetail />} />
+                  <Route path="/blog/:slug" element={<BlogDetail />} />
                   <Route path="/rappers" element={<AllRappers />} />
                   <Route path="/all-rappers" element={<AllRappers />} />
                   <Route path="/rapper/:id" element={<RapperDetail />} />
