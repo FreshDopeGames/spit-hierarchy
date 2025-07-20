@@ -1,7 +1,8 @@
 
 import { useState } from "react";
-import { useAuth } from "@/hooks/useAuth";
 import { Navigate } from "react-router-dom";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
+import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
@@ -12,13 +13,19 @@ import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement"
 import AdminDataManagement from "@/components/admin/AdminDataManagement";
 
 const Admin = () => {
-  const { user } = useAuth();
+  const { user, isAuthenticated } = useSecureAuth();
+  const { isAdmin, isLoading } = useSecurityContext();
   const [isScrolled, setIsScrolled] = useState(false);
 
-  // Check if user is admin (you'll need to implement proper admin check)
-  const isAdmin = true; // Replace with actual admin check
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
+        <div className="text-rap-platinum text-xl font-mogra animate-pulse">Loading...</div>
+      </div>
+    );
+  }
 
-  if (!user || !isAdmin) {
+  if (!isAuthenticated || !isAdmin) {
     return <Navigate to="/auth" replace />;
   }
 
