@@ -1605,6 +1605,10 @@ export type Database = {
         Args: { target_ranking_id?: string }
         Returns: undefined
       }
+      reset_all_voting_data: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
     }
     Enums: {
       achievement_rarity: "common" | "rare" | "epic" | "legendary"
