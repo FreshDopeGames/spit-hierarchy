@@ -1,3 +1,4 @@
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -36,12 +37,30 @@ const AuthForm = ({
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
   const [showPasswordRequirements, setShowPasswordRequirements] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [touchedFields, setTouchedFields] = useState<{
+    email: boolean;
+    password: boolean;
+    username: boolean;
+  }>({
+    email: false,
+    password: false,
+    username: false
+  });
 
   const handleEmailChange = (value: string) => {
     const sanitized = sanitizeInput(value);
     onEmailChange(sanitized);
     
-    if (sanitized && !validateEmail(sanitized)) {
+    // Clear errors when user starts typing again
+    if (touchedFields.email && validationErrors.length > 0) {
+      setValidationErrors([]);
+    }
+  };
+
+  const handleEmailBlur = () => {
+    setTouchedFields(prev => ({ ...prev, email: true }));
+    
+    if (email && !validateEmail(email)) {
       setValidationErrors(['Please enter a valid email address']);
     } else {
       setValidationErrors([]);
@@ -51,8 +70,18 @@ const AuthForm = ({
   const handlePasswordChange = (value: string) => {
     onPasswordChange(value);
     
-    if (!isLogin && value) {
-      const validation = validatePassword(value);
+    // Clear errors when user starts typing again
+    if (touchedFields.password && validationErrors.length > 0) {
+      setValidationErrors([]);
+    }
+  };
+
+  const handlePasswordBlur = () => {
+    setShowPasswordRequirements(false);
+    setTouchedFields(prev => ({ ...prev, password: true }));
+    
+    if (!isLogin && password) {
+      const validation = validatePassword(password);
       setValidationErrors(validation.errors);
     } else {
       setValidationErrors([]);
@@ -63,8 +92,17 @@ const AuthForm = ({
     const sanitized = sanitizeInput(value);
     onUsernameChange(sanitized);
     
-    if (sanitized) {
-      const validation = validateUsername(sanitized);
+    // Clear errors when user starts typing again
+    if (touchedFields.username && validationErrors.length > 0) {
+      setValidationErrors([]);
+    }
+  };
+
+  const handleUsernameBlur = () => {
+    setTouchedFields(prev => ({ ...prev, username: true }));
+    
+    if (username) {
+      const validation = validateUsername(username);
       setValidationErrors(validation.errors);
     } else {
       setValidationErrors([]);
@@ -129,7 +167,8 @@ const AuthForm = ({
                 type="text" 
                 placeholder="Enter your username (3-30 characters)" 
                 value={username} 
-                onChange={(e) => handleUsernameChange(e.target.value)} 
+                onChange={(e) => handleUsernameChange(e.target.value)}
+                onBlur={handleUsernameBlur}
                 required={!isLogin} 
                 maxLength={30}
                 className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-kaushan" 
@@ -164,7 +203,8 @@ const AuthForm = ({
             type="email" 
             placeholder="Enter your email" 
             value={email} 
-            onChange={(e) => handleEmailChange(e.target.value)} 
+            onChange={(e) => handleEmailChange(e.target.value)}
+            onBlur={handleEmailBlur}
             required 
             maxLength={254}
             className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-merienda" 
@@ -183,7 +223,7 @@ const AuthForm = ({
             value={password} 
             onChange={(e) => handlePasswordChange(e.target.value)} 
             onFocus={() => !isLogin && setShowPasswordRequirements(true)}
-            onBlur={() => setShowPasswordRequirements(false)}
+            onBlur={handlePasswordBlur}
             required 
             maxLength={128}
             className="pl-10 pr-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-merienda" 
