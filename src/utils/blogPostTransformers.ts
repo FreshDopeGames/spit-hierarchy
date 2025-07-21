@@ -27,6 +27,7 @@ interface RelatedPostData {
   excerpt: string;
   featured_image_url: string;
   published_at: string;
+  slug: string;
 }
 
 export const formatDate = (dateString: string) => {
@@ -54,6 +55,7 @@ export const transformRelatedPosts = (relatedPosts: RelatedPostData[]) => {
     title: post.title,
     excerpt: post.excerpt || `${post.title.substring(0, 100)}...`,
     imageUrl: post.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
-    timeAgo: formatDate(post.published_at)
+    timeAgo: formatDate(post.published_at),
+    slug: post.slug
   })) || [];
 };

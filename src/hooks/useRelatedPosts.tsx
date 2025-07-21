@@ -15,7 +15,8 @@ export const useRelatedPosts = (categoryId: string | undefined, currentPostId: s
           title,
           excerpt,
           featured_image_url,
-          published_at
+          published_at,
+          slug
         `)
         .eq('status', 'published')
         .eq('category_id', categoryId)

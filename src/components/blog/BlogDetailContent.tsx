@@ -31,6 +31,7 @@ interface RelatedPost {
   excerpt: string;
   imageUrl: string;
   timeAgo: string;
+  slug: string;
 }
 
 interface BlogDetailContentProps {
