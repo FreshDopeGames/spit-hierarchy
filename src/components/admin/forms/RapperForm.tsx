@@ -153,6 +153,15 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     setValidationErrors([]);
 
     try {
+      // Generate slug from name
+      const generateSlug = (name: string): string => {
+        return name
+          .toLowerCase()
+          .replace(/[^a-zA-Z0-9\s-]/g, '')
+          .replace(/\s+/g, '-')
+          .replace(/^-+|-+$/g, '');
+      };
+
       const rapperData = {
         name: sanitizeAdminInput(formData.name).trim(),
         real_name: sanitizeAdminInput(formData.real_name).trim() || null,
@@ -164,6 +173,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         twitter_handle: formData.twitter_handle?.replace('@', '').trim() || null,
         instagram_handle: formData.instagram_handle?.replace('@', '').trim() || null,
         spotify_id: sanitizeInput(formData.spotify_id).trim() || null,
+        slug: generateSlug(sanitizeAdminInput(formData.name).trim()),
         updated_at: new Date().toISOString()
       };
 

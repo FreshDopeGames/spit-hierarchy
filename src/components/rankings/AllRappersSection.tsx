@@ -67,7 +67,7 @@ const AllRappersSection = ({
                   disabled={!userLoggedIn}
                   className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-bold text-sm sm:text-lg px-3 py-2 sm:px-6 sm:py-3"
                 />
-                <Link to={`/rapper/${rapper.id}`} className="w-full sm:w-auto">
+                <Link to={`/rapper/${rapper.slug || rapper.id}`} className="w-full sm:w-auto">
                   <Button
                     variant="ghost"
                     size="sm"

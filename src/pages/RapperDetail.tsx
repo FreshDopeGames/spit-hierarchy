@@ -31,18 +31,21 @@ const RapperDetail = () => {
     queryFn: async () => {
       if (!id) throw new Error("No rapper ID provided");
 
-      // Fetch rapper data
+      // Check if id is a UUID (old format) or slug (new format)
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(id);
+      
+      // Fetch rapper data using either id or slug
       const { data: rapperData, error: rapperError } = await supabase
         .from("rappers")
         .select("*")
-        .eq("id", id)
+        .eq(isUUID ? "id" : "slug", id)
         .single();
 
       if (rapperError) throw rapperError;
 
       // Fetch Top 5 count using the database function
       const { data: countData, error: countError } = await supabase
-        .rpc("get_rapper_top5_count", { rapper_uuid: id });
+        .rpc("get_rapper_top5_count", { rapper_uuid: rapperData.id });
 
       if (countError) {
         console.error("Error fetching Top 5 count:", countError);

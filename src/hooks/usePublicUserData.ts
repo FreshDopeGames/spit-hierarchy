@@ -17,7 +17,7 @@ export const usePublicUserData = () => {
       // Fetch user profile by username with enhanced error handling
       const { data: profileData, error: profileError } = await supabase
         .from("profiles")
-        .select("id, username, full_name, created_at, bio, location")
+        .select("id, username, full_name, created_at, bio, location, avatar_url")
         .eq("username", username)
         .single();
 

@@ -965,6 +965,7 @@ export type Database = {
           name: string
           origin: string | null
           real_name: string | null
+          slug: string
           spotify_id: string | null
           total_votes: number | null
           twitter_handle: string | null
@@ -984,6 +985,7 @@ export type Database = {
           name: string
           origin?: string | null
           real_name?: string | null
+          slug: string
           spotify_id?: string | null
           total_votes?: number | null
           twitter_handle?: string | null
@@ -1003,6 +1005,7 @@ export type Database = {
           name?: string
           origin?: string | null
           real_name?: string | null
+          slug?: string
           spotify_id?: string | null
           total_votes?: number | null
           twitter_handle?: string | null

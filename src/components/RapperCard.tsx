@@ -43,7 +43,7 @@ const RapperCard = ({
   
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigateToRapper(rapper.id, currentPage);
+    navigateToRapper(rapper.slug || rapper.id, currentPage);
   };
   
   return (

@@ -50,7 +50,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </div>
             <RapperAvatar rapper={rapper} size="xl" />
             <div className="flex-1 text-center w-full">
-              <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
+              <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
                 <h3 className="text-xl sm:text-2xl font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors leading-tight mb-2">
                   {rapper.name}
                 </h3>
@@ -80,7 +80,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </div>
             <RapperAvatar rapper={rapper} size="md" />
             <div className="text-center min-w-0 w-full px-2">
-              <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
+              <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
                 <h4 className="text-base sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors leading-tight">
                   {rapper.name}
                 </h4>

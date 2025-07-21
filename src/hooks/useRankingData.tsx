@@ -16,6 +16,7 @@ export interface RankingItemWithDelta {
     name: string;
     origin: string | null;
     total_votes: number | null;
+    slug?: string | null;
   };
   position_delta: number;
   ranking_votes: number;
@@ -86,7 +87,8 @@ export const useRankingData = (rankingId: string) => {
             id,
             name,
             origin,
-            total_votes
+            total_votes,
+            slug
           )
         `)
         .eq("ranking_id", rankingId)

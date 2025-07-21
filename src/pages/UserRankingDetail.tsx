@@ -29,6 +29,7 @@ interface UserRankingData {
       name: string;
       real_name: string | null;
       origin: string | null;
+      slug?: string | null;
     };
   }>;
 }
@@ -69,7 +70,8 @@ const UserRankingDetail = () => {
               id,
               name,
               real_name,
-              origin
+              origin,
+              slug
             )
           )
         `)
@@ -239,7 +241,7 @@ const UserRankingDetail = () => {
                   </div>
                   
                   <div className="flex-1">
-                    <Link to={`/rapper/${item.rapper.id}`} className="text-xl font-bold text-rap-platinum hover:text-rap-gold transition-colors font-mogra">
+                    <Link to={`/rapper/${item.rapper.slug || item.rapper.id}`} className="text-xl font-bold text-rap-platinum hover:text-rap-gold transition-colors font-mogra">
                       {item.rapper.name}
                     </Link>
                     {item.rapper.real_name && (

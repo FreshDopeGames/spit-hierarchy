@@ -77,7 +77,7 @@ const RankingItemContent = ({
   return (
     <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
       {/* Rapper Image - Always displayed with placeholder fallback */}
-      <Link to={`/rapper/${item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity relative`}>
+      <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity relative`}>
         <img 
           src={imageToDisplay}
           alt=""
@@ -106,7 +106,7 @@ const RankingItemContent = ({
       {/* Main Content */}
       <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
         <div className={`flex ${isTopFive && isMobile ? 'flex-col items-center' : 'items-start'} gap-2 flex-wrap`}>
-          <Link to={`/rapper/${item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
+          <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
           </Link>
           {/* Only show trending icon next to name for top 5 */}

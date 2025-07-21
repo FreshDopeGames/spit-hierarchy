@@ -56,7 +56,7 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
   });
   
   return (
-    <Link to={`/rapper/${rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
+    <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
       <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
         <img 
           src={imageToDisplay}

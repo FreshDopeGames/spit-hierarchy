@@ -46,7 +46,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           )}
 
           {/* Rapper Image - Make it clickable */}
-          <Link to={`/rapper/${rapper.id}`}>
+          <Link to={`/rapper/${rapper.slug || rapper.id}`}>
             <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
               <img 
                 src={imageUrl} 
@@ -59,7 +59,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           {/* Rapper Info */}
           <div className="space-y-3">
             <div className="flex items-start justify-between">
-              <Link to={`/rapper/${rapper.id}`}>
+              <Link to={`/rapper/${rapper.slug || rapper.id}`}>
                 <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-gold transition-colors cursor-pointer font-mogra">{rapper.name}</h3>
               </Link>
               {rapper.verified && (
