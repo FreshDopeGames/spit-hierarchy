@@ -2,7 +2,6 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { RapperFormData } from "../types/RapperFormTypes";
 
@@ -12,14 +11,12 @@ interface RapperFormFieldsProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onSelectChange: (field: keyof RapperFormData) => (value: string) => void;
-  onVerifiedChange: (checked: boolean) => void;
 }
 
 export const RapperFormFields = ({ 
   formData, 
   onInputChange, 
-  onSelectChange,
-  onVerifiedChange 
+  onSelectChange
 }: RapperFormFieldsProps) => {
   const months = [
     { value: "1", label: "January" },
@@ -168,15 +165,6 @@ export const RapperFormFields = ({
           className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           rows={3}
         />
-      </div>
-
-      <div className="flex items-center space-x-2">
-        <Switch
-          id="verified"
-          checked={formData.verified}
-          onCheckedChange={onVerifiedChange}
-        />
-        <Label htmlFor="verified" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Verified Artist</Label>
       </div>
     </>
   );

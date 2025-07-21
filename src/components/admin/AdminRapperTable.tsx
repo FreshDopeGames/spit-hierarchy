@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
-import { Star, MapPin, Calendar, Verified, Music, Edit, Trash2 } from "lucide-react";
+import { Star, MapPin, Calendar, Music, Edit, Trash2 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { formatBirthdate } from "@/utils/zodiacUtils";
@@ -82,9 +82,6 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
         <div className="space-y-2">
           <div className="flex items-start justify-between">
             <h3 className="text-rap-platinum font-bold text-sm leading-tight">{rapper.name}</h3>
-            {rapper.verified && (
-              <Verified className="w-4 h-4 text-rap-gold flex-shrink-0" />
-            )}
           </div>
 
           {rapper.real_name && (

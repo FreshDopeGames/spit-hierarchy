@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Star, MapPin, Calendar, Verified, TrendingUp } from "lucide-react";
+import { Star, MapPin, Calendar, TrendingUp } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperPercentile } from "@/hooks/useRapperPercentile";
 
@@ -28,7 +28,6 @@ const RapperInfo = ({ rapper }: RapperInfoProps) => {
     <div className="space-y-3">
       <div className="flex items-center justify-between">
         <h3 className="text-xl font-bold font-kaushan text-rap-platinum">{rapper.name}</h3>
-        {rapper.verified && <Verified className="w-5 h-5 text-rap-forest" />}
       </div>
       
       {rapper.real_name && (

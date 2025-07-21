@@ -1,7 +1,8 @@
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Crown, MapPin, Calendar, Verified, Music, Instagram, Twitter } from "lucide-react";
+import { Crown, MapPin, Calendar, Music, Instagram, Twitter } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
@@ -61,7 +62,6 @@ const RapperHeader = ({
                 <div>
                   <div className="flex items-center gap-3 mb-2">
                     <h1 className="text-4xl font-bold text-rap-platinum font-mogra">{rapper.name}</h1>
-                    {rapper.verified && <Verified className="w-6 h-6 text-rap-forest" />}
                   </div>
                   {rapper.real_name && <p className="text-rap-smoke text-lg font-kaushan">{rapper.real_name}</p>}
                 </div>
