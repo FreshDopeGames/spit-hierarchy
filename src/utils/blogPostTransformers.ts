@@ -7,6 +7,7 @@ interface BlogPost {
   content: string;
   excerpt: string;
   featured_image_url: string;
+  video_url: string;
   published_at: string;
   author_id: string;
   category_id: string;
@@ -45,7 +46,8 @@ export const transformBlogPost = (blogPost: BlogPost) => {
     author: "Temple Scribe",
     timeAgo: formatDate(blogPost.published_at),
     readTime: "5 min read",
-    featured_image_url: blogPost.featured_image_url
+    featured_image_url: blogPost.featured_image_url,
+    video_url: blogPost.video_url
   };
 };
 

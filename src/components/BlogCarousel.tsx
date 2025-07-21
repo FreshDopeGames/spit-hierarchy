@@ -29,6 +29,7 @@ const BlogCarousel = () => {
         error
       } = await supabase.from("blog_posts").select(`
           id,
+          slug,
           title,
           excerpt,
           featured_image_url,
@@ -113,7 +114,7 @@ const BlogCarousel = () => {
             <div className="flex">
               {featuredPosts.map(post => (
                 <div key={post.id} className="flex-[0_0_100%] min-w-0">
-                  <Link to={`/blog/${post.id}`} className="block">
+                  <Link to={`/blog/${post.slug}`} className="block">
                     <div className="relative h-[400px] sm:h-[450px] md:h-[500px] lg:h-[550px] overflow-hidden cursor-pointer">
                       <ResponsiveImage 
                         src={getImageData(post)} 

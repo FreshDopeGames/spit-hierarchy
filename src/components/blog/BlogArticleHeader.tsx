@@ -2,6 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
+import VideoPlayer from "@/components/ui/VideoPlayer";
 
 interface BlogPost {
   title: string;
@@ -10,6 +11,7 @@ interface BlogPost {
   timeAgo: string;
   readTime: string;
   featured_image_url?: string;
+  video_url?: string;
 }
 
 interface BlogArticleHeaderProps {
@@ -62,21 +64,14 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
         </div>
       </div>
 
-      {/* Featured Image - show full aspect ratio with optimized sizing */}
-      {featuredImageData && (
+      {/* Featured Video or Image - show full aspect ratio with optimized sizing */}
+      {(blogPost.video_url || featuredImageData) && (
         <div className="relative rounded-xl overflow-hidden mb-8">
-          <ResponsiveImage
-            src={featuredImageData}
+          <VideoPlayer
+            videoUrl={blogPost.video_url}
+            fallbackImageUrl={featuredImageData}
             alt={blogPost.title}
-            className="w-full h-auto"
-            context="hero"
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
-            onError={() => {
-              console.error('Failed to load blog post image:', blogPost.featured_image_url);
-            }}
-            onLoad={() => {
-              console.log('Successfully loaded blog post image:', blogPost.featured_image_url);
-            }}
+            className="w-full h-auto rounded-xl"
           />
         </div>
       )}

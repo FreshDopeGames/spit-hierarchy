@@ -7,6 +7,7 @@ export interface BlogPostFormData {
   meta_title: string;
   meta_description: string;
   featured_image_url: string;
+  video_url: string;
   category_id: string;
   status: string;
   featured: boolean;
@@ -20,6 +21,7 @@ export const createEmptyFormData = (): BlogPostFormData => ({
   meta_title: '',
   meta_description: '',
   featured_image_url: '',
+  video_url: '',
   category_id: '',
   status: 'draft',
   featured: false
@@ -33,6 +35,7 @@ export const createFormDataFromPost = (post: any): BlogPostFormData => ({
   meta_title: post.meta_title || '',
   meta_description: post.meta_description || '',
   featured_image_url: post.featured_image_url || '',
+  video_url: post.video_url || '',
   category_id: post.category_id || '',
   status: post.status || 'draft',
   featured: post.featured || false

@@ -11,6 +11,7 @@ interface BlogPost {
   content: string;
   excerpt: string;
   featured_image_url: string;
+  video_url: string;
   published_at: string;
   author_id: string;
   category_id: string;
@@ -43,6 +44,7 @@ interface BlogDetailContentProps {
     timeAgo: string;
     readTime: string;
     featured_image_url?: string;
+    video_url?: string;
   };
   transformedRelatedPosts: RelatedPost[];
   totalComments: number;

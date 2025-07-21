@@ -8,6 +8,7 @@ interface BlogPost {
   content: string;
   excerpt: string;
   featured_image_url: string;
+  video_url: string;
   published_at: string;
   author_id: string;
   category_id: string;
@@ -34,6 +35,7 @@ export const useBlogPost = (id: string | undefined) => {
           content,
           excerpt,
           featured_image_url,
+          video_url,
           published_at,
           author_id,
           category_id,

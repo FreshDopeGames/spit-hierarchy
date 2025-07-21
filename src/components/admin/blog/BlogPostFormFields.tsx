@@ -132,6 +132,19 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
         onImageChange={(url) => setFormData(prev => ({ ...prev, featured_image_url: url }))}
       />
 
+      <div className="space-y-2">
+        <Label htmlFor="video_url" className="text-rap-platinum text-sm sm:text-base">Video URL (optional)</Label>
+        <Input
+          id="video_url"
+          value={formData.video_url}
+          onChange={(e) => handleInputChange('video_url', e.target.value)}
+          className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10"
+          placeholder="https://example.com/video.mp4"
+          type="url"
+        />
+        <p className="text-xs text-rap-smoke">If provided, this video will be displayed instead of the featured image on the blog detail page</p>
+      </div>
+
       <div className="flex items-center space-x-3 p-3 bg-rap-carbon/30 rounded">
         <Switch
           id="featured"
