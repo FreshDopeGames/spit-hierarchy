@@ -10,47 +10,33 @@ interface RankingItemPositionCapProps {
 }
 
 const RankingItemPositionCap = ({ position, isTopFive, voteCount, visualRank }: RankingItemPositionCapProps) => {
-  const isMobile = useIsMobile();
-
   const getPositionGradient = (position: number) => {
     if (position <= 5) {
-      return "bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light";
+      return "bg-gradient-to-br from-rap-gold via-rap-gold-light to-yellow-300";
     }
-    return "bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400";
+    return "bg-gradient-to-br from-gray-700 via-gray-600 to-gray-500";
   };
 
-  const getRoundedCorners = () => {
-    if (isMobile && isTopFive) {
-      return "rounded-t-lg"; // Top corners rounded on mobile for top 5
-    }
-    return "rounded-l-lg"; // Left corners rounded for desktop top 5 and all 6+ rankings
-  };
-
-  const getSizing = () => {
-    if (isMobile && isTopFive) {
-      return 'h-10 w-full'; // Half height, full width for mobile top 5
-    }
-    // On desktop/tablet, ensure the cap covers the full height including padding
-    // Use absolute positioning to stretch the full height of the parent container
+  const getPositionStyling = () => {
     if (isTopFive) {
-      return 'absolute left-0 top-0 bottom-0 w-20'; // Absolute positioning to cover full height
+      return "absolute top-4 left-4 z-20 w-16 h-16 md:w-20 md:h-20 rounded-2xl shadow-2xl border-4 border-white/20";
     }
-    return 'h-full w-10'; // For 6+ rankings, keep existing behavior
+    return "absolute top-3 left-3 z-20 w-12 h-12 rounded-xl shadow-xl border-3 border-white/20";
   };
 
-  const getPositioning = () => {
-    if (!isMobile && isTopFive) {
-      return 'relative'; // Make parent relative for absolute positioning
+  const getTextSize = () => {
+    if (isTopFive) {
+      return "text-2xl md:text-3xl lg:text-4xl";
     }
-    return '';
+    return "text-lg md:text-xl";
   };
 
   // Display logic: show "–" for 0 votes, otherwise show visual rank
   const displayText = voteCount === 0 ? "–" : (visualRank?.toString() || position.toString());
 
   return (
-    <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0 ${getPositioning()}`}>
-      <span className={`${isTopFive ? 'text-3xl' : 'text-lg'} font-bold text-rap-carbon font-mogra relative z-10`}>
+    <div className={`${getPositionGradient(position)} ${getPositionStyling()} flex items-center justify-center`}>
+      <span className={`${getTextSize()} font-bold text-rap-carbon font-mogra drop-shadow-lg`}>
         {displayText}
       </span>
     </div>
