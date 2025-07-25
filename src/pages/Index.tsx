@@ -32,16 +32,15 @@ const Index = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Fetch the top 3 most active official rankings with optimized polling
+  // Fetch the top 3 official rankings ordered by display_order
   const { data: topActiveRankings = [], isLoading } = useOptimizedQuery({
-    queryKey: ["top-active-rankings-for-sections"],
+    queryKey: ["homepage-rankings-by-display-order"],
     queryFn: async () => {
-      // Get the top 3 most active official rankings
+      // Get the official rankings in display order
       const { data: rankingsData, error: rankingsError } = await supabase
         .from("official_rankings")
         .select("*")
-        .order("activity_score", { ascending: false })
-        .order("last_activity_at", { ascending: false })
+        .order("display_order", { ascending: true })
         .limit(3);
 
       if (rankingsError) throw rankingsError;
