@@ -23,46 +23,70 @@ const RankingItemContent = ({
   rapperImageUrl,
   isPending
 }: RankingItemContentProps) => {
+  const isMobile = useIsMobile();
   const delta = item.position_delta || 0;
   
   const getTrendingIcon = () => {
-    if (delta < 0) return <TrendingUp className="w-4 h-4 text-green-400" />;
-    if (delta > 0) return <TrendingDown className="w-4 h-4 text-red-400" />;
-    return <Minus className="w-4 h-4 text-gray-400" />;
+    if (delta < 0) return <TrendingUp className="w-4 h-4 text-green-500" />;
+    if (delta > 0) return <TrendingDown className="w-4 h-4 text-red-500" />;
+    return <Minus className="w-4 h-4 text-gray-500" />;
   };
 
   const getTextSizes = () => {
     if (isTopFive) {
       return {
-        name: "text-2xl md:text-3xl lg:text-4xl",
-        location: "text-lg md:text-xl",
-        votes: "text-base md:text-lg"
+        name: "text-xl sm:text-2xl text-rap-gold",
+        reason: "text-base sm:text-lg text-rap-platinum",
       };
     }
     return {
-      name: "text-lg md:text-xl",
-      location: "text-sm md:text-base",
-      votes: "text-xs md:text-sm"
+      name: "text-sm text-rap-platinum leading-tight",
+      reason: "text-xs text-rap-smoke leading-tight",
     };
+  };
+
+  const getImageSize = () => {
+    if (isTopFive) {
+      return "w-20 h-20 sm:w-32 sm:h-32";
+    }
+    return "w-10 h-10 sm:w-14 sm:h-14";
+  };
+
+  const getContentAlignment = () => {
+    if (isTopFive && isMobile) {
+      return "items-center text-center";
+    }
+    return "items-center text-left";
+  };
+
+  const getContentSpacing = () => {
+    if (isTopFive) {
+      return isMobile ? "gap-3 p-2" : "gap-4 pr-3 py-3";
+    }
+    return isMobile ? "gap-2 px-2 py-1" : "gap-2 px-3 py-2";
   };
 
   const textSizes = getTextSizes();
 
   // Use optimized placeholder system
-  const placeholderImage = getOptimizedPlaceholder('large');
+  const placeholderImage = getOptimizedPlaceholder('medium');
   
   // Use rapper image if available and not empty, otherwise use optimized placeholder
   const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : placeholderImage;
 
   return (
-    <>
-      {/* Background Image */}
-      <div className="absolute inset-0 z-0">
+    <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
+      {/* Rapper Image - Always displayed with placeholder fallback */}
+      <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity relative`}>
         <img 
           src={imageToDisplay}
           alt=""
-          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+          className="w-full h-full object-cover"
           loading="lazy"
+          style={{ 
+            fontSize: '0px', // Hide alt text completely
+            color: 'transparent' // Make alt text invisible
+          }}
           onError={(e) => {
             // Fallback to placeholder if image fails to load
             const target = e.target as HTMLImageElement;
@@ -71,51 +95,49 @@ const RankingItemContent = ({
             }
           }}
         />
-        {/* Dark overlay for text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"></div>
-      </div>
-
-      {/* Content Overlay - Lower Third */}
-      <div className="absolute bottom-0 left-0 right-0 z-10 p-4 md:p-6">
-        <Link 
-          to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} 
-          className="block group-hover:scale-105 transition-transform duration-300"
-        >
-          {/* Rapper Name */}
-          <h3 className={`font-mogra font-bold text-white drop-shadow-2xl ${textSizes.name} mb-2 leading-tight`}>
+        {/* Fallback content in case image completely fails */}
+        <div className="absolute inset-0 bg-rap-carbon-light/80 flex items-center justify-center opacity-0 transition-opacity">
+          <span className="text-rap-gold text-xs font-bold">
+            {item.rapper?.name?.charAt(0)?.toUpperCase() || '?'}
+          </span>
+        </div>
+      </Link>
+      
+      {/* Main Content */}
+      <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
+        <div className={`flex ${isTopFive && isMobile ? 'flex-col items-center' : 'items-start'} gap-2 flex-wrap`}>
+          <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
-          </h3>
-          
-          {/* Location/Origin */}
-          {item.rapper?.origin && (
-            <p className={`font-merienda text-white/90 drop-shadow-lg ${textSizes.location} mb-3`}>
-              {item.rapper?.origin}
-            </p>
-          )}
-          
-          {/* Vote Count with Trending */}
-          <div className="flex items-center gap-2">
-            {getTrendingIcon()}
-            <div className="flex items-center gap-1">
-              <Star className="w-4 h-4 md:w-5 md:h-5 text-rap-gold drop-shadow-lg" />
-              <span className={`font-merienda font-bold text-rap-gold drop-shadow-lg ${textSizes.votes}`}>
-                {item.ranking_votes} vote{item.ranking_votes !== 1 ? 's' : ''}
-                {isPending && (
-                  <span className="text-yellow-400 ml-1">(processing...)</span>
-                )}
-              </span>
-            </div>
+          </Link>
+          {/* Only show trending icon next to name for top 5 */}
+          {isTopFive && getTrendingIcon()}
+        </div>
+        
+        {isTopFive && (
+          <>
+            {(item.reason || item.rapper?.origin) && (
+              <p className={`font-merienda ${textSizes.reason} ${isMobile ? 'text-center' : 'text-left'}`}>
+                {item.reason || item.rapper?.origin || 'Unknown'}
+              </p>
+            )}
+          </>
+        )}
+        
+        <div className={`flex items-center gap-2 text-sm ${isTopFive && isMobile ? 'justify-center' : 'justify-start'}`}>
+          <div className="flex items-center gap-1">
+            {/* For rankings 6+, show trending icon before the vote count */}
+            {!isTopFive && getTrendingIcon()}
+            <Star className={`w-3 h-3 ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`} />
+            <span className={`font-merienda ${isTopFive ? 'text-base sm:text-lg text-rap-gold font-bold' : 'text-xs text-rap-gold/70'}`}>
+              {item.ranking_votes} vote{item.ranking_votes !== 1 ? 's' : ''}
+              {isPending && (
+                <span className="text-yellow-400 ml-1">(processing...)</span>
+              )}
+            </span>
           </div>
-
-          {/* Reason/Description for Top 5 */}
-          {isTopFive && item.reason && (
-            <p className="font-merienda text-white/80 text-sm md:text-base mt-2 line-clamp-2 drop-shadow-lg">
-              {item.reason}
-            </p>
-          )}
-        </Link>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

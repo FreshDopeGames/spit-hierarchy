@@ -29,43 +29,53 @@ const RankingItemCard = ({
   const isPending = (item as any).isPending || false;
   const isTopFive = item.dynamic_position <= 5;
 
-  const getCardDimensions = () => {
+  const getCardStyling = () => {
     if (isTopFive) {
-      return "aspect-[4/3] md:aspect-square";
+      return "bg-rap-carbon/50 border-rap-gold/40 shadow-xl hover:bg-rap-carbon/70 hover:shadow-2xl hover:border-rap-gold/60";
     }
-    return "aspect-[3/1] md:aspect-[5/2]";
+    return "bg-rap-carbon/30 border-rap-platinum/30 hover:bg-rap-carbon/40 hover:border-rap-platinum/40";
   };
 
   const getCardHeight = () => {
     if (isTopFive) {
-      return "h-64 md:h-80 lg:h-96";
+      return "min-h-[140px] sm:min-h-[120px]";
     }
-    return "h-32 md:h-40";
+    // Reduced height for 6+ rankings on mobile for better fit
+    return "h-[60px] sm:h-[78px]";
   };
 
-  const getCardStyling = () => {
-    const baseStyle = "rounded-xl overflow-hidden border-2 transition-all duration-500 group cursor-pointer transform hover:scale-[1.02] hover:shadow-2xl";
-    if (isTopFive) {
-      return `${baseStyle} border-rap-gold/40 shadow-xl hover:border-rap-gold/60 hover:shadow-rap-gold/20`;
+  const getLayout = () => {
+    if (isTopFive && isMobile) {
+      return "flex-col";
     }
-    return `${baseStyle} border-rap-platinum/30 shadow-lg hover:border-rap-platinum/50 hover:shadow-rap-platinum/10`;
+    return "flex-row";
+  };
+
+  const getContentRoundedCorners = () => {
+    if (isMobile) {
+      return "rounded-b-lg"; // Bottom corners rounded on mobile to match cap's top corners
+    }
+    return "rounded-r-lg"; // Right corners rounded on desktop to match cap's left corners
+  };
+
+  const getContentMargin = () => {
+    // Add consistent spacing for desktop/tablet top-5 to match 6+ rankings spacing
+    if (!isMobile && isTopFive) {
+      return "ml-3"; // 12px spacing to match the visual spacing of 6+ rankings
+    }
+    return "";
+  };
+
+  // Use consistent border radius for the main container
+  const getContainerRadius = () => {
+    return "rounded-lg"; // Use lg consistently for both cap and content
   };
 
   return (
-    <div className={`relative ${getCardHeight()} ${getCardStyling()} ${
-      isPending ? 'ring-2 ring-yellow-500/50' : ''
-    }`}>
-      {/* Background Image */}
-      <RankingItemContent
-        item={item}
-        isTopFive={isTopFive}
-        isHot={isHot}
-        voteVelocity={voteVelocity}
-        rapperImageUrl={rapperImageUrl}
-        isPending={isPending}
-      />
-      
-      {/* Position Cap Overlay */}
+    <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
+      isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
+    } overflow-hidden ${getContainerRadius()}`}>
+      {/* Position Cap - Pass vote count and visual rank */}
       <RankingItemPositionCap 
         position={item.dynamic_position} 
         isTopFive={isTopFive} 
@@ -73,21 +83,32 @@ const RankingItemCard = ({
         visualRank={item.visual_rank}
       />
       
-      {/* Vote Section Overlay */}
-      <RankingItemVoteSection
-        onVote={onVote}
-        userLoggedIn={userLoggedIn}
-        isTopFive={isTopFive}
-        rankingId={rankingId}
-        rapperId={item.rapper?.id}
-        rapperName={item.rapper?.name}
-        isPending={isPending}
-      />
+      {/* Content with appropriate margin for absolute positioned cap */}
+      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentRoundedCorners()} ${getContentMargin()}`}>
+        <RankingItemContent
+          item={item}
+          isTopFive={isTopFive}
+          isHot={isHot}
+          voteVelocity={voteVelocity}
+          rapperImageUrl={rapperImageUrl}
+          isPending={isPending}
+        />
+        
+        <RankingItemVoteSection
+          onVote={onVote}
+          userLoggedIn={userLoggedIn}
+          isTopFive={isTopFive}
+          rankingId={rankingId}
+          rapperId={item.rapper?.id}
+          rapperName={item.rapper?.name}
+          isPending={isPending}
+        />
+      </div>
       
       {/* Pending Indicator */}
       {isPending && (
-        <div className="absolute top-3 right-3 z-30">
-          <div className="w-3 h-3 bg-yellow-400 rounded-full animate-pulse shadow-lg"></div>
+        <div className="absolute top-2 right-2">
+          <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
         </div>
       )}
     </div>
