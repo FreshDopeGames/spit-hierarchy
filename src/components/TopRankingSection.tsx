@@ -1,7 +1,8 @@
 
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
-import RapperAvatar from "@/components/RapperAvatar";
+import { useRapperImage } from "@/hooks/useImageStyle";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { Star, MapPin } from "lucide-react";
 
 type Rapper = Tables<"rappers">;
@@ -16,110 +17,108 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
-  const getVoteDisplay = (voteCount: number | undefined) => {
-    const count = rankingId && voteCount !== undefined ? voteCount : 0;
+  // Component to render individual ranking card with background image
+  const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
+    const imageSize = isTopTwo ? 'xlarge' : 'large';
+    const { data: imageUrl } = useRapperImage(rapper.id, imageSize);
+    const placeholderImage = getOptimizedPlaceholder(imageSize);
+    const backgroundImage = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
     
-    if (count === 0) {
-      return (
-        <div className="flex items-center gap-1 mt-3">
-          <Star className="w-4 h-4 text-rap-gold/50" />
-          <span className="text-rap-smoke/70 font-kaushan text-sm italic">
-            Vote to rank
-          </span>
-        </div>
-      );
-    }
-    
+    const voteCount = rankingId && rapper.ranking_votes !== undefined 
+      ? rapper.ranking_votes 
+      : (rapper.total_votes || 0);
+
+    const cardHeight = isTopTwo ? "h-80 sm:h-96" : "h-64 sm:h-72";
+    const rankingTextSize = isTopTwo ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl";
+    const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
+
     return (
-      <p className="text-rap-silver text-sm sm:text-base font-bold mt-3">
-        Votes: {count.toLocaleString()}
-      </p>
+      <Link 
+        to={`/rapper/${rapper.slug || rapper.id}`} 
+        className="group block"
+        onClick={() => window.scrollTo(0, 0)}
+      >
+        <div 
+          className={`${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold/30 group-hover:border-rap-gold transition-all duration-300 group-hover:scale-[1.02]`}
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        >
+          {/* Ranking Number - Top Left */}
+          <div className="absolute top-4 left-4 z-10">
+            <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
+              <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
+                {position}
+              </span>
+            </div>
+          </div>
+
+          {/* Gradient Overlay - Bottom Third */}
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
+          
+          {/* Content - Bottom Area */}
+          <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
+            <div className="text-white">
+              <h3 className={`${nameTextSize} font-mogra text-white group-hover:text-rap-gold transition-colors leading-tight mb-2`}>
+                {rapper.name}
+              </h3>
+              
+              {rapper.origin && (
+                <div className="flex items-center gap-2 mb-3">
+                  <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0" />
+                  <p className="text-rap-silver text-sm sm:text-base font-kaushan">
+                    {rapper.origin}
+                  </p>
+                </div>
+              )}
+              
+              <div className="flex items-center gap-2">
+                {voteCount === 0 ? (
+                  <>
+                    <Star className="w-4 h-4 text-rap-gold/70" />
+                    <span className="text-rap-gold/70 font-kaushan text-sm italic">
+                      Vote to rank
+                    </span>
+                  </>
+                ) : (
+                  <p className="text-rap-silver text-sm sm:text-base font-bold">
+                    Votes: {voteCount.toLocaleString()}
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </Link>
     );
   };
 
   return (
-    <div className="space-y-8">
-      {/* Top 2 in one row - Use xlarge for prominence */}
+    <div className="space-y-6 sm:space-y-8">
+      {/* Top 2 Cards - Larger and More Prominent */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
-        {rappers.slice(0, 2).map((rapper, index) => 
-          <div key={rapper.id} className="flex flex-col items-center space-y-4 p-6 sm:p-6 bg-black rounded-lg border border-rap-gold/30 min-h-[200px] sm:min-h-[180px]">
-            <div className="flex items-center justify-center w-12 h-12 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg flex-shrink-0">
-              <span className="text-rap-carbon font-mogra text-lg sm:text-base font-bold">
-                {index + 1}
-              </span>
-            </div>
-            <RapperAvatar rapper={rapper} size="xl" />
-            <div className="flex-1 text-center w-full">
-              <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-                <h3 className="text-xl sm:text-2xl font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors leading-tight mb-2">
-                  {rapper.name}
-                </h3>
-              </Link>
-              {rapper.origin && 
-                <div className="flex items-center justify-center gap-1 mt-2">
-                  <MapPin className="w-4 h-4 text-rap-smoke" />
-                  <p className="text-rap-smoke text-base sm:text-lg font-kaushan leading-relaxed">
-                    {rapper.origin}
-                  </p>
-                </div>
-              }
-              {getVoteDisplay(rapper.ranking_votes)}
-            </div>
-          </div>
-        )}
+        {rappers.slice(0, 2).map((rapper, index) => (
+          <RankingCard 
+            key={rapper.id}
+            rapper={rapper}
+            position={index + 1}
+            isTopTwo={true}
+          />
+        ))}
       </div>
       
-      {/* Next 3 in one row - Use medium for smaller cards */}
+      {/* Cards 3-5 - Smaller Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        {rappers.slice(2, 5).map((rapper, index) => 
-          <div key={rapper.id} className="flex flex-col items-center space-y-2 sm:space-y-3 p-4 sm:p-4 bg-black rounded-lg border border-rap-gold/10 min-h-[140px] sm:min-h-[160px]">
-            <div className="flex items-center justify-center w-8 h-8 sm:w-8 sm:h-8 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg flex-shrink-0">
-              <span className="text-rap-carbon font-mogra text-sm font-bold">
-                {index + 3}
-              </span>
-            </div>
-            <RapperAvatar rapper={rapper} size="md" />
-            <div className="text-center min-w-0 w-full px-2">
-              <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-                <h4 className="text-base sm:text-lg font-mogra text-rap-platinum group-hover:text-rap-gold transition-colors leading-tight">
-                  {rapper.name}
-                </h4>
-              </Link>
-              {rapper.origin && 
-                <div className="flex items-center justify-center gap-1 mt-1">
-                  <MapPin className="w-3 h-3 text-rap-smoke flex-shrink-0" />
-                  <p className="text-rap-smoke text-xs sm:text-sm font-kaushan leading-tight text-center">
-                    {rapper.origin}
-                  </p>
-                </div>
-              }
-              <div className="mt-1">
-                {(() => {
-                  const voteCount = rankingId && rapper.ranking_votes !== undefined 
-                    ? rapper.ranking_votes 
-                    : (rapper.total_votes || 0);
-                  
-                  if (voteCount === 0) {
-                    return (
-                      <div className="flex items-center justify-center gap-1">
-                        <Star className="w-3 h-3 text-rap-gold/50" />
-                        <span className="text-rap-smoke/70 font-kaushan text-xs italic">
-                          Vote now
-                        </span>
-                      </div>
-                    );
-                  }
-                  
-                  return (
-                    <p className="text-rap-silver text-xs font-bold">
-                      Votes: {voteCount.toLocaleString()}
-                    </p>
-                  );
-                })()}
-              </div>
-            </div>
-          </div>
-        )}
+        {rappers.slice(2, 5).map((rapper, index) => (
+          <RankingCard 
+            key={rapper.id}
+            rapper={rapper}
+            position={index + 3}
+            isTopTwo={false}
+          />
+        ))}
       </div>
     </div>
   );
