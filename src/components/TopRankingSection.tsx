@@ -39,7 +39,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         onClick={() => window.scrollTo(0, 0)}
       >
         <div 
-          className={`${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold/30 group-hover:border-rap-gold transition-all duration-300 group-hover:scale-[1.02]`}
+          className={`${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold group-hover:border-rap-gold-light transition-all duration-300 group-hover:scale-[1.02]`}
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover',
