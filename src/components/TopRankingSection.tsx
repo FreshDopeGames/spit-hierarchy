@@ -19,7 +19,7 @@ interface TopRankingSectionProps {
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
   // Component to render individual ranking card with background image
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
-    const imageSize = isTopTwo ? 'xlarge' : 'large';
+    const imageSize = isTopTwo ? 'original' : 'large';
     const { data: imageUrl } = useRapperImage(rapper.id, imageSize);
     const placeholderImage = getOptimizedPlaceholder(imageSize);
     const backgroundImage = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;

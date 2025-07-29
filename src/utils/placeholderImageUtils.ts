@@ -12,7 +12,7 @@ export const PLACEHOLDER_IMAGES = {
 };
 
 // Get premium placeholder based on size context
-export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
+export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original'): string => {
   switch (size) {
     case 'thumb':
       return PLACEHOLDER_IMAGES.thumb;
@@ -22,6 +22,8 @@ export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'x
       return PLACEHOLDER_IMAGES.large;
     case 'xlarge':
       return PLACEHOLDER_IMAGES.xlarge;
+    case 'original':
+      return PLACEHOLDER_IMAGES.original;
     default:
       // For contexts where size isn't specified, use original as fallback
       return PLACEHOLDER_IMAGES.original;
@@ -29,13 +31,13 @@ export const getOptimizedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'x
 };
 
 // Premium WebP support with fallback
-export const getOptimizedPlaceholderWithWebP = (size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
+export const getOptimizedPlaceholderWithWebP = (size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original'): string => {
   // Future enhancement: WebP versions for even better quality/size ratio
   return getOptimizedPlaceholder(size);
 };
 
 // Cache-busting utility for placeholder updates
-export const getCacheBustedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
+export const getCacheBustedPlaceholder = (size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original'): string => {
   const baseUrl = getOptimizedPlaceholder(size);
   return `${baseUrl}?v=${Math.floor(Date.now() / (1000 * 60 * 10))}`; // Cache for 10 minutes
 };

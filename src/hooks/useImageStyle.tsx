@@ -29,10 +29,21 @@ export const useImageStyle = () => {
 };
 
 // Helper function to construct rapper image URLs with size support and proper error handling
-const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge'): string => {
+const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original'): string => {
   // If basePath is already a full URL, return as is (backward compatibility)
   if (basePath.startsWith('http')) {
     return basePath;
+  }
+  
+  // For original size, use the uploaded image file name directly
+  if (size === 'original') {
+    const originalUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${basePath}`;
+    console.log('Constructed original image URL:', {
+      basePath,
+      size,
+      url: originalUrl
+    });
+    return originalUrl;
   }
   
   // If no size specified, default to xlarge for best quality
@@ -51,7 +62,7 @@ const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large'
 };
 
 // Enhanced hook to get rapper image with better error handling and fallbacks
-export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
+export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original') => {
   return useQuery({
     queryKey: ["rapper-image", rapperId, "comic_book", size],
     queryFn: async () => {
@@ -97,8 +108,21 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
             console.warn(`Network error testing ${size} for rapper ${rapperId}:`, fetchError);
           }
           
-          // If specific size doesn't exist, try xlarge as fallback
-          if (size !== 'xlarge') {
+          // For original size, try without fallback first, then try xlarge
+          if (size === 'original') {
+            // Original size request failed, try xlarge as fallback
+            const xlargeUrl = getRapperImageUrl(basePath, 'xlarge');
+            try {
+              const response = await fetch(xlargeUrl, { method: 'HEAD' });
+              if (response.ok) {
+                console.log(`Using xlarge fallback for original request for rapper ${rapperId}`);
+                return xlargeUrl;
+              }
+            } catch (fetchError) {
+              console.warn(`Network error testing xlarge fallback for original request for rapper ${rapperId}:`, fetchError);
+            }
+          } else if (size !== 'xlarge') {
+            // If specific size doesn't exist, try xlarge as fallback
             const xlargeUrl = getRapperImageUrl(basePath, 'xlarge');
             try {
               const response = await fetch(xlargeUrl, { method: 'HEAD' });
@@ -152,7 +176,7 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
 };
 
 // Enhanced batch hook for loading multiple rapper images efficiently
-export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' | 'large' | 'xlarge') => {
+export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original') => {
   return useQuery({
     queryKey: ["rapper-images-batch", rapperIds, "comic_book", size],
     queryFn: async () => {
