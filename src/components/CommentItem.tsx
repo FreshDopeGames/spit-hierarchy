@@ -113,7 +113,7 @@ const CommentItem = ({
                 }`}
               >
                 <Mic className={`w-4 h-4 mr-1 ${isLiked ? 'fill-current' : ''}`} />
-                {likeCount}
+                {likeCount} {likeCount === 1 ? 'Bar' : 'Bars'}
               </Button>
               
               {currentUserId && (
