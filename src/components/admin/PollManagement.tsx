@@ -146,26 +146,26 @@ const PollManagement = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
                 <div>
-                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Type</p>
-                  <p className="text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Type</p>
+                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
                     {poll.type === 'single_choice' ? 'Single Choice' : 'Multiple Choice'}
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Placement</p>
-                  <p className="text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Placement</p>
+                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
                     {getPlacementText(poll.placement, poll.blog_post_id)}
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Options</p>
-                  <p className="text-rap-platinum font-[var(--theme-font-body)]">{poll.poll_options.length} options</p>
+                  <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Options</p>
+                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">{poll.poll_options.length} options</p>
                 </div>
                 <div>
-                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Created</p>
-                  <p className="text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Created</p>
+                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
                     {new Date(poll.created_at).toLocaleDateString()}
                   </p>
                 </div>
