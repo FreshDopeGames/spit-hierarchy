@@ -1,9 +1,7 @@
-
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Vote } from "lucide-react";
 import { Link } from "react-router-dom";
-
 interface RelatedPost {
   id: string;
   title: string;
@@ -24,7 +22,7 @@ const BlogSidebar = ({
       {/* Related Posts */}
       {relatedPosts.length > 0 && <Card className="bg-rap-carbon border border-rap-gold/40">
           <CardHeader className="pb-4">
-            <CardTitle className="text-rap-gold font-ceviche font-normal text-2xl text-center">More Writtens</CardTitle>
+            <CardTitle className="text-rap-gold font-ceviche font-normal text-center text-5xl">More Writtens</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4 pt-0">
             {relatedPosts.map(post => <Link key={post.id} to={`/blog/${post.slug}`} className="block group">
@@ -67,7 +65,7 @@ const BlogSidebar = ({
       {/* All Rankings Voting Module */}
       <Card className="bg-rap-carbon border border-rap-gold/40">
         <CardContent className="p-6 text-center space-y-4">
-          <h3 className="text-rap-gold font-ceviche text-3xl">All Rankings</h3>
+          <h3 className="text-rap-gold font-ceviche text-5xl">All Rankings</h3>
           <p className="text-rap-platinum font-kaushan text-base pb-2">
             Your Voice Matters
           </p>
