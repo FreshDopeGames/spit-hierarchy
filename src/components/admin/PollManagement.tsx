@@ -148,7 +148,7 @@ const PollManagement = () => {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Type</p>
                   <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
