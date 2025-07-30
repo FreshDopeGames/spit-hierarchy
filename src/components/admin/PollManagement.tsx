@@ -136,15 +136,13 @@ const PollManagement = () => {
         {polls?.map((poll) => (
           <Card key={poll.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-smoke/30 rounded-lg hover:border-rap-gold/50 transition-colors">
             <CardHeader className="pb-3">
-              <div className="flex justify-between items-start">
-                <div className="space-y-1">
-                  <CardTitle className="text-lg text-[var(--theme-text)] font-[var(--theme-font-heading)]">{poll.title}</CardTitle>
-                  <CardDescription className="text-rap-platinum font-[var(--theme-font-body)]">{poll.description}</CardDescription>
-                </div>
-                <div className="flex gap-2">
+              <div className="space-y-2">
+                <CardTitle className="text-lg text-[var(--theme-text)] font-[var(--theme-font-heading)]">{poll.title}</CardTitle>
+                <div className="flex items-center gap-2 flex-wrap">
                   {getStatusBadge(poll.status)}
                   {poll.is_featured && <Badge variant="outline" className="border-[var(--theme-primary)] text-[var(--theme-primary)]">Featured</Badge>}
                 </div>
+                <CardDescription className="text-rap-platinum font-[var(--theme-font-body)]">{poll.description}</CardDescription>
               </div>
             </CardHeader>
             <CardContent>
