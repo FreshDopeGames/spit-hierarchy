@@ -5,6 +5,7 @@ import { Mic, Reply, Trash2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import SmallAvatar from "./avatar/SmallAvatar";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
+import { useIsMobile } from "@/hooks/use-mobile";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -57,6 +58,7 @@ const CommentItem = ({
   const [showReplyForm, setShowReplyForm] = useState(false);
   const [replyText, setReplyText] = useState("");
   const { isAdmin } = useSecurityContext();
+  const isMobile = useIsMobile();
 
   const isLiked = comment.comment_likes.some(like => like.user_id === currentUserId);
   const likeCount = comment.comment_likes.length;
@@ -86,20 +88,22 @@ const CommentItem = ({
   return (
     <div className={`${depth > 0 ? 'ml-8 border-l border-rap-gold/30 pl-4' : ''}`}>
       <div className="bg-rap-carbon/30 border border-rap-gold/20 rounded-lg p-4 mb-4">
-        <div className="flex items-start gap-3">
-          <SmallAvatar 
-            avatarUrl={comment.profiles.avatar_url} 
-            username={comment.profiles.username}
-            size="sm"
-          />
-          <div className="flex-1">
-            <div className="flex items-center gap-2 mb-1">
+        <div className={`${isMobile ? 'flex flex-col gap-2' : 'flex items-start gap-3'}`}>
+          <div className="flex items-start gap-3">
+            <SmallAvatar 
+              avatarUrl={comment.profiles.avatar_url} 
+              username={comment.profiles.username}
+              size="sm"
+            />
+            <div className="flex items-center gap-2">
               <span className="text-rap-gold font-mogra">{comment.profiles.username}</span>
               <span className="text-rap-smoke text-sm font-merienda">
                 {formatTimeAgo(comment.created_at)}
               </span>
             </div>
-            <p className="text-rap-platinum font-merienda mb-3 whitespace-pre-wrap">
+          </div>
+          <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
+            <p className={`text-rap-platinum font-merienda mb-3 whitespace-pre-wrap ${isMobile ? 'text-sm' : ''}`}>
               {comment.comment_text}
             </p>
             <div className="flex items-center gap-4">
