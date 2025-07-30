@@ -175,10 +175,10 @@ const PollManagement = () => {
                 </div>
               </div>
               
-              <div className="flex justify-end gap-2">
+              <div className="flex flex-col sm:flex-row justify-end gap-2">
                 <Button 
                   size="sm"
-                  className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon hover:text-rap-carbon"
+                  className="w-full sm:w-auto bg-rap-gold hover:bg-rap-gold-light text-rap-carbon hover:text-rap-carbon"
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   View Results
@@ -186,7 +186,7 @@ const PollManagement = () => {
                 <Button 
                   size="sm" 
                   onClick={() => handleEdit(poll)}
-                  className="bg-white hover:bg-gray-100 text-rap-carbon hover:text-rap-carbon"
+                  className="w-full sm:w-auto bg-white hover:bg-gray-100 text-rap-carbon hover:text-rap-carbon"
                 >
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
@@ -194,7 +194,7 @@ const PollManagement = () => {
                 <Button 
                   size="sm" 
                   onClick={() => handleDelete(poll.id)}
-                  className="bg-red-600 hover:bg-red-700 text-white hover:text-white"
+                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white hover:text-white"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
