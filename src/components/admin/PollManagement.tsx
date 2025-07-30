@@ -173,27 +173,24 @@ const PollManagement = () => {
               
               <div className="flex justify-end gap-2">
                 <Button 
-                  variant="outline" 
                   size="sm"
-                  className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
+                  className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon hover:text-rap-carbon"
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   View Results
                 </Button>
                 <Button 
-                  variant="outline" 
                   size="sm" 
                   onClick={() => handleEdit(poll)}
-                  className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
+                  className="bg-white hover:bg-gray-100 text-rap-carbon hover:text-rap-carbon"
                 >
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
                 </Button>
                 <Button 
-                  variant="outline" 
                   size="sm" 
                   onClick={() => handleDelete(poll.id)}
-                  className="text-destructive hover:text-destructive border-destructive"
+                  className="bg-red-600 hover:bg-red-700 text-white hover:text-white"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete
