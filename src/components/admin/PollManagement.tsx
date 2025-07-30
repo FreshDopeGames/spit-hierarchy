@@ -132,7 +132,7 @@ const PollManagement = () => {
 
       <div className="grid gap-4">
         {polls?.map((poll) => (
-          <Card key={poll.id} className="bg-carbon-fiber border border-[var(--theme-border)]">
+          <Card key={poll.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-smoke/30 rounded-lg hover:border-rap-gold/50 transition-colors">
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
