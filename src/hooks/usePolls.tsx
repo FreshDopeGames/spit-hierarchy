@@ -11,6 +11,7 @@ interface Poll {
   blog_post_id?: string;
   expires_at?: string;
   is_featured: boolean;
+  allow_write_in?: boolean;
   created_at: string;
   poll_options: Array<{
     id: string;
@@ -35,6 +36,7 @@ export const usePolls = (placement?: string, blogPostId?: string) => {
           blog_post_id,
           expires_at,
           is_featured,
+          allow_write_in,
           created_at,
           poll_options (
             id,
@@ -76,6 +78,7 @@ export const useFeaturedPolls = () => {
           placement,
           expires_at,
           is_featured,
+          allow_write_in,
           created_at,
           poll_options (
             id,
