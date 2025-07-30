@@ -88,6 +88,7 @@ export const useFeaturedPolls = () => {
         `)
         .eq('status', 'active')
         .eq('is_featured', true)
+        .eq('placement', 'homepage')
         .order('created_at', { ascending: false })
         .limit(3);
       
