@@ -19,6 +19,7 @@ interface Poll {
   blog_post_id?: string;
   expires_at?: string;
   is_featured: boolean;
+  allow_write_in: boolean;
   created_at: string;
   poll_options: Array<{
     id: string;
@@ -46,6 +47,7 @@ const PollManagement = () => {
           blog_post_id,
           expires_at,
           is_featured,
+          allow_write_in,
           created_at,
           poll_options (
             id,
@@ -161,7 +163,9 @@ const PollManagement = () => {
                 </div>
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Options</p>
-                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">{poll.poll_options.length} options</p>
+                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
+                    {poll.poll_options.length} options {poll.allow_write_in && '+ write-in'}
+                  </p>
                 </div>
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Created</p>

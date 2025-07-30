@@ -43,6 +43,7 @@ const pollSchema = z.object({
   blog_post_id: z.string().optional(),
   expires_at: z.string().optional(),
   is_featured: z.boolean(),
+  allow_write_in: z.boolean().default(false),
   options: z.array(z.string().min(1, "Option text is required")).min(2, "At least 2 options required")
 });
 
@@ -70,6 +71,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
       blog_post_id: "",
       expires_at: "",
       is_featured: false,
+      allow_write_in: false,
       options: ['', '']
     }
   });
@@ -89,6 +91,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
         blog_post_id: poll.blog_post_id || "",
         expires_at: poll.expires_at ? poll.expires_at.split('T')[0] : "",
         is_featured: poll.is_featured,
+        allow_write_in: poll.allow_write_in || false,
         options: pollOptions
       });
       setOptions(pollOptions);
@@ -132,6 +135,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
         blog_post_id: data.placement === 'specific_blog' ? data.blog_post_id || null : null,
         expires_at: data.expires_at ? new Date(data.expires_at).toISOString() : null,
         is_featured: data.is_featured,
+        allow_write_in: data.allow_write_in,
         created_by: user.id
       };
 
@@ -345,9 +349,32 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
                       onCheckedChange={field.onChange}
                     />
                   </FormControl>
-                </FormItem>
-              )}
-            />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="allow_write_in"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Allow Write-In Options
+                      </FormLabel>
+                      <FormDescription>
+                        Let users submit their own custom options
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
 
             <div className="space-y-4">
               <FormLabel>Poll Options</FormLabel>

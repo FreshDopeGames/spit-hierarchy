@@ -6,6 +6,7 @@ import { toast } from "sonner";
 interface VoteData {
   pollId: string;
   optionIds: string[];
+  writeInOption?: string;
 }
 
 export const usePollVoting = () => {
@@ -13,16 +14,45 @@ export const usePollVoting = () => {
   const queryClient = useQueryClient();
 
   const submitVote = useMutation({
-    mutationFn: async ({ pollId, optionIds }: VoteData) => {
-      // Generate session ID for anonymous users
-      const sessionId = !user ? `session_${Date.now()}_${Math.random()}` : null;
+    mutationFn: async ({ pollId, optionIds, writeInOption }: VoteData) => {
+      if (!user) {
+        throw new Error("Authentication required");
+      }
+
+      let finalOptionIds = [...optionIds];
+
+      // Handle write-in option by creating a new poll option
+      if (writeInOption) {
+        // Get the highest order number for existing options
+        const { data: existingOptions } = await supabase
+          .from('poll_options')
+          .select('option_order')
+          .eq('poll_id', pollId)
+          .order('option_order', { ascending: false })
+          .limit(1);
+
+        const nextOrder = (existingOptions?.[0]?.option_order || 0) + 1;
+
+        // Create new poll option for write-in
+        const { data: newOption, error: optionError } = await supabase
+          .from('poll_options')
+          .insert({
+            poll_id: pollId,
+            option_text: writeInOption,
+            option_order: nextOrder
+          })
+          .select('id')
+          .single();
+
+        if (optionError) throw optionError;
+        finalOptionIds.push(newOption.id);
+      }
       
-      // Insert votes for each selected option
-      const votes = optionIds.map(optionId => ({
+      // Insert votes for each selected option (including write-in)
+      const votes = finalOptionIds.map(optionId => ({
         poll_id: pollId,
         option_id: optionId,
-        user_id: user?.id || null,
-        session_id: sessionId
+        user_id: user.id
       }));
 
       const { error } = await supabase

@@ -710,6 +710,7 @@ export type Database = {
       }
       polls: {
         Row: {
+          allow_write_in: boolean
           blog_post_id: string | null
           created_at: string
           created_by: string
@@ -724,6 +725,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          allow_write_in?: boolean
           blog_post_id?: string | null
           created_at?: string
           created_by: string
@@ -738,6 +740,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          allow_write_in?: boolean
           blog_post_id?: string | null
           created_at?: string
           created_by?: string
