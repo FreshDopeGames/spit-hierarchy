@@ -154,6 +154,27 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
     }
   });
 
+  // Delete comment mutation
+  const deleteCommentMutation = useMutation({
+    mutationFn: async (commentId: string) => {
+      if (!user) throw new Error("Must be logged in to delete comments");
+
+      const { error } = await supabase
+        .from("comments")
+        .delete()
+        .eq("id", commentId);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["comments", contentType, contentId] });
+      toast.success("Comment deleted successfully.");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    }
+  });
+
   const totalComments = comments.reduce((total, comment) => {
     return total + 1 + (comment.replies?.length || 0);
   }, 0);
@@ -168,6 +189,8 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
     isCreatingComment: createCommentMutation.isPending,
     toggleLike: toggleLikeMutation.mutate,
     isTogglingLike: toggleLikeMutation.isPending,
+    deleteComment: deleteCommentMutation.mutate,
+    isDeletingComment: deleteCommentMutation.isPending,
     user
   };
 };

@@ -28,7 +28,9 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
     createComment,
     isCreatingComment,
     toggleLike,
-    isTogglingLike
+    isTogglingLike,
+    deleteComment,
+    isDeletingComment
   } = useComments({ contentType, contentId });
 
   // Animation effect - hop every 20 seconds when collapsed
@@ -166,8 +168,10 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                           comment={comment}
                           onReply={handleReply}
                           onLike={toggleLike}
+                          onDelete={deleteComment}
                           currentUserId={user?.id}
                           isLiking={isTogglingLike}
+                          isDeletingComment={isDeletingComment}
                         />
                       ))
                     )}
