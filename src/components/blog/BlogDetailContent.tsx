@@ -69,29 +69,28 @@ const BlogDetailContent = ({
     <main className="max-w-4xl mx-auto p-6 pt-24">
       <BlogArticleHeader blogPost={transformedBlogPost} />
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
-        {/* Main Content */}
-        <div className="lg:col-span-3">
-          <BlogArticleContent content={blogPost.content} />
-          <BlogPoll blogPostId={blogPost.id} />
-          <BlogEngagementActions 
-            likes={likesCount}
-            isLiked={isLiked}
-            commentCount={totalComments}
-            onLike={toggleLike}
-            onShare={onShare}
-            onCommentsClick={onCommentsClick}
-            isLikeLoading={isLoading}
-          />
-        </div>
+      {/* Full-width main content */}
+      <div className="space-y-8">
+        <BlogArticleContent content={blogPost.content} />
+        
+        <BlogEngagementActions 
+          likes={likesCount}
+          isLiked={isLiked}
+          commentCount={totalComments}
+          onLike={toggleLike}
+          onShare={onShare}
+          onCommentsClick={onCommentsClick}
+          isLikeLoading={isLoading}
+        />
 
-        {/* Sidebar */}
-        <div className="lg:col-span-1">
-          <BlogSidebar 
-            relatedPosts={transformedRelatedPosts}
-            showSignUp={!user}
-          />
-        </div>
+        {/* Polls section */}
+        <BlogPoll blogPostId={blogPost.id} />
+
+        {/* Sidebar content moved below */}
+        <BlogSidebar 
+          relatedPosts={transformedRelatedPosts}
+          showSignUp={!user}
+        />
       </div>
     </main>
   );

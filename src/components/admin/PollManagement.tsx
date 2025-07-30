@@ -3,9 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Edit, Trash2, Eye } from "lucide-react";
+import { Plus, Edit, Trash2, Eye, BarChart3 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import PollDialog from "./PollDialog";
+import AdminTabHeader from "./AdminTabHeader";
 import { toast } from "sonner";
 
 interface Poll {
@@ -115,64 +116,76 @@ const PollManagement = () => {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h2 className="text-2xl font-bold">Poll Management</h2>
-          <p className="text-muted-foreground">Create and manage community polls</p>
-        </div>
-        <Button onClick={handleCreate}>
+      <AdminTabHeader 
+        title="Poll Management" 
+        icon={BarChart3}
+        description="Create and manage community polls and voting"
+      >
+        <Button 
+          onClick={handleCreate}
+          className="bg-[var(--theme-primary)] text-[var(--theme-background)] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+        >
           <Plus className="h-4 w-4 mr-2" />
           Create Poll
         </Button>
-      </div>
+      </AdminTabHeader>
 
       <div className="grid gap-4">
         {polls?.map((poll) => (
-          <Card key={poll.id}>
+          <Card key={poll.id} className="bg-carbon-fiber border border-[var(--theme-border)]">
             <CardHeader className="pb-3">
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
-                  <CardTitle className="text-lg">{poll.title}</CardTitle>
-                  <CardDescription>{poll.description}</CardDescription>
+                  <CardTitle className="text-lg text-[var(--theme-text)] font-[var(--theme-font-heading)]">{poll.title}</CardTitle>
+                  <CardDescription className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">{poll.description}</CardDescription>
                 </div>
                 <div className="flex gap-2">
                   {getStatusBadge(poll.status)}
-                  {poll.is_featured && <Badge variant="outline">Featured</Badge>}
+                  {poll.is_featured && <Badge variant="outline" className="border-[var(--theme-primary)] text-[var(--theme-primary)]">Featured</Badge>}
                 </div>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
                 <div>
-                  <p className="font-medium">Type</p>
-                  <p className="text-muted-foreground">
+                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Type</p>
+                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">
                     {poll.type === 'single_choice' ? 'Single Choice' : 'Multiple Choice'}
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium">Placement</p>
-                  <p className="text-muted-foreground">
+                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Placement</p>
+                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">
                     {getPlacementText(poll.placement, poll.blog_post_id)}
                   </p>
                 </div>
                 <div>
-                  <p className="font-medium">Options</p>
-                  <p className="text-muted-foreground">{poll.poll_options.length} options</p>
+                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Options</p>
+                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">{poll.poll_options.length} options</p>
                 </div>
                 <div>
-                  <p className="font-medium">Created</p>
-                  <p className="text-muted-foreground">
+                  <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Created</p>
+                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">
                     {new Date(poll.created_at).toLocaleDateString()}
                   </p>
                 </div>
               </div>
               
               <div className="flex justify-end gap-2">
-                <Button variant="outline" size="sm">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
+                >
                   <Eye className="h-4 w-4 mr-2" />
                   View Results
                 </Button>
-                <Button variant="outline" size="sm" onClick={() => handleEdit(poll)}>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  onClick={() => handleEdit(poll)}
+                  className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
+                >
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
                 </Button>
@@ -180,7 +193,7 @@ const PollManagement = () => {
                   variant="outline" 
                   size="sm" 
                   onClick={() => handleDelete(poll.id)}
-                  className="text-destructive hover:text-destructive"
+                  className="text-destructive hover:text-destructive border-destructive"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete

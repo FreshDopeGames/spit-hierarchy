@@ -119,9 +119,6 @@ const Index = () => {
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
 
-            {/* Community Polls */}
-            <HomepagePoll />
-
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
 
@@ -153,6 +150,9 @@ const Index = () => {
                 </Button>
               </Link>
             </div>
+
+            {/* Community Polls */}
+            <HomepagePoll />
 
             {/* Stats Overview */}
             <StatsOverview />
