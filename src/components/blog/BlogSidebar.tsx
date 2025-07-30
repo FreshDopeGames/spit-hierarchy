@@ -20,7 +20,7 @@ const BlogSidebar = ({
 }: BlogSidebarProps) => {
   return <div className="space-y-6">
       {/* Related Posts */}
-      {relatedPosts.length > 0 && <Card className="bg-rap-carbon border border-rap-gold/40">
+      {relatedPosts.length > 0 && <Card className="bg-black border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
           <CardHeader className="pb-4">
             <CardTitle className="text-rap-gold font-ceviche font-normal text-center text-5xl">More Writtens</CardTitle>
           </CardHeader>
@@ -45,7 +45,7 @@ const BlogSidebar = ({
         </Card>}
 
       {/* Newsletter Signup */}
-      {showSignUp && <Card className="bg-rap-carbon border border-rap-gold/40">
+      {showSignUp && <Card className="bg-black border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
           <CardHeader className="pb-4">
             <CardTitle className="text-rap-gold font-ceviche text-lg">Join the Temple</CardTitle>
           </CardHeader>
@@ -63,7 +63,7 @@ const BlogSidebar = ({
         </Card>}
 
       {/* All Rankings Voting Module */}
-      <Card className="bg-rap-carbon border border-rap-gold/40">
+      <Card className="bg-black border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
         <CardContent className="p-6 text-center space-y-4">
           <h3 className="text-rap-gold font-ceviche text-5xl">All Rankings</h3>
           <p className="text-rap-platinum font-kaushan text-base pb-2">
