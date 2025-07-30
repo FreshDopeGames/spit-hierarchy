@@ -137,7 +137,7 @@ const PollManagement = () => {
               <div className="flex justify-between items-start">
                 <div className="space-y-1">
                   <CardTitle className="text-lg text-[var(--theme-text)] font-[var(--theme-font-heading)]">{poll.title}</CardTitle>
-                  <CardDescription className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">{poll.description}</CardDescription>
+                  <CardDescription className="text-rap-platinum font-[var(--theme-font-body)]">{poll.description}</CardDescription>
                 </div>
                 <div className="flex gap-2">
                   {getStatusBadge(poll.status)}
@@ -149,23 +149,23 @@ const PollManagement = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4 text-sm">
                 <div>
                   <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Type</p>
-                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">
+                  <p className="text-rap-platinum font-[var(--theme-font-body)]">
                     {poll.type === 'single_choice' ? 'Single Choice' : 'Multiple Choice'}
                   </p>
                 </div>
                 <div>
                   <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Placement</p>
-                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">
+                  <p className="text-rap-platinum font-[var(--theme-font-body)]">
                     {getPlacementText(poll.placement, poll.blog_post_id)}
                   </p>
                 </div>
                 <div>
                   <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Options</p>
-                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">{poll.poll_options.length} options</p>
+                  <p className="text-rap-platinum font-[var(--theme-font-body)]">{poll.poll_options.length} options</p>
                 </div>
                 <div>
                   <p className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">Created</p>
-                  <p className="text-[var(--theme-text)]/70 font-[var(--theme-font-body)]">
+                  <p className="text-rap-platinum font-[var(--theme-font-body)]">
                     {new Date(poll.created_at).toLocaleDateString()}
                   </p>
                 </div>
