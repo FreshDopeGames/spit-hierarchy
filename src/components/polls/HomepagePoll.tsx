@@ -1,8 +1,10 @@
 import { useFeaturedPolls } from "@/hooks/usePolls";
+import { useTheme } from "@/hooks/useTheme";
 import PollWidget from "./PollWidget";
 
 const HomepagePoll = () => {
   const { data: polls, isLoading } = useFeaturedPolls();
+  const { theme } = useTheme();
 
   if (isLoading || !polls || polls.length === 0) {
     return null;
@@ -12,7 +14,12 @@ const HomepagePoll = () => {
     <section className="py-16 px-6">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold mb-4">Community Polls</h2>
+          <h2 
+            className="font-ceviche text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 tracking-wider leading-tight"
+            style={{ color: theme.colors.primary }}
+          >
+            Community Polls
+          </h2>
           <p className="text-muted-foreground">
             Share your opinion and see what the community thinks
           </p>
