@@ -17,7 +17,7 @@ const BlogPoll = ({
     return null;
   }
   return <div className="space-y-6 mt-8">
-      <h3 className="font-semibold text-center text-4xl">Community Polls</h3>
+      <h3 className="font-ceviche font-semibold text-center text-5xl text-rap-gold">Community Polls</h3>
       {polls.map(poll => <PollWidget key={poll.id} poll={poll} />)}
     </div>;
 };
