@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ThemedCard, ThemedCardContent, ThemedCardDescription, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
@@ -85,14 +85,14 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
   const sortedOptions = [...poll.poll_options].sort((a, b) => a.option_order - b.option_order);
 
   return (
-    <Card className="w-full">
-      <CardHeader>
-        <CardTitle className="text-lg">{poll.title}</CardTitle>
+    <ThemedCard className="w-full bg-gradient-to-r from-[var(--theme-primaryLight)] via-[var(--theme-primary)] to-[var(--theme-primaryDark)] border-[var(--theme-primaryDark)] shadow-[var(--theme-shadow-lg)]">
+      <ThemedCardHeader>
+        <ThemedCardTitle className="text-lg font-bold text-[var(--theme-background)]">{poll.title}</ThemedCardTitle>
         {poll.description && (
-          <CardDescription>{poll.description}</CardDescription>
+          <ThemedCardDescription className="font-bold text-[var(--theme-background)]">{poll.description}</ThemedCardDescription>
         )}
-      </CardHeader>
-      <CardContent>
+      </ThemedCardHeader>
+      <ThemedCardContent>
         {!user ? (
           // Non-authenticated users
           hasResults ? (
@@ -101,8 +101,8 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               {results?.results.map((result) => (
                 <div key={result.optionId} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-medium">{result.optionText}</span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm font-bold text-[var(--theme-background)]">{result.optionText}</span>
+                    <span className="text-sm font-bold text-[var(--theme-background)]">
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
@@ -110,16 +110,16 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 </div>
               ))}
               
-              <p className="text-sm text-muted-foreground text-center mt-4">
+              <p className="text-sm font-bold text-[var(--theme-background)] text-center mt-4">
                 Total votes: {results?.totalVotes}
               </p>
             </div>
           ) : (
             // No results available - show locked state
             <div className="text-center py-8 space-y-4">
-              <Lock className="h-12 w-12 text-muted-foreground mx-auto" />
-              <h3 className="text-lg font-semibold">Members Only</h3>
-              <p className="text-muted-foreground">
+              <Lock className="h-12 w-12 text-[var(--theme-background)] mx-auto" />
+              <h3 className="text-lg font-bold text-[var(--theme-background)]">Members Only</h3>
+              <p className="font-bold text-[var(--theme-background)]">
                 Sign up to participate in this poll and see results
               </p>
               <GuestCallToAction />
@@ -134,15 +134,15 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               return (
                 <div key={result.optionId} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className={`text-sm font-medium flex items-center gap-2 ${isUserChoice ? 'text-primary' : ''}`}>
+                    <span className={`text-sm font-bold flex items-center gap-2 text-[var(--theme-background)] ${isUserChoice ? 'text-[var(--theme-background)]' : ''}`}>
                       {result.optionText}
                       {isUserChoice && (
-                        <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
+                        <span className="text-xs bg-[var(--theme-background)]/20 text-[var(--theme-background)] px-2 py-1 rounded font-bold">
                           Your choice
                         </span>
                       )}
                     </span>
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm font-bold text-[var(--theme-background)]">
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
@@ -151,7 +151,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               );
             })}
             
-            <p className="text-sm text-muted-foreground text-center mt-4">
+            <p className="text-sm font-bold text-[var(--theme-background)] text-center mt-4">
               Total votes: {results?.totalVotes || 0}
             </p>
           </div>
@@ -163,7 +163,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 {sortedOptions.map((option) => (
                   <div key={option.id} className="flex items-center space-x-2">
                     <RadioGroupItem value={option.id} id={option.id} />
-                    <Label htmlFor={option.id} className="flex-1">
+                    <Label htmlFor={option.id} className="flex-1 font-bold text-[var(--theme-background)]">
                       {option.option_text}
                     </Label>
                   </div>
@@ -172,7 +172,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="write-in" id="write-in" />
-                      <Label htmlFor="write-in" className="cursor-pointer">
+                      <Label htmlFor="write-in" className="cursor-pointer font-bold text-[var(--theme-background)]">
                         Other
                       </Label>
                     </div>
@@ -199,7 +199,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                         handleMultipleChoice(option.id, checked as boolean)
                       }
                     />
-                    <Label htmlFor={option.id} className="flex-1">
+                    <Label htmlFor={option.id} className="flex-1 font-bold text-[var(--theme-background)]">
                       {option.option_text}
                     </Label>
                   </div>
@@ -214,7 +214,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                           handleMultipleChoice('write-in', checked as boolean)
                         }
                       />
-                      <Label htmlFor="write-in-multiple" className="cursor-pointer">
+                      <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-[var(--theme-background)]">
                         Other
                       </Label>
                     </div>
@@ -232,21 +232,22 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               </div>
             )}
             
-            <Button 
+            <ThemedButton 
               onClick={handleSubmit} 
               disabled={
                 (selectedOptions.length === 0) || 
                 (selectedOptions.includes('write-in') && !writeInOption.trim()) || 
                 isSubmitting
               }
-              className="w-full"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold"
+              variant="accent"
             >
               {isSubmitting ? "Submitting..." : "Vote"}
-            </Button>
+            </ThemedButton>
           </div>
         )}
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 };
 
