@@ -18,7 +18,7 @@ const HomepagePoll = () => {
           </p>
         </div>
         
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        <div className={`grid gap-6 ${polls.length === 1 ? 'justify-items-center grid-cols-1 max-w-md mx-auto' : 'md:grid-cols-2 lg:grid-cols-3'}`}>
           {polls.map((poll) => (
             <PollWidget key={poll.id} poll={poll} />
           ))}

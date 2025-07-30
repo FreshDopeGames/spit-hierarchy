@@ -37,7 +37,6 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [writeInOption, setWriteInOption] = useState("");
-  const [showWriteIn, setShowWriteIn] = useState(false);
   
   const { submitVote, isSubmitting } = usePollVoting();
   const { data: results } = usePollResults(poll.id);
@@ -49,6 +48,9 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
 
   const handleSingleChoice = (optionId: string) => {
     setSelectedOptions([optionId]);
+    if (optionId !== 'write-in') {
+      setWriteInOption('');
+    }
   };
 
   const handleMultipleChoice = (optionId: string, checked: boolean) => {
@@ -56,6 +58,9 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
       setSelectedOptions(prev => [...prev, optionId]);
     } else {
       setSelectedOptions(prev => prev.filter(id => id !== optionId));
+      if (optionId === 'write-in') {
+        setWriteInOption('');
+      }
     }
   };
 
@@ -63,10 +68,13 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
     if (selectedOptions.length === 0 && !writeInOption.trim()) return;
     
     try {
+      const finalOptionIds = selectedOptions.filter(id => id !== 'write-in');
+      const finalWriteIn = selectedOptions.includes('write-in') ? writeInOption.trim() : undefined;
+      
       await submitVote({
         pollId: poll.id,
-        optionIds: selectedOptions,
-        writeInOption: writeInOption.trim() || undefined
+        optionIds: finalOptionIds,
+        writeInOption: finalWriteIn || undefined
       });
       setHasVoted(true);
     } catch (error) {
@@ -160,6 +168,25 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                     </Label>
                   </div>
                 ))}
+                {poll.allow_write_in && (
+                  <div className="space-y-2">
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="write-in" id="write-in" />
+                      <Label htmlFor="write-in" className="cursor-pointer">
+                        Other
+                      </Label>
+                    </div>
+                    {selectedOptions.includes('write-in') && (
+                      <Input
+                        value={writeInOption}
+                        onChange={(e) => setWriteInOption(e.target.value)}
+                        placeholder="Other"
+                        className="ml-6"
+                        maxLength={100}
+                      />
+                    )}
+                  </div>
+                )}
               </RadioGroup>
             ) : (
               <div className="space-y-3">
@@ -177,43 +204,29 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                     </Label>
                   </div>
                 ))}
-              </div>
-            )}
-            
-            {poll.allow_write_in && (
-              <div className="space-y-2">
-                {!showWriteIn ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setShowWriteIn(true)}
-                    className="w-full"
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Add your own option
-                  </Button>
-                ) : (
+                {poll.allow_write_in && (
                   <div className="space-y-2">
-                    <Input
-                      placeholder="Enter your option..."
-                      value={writeInOption}
-                      onChange={(e) => setWriteInOption(e.target.value)}
-                      maxLength={100}
-                    />
-                    <div className="flex gap-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => {
-                          setShowWriteIn(false);
-                          setWriteInOption("");
-                        }}
-                      >
-                        Cancel
-                      </Button>
+                    <div className="flex items-center space-x-2">
+                      <Checkbox
+                        id="write-in-multiple"
+                        checked={selectedOptions.includes('write-in')}
+                        onCheckedChange={(checked) => 
+                          handleMultipleChoice('write-in', checked as boolean)
+                        }
+                      />
+                      <Label htmlFor="write-in-multiple" className="cursor-pointer">
+                        Other
+                      </Label>
                     </div>
+                    {selectedOptions.includes('write-in') && (
+                      <Input
+                        value={writeInOption}
+                        onChange={(e) => setWriteInOption(e.target.value)}
+                        placeholder="Other"
+                        className="ml-6"
+                        maxLength={100}
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -221,7 +234,11 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
             
             <Button 
               onClick={handleSubmit} 
-              disabled={(selectedOptions.length === 0 && !writeInOption.trim()) || isSubmitting}
+              disabled={
+                (selectedOptions.length === 0) || 
+                (selectedOptions.includes('write-in') && !writeInOption.trim()) || 
+                isSubmitting
+              }
               className="w-full"
             >
               {isSubmitting ? "Submitting..." : "Vote"}
