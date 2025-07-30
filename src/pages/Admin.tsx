@@ -8,6 +8,7 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement";
 import BlogManagement from "@/components/admin/BlogManagement";
+import PollManagement from "@/components/admin/PollManagement";
 import ThemeManagement from "@/components/admin/ThemeManagement";
 import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement";
 import AdminDataManagement from "@/components/admin/AdminDataManagement";
@@ -39,10 +40,11 @@ const Admin = () => {
         </h1>
 
         <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 bg-rap-carbon-light/50 gap-1 h-auto p-2">
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 bg-rap-carbon-light/50 gap-1 h-auto p-2">
             <TabsTrigger value="rappers" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Rappers</TabsTrigger>
             <TabsTrigger value="rankings" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Rankings</TabsTrigger>
             <TabsTrigger value="blog" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Blog</TabsTrigger>
+            <TabsTrigger value="polls" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Polls</TabsTrigger>
             <TabsTrigger value="headers" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Headers</TabsTrigger>
             <TabsTrigger value="theme" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Theme</TabsTrigger>
             <TabsTrigger value="data" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Data</TabsTrigger>
@@ -56,13 +58,17 @@ const Admin = () => {
             <AdminRankingsManagement />
           </TabsContent>
 
-          <TabsContent value="blog">
-            <BlogManagement />
-          </TabsContent>
+        <TabsContent value="blog">
+          <BlogManagement />
+        </TabsContent>
 
-          <TabsContent value="headers">
-            <SectionHeaderManagement />
-          </TabsContent>
+        <TabsContent value="polls">
+          <PollManagement />
+        </TabsContent>
+
+        <TabsContent value="headers">
+          <SectionHeaderManagement />
+        </TabsContent>
 
           <TabsContent value="theme">
             <ThemeManagement />

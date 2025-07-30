@@ -5,6 +5,7 @@ import { useAdaptivePolling } from "@/hooks/useAdaptivePolling";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import HeroSection from "@/components/HeroSection";
 import BlogCarousel from "@/components/BlogCarousel";
+import HomepagePoll from "@/components/polls/HomepagePoll";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import TopRappersGrid from "@/components/TopRappersGrid";
 import StatsOverview from "@/components/StatsOverview";
@@ -117,6 +118,9 @@ const Index = () => {
 
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
+
+            {/* Community Polls */}
+            <HomepagePoll />
 
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />

@@ -3,6 +3,7 @@ import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
 import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
 import BlogSidebar from "@/components/blog/BlogSidebar";
+import BlogPoll from "@/components/polls/BlogPoll";
 import { useBlogPostLikes } from "@/hooks/useBlogPostLikes";
 
 interface BlogPost {
@@ -72,6 +73,7 @@ const BlogDetailContent = ({
         {/* Main Content */}
         <div className="lg:col-span-3">
           <BlogArticleContent content={blogPost.content} />
+          <BlogPoll blogPostId={blogPost.id} />
           <BlogEngagementActions 
             likes={likesCount}
             isLiked={isLiked}
