@@ -35,7 +35,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     return (
       <Link 
         to={`/rapper/${rapper.slug || rapper.id}`} 
-        className="group block"
+        className="group block pointer-events-auto"
         onClick={() => window.scrollTo(0, 0)}
       >
         <div 
@@ -47,7 +47,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           }}
         >
           {/* Ranking Number - Top Left */}
-          <div className="absolute top-4 left-4 z-10">
+          <div className="absolute top-4 left-4">
             <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
               <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
                 {position}
@@ -56,10 +56,10 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           </div>
 
           {/* Gradient Overlay - Bottom Third */}
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none" />
           
           {/* Content - Bottom Area */}
-          <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
+          <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 pointer-events-none">
             <div className="text-white">
               <h3 className={`${nameTextSize} font-mogra text-white group-hover:text-rap-gold transition-colors leading-tight mb-2`}>
                 {rapper.name}
