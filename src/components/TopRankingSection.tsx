@@ -44,8 +44,8 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         onClick={() => window.scrollTo(0, 0)}
       >
         {/* Ranking Number - Top Left */}
-        <div className="absolute top-4 left-4">
-          <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
+        <div className="absolute top-4 left-4 pointer-events-none">
+          <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20 pointer-events-none">
             <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
               {position}
             </span>
