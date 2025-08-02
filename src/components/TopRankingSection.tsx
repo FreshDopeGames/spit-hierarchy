@@ -35,59 +35,55 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     return (
       <Link 
         to={`/rapper/${rapper.slug || rapper.id}`} 
-        className="group block pointer-events-auto"
+        className={`group block pointer-events-auto ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold group-hover:border-rap-gold-light transition-all duration-300 group-hover:scale-[1.02]`}
+        style={{
+          backgroundImage: `url(${backgroundImage})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+        }}
         onClick={() => window.scrollTo(0, 0)}
       >
-        <div 
-          className={`${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold group-hover:border-rap-gold-light transition-all duration-300 group-hover:scale-[1.02]`}
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-          }}
-        >
-          {/* Ranking Number - Top Left */}
-          <div className="absolute top-4 left-4">
-            <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
-              <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
-                {position}
-              </span>
-            </div>
+        {/* Ranking Number - Top Left */}
+        <div className="absolute top-4 left-4">
+          <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
+            <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
+              {position}
+            </span>
           </div>
+        </div>
 
-          {/* Gradient Overlay - Bottom Third */}
-          <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none" />
-          
-          {/* Content - Bottom Area */}
-          <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 pointer-events-none">
-            <div className="text-white">
-              <h3 className={`${nameTextSize} font-mogra text-white group-hover:text-rap-gold transition-colors leading-tight mb-2`}>
-                {rapper.name}
-              </h3>
-              
-              {rapper.origin && (
-                <div className="flex items-center gap-2 mb-3">
-                  <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0" />
-                  <p className="text-rap-silver text-sm sm:text-base font-kaushan">
-                    {rapper.origin}
-                  </p>
-                </div>
-              )}
-              
-              <div className="flex items-center gap-2">
-                {voteCount === 0 ? (
-                  <>
-                    <Star className="w-4 h-4 text-rap-gold/70" />
-                    <span className="text-rap-gold/70 font-kaushan text-sm italic">
-                      Vote to rank
-                    </span>
-                  </>
-                ) : (
-                  <p className="text-rap-silver text-sm sm:text-base font-bold">
-                    Votes: {voteCount.toLocaleString()}
-                  </p>
-                )}
+        {/* Gradient Overlay - Bottom Third */}
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none" />
+        
+        {/* Content - Bottom Area */}
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 pointer-events-none">
+          <div className="text-white">
+            <h3 className={`${nameTextSize} font-mogra text-white group-hover:text-rap-gold transition-colors leading-tight mb-2`}>
+              {rapper.name}
+            </h3>
+            
+            {rapper.origin && (
+              <div className="flex items-center gap-2 mb-3">
+                <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0" />
+                <p className="text-rap-silver text-sm sm:text-base font-kaushan">
+                  {rapper.origin}
+                </p>
               </div>
+            )}
+            
+            <div className="flex items-center gap-2">
+              {voteCount === 0 ? (
+                <>
+                  <Star className="w-4 h-4 text-rap-gold/70" />
+                  <span className="text-rap-gold/70 font-kaushan text-sm italic">
+                    Vote to rank
+                  </span>
+                </>
+              ) : (
+                <p className="text-rap-silver text-sm sm:text-base font-bold">
+                  Votes: {voteCount.toLocaleString()}
+                </p>
+              )}
             </div>
           </div>
         </div>
