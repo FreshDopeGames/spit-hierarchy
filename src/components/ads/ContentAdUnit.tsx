@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import AdSenseUnit from './AdSenseUnit';
 
 interface ContentAdUnitProps {
@@ -6,6 +7,9 @@ interface ContentAdUnitProps {
 }
 
 const ContentAdUnit = ({ className = '', size = 'medium' }: ContentAdUnitProps) => {
+  const [adLoaded, setAdLoaded] = useState(false);
+  const [showAd, setShowAd] = useState(true);
+
   // Different ad slot IDs for different sizes
   const adSlots = {
     small: '1234567890', // Replace with actual ad slot
@@ -13,20 +17,30 @@ const ContentAdUnit = ({ className = '', size = 'medium' }: ContentAdUnitProps) 
     large: '1234567892'   // Replace with actual ad slot
   };
 
-  const sizeStyles = {
-    small: { minHeight: '250px' },
-    medium: { minHeight: '320px' },
-    large: { minHeight: '400px' }
+  const handleAdLoad = (loaded: boolean) => {
+    setAdLoaded(loaded);
+    if (!loaded) {
+      // Hide the entire container if ad fails to load
+      setTimeout(() => setShowAd(false), 100);
+    }
   };
 
+  // Don't render anything if ad failed to load
+  if (!showAd) {
+    return null;
+  }
+
   return (
-    <div className={`my-8 flex justify-center ${className}`}>
-      <div className="max-w-full" style={sizeStyles[size]}>
+    <div className={`my-8 flex justify-center transition-all duration-300 ${
+      adLoaded ? 'opacity-100' : 'opacity-50'
+    } ${className}`}>
+      <div className="max-w-full">
         <AdSenseUnit 
           adSlot={adSlots[size]}
           adFormat="auto"
           responsive={true}
           className="border border-rap-smoke/20 rounded-lg"
+          onAdLoad={handleAdLoad}
         />
       </div>
     </div>
