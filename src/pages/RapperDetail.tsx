@@ -10,10 +10,12 @@ import VoteModal from "@/components/VoteModal";
 import CommentBubble from "@/components/CommentBubble";
 import BackToTopButton from "@/components/BackToTopButton";
 import RapperHeader from "@/components/rapper/RapperHeader";
-import RapperBio from "@/components/rapper/RapperBio";
+import RapperBioExpanded from "@/components/content/RapperBioExpanded";
 import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import HeaderNavigation from "@/components/HeaderNavigation";
+import SEOHead from "@/components/seo/SEOHead";
+import ContentAdUnit from "@/components/ads/ContentAdUnit";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers"> & {
@@ -98,8 +100,35 @@ const RapperDetail = () => {
     );
   }
 
+  // Generate SEO data
+  const seoTitle = `${rapper.name} - Rapper Profile & Rankings | Spit Hierarchy`;
+  const seoDescription = `Explore ${rapper.name}'s profile, vote on their skills, and see their rankings in our hip-hop community. ${rapper.bio ? rapper.bio.substring(0, 120) + '...' : `Learn about ${rapper.name}'s place in rap culture.`}`;
+  const seoKeywords = [
+    rapper.name,
+    'rapper profile',
+    'hip hop artist',
+    'rap rankings',
+    ...(rapper.origin ? [rapper.origin + ' rapper'] : [])
+  ];
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <SEOHead 
+        title={seoTitle}
+        description={seoDescription}
+        keywords={seoKeywords}
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "Person",
+          "name": rapper.name,
+          "alternateName": rapper.real_name || undefined,
+          "description": rapper.bio || `${rapper.name} is a rapper featured on Spit Hierarchy`,
+          "birthPlace": rapper.origin || undefined,
+          "birthDate": rapper.birth_year ? `${rapper.birth_year}` : undefined,
+          "url": typeof window !== 'undefined' ? window.location.href : undefined
+        }}
+      />
+      
       <HeaderNavigation isScrolled={false} />
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
       
@@ -115,8 +144,11 @@ const RapperDetail = () => {
         {/* Rapper Header */}
         <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
-        {/* Bio Section */}
-        <RapperBio rapper={rapper} />
+        {/* Enhanced Bio Section with more content */}
+        <RapperBioExpanded rapper={rapper} />
+
+        {/* Ad placement between content sections */}
+        <ContentAdUnit size="medium" />
 
         {/* Attribute Stats - New sports-style stats */}
         <div className="mb-8 bg-rap-carbon">

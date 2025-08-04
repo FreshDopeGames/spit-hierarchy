@@ -4,6 +4,7 @@ import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogPoll from "@/components/polls/BlogPoll";
+import ContentAdUnit from "@/components/ads/ContentAdUnit";
 import { useBlogPostLikes } from "@/hooks/useBlogPostLikes";
 
 interface BlogPost {
@@ -73,6 +74,9 @@ const BlogDetailContent = ({
       <div className="space-y-8">
         <BlogArticleContent content={blogPost.content} />
         
+        {/* Strategic ad placement in content */}
+        <ContentAdUnit size="medium" />
+        
         <BlogEngagementActions 
           likes={likesCount}
           isLiked={isLiked}
@@ -85,6 +89,9 @@ const BlogDetailContent = ({
 
         {/* Polls section */}
         <BlogPoll blogPostId={blogPost.id} />
+
+        {/* Another ad placement */}
+        <ContentAdUnit size="large" />
 
         {/* Sidebar content moved below */}
         <BlogSidebar 

@@ -15,6 +15,8 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import ErrorBoundary from "@/components/ErrorBoundary";
+import SEOHead from "@/components/seo/SEOHead";
+import ContentAdUnit from "@/components/ads/ContentAdUnit";
 
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -106,6 +108,11 @@ const Index = () => {
 
   return (
     <ErrorBoundary>
+      <SEOHead 
+        title="Spit Hierarchy - The Ultimate Rap Rankings Platform"
+        description="Join the ultimate rapper ranking platform. Vote on your favorite rappers, discover new artists, and explore the best in hip-hop culture. Community-driven rankings with real-time voting."
+        keywords={['rap rankings', 'hip hop voting', 'rapper polls', 'music community', 'hip hop culture', 'rap battles']}
+      />
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
         {/* Sticky Header */}
         <HeaderNavigation isScrolled={isScrolled} />
@@ -151,11 +158,17 @@ const Index = () => {
               </Link>
             </div>
 
+            {/* Strategic Ad Placement */}
+            <ContentAdUnit size="large" />
+
             {/* Community Polls */}
             <HomepagePoll />
 
             {/* Stats Overview */}
             <StatsOverview />
+            
+            {/* Ad between sections */}
+            <ContentAdUnit size="medium" />
             
             {/* View All Stats Button */}
             <AnalyticsButton />
