@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 import { useUserTopRappers } from "@/hooks/useUserTopRappers";
+import { useUserProfile } from "@/hooks/useUserProfile";
 import TopFiveSlot from "./TopFiveSlot";
 import RapperSearchOverlay from "./RapperSearchOverlay";
+import ShareTopFiveModal from "./ShareTopFiveModal";
+import { Button } from "@/components/ui/button";
+import { Share2 } from "lucide-react";
 
 const MyTopFiveSection = () => {
   const { topRappers, isLoading, updateTopRapper, selectedRapperIds } = useUserTopRappers();
+  const { userProfile } = useUserProfile();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isShareOpen, setIsShareOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
 
   const handleSlotClick = (position: number) => {
@@ -54,9 +60,20 @@ const MyTopFiveSection = () => {
   return (
     <>
       <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
-        <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda mb-4 text-center">
-          My Top 5
-        </h3>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda flex-1 text-center">
+            My Top 5
+          </h3>
+          <Button
+            onClick={() => setIsShareOpen(true)}
+            variant="outline"
+            size="sm"
+            className="flex items-center gap-2 text-rap-gold border-rap-gold/30 hover:bg-rap-gold/10"
+          >
+            <Share2 className="w-4 h-4" />
+            Share
+          </Button>
+        </div>
         
         {/* Desktop Layout */}
         <div className="hidden lg:block">
@@ -136,6 +153,13 @@ const MyTopFiveSection = () => {
         onSelectRapper={handleRapperSelect}
         excludeIds={selectedRapperIds}
         position={selectedPosition || 1}
+      />
+
+      <ShareTopFiveModal
+        isOpen={isShareOpen}
+        onClose={() => setIsShareOpen(false)}
+        slots={slots}
+        username={userProfile?.username || "Anonymous"}
       />
     </>
   );
