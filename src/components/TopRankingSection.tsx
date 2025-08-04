@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
@@ -17,6 +17,8 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
+  const navigate = useNavigate();
+  
   // Component to render individual ranking card with background image
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
@@ -32,16 +34,20 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const rankingTextSize = isTopTwo ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl";
     const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
 
+    const handleClick = () => {
+      window.scrollTo(0, 0);
+      navigate(`/rapper/${rapper.slug || rapper.id}`);
+    };
+
     return (
-      <Link 
-        to={`/rapper/${rapper.slug || rapper.id}`} 
-        className={`group block pointer-events-auto ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold group-hover:border-rap-gold-light transition-all duration-300 group-hover:scale-[1.02]`}
+      <div 
+        className={`group block cursor-pointer ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold hover:border-rap-gold-light transition-all duration-300 hover:scale-[1.02]`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
-        onClick={() => window.scrollTo(0, 0)}
+        onClick={handleClick}
       >
         {/* Ranking Number - Top Left */}
         <div className="absolute top-4 left-4 pointer-events-none">
@@ -87,7 +93,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     );
   };
 
