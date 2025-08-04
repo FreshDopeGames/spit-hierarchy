@@ -3,9 +3,16 @@ import { useLocation, Link } from "react-router-dom";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Home } from "lucide-react";
+import { useSecureAuth } from "@/hooks/useSecureAuth";
 
 const NotFound = () => {
   const location = useLocation();
+  const { isAuthenticated } = useSecureAuth();
+  
+  const isAdminRoute = location.pathname.startsWith('/admin');
+  const isProtectedRoute = ['/profile', '/analytics'].some(route => 
+    location.pathname.startsWith(route)
+  );
 
   useEffect(() => {
     console.error(
@@ -30,15 +37,30 @@ const NotFound = () => {
         <h1 className="text-6xl font-mogra text-rap-gold mb-4 animate-text-glow">404</h1>
         <h2 className="text-4xl sm:text-5xl font-ceviche text-rap-silver mb-4">...but not the ATL</h2>
         <p className="text-rap-platinum font-kaushan text-lg mb-8 max-w-md tracking-wide">
-          This scroll has been lost to time. Return to your expedition...expeditiously.
+          {isAdminRoute && !isAuthenticated 
+            ? "The sacred admin chambers require authentication. Your session may have expired."
+            : isProtectedRoute && !isAuthenticated
+            ? "This area requires you to be signed in. Your session may have expired."
+            : "This scroll has been lost to time. Return to your expedition...expeditiously."
+          }
         </p>
         
-        <Link to="/">
-          <Button className="bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold hover:from-rap-gold-light hover:via-rap-gold hover:to-rap-gold-dark font-mogra text-rap-carbon px-8 py-3 shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
-            <Home className="w-4 h-4 mr-2" />
-            Snap Back To Reality
-          </Button>
-        </Link>
+        <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          {(isAdminRoute || isProtectedRoute) && !isAuthenticated ? (
+            <Link to="/auth" state={{ returnTo: location.pathname }}>
+              <Button className="bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold hover:from-rap-gold-light hover:via-rap-gold hover:to-rap-gold-dark font-mogra text-rap-carbon px-8 py-3 shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+                Sign In to Continue
+              </Button>
+            </Link>
+          ) : (
+            <Link to="/">
+              <Button className="bg-gradient-to-r from-rap-gold via-rap-gold-light to-rap-gold hover:from-rap-gold-light hover:via-rap-gold hover:to-rap-gold-dark font-mogra text-rap-carbon px-8 py-3 shadow-xl shadow-rap-gold/40 border border-rap-gold/30">
+                <Home className="w-4 h-4 mr-2" />
+                Snap Back To Reality
+              </Button>
+            </Link>
+          )}
+        </div>
       </div>
     </div>
   );
