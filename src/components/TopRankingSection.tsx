@@ -72,7 +72,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
 
     return (
       <div 
-        className={`group block cursor-pointer ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold hover:border-rap-gold-light transition-all duration-300 hover:scale-[1.02] z-10`}
+        className={`block cursor-pointer ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-10`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
@@ -99,7 +99,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         {/* Content - Bottom Area */}
         <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 pointer-events-none">
           <div className="text-white">
-            <h3 className={`${nameTextSize} font-mogra text-white group-hover:text-rap-gold transition-colors leading-tight mb-2`}>
+            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-2`}>
               {rapper.name}
             </h3>
             
