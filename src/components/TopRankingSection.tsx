@@ -34,20 +34,55 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const rankingTextSize = isTopTwo ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl";
     const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
 
-    const handleClick = () => {
-      window.scrollTo(0, 0);
-      navigate(`/rapper/${rapper.slug || rapper.id}`);
+    const handleClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      console.log('🎯 TopRankingSection card clicked!', {
+        rapperId: rapper.id,
+        rapperSlug: rapper.slug,
+        rapperName: rapper.name,
+        navigationPath: `/rapper/${rapper.slug || rapper.id}`
+      });
+
+      // Validate rapper data
+      if (!rapper.id && !rapper.slug) {
+        console.error('❌ No rapper ID or slug available for navigation');
+        return;
+      }
+
+      try {
+        window.scrollTo(0, 0);
+        const path = `/rapper/${rapper.slug || rapper.id}`;
+        console.log('🚀 Navigating to:', path);
+        navigate(path);
+      } catch (error) {
+        console.error('❌ Navigation failed, trying fallback:', error);
+        // Fallback to window.location
+        window.location.href = `/rapper/${rapper.slug || rapper.id}`;
+      }
+    };
+
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleClick(e as any);
+      }
     };
 
     return (
       <div 
-        className={`group block cursor-pointer ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold hover:border-rap-gold-light transition-all duration-300 hover:scale-[1.02]`}
+        className={`group block cursor-pointer ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold hover:border-rap-gold-light transition-all duration-300 hover:scale-[1.02] z-10`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
         onClick={handleClick}
+        onKeyDown={handleKeyDown}
+        role="button"
+        tabIndex={0}
+        aria-label={`View ${rapper.name} profile`}
       >
         {/* Ranking Number - Top Left */}
         <div className="absolute top-4 left-4 pointer-events-none">
