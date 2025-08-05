@@ -35,12 +35,14 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     return (
       <Link 
         to={`/rapper/${rapper.slug || rapper.id}`}
-        className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-10`}
+        className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-50 cursor-pointer`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center'
+          backgroundPosition: 'center',
+          touchAction: 'manipulation'
         }}
+        onTouchStart={() => {}}
       >
         {/* Ranking Number - Top Left */}
         <div className="absolute top-4 left-4">
@@ -91,9 +93,9 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="space-y-6 sm:space-y-8 px-2 sm:px-0">
       {/* Top 2 Cards - Larger and More Prominent */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-8">
         {rappers.slice(0, 2).map((rapper, index) => (
           <RankingCard 
             key={rapper.id}
@@ -105,7 +107,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       </div>
       
       {/* Cards 3-5 - Smaller Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-6">
         {rappers.slice(2, 5).map((rapper, index) => (
           <RankingCard 
             key={rapper.id}
