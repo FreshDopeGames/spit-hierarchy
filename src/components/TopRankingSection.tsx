@@ -43,8 +43,8 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         }}
       >
         {/* Ranking Number - Top Left */}
-        <div className="absolute top-4 left-4 pointer-events-none">
-          <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20 pointer-events-none">
+        <div className="absolute top-4 left-4">
+          <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
             <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
               {position}
             </span>
@@ -52,7 +52,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         </div>
 
         {/* Gradient Overlay - Bottom Third */}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
         
         {/* Content - Bottom Area */}
         <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6">
