@@ -35,9 +35,6 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
 
     const handleClick = (e: React.MouseEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      
       console.log('🎯 TopRankingSection card clicked!', {
         rapperId: rapper.id,
         rapperSlug: rapper.slug,
