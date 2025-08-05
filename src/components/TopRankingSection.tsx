@@ -39,7 +39,10 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         rapperId: rapper.id,
         rapperSlug: rapper.slug,
         rapperName: rapper.name,
-        navigationPath: `/rapper/${rapper.slug || rapper.id}`
+        navigationPath: `/rapper/${rapper.slug || rapper.id}`,
+        eventType: 'click',
+        target: e.target,
+        currentTarget: e.currentTarget
       });
 
       // Validate rapper data
@@ -60,6 +63,13 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       }
     };
 
+    const handleMouseDown = (e: React.MouseEvent) => {
+      console.log('🖱️ TopRankingSection card mouse down!', {
+        rapperId: rapper.id,
+        eventType: 'mousedown'
+      });
+    };
+
     const handleKeyDown = (e: React.KeyboardEvent) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
@@ -69,13 +79,15 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
 
     return (
       <div 
-        className={`block cursor-pointer ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-10`}
+        className={`block cursor-pointer pointer-events-auto ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-50`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
+          pointerEvents: 'auto'
         }}
         onClick={handleClick}
+        onMouseDown={handleMouseDown}
         onKeyDown={handleKeyDown}
         role="button"
         tabIndex={0}
