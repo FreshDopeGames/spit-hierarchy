@@ -1,5 +1,5 @@
 
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
@@ -17,8 +17,6 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
-  const navigate = useNavigate();
-  
   // Component to render individual ranking card with background image
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
@@ -34,64 +32,15 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const rankingTextSize = isTopTwo ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl";
     const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
 
-    const handleClick = (e: React.MouseEvent) => {
-      console.log('🎯 TopRankingSection card clicked!', {
-        rapperId: rapper.id,
-        rapperSlug: rapper.slug,
-        rapperName: rapper.name,
-        navigationPath: `/rapper/${rapper.slug || rapper.id}`,
-        eventType: 'click',
-        target: e.target,
-        currentTarget: e.currentTarget
-      });
-
-      // Validate rapper data
-      if (!rapper.id && !rapper.slug) {
-        console.error('❌ No rapper ID or slug available for navigation');
-        return;
-      }
-
-      try {
-        window.scrollTo(0, 0);
-        const path = `/rapper/${rapper.slug || rapper.id}`;
-        console.log('🚀 Navigating to:', path);
-        navigate(path);
-      } catch (error) {
-        console.error('❌ Navigation failed, trying fallback:', error);
-        // Fallback to window.location
-        window.location.href = `/rapper/${rapper.slug || rapper.id}`;
-      }
-    };
-
-    const handleMouseDown = (e: React.MouseEvent) => {
-      console.log('🖱️ TopRankingSection card mouse down!', {
-        rapperId: rapper.id,
-        eventType: 'mousedown'
-      });
-    };
-
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleClick(e as any);
-      }
-    };
-
     return (
-      <div 
-        className={`block cursor-pointer pointer-events-auto ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-50`}
+      <Link 
+        to={`/rapper/${rapper.slug || rapper.id}`}
+        className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-10`}
         style={{
           backgroundImage: `url(${backgroundImage})`,
           backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          pointerEvents: 'auto'
+          backgroundPosition: 'center'
         }}
-        onClick={handleClick}
-        onMouseDown={handleMouseDown}
-        onKeyDown={handleKeyDown}
-        role="button"
-        tabIndex={0}
-        aria-label={`View ${rapper.name} profile`}
       >
         {/* Ranking Number - Top Left */}
         <div className="absolute top-4 left-4 pointer-events-none">
@@ -137,7 +86,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </div>
           </div>
         </div>
-      </div>
+      </Link>
     );
   };
 
