@@ -55,7 +55,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent pointer-events-none" />
         
         {/* Content - Bottom Area */}
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 pointer-events-none">
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6">
           <div className="text-white">
             <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-2`}>
               {rapper.name}
