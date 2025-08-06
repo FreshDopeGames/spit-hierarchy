@@ -8,7 +8,7 @@ const Footer = () => {
   const CypherIcon = PenTool || Pen || MessageSquare;
 
   return (
-    <footer className="bg-black border-t border-rap-gold/30 mt-16">
+    <footer className="bg-black border-t border-rap-gold/30 mt-0">
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
