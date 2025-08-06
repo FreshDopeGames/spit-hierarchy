@@ -13,6 +13,8 @@ import RapperHeader from "@/components/rapper/RapperHeader";
 import RapperBioExpanded from "@/components/content/RapperBioExpanded";
 import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
+import CareerStatsCard from "@/components/rapper/CareerStatsCard";
+import RapperDiscography from "@/components/rapper/RapperDiscography";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
@@ -144,13 +146,19 @@ const RapperDetail = () => {
         {/* Rapper Header */}
         <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
+        {/* Career Overview - New sports-card style stats */}
+        <CareerStatsCard rapperId={rapper.id} />
+
         {/* Enhanced Bio Section with more content */}
         <RapperBioExpanded rapper={rapper} />
+
+        {/* Discography Section - MusicBrainz integration */}
+        <RapperDiscography rapperId={rapper.id} />
 
         {/* Ad placement between content sections */}
         <ContentAdUnit size="medium" />
 
-        {/* Attribute Stats - New sports-style stats */}
+        {/* Attribute Stats - Sports-style performance stats */}
         <div className="mb-8 bg-rap-carbon">
           <RapperAttributeStats rapper={rapper} />
         </div>

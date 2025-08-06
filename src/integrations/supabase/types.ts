@@ -95,6 +95,53 @@ export type Database = {
         }
         Relationships: []
       }
+      albums: {
+        Row: {
+          cover_art_url: string | null
+          created_at: string
+          id: string
+          label_id: string | null
+          musicbrainz_id: string | null
+          release_date: string | null
+          release_type: string
+          title: string
+          track_count: number | null
+          updated_at: string
+        }
+        Insert: {
+          cover_art_url?: string | null
+          created_at?: string
+          id?: string
+          label_id?: string | null
+          musicbrainz_id?: string | null
+          release_date?: string | null
+          release_type?: string
+          title: string
+          track_count?: number | null
+          updated_at?: string
+        }
+        Update: {
+          cover_art_url?: string | null
+          created_at?: string
+          id?: string
+          label_id?: string | null
+          musicbrainz_id?: string | null
+          release_date?: string | null
+          release_type?: string
+          title?: string
+          track_count?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "albums_label_id_fkey"
+            columns: ["label_id"]
+            isOneToOne: false
+            referencedRelation: "record_labels"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       audit_logs: {
         Row: {
           action: string
@@ -1036,6 +1083,52 @@ export type Database = {
           },
         ]
       }
+      rapper_albums: {
+        Row: {
+          album_id: string
+          created_at: string
+          id: string
+          rapper_id: string
+          role: string | null
+        }
+        Insert: {
+          album_id: string
+          created_at?: string
+          id?: string
+          rapper_id: string
+          role?: string | null
+        }
+        Update: {
+          album_id?: string
+          created_at?: string
+          id?: string
+          rapper_id?: string
+          role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_albums_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_albums_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_albums_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_images: {
         Row: {
           created_at: string
@@ -1081,6 +1174,104 @@ export type Database = {
           },
         ]
       }
+      rapper_labels: {
+        Row: {
+          created_at: string
+          end_year: number | null
+          id: string
+          is_current: boolean | null
+          label_id: string
+          rapper_id: string
+          start_year: number | null
+        }
+        Insert: {
+          created_at?: string
+          end_year?: number | null
+          id?: string
+          is_current?: boolean | null
+          label_id: string
+          rapper_id: string
+          start_year?: number | null
+        }
+        Update: {
+          created_at?: string
+          end_year?: number | null
+          id?: string
+          is_current?: boolean | null
+          label_id?: string
+          rapper_id?: string
+          start_year?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_labels_label_id_fkey"
+            columns: ["label_id"]
+            isOneToOne: false
+            referencedRelation: "record_labels"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_labels_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_labels_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rapper_singles: {
+        Row: {
+          created_at: string
+          id: string
+          rapper_id: string
+          role: string | null
+          single_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rapper_id: string
+          role?: string | null
+          single_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rapper_id?: string
+          role?: string | null
+          single_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_singles_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_singles_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_singles_single_id_fkey"
+            columns: ["single_id"]
+            isOneToOne: false
+            referencedRelation: "singles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rappers: {
         Row: {
           average_rating: number | null
@@ -1088,10 +1279,14 @@ export type Database = {
           birth_day: number | null
           birth_month: number | null
           birth_year: number | null
+          career_end_year: number | null
+          career_start_year: number | null
           created_at: string
+          discography_last_updated: string | null
           id: string
           image_url: string | null
           instagram_handle: string | null
+          musicbrainz_id: string | null
           name: string
           origin: string | null
           real_name: string | null
@@ -1108,10 +1303,14 @@ export type Database = {
           birth_day?: number | null
           birth_month?: number | null
           birth_year?: number | null
+          career_end_year?: number | null
+          career_start_year?: number | null
           created_at?: string
+          discography_last_updated?: string | null
           id?: string
           image_url?: string | null
           instagram_handle?: string | null
+          musicbrainz_id?: string | null
           name: string
           origin?: string | null
           real_name?: string | null
@@ -1128,10 +1327,14 @@ export type Database = {
           birth_day?: number | null
           birth_month?: number | null
           birth_year?: number | null
+          career_end_year?: number | null
+          career_start_year?: number | null
           created_at?: string
+          discography_last_updated?: string | null
           id?: string
           image_url?: string | null
           instagram_handle?: string | null
+          musicbrainz_id?: string | null
           name?: string
           origin?: string | null
           real_name?: string | null
@@ -1141,6 +1344,42 @@ export type Database = {
           twitter_handle?: string | null
           updated_at?: string
           verified?: boolean | null
+        }
+        Relationships: []
+      }
+      record_labels: {
+        Row: {
+          country: string | null
+          created_at: string
+          founded_year: number | null
+          id: string
+          logo_url: string | null
+          musicbrainz_id: string | null
+          name: string
+          updated_at: string
+          website_url: string | null
+        }
+        Insert: {
+          country?: string | null
+          created_at?: string
+          founded_year?: number | null
+          id?: string
+          logo_url?: string | null
+          musicbrainz_id?: string | null
+          name: string
+          updated_at?: string
+          website_url?: string | null
+        }
+        Update: {
+          country?: string | null
+          created_at?: string
+          founded_year?: number | null
+          id?: string
+          logo_url?: string | null
+          musicbrainz_id?: string | null
+          name?: string
+          updated_at?: string
+          website_url?: string | null
         }
         Relationships: []
       }
@@ -1176,6 +1415,53 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      singles: {
+        Row: {
+          album_id: string | null
+          chart_country: string | null
+          created_at: string
+          duration_ms: number | null
+          id: string
+          musicbrainz_id: string | null
+          peak_chart_position: number | null
+          release_date: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          album_id?: string | null
+          chart_country?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          musicbrainz_id?: string | null
+          peak_chart_position?: number | null
+          release_date?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          album_id?: string | null
+          chart_country?: string | null
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          musicbrainz_id?: string | null
+          peak_chart_position?: number | null
+          release_date?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "singles_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       user_achievements: {
         Row: {

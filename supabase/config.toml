@@ -1,1 +1,4 @@
 project_id = "xzcmkssadekswmiqfbff"
+
+[functions.fetch-rapper-discography]
+verify_jwt = false
