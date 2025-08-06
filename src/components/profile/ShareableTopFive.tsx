@@ -24,23 +24,23 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
   return (
     <div 
       className={cn(
-        "bg-gradient-to-br from-background via-card to-background relative",
-        "border-2 border-primary/20 overflow-hidden",
+        "bg-gradient-to-br from-black via-gray-900 to-black relative",
+        "border-2 border-gray-700 overflow-hidden",
         isSquare ? "w-[1080px] h-[1080px]" : "w-[1200px] h-[630px]"
       )}
       style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}
     >
       {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,hsl(var(--primary))_0%,transparent_50%)]" />
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,#ffd700_0%,transparent_50%)]" />
       </div>
       
       {/* Header */}
       <div className="relative z-10 text-center pt-8 pb-6">
-        <h1 className="text-4xl md:text-5xl font-bold text-primary mb-2">
+        <h1 className="text-4xl md:text-5xl font-bold text-yellow-400 mb-2">
           {username}'s Top 5
         </h1>
-        <p className="text-xl text-muted-foreground">
+        <p className="text-xl text-gray-300">
           My favorite rappers ranked
         </p>
       </div>
@@ -56,13 +56,13 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           <div
             key={slot.position}
             className={cn(
-              "bg-card border border-border rounded-lg p-4 shadow-lg",
+              "bg-gray-800 border border-gray-600 rounded-lg p-4 shadow-lg",
               "flex items-center gap-4",
               isSquare ? "min-h-[140px]" : "min-h-[120px] max-w-[200px]"
             )}
           >
             {/* Position Badge */}
-            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-primary text-primary-foreground font-bold text-xl">
+            <div className="flex-shrink-0 flex items-center justify-center w-12 h-12 rounded-full bg-yellow-400 text-black font-bold text-xl">
               {slot.position}
             </div>
             
@@ -79,16 +79,16 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
                       />
                     </div>
                   )}
-                  <h3 className="font-semibold text-foreground text-center text-sm leading-tight">
+                  <h3 className="font-semibold text-white text-center text-sm leading-tight">
                     {slot.rapper.name}
                   </h3>
                 </>
               ) : (
                 <div className="text-center">
-                  <div className="w-16 h-16 rounded-lg bg-muted mb-2 mx-auto flex items-center justify-center">
-                    <span className="text-muted-foreground text-xs">No pick</span>
+                  <div className="w-16 h-16 rounded-lg bg-gray-700 mb-2 mx-auto flex items-center justify-center">
+                    <span className="text-gray-400 text-xs">No pick</span>
                   </div>
-                  <p className="text-muted-foreground text-sm">
+                  <p className="text-gray-400 text-sm">
                     Empty slot
                   </p>
                 </div>
@@ -100,9 +100,8 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
 
       {/* Footer */}
       <div className="absolute bottom-6 left-0 right-0 text-center">
-        <p className="text-lg text-muted-foreground">
-          Create your own rankings at{" "}
-          <span className="text-primary font-semibold">RapRankings</span>
+        <p className="text-lg text-gray-400">
+          Personal hip-hop rankings
         </p>
       </div>
     </div>
