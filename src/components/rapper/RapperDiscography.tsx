@@ -12,7 +12,7 @@ interface RapperDiscographyProps {
 }
 
 const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
-  const { data, isLoading, error } = useRapperDiscography(rapperId);
+  const { data, isLoading, error } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
   const refreshMutation = useRefreshDiscography();
   const [activeTab, setActiveTab] = useState("albums");
 
@@ -44,19 +44,31 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
   }
 
   if (error) {
+    const isNotFound = error?.message?.includes('404') || error?.message?.includes('not found');
+    
     return (
       <Card className="bg-carbon-fiber border-rap-burgundy/30">
         <CardContent className="p-6 text-center">
           <div className="text-rap-burgundy mb-4">
-            Failed to load discography data
+            {isNotFound 
+              ? "No discography data found on MusicBrainz"
+              : "Failed to load discography data"
+            }
           </div>
+          <p className="text-sm text-rap-smoke mb-4">
+            {isNotFound 
+              ? "This artist may not be in the MusicBrainz database yet."
+              : "There was an error connecting to the music database."
+            }
+          </p>
           <Button 
             onClick={handleRefresh} 
             variant="outline"
             className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10"
+            disabled={refreshMutation.isPending}
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
-            Retry
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshMutation.isPending ? 'animate-spin' : ''}`} />
+            {isNotFound ? 'Search Again' : 'Retry'}
           </Button>
         </CardContent>
       </Card>
@@ -97,7 +109,9 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
         <div className="flex items-center justify-between">
           <div>
             <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
-            <p className="text-sm text-rap-smoke mt-1">Complete musical catalog and chart performances</p>
+            <p className="text-sm text-rap-smoke mt-1">
+              {isLoading ? 'Fetching from MusicBrainz...' : 'Complete musical catalog and chart performances'}
+            </p>
           </div>
           <div className="flex items-center gap-2">
             {data?.cached && (
@@ -105,14 +119,19 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
                 Cached
               </Badge>
             )}
+            {isLoading && (
+              <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
+                Loading...
+              </Badge>
+            )}
             <Button
               variant="ghost"
               size="sm"
               onClick={handleRefresh}
-              disabled={refreshMutation.isPending}
+              disabled={refreshMutation.isPending || isLoading}
               className="text-rap-gold hover:bg-rap-gold/10"
             >
-              <RefreshCw className={`w-4 h-4 ${refreshMutation.isPending ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
             </Button>
           </div>
         </div>

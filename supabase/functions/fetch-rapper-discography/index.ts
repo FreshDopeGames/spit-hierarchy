@@ -134,6 +134,8 @@ serve(async (req) => {
     // Search for artist if no MusicBrainz ID
     let musicbrainzId = rapper.musicbrainz_id;
     if (!musicbrainzId) {
+      console.log('Searching MusicBrainz for artist:', rapper.name);
+      
       const searchResponse = await fetch(
         `https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(rapper.name)}&fmt=json&limit=5`,
         {
@@ -143,7 +145,14 @@ serve(async (req) => {
         }
       );
 
+      if (!searchResponse.ok) {
+        console.error('MusicBrainz search failed:', searchResponse.status, searchResponse.statusText);
+        throw new Error(`MusicBrainz API error: ${searchResponse.status}`);
+      }
+
       const searchData = await searchResponse.json();
+      console.log('MusicBrainz search results:', searchData);
+      
       const artists = searchData.artists || [];
       
       // Find best match - exact name match preferred
@@ -153,20 +162,28 @@ serve(async (req) => {
       
       if (exactMatch) {
         musicbrainzId = exactMatch.id;
+        console.log('Found MusicBrainz ID:', musicbrainzId, 'for artist:', rapper.name);
         
         // Update rapper with MusicBrainz ID
         await supabase
           .from('rappers')
           .update({ musicbrainz_id: musicbrainzId })
           .eq('id', rapperId);
+      } else {
+        console.log('No exact match found for:', rapper.name, 'Available options:', artists.map((a: any) => a.name));
       }
     }
 
     if (!musicbrainzId) {
+      console.log('No MusicBrainz artist found for:', rapper.name);
       return new Response(JSON.stringify({
         success: false,
-        error: 'Could not find MusicBrainz artist'
+        cached: false,
+        discography: [],
+        topSingles: [],
+        error: 'Artist not found on MusicBrainz'
       }), {
+        status: 404,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -365,9 +382,19 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in fetch-rapper-discography:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      rapperId,
+      forceRefresh
+    });
+    
     return new Response(JSON.stringify({
       success: false,
-      error: error.message
+      cached: false,
+      discography: [],
+      topSingles: [],
+      error: error.message || 'Failed to fetch discography data'
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

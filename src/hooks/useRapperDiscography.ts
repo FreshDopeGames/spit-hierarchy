@@ -39,10 +39,12 @@ export interface DiscographyData {
   topSingles: DiscographySingle[];
 }
 
-export const useRapperDiscography = (rapperId: string) => {
+export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true) => {
   return useQuery({
     queryKey: ["rapper-discography", rapperId],
     queryFn: async (): Promise<DiscographyData> => {
+      console.log('Fetching discography for rapper:', rapperId);
+      
       const { data, error } = await supabase.functions.invoke(
         "fetch-rapper-discography",
         {
@@ -51,14 +53,21 @@ export const useRapperDiscography = (rapperId: string) => {
       );
 
       if (error) {
+        console.error('Discography fetch error:', error);
         throw new Error(error.message || "Failed to fetch discography");
       }
 
+      console.log('Discography fetch result:', data);
       return data;
     },
-    enabled: !!rapperId,
+    enabled: !!rapperId && autoFetch,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
+    retry: (failureCount, error) => {
+      // Don't retry if it's a 404 (artist not found)
+      if (error?.message?.includes('404')) return false;
+      return failureCount < 2;
+    },
   });
 };
 
