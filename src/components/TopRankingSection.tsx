@@ -60,14 +60,24 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         {/* Content - Bottom Area with Drop Shadow */}
         <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
           <div className="text-white">
-            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-2 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]`}>
+            <h3 
+              className={`${nameTextSize} font-mogra text-white leading-tight mb-2`}
+              style={{
+                textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 2px 2px 4px rgba(0,0,0,0.8)'
+              }}
+            >
               {rapper.name}
             </h3>
             
             {rapper.origin && (
               <div className="flex items-center gap-2 mb-3">
                 <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
-                <p className="text-rap-silver text-sm sm:text-base font-kaushan drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
+                <p 
+                  className="text-rap-silver text-sm sm:text-base font-kaushan"
+                  style={{
+                    textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
+                  }}
+                >
                   {rapper.origin}
                 </p>
               </div>
@@ -77,12 +87,22 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               {voteCount === 0 ? (
                 <>
                   <Star className="w-4 h-4 text-rap-gold/70 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
-                  <span className="text-rap-gold/70 font-kaushan text-sm italic drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
+                  <span 
+                    className="text-rap-gold/70 font-kaushan text-sm italic"
+                    style={{
+                      textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
+                    }}
+                  >
                     Vote to rank
                   </span>
                 </>
               ) : (
-                <p className="text-rap-silver text-sm sm:text-base font-bold drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
+                <p 
+                  className="text-rap-silver text-sm sm:text-base font-bold"
+                  style={{
+                    textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
+                  }}
+                >
                   Votes: {voteCount.toLocaleString()}
                 </p>
               )}
