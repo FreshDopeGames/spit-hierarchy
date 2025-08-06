@@ -120,21 +120,21 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
           <TabsList className="grid w-full grid-cols-3 bg-rap-charcoal">
             <TabsTrigger 
               value="albums" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
             >
               <Disc3 className="w-4 h-4 mr-2" />
               Albums ({albums.length})
             </TabsTrigger>
             <TabsTrigger 
               value="mixtapes"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
             >
               <Music className="w-4 h-4 mr-2" />
               Mixtapes ({mixtapes.length})
             </TabsTrigger>
             <TabsTrigger 
               value="singles"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
             >
               <Trophy className="w-4 h-4 mr-2" />
               Top Singles ({singles.length})
