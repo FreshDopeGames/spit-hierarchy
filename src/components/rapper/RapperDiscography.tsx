@@ -93,7 +93,7 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
   return (
     <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-4 sm:pb-6">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
           <div className="flex items-center gap-2">
@@ -115,41 +115,41 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
         </div>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="p-4 sm:p-6">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-rap-charcoal gap-2 p-2">
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-rap-charcoal gap-3 sm:gap-2 p-3 sm:p-2 min-h-[60px] sm:min-h-[50px]">
             <TabsTrigger 
               value="albums" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-3 px-4 text-sm flex items-center justify-center"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-4 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm flex items-center justify-center"
             >
               <Disc3 className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Albums ({albums.length})</span>
             </TabsTrigger>
             <TabsTrigger 
               value="mixtapes"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-3 px-4 text-sm flex items-center justify-center"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-4 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm flex items-center justify-center"
             >
               <Music className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Mixtapes ({mixtapes.length})</span>
             </TabsTrigger>
             <TabsTrigger 
               value="singles"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-3 px-4 text-sm flex items-center justify-center"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-4 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm flex items-center justify-center"
             >
               <Trophy className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Top Singles ({singles.length})</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="albums" className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value="albums" className="mt-6 sm:mt-4">
+            <div className="space-y-4 sm:space-y-3">
               {albums.length === 0 ? (
-                <div className="text-center py-8 text-rap-smoke font-kaushan">
+                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No albums found in discography
                 </div>
               ) : (
                 albums.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
                       <Disc3 className="w-6 h-6 text-rap-gold" />
                     </div>
@@ -181,15 +181,15 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
             </div>
           </TabsContent>
 
-          <TabsContent value="mixtapes" className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value="mixtapes" className="mt-6 sm:mt-4">
+            <div className="space-y-4 sm:space-y-3">
               {mixtapes.length === 0 ? (
-                <div className="text-center py-8 text-rap-smoke font-kaushan">
+                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No mixtapes found in discography
                 </div>
               ) : (
                 mixtapes.map((item) => (
-                  <div key={item.id} className="flex gap-4 p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
                       <Music className="w-6 h-6 text-rap-burgundy" />
                     </div>
@@ -221,15 +221,15 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
             </div>
           </TabsContent>
 
-          <TabsContent value="singles" className="mt-4">
-            <div className="space-y-3">
+          <TabsContent value="singles" className="mt-6 sm:mt-4">
+            <div className="space-y-4 sm:space-y-3">
               {singles.length === 0 ? (
-                <div className="text-center py-8 text-rap-smoke font-kaushan">
+                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No singles found in discography
                 </div>
               ) : (
                 singles.map((item, index) => (
-                  <div key={item.id} className="flex gap-4 p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                  <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
                       <div className="text-rap-silver font-bold">#{index + 1}</div>
                     </div>
