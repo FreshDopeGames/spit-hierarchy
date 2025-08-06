@@ -12,7 +12,7 @@ const CareerStatsCard = ({ rapperId }: CareerStatsCardProps) => {
 
   if (isLoading) {
     return (
-      <Card className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
+      <Card className="bg-black border-rap-gold/20 animate-pulse">
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="h-6 bg-rap-carbon-light rounded w-1/3"></div>
@@ -60,7 +60,7 @@ const CareerStatsCard = ({ rapperId }: CareerStatsCardProps) => {
   ];
 
   return (
-    <Card className="bg-carbon-fiber border-rap-gold/20 shadow-lg shadow-rap-gold/10">
+    <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10">
       <CardContent className="p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">

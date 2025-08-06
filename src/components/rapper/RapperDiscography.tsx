@@ -92,7 +92,7 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
   };
 
   return (
-    <Card className="bg-carbon-fiber border-rap-gold/20 shadow-lg shadow-rap-gold/10">
+    <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
