@@ -134,7 +134,6 @@ const RapperDetail = () => {
       
       <main className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
         <HeaderNavigation isScrolled={false} />
-        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-0">
           {/* Back Button - Now properly preserves navigation state */}
