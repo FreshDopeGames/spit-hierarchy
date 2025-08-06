@@ -92,10 +92,13 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
   };
 
   return (
-    <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10">
-      <CardHeader className="pb-4 sm:pb-6">
+    <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10 min-h-[600px] sm:min-h-[500px]">
+      <CardHeader className="pb-6 sm:pb-8">
         <div className="flex items-center justify-between">
-          <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
+          <div>
+            <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
+            <p className="text-sm text-rap-smoke mt-1">Complete musical catalog and chart performances</p>
+          </div>
           <div className="flex items-center gap-2">
             {data?.cached && (
               <Badge variant="secondary" className="text-xs">
@@ -115,26 +118,26 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6">
+      <CardContent className="p-6 sm:p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-rap-charcoal gap-3 sm:gap-2 p-3 sm:p-2 min-h-[60px] sm:min-h-[50px]">
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-muted/80 rounded-lg p-2 gap-1 sm:gap-2 min-h-[180px] sm:min-h-[50px]">
             <TabsTrigger 
               value="albums" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-4 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm flex items-center justify-center"
+              className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
             >
               <Disc3 className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Albums ({albums.length})</span>
             </TabsTrigger>
             <TabsTrigger 
               value="mixtapes"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-4 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm flex items-center justify-center"
+              className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
             >
               <Music className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Mixtapes ({mixtapes.length})</span>
             </TabsTrigger>
             <TabsTrigger 
               value="singles"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-4 px-3 sm:py-3 sm:px-4 text-xs sm:text-sm flex items-center justify-center"
+              className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
             >
               <Trophy className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Top Singles ({singles.length})</span>
