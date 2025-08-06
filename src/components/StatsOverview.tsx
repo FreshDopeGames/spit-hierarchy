@@ -2,7 +2,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
-import { Users, Vote, MessageCircle, TrendingUp } from "lucide-react";
+import { Users, Vote, MessageCircle, TrendingUp, Music, UserPlus, Crown, Trophy } from "lucide-react";
 
 const StatsOverview = () => {
   const { data: stats, isLoading } = useQuery({
@@ -23,6 +23,11 @@ const StatsOverview = () => {
         .from("comments")
         .select("*", { count: "exact", head: true });
 
+      // Get total rappers
+      const { count: totalRappers } = await supabase
+        .from("rappers")
+        .select("*", { count: "exact", head: true });
+
       // Get top rated rapper
       const { data: topRapper } = await supabase
         .from("rappers")
@@ -32,11 +37,61 @@ const StatsOverview = () => {
         .limit(1)
         .single();
 
+      // Get newest member
+      const { data: newestMember } = await supabase
+        .from("profiles")
+        .select("username")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
+
+      // Get top commenter
+      const { data: topCommenter } = await supabase
+        .from("member_stats")
+        .select("id, total_comments")
+        .gt("total_comments", 0)
+        .order("total_comments", { ascending: false })
+        .limit(1)
+        .single();
+
+      let topCommenterName = "N/A";
+      if (topCommenter) {
+        const { data: commenterProfile } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", topCommenter.id)
+          .single();
+        topCommenterName = commenterProfile?.username || "N/A";
+      }
+
+      // Get top voter
+      const { data: topVoter } = await supabase
+        .from("member_stats")
+        .select("id, total_votes")
+        .gt("total_votes", 0)
+        .order("total_votes", { ascending: false })
+        .limit(1)
+        .single();
+
+      let topVoterName = "N/A";
+      if (topVoter) {
+        const { data: voterProfile } = await supabase
+          .from("profiles")
+          .select("username")
+          .eq("id", topVoter.id)
+          .single();
+        topVoterName = voterProfile?.username || "N/A";
+      }
+
       return {
         totalMembers: totalMembers || 0,
         totalVotes: totalVotes || 0,
         totalComments: totalComments || 0,
-        topRapper: topRapper?.name || "N/A"
+        totalRappers: totalRappers || 0,
+        topRapper: topRapper?.name || "N/A",
+        newestMember: newestMember?.username || "N/A",
+        topCommenter: topCommenterName,
+        topVoter: topVoterName
       };
     }
   });
@@ -53,7 +108,7 @@ const StatsOverview = () => {
           </p>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 8 }).map((_, i) => (
             <Card key={i} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
               <CardContent className="p-3 sm:p-4">
                 <div className="h-12 sm:h-16 bg-rap-carbon-light rounded"></div>
@@ -85,9 +140,33 @@ const StatsOverview = () => {
       color: "from-rap-gold to-rap-gold-light"
     },
     {
+      icon: Music,
+      label: "Rappers",
+      value: stats?.totalRappers || 0,
+      color: "from-rap-gold to-rap-gold-light"
+    },
+    {
       icon: TrendingUp,
       label: "Top Rated",
       value: stats?.topRapper || "N/A",
+      color: "from-rap-gold to-rap-gold-light"
+    },
+    {
+      icon: UserPlus,
+      label: "Newest Member",
+      value: stats?.newestMember || "N/A",
+      color: "from-rap-gold to-rap-gold-light"
+    },
+    {
+      icon: Crown,
+      label: "Top Commenter",
+      value: stats?.topCommenter || "N/A",
+      color: "from-rap-gold to-rap-gold-light"
+    },
+    {
+      icon: Trophy,
+      label: "Top Voter",
+      value: stats?.topVoter || "N/A",
       color: "from-rap-gold to-rap-gold-light"
     }
   ];
