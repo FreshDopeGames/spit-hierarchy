@@ -117,27 +117,27 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-rap-charcoal gap-1 p-1">
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-rap-charcoal gap-2 p-2">
             <TabsTrigger 
               value="albums" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-3 px-4 text-sm flex items-center justify-center"
             >
-              <Disc3 className="w-4 h-4 mr-2" />
-              Albums ({albums.length})
+              <Disc3 className="w-4 h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">Albums ({albums.length})</span>
             </TabsTrigger>
             <TabsTrigger 
               value="mixtapes"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-3 px-4 text-sm flex items-center justify-center"
             >
-              <Music className="w-4 h-4 mr-2" />
-              Mixtapes ({mixtapes.length})
+              <Music className="w-4 h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">Mixtapes ({mixtapes.length})</span>
             </TabsTrigger>
             <TabsTrigger 
               value="singles"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum py-3 px-4 text-sm flex items-center justify-center"
             >
-              <Trophy className="w-4 h-4 mr-2" />
-              Top Singles ({singles.length})
+              <Trophy className="w-4 h-4 mr-2 flex-shrink-0" />
+              <span className="truncate">Top Singles ({singles.length})</span>
             </TabsTrigger>
           </TabsList>
 
