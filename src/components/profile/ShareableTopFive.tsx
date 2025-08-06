@@ -1,5 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 interface ShareableTopFiveProps {
   slots: Array<{
@@ -72,7 +73,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
                 <>
                   <div className="w-16 h-16 rounded-lg overflow-hidden mb-2 mx-auto">
                     <img 
-                      src={slot.rapper.image_url || "/placeholder.svg"} 
+                      src={slot.rapper.image_url || getOptimizedPlaceholder('medium')}
                       alt={slot.rapper.name}
                       className="w-full h-full object-cover"
                     />
