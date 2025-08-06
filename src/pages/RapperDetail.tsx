@@ -18,6 +18,7 @@ import RapperDiscography from "@/components/rapper/RapperDiscography";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
+import Footer from "@/components/Footer";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers"> & {
@@ -146,26 +147,35 @@ const RapperDetail = () => {
         {/* Rapper Header */}
         <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
-        {/* Career Overview - New sports-card style stats */}
-        <CareerStatsCard rapperId={rapper.id} />
-
         {/* Enhanced Bio Section with more content */}
         <RapperBioExpanded rapper={rapper} />
 
-        {/* Discography Section - MusicBrainz integration */}
-        <RapperDiscography rapperId={rapper.id} />
+        {/* Career Overview - New sports-card style stats */}
+        <div className="mb-8">
+          <CareerStatsCard rapperId={rapper.id} />
+        </div>
 
         {/* Ad placement between content sections */}
         <ContentAdUnit size="medium" />
 
+        {/* Discography Section - MusicBrainz integration */}
+        <div className="mb-8">
+          <RapperDiscography rapperId={rapper.id} />
+        </div>
+
         {/* Attribute Stats - Sports-style performance stats */}
-        <div className="mb-8 bg-rap-carbon">
+        <div className="mb-8">
           <RapperAttributeStats rapper={rapper} />
         </div>
 
         {/* Community Stats */}
-        <RapperStats rapper={rapper} />
+        <div className="mb-8">
+          <RapperStats rapper={rapper} />
+        </div>
       </div>
+
+      {/* Footer */}
+      <Footer />
 
       {/* Vote Modal */}
       {showVoteModal && (
