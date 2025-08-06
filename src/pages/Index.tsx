@@ -151,9 +151,9 @@ const Index = () => {
               <Link to="/rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
                 <Button 
                   variant="outline" 
-                  className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal font-mogra text-sm px-6 py-3"
+                  className="w-full sm:w-auto border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal font-mogra text-xl px-8 py-4"
                 >
-                  All Rankings
+                  All Rapper Rankings
                 </Button>
               </Link>
             </div>
