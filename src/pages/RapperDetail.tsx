@@ -115,7 +115,7 @@ const RapperDetail = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+    <>
       <SEOHead 
         title={seoTitle}
         description={seoDescription}
@@ -132,49 +132,51 @@ const RapperDetail = () => {
         }}
       />
       
-      <HeaderNavigation isScrolled={false} />
-      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-      
-      <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
-        {/* Back Button - Now properly preserves navigation state */}
-        <Link to="/all-rappers" className="inline-block mb-6">
-          <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back To All Rappers
-          </Button>
-        </Link>
+      <main className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+        <HeaderNavigation isScrolled={false} />
+        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+        
+        <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-16">
+          {/* Back Button - Now properly preserves navigation state */}
+          <Link to="/all-rappers" className="inline-block mb-6">
+            <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back To All Rappers
+            </Button>
+          </Link>
 
-        {/* Rapper Header */}
-        <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
+          {/* Rapper Header */}
+          <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
-        {/* Enhanced Bio Section with more content */}
-        <RapperBioExpanded rapper={rapper} />
+          {/* Enhanced Bio Section with more content */}
+          <RapperBioExpanded rapper={rapper} />
 
-        {/* Career Overview - New sports-card style stats */}
-        <div className="mb-8">
-          <CareerStatsCard rapperId={rapper.id} />
+          {/* Career Overview - New sports-card style stats */}
+          <div className="mb-8">
+            <CareerStatsCard rapperId={rapper.id} />
+          </div>
+
+          {/* Ad placement between content sections */}
+          <ContentAdUnit size="medium" />
+
+          {/* Discography Section - MusicBrainz integration */}
+          <div className="mb-8">
+            <RapperDiscography rapperId={rapper.id} />
+          </div>
+
+          {/* Attribute Stats - Sports-style performance stats */}
+          <div className="mb-8">
+            <RapperAttributeStats rapper={rapper} />
+          </div>
+
+          {/* Community Stats */}
+          <div className="mb-8">
+            <RapperStats rapper={rapper} />
+          </div>
         </div>
+      </main>
 
-        {/* Ad placement between content sections */}
-        <ContentAdUnit size="medium" />
-
-        {/* Discography Section - MusicBrainz integration */}
-        <div className="mb-8">
-          <RapperDiscography rapperId={rapper.id} />
-        </div>
-
-        {/* Attribute Stats - Sports-style performance stats */}
-        <div className="mb-8">
-          <RapperAttributeStats rapper={rapper} />
-        </div>
-
-        {/* Community Stats */}
-        <div className="mb-8">
-          <RapperStats rapper={rapper} />
-        </div>
-      </div>
-
-      {/* Footer */}
+      {/* Footer - Outside main content for proper z-index */}
       <Footer />
 
       {/* Vote Modal */}
@@ -192,7 +194,7 @@ const RapperDetail = () => {
 
       {/* Comment Bubble - Pinned to bottom */}
       <CommentBubble contentType="rapper" contentId={rapper.id} />
-    </div>
+    </>
   );
 };
 
