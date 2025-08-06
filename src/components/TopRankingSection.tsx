@@ -35,38 +35,39 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     return (
       <Link 
         to={`/rapper/${rapper.slug || rapper.id}`}
-        className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold z-50 cursor-pointer`}
-        style={{
-          backgroundImage: `url(${backgroundImage})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          touchAction: 'manipulation'
-        }}
-        onTouchStart={() => {}}
+        className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold cursor-pointer min-h-[176px] sm:min-h-[288px]`}
+        style={{ touchAction: 'manipulation' }}
       >
+        {/* Background Image Container */}
+        <div 
+          className="absolute inset-0 w-full h-full"
+          style={{
+            backgroundImage: `url(${backgroundImage})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+        />
+
         {/* Ranking Number - Top Left */}
-        <div className="absolute top-4 left-4">
+        <div className="absolute top-4 left-4 z-10">
           <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
-            <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
+            <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon drop-shadow-lg`}>
               {position}
             </span>
           </div>
         </div>
-
-        {/* Gradient Overlay - Bottom Third */}
-        <div className="absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-black/90 via-black/60 to-transparent" />
         
-        {/* Content - Bottom Area */}
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6">
+        {/* Content - Bottom Area with Drop Shadow */}
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
           <div className="text-white">
-            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-2`}>
+            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-2 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]`}>
               {rapper.name}
             </h3>
             
             {rapper.origin && (
               <div className="flex items-center gap-2 mb-3">
-                <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0" />
-                <p className="text-rap-silver text-sm sm:text-base font-kaushan">
+                <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
+                <p className="text-rap-silver text-sm sm:text-base font-kaushan drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
                   {rapper.origin}
                 </p>
               </div>
@@ -75,13 +76,13 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             <div className="flex items-center gap-2">
               {voteCount === 0 ? (
                 <>
-                  <Star className="w-4 h-4 text-rap-gold/70" />
-                  <span className="text-rap-gold/70 font-kaushan text-sm italic">
+                  <Star className="w-4 h-4 text-rap-gold/70 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
+                  <span className="text-rap-gold/70 font-kaushan text-sm italic drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
                     Vote to rank
                   </span>
                 </>
               ) : (
-                <p className="text-rap-silver text-sm sm:text-base font-bold">
+                <p className="text-rap-silver text-sm sm:text-base font-bold drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]">
                   Votes: {voteCount.toLocaleString()}
                 </p>
               )}
