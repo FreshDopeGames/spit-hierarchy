@@ -70,15 +70,13 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             <div className="flex-1 min-w-0">
               {slot.rapper ? (
                 <>
-                  {slot.rapper.image_url && (
-                    <div className="w-16 h-16 rounded-lg overflow-hidden mb-2 mx-auto">
-                      <img 
-                        src={slot.rapper.image_url} 
-                        alt={slot.rapper.name}
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
+                  <div className="w-16 h-16 rounded-lg overflow-hidden mb-2 mx-auto">
+                    <img 
+                      src={slot.rapper.image_url || "/placeholder.svg"} 
+                      alt={slot.rapper.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                   <h3 className="font-semibold text-white text-center text-sm leading-tight">
                     {slot.rapper.name}
                   </h3>
