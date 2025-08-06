@@ -122,6 +122,12 @@ const StatsOverview = () => {
 
   const statCards = [
     {
+      icon: Music,
+      label: "Rappers",
+      value: stats?.totalRappers || 0,
+      color: "from-rap-gold to-rap-gold-light"
+    },
+    {
       icon: Users,
       label: "Members",
       value: stats?.totalMembers || 0,
@@ -134,15 +140,9 @@ const StatsOverview = () => {
       color: "from-rap-gold to-rap-gold-light"
     },
     {
-      icon: MessageCircle,
-      label: "Comments",
-      value: stats?.totalComments || 0,
-      color: "from-rap-gold to-rap-gold-light"
-    },
-    {
-      icon: Music,
-      label: "Rappers",
-      value: stats?.totalRappers || 0,
+      icon: Trophy,
+      label: "Top Voter",
+      value: stats?.topVoter || "N/A",
       color: "from-rap-gold to-rap-gold-light"
     },
     {
@@ -152,9 +152,9 @@ const StatsOverview = () => {
       color: "from-rap-gold to-rap-gold-light"
     },
     {
-      icon: UserPlus,
-      label: "Newest Member",
-      value: stats?.newestMember || "N/A",
+      icon: MessageCircle,
+      label: "Comments",
+      value: stats?.totalComments || 0,
       color: "from-rap-gold to-rap-gold-light"
     },
     {
@@ -164,9 +164,9 @@ const StatsOverview = () => {
       color: "from-rap-gold to-rap-gold-light"
     },
     {
-      icon: Trophy,
-      label: "Top Voter",
-      value: stats?.topVoter || "N/A",
+      icon: UserPlus,
+      label: "Newest Member",
+      value: stats?.newestMember || "N/A",
       color: "from-rap-gold to-rap-gold-light"
     }
   ];
