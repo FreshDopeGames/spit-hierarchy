@@ -79,7 +79,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">Share Your Top 5</DialogTitle>
         </DialogHeader>
@@ -94,29 +94,29 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
             </Button>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {/* Format Selection */}
             <div className="flex justify-center gap-2">
               <Badge 
                 variant={format === 'square' ? 'default' : 'outline'}
-                className="cursor-pointer"
+                className="cursor-pointer text-xs px-2 py-1"
                 onClick={() => setFormat('square')}
               >
-                Square (1080×1080) - Instagram
+                Square - Instagram
               </Badge>
               <Badge 
                 variant={format === 'landscape' ? 'default' : 'outline'}
-                className="cursor-pointer"
+                className="cursor-pointer text-xs px-2 py-1"
                 onClick={() => setFormat('landscape')}
               >
-                Landscape (1200×630) - Twitter/Facebook
+                Landscape - Twitter/Facebook
               </Badge>
             </div>
 
             {/* Preview */}
             <div className="flex justify-center">
               <div 
-                className="transform scale-[0.3] origin-top border border-border rounded-lg overflow-hidden"
+                className="transform scale-[0.5] origin-top border border-border rounded-lg overflow-hidden"
                 style={{ 
                   width: format === 'square' ? '1080px' : '1200px',
                   height: format === 'square' ? '1080px' : '630px'
@@ -133,11 +133,12 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center gap-3">
               <Button
                 onClick={() => generateImage('download')}
                 disabled={isGenerating}
                 className="flex items-center gap-2"
+                size="sm"
               >
                 {isGenerating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -152,6 +153,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
                 disabled={isGenerating}
                 variant="outline"
                 className="flex items-center gap-2"
+                size="sm"
               >
                 {isGenerating ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -161,10 +163,6 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
                 Copy to Clipboard
               </Button>
             </div>
-
-            <p className="text-center text-sm text-muted-foreground">
-              Generate a high-quality image of your Top 5 to share on social media
-            </p>
           </div>
         )}
       </DialogContent>
