@@ -117,7 +117,7 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 bg-rap-charcoal">
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-rap-charcoal gap-1 p-1">
             <TabsTrigger 
               value="albums" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-bold text-rap-platinum"
