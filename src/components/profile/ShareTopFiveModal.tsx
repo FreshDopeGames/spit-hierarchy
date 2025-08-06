@@ -79,7 +79,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl max-h-[95vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-center">Share Your Top 5</DialogTitle>
         </DialogHeader>
@@ -96,27 +96,29 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
         ) : (
           <div className="space-y-4">
             {/* Format Selection */}
-            <div className="flex justify-center gap-2">
+            <div className="flex flex-col sm:flex-row justify-center gap-2">
               <Badge 
                 variant={format === 'square' ? 'default' : 'outline'}
-                className="cursor-pointer text-xs px-2 py-1"
+                className="cursor-pointer text-xs px-3 py-2 text-center"
                 onClick={() => setFormat('square')}
               >
-                Square - Instagram
+                <span className="block sm:inline">Square</span>
+                <span className="hidden sm:inline"> - Instagram</span>
               </Badge>
               <Badge 
                 variant={format === 'landscape' ? 'default' : 'outline'}
-                className="cursor-pointer text-xs px-2 py-1"
+                className="cursor-pointer text-xs px-3 py-2 text-center"
                 onClick={() => setFormat('landscape')}
               >
-                Landscape - Twitter/Facebook
+                <span className="block sm:inline">Landscape</span>
+                <span className="hidden sm:inline"> - Twitter/Facebook</span>
               </Badge>
             </div>
 
             {/* Preview */}
-            <div className="flex justify-center">
+            <div className="flex justify-center overflow-hidden">
               <div 
-                className="transform scale-[0.5] origin-top border border-border rounded-lg overflow-hidden"
+                className="transform scale-[0.25] sm:scale-[0.35] md:scale-[0.45] lg:scale-[0.5] origin-top border border-border rounded-lg overflow-hidden"
                 style={{ 
                   width: format === 'square' ? '1080px' : '1200px',
                   height: format === 'square' ? '1080px' : '630px'
@@ -133,11 +135,11 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex justify-center gap-3">
+            <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 px-4 sm:px-0">
               <Button
                 onClick={() => generateImage('download')}
                 disabled={isGenerating}
-                className="flex items-center gap-2"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto"
                 size="sm"
               >
                 {isGenerating ? (
@@ -152,7 +154,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
                 onClick={() => generateImage('copy')}
                 disabled={isGenerating}
                 variant="outline"
-                className="flex items-center gap-2"
+                className="flex items-center justify-center gap-2 w-full sm:w-auto"
                 size="sm"
               >
                 {isGenerating ? (
