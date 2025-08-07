@@ -563,6 +563,81 @@ export type Database = {
         }
         Relationships: []
       }
+      musicbrainz_audit_logs: {
+        Row: {
+          action: string
+          created_at: string
+          error_message: string | null
+          execution_time_ms: number | null
+          id: string
+          ip_address: unknown | null
+          rapper_id: string
+          request_data: Json | null
+          response_data: Json | null
+          status: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          created_at?: string
+          error_message?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          ip_address?: unknown | null
+          rapper_id: string
+          request_data?: Json | null
+          response_data?: Json | null
+          status: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          created_at?: string
+          error_message?: string | null
+          execution_time_ms?: number | null
+          id?: string
+          ip_address?: unknown | null
+          rapper_id?: string
+          request_data?: Json | null
+          response_data?: Json | null
+          status?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      musicbrainz_rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          ip_address: unknown | null
+          request_count: number | null
+          updated_at: string
+          user_id: string | null
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          request_count?: number | null
+          updated_at?: string
+          user_id?: string | null
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip_address?: unknown | null
+          request_count?: number | null
+          updated_at?: string
+          user_id?: string | null
+          window_start?: string
+        }
+        Relationships: []
+      }
       official_ranking_items: {
         Row: {
           created_at: string | null
@@ -1902,6 +1977,15 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: undefined
       }
+      check_musicbrainz_rate_limit: {
+        Args: {
+          p_user_id?: string
+          p_ip_address?: unknown
+          p_max_requests?: number
+          p_window_minutes?: number
+        }
+        Returns: boolean
+      }
       check_rate_limit: {
         Args: {
           action_type: string
@@ -1918,6 +2002,14 @@ export type Database = {
       daily_ranking_maintenance: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      fetch_musicbrainz_discography: {
+        Args: {
+          p_rapper_id: string
+          p_force_refresh?: boolean
+          p_user_id?: string
+        }
+        Returns: Json
       }
       get_category_voting_analytics: {
         Args: Record<PropertyKey, never>
