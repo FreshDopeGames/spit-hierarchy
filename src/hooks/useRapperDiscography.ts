@@ -91,6 +91,11 @@ export const useRefreshDiscography = () => {
     },
     onSuccess: (data, rapperId) => {
       queryClient.setQueryData(["rapper-discography", rapperId], data);
+      // Ensure dependent stats refresh
+      queryClient.invalidateQueries({ queryKey: ["rapper-career-stats", rapperId] });
+      setTimeout(() => {
+        queryClient.refetchQueries({ queryKey: ["rapper-career-stats", rapperId] });
+      }, 400);
       toast.success("Discography refreshed successfully");
     },
     onError: (error) => {

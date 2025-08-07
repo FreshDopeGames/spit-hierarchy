@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { useRefreshDiscography } from "@/hooks/useRapperDiscography";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft } from "lucide-react";
@@ -30,6 +31,7 @@ const RapperDetail = () => {
   const { user } = useAuth();
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [selectedCategory] = useState("");
+  const refreshDiscography = useRefreshDiscography();
 
   const { data: rapper, isLoading } = useQuery({
     queryKey: ["rapper", id],
@@ -62,6 +64,13 @@ const RapperDetail = () => {
     },
     enabled: !!id
   });
+
+  // Ensure MusicBrainz fetch runs for artists without cached discography
+  useEffect(() => {
+    if (rapper && !rapper.discography_last_updated) {
+      refreshDiscography.mutate(rapper.id);
+    }
+  }, [rapper?.id, rapper?.discography_last_updated]);
 
   if (isLoading) {
     return (

@@ -64,6 +64,7 @@ serve(async (req) => {
   const startTime = Date.now();
   const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
   const userAgent = req.headers.get('user-agent') || 'unknown';
+  let userId: string | null = null;
   
   try {
     // Create clients - service role for DB operations, anon for auth
@@ -78,7 +79,6 @@ serve(async (req) => {
     
     // Get user from auth header if present
     const authHeader = req.headers.get('authorization');
-    let userId = null;
     if (authHeader) {
       const { data: { user } } = await supabaseAnon.auth.getUser(
         authHeader.replace('Bearer ', '')
@@ -307,9 +307,60 @@ serve(async (req) => {
       })
       .eq('id', rapperId);
 
-    // Fetch release groups (albums)
+    // Upsert artist label affiliations
+    if (artistData.labels && artistData.labels.length > 0) {
+      for (const l of artistData.labels) {
+        const labelMbId = l.label?.id;
+        const labelName = l.label?.name;
+        if (!labelMbId || !labelName) continue;
+
+        // Find or create record label
+        const { data: existingLabel } = await supabaseService
+          .from('record_labels')
+          .select('id')
+          .eq('musicbrainz_id', labelMbId)
+          .single();
+
+        let labelId = existingLabel?.id;
+        if (!labelId) {
+          const { data: newLabel } = await supabaseService
+            .from('record_labels')
+            .insert({ name: labelName, musicbrainz_id: labelMbId })
+            .select('id')
+            .single();
+          labelId = newLabel?.id;
+        }
+
+        if (labelId) {
+          // Link rapper to label if not already linked
+          const { data: existingAff } = await supabaseService
+            .from('rapper_labels')
+            .select('id')
+            .eq('rapper_id', rapperId)
+            .eq('label_id', labelId)
+            .single();
+
+          if (!existingAff) {
+            await supabaseService
+              .from('rapper_labels')
+              .insert({
+                rapper_id: rapperId,
+                label_id: labelId,
+                start_year: l['begin-year'] || null,
+                end_year: l['end-year'] || null,
+                is_current: !l['end-year']
+              });
+          }
+        }
+
+        // Small delay to be polite with rate limits
+        await new Promise((r) => setTimeout(r, 50));
+      }
+    }
+
+    // Fetch release groups (albums only; singles handled via recordings)
     const releaseGroupResponse = await fetch(
-      `https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album|single&fmt=json&limit=100&offset=0`,
+      `https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album|ep&fmt=json&limit=100&offset=0`,
       {
         headers: {
           'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)',
@@ -322,8 +373,14 @@ serve(async (req) => {
 
     // Process albums and mixtapes
     for (const rg of releaseGroups.slice(0, 50)) { // Limit to prevent rate limiting
-      const releaseType = rg['primary-type'] === 'Album' ? 'album' : 
-                         rg['secondary-types']?.includes('Mixtape') ? 'mixtape' : 'album';
+      // Skip singles here; they are handled via recordings API below
+      const primaryType = rg['primary-type'];
+      const secondaryTypes = rg['secondary-types'] || [];
+      const isSingle = primaryType === 'Single' || secondaryTypes.includes('Single');
+      if (isSingle) continue;
+
+      const isMixtape = secondaryTypes.some((t) => t.toLowerCase().includes('mixtape'));
+      const releaseType = isMixtape ? 'mixtape' : 'album';
 
       // Check if album already exists using service role
       const { data: existingAlbum } = await supabaseService
@@ -350,6 +407,34 @@ serve(async (req) => {
         albumId = newAlbum?.id;
       } else {
         albumId = existingAlbum.id;
+      }
+
+      // Try to associate album with a label if available
+      const labelInfo = rg.releases?.[0]?.['label-info']?.[0]?.label;
+      if (albumId && labelInfo?.id && labelInfo?.name) {
+        // Find or create record label
+        const { data: existingLabel } = await supabaseService
+          .from('record_labels')
+          .select('id')
+          .eq('musicbrainz_id', labelInfo.id)
+          .single();
+
+        let labelId = existingLabel?.id;
+        if (!labelId) {
+          const { data: newLabel } = await supabaseService
+            .from('record_labels')
+            .insert({ name: labelInfo.name, musicbrainz_id: labelInfo.id })
+            .select('id')
+            .single();
+          labelId = newLabel?.id;
+        }
+
+        if (labelId) {
+          await supabaseService
+            .from('albums')
+            .update({ label_id: labelId })
+            .eq('id', albumId);
+        }
       }
 
       if (albumId) {
