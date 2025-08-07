@@ -101,6 +101,9 @@ export const useRefreshDiscography = () => {
 };
 
 export const useRapperCareerStats = (rapperId: string) => {
+  // Auto-fetch discography if not present
+  const { refetch: fetchDiscography } = useRapperDiscography(rapperId, false);
+  
   return useQuery({
     queryKey: ["rapper-career-stats", rapperId],
     queryFn: async () => {
@@ -154,6 +157,11 @@ export const useRapperCareerStats = (rapperId: string) => {
         : rapper?.career_start_year 
         ? new Date().getFullYear() - rapper.career_start_year
         : 0;
+
+      // Auto-fetch MusicBrainz data if missing and no discography exists
+      if (!rapper?.musicbrainz_id && totalAlbums === 0 && totalSingles === 0) {
+        fetchDiscography();
+      }
 
       return {
         totalAlbums,
