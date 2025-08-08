@@ -11,7 +11,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { X, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import { toast } from "sonner";
 import CategorySelector from "./vote/CategorySelector";
 import RatingSlider from "./vote/RatingSlider";
@@ -96,7 +96,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     },
     onSuccess: () => {
       toast.success(existingVote ? "Vote updated successfully!" : "Vote submitted successfully!");
-      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["existing-vote"] });
       queryClient.invalidateQueries({ queryKey: ["rapper"] });
       onClose();
@@ -114,7 +114,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     }
     
     if (!category) {
-      toast.error("Please select a category");
+      toast.error("Please select a skill");
       return;
     }
 
@@ -137,18 +137,10 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-md mx-auto bg-rap-carbon border-rap-burgundy/30">
-        <DialogHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+        <DialogHeader className="space-y-0 pb-4">
           <DialogTitle className="text-rap-platinum font-mogra text-xl">
             Rate {rapper.name}
           </DialogTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onClose}
-            className="h-6 w-6 p-0 text-rap-smoke hover:text-rap-platinum"
-          >
-            <X className="h-4 w-4" />
-          </Button>
         </DialogHeader>
 
         <div className="space-y-6">

@@ -24,11 +24,11 @@ const CategorySelector = ({
   return (
     <div className="space-y-2">
       <Label htmlFor="category" className="text-rap-smoke font-kaushan">
-        Attribute Category
+        Skill Category
       </Label>
       <Select value={categoryId} onValueChange={setCategoryId}>
         <SelectTrigger className="bg-rap-carbon/50 border-rap-gold/30 text-rap-platinum font-kaushan min-h-[2.5rem] [&>span]:!text-clip [&>span]:!whitespace-normal [&>span]:!line-clamp-none">
-          <SelectValue placeholder="Select an attribute to rate..." />
+          <SelectValue placeholder="Select a skill to rate..." />
         </SelectTrigger>
         <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
           {filteredCategories?.map(category => (
