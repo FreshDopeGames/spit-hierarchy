@@ -1,4 +1,4 @@
-
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -40,11 +40,22 @@ const RapperHeader = ({
           <div className="grid md:grid-cols-3 gap-8">
             {/* Rapper Image */}
             <div className="md:col-span-1">
-              <div className="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center">
+              <div className="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center relative">
+                {/* Loading spinner overlay */}
+                <div className="absolute inset-0 flex items-center justify-center" aria-label="Loading avatar">
+                  {/* Spinner shown until image fires onLoad */}
+                  <div className="w-10 h-10 rounded-full border-2 border-rap-gold/30 border-t-rap-gold animate-spin"></div>
+                </div>
                 <img 
                   src={imageToDisplay} 
                   alt={rapper.name} 
                   className="w-full h-full object-cover" 
+                  onLoad={(e) => {
+                    // Hide spinner by removing the overlay
+                    const parent = (e.target as HTMLImageElement).parentElement;
+                    const overlay = parent?.querySelector('[aria-label="Loading avatar"]');
+                    if (overlay) overlay.remove();
+                  }}
                   onError={(e) => {
                     // Fallback to placeholder if image fails to load
                     const target = e.target as HTMLImageElement;
@@ -123,14 +134,6 @@ const RapperHeader = ({
                 )}
               </div>
 
-              {/* Vote Button */}
-              <Button 
-                onClick={onVoteClick} 
-                size="lg" 
-                className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30 text-xl"
-              >
-                Rate This Rapper
-              </Button>
             </div>
           </div>
         </CardContent>

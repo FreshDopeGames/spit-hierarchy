@@ -59,7 +59,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
     return (
       <Card className="bg-black border-rap-burgundy/40">
         <CardHeader>
-          <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
+          <CardTitle className="text-rap-platinum font-mogra">Skill Ratings</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
@@ -85,7 +85,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
   return (
     <Card className="bg-black border-rap-burgundy/40">
       <CardHeader>
-        <CardTitle className="text-rap-platinum font-mogra">Attribute Ratings</CardTitle>
+        <CardTitle className="text-rap-platinum font-mogra">Skill Ratings</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Overall Rating - Always calculated from attributes */}
@@ -97,7 +97,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
           <div className="space-y-3">
             <div className="flex justify-between items-center">
               <span className="text-sm text-rap-smoke font-kaushan">
-                Calculated from all attributes
+                Calculated from all skills
               </span>
               <div className="text-right">
                 <div className="flex items-center gap-2">
@@ -113,9 +113,9 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
                     </div>
                   )}
                 </div>
-                <span className="text-rap-smoke text-sm font-kaushan">
-                  (Average of {attributesWithVotes.length} attributes)
-                </span>
+              <span className="text-rap-smoke text-sm font-kaushan">
+                (Average of {attributesWithVotes.length} skills)
+              </span>
               </div>
             </div>
             <Progress value={overallPercentage} className="h-4 bg-rap-carbon" />
@@ -125,7 +125,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
         {/* Individual Attributes */}
         <div className="space-y-4">
           <h3 className="text-sm font-semibold text-rap-smoke uppercase tracking-wider font-kaushan">
-            Individual Attributes
+            Individual Skills
           </h3>
           {attributeCategories.map((category) => {
             const percentage = (category.averageRating / 10) * 100;
@@ -154,7 +154,7 @@ const RapperAttributeStats = ({ rapper }: RapperAttributeStatsProps) => {
 
         {attributeCategories.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-rap-smoke font-kaushan">No attribute ratings yet. Be the first to rate this rapper!</p>
+            <p className="text-rap-smoke font-kaushan">No skill ratings yet. Be the first to rate this rapper!</p>
           </div>
         )}
       </CardContent>

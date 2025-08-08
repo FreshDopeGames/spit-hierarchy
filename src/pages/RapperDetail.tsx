@@ -159,6 +159,17 @@ const RapperDetail = () => {
           {/* Enhanced Bio Section with more content */}
           <RapperBioExpanded rapper={rapper} />
 
+          {/* Primary call-to-action: Rate Rapper (moved under description) */}
+          <div className="mb-8">
+            <Button 
+              onClick={() => setShowVoteModal(true)}
+              size="lg"
+              className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light text-rap-carbon font-bold font-mogra shadow-lg shadow-rap-gold/30 text-xl"
+            >
+              Rate Rapper
+            </Button>
+          </div>
+
           {/* Career Overview - New sports-card style stats */}
           <div className="mb-8">
             <CareerStatsCard rapperId={rapper.id} />
