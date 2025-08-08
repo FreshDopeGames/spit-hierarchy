@@ -10,18 +10,15 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const supabaseAnonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
+interface MusicBrainzAlias { name: string }
 interface MusicBrainzArtist {
   id: string;
   name: string;
-  'life-span'?: {
-    begin?: string;
-    end?: string;
-  };
+  score?: number;
+  aliases?: MusicBrainzAlias[];
+  'life-span'?: { begin?: string; end?: string };
   labels?: Array<{
-    label: {
-      id: string;
-      name: string;
-    };
+    label: { id: string; name: string };
     'begin-year'?: number;
     'end-year'?: number;
   }>;
@@ -36,12 +33,7 @@ interface MusicBrainzReleaseGroup {
   releases?: Array<{
     id: string;
     'track-count'?: number;
-    'label-info'?: Array<{
-      label?: {
-        id: string;
-        name: string;
-      };
-    }>;
+    'label-info'?: Array<{ label?: { id: string; name: string } }>
   }>;
 }
 
@@ -49,11 +41,7 @@ interface MusicBrainzRecording {
   id: string;
   title: string;
   length?: number;
-  releases?: Array<{
-    id: string;
-    title: string;
-    date?: string;
-  }>;
+  releases?: Array<{ id: string; title: string; date?: string }>;
 }
 
 serve(async (req) => {
@@ -62,27 +50,29 @@ serve(async (req) => {
   }
 
   const startTime = Date.now();
-  const clientIP = req.headers.get('x-forwarded-for') || req.headers.get('x-real-ip') || 'unknown';
+  const clientIP = req.headers.get('cf-connecting-ip')
+    || req.headers.get('x-forwarded-for')
+    || req.headers.get('x-real-ip')
+    || null;
   const userAgent = req.headers.get('user-agent') || 'unknown';
   let userId: string | null = null;
-  
+
   try {
-    // Create clients - service role for DB operations, anon for auth
+    // Clients
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
     const supabaseAnon = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: { autoRefreshToken: false, persistSession: false }
+      auth: { autoRefreshToken: false, persistSession: false },
     });
 
-    // Parse request and validate
-    const requestBody = await req.json();
-    const { rapperId, forceRefresh = false } = requestBody;
-    
-    // Get user from auth header if present
+    // Parse request
+    const body = await req.json().catch(() => ({}));
+    const { rapperId, forceRefresh = false } = body as { rapperId?: string; forceRefresh?: boolean };
+
+    // Auth (optional)
     const authHeader = req.headers.get('authorization');
     if (authHeader) {
-      const { data: { user } } = await supabaseAnon.auth.getUser(
-        authHeader.replace('Bearer ', '')
-      );
+      const token = authHeader.replace('Bearer ', '');
+      const { data: { user } } = await supabaseAnon.auth.getUser(token);
       userId = user?.id || null;
     }
 
@@ -94,45 +84,21 @@ serve(async (req) => {
         user_id: userId,
         ip_address: clientIP,
         user_agent: userAgent,
-        request_data: requestBody,
+        request_data: body,
         error_message: 'Rapper ID is required',
-        execution_time_ms: Date.now() - startTime
+        execution_time_ms: Date.now() - startTime,
       });
-      throw new Error('Rapper ID is required');
+      return json({ success: false, error: 'Rapper ID is required' }, 400);
     }
 
-    // Check rate limits
-    const { data: rateLimitCheck } = await supabaseService
-      .rpc('check_musicbrainz_rate_limit', {
-        p_user_id: userId,
-        p_ip_address: clientIP,
-        p_max_requests: 10,
-        p_window_minutes: 60
-      });
-
-    if (!rateLimitCheck) {
-      await logAuditEvent(supabaseService, {
-        rapper_id: rapperId,
-        action: 'FETCH_DISCOGRAPHY',
-        status: 'RATE_LIMITED',
-        user_id: userId,
-        ip_address: clientIP,
-        user_agent: userAgent,
-        request_data: requestBody,
-        error_message: 'Rate limit exceeded',
-        execution_time_ms: Date.now() - startTime
-      });
-      throw new Error('Rate limit exceeded. Please try again later.');
-    }
-
-    // Check if discography data exists and is recent (less than 7 days old)
-    const { data: rapper } = await supabaseService
+    // Load rapper row first (so we can short-circuit with cache before rate-limiting)
+    const { data: rapper, error: rapperErr } = await supabaseService
       .from('rappers')
-      .select('musicbrainz_id, discography_last_updated, name')
+      .select('id, name, musicbrainz_id, discography_last_updated')
       .eq('id', rapperId)
       .single();
 
-    if (!rapper) {
+    if (rapperErr || !rapper) {
       await logAuditEvent(supabaseService, {
         rapper_id: rapperId,
         action: 'FETCH_DISCOGRAPHY',
@@ -140,55 +106,19 @@ serve(async (req) => {
         user_id: userId,
         ip_address: clientIP,
         user_agent: userAgent,
-        request_data: requestBody,
+        request_data: body,
         error_message: 'Rapper not found',
-        execution_time_ms: Date.now() - startTime
+        execution_time_ms: Date.now() - startTime,
       });
-      throw new Error('Rapper not found');
+      return json({ success: false, error: 'Rapper not found' }, 404);
     }
 
-    const isDataFresh = rapper.discography_last_updated && 
-      new Date(rapper.discography_last_updated) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+    const fresh = rapper.discography_last_updated
+      && new Date(rapper.discography_last_updated) > new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
 
-    if (!forceRefresh && isDataFresh) {
-      // Return cached data
-      const { data: discographyData } = await supabaseService
-        .from('rapper_albums')
-        .select(`
-          id,
-          role,
-          album:albums (
-            id,
-            title,
-            release_date,
-            release_type,
-            cover_art_url,
-            track_count,
-            label:record_labels (
-              id,
-              name
-            )
-          )
-        `)
-        .eq('rapper_id', rapperId);
-
-      const { data: singlesData } = await supabaseService
-        .from('rapper_singles')
-        .select(`
-          id,
-          role,
-          single:singles (
-            id,
-            title,
-            release_date,
-            peak_chart_position,
-            chart_country,
-            duration_ms
-          )
-        `)
-        .eq('rapper_id', rapperId)
-        .limit(5);
-
+    // 1) Return cached immediately if fresh and not forced
+    if (!forceRefresh && fresh) {
+      const payload = await readDiscographyPayload(supabaseService, rapperId);
       await logAuditEvent(supabaseService, {
         rapper_id: rapperId,
         action: 'FETCH_DISCOGRAPHY',
@@ -196,66 +126,71 @@ serve(async (req) => {
         user_id: userId,
         ip_address: clientIP,
         user_agent: userAgent,
-        request_data: requestBody,
-        response_data: { albums: discographyData?.length || 0, singles: singlesData?.length || 0 },
-        execution_time_ms: Date.now() - startTime
+        request_data: body,
+        response_data: { albums: payload.discography.length, singles: payload.topSingles.length },
+        execution_time_ms: Date.now() - startTime,
       });
-
-      return new Response(JSON.stringify({
-        success: true,
-        cached: true,
-        discography: discographyData || [],
-        topSingles: singlesData || []
-      }), {
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return json({ success: true, cached: true, ...payload });
     }
 
-    // Search for artist if no MusicBrainz ID
-    let musicbrainzId = rapper.musicbrainz_id;
-    if (!musicbrainzId) {
-      console.log('Searching MusicBrainz for artist:', rapper.name);
-      
-      const searchResponse = await fetch(
-        `https://musicbrainz.org/ws/2/artist?query=${encodeURIComponent(rapper.name)}&fmt=json&limit=5`,
-        {
-          headers: {
-            'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)',
-          },
-        }
-      );
-
-      if (!searchResponse.ok) {
-        console.error('MusicBrainz search failed:', searchResponse.status, searchResponse.statusText);
-        throw new Error(`MusicBrainz API error: ${searchResponse.status}`);
-      }
-
-      const searchData = await searchResponse.json();
-      console.log('MusicBrainz search results:', searchData);
-      
-      const artists = searchData.artists || [];
-      
-      // Find best match - exact name match preferred
-      const exactMatch = artists.find((a: any) => 
-        a.name.toLowerCase() === rapper.name.toLowerCase()
-      );
-      
-      if (exactMatch) {
-        musicbrainzId = exactMatch.id;
-        console.log('Found MusicBrainz ID:', musicbrainzId, 'for artist:', rapper.name);
-        
-        // Update rapper with MusicBrainz ID using service role
-        await supabaseService
-          .from('rappers')
-          .update({ musicbrainz_id: musicbrainzId })
-          .eq('id', rapperId);
-      } else {
-        console.log('No exact match found for:', rapper.name, 'Available options:', artists.map((a: any) => a.name));
+    // 2) De-dupe calls within 10 minutes: if a successful attempt was logged recently, return current DB
+    if (!forceRefresh) {
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+      const { data: recentLogs } = await supabaseService
+        .from('musicbrainz_audit_logs')
+        .select('id, status, created_at')
+        .eq('rapper_id', rapperId)
+        .gte('created_at', tenMinutesAgo)
+        .in('status', ['SUCCESS', 'SUCCESS_CACHED']);
+      if ((recentLogs?.length || 0) > 0) {
+        const payload = await readDiscographyPayload(supabaseService, rapperId);
+        await logAuditEvent(supabaseService, {
+          rapper_id: rapperId,
+          action: 'FETCH_DISCOGRAPHY',
+          status: 'SUCCESS_DEDUP',
+          user_id: userId,
+          ip_address: clientIP,
+          user_agent: userAgent,
+          request_data: body,
+          response_data: { albums: payload.discography.length, singles: payload.topSingles.length },
+          execution_time_ms: Date.now() - startTime,
+        });
+        return json({ success: true, cached: true, ...payload });
       }
     }
 
+    // 3) Only now check rate limit (so affordable cache hits don't consume it)
+    const { data: rateOk } = await supabaseService.rpc('check_musicbrainz_rate_limit', {
+      p_user_id: userId,
+      p_ip_address: clientIP,
+      p_max_requests: 10,
+      p_window_minutes: 60,
+    });
+    if (!rateOk) {
+      await logAuditEvent(supabaseService, {
+        rapper_id: rapperId,
+        action: 'FETCH_DISCOGRAPHY',
+        status: 'RATE_LIMITED',
+        user_id: userId,
+        ip_address: clientIP,
+        user_agent: userAgent,
+        request_data: body,
+        error_message: 'Rate limit exceeded',
+        execution_time_ms: Date.now() - startTime,
+      });
+      return json({ success: false, error: 'Rate limit exceeded. Please try again later.' }, 429);
+    }
+
+    // Resolve MusicBrainz artist id (robust alias-aware search)
+    let musicbrainzId = rapper.musicbrainz_id as string | null;
     if (!musicbrainzId) {
-      console.log('No MusicBrainz artist found for:', rapper.name);
+      musicbrainzId = await resolveArtistId(rapper.name);
+      if (musicbrainzId) {
+        await supabaseService.from('rappers').update({ musicbrainz_id: musicbrainzId }).eq('id', rapperId);
+      }
+    }
+
+    if (!musicbrainzId) {
       await logAuditEvent(supabaseService, {
         rapper_id: rapperId,
         action: 'FETCH_DISCOGRAPHY',
@@ -263,135 +198,90 @@ serve(async (req) => {
         user_id: userId,
         ip_address: clientIP,
         user_agent: userAgent,
-        request_data: requestBody,
+        request_data: body,
         error_message: 'Artist not found on MusicBrainz',
-        execution_time_ms: Date.now() - startTime
+        execution_time_ms: Date.now() - startTime,
       });
-      return new Response(JSON.stringify({
-        success: false,
-        cached: false,
-        discography: [],
-        topSingles: [],
-        error: 'Artist not found on MusicBrainz'
-      }), {
-        status: 404,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      return json({ success: false, error: 'Artist not found on MusicBrainz', discography: [], topSingles: [] }, 404);
     }
 
-    // Fetch detailed artist info
-    const artistResponse = await fetch(
-      `https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=labels&fmt=json`,
-      {
-        headers: {
-          'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)',
-        },
-      }
-    );
+    // Fetch artist details (labels and lifespan)
+    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=labels&fmt=json`);
 
-    const artistData: MusicBrainzArtist = await artistResponse.json();
+    const careerStartYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
+    const careerEndYear = artistData['life-span']?.end ? parseInt(artistData['life-span'].end.substring(0, 4)) : null;
 
-    // Extract career years
-    const careerStartYear = artistData['life-span']?.begin ? 
-      parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
-    const careerEndYear = artistData['life-span']?.end ? 
-      parseInt(artistData['life-span'].end.substring(0, 4)) : null;
-
-    // Update rapper with career info using service role
     await supabaseService
       .from('rappers')
       .update({
         career_start_year: careerStartYear,
         career_end_year: careerEndYear,
-        discography_last_updated: new Date().toISOString()
+        discography_last_updated: new Date().toISOString(),
       })
       .eq('id', rapperId);
 
-    // Upsert artist label affiliations
-    if (artistData.labels && artistData.labels.length > 0) {
+    // Upsert labels
+    if (artistData.labels?.length) {
       for (const l of artistData.labels) {
-        const labelMbId = l.label?.id;
-        const labelName = l.label?.name;
-        if (!labelMbId || !labelName) continue;
+        const mbId = l.label?.id;
+        const name = l.label?.name;
+        if (!mbId || !name) continue;
 
-        // Find or create record label
         const { data: existingLabel } = await supabaseService
           .from('record_labels')
           .select('id')
-          .eq('musicbrainz_id', labelMbId)
+          .eq('musicbrainz_id', mbId)
           .single();
-
-        let labelId = existingLabel?.id;
+        let labelId = existingLabel?.id as string | undefined;
         if (!labelId) {
           const { data: newLabel } = await supabaseService
             .from('record_labels')
-            .insert({ name: labelName, musicbrainz_id: labelMbId })
+            .insert({ name, musicbrainz_id: mbId })
             .select('id')
             .single();
           labelId = newLabel?.id;
         }
-
         if (labelId) {
-          // Link rapper to label if not already linked
           const { data: existingAff } = await supabaseService
             .from('rapper_labels')
             .select('id')
             .eq('rapper_id', rapperId)
             .eq('label_id', labelId)
             .single();
-
           if (!existingAff) {
-            await supabaseService
-              .from('rapper_labels')
-              .insert({
-                rapper_id: rapperId,
-                label_id: labelId,
-                start_year: l['begin-year'] || null,
-                end_year: l['end-year'] || null,
-                is_current: !l['end-year']
-              });
+            await supabaseService.from('rapper_labels').insert({
+              rapper_id: rapperId,
+              label_id: labelId,
+              start_year: l['begin-year'] || null,
+              end_year: l['end-year'] || null,
+              is_current: !l['end-year'],
+            });
           }
         }
-
-        // Small delay to be polite with rate limits
-        await new Promise((r) => setTimeout(r, 50));
+        await delay(50);
       }
     }
 
-    // Fetch release groups (albums only; singles handled via recordings)
-    const releaseGroupResponse = await fetch(
-      `https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album|ep&fmt=json&limit=100&offset=0`,
-      {
-        headers: {
-          'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)',
-        },
-      }
-    );
+    // Fetch albums/EPs (skip singles here)
+    const rgData = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album|ep&fmt=json&limit=100&offset=0`);
+    const releaseGroups: MusicBrainzReleaseGroup[] = rgData['release-groups'] || [];
 
-    const releaseGroupData = await releaseGroupResponse.json();
-    const releaseGroups: MusicBrainzReleaseGroup[] = releaseGroupData['release-groups'] || [];
-
-    // Process albums and mixtapes
-    for (const rg of releaseGroups.slice(0, 50)) { // Limit to prevent rate limiting
-      // Skip singles here; they are handled via recordings API below
+    for (const rg of releaseGroups.slice(0, 50)) {
       const primaryType = rg['primary-type'];
-      const secondaryTypes = rg['secondary-types'] || [];
-      const isSingle = primaryType === 'Single' || secondaryTypes.includes('Single');
+      const secondary = rg['secondary-types'] || [];
+      const isSingle = primaryType === 'Single' || secondary.includes('Single');
       if (isSingle) continue;
 
-      const isMixtape = secondaryTypes.some((t) => t.toLowerCase().includes('mixtape'));
+      const isMixtape = secondary.some((t) => t.toLowerCase().includes('mixtape'));
       const releaseType = isMixtape ? 'mixtape' : 'album';
 
-      // Check if album already exists using service role
       const { data: existingAlbum } = await supabaseService
         .from('albums')
         .select('id')
         .eq('musicbrainz_id', rg.id)
         .single();
-
-      let albumId;
-      if (!existingAlbum) {
-        // Create new album using service role
+      let albumId = existingAlbum?.id as string | undefined;
+      if (!albumId) {
         const { data: newAlbum } = await supabaseService
           .from('albums')
           .insert({
@@ -399,27 +289,21 @@ serve(async (req) => {
             musicbrainz_id: rg.id,
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
-            track_count: rg.releases?.[0]?.['track-count'] || null
+            track_count: rg.releases?.[0]?.['track-count'] || null,
           })
           .select('id')
           .single();
-
         albumId = newAlbum?.id;
-      } else {
-        albumId = existingAlbum.id;
       }
 
-      // Try to associate album with a label if available
       const labelInfo = rg.releases?.[0]?.['label-info']?.[0]?.label;
       if (albumId && labelInfo?.id && labelInfo?.name) {
-        // Find or create record label
-        const { data: existingLabel } = await supabaseService
+        const { data: exLabel } = await supabaseService
           .from('record_labels')
           .select('id')
           .eq('musicbrainz_id', labelInfo.id)
           .single();
-
-        let labelId = existingLabel?.id;
+        let labelId = exLabel?.id as string | undefined;
         if (!labelId) {
           const { data: newLabel } = await supabaseService
             .from('record_labels')
@@ -428,125 +312,52 @@ serve(async (req) => {
             .single();
           labelId = newLabel?.id;
         }
-
         if (labelId) {
-          await supabaseService
-            .from('albums')
-            .update({ label_id: labelId })
-            .eq('id', albumId);
+          await supabaseService.from('albums').update({ label_id: labelId }).eq('id', albumId);
         }
       }
 
       if (albumId) {
-        // Link rapper to album using service role
         await supabaseService
           .from('rapper_albums')
-          .upsert({
-            rapper_id: rapperId,
-            album_id: albumId,
-            role: 'primary'
-          }, {
-            onConflict: 'rapper_id,album_id'
-          });
+          .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
       }
-
-      // Add small delay to respect rate limits
-      await new Promise(resolve => setTimeout(resolve, 100));
+      await delay(100);
     }
 
-    // Fetch top recordings (singles)
-    const recordingsResponse = await fetch(
-      `https://musicbrainz.org/ws/2/recording?artist=${musicbrainzId}&fmt=json&limit=20`,
-      {
-        headers: {
-          'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)',
-        },
-      }
-    );
+    // Fetch top recordings (singles) - keep light
+    const recData = await mbJson<any>(`https://musicbrainz.org/ws/2/recording?artist=${musicbrainzId}&fmt=json&limit=20`);
+    const recordings: MusicBrainzRecording[] = recData.recordings || [];
 
-    const recordingsData = await recordingsResponse.json();
-    const recordings: MusicBrainzRecording[] = recordingsData.recordings || [];
-
-    // Process top 5 singles
     for (const recording of recordings.slice(0, 5)) {
-      // Check if single already exists using service role
       const { data: existingSingle } = await supabaseService
         .from('singles')
         .select('id')
         .eq('musicbrainz_id', recording.id)
         .single();
-
-      let singleId;
-      if (!existingSingle) {
-        // Create new single using service role
+      let singleId = existingSingle?.id as string | undefined;
+      if (!singleId) {
         const { data: newSingle } = await supabaseService
           .from('singles')
           .insert({
             title: recording.title,
             musicbrainz_id: recording.id,
             release_date: recording.releases?.[0]?.date || null,
-            duration_ms: recording.length || null
+            duration_ms: recording.length || null,
           })
           .select('id')
           .single();
-
         singleId = newSingle?.id;
-      } else {
-        singleId = existingSingle.id;
       }
-
       if (singleId) {
-        // Link rapper to single using service role
         await supabaseService
           .from('rapper_singles')
-          .upsert({
-            rapper_id: rapperId,
-            single_id: singleId,
-            role: 'primary'
-          }, {
-            onConflict: 'rapper_id,single_id'
-          });
+          .upsert({ rapper_id: rapperId, single_id: singleId, role: 'primary' }, { onConflict: 'rapper_id,single_id' });
       }
     }
 
-    // Fetch and return updated data using service role
-    const { data: discographyData } = await supabaseService
-      .from('rapper_albums')
-      .select(`
-        id,
-        role,
-        album:albums (
-          id,
-          title,
-          release_date,
-          release_type,
-          cover_art_url,
-          track_count,
-          label:record_labels (
-            id,
-            name
-          )
-        )
-      `)
-      .eq('rapper_id', rapperId);
-
-    const { data: singlesData } = await supabaseService
-      .from('rapper_singles')
-      .select(`
-        id,
-        role,
-        single:singles (
-          id,
-          title,
-          release_date,
-          peak_chart_position,
-          chart_country,
-          duration_ms
-        )
-      `)
-      .eq('rapper_id', rapperId)
-      .limit(5);
-
+    // Final payload
+    const payload = await readDiscographyPayload(supabaseService, rapperId);
     await logAuditEvent(supabaseService, {
       rapper_id: rapperId,
       action: 'FETCH_DISCOGRAPHY',
@@ -554,28 +365,13 @@ serve(async (req) => {
       user_id: userId,
       ip_address: clientIP,
       user_agent: userAgent,
-      request_data: requestBody,
-      response_data: { 
-        albums: discographyData?.length || 0, 
-        singles: singlesData?.length || 0,
-        musicbrainz_id: musicbrainzId 
-      },
-      execution_time_ms: Date.now() - startTime
+      request_data: body,
+      response_data: { albums: payload.discography.length, singles: payload.topSingles.length, musicbrainz_id: musicbrainzId },
+      execution_time_ms: Date.now() - startTime,
     });
-
-    return new Response(JSON.stringify({
-      success: true,
-      cached: false,
-      discography: discographyData || [],
-      topSingles: singlesData || []
-    }), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
-
-  } catch (error) {
+    return json({ success: true, cached: false, ...payload });
+  } catch (error: any) {
     console.error('Error in fetch-rapper-discography:', error);
-    
-    // Log error to audit
     try {
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
       await logAuditEvent(supabaseService, {
@@ -586,44 +382,124 @@ serve(async (req) => {
         ip_address: clientIP,
         user_agent: userAgent,
         request_data: null,
-        error_message: error.message || 'Unknown error',
-        execution_time_ms: Date.now() - startTime
+        error_message: error?.message || 'Unknown error',
+        execution_time_ms: Date.now() - startTime,
       });
-    } catch (auditError) {
-      console.error('Failed to log audit event:', auditError);
-    }
-    
-    return new Response(JSON.stringify({
-      success: false,
-      cached: false,
-      discography: [],
-      topSingles: [],
-      error: 'Failed to fetch discography data'
-    }), {
-      status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-    });
+    } catch {}
+    return json({ success: false, error: 'Failed to fetch discography data', discography: [], topSingles: [] }, 500);
   }
 });
 
-// Helper function to log audit events securely
+// Utilities
 async function logAuditEvent(supabase: any, eventData: any) {
   try {
-    await supabase
-      .from('musicbrainz_audit_logs')
-      .insert({
-        rapper_id: eventData.rapper_id,
-        action: eventData.action,
-        status: eventData.status,
-        user_id: eventData.user_id,
-        ip_address: eventData.ip_address,
-        user_agent: eventData.user_agent,
-        request_data: eventData.request_data,
-        response_data: eventData.response_data,
-        error_message: eventData.error_message,
-        execution_time_ms: eventData.execution_time_ms
-      });
-  } catch (error) {
-    console.error('Failed to log audit event:', error);
+    await supabase.from('musicbrainz_audit_logs').insert({
+      rapper_id: eventData.rapper_id,
+      action: eventData.action,
+      status: eventData.status,
+      user_id: eventData.user_id,
+      ip_address: eventData.ip_address,
+      user_agent: eventData.user_agent,
+      request_data: eventData.request_data,
+      response_data: eventData.response_data,
+      error_message: eventData.error_message,
+      execution_time_ms: eventData.execution_time_ms,
+    });
+  } catch (e) {
+    console.error('Failed to log audit event:', e);
   }
+}
+
+async function readDiscographyPayload(supabaseService: any, rapperId: string) {
+  const { data: discography } = await supabaseService
+    .from('rapper_albums')
+    .select(`
+      id,
+      role,
+      album:albums (
+        id,
+        title,
+        release_date,
+        release_type,
+        cover_art_url,
+        track_count,
+        label:record_labels ( id, name )
+      )
+    `)
+    .eq('rapper_id', rapperId);
+
+  const { data: topSingles } = await supabaseService
+    .from('rapper_singles')
+    .select(`
+      id,
+      role,
+      single:singles (
+        id,
+        title,
+        release_date,
+        peak_chart_position,
+        chart_country,
+        duration_ms
+      )
+    `)
+    .eq('rapper_id', rapperId)
+    .limit(5);
+
+  return { discography: discography || [], topSingles: topSingles || [] };
+}
+
+function normalizeName(name: string) {
+  return name
+    .toLowerCase()
+    .replace(/\./g, '')
+    .replace(/[^a-z0-9\s]/g, '')
+    .replace(/^the\s+/, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+async function resolveArtistId(artistName: string): Promise<string | null> {
+  // Try exact + alias-aware search
+  const query = `https://musicbrainz.org/ws/2/artist?query=artist:"${encodeURIComponent(artistName)}"&fmt=json&limit=10&inc=aliases`;
+  const data = await mbJson<any>(query);
+  const artists: MusicBrainzArtist[] = data.artists || [];
+
+  const target = normalizeName(artistName);
+
+  // 1) Exact normalized name match
+  const exact = artists.find(a => normalizeName(a.name) === target);
+  if (exact) return exact.id;
+
+  // 2) Match any alias exactly (normalized)
+  for (const a of artists) {
+    for (const al of a.aliases || []) {
+      if (normalizeName(al.name) === target) return a.id;
+    }
+  }
+
+  // 3) Fallback: highest score
+  let best: MusicBrainzArtist | undefined = undefined;
+  for (const a of artists) {
+    if (!best || (a.score || 0) > (best.score || 0)) best = a;
+  }
+  return best?.id || null;
+}
+
+async function mbJson<T>(url: string): Promise<T> {
+  const res = await fetch(url, {
+    headers: { 'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)' },
+  });
+  if (!res.ok) throw new Error(`MusicBrainz API error: ${res.status}`);
+  return await res.json() as T;
+}
+
+function delay(ms: number) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+function json(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+  });
 }

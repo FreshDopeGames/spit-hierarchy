@@ -63,9 +63,9 @@ export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true
     enabled: !!rapperId && autoFetch,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours
     gcTime: 1000 * 60 * 60 * 24 * 7, // 7 days
-    retry: (failureCount, error) => {
-      // Don't retry if it's a 404 (artist not found)
-      if (error?.message?.includes('404')) return false;
+    retry: (failureCount, error: any) => {
+      const msg = error?.message?.toLowerCase?.() || '';
+      if (msg.includes('404') || msg.includes('rate limit') || msg.includes('429')) return false;
       return failureCount < 2;
     },
   });
