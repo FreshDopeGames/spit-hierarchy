@@ -1,9 +1,9 @@
 
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
-import { Star, MapPin } from "lucide-react";
+import { Star } from "lucide-react";
 
 type Rapper = Tables<"rappers">;
 
@@ -17,7 +17,7 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
-  const navigate = useNavigate();
+  
   // Component to render individual ranking card with background image
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
@@ -34,12 +34,9 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
 
     return (
-      <div
-        role="link"
-        tabIndex={0}
+      <Link
+        to={`/rapper/${rapper.slug || rapper.id}`}
         aria-label={`View ${rapper.name} details`}
-        onClick={() => navigate(`/rapper/${rapper.slug || rapper.id}`)}
-        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/rapper/${rapper.slug || rapper.id}`); } }}
         className={`block ${cardHeight} relative overflow-hidden rounded-lg border-2 border-rap-gold cursor-pointer min-h-[176px] sm:min-h-[288px]`}
         style={{ touchAction: 'manipulation' }}
       >
@@ -54,7 +51,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         />
 
         {/* Ranking Number - Top Left */}
-        <div className="absolute top-4 left-4 z-10 pointer-events-none">
+        <div className="absolute top-4 left-4 z-10">
           <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
             <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon drop-shadow-lg`}>
               {position}
@@ -63,10 +60,10 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         </div>
         
         {/* Content - Bottom Area with Drop Shadow */}
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10 pointer-events-none">
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
           <div className="text-white">
             <h3 
-              className={`${nameTextSize} font-mogra text-white leading-tight mb-2`}
+              className={`${nameTextSize} font-mogra text-white leading-snug mb-1`}
               style={{
                 textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 2px 2px 4px rgba(0,0,0,0.8)'
               }}
@@ -75,25 +72,22 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </h3>
             
             {rapper.origin && (
-              <div className="flex items-center gap-2 mb-3">
-                <MapPin className="w-4 h-4 text-rap-silver flex-shrink-0 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
-                <p 
-                  className="text-rap-silver text-sm sm:text-base font-kaushan"
-                  style={{
-                    textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
-                  }}
-                >
-                  {rapper.origin}
-                </p>
-              </div>
+              <p 
+                className="text-rap-silver text-xs sm:text-sm font-kaushan mb-1"
+                style={{
+                  textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
+                }}
+              >
+                {rapper.origin}
+              </p>
             )}
             
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1">
               {voteCount === 0 ? (
                 <>
                   <Star className="w-4 h-4 text-rap-gold/70 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
                   <span 
-                    className="text-rap-gold/70 font-kaushan text-sm italic"
+                    className="text-rap-gold/70 font-kaushan text-xs sm:text-sm italic"
                     style={{
                       textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
                     }}
@@ -103,7 +97,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
                 </>
               ) : (
                 <p 
-                  className="text-rap-silver text-sm sm:text-base font-bold"
+                  className="text-rap-silver text-xs sm:text-sm font-bold"
                   style={{
                     textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
                   }}
@@ -113,8 +107,8 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               )}
             </div>
           </div>
-        </div>
       </div>
+      </Link>
     );
   };
 

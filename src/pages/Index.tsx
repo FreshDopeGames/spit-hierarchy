@@ -80,15 +80,15 @@ const Index = () => {
             voteCounts[vote.rapper_id] = (voteCounts[vote.rapper_id] || 0) + vote.vote_weight;
           });
 
-          // Enhance rappers with ranking-specific vote counts and sort by votes
+          // Order by official ranking position and enhance with vote counts
           const rappersWithVotes = (itemsData || [])
+            .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
+            .slice(0, 5)
             .map(item => ({
               ...item.rapper,
               ranking_votes: voteCounts[item.rapper?.id] || 0
             }))
-            .filter(rapper => rapper.id)
-            .sort((a, b) => (b.ranking_votes || 0) - (a.ranking_votes || 0))
-            .slice(0, 5); // Top 5 for homepage display
+            .filter(rapper => rapper && rapper.id);
 
           return { 
             ...ranking, 

@@ -91,10 +91,12 @@ const TopRappersGrid = ({
     ranking_votes: rankingId ? (rankingVoteCounts[rapper.id] || 0) : undefined
   }));
 
-  // Sort by ranking votes if we have rankingId, otherwise keep original order
-  const sortedRappers = rankingId 
-    ? rappersWithVotes.sort((a, b) => (b.ranking_votes || 0) - (a.ranking_votes || 0))
-    : rappersWithVotes;
+  // Respect provided order when rappers are passed in; otherwise sort by ranking votes if rankingId is present
+  const sortedRappers = providedRappers
+    ? rappersWithVotes
+    : rankingId 
+      ? [...rappersWithVotes].sort((a, b) => (b.ranking_votes || 0) - (a.ranking_votes || 0))
+      : rappersWithVotes;
 
   if (isLoading && !providedRappers) {
     return (
