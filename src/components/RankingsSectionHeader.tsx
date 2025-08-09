@@ -38,7 +38,7 @@ const RankingsSectionHeader = () => {
   const backgroundImage = headerData?.background_image_url;
 
   return (
-    <div className="relative mb-12 overflow-hidden rounded-2xl">
+    <div className="relative mb-12 sm:mb-6 lg:mb-6 overflow-hidden rounded-2xl">
       {/* Background Image Container */}
       <div 
         className="absolute inset-0 bg-gradient-to-br from-rap-carbon to-rap-burgundy/30" 
@@ -55,45 +55,45 @@ const RankingsSectionHeader = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-rap-carbon/80 via-rap-carbon/60 to-rap-carbon/80" />
       
       {/* Content */}
-      <div className="relative z-10 px-6 text-center py-[30px] sm:py-10 lg:py-5 sm:scale-50 lg:scale-50 transform origin-top">
+      <div className="relative z-10 px-6 text-center py-[30px] sm:py-6 lg:py-4">
         <div className="max-w-4xl mx-auto">
           {/* Icon and Title */}
-          <div className="flex items-center justify-center gap-4 mb-6">
+          <div className="flex items-center justify-center gap-4 mb-6 sm:gap-2 sm:mb-3 lg:mb-2">
             <Crown 
-              className="w-8 h-8 sm:w-10 sm:h-10 animate-pulse" 
+              className="w-8 h-8 sm:w-5 sm:h-5 lg:w-4 lg:h-4 animate-pulse" 
               style={{ color: theme.colors.primary }}
             />
             <h1 
-              className="text-4xl sm:text-5xl font-ceviche animate-text-glow tracking-wider font-normal lg:text-6xl"
+              className="text-4xl sm:text-2xl lg:text-3xl font-ceviche animate-text-glow tracking-wider font-normal"
               style={{ color: theme.colors.primary }}
             >
               {title}
             </h1>
             <TrendingUp 
-              className="w-8 h-8 sm:w-10 sm:h-10 animate-pulse" 
+              className="w-8 h-8 sm:w-5 sm:h-5 lg:w-4 lg:h-4 animate-pulse" 
               style={{ color: theme.colors.primary }}
             />
           </div>
           
           {/* Subtitle */}
-          <p className="text-lg sm:text-xl lg:text-2xl text-rap-platinum font-kaushan max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-sm lg:text-base text-rap-platinum font-kaushan max-w-3xl mx-auto leading-relaxed">
             {subtitle}
           </p>
           
           {/* Decorative Elements */}
-          <div className="mt-8 flex items-center justify-center gap-2">
+          <div className="mt-8 sm:mt-4 lg:mt-4 flex items-center justify-center gap-2 sm:gap-1 lg:gap-1">
             <div 
-              className="h-px w-20"
+              className="h-px w-20 sm:w-10 lg:w-10"
               style={{ 
                 background: `linear-gradient(to right, transparent, ${theme.colors.primary}, transparent)`
               }}
             />
             <Crown 
-              className="w-5 h-5" 
+              className="w-5 h-5 sm:w-3 sm:h-3 lg:w-2 lg:h-2" 
               style={{ color: theme.colors.primary }}
             />
             <div 
-              className="h-px w-20"
+              className="h-px w-20 sm:w-10 lg:w-10"
               style={{ 
                 background: `linear-gradient(to right, transparent, ${theme.colors.primary}, transparent)`
               }}
@@ -103,7 +103,7 @@ const RankingsSectionHeader = () => {
       </div>
       
       {/* Bottom fade effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-rap-carbon to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-rap-carbon to-transparent" />
     </div>
   );
 };
