@@ -63,7 +63,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         </Link>
         
         {/* Text Content - Bottom Section */}
-        <div className={`${textHeight} p-3 sm:p-4 bg-rap-carbon flex flex-col justify-center flex-shrink-0`}>
+        <div className={`${textHeight} p-3 sm:p-4 bg-carbon-gradient flex flex-col justify-center flex-shrink-0`}>
           <Link
             to={`/rapper/${rapper.slug || rapper.id}`}
             className="block"
