@@ -18,66 +18,62 @@ interface TopRankingSectionProps {
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
   
-  // Component to render individual ranking card with background image
+  // Component to render individual ranking card with structured layout
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
     const { data: imageUrl } = useRapperImage(rapper.id, imageSize);
     const placeholderImage = getOptimizedPlaceholder(imageSize);
-    const backgroundImage = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
+    const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
     
     const voteCount = rankingId && rapper.ranking_votes !== undefined 
       ? rapper.ranking_votes 
       : (rapper.total_votes || 0);
 
-    const cardHeight = isTopTwo ? "h-80 sm:h-96" : "h-64 sm:h-72";
-    const rankingTextSize = isTopTwo ? "text-4xl sm:text-5xl" : "text-3xl sm:text-4xl";
-    const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
+    // Overall card height increased to accommodate three sections
+    const cardHeight = isTopTwo ? "h-96 sm:h-112" : "h-80 sm:h-96";
+    const capHeight = isTopTwo ? "h-12 sm:h-14" : "h-10 sm:h-12";
+    const imageHeight = isTopTwo ? "h-64 sm:h-72" : "h-52 sm:h-64";
+    const textHeight = isTopTwo ? "h-20 sm:h-26" : "h-18 sm:h-20";
+    
+    const rankingTextSize = isTopTwo ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl";
+    const nameTextSize = isTopTwo ? "text-lg sm:text-xl" : "text-base sm:text-lg";
 
     return (
-      <Link
-        to={`/rapper/${rapper.slug || rapper.id}`}
-        aria-label={`View ${rapper.name} details`}
-        className={`block ${cardHeight} relative overflow-hidden rounded-lg border-2 border-rap-gold cursor-pointer min-h-[176px] sm:min-h-[288px]`}
-        style={{ touchAction: 'manipulation' }}
-      >
-        {/* Background Image Container */}
-        <div 
-          className="absolute inset-0 w-full h-full pointer-events-none"
-          style={{
-            backgroundImage: `url(${backgroundImage})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center'
-          }}
-        />
-
-        {/* Ranking Number - Top Left */}
-        <div className="absolute top-4 left-4 z-10">
-          <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
-            <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon drop-shadow-lg`}>
-              {position}
-            </span>
-          </div>
+      <div className={`${cardHeight} overflow-hidden rounded-lg border-2 border-rap-gold min-h-[256px] sm:min-h-[384px] flex flex-col`}>
+        {/* Number Cap - Top Section */}
+        <div className={`${capHeight} bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light rounded-t-lg flex items-center justify-center flex-shrink-0`}>
+          <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon`}>
+            {position}
+          </span>
         </div>
+
+        {/* Image Section - Middle Section - Clickable */}
+        <Link
+          to={`/rapper/${rapper.slug || rapper.id}`}
+          aria-label={`View ${rapper.name} details`}
+          className={`${imageHeight} relative overflow-hidden cursor-pointer flex-shrink-0 block`}
+          style={{ touchAction: 'manipulation' }}
+        >
+          <img 
+            src={imageToDisplay}
+            alt={rapper.name}
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            loading="lazy"
+          />
+        </Link>
         
-        {/* Content - Bottom Area with Drop Shadow */}
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
-          <div className="text-white">
-            <h3 
-              className={`${nameTextSize} font-mogra text-white leading-snug mb-1`}
-              style={{
-                textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 2px 2px 4px rgba(0,0,0,0.8)'
-              }}
-            >
+        {/* Text Content - Bottom Section */}
+        <div className={`${textHeight} p-3 sm:p-4 bg-rap-carbon flex flex-col justify-center flex-shrink-0`}>
+          <Link
+            to={`/rapper/${rapper.slug || rapper.id}`}
+            className="block"
+          >
+            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-1 hover:text-rap-gold transition-colors`}>
               {rapper.name}
             </h3>
             
             {rapper.origin && (
-              <p 
-                className="text-rap-silver text-xs sm:text-sm font-kaushan mb-1"
-                style={{
-                  textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
-                }}
-              >
+              <p className="text-rap-silver text-xs sm:text-sm font-kaushan mb-1 line-clamp-1">
                 {rapper.origin}
               </p>
             )}
@@ -85,30 +81,20 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             <div className="flex items-center gap-1">
               {voteCount === 0 ? (
                 <>
-                  <Star className="w-4 h-4 text-rap-gold/70 drop-shadow-[1px_1px_2px_rgba(0,0,0,0.8)]" />
-                  <span 
-                    className="text-rap-gold/70 font-kaushan text-xs sm:text-sm italic"
-                    style={{
-                      textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
-                    }}
-                  >
+                  <Star className="w-3 h-3 sm:w-4 sm:h-4 text-rap-gold/70" />
+                  <span className="text-rap-gold/70 font-kaushan text-xs italic">
                     Vote to rank
                   </span>
                 </>
               ) : (
-                <p 
-                  className="text-rap-silver text-xs sm:text-sm font-bold"
-                  style={{
-                    textShadow: '-2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000, -2px 0 0 #000, 2px 0 0 #000, 0 -2px 0 #000, 0 2px 0 #000, 1px 1px 2px rgba(0,0,0,0.8)'
-                  }}
-                >
+                <p className="text-rap-silver text-xs sm:text-sm font-bold">
                   Votes: {voteCount.toLocaleString()}
                 </p>
               )}
             </div>
-          </div>
+          </Link>
+        </div>
       </div>
-      </Link>
     );
   };
 
