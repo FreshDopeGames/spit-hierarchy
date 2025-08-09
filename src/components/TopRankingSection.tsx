@@ -40,7 +40,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         aria-label={`View ${rapper.name} details`}
         onClick={() => navigate(`/rapper/${rapper.slug || rapper.id}`)}
         onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/rapper/${rapper.slug || rapper.id}`); } }}
-        className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold cursor-pointer min-h-[176px] sm:min-h-[288px]`}
+        className={`block ${cardHeight} relative overflow-hidden rounded-lg border-2 border-rap-gold cursor-pointer min-h-[176px] sm:min-h-[288px]`}
         style={{ touchAction: 'manipulation' }}
       >
         {/* Background Image Container */}
