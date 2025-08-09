@@ -60,23 +60,23 @@ const RankingsSectionHeader = () => {
           {/* Icon and Title */}
           <div className="flex items-center justify-center gap-4 mb-6 sm:gap-2 sm:mb-3 lg:mb-2">
             <Crown 
-              className="w-8 h-8 sm:w-5 sm:h-5 lg:w-4 lg:h-4 animate-pulse" 
+              className="w-8 h-8 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" 
               style={{ color: theme.colors.primary }}
             />
             <h1 
-              className="text-4xl sm:text-2xl lg:text-3xl font-ceviche animate-text-glow tracking-wider font-normal"
+              className="text-4xl sm:text-3xl lg:text-4xl font-ceviche animate-text-glow tracking-wider font-normal"
               style={{ color: theme.colors.primary }}
             >
               {title}
             </h1>
             <TrendingUp 
-              className="w-8 h-8 sm:w-5 sm:h-5 lg:w-4 lg:h-4 animate-pulse" 
+              className="w-8 h-8 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" 
               style={{ color: theme.colors.primary }}
             />
           </div>
           
           {/* Subtitle */}
-          <p className="text-lg sm:text-sm lg:text-base text-rap-platinum font-kaushan max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-base lg:text-lg text-rap-platinum font-kaushan max-w-3xl mx-auto leading-relaxed">
             {subtitle}
           </p>
           
@@ -89,7 +89,7 @@ const RankingsSectionHeader = () => {
               }}
             />
             <Crown 
-              className="w-5 h-5 sm:w-3 sm:h-3 lg:w-2 lg:h-2" 
+              className="w-5 h-5 sm:w-4 sm:h-4 lg:w-3 lg:h-3" 
               style={{ color: theme.colors.primary }}
             />
             <div 
