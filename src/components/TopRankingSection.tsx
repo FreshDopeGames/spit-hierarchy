@@ -31,9 +31,8 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
 
     // Overall card height increased to accommodate three sections
     const cardHeight = isTopTwo ? "h-96 sm:h-112" : "h-80 sm:h-96";
-    const capHeight = isTopTwo ? "h-12 sm:h-14" : "h-10 sm:h-12";
     const imageHeight = isTopTwo ? "h-64 sm:h-72" : "h-52 sm:h-64";
-    const textHeight = isTopTwo ? "h-24 sm:h-32" : "h-20 sm:h-24";
+    const textHeight = "h-24 sm:h-28"; // Unified height for all cards
     
     const rankingTextSize = isTopTwo ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl";
     const nameTextSize = isTopTwo ? "text-lg sm:text-xl" : "text-base sm:text-lg";
