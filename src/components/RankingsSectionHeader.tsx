@@ -55,7 +55,7 @@ const RankingsSectionHeader = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-rap-carbon/80 via-rap-carbon/60 to-rap-carbon/80" />
       
       {/* Content */}
-      <div className="relative z-10 px-6 sm:py-20 text-center py-[30px] lg:py-[40px]">
+      <div className="relative z-10 px-6 text-center py-[30px] sm:py-10 lg:py-5 sm:scale-50 lg:scale-50 transform origin-top">
         <div className="max-w-4xl mx-auto">
           {/* Icon and Title */}
           <div className="flex items-center justify-center gap-4 mb-6">
