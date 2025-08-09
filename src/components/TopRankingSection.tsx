@@ -1,5 +1,5 @@
 
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
@@ -17,6 +17,7 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
+  const navigate = useNavigate();
   // Component to render individual ranking card with background image
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
@@ -33,14 +34,18 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const nameTextSize = isTopTwo ? "text-xl sm:text-2xl" : "text-lg sm:text-xl";
 
     return (
-      <Link 
-        to={`/rapper/${rapper.slug || rapper.id}`}
+      <div
+        role="link"
+        tabIndex={0}
+        aria-label={`View ${rapper.name} details`}
+        onClick={() => navigate(`/rapper/${rapper.slug || rapper.id}`)}
+        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(`/rapper/${rapper.slug || rapper.id}`); } }}
         className={`block ${cardHeight} relative overflow-hidden rounded-lg border border-rap-gold cursor-pointer min-h-[176px] sm:min-h-[288px]`}
         style={{ touchAction: 'manipulation' }}
       >
         {/* Background Image Container */}
         <div 
-          className="absolute inset-0 w-full h-full"
+          className="absolute inset-0 w-full h-full pointer-events-none"
           style={{
             backgroundImage: `url(${backgroundImage})`,
             backgroundSize: 'cover',
@@ -49,7 +54,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         />
 
         {/* Ranking Number - Top Left */}
-        <div className="absolute top-4 left-4 z-10">
+        <div className="absolute top-4 left-4 z-10 pointer-events-none">
           <div className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light shadow-lg border-2 border-black/20">
             <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon drop-shadow-lg`}>
               {position}
@@ -58,7 +63,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         </div>
         
         {/* Content - Bottom Area with Drop Shadow */}
-        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10">
+        <div className="absolute inset-x-0 bottom-0 p-4 sm:p-6 z-10 pointer-events-none">
           <div className="text-white">
             <h3 
               className={`${nameTextSize} font-mogra text-white leading-tight mb-2`}
@@ -109,7 +114,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </div>
           </div>
         </div>
-      </Link>
+      </div>
     );
   };
 
