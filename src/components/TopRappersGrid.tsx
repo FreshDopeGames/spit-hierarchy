@@ -113,7 +113,7 @@ const TopRappersGrid = ({
 
   return (
     <section className="mb-16">
-      <Card className="bg-carbon-gradient border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+      <Card className="bg-gradient-to-br from-rap-gold-dark via-rap-carbon to-rap-gold-dark border-rap-gold/30 shadow-lg shadow-rap-gold/20">
         <CardContent className="p-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
