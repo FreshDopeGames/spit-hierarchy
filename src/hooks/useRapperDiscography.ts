@@ -39,26 +39,49 @@ export interface DiscographyData {
   topSingles: DiscographySingle[];
 }
 
+// Track ongoing requests to prevent duplicates
+const ongoingRequests = new Map<string, Promise<DiscographyData>>();
+
 export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true) => {
   return useQuery({
     queryKey: ["rapper-discography", rapperId],
     queryFn: async (): Promise<DiscographyData> => {
       console.log('Fetching discography for rapper:', rapperId);
       
-      const { data, error } = await supabase.functions.invoke(
-        "fetch-rapper-discography",
-        {
-          body: { rapperId }
-        }
-      );
-
-      if (error) {
-        console.error('Discography fetch error:', error);
-        throw new Error(error.message || "Failed to fetch discography");
+      // Check if there's already an ongoing request for this rapper
+      if (ongoingRequests.has(rapperId)) {
+        console.log('Reusing ongoing request for rapper:', rapperId);
+        return await ongoingRequests.get(rapperId)!;
       }
+      
+      // Create the request promise
+      const requestPromise = (async () => {
+        try {
+          const { data, error } = await supabase.functions.invoke(
+            "fetch-rapper-discography",
+            {
+              body: { rapperId }
+            }
+          );
 
-      console.log('Discography fetch result:', data);
-      return data;
+          if (error) {
+            console.error('Discography fetch error:', error);
+            const errorMessage = error.message || "Failed to fetch discography";
+            throw new Error(errorMessage);
+          }
+
+          console.log('Discography fetch result:', data);
+          return data;
+        } finally {
+          // Remove from ongoing requests when complete
+          ongoingRequests.delete(rapperId);
+        }
+      })();
+      
+      // Store the promise to prevent duplicates
+      ongoingRequests.set(rapperId, requestPromise);
+      
+      return await requestPromise;
     },
     enabled: !!rapperId && autoFetch,
     staleTime: 1000 * 60 * 60 * 24, // 24 hours

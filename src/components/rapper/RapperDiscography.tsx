@@ -22,7 +22,7 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
   if (isLoading) {
     return (
-      <Card className="bg-carbon-fiber border-rap-gold/20">
+      <Card className="bg-black border-rap-gold/20">
         <CardHeader>
           <div className="h-6 bg-rap-carbon-light rounded w-1/3 animate-pulse"></div>
         </CardHeader>
@@ -45,19 +45,24 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
   if (error) {
     const isNotFound = error?.message?.includes('404') || error?.message?.includes('not found');
+    const isRateLimit = error?.message?.includes('Rate limit') || error?.message?.includes('429');
     
     return (
-      <Card className="bg-carbon-fiber border-rap-burgundy/30">
+      <Card className="bg-black border-rap-burgundy/30">
         <CardContent className="p-6 text-center">
           <div className="text-rap-burgundy mb-4">
             {isNotFound 
               ? "No discography data found on MusicBrainz"
+              : isRateLimit
+              ? "Rate limit reached"
               : "Failed to load discography data"
             }
           </div>
           <p className="text-sm text-rap-smoke mb-4">
             {isNotFound 
               ? "This artist may not be in the MusicBrainz database yet."
+              : isRateLimit
+              ? "Too many requests. Please try again in a few minutes."
               : "There was an error connecting to the music database."
             }
           </p>
