@@ -2048,19 +2048,12 @@ export type Database = {
         Returns: undefined
       }
       check_musicbrainz_rate_limit: {
-        Args:
-          | {
-              p_user_id?: string
-              p_ip_address?: string
-              p_max_requests?: number
-              p_window_minutes?: number
-            }
-          | {
-              p_user_id?: string
-              p_ip_address?: unknown
-              p_max_requests?: number
-              p_window_minutes?: number
-            }
+        Args: {
+          p_user_id?: string
+          p_ip_address?: string
+          p_max_requests?: number
+          p_window_minutes?: number
+        }
         Returns: boolean
       }
       check_rate_limit: {
