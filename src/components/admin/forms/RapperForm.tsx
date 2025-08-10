@@ -226,7 +226,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="text"
             value={formData.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
             required
           />
         </div>
@@ -238,7 +238,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="text"
             value={formData.real_name}
             onChange={(e) => handleInputChange("real_name", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
           />
         </div>
       </div>
@@ -250,7 +250,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
           type="text"
           value={formData.origin}
           onChange={(e) => handleInputChange("origin", e.target.value)}
-          className="bg-rap-carbon border-rap-gold/30 text-white"
+          className="bg-white border-rap-gold/30 text-black"
           placeholder="e.g., New York, NY"
         />
       </div>
@@ -263,7 +263,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="number"
             value={formData.birth_year}
             onChange={(e) => handleInputChange("birth_year", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
             min="1900"
             max={new Date().getFullYear()}
           />
@@ -276,7 +276,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="number"
             value={formData.birth_month}
             onChange={(e) => handleInputChange("birth_month", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
             min="1"
             max="12"
           />
@@ -289,7 +289,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="number"
             value={formData.birth_day}
             onChange={(e) => handleInputChange("birth_day", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
             min="1"
             max="31"
           />
@@ -302,7 +302,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
           id="bio"
           value={formData.bio}
           onChange={(e) => handleInputChange("bio", e.target.value)}
-          className="bg-rap-carbon border-rap-gold/30 text-white min-h-[100px]"
+          className="bg-white border-rap-gold/30 text-black min-h-[100px]"
           placeholder="Enter rapper biography..."
         />
       </div>
@@ -315,7 +315,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="text"
             value={formData.spotify_id}
             onChange={(e) => handleInputChange("spotify_id", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
           />
         </div>
 
@@ -326,7 +326,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="text"
             value={formData.instagram_handle}
             onChange={(e) => handleInputChange("instagram_handle", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
             placeholder="@username"
           />
         </div>
@@ -338,7 +338,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="text"
             value={formData.twitter_handle}
             onChange={(e) => handleInputChange("twitter_handle", e.target.value)}
-            className="bg-rap-carbon border-rap-gold/30 text-white"
+            className="bg-white border-rap-gold/30 text-black"
             placeholder="@username"
           />
         </div>
