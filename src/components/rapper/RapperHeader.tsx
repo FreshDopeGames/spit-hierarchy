@@ -136,21 +136,54 @@ const RapperHeader = ({
               {/* Social Links */}
               <div className="flex flex-wrap gap-3">
                 {rapper.instagram_handle && (
-                  <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
-                    <Instagram className="w-4 h-4 mr-2" />
-                    Instagram
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan"
+                    asChild
+                  >
+                    <a 
+                      href={`https://instagram.com/${rapper.instagram_handle.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Instagram className="w-4 h-4 mr-2" />
+                      Instagram
+                    </a>
                   </Button>
                 )}
                 {rapper.twitter_handle && (
-                  <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
-                    <Twitter className="w-4 h-4 mr-2" />
-                    Twitter
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan"
+                    asChild
+                  >
+                    <a 
+                      href={`https://twitter.com/${rapper.twitter_handle.replace('@', '')}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Twitter className="w-4 h-4 mr-2" />
+                      Twitter
+                    </a>
                   </Button>
                 )}
                 {rapper.spotify_id && (
-                  <Button variant="outline" size="sm" className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan">
-                    <Music className="w-4 h-4 mr-2" />
-                    Spotify
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan"
+                    asChild
+                  >
+                    <a 
+                      href={`https://open.spotify.com/artist/${rapper.spotify_id}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <Music className="w-4 h-4 mr-2" />
+                      Spotify
+                    </a>
                   </Button>
                 )}
               </div>
