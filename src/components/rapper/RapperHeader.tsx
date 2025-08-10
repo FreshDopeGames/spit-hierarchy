@@ -6,6 +6,7 @@ import { Crown, MapPin, Calendar, Music, Instagram, Twitter } from "lucide-react
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
+import { useRapperTags } from "@/hooks/useRapperTags";
 
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
@@ -23,6 +24,7 @@ const RapperHeader = ({
   const zodiacSign = getZodiacSign(rapper.birth_month, rapper.birth_day);
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
   const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge for profile detail
+  const { data: tags = [] } = useRapperTags(rapper.id);
 
   // Placeholder image from Supabase Storage
   const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
@@ -111,6 +113,25 @@ const RapperHeader = ({
                   </div>
                 )}
               </div>
+
+              {/* Tags */}
+              {tags.length > 0 && (
+                <div>
+                  <h4 className="text-sm font-medium text-rap-smoke mb-2">Tags</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {tags.map((tag) => (
+                      <Badge
+                        key={tag.id}
+                        variant="secondary"
+                        className="font-kaushan"
+                        style={{ backgroundColor: tag.color, color: 'white' }}
+                      >
+                        {tag.name}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Social Links */}
               <div className="flex flex-wrap gap-3">

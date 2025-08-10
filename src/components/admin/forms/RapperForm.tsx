@@ -1,181 +1,152 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
-import { sanitizeAdminInput, sanitizeAdminContent, sanitizeInput, validateTextInput } from "@/utils/securityUtils";
-import { Alert, AlertDescription } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { RapperFormData } from "../types/RapperFormTypes";
+import RapperTagSelector from "../RapperTagSelector";
 
 type Rapper = Tables<"rappers">;
 
 interface RapperFormProps {
-  rapper?: Rapper;
+  rapper?: Rapper | null;
   onSuccess: () => void;
   onCancel: () => void;
 }
 
 const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
-  const [formData, setFormData] = useState({
-    name: rapper?.name || "",
-    real_name: rapper?.real_name || "",
-    origin: rapper?.origin || "",
-    bio: rapper?.bio || "",
-    birth_year: rapper?.birth_year?.toString() || "",
-    birth_month: rapper?.birth_month?.toString() || "",
-    birth_day: rapper?.birth_day?.toString() || "",
-    twitter_handle: rapper?.twitter_handle || "",
-    instagram_handle: rapper?.instagram_handle || "",
-    spotify_id: rapper?.spotify_id || ""
-  });
-  
-  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+  const [isLoading, setIsLoading] = useState(false);
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
 
-  const validateForm = () => {
+  const [formData, setFormData] = useState<RapperFormData>({
+    name: "",
+    real_name: "",
+    origin: "",
+    birth_year: "",
+    birth_month: "",
+    birth_day: "",
+    bio: "",
+    verified: false,
+    spotify_id: "",
+    instagram_handle: "",
+    twitter_handle: "",
+    tags: [],
+  });
+
+  // Fetch existing tags for this rapper
+  const { data: existingTags = [] } = useQuery({
+    queryKey: ["rapper-tag-assignments", rapper?.id],
+    queryFn: async () => {
+      if (!rapper?.id) return [];
+      
+      const { data, error } = await supabase
+        .from("rapper_tag_assignments")
+        .select("tag_id")
+        .eq("rapper_id", rapper.id);
+      
+      if (error) throw error;
+      return data.map(item => item.tag_id);
+    },
+    enabled: !!rapper?.id,
+  });
+
+  // Initialize form data when rapper or existing tags change
+  useEffect(() => {
+    if (rapper) {
+      setFormData({
+        name: rapper.name || "",
+        real_name: rapper.real_name || "",
+        origin: rapper.origin || "",
+        birth_year: rapper.birth_year?.toString() || "",
+        birth_month: rapper.birth_month?.toString() || "",
+        birth_day: rapper.birth_day?.toString() || "",
+        bio: rapper.bio || "",
+        verified: rapper.verified || false,
+        spotify_id: rapper.spotify_id || "",
+        instagram_handle: rapper.instagram_handle || "",
+        twitter_handle: rapper.twitter_handle || "",
+        tags: existingTags,
+      });
+    } else {
+      setFormData({
+        name: "",
+        real_name: "",
+        origin: "",
+        birth_year: "",
+        birth_month: "",
+        birth_day: "",
+        bio: "",
+        verified: false,
+        spotify_id: "",
+        instagram_handle: "",
+        twitter_handle: "",
+        tags: [],
+      });
+    }
+  }, [rapper, existingTags]);
+
+  const validateForm = (): string[] => {
     const errors: string[] = [];
     
-    // Validate required fields using admin-sanitized values
-    const nameValidation = validateTextInput(sanitizeAdminInput(formData.name), 2, 100);
-    if (!nameValidation.isValid) {
-      errors.push(`Name: ${nameValidation.errors.join(', ')}`);
+    if (!formData.name.trim()) {
+      errors.push("Name is required");
     }
     
-    // Validate optional fields if provided
-    if (formData.real_name) {
-      const realNameValidation = validateTextInput(sanitizeAdminInput(formData.real_name), 2, 100);
-      if (!realNameValidation.isValid) {
-        errors.push(`Real Name: ${realNameValidation.errors.join(', ')}`);
-      }
+    if (formData.birth_year && (parseInt(formData.birth_year) < 1900 || parseInt(formData.birth_year) > new Date().getFullYear())) {
+      errors.push("Birth year must be between 1900 and current year");
     }
     
-    if (formData.origin) {
-      const originValidation = validateTextInput(sanitizeAdminInput(formData.origin), 2, 100);
-      if (!originValidation.isValid) {
-        errors.push(`Origin: ${originValidation.errors.join(', ')}`);
-      }
+    if (formData.birth_month && (parseInt(formData.birth_month) < 1 || parseInt(formData.birth_month) > 12)) {
+      errors.push("Birth month must be between 1 and 12");
     }
     
-    if (formData.bio) {
-      const bioValidation = validateTextInput(sanitizeAdminContent(formData.bio), 10, 2000);
-      if (!bioValidation.isValid) {
-        errors.push(`Bio: ${bioValidation.errors.join(', ')}`);
-      }
-    }
-    
-    // Validate year
-    if (formData.birth_year) {
-      const year = parseInt(formData.birth_year);
-      const currentYear = new Date().getFullYear();
-      if (isNaN(year) || year < 1900 || year > currentYear) {
-        errors.push('Birth year must be between 1900 and current year');
-      }
-    }
-    
-    // Validate month
-    if (formData.birth_month) {
-      const month = parseInt(formData.birth_month);
-      if (isNaN(month) || month < 1 || month > 12) {
-        errors.push('Birth month must be between 1 and 12');
-      }
-    }
-    
-    // Validate day
-    if (formData.birth_day) {
-      const day = parseInt(formData.birth_day);
-      if (isNaN(day) || day < 1 || day > 31) {
-        errors.push('Birth day must be between 1 and 31');
-      }
-    }
-    
-    // Validate social handles (no @ symbol, alphanumeric and underscores only)
-    if (formData.twitter_handle) {
-      const cleanHandle = formData.twitter_handle.replace('@', '');
-      if (!/^[a-zA-Z0-9_]{1,15}$/.test(cleanHandle)) {
-        errors.push('Twitter handle must be 1-15 characters, letters, numbers, and underscores only');
-      }
-    }
-    
-    if (formData.instagram_handle) {
-      const cleanHandle = formData.instagram_handle.replace('@', '');
-      if (!/^[a-zA-Z0-9_.]{1,30}$/.test(cleanHandle)) {
-        errors.push('Instagram handle must be 1-30 characters, letters, numbers, underscores, and periods only');
-      }
+    if (formData.birth_day && (parseInt(formData.birth_day) < 1 || parseInt(formData.birth_day) > 31)) {
+      errors.push("Birth day must be between 1 and 31");
     }
     
     return errors;
   };
 
-  const handleInputChange = (field: string, value: string) => {
-    // Use appropriate sanitization based on field type
-    let sanitizedValue: string;
-    
-    if (field === 'bio') {
-      // Most permissive for bio content
-      sanitizedValue = sanitizeAdminContent(value);
-    } else if (field === 'name' || field === 'real_name' || field === 'origin') {
-      // Permissive for content fields but not as much as bio
-      sanitizedValue = sanitizeAdminInput(value);
-    } else if (field === 'spotify_id' || field === 'twitter_handle' || field === 'instagram_handle') {
-      // Strict for technical fields
-      sanitizedValue = sanitizeInput(value);
-    } else {
-      // Default to admin input sanitization
-      sanitizedValue = sanitizeAdminInput(value);
-    }
-    
-    setFormData(prev => ({
-      ...prev,
-      [field]: sanitizedValue
-    }));
-    
-    // Clear validation errors when user starts typing
-    if (validationErrors.length > 0) {
-      setValidationErrors([]);
-    }
+  const handleInputChange = (field: keyof RapperFormData, value: string | boolean | string[]) => {
+    setFormData(prev => ({ ...prev, [field]: value }));
+    setValidationErrors([]);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
     const errors = validateForm();
     if (errors.length > 0) {
       setValidationErrors(errors);
       return;
     }
     
-    setLoading(true);
-    setValidationErrors([]);
-
+    setIsLoading(true);
+    
     try {
-      // Generate slug from name
-      const generateSlug = (name: string): string => {
-        return name
-          .toLowerCase()
-          .replace(/[^a-zA-Z0-9\s-]/g, '')
-          .replace(/\s+/g, '-')
-          .replace(/^-+|-+$/g, '');
-      };
-
+      const slug = formData.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+      
       const rapperData = {
-        name: sanitizeAdminInput(formData.name).trim(),
-        real_name: sanitizeAdminInput(formData.real_name).trim() || null,
-        origin: sanitizeAdminInput(formData.origin).trim() || null,
-        bio: sanitizeAdminContent(formData.bio).trim() || null,
+        name: formData.name.trim(),
+        real_name: formData.real_name.trim() || null,
+        origin: formData.origin.trim() || null,
         birth_year: formData.birth_year ? parseInt(formData.birth_year) : null,
         birth_month: formData.birth_month ? parseInt(formData.birth_month) : null,
         birth_day: formData.birth_day ? parseInt(formData.birth_day) : null,
-        twitter_handle: formData.twitter_handle?.replace('@', '').trim() || null,
-        instagram_handle: formData.instagram_handle?.replace('@', '').trim() || null,
-        spotify_id: sanitizeInput(formData.spotify_id).trim() || null,
-        slug: generateSlug(sanitizeAdminInput(formData.name).trim()),
-        updated_at: new Date().toISOString()
+        bio: formData.bio.trim() || null,
+        verified: formData.verified,
+        spotify_id: formData.spotify_id.trim() || null,
+        instagram_handle: formData.instagram_handle.trim() || null,
+        twitter_handle: formData.twitter_handle.trim() || null,
+        slug,
       };
+
+      let rapperId: string;
 
       if (rapper) {
         // Update existing rapper
@@ -183,197 +154,210 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
           .from("rappers")
           .update(rapperData)
           .eq("id", rapper.id);
-
+        
         if (error) throw error;
-        toast.success("Rapper updated successfully");
+        rapperId = rapper.id;
+        toast.success("Rapper updated successfully!");
       } else {
         // Create new rapper
-        const { error } = await supabase
+        const { data, error } = await supabase
           .from("rappers")
-          .insert([rapperData]);
-
+          .insert([rapperData])
+          .select("id")
+          .single();
+        
         if (error) throw error;
-        toast.success("Rapper created successfully");
+        rapperId = data.id;
+        toast.success("Rapper created successfully!");
       }
 
+      // Update tag assignments
+      if (rapperId) {
+        // Delete existing tag assignments
+        await supabase
+          .from("rapper_tag_assignments")
+          .delete()
+          .eq("rapper_id", rapperId);
+
+        // Insert new tag assignments
+        if (formData.tags.length > 0) {
+          const tagAssignments = formData.tags.map(tagId => ({
+            rapper_id: rapperId,
+            tag_id: tagId,
+          }));
+
+          const { error: tagError } = await supabase
+            .from("rapper_tag_assignments")
+            .insert(tagAssignments);
+
+          if (tagError) throw tagError;
+        }
+      }
+
+      queryClient.invalidateQueries({ queryKey: ["rappers"] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-tag-assignments"] });
       onSuccess();
-    } catch (error: any) {
+    } catch (error) {
       console.error("Error saving rapper:", error);
-      toast.error(error.message || "Failed to save rapper");
+      toast.error("Failed to save rapper");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-6">
       {validationErrors.length > 0 && (
-        <Alert className="border-red-500 bg-red-50">
-          <AlertCircle className="h-4 w-4 text-red-500" />
-          <AlertDescription className="text-red-700">
-            <ul className="list-disc list-inside space-y-1">
-              {validationErrors.map((error, index) => (
-                <li key={index}>{error}</li>
-              ))}
-            </ul>
-          </AlertDescription>
-        </Alert>
+        <div className="bg-destructive/10 border border-destructive/20 rounded-md p-4">
+          <h4 className="text-sm font-medium text-destructive mb-2">Please fix the following errors:</h4>
+          <ul className="text-sm text-destructive space-y-1">
+            {validationErrors.map((error, index) => (
+              <li key={index}>• {error}</li>
+            ))}
+          </ul>
+        </div>
       )}
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="name" className="text-white">Stage Name *</Label>
+        <div>
+          <Label htmlFor="name" className="text-rap-gold">Name *</Label>
           <Input
             id="name"
             type="text"
             value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            placeholder="e.g., Jay-Z, Eminem"
+            onChange={(e) => handleInputChange("name", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
             required
-            maxLength={100}
-            className="w-full"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="real_name" className="text-white">Real Name</Label>
+        <div>
+          <Label htmlFor="real_name" className="text-rap-gold">Real Name</Label>
           <Input
             id="real_name"
             type="text"
             value={formData.real_name}
-            onChange={(e) => handleInputChange('real_name', e.target.value)}
-            placeholder="e.g., Shawn Carter, Marshall Mathers"
-            maxLength={100}
-            className="w-full"
+            onChange={(e) => handleInputChange("real_name", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
           />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="origin" className="text-white">Origin</Label>
+      <div>
+        <Label htmlFor="origin" className="text-rap-gold">Origin</Label>
         <Input
           id="origin"
           type="text"
           value={formData.origin}
-          onChange={(e) => handleInputChange('origin', e.target.value)}
-          placeholder="e.g., Brooklyn, New York"
-          maxLength={100}
-          className="w-full"
-        />
-      </div>
-
-      <div className="space-y-2">
-        <Label htmlFor="bio" className="text-white">Biography</Label>
-        <Textarea
-          id="bio"
-          value={formData.bio}
-          onChange={(e) => handleInputChange('bio', e.target.value)}
-          placeholder="Brief biography of the rapper..."
-          maxLength={2000}
-          className="w-full min-h-[100px]"
+          onChange={(e) => handleInputChange("origin", e.target.value)}
+          className="bg-rap-carbon border-rap-gold/30 text-white"
+          placeholder="e.g., New York, NY"
         />
       </div>
 
       <div className="grid grid-cols-3 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="birth_year" className="text-white">Birth Year</Label>
+        <div>
+          <Label htmlFor="birth_year" className="text-rap-gold">Birth Year</Label>
           <Input
             id="birth_year"
             type="number"
             value={formData.birth_year}
-            onChange={(e) => handleInputChange('birth_year', e.target.value)}
-            placeholder="1969"
-            min={1900}
+            onChange={(e) => handleInputChange("birth_year", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
+            min="1900"
             max={new Date().getFullYear()}
-            className="w-full"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="birth_month" className="text-white">Birth Month</Label>
+        <div>
+          <Label htmlFor="birth_month" className="text-rap-gold">Birth Month</Label>
           <Input
             id="birth_month"
             type="number"
             value={formData.birth_month}
-            onChange={(e) => handleInputChange('birth_month', e.target.value)}
-            placeholder="12"
-            min={1}
-            max={12}
-            className="w-full"
+            onChange={(e) => handleInputChange("birth_month", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
+            min="1"
+            max="12"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="birth_day" className="text-white">Birth Day</Label>
+        <div>
+          <Label htmlFor="birth_day" className="text-rap-gold">Birth Day</Label>
           <Input
             id="birth_day"
             type="number"
             value={formData.birth_day}
-            onChange={(e) => handleInputChange('birth_day', e.target.value)}
-            placeholder="4"
-            min={1}
-            max={31}
-            className="w-full"
+            onChange={(e) => handleInputChange("birth_day", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
+            min="1"
+            max="31"
           />
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div className="space-y-2">
-          <Label htmlFor="twitter_handle" className="text-white">Twitter Handle</Label>
+      <div>
+        <Label htmlFor="bio" className="text-rap-gold">Bio</Label>
+        <Textarea
+          id="bio"
+          value={formData.bio}
+          onChange={(e) => handleInputChange("bio", e.target.value)}
+          className="bg-rap-carbon border-rap-gold/30 text-white min-h-[100px]"
+          placeholder="Enter rapper biography..."
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <Label htmlFor="spotify_id" className="text-rap-gold">Spotify ID</Label>
           <Input
-            id="twitter_handle"
+            id="spotify_id"
             type="text"
-            value={formData.twitter_handle}
-            onChange={(e) => handleInputChange('twitter_handle', e.target.value)}
-            placeholder="username (without @)"
-            maxLength={15}
-            className="w-full"
+            value={formData.spotify_id}
+            onChange={(e) => handleInputChange("spotify_id", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
           />
         </div>
 
-        <div className="space-y-2">
-          <Label htmlFor="instagram_handle" className="text-white">Instagram Handle</Label>
+        <div>
+          <Label htmlFor="instagram_handle" className="text-rap-gold">Instagram Handle</Label>
           <Input
             id="instagram_handle"
             type="text"
             value={formData.instagram_handle}
-            onChange={(e) => handleInputChange('instagram_handle', e.target.value)}
-            placeholder="username (without @)"
-            maxLength={30}
-            className="w-full"
+            onChange={(e) => handleInputChange("instagram_handle", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
+            placeholder="@username"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="twitter_handle" className="text-rap-gold">Twitter Handle</Label>
+          <Input
+            id="twitter_handle"
+            type="text"
+            value={formData.twitter_handle}
+            onChange={(e) => handleInputChange("twitter_handle", e.target.value)}
+            className="bg-rap-carbon border-rap-gold/30 text-white"
+            placeholder="@username"
           />
         </div>
       </div>
 
-      <div className="space-y-2">
-        <Label htmlFor="spotify_id" className="text-white">Spotify Artist ID</Label>
-        <Input
-          id="spotify_id"
-          type="text"
-          value={formData.spotify_id}
-          onChange={(e) => handleInputChange('spotify_id', e.target.value)}
-          placeholder="Spotify artist ID"
-          maxLength={100}
-          className="w-full"
+      <div>
+        <Label className="text-rap-gold">Tags</Label>
+        <RapperTagSelector
+          selectedTags={formData.tags}
+          onTagsChange={(tags) => handleInputChange("tags", tags)}
         />
       </div>
 
-      <div className="flex justify-end space-x-2 pt-4">
-        <Button
-          type="button"
-          variant="outline"
-          onClick={onCancel}
-          disabled={loading}
-        >
+      <div className="flex justify-end space-x-4">
+        <Button type="button" variant="outline" onClick={onCancel}>
           Cancel
         </Button>
-        <Button
-          type="submit"
-          disabled={loading || validationErrors.length > 0}
-          className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon"
-        >
-          {loading ? "Saving..." : rapper ? "Update Rapper" : "Create Rapper"}
+        <Button type="submit" disabled={isLoading}>
+          {isLoading ? "Saving..." : rapper ? "Update Rapper" : "Create Rapper"}
         </Button>
       </div>
     </form>

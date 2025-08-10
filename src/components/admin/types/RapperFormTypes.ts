@@ -11,4 +11,5 @@ export interface RapperFormData {
   spotify_id: string;
   instagram_handle: string;
   twitter_handle: string;
+  tags: string[];
 }

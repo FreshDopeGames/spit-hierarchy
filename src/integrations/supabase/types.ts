@@ -1347,6 +1347,76 @@ export type Database = {
           },
         ]
       }
+      rapper_tag_assignments: {
+        Row: {
+          created_at: string
+          id: string
+          rapper_id: string
+          tag_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rapper_id: string
+          tag_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rapper_id?: string
+          tag_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "fk_rapper_tag_assignments_rapper"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_rapper_tag_assignments_rapper"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_rapper_tag_assignments_tag"
+            columns: ["tag_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_tags"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rapper_tags: {
+        Row: {
+          color: string
+          created_at: string
+          id: string
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          color?: string
+          created_at?: string
+          id?: string
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          color?: string
+          created_at?: string
+          id?: string
+          name?: string
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       rappers: {
         Row: {
           average_rating: number | null
