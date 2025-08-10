@@ -17,10 +17,12 @@ interface MusicBrainzArtist {
   score?: number;
   aliases?: MusicBrainzAlias[];
   'life-span'?: { begin?: string; end?: string };
-  labels?: Array<{
-    label: { id: string; name: string };
-    'begin-year'?: number;
-    'end-year'?: number;
+  relations?: Array<{
+    'target-type'?: string;
+    type?: string;
+    label?: { id: string; name: string };
+    begin?: string;
+    end?: string;
   }>;
 }
 
@@ -205,8 +207,8 @@ serve(async (req) => {
       return json({ success: false, error: 'Artist not found on MusicBrainz', discography: [], topSingles: [] }, 404);
     }
 
-    // Fetch artist details (labels and lifespan)
-    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=labels&fmt=json`);
+// Fetch artist details (labels and lifespan via relations)
+    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels&fmt=json`);
 
     const careerStartYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
     const careerEndYear = artistData['life-span']?.end ? parseInt(artistData['life-span'].end.substring(0, 4)) : null;
@@ -220,12 +222,12 @@ serve(async (req) => {
       })
       .eq('id', rapperId);
 
-    // Upsert labels
-    if (artistData.labels?.length) {
-      for (const l of artistData.labels) {
-        const mbId = l.label?.id;
-        const name = l.label?.name;
-        if (!mbId || !name) continue;
+    // Upsert labels from artist relations
+    const labelRels = (artistData.relations || []).filter((r) => r['target-type'] === 'label' && r.label?.id && r.label?.name);
+    if (labelRels.length) {
+      for (const rel of labelRels) {
+        const mbId = rel.label!.id;
+        const name = rel.label!.name;
 
         const { data: existingLabel } = await supabaseService
           .from('record_labels')
@@ -242,6 +244,9 @@ serve(async (req) => {
           labelId = newLabel?.id;
         }
         if (labelId) {
+          const beginYear = rel.begin ? parseInt(rel.begin.substring(0, 4)) : null;
+          const endYear = rel.end ? parseInt(rel.end.substring(0, 4)) : null;
+
           const { data: existingAff } = await supabaseService
             .from('rapper_labels')
             .select('id')
@@ -252,19 +257,24 @@ serve(async (req) => {
             await supabaseService.from('rapper_labels').insert({
               rapper_id: rapperId,
               label_id: labelId,
-              start_year: l['begin-year'] || null,
-              end_year: l['end-year'] || null,
-              is_current: !l['end-year'],
+              start_year: beginYear,
+              end_year: endYear,
+              is_current: !endYear,
             });
           }
         }
-        await delay(50);
+        await delay(100);
       }
     }
 
-    // Fetch albums/EPs (skip singles here)
-    const rgData = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album|ep&fmt=json&limit=100&offset=0`);
-    const releaseGroups: MusicBrainzReleaseGroup[] = rgData['release-groups'] || [];
+// Fetch albums and EPs separately with releases included (avoid singles)
+    const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&inc=releases&fmt=json&limit=100&offset=0`);
+    await delay(150);
+    const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&inc=releases&fmt=json&limit=100&offset=0`);
+    const releaseGroups: MusicBrainzReleaseGroup[] = [
+      ...(rgAlbums['release-groups'] || []),
+      ...(rgEps['release-groups'] || []),
+    ];
 
     for (const rg of releaseGroups.slice(0, 50)) {
       const primaryType = rg['primary-type'];
@@ -282,6 +292,9 @@ serve(async (req) => {
         .single();
       let albumId = existingAlbum?.id as string | undefined;
       if (!albumId) {
+        const firstRelease = rg.releases?.[0];
+        const trackCount = firstRelease?.['track-count'] || null;
+
         const { data: newAlbum } = await supabaseService
           .from('albums')
           .insert({
@@ -289,7 +302,7 @@ serve(async (req) => {
             musicbrainz_id: rg.id,
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
-            track_count: rg.releases?.[0]?.['track-count'] || null,
+            track_count: trackCount,
           })
           .select('id')
           .single();
@@ -322,11 +335,12 @@ serve(async (req) => {
           .from('rapper_albums')
           .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
       }
-      await delay(100);
+      await delay(150);
     }
 
-    // Fetch top recordings (singles) - keep light
-    const recData = await mbJson<any>(`https://musicbrainz.org/ws/2/recording?artist=${musicbrainzId}&fmt=json&limit=20`);
+// Fetch top recordings (singles) with releases included
+    await delay(150);
+    const recData = await mbJson<any>(`https://musicbrainz.org/ws/2/recording?artist=${musicbrainzId}&inc=releases&fmt=json&limit=20`);
     const recordings: MusicBrainzRecording[] = recData.recordings || [];
 
     for (const recording of recordings.slice(0, 5)) {
@@ -354,6 +368,7 @@ serve(async (req) => {
           .from('rapper_singles')
           .upsert({ rapper_id: rapperId, single_id: singleId, role: 'primary' }, { onConflict: 'rapper_id,single_id' });
       }
+      await delay(100);
     }
 
     // Final payload
@@ -459,9 +474,10 @@ function normalizeName(name: string) {
 }
 
 async function resolveArtistId(artistName: string): Promise<string | null> {
-  // Try exact + alias-aware search
-  const query = `https://musicbrainz.org/ws/2/artist?query=artist:"${encodeURIComponent(artistName)}"&fmt=json&limit=10&inc=aliases`;
-  const data = await mbJson<any>(query);
+  // Exact + alias-aware search (encode full query)
+  const search = encodeURIComponent(`artist:"${artistName}"`);
+  const url = `https://musicbrainz.org/ws/2/artist?query=${search}&fmt=json&limit=10&inc=aliases`;
+  const data = await mbJson<any>(url);
   const artists: MusicBrainzArtist[] = data.artists || [];
 
   const target = normalizeName(artistName);
@@ -487,9 +503,15 @@ async function resolveArtistId(artistName: string): Promise<string | null> {
 
 async function mbJson<T>(url: string): Promise<T> {
   const res = await fetch(url, {
-    headers: { 'User-Agent': 'RapperHierarchy/1.0 (contact@rapperhierarchy.com)' },
+    headers: {
+      'User-Agent': 'RapperHierarchy/1.1 (https://rapperhierarchy.com; contact@rapperhierarchy.com)',
+      'Accept': 'application/json',
+    },
   });
-  if (!res.ok) throw new Error(`MusicBrainz API error: ${res.status}`);
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`MusicBrainz API error ${res.status} ${res.statusText} for ${url} - ${text?.slice(0,200)}`);
+  }
   return await res.json() as T;
 }
 
