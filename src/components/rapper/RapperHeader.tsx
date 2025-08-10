@@ -7,6 +7,7 @@ import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { useRapperTags } from "@/hooks/useRapperTags";
+import { getContrastTextColor } from "@/lib/utils";
 
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
@@ -124,7 +125,7 @@ const RapperHeader = ({
                         key={tag.id}
                         variant="secondary"
                         className="font-kaushan"
-                        style={{ backgroundColor: tag.color, color: 'white' }}
+                        style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
                       >
                         {tag.name}
                       </Badge>

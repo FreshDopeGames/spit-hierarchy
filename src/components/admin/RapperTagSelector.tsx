@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Plus } from "lucide-react";
+import { getContrastTextColor } from "@/lib/utils";
 
 interface RapperTag {
   id: string;
@@ -42,7 +43,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
   const createTagMutation = useMutation({
     mutationFn: async (name: string) => {
       const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-      const colors = ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#06B6D4', '#3B82F6', '#8B5CF6', '#EC4899'];
+      const colors = ['#EF4444', '#F97316', '#EAB308', '#22C55E', '#06B6D4', '#3B82F6', '#8B5CF6', '#FFFFFF'];
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
       
       const { data, error } = await supabase
@@ -95,7 +96,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
                 key={tag.id}
                 variant="secondary"
                 className="cursor-pointer hover:opacity-75"
-                style={{ backgroundColor: tag.color, color: 'white' }}
+                style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
                 onClick={() => handleTagToggle(tag.id)}
               >
                 {tag.name} ×
