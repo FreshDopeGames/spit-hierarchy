@@ -129,7 +129,7 @@ serve(async (req) => {
         ip_address: clientIP,
         user_agent: userAgent,
         request_data: body,
-        response_data: { albums: payload.discography.length, singles: payload.topSingles.length },
+      response_data: { albums: payload.discography.length },
         execution_time_ms: Date.now() - startTime,
       });
       return json({ success: true, cached: true, ...payload });
@@ -154,7 +154,7 @@ serve(async (req) => {
           ip_address: clientIP,
           user_agent: userAgent,
           request_data: body,
-          response_data: { albums: payload.discography.length, singles: payload.topSingles.length },
+          response_data: { albums: payload.discography.length },
           execution_time_ms: Date.now() - startTime,
         });
         return json({ success: true, cached: true, ...payload });
@@ -204,7 +204,7 @@ serve(async (req) => {
         error_message: 'Artist not found on MusicBrainz',
         execution_time_ms: Date.now() - startTime,
       });
-      return json({ success: false, error: 'Artist not found on MusicBrainz', discography: [], topSingles: [] }, 404);
+      return json({ success: false, error: 'Artist not found on MusicBrainz', discography: [] }, 404);
     }
 
 // Fetch artist details (labels and lifespan via relations)
@@ -318,38 +318,6 @@ serve(async (req) => {
       await delay(150);
     }
 
-// Fetch top recordings (singles) with releases included
-    await delay(150);
-    const recData = await mbJson<any>(`https://musicbrainz.org/ws/2/recording?artist=${musicbrainzId}&inc=releases&fmt=json&limit=20`);
-    const recordings: MusicBrainzRecording[] = recData.recordings || [];
-
-    for (const recording of recordings.slice(0, 5)) {
-      const { data: existingSingle } = await supabaseService
-        .from('singles')
-        .select('id')
-        .eq('musicbrainz_id', recording.id)
-        .single();
-      let singleId = existingSingle?.id as string | undefined;
-      if (!singleId) {
-        const { data: newSingle } = await supabaseService
-          .from('singles')
-          .insert({
-            title: recording.title,
-            musicbrainz_id: recording.id,
-            release_date: null, // Release date not available without inc=releases
-            duration_ms: recording.length || null,
-          })
-          .select('id')
-          .single();
-        singleId = newSingle?.id;
-      }
-      if (singleId) {
-        await supabaseService
-          .from('rapper_singles')
-          .upsert({ rapper_id: rapperId, single_id: singleId, role: 'primary' }, { onConflict: 'rapper_id,single_id' });
-      }
-      await delay(100);
-    }
 
     // Final payload
     const payload = await readDiscographyPayload(supabaseService, rapperId);
@@ -361,7 +329,7 @@ serve(async (req) => {
       ip_address: clientIP,
       user_agent: userAgent,
       request_data: body,
-      response_data: { albums: payload.discography.length, singles: payload.topSingles.length, musicbrainz_id: musicbrainzId },
+      response_data: { albums: payload.discography.length, musicbrainz_id: musicbrainzId },
       execution_time_ms: Date.now() - startTime,
     });
     return json({ success: true, cached: false, ...payload });
@@ -381,7 +349,7 @@ serve(async (req) => {
         execution_time_ms: Date.now() - startTime,
       });
     } catch {}
-    return json({ success: false, error: 'Failed to fetch discography data', discography: [], topSingles: [] }, 500);
+    return json({ success: false, error: 'Failed to fetch discography data', discography: [] }, 500);
   }
 });
 
@@ -423,24 +391,7 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
     `)
     .eq('rapper_id', rapperId);
 
-  const { data: topSingles } = await supabaseService
-    .from('rapper_singles')
-    .select(`
-      id,
-      role,
-      single:singles (
-        id,
-        title,
-        release_date,
-        peak_chart_position,
-        chart_country,
-        duration_ms
-      )
-    `)
-    .eq('rapper_id', rapperId)
-    .limit(5);
-
-  return { discography: discography || [], topSingles: topSingles || [] };
+  return { discography: discography || [] };
 }
 
 function normalizeName(name: string) {

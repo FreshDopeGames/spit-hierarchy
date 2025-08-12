@@ -19,24 +19,11 @@ export interface DiscographyAlbum {
   };
 }
 
-export interface DiscographySingle {
-  id: string;
-  role: string;
-  single: {
-    id: string;
-    title: string;
-    release_date: string | null;
-    peak_chart_position: number | null;
-    chart_country: string;
-    duration_ms: number | null;
-  };
-}
 
 export interface DiscographyData {
   success: boolean;
   cached: boolean;
   discography: DiscographyAlbum[];
-  topSingles: DiscographySingle[];
 }
 
 // Track ongoing requests to prevent duplicates
@@ -154,16 +141,6 @@ export const useRapperCareerStats = (rapperId: string) => {
 
       if (albumsError) throw albumsError;
 
-      // Get singles count and release dates
-      const { data: singles, error: singlesError } = await supabase
-        .from("rapper_singles")
-        .select(`
-          id,
-          single:singles(release_date)
-        `)
-        .eq("rapper_id", rapperId);
-
-      if (singlesError) throw singlesError;
 
       // Get label affiliations
       const { data: labels, error: labelsError } = await supabase
@@ -181,12 +158,10 @@ export const useRapperCareerStats = (rapperId: string) => {
       const albumTypes = albums?.map(a => a.album?.release_type) || [];
       const totalAlbums = albumTypes.filter(type => type === 'album').length;
       const totalMixtapes = albumTypes.filter(type => type === 'mixtape').length;
-      const totalSingles = singles?.length || 0;
 
       // Calculate career start/end years based on first and last releases
       const allReleaseDates = [
-        ...(albums?.map(a => a.album?.release_date).filter(Boolean) || []),
-        ...(singles?.map(s => s.single?.release_date).filter(Boolean) || [])
+        ...(albums?.map(a => a.album?.release_date).filter(Boolean) || [])
       ];
 
       let careerStartYear = rapper?.career_start_year;
@@ -220,14 +195,13 @@ export const useRapperCareerStats = (rapperId: string) => {
         : 0;
 
       // Auto-fetch MusicBrainz data if missing and no discography exists
-      if (!rapper?.musicbrainz_id && totalAlbums === 0 && totalSingles === 0) {
+      if (!rapper?.musicbrainz_id && totalAlbums === 0) {
         fetchDiscography();
       }
 
       return {
         totalAlbums,
         totalMixtapes,
-        totalSingles,
         careerStartYear,
         careerEndYear,
         careerSpan,

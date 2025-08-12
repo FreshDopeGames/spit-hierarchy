@@ -17,8 +17,8 @@ const CareerStatsCard = ({
         <CardContent className="p-6">
           <div className="space-y-4">
             <div className="h-6 bg-rap-carbon-light rounded w-1/3"></div>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              {[...Array(4)].map((_, i) => <div key={i} className="text-center space-y-2">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+              {[...Array(3)].map((_, i) => <div key={i} className="text-center space-y-2">
                   <div className="h-8 bg-rap-carbon-light rounded w-full"></div>
                   <div className="h-4 bg-rap-carbon-light rounded w-3/4 mx-auto"></div>
                 </div>)}
@@ -39,11 +39,6 @@ const CareerStatsCard = ({
     value: stats.totalMixtapes,
     color: "text-rap-burgundy"
   }, {
-    icon: Trophy,
-    label: "Singles",
-    value: stats.totalSingles,
-    color: "text-rap-silver"
-  }, {
     icon: Calendar,
     label: "Career Span",
     value: stats.careerSpan > 0 ? `${stats.careerSpan} yrs` : "N/A",
@@ -59,7 +54,7 @@ const CareerStatsCard = ({
               </Badge>}
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {statItems.map((item, index) => <div key={index} className="text-center space-y-2">
                 <div className="flex items-center justify-center">
                   <item.icon className={`w-6 h-6 ${item.color}`} />

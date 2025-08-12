@@ -69,11 +69,6 @@ const RapperDiscography = ({
     const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
     return dateA - dateB; // Chronological order (earliest first)
   }) || [];
-  const singles = (data?.topSingles || []).sort((a, b) => {
-    const dateA = a.single?.release_date ? new Date(a.single.release_date).getTime() : 0;
-    const dateB = b.single?.release_date ? new Date(b.single.release_date).getTime() : 0;
-    return dateA - dateB; // Chronological order (earliest first)
-  });
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Unknown";
     try {
@@ -102,7 +97,7 @@ const RapperDiscography = ({
 
       <CardContent className="p-6 sm:p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[200px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
             <TabsTrigger value="albums" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
               <Disc3 className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Albums ({albums.length})</span>
@@ -110,10 +105,6 @@ const RapperDiscography = ({
             <TabsTrigger value="mixtapes" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
               <Music className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Mixtapes ({mixtapes.length})</span>
-            </TabsTrigger>
-            <TabsTrigger value="singles" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
-              <Trophy className="w-4 h-4 mr-2 flex-shrink-0" />
-              <span className="truncate">Top Singles ({singles.length})</span>
             </TabsTrigger>
           </TabsList>
 
@@ -173,36 +164,6 @@ const RapperDiscography = ({
             </div>
           </TabsContent>
 
-          <TabsContent value="singles" className="mt-6 sm:mt-4">
-            <div className="space-y-4 sm:space-y-3">
-              {singles.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
-                  No singles found in discography
-                </div> : singles.map((item, index) => <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                    <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
-                      <div className="text-rap-silver font-bold">#{index + 1}</div>
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
-                        {item.single?.title}
-                      </h4>
-                      <div className="flex items-center gap-3 text-sm text-rap-smoke font-kaushan">
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(item.single?.release_date)}
-                        </div>
-                        {item.single?.duration_ms && <span>{formatDuration(item.single.duration_ms)}</span>}
-                        {item.single?.peak_chart_position && <div className="flex items-center gap-1 text-rap-gold">
-                            <Trophy className="w-3 h-3" />
-                            #{item.single.peak_chart_position} {item.single.chart_country}
-                          </div>}
-                      </div>
-                    </div>
-                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
-                        {item.role}
-                      </Badge>}
-                  </div>)}
-            </div>
-          </TabsContent>
         </Tabs>
         
         <div className="flex items-center justify-center gap-2 pt-6 border-t border-rap-carbon/20 mt-6">
