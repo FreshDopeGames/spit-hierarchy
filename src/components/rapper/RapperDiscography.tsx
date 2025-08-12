@@ -84,13 +84,25 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
   const albums = data?.discography?.filter(item => 
     item.album?.release_type === 'album'
-  ) || [];
+  ).sort((a, b) => {
+    const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
+    const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
+    return dateA - dateB; // Chronological order (earliest first)
+  }) || [];
   
   const mixtapes = data?.discography?.filter(item => 
     item.album?.release_type === 'mixtape'
-  ) || [];
+  ).sort((a, b) => {
+    const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
+    const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
+    return dateA - dateB; // Chronological order (earliest first)
+  }) || [];
 
-  const singles = data?.topSingles || [];
+  const singles = (data?.topSingles || []).sort((a, b) => {
+    const dateA = a.single?.release_date ? new Date(a.single.release_date).getTime() : 0;
+    const dateB = b.single?.release_date ? new Date(b.single.release_date).getTime() : 0;
+    return dateA - dateB; // Chronological order (earliest first)
+  });
 
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Unknown";
