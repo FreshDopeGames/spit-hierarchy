@@ -97,8 +97,11 @@ export type Database = {
       }
       albums: {
         Row: {
+          cover_art_colors: Json | null
           cover_art_url: string | null
           created_at: string
+          external_cover_links: Json | null
+          has_cover_art: boolean | null
           id: string
           label_id: string | null
           musicbrainz_id: string | null
@@ -109,8 +112,11 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          cover_art_colors?: Json | null
           cover_art_url?: string | null
           created_at?: string
+          external_cover_links?: Json | null
+          has_cover_art?: boolean | null
           id?: string
           label_id?: string | null
           musicbrainz_id?: string | null
@@ -121,8 +127,11 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          cover_art_colors?: Json | null
           cover_art_url?: string | null
           created_at?: string
+          external_cover_links?: Json | null
+          has_cover_art?: boolean | null
           id?: string
           label_id?: string | null
           musicbrainz_id?: string | null

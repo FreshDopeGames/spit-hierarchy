@@ -3,14 +3,17 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink } from "lucide-react";
+import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink, PlayCircle } from "lucide-react";
 import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDiscography";
 import { format } from "date-fns";
+import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
 interface RapperDiscographyProps {
   rapperId: string;
+  rapperName?: string;
 }
 const RapperDiscography = ({
-  rapperId
+  rapperId,
+  rapperName = "Unknown Artist"
 }: RapperDiscographyProps) => {
   const {
     data,
@@ -110,11 +113,36 @@ const RapperDiscography = ({
 
           <TabsContent value="albums" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-              {albums.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+                {albums.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No albums found in discography
-                </div> : albums.map(item => <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                    <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
-                      <Disc3 className="w-6 h-6 text-rap-gold" />
+                </div> : albums.map(item => {
+                  const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
+                  const placeholder = getSmartAlbumPlaceholder({
+                    releaseYear,
+                    releaseType: 'album',
+                    title: item.album?.title
+                  });
+                  const externalLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  
+                  return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                    <div 
+                      className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden"
+                      style={{ 
+                        backgroundColor: placeholder.style.bgColor,
+                        background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
+                      }}
+                    >
+                      <Disc3 
+                        className="w-6 h-6" 
+                        style={{ color: placeholder.style.textColor }}
+                      />
+                      <div 
+                        className="absolute inset-0 opacity-10"
+                        style={{
+                          backgroundImage: `radial-gradient(circle at 30% 70%, ${placeholder.style.textColor} 1px, transparent 1px)`,
+                          backgroundSize: '8px 8px'
+                        }}
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
@@ -128,21 +156,67 @@ const RapperDiscography = ({
                         {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => window.open(externalLinks.spotify, '_blank')}
+                        >
+                          <PlayCircle className="w-3 h-3 mr-1" />
+                          Spotify
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => window.open(externalLinks.appleMusic, '_blank')}
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Apple Music
+                        </Button>
+                      </div>
                     </div>
                     {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
                       </Badge>}
-                  </div>)}
+                  </div>
+                })}
             </div>
           </TabsContent>
 
           <TabsContent value="mixtapes" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-              {mixtapes.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+                {mixtapes.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No mixtapes found in discography
-                </div> : mixtapes.map(item => <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                    <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
-                      <Music className="w-6 h-6 text-rap-burgundy" />
+                </div> : mixtapes.map(item => {
+                  const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
+                  const placeholder = getSmartAlbumPlaceholder({
+                    releaseYear,
+                    releaseType: 'mixtape',
+                    title: item.album?.title
+                  });
+                  const externalLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  
+                  return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                    <div 
+                      className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden"
+                      style={{ 
+                        backgroundColor: placeholder.style.bgColor,
+                        background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
+                      }}
+                    >
+                      <Music 
+                        className="w-6 h-6" 
+                        style={{ color: placeholder.style.textColor }}
+                      />
+                      <div 
+                        className="absolute inset-0 opacity-10"
+                        style={{
+                          backgroundImage: `linear-gradient(45deg, ${placeholder.style.textColor} 25%, transparent 25%, transparent 75%, ${placeholder.style.textColor} 75%)`,
+                          backgroundSize: '6px 6px'
+                        }}
+                      />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
@@ -156,11 +230,32 @@ const RapperDiscography = ({
                         {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
+                      <div className="flex items-center gap-2 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => window.open(externalLinks.spotify, '_blank')}
+                        >
+                          <PlayCircle className="w-3 h-3 mr-1" />
+                          Spotify
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                          onClick={() => window.open(externalLinks.appleMusic, '_blank')}
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Apple Music
+                        </Button>
+                      </div>
                     </div>
                     {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
                       </Badge>}
-                  </div>)}
+                  </div>
+                })}
             </div>
           </TabsContent>
 

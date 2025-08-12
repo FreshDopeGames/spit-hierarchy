@@ -292,8 +292,12 @@ serve(async (req) => {
         .single();
       let albumId = existingAlbum?.id as string | undefined;
       if (!albumId) {
-        // Note: track_count and label info not available without inc=releases
-        // Using available data from release-group only
+        // Generate external cover art links instead of storing actual images
+        const externalLinks = {
+          musicbrainz: `https://musicbrainz.org/release-group/${rg.id}`,
+          coverartarchive: `https://coverartarchive.org/release-group/${rg.id}`
+        };
+        
         const { data: newAlbum } = await supabaseService
           .from('albums')
           .insert({
@@ -302,6 +306,9 @@ serve(async (req) => {
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
             track_count: null, // Not available without inc=releases
+            has_cover_art: false, // Safe default - no direct copyright infringement
+            external_cover_links: externalLinks,
+            cover_art_colors: null // Will be populated by future user-generated content
           })
           .select('id')
           .single();
@@ -385,6 +392,9 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
         release_date,
         release_type,
         cover_art_url,
+        has_cover_art,
+        cover_art_colors,
+        external_cover_links,
         track_count,
         label:record_labels ( id, name )
       )
