@@ -122,7 +122,12 @@ const RapperDiscography = ({
                     releaseType: 'album',
                     title: item.album?.title
                   });
-                  const externalLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  const directLinks = (item.album as any)?.external_cover_links || {};
+                  const externalLinks = {
+                    spotify: directLinks.spotify || searchLinks.spotify,
+                    appleMusic: directLinks.apple_music || searchLinks.appleMusic,
+                  };
                   
                   return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div 
@@ -196,7 +201,12 @@ const RapperDiscography = ({
                     releaseType: 'mixtape',
                     title: item.album?.title
                   });
-                  const externalLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  const directLinks = (item.album as any)?.external_cover_links || {};
+                  const externalLinks = {
+                    spotify: directLinks.spotify || searchLinks.spotify,
+                    appleMusic: directLinks.apple_music || searchLinks.appleMusic,
+                  };
                   
                   return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div 

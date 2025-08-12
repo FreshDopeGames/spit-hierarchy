@@ -11,6 +11,8 @@ export interface DiscographyAlbum {
     release_date: string | null;
     release_type: string;
     cover_art_url: string | null;
+    has_cover_art?: boolean | null;
+    external_cover_links?: Record<string, string> | null;
     track_count: number | null;
     label: {
       id: string;

@@ -292,10 +292,34 @@ serve(async (req) => {
         .single();
       let albumId = existingAlbum?.id as string | undefined;
       if (!albumId) {
-        // Generate external cover art links instead of storing actual images
+        // Fetch release-group details to extract direct streaming links (Spotify/Apple/Deezer/YT Music)
+        let streamingLinks: Record<string, string> = {};
+        try {
+          const rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=url-rels&fmt=json`);
+          await delay(120);
+          const rels: Array<any> = rgDetails?.relations || [];
+
+          const findByHost = (host: string) => rels.find((r: any) => r?.url?.resource?.includes(host))?.url?.resource;
+          const spotify = findByHost('open.spotify.com');
+          const apple = findByHost('music.apple.com');
+          const deezer = findByHost('deezer.com');
+          const ytmusic = findByHost('music.youtube.com') || findByHost('youtube.com');
+
+          streamingLinks = {
+            ...(spotify ? { spotify } : {}),
+            ...(apple ? { apple_music: apple } : {}),
+            ...(deezer ? { deezer } : {}),
+            ...(ytmusic ? { youtube_music: ytmusic } : {}),
+          };
+        } catch (_) {
+          // best-effort only
+        }
+
+        // Generate external references (no direct cover art stored)
         const externalLinks = {
           musicbrainz: `https://musicbrainz.org/release-group/${rg.id}`,
-          coverartarchive: `https://coverartarchive.org/release-group/${rg.id}`
+          coverartarchive: `https://coverartarchive.org/release-group/${rg.id}`,
+          ...streamingLinks,
         };
         
         const { data: newAlbum } = await supabaseService
