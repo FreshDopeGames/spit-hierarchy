@@ -6,104 +6,74 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink } from "lucide-react";
 import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDiscography";
 import { format } from "date-fns";
-
 interface RapperDiscographyProps {
   rapperId: string;
 }
-
-const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
-  const { data, isLoading, error } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
+const RapperDiscography = ({
+  rapperId
+}: RapperDiscographyProps) => {
+  const {
+    data,
+    isLoading,
+    error
+  } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
   const refreshMutation = useRefreshDiscography();
   const [activeTab, setActiveTab] = useState("albums");
-
   const handleRefresh = () => {
     refreshMutation.mutate(rapperId);
   };
-
   if (isLoading) {
-    return (
-      <Card className="bg-black border-rap-gold/20">
+    return <Card className="bg-black border-rap-gold/20">
         <CardHeader>
           <div className="h-6 bg-rap-carbon-light rounded w-1/3 animate-pulse"></div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex gap-4 animate-pulse">
+            {[...Array(3)].map((_, i) => <div key={i} className="flex gap-4 animate-pulse">
                 <div className="w-16 h-16 bg-rap-carbon-light rounded"></div>
                 <div className="flex-1 space-y-2">
                   <div className="h-4 bg-rap-carbon-light rounded w-3/4"></div>
                   <div className="h-3 bg-rap-carbon-light rounded w-1/2"></div>
                 </div>
-              </div>
-            ))}
+              </div>)}
           </div>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
   if (error) {
     const isNotFound = error?.message?.includes('404') || error?.message?.includes('not found');
     const isRateLimit = error?.message?.includes('Rate limit') || error?.message?.includes('429');
-    
-    return (
-      <Card className="bg-black border-rap-burgundy/30">
+    return <Card className="bg-black border-rap-burgundy/30">
         <CardContent className="p-6 text-center">
           <div className="text-rap-burgundy mb-4">
-            {isNotFound 
-              ? "No discography data found on MusicBrainz"
-              : isRateLimit
-              ? "Rate limit reached"
-              : "Failed to load discography data"
-            }
+            {isNotFound ? "No discography data found on MusicBrainz" : isRateLimit ? "Rate limit reached" : "Failed to load discography data"}
           </div>
           <p className="text-sm text-rap-smoke mb-4">
-            {isNotFound 
-              ? "This artist may not be in the MusicBrainz database yet."
-              : isRateLimit
-              ? "Too many requests. Please try again in a few minutes."
-              : "There was an error connecting to the music database."
-            }
+            {isNotFound ? "This artist may not be in the MusicBrainz database yet." : isRateLimit ? "Too many requests. Please try again in a few minutes." : "There was an error connecting to the music database."}
           </p>
-          <Button 
-            onClick={handleRefresh} 
-            variant="outline"
-            className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10"
-            disabled={refreshMutation.isPending}
-          >
+          <Button onClick={handleRefresh} variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10" disabled={refreshMutation.isPending}>
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshMutation.isPending ? 'animate-spin' : ''}`} />
             {isNotFound ? 'Search Again' : 'Retry'}
           </Button>
         </CardContent>
-      </Card>
-    );
+      </Card>;
   }
-
   if (!data) return null;
-
-  const albums = data?.discography?.filter(item => 
-    item.album?.release_type === 'album'
-  ).sort((a, b) => {
+  const albums = data?.discography?.filter(item => item.album?.release_type === 'album').sort((a, b) => {
     const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
     const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
     return dateA - dateB; // Chronological order (earliest first)
   }) || [];
-  
-  const mixtapes = data?.discography?.filter(item => 
-    item.album?.release_type === 'mixtape'
-  ).sort((a, b) => {
+  const mixtapes = data?.discography?.filter(item => item.album?.release_type === 'mixtape').sort((a, b) => {
     const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
     const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
     return dateA - dateB; // Chronological order (earliest first)
   }) || [];
-
   const singles = (data?.topSingles || []).sort((a, b) => {
     const dateA = a.single?.release_date ? new Date(a.single.release_date).getTime() : 0;
     const dateB = b.single?.release_date ? new Date(b.single.release_date).getTime() : 0;
     return dateA - dateB; // Chronological order (earliest first)
   });
-
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Unknown";
     try {
@@ -112,16 +82,13 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
       return dateString;
     }
   };
-
   const formatDuration = (ms: number | null) => {
     if (!ms) return null;
     const minutes = Math.floor(ms / 60000);
-    const seconds = Math.floor((ms % 60000) / 1000);
+    const seconds = Math.floor(ms % 60000 / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
-
-  return (
-    <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10 min-h-[600px] sm:min-h-[500px]">
+  return <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10 min-h-[600px] sm:min-h-[500px]">
       <CardHeader className="pb-6 sm:pb-8">
         <div className="flex items-center justify-between">
           <div>
@@ -130,24 +97,14 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
               {isLoading ? 'Fetching from MusicBrainz...' : 'commercial and underground projects'}
             </p>
           </div>
-          <div className="flex items-center gap-2">
-            {data?.cached && (
-              <Badge variant="secondary" className="text-xs">
+          <div className="flex items-center gap-2 mx-0 my-0 py-[6px] px-0">
+            {data?.cached && <Badge variant="secondary" className="text-xs">
                 Cached
-              </Badge>
-            )}
-            {isLoading && (
-              <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
+              </Badge>}
+            {isLoading && <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
                 Loading...
-              </Badge>
-            )}
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleRefresh}
-              disabled={refreshMutation.isPending || isLoading}
-              className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2"
-            >
+              </Badge>}
+            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2">
               <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
               <span className="text-sm font-medium">
                 {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
@@ -159,25 +116,16 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
       <CardContent className="p-6 sm:p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[200px] sm:min-h-[70px] items-center">
-            <TabsTrigger 
-              value="albums" 
-              className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
-            >
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[200px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
+            <TabsTrigger value="albums" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
               <Disc3 className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Albums ({albums.length})</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="mixtapes"
-              className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
-            >
+            <TabsTrigger value="mixtapes" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
               <Music className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Mixtapes ({mixtapes.length})</span>
             </TabsTrigger>
-            <TabsTrigger 
-              value="singles"
-              className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
-            >
+            <TabsTrigger value="singles" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
               <Trophy className="w-4 h-4 mr-2 flex-shrink-0" />
               <span className="truncate">Top Singles ({singles.length})</span>
             </TabsTrigger>
@@ -185,13 +133,9 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
           <TabsContent value="albums" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-              {albums.length === 0 ? (
-                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+              {albums.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No albums found in discography
-                </div>
-              ) : (
-                albums.map((item) => (
-                  <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                </div> : albums.map(item => <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
                       <Disc3 className="w-6 h-6 text-rap-gold" />
                     </div>
@@ -204,34 +148,22 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
                           <Calendar className="w-3 h-3" />
                           {formatDate(item.album?.release_date)}
                         </div>
-                        {item.album?.track_count && (
-                          <span>{item.album.track_count} tracks</span>
-                        )}
-                        {item.album?.label && (
-                          <span className="text-rap-gold">{item.album.label.name}</span>
-                        )}
+                        {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
+                        {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                     </div>
-                    {item.role !== 'primary' && (
-                      <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
+                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
-                      </Badge>
-                    )}
-                  </div>
-                ))
-              )}
+                      </Badge>}
+                  </div>)}
             </div>
           </TabsContent>
 
           <TabsContent value="mixtapes" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-              {mixtapes.length === 0 ? (
-                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+              {mixtapes.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No mixtapes found in discography
-                </div>
-              ) : (
-                mixtapes.map((item) => (
-                  <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                </div> : mixtapes.map(item => <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
                       <Music className="w-6 h-6 text-rap-burgundy" />
                     </div>
@@ -244,34 +176,22 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
                           <Calendar className="w-3 h-3" />
                           {formatDate(item.album?.release_date)}
                         </div>
-                        {item.album?.track_count && (
-                          <span>{item.album.track_count} tracks</span>
-                        )}
-                        {item.album?.label && (
-                          <span className="text-rap-gold">{item.album.label.name}</span>
-                        )}
+                        {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
+                        {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                     </div>
-                    {item.role !== 'primary' && (
-                      <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
+                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
-                      </Badge>
-                    )}
-                  </div>
-                ))
-              )}
+                      </Badge>}
+                  </div>)}
             </div>
           </TabsContent>
 
           <TabsContent value="singles" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-              {singles.length === 0 ? (
-                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+              {singles.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No singles found in discography
-                </div>
-              ) : (
-                singles.map((item, index) => (
-                  <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                </div> : singles.map((item, index) => <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div className="w-12 h-12 bg-rap-carbon-light rounded flex items-center justify-center">
                       <div className="text-rap-silver font-bold">#{index + 1}</div>
                     </div>
@@ -284,31 +204,21 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
                           <Calendar className="w-3 h-3" />
                           {formatDate(item.single?.release_date)}
                         </div>
-                        {item.single?.duration_ms && (
-                          <span>{formatDuration(item.single.duration_ms)}</span>
-                        )}
-                        {item.single?.peak_chart_position && (
-                          <div className="flex items-center gap-1 text-rap-gold">
+                        {item.single?.duration_ms && <span>{formatDuration(item.single.duration_ms)}</span>}
+                        {item.single?.peak_chart_position && <div className="flex items-center gap-1 text-rap-gold">
                             <Trophy className="w-3 h-3" />
                             #{item.single.peak_chart_position} {item.single.chart_country}
-                          </div>
-                        )}
+                          </div>}
                       </div>
                     </div>
-                    {item.role !== 'primary' && (
-                      <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
+                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
-                      </Badge>
-                    )}
-                  </div>
-                ))
-              )}
+                      </Badge>}
+                  </div>)}
             </div>
           </TabsContent>
         </Tabs>
       </CardContent>
-    </Card>
-  );
+    </Card>;
 };
-
 export default RapperDiscography;
