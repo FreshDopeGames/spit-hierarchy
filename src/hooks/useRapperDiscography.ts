@@ -135,7 +135,7 @@ export const useRapperCareerStats = (rapperId: string) => {
   return useQuery({
     queryKey: ["rapper-career-stats", rapperId],
     queryFn: async () => {
-      // Get basic rapper info with career years
+      // Get basic rapper info
       const { data: rapper, error: rapperError } = await supabase
         .from("rappers")
         .select("career_start_year, career_end_year, musicbrainz_id")
@@ -144,20 +144,23 @@ export const useRapperCareerStats = (rapperId: string) => {
 
       if (rapperError) throw rapperError;
 
-      // Get album count by type
+      // Get album count by type and release dates for career calculation
       const { data: albums, error: albumsError } = await supabase
         .from("rapper_albums")
         .select(`
-          album:albums(release_type)
+          album:albums(release_type, release_date)
         `)
         .eq("rapper_id", rapperId);
 
       if (albumsError) throw albumsError;
 
-      // Get singles count
+      // Get singles count and release dates
       const { data: singles, error: singlesError } = await supabase
         .from("rapper_singles")
-        .select("id")
+        .select(`
+          id,
+          single:singles(release_date)
+        `)
         .eq("rapper_id", rapperId);
 
       if (singlesError) throw singlesError;
@@ -180,10 +183,29 @@ export const useRapperCareerStats = (rapperId: string) => {
       const totalMixtapes = albumTypes.filter(type => type === 'mixtape').length;
       const totalSingles = singles?.length || 0;
 
-      const careerSpan = rapper?.career_start_year && rapper?.career_end_year 
-        ? rapper.career_end_year - rapper.career_start_year
-        : rapper?.career_start_year 
-        ? new Date().getFullYear() - rapper.career_start_year
+      // Calculate career start/end years based on first and last releases
+      const allReleaseDates = [
+        ...(albums?.map(a => a.album?.release_date).filter(Boolean) || []),
+        ...(singles?.map(s => s.single?.release_date).filter(Boolean) || [])
+      ];
+
+      let careerStartYear = rapper?.career_start_year;
+      let careerEndYear = rapper?.career_end_year;
+
+      if (allReleaseDates.length > 0) {
+        const years = allReleaseDates.map(date => new Date(date).getFullYear()).sort((a, b) => a - b);
+        const firstReleaseYear = years[0];
+        const lastReleaseYear = years[years.length - 1];
+        
+        // Use release-based years, with fallback to rapper table data
+        careerStartYear = firstReleaseYear || rapper?.career_start_year;
+        careerEndYear = lastReleaseYear !== new Date().getFullYear() ? lastReleaseYear : rapper?.career_end_year;
+      }
+
+      const careerSpan = careerStartYear && careerEndYear 
+        ? careerEndYear - careerStartYear
+        : careerStartYear 
+        ? new Date().getFullYear() - careerStartYear
         : 0;
 
       // Auto-fetch MusicBrainz data if missing and no discography exists
@@ -195,8 +217,8 @@ export const useRapperCareerStats = (rapperId: string) => {
         totalAlbums,
         totalMixtapes,
         totalSingles,
-        careerStartYear: rapper?.career_start_year,
-        careerEndYear: rapper?.career_end_year,
+        careerStartYear,
+        careerEndYear,
         careerSpan,
         labelAffiliations: labels || [],
         hasMusicBrainzId: !!rapper?.musicbrainz_id
