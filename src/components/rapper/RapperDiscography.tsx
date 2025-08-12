@@ -127,7 +127,7 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
           <div>
             <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
             <p className="text-sm text-rap-smoke mt-1">
-              {isLoading ? 'Fetching from MusicBrainz...' : 'Complete musical catalog and chart performances'}
+              {isLoading ? 'Fetching from MusicBrainz...' : 'commercial and underground projects'}
             </p>
           </div>
           <div className="flex items-center gap-2">
