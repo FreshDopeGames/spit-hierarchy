@@ -675,6 +675,13 @@ export type Database = {
             foreignKeyName: "official_ranking_items_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "official_ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -976,6 +983,13 @@ export type Database = {
             foreignKeyName: "ranking_items_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -1019,6 +1033,13 @@ export type Database = {
             columns: ["ranking_id"]
             isOneToOne: false
             referencedRelation: "official_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_position_history_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
             referencedColumns: ["id"]
           },
           {
@@ -1146,6 +1167,13 @@ export type Database = {
             foreignKeyName: "ranking_votes_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -1186,6 +1214,13 @@ export type Database = {
             columns: ["album_id"]
             isOneToOne: false
             referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_albums_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
             referencedColumns: ["id"]
           },
           {
@@ -1233,6 +1268,13 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "rapper_images_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "rapper_images_rapper_id_fkey"
             columns: ["rapper_id"]
@@ -1289,6 +1331,13 @@ export type Database = {
             foreignKeyName: "rapper_labels_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_labels_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -1324,6 +1373,13 @@ export type Database = {
           single_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "rapper_singles_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "rapper_singles_rapper_id_fkey"
             columns: ["rapper_id"]
@@ -1367,6 +1423,13 @@ export type Database = {
           tag_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "fk_rapper_tag_assignments_rapper"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "fk_rapper_tag_assignments_rapper"
             columns: ["rapper_id"]
@@ -1705,6 +1768,13 @@ export type Database = {
             foreignKeyName: "user_ranking_items_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_ranking_items_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -1858,6 +1928,13 @@ export type Database = {
             foreignKeyName: "user_top_rappers_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_top_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -1899,6 +1976,13 @@ export type Database = {
           user_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "vote_notes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "vote_notes_rapper_id_fkey"
             columns: ["rapper_id"]
@@ -1955,6 +2039,13 @@ export type Database = {
             foreignKeyName: "votes_rapper_id_fkey"
             columns: ["rapper_id"]
             isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
             referencedRelation: "rapper_voting_analytics"
             referencedColumns: ["id"]
           },
@@ -1993,6 +2084,21 @@ export type Database = {
       }
     }
     Views: {
+      rapper_vote_stats: {
+        Row: {
+          average_rating: number | null
+          first_vote_date: string | null
+          id: string | null
+          last_vote_date: string | null
+          name: string | null
+          slug: string | null
+          total_votes: number | null
+          unique_voters: number | null
+          votes_last_30_days: number | null
+          votes_last_7_days: number | null
+        }
+        Relationships: []
+      }
       rapper_voting_analytics: {
         Row: {
           average_rating: number | null
@@ -2106,6 +2212,17 @@ export type Database = {
         Args: { p_ranking_id: string; p_rapper_id: string }
         Returns: number
       }
+      get_public_category_stats: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          category_id: string
+          category_name: string
+          total_votes: number
+          unique_voters: number
+          unique_rappers: number
+          average_rating: number
+        }[]
+      }
       get_public_profile: {
         Args: { user_uuid?: string }
         Returns: {
@@ -2151,6 +2268,17 @@ export type Database = {
           average_rating: number
           votes_last_7_days: number
           votes_last_30_days: number
+        }[]
+      }
+      get_trending_rappers: {
+        Args: { days_back?: number }
+        Returns: {
+          rapper_id: string
+          rapper_name: string
+          recent_votes: number
+          recent_average_rating: number
+          total_votes: number
+          momentum_score: number
         }[]
       }
       get_user_ranking_preview_items: {
