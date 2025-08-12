@@ -267,10 +267,10 @@ serve(async (req) => {
       }
     }
 
-// Fetch albums and EPs separately with releases included (avoid singles)
-    const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&inc=releases&fmt=json&limit=100&offset=0`);
+// Fetch albums and EPs separately (fixed - removed invalid inc=releases parameter)
+    const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&fmt=json&limit=100&offset=0`);
     await delay(150);
-    const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&inc=releases&fmt=json&limit=100&offset=0`);
+    const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&fmt=json&limit=100&offset=0`);
     const releaseGroups: MusicBrainzReleaseGroup[] = [
       ...(rgAlbums['release-groups'] || []),
       ...(rgEps['release-groups'] || []),
