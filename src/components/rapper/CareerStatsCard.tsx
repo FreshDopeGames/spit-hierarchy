@@ -73,7 +73,7 @@ const CareerStatsCard = ({
                 <Calendar className="w-4 h-4" />
                 <span>
                   Active: {stats.careerStartYear}
-                  {stats.careerEndYear ? ` - ${stats.careerEndYear}` : ' - Present'}
+                  {stats.careerEndYear ? ` - ${stats.careerEndYear}` : ' - Current'}
                   {stats.isDeceased && <span className="ml-2 text-xs">✝</span>}
                 </span>
               </div>
