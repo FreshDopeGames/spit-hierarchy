@@ -86,8 +86,12 @@ export const getSmartAlbumPlaceholder = (context: AlbumContext = {}): {
   };
 };
 
-// Generate external links for album
-export const generateExternalAlbumLinks = (albumTitle: string, artistName: string): {
+// Generate external links for album/mixtape
+export const generateExternalAlbumLinks = (
+  albumTitle: string, 
+  artistName: string, 
+  releaseType: 'album' | 'mixtape' | 'ep' | 'single' = 'album'
+): {
   spotify?: string;
   appleMusic?: string;
   musicbrainz?: string;
@@ -96,12 +100,21 @@ export const generateExternalAlbumLinks = (albumTitle: string, artistName: strin
   const encodedAlbum = encodeURIComponent(albumTitle);
   const encodedArtist = encodeURIComponent(artistName);
   
-  return {
-    spotify: `https://open.spotify.com/search/${encodedArtist}%20${encodedAlbum}`,
-    appleMusic: `https://music.apple.com/search?term=${encodedArtist}%20${encodedAlbum}`,
+  const baseLinks = {
     genius: `https://genius.com/search?q=${encodedArtist}%20${encodedAlbum}`,
     musicbrainz: `https://musicbrainz.org/search?query=${encodedArtist}%20${encodedAlbum}&type=release`
   };
+
+  // Only include Spotify/Apple Music for albums (not mixtapes)
+  if (releaseType === 'album') {
+    return {
+      ...baseLinks,
+      spotify: `https://open.spotify.com/search/${encodedArtist}%20${encodedAlbum}/albums`,
+      appleMusic: `https://music.apple.com/search?term=${encodedArtist}%20${encodedAlbum}`,
+    };
+  }
+
+  return baseLinks;
 };
 
 // Extract primary color palette from release info

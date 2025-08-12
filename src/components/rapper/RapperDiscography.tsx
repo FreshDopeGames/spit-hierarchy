@@ -122,7 +122,7 @@ const RapperDiscography = ({
                     releaseType: 'album',
                     title: item.album?.title
                   });
-                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName, 'album');
                   const directLinks = (item.album as any)?.external_cover_links || {};
                   const externalLinks = {
                     spotify: directLinks.spotify || searchLinks.spotify,
@@ -201,12 +201,11 @@ const RapperDiscography = ({
                     releaseType: 'mixtape',
                     title: item.album?.title
                   });
-                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName);
+                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName, 'mixtape');
                   const directLinks = (item.album as any)?.external_cover_links || {};
-                  const externalLinks = {
-                    spotify: directLinks.spotify || searchLinks.spotify,
-                    appleMusic: directLinks.apple_music || searchLinks.appleMusic,
-                  };
+                  // For mixtapes, only show links if we have direct links from MusicBrainz
+                  const hasDirectSpotify = directLinks.spotify;
+                  const hasDirectApple = directLinks.apple_music;
                   
                   return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
                     <div 
@@ -241,23 +240,36 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                       <div className="flex items-center gap-2 mt-2">
+                        {hasDirectSpotify && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                            onClick={() => window.open(directLinks.spotify, '_blank')}
+                          >
+                            <PlayCircle className="w-3 h-3 mr-1" />
+                            Spotify
+                          </Button>
+                        )}
+                        {hasDirectApple && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
+                            onClick={() => window.open(directLinks.apple_music, '_blank')}
+                          >
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Apple Music
+                          </Button>
+                        )}
                         <Button
                           variant="ghost"
                           size="sm"
                           className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                          onClick={() => window.open(externalLinks.spotify, '_blank')}
-                        >
-                          <PlayCircle className="w-3 h-3 mr-1" />
-                          Spotify
-                        </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                          onClick={() => window.open(externalLinks.appleMusic, '_blank')}
+                          onClick={() => window.open(searchLinks.genius, '_blank')}
                         >
                           <ExternalLink className="w-3 h-3 mr-1" />
-                          Apple Music
+                          Genius
                         </Button>
                       </div>
                     </div>
