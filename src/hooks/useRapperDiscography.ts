@@ -174,7 +174,7 @@ export const useRapperCareerStats = (rapperId: string) => {
         
         // Use release-based years, with fallback to rapper table data
         careerStartYear = firstReleaseYear || rapper?.career_start_year;
-        careerEndYear = lastReleaseYear !== new Date().getFullYear() ? lastReleaseYear : rapper?.career_end_year;
+        careerEndYear = rapper?.career_end_year;
       }
 
       // Handle death year in career calculations
