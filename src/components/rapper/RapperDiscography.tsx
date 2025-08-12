@@ -97,20 +97,6 @@ const RapperDiscography = ({
               {isLoading ? 'Fetching from MusicBrainz...' : 'commercial and underground projects'}
             </p>
           </div>
-          <div className="flex items-center gap-2 mx-0 my-0 py-[6px] px-0">
-            {data?.cached && <Badge variant="secondary" className="text-xs">
-                Cached
-              </Badge>}
-            {isLoading && <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
-                Loading...
-              </Badge>}
-            <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2">
-              <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
-              <span className="text-sm font-medium">
-                {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
-              </span>
-            </Button>
-          </div>
         </div>
       </CardHeader>
 
@@ -218,6 +204,21 @@ const RapperDiscography = ({
             </div>
           </TabsContent>
         </Tabs>
+        
+        <div className="flex items-center justify-center gap-2 pt-6 border-t border-rap-carbon/20 mt-6">
+          {data?.cached && <Badge variant="secondary" className="text-xs">
+              Cached
+            </Badge>}
+          {isLoading && <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
+              Loading...
+            </Badge>}
+          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2">
+            <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
+            <span className="text-sm font-medium">
+              {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
+            </span>
+          </Button>
+        </div>
       </CardContent>
     </Card>;
 };
