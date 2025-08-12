@@ -55,7 +55,7 @@ const CareerStatsCard = ({
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {statItems.map((item, index) => <div key={index} className="text-center space-y-2">
+            {statItems.map((item, index) => <div key={index} className={`text-center space-y-2 ${index === 2 ? 'col-span-2 md:col-span-1' : ''}`}>
                 <div className="flex items-center justify-center">
                   <item.icon className={`w-6 h-6 ${item.color}`} />
                 </div>
