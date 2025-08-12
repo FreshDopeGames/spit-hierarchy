@@ -134,9 +134,12 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
               size="sm"
               onClick={handleRefresh}
               disabled={refreshMutation.isPending || isLoading}
-              className="text-rap-gold hover:bg-rap-gold/10"
+              className="text-rap-gold hover:bg-rap-gold/10 transition-all duration-200 gap-2"
             >
-              <RefreshCw className={`w-4 h-4 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
+              <span className="text-sm font-medium">
+                {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
+              </span>
             </Button>
           </div>
         </div>

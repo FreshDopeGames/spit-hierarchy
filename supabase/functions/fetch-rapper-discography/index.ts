@@ -292,9 +292,8 @@ serve(async (req) => {
         .single();
       let albumId = existingAlbum?.id as string | undefined;
       if (!albumId) {
-        const firstRelease = rg.releases?.[0];
-        const trackCount = firstRelease?.['track-count'] || null;
-
+        // Note: track_count and label info not available without inc=releases
+        // Using available data from release-group only
         const { data: newAlbum } = await supabaseService
           .from('albums')
           .insert({
@@ -302,33 +301,14 @@ serve(async (req) => {
             musicbrainz_id: rg.id,
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
-            track_count: trackCount,
+            track_count: null, // Not available without inc=releases
           })
           .select('id')
           .single();
         albumId = newAlbum?.id;
       }
 
-      const labelInfo = rg.releases?.[0]?.['label-info']?.[0]?.label;
-      if (albumId && labelInfo?.id && labelInfo?.name) {
-        const { data: exLabel } = await supabaseService
-          .from('record_labels')
-          .select('id')
-          .eq('musicbrainz_id', labelInfo.id)
-          .single();
-        let labelId = exLabel?.id as string | undefined;
-        if (!labelId) {
-          const { data: newLabel } = await supabaseService
-            .from('record_labels')
-            .insert({ name: labelInfo.name, musicbrainz_id: labelInfo.id })
-            .select('id')
-            .single();
-          labelId = newLabel?.id;
-        }
-        if (labelId) {
-          await supabaseService.from('albums').update({ label_id: labelId }).eq('id', albumId);
-        }
-      }
+      // Label info not available without inc=releases - skip label processing
 
       if (albumId) {
         await supabaseService
@@ -356,7 +336,7 @@ serve(async (req) => {
           .insert({
             title: recording.title,
             musicbrainz_id: recording.id,
-            release_date: recording.releases?.[0]?.date || null,
+            release_date: null, // Release date not available without inc=releases
             duration_ms: recording.length || null,
           })
           .select('id')
