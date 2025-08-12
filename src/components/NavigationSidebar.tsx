@@ -25,6 +25,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     queryKey: ['user-profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
+      // Users can view their own profile with the new RLS policy
       const { data, error } = await supabase
         .from('profiles')
         .select('username, full_name, avatar_url')

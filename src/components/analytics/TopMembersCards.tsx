@@ -36,24 +36,28 @@ const TopMembersCards = () => {
       const userIds = memberStats.map(stat => stat.id);
       console.log('User IDs for commenters:', userIds);
       
-      // Fetch profiles for these users
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, username, avatar_url')
-        .in('id', userIds);
+      // Fetch profiles for these users using the secure function
+      const profiles = await Promise.all(
+        userIds.map(async (id) => {
+          const { data, error } = await supabase
+            .rpc('get_public_profile', { user_uuid: id });
+          
+          if (error) {
+            console.error(`Error fetching profile for ${id}:`, error);
+            return null;
+          }
+          return data?.[0] || null;
+        })
+      );
       
-      if (profilesError) {
-        console.error('Error fetching profiles:', profilesError);
-        throw profilesError;
-      }
-      
-      console.log('Profiles found:', profiles);
+      const validProfiles = profiles.filter(Boolean);
+      console.log('Profiles found:', validProfiles);
       
       // Merge the data
       const merged = memberStats.map(stat => ({
         id: stat.id,
         total_comments: stat.total_comments,
-        profiles: profiles?.find(p => p.id === stat.id) || null
+        profiles: validProfiles?.find(p => p.id === stat.id) || null
       }));
       
       console.log('Merged commenters data:', merged);
@@ -89,24 +93,28 @@ const TopMembersCards = () => {
       const userIds = memberStats.map(stat => stat.id);
       console.log('User IDs for voters:', userIds);
       
-      // Fetch profiles for these users
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, username, avatar_url')
-        .in('id', userIds);
+      // Fetch profiles for these users using the secure function
+      const profiles = await Promise.all(
+        userIds.map(async (id) => {
+          const { data, error } = await supabase
+            .rpc('get_public_profile', { user_uuid: id });
+          
+          if (error) {
+            console.error(`Error fetching profile for ${id}:`, error);
+            return null;
+          }
+          return data?.[0] || null;
+        })
+      );
       
-      if (profilesError) {
-        console.error('Error fetching profiles for voters:', profilesError);
-        throw profilesError;
-      }
-      
-      console.log('Profiles found for voters:', profiles);
+      const validProfiles = profiles.filter(Boolean);
+      console.log('Profiles found for voters:', validProfiles);
       
       // Merge the data
       const merged = memberStats.map(stat => ({
         id: stat.id,
         total_votes: stat.total_votes,
-        profiles: profiles?.find(p => p.id === stat.id) || null
+        profiles: validProfiles?.find(p => p.id === stat.id) || null
       }));
       
       console.log('Merged voters data:', merged);
@@ -162,24 +170,28 @@ const TopMembersCards = () => {
       const userIds = sortedUsers.map((user: any) => user.user_id);
       console.log('User IDs for judges:', userIds);
       
-      // Fetch profiles for these users
-      const { data: profiles, error: profilesError } = await supabase
-        .from('profiles')
-        .select('id, username, avatar_url')
-        .in('id', userIds);
+      // Fetch profiles for these users using the secure function
+      const profiles = await Promise.all(
+        userIds.map(async (id) => {
+          const { data, error } = await supabase
+            .rpc('get_public_profile', { user_uuid: id });
+          
+          if (error) {
+            console.error(`Error fetching profile for ${id}:`, error);
+            return null;
+          }
+          return data?.[0] || null;
+        })
+      );
       
-      if (profilesError) {
-        console.error('Error fetching profiles for judges:', profilesError);
-        throw profilesError;
-      }
-      
-      console.log('Profiles found for judges:', profiles);
+      const validProfiles = profiles.filter(Boolean);
+      console.log('Profiles found for judges:', validProfiles);
       
       // Merge the data
       const merged = sortedUsers.map((user: any) => ({
         user_id: user.user_id,
         vote_count: user.vote_count,
-        profiles: profiles?.find(p => p.id === user.user_id) || null
+        profiles: validProfiles?.find(p => p.id === user.user_id) || null
       }));
       
       console.log('Merged judges data:', merged);

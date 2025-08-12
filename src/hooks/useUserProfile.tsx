@@ -35,6 +35,7 @@ export const useUserProfile = () => {
         setLoading(true);
         setError(null);
         
+        // Users can view their own complete profile with the new RLS policy
         const { data, error } = await supabase
           .from('profiles')
           .select('*')
