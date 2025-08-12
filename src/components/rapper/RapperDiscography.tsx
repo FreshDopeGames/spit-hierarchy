@@ -159,7 +159,7 @@ const RapperDiscography = ({ rapperId }: RapperDiscographyProps) => {
 
       <CardContent className="p-6 sm:p-8">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-muted/80 rounded-lg p-2 gap-1 sm:gap-2 min-h-[180px] sm:min-h-[50px] items-center">
+          <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[200px] sm:min-h-[70px] items-center">
             <TabsTrigger 
               value="albums" 
               className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center"
