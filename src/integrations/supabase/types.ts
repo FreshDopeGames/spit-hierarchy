@@ -1427,6 +1427,9 @@ export type Database = {
           career_end_year: number | null
           career_start_year: number | null
           created_at: string
+          death_day: number | null
+          death_month: number | null
+          death_year: number | null
           discography_last_updated: string | null
           id: string
           image_url: string | null
@@ -1451,6 +1454,9 @@ export type Database = {
           career_end_year?: number | null
           career_start_year?: number | null
           created_at?: string
+          death_day?: number | null
+          death_month?: number | null
+          death_year?: number | null
           discography_last_updated?: string | null
           id?: string
           image_url?: string | null
@@ -1475,6 +1481,9 @@ export type Database = {
           career_end_year?: number | null
           career_start_year?: number | null
           created_at?: string
+          death_day?: number | null
+          death_month?: number | null
+          death_year?: number | null
           discography_last_updated?: string | null
           id?: string
           image_url?: string | null

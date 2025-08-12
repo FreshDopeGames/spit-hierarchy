@@ -138,7 +138,7 @@ export const useRapperCareerStats = (rapperId: string) => {
       // Get basic rapper info
       const { data: rapper, error: rapperError } = await supabase
         .from("rappers")
-        .select("career_start_year, career_end_year, musicbrainz_id")
+        .select("career_start_year, career_end_year, musicbrainz_id, death_year, death_month, death_day")
         .eq("id", rapperId)
         .single();
 
@@ -202,6 +202,17 @@ export const useRapperCareerStats = (rapperId: string) => {
         careerEndYear = lastReleaseYear !== new Date().getFullYear() ? lastReleaseYear : rapper?.career_end_year;
       }
 
+      // Handle death year in career calculations
+      const isDeceased = !!rapper?.death_year;
+      if (isDeceased && rapper?.death_year) {
+        // For deceased rappers, career end should be the later of death year or last release
+        if (careerEndYear) {
+          careerEndYear = Math.max(careerEndYear, rapper.death_year);
+        } else {
+          careerEndYear = rapper.death_year;
+        }
+      }
+
       const careerSpan = careerStartYear && careerEndYear 
         ? careerEndYear - careerStartYear
         : careerStartYear 
@@ -221,7 +232,8 @@ export const useRapperCareerStats = (rapperId: string) => {
         careerEndYear,
         careerSpan,
         labelAffiliations: labels || [],
-        hasMusicBrainzId: !!rapper?.musicbrainz_id
+        hasMusicBrainzId: !!rapper?.musicbrainz_id,
+        isDeceased: !!rapper?.death_year
       };
     },
     enabled: !!rapperId,

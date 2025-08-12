@@ -95,6 +95,7 @@ const CareerStatsCard = ({ rapperId }: CareerStatsCardProps) => {
                 <span>
                   Active: {stats.careerStartYear}
                   {stats.careerEndYear ? ` - ${stats.careerEndYear}` : ' - Present'}
+                  {stats.isDeceased && <span className="ml-2 text-xs">✝</span>}
                 </span>
               </div>
             </div>

@@ -30,6 +30,9 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     birth_year: "",
     birth_month: "",
     birth_day: "",
+    death_year: "",
+    death_month: "",
+    death_day: "",
     bio: "",
     verified: false,
     spotify_id: "",
@@ -65,6 +68,9 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         birth_year: rapper.birth_year?.toString() || "",
         birth_month: rapper.birth_month?.toString() || "",
         birth_day: rapper.birth_day?.toString() || "",
+        death_year: rapper.death_year?.toString() || "",
+        death_month: rapper.death_month?.toString() || "",
+        death_day: rapper.death_day?.toString() || "",
         bio: rapper.bio || "",
         verified: rapper.verified || false,
         spotify_id: rapper.spotify_id || "",
@@ -80,6 +86,9 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         birth_year: "",
         birth_month: "",
         birth_day: "",
+        death_year: "",
+        death_month: "",
+        death_day: "",
         bio: "",
         verified: false,
         spotify_id: "",
@@ -138,6 +147,9 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         birth_year: formData.birth_year ? parseInt(formData.birth_year) : null,
         birth_month: formData.birth_month ? parseInt(formData.birth_month) : null,
         birth_day: formData.birth_day ? parseInt(formData.birth_day) : null,
+        death_year: formData.death_year ? parseInt(formData.death_year) : null,
+        death_month: formData.death_month ? parseInt(formData.death_month) : null,
+        death_day: formData.death_day ? parseInt(formData.death_day) : null,
         bio: formData.bio.trim() || null,
         verified: formData.verified,
         spotify_id: formData.spotify_id.trim() || null,
@@ -289,6 +301,47 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             type="number"
             value={formData.birth_day}
             onChange={(e) => handleInputChange("birth_day", e.target.value)}
+            className="bg-white border-rap-gold/30 text-black"
+            min="1"
+            max="31"
+          />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-4">
+        <div>
+          <Label htmlFor="death_year" className="text-rap-gold">Death Year (if applicable)</Label>
+          <Input
+            id="death_year"
+            type="number"
+            value={formData.death_year}
+            onChange={(e) => handleInputChange("death_year", e.target.value)}
+            className="bg-white border-rap-gold/30 text-black"
+            min="1900"
+            max={new Date().getFullYear()}
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="death_month" className="text-rap-gold">Death Month</Label>
+          <Input
+            id="death_month"
+            type="number"
+            value={formData.death_month}
+            onChange={(e) => handleInputChange("death_month", e.target.value)}
+            className="bg-white border-rap-gold/30 text-black"
+            min="1"
+            max="12"
+          />
+        </div>
+
+        <div>
+          <Label htmlFor="death_day" className="text-rap-gold">Death Day</Label>
+          <Input
+            id="death_day"
+            type="number"
+            value={formData.death_day}
+            onChange={(e) => handleInputChange("death_day", e.target.value)}
             className="bg-white border-rap-gold/30 text-black"
             min="1"
             max="31"
