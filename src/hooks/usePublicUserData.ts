@@ -21,9 +21,9 @@ export const usePublicUserData = () => {
       // For now, we'll need to use a different strategy since the RLS policies
       // prevent direct username lookups. We'll create a public function for this.
       const { data: userLookup, error: lookupError } = await supabase
-        .rpc('find_user_by_username', { search_username: username });
+        .rpc('find_user_by_username' as any, { search_username: username }) as { data: any, error: any };
       
-      if (lookupError || !userLookup || userLookup.length === 0) {
+      if (lookupError || !userLookup || !Array.isArray(userLookup) || userLookup.length === 0) {
         console.error("Error finding user by username:", lookupError);
         setNotFound(true);
         return;
