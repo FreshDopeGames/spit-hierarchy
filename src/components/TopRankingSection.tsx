@@ -36,12 +36,26 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     const rankingTextSize = isTopTwo ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl";
     const nameTextSize = isTopTwo ? "text-lg sm:text-xl" : "text-base sm:text-lg";
 
+    const rapperUrl = `/rapper/${rapper.slug || rapper.id}`;
+    
+    // Debug logging
+    console.log('Rapper card data:', { 
+      name: rapper.name, 
+      slug: rapper.slug, 
+      id: rapper.id, 
+      url: rapperUrl 
+    });
+
     return (
       <Link
-        to={`/rapper/${rapper.slug || rapper.id}`}
+        to={rapperUrl}
         aria-label={`View ${rapper.name} details`}
-        className={`${cardHeight} overflow-hidden rounded-lg border-2 border-rap-gold bg-carbon-gradient min-h-[256px] sm:min-h-[384px] flex flex-col group cursor-pointer`}
+        className={`${cardHeight} overflow-hidden rounded-lg border-2 border-rap-gold bg-carbon-gradient min-h-[256px] sm:min-h-[384px] flex flex-col group cursor-pointer bg-red-500/20`}
         style={{ touchAction: 'manipulation' }}
+        onClick={(e) => {
+          console.log('Card clicked:', rapper.name, 'URL:', rapperUrl);
+          console.log('Event:', e);
+        }}
       >
         {/* Image Section */}
         <div className={`${imageHeight} relative overflow-hidden flex-shrink-0`}>
