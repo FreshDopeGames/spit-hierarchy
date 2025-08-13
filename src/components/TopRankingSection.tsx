@@ -30,7 +30,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       : (rapper.total_votes || 0);
 
     // Card dimensions
-    const cardHeight = isTopTwo ? "h-[26rem] sm:h-[30rem]" : "h-80 sm:h-96";
+    const cardHeight = isTopTwo ? "h-80 sm:h-96" : "h-80 sm:h-96";
     const imageHeight = isTopTwo ? "h-64 sm:h-72" : "h-52 sm:h-64";
     
     const rankingTextSize = isTopTwo ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl";
@@ -68,7 +68,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         </div>
         
         {/* Text Content Section */}
-        <div className={`flex-1 ${isTopTwo ? 'p-3 pb-6 sm:p-4 sm:pb-8' : 'p-3 sm:p-4'} flex items-center gap-3 sm:gap-4`}>
+        <div className={`flex-1 ${isTopTwo ? 'p-3 sm:p-4' : 'p-3 sm:p-4'} flex items-center gap-3 sm:gap-4`}>
           <div className={`flex-shrink-0 ${isTopTwo ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light rounded-lg flex items-center justify-center`}>
             <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon leading-none`}>
               {position}
