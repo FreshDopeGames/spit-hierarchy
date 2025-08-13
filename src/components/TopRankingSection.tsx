@@ -68,7 +68,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         </div>
         
         {/* Text Content Section */}
-        <div className={`flex-1 ${isTopTwo ? 'p-3 sm:p-4' : 'p-3 sm:p-4'} flex items-center gap-3 sm:gap-4`}>
+        <div className={`flex-1 ${isTopTwo ? 'p-3 sm:p-4' : 'p-3 sm:p-4'} flex items-start gap-3 sm:gap-4`}>
           <div className={`flex-shrink-0 ${isTopTwo ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light rounded-lg flex items-center justify-center`}>
             <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon leading-none`}>
               {position}
