@@ -83,7 +83,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
                 {rapper.origin}
               </p>
             )}
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-1 mb-2">
               {voteCount === 0 ? (
                 <>
                   <Star className="w-3 h-3 sm:w-4 sm:h-4 text-rap-gold/70" />
