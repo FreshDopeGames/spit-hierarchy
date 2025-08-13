@@ -102,7 +102,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
   return (
     <div className="space-y-6 sm:space-y-8 px-2 sm:px-0">
       {/* Top 2 Cards - Larger and More Prominent */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-8 pb-4 sm:pb-6">
         {rappers.slice(0, 2).map((rapper, index) => (
           <RankingCard 
             key={rapper.id}
