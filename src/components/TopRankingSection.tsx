@@ -30,7 +30,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       : (rapper.total_votes || 0);
 
     // Card dimensions
-    const cardHeight = isTopTwo ? "h-80 sm:h-96" : "h-80 sm:h-96";
+    const cardHeight = isTopTwo ? "h-96 sm:h-112" : "h-80 sm:h-96";
     const imageHeight = isTopTwo ? "h-64 sm:h-72" : "h-52 sm:h-64";
     
     const rankingTextSize = isTopTwo ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl";
