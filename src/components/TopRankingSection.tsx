@@ -1,9 +1,10 @@
 
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
-import { Star } from "lucide-react";
+import { Star, Eye } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 type Rapper = Tables<"rappers">;
 
@@ -17,6 +18,7 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
+  const navigate = useNavigate();
   
   // Component to render individual ranking card with structured layout
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
@@ -47,22 +49,15 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     });
 
     return (
-      <Link
-        to={rapperUrl}
-        aria-label={`View ${rapper.name} details`}
-        className={`${cardHeight} overflow-hidden rounded-lg border-2 border-rap-gold bg-carbon-gradient min-h-[256px] sm:min-h-[384px] flex flex-col group cursor-pointer bg-red-500/20`}
-        style={{ touchAction: 'manipulation' }}
-        onClick={(e) => {
-          console.log('Card clicked:', rapper.name, 'URL:', rapperUrl);
-          console.log('Event:', e);
-        }}
+      <div
+        className={`${cardHeight} overflow-hidden rounded-lg border-2 border-rap-gold bg-carbon-gradient min-h-[256px] sm:min-h-[384px] flex flex-col`}
       >
         {/* Image Section */}
         <div className={`${imageHeight} relative overflow-hidden flex-shrink-0`}>
           <img 
             src={imageToDisplay}
             alt={rapper.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+            className="w-full h-full object-cover"
             loading="lazy"
           />
         </div>
@@ -75,7 +70,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             </span>
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-1 group-hover:text-rap-gold transition-colors truncate`}>
+            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-1 truncate`}>
               {rapper.name}
             </h3>
             {rapper.origin && (
@@ -94,8 +89,18 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               )}
             </div>
           </div>
+          <div className="flex-shrink-0">
+            <Button 
+              size="sm"
+              onClick={() => navigate(rapperUrl)}
+              className="bg-rap-gold hover:bg-rap-gold-dark text-rap-carbon font-mogra font-bold"
+            >
+              <Eye className="w-3 h-3 mr-1" />
+              View
+            </Button>
+          </div>
         </div>
-      </Link>
+      </div>
     );
   };
 
