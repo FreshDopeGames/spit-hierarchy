@@ -73,11 +73,6 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-1 truncate`}>
               {rapper.name}
             </h3>
-            {rapper.origin && (
-              <p className="text-rap-silver text-xs sm:text-sm font-kaushan mb-2 line-clamp-1">
-                {rapper.origin}
-              </p>
-            )}
             <div className="flex items-center gap-1 mb-2">
               {voteCount === 0 ? (
                 <>
