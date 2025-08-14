@@ -100,6 +100,9 @@ export const generateExternalAlbumLinks = (
   const encodedAlbum = encodeURIComponent(albumTitle);
   const encodedArtist = encodeURIComponent(artistName);
   
+  // For Apple Music, encode the combined search term as one unit
+  const appleSearchTerm = encodeURIComponent(`${artistName} ${albumTitle}`);
+  
   const baseLinks = {
     genius: `https://genius.com/search?q=${encodedArtist}%20${encodedAlbum}`,
     musicbrainz: `https://musicbrainz.org/search?query=${encodedArtist}%20${encodedAlbum}&type=release`
@@ -110,7 +113,7 @@ export const generateExternalAlbumLinks = (
     return {
       ...baseLinks,
       spotify: `https://open.spotify.com/search/${encodedArtist}%20${encodedAlbum}/albums`,
-      appleMusic: `https://music.apple.com/search?term=${encodedArtist}%20${encodedAlbum}`,
+      appleMusic: `https://music.apple.com/us/search?term=${appleSearchTerm}`,
     };
   }
 
