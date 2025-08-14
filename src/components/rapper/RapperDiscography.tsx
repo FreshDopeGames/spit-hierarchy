@@ -98,7 +98,7 @@ const RapperDiscography = ({
         </div>
       </CardHeader>
 
-      <CardContent className="p-6 sm:p-8">
+      <CardContent className="p-6 sm:p-8 py-[10px]">
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
             <TabsTrigger value="albums" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
@@ -116,38 +116,30 @@ const RapperDiscography = ({
                 {albums.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No albums found in discography
                 </div> : albums.map(item => {
-                  const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
-                  const placeholder = getSmartAlbumPlaceholder({
-                    releaseYear,
-                    releaseType: 'album',
-                    title: item.album?.title
-                  });
-                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName, 'album');
-                  const directLinks = (item.album as any)?.external_cover_links || {};
-                  const externalLinks = {
-                    spotify: directLinks.spotify || searchLinks.spotify,
-                    appleMusic: directLinks.apple_music || searchLinks.appleMusic,
-                  };
-                  
-                  return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                    <div 
-                      className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden"
-                      style={{ 
-                        backgroundColor: placeholder.style.bgColor,
-                        background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
-                      }}
-                    >
-                      <Disc3 
-                        className="w-6 h-6" 
-                        style={{ color: placeholder.style.textColor }}
-                      />
-                      <div 
-                        className="absolute inset-0 opacity-10"
-                        style={{
-                          backgroundImage: `radial-gradient(circle at 30% 70%, ${placeholder.style.textColor} 1px, transparent 1px)`,
-                          backgroundSize: '8px 8px'
-                        }}
-                      />
+              const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
+              const placeholder = getSmartAlbumPlaceholder({
+                releaseYear,
+                releaseType: 'album',
+                title: item.album?.title
+              });
+              const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName, 'album');
+              const directLinks = (item.album as any)?.external_cover_links || {};
+              const externalLinks = {
+                spotify: directLinks.spotify || searchLinks.spotify,
+                appleMusic: directLinks.apple_music || searchLinks.appleMusic
+              };
+              return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                    <div className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden" style={{
+                  backgroundColor: placeholder.style.bgColor,
+                  background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
+                }}>
+                      <Disc3 className="w-6 h-6" style={{
+                    color: placeholder.style.textColor
+                  }} />
+                      <div className="absolute inset-0 opacity-10" style={{
+                    backgroundImage: `radial-gradient(circle at 30% 70%, ${placeholder.style.textColor} 1px, transparent 1px)`,
+                    backgroundSize: '8px 8px'
+                  }} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
@@ -162,21 +154,11 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                       <div className="flex items-center gap-2 mt-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                          onClick={() => window.open(externalLinks.spotify, '_blank')}
-                        >
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(externalLinks.spotify, '_blank')}>
                           <PlayCircle className="w-3 h-3 mr-1" />
                           Spotify
                         </Button>
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                          onClick={() => window.open(externalLinks.appleMusic, '_blank')}
-                        >
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Apple Music
                         </Button>
@@ -185,8 +167,8 @@ const RapperDiscography = ({
                     {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
                       </Badge>}
-                  </div>
-                })}
+                  </div>;
+            })}
             </div>
           </TabsContent>
 
@@ -195,37 +177,29 @@ const RapperDiscography = ({
                 {mixtapes.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
                   No mixtapes found in discography
                 </div> : mixtapes.map(item => {
-                  const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
-                  const placeholder = getSmartAlbumPlaceholder({
-                    releaseYear,
-                    releaseType: 'mixtape',
-                    title: item.album?.title
-                  });
-                  const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName, 'mixtape');
-                  const directLinks = (item.album as any)?.external_cover_links || {};
-                  // For mixtapes, only show links if we have direct links from MusicBrainz
-                  const hasDirectSpotify = directLinks.spotify;
-                  const hasDirectApple = directLinks.apple_music;
-                  
-                  return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
-                    <div 
-                      className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden"
-                      style={{ 
-                        backgroundColor: placeholder.style.bgColor,
-                        background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
-                      }}
-                    >
-                      <Music 
-                        className="w-6 h-6" 
-                        style={{ color: placeholder.style.textColor }}
-                      />
-                      <div 
-                        className="absolute inset-0 opacity-10"
-                        style={{
-                          backgroundImage: `linear-gradient(45deg, ${placeholder.style.textColor} 25%, transparent 25%, transparent 75%, ${placeholder.style.textColor} 75%)`,
-                          backgroundSize: '6px 6px'
-                        }}
-                      />
+              const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
+              const placeholder = getSmartAlbumPlaceholder({
+                releaseYear,
+                releaseType: 'mixtape',
+                title: item.album?.title
+              });
+              const searchLinks = generateExternalAlbumLinks(item.album?.title || '', rapperName, 'mixtape');
+              const directLinks = (item.album as any)?.external_cover_links || {};
+              // For mixtapes, only show links if we have direct links from MusicBrainz
+              const hasDirectSpotify = directLinks.spotify;
+              const hasDirectApple = directLinks.apple_music;
+              return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+                    <div className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden" style={{
+                  backgroundColor: placeholder.style.bgColor,
+                  background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
+                }}>
+                      <Music className="w-6 h-6" style={{
+                    color: placeholder.style.textColor
+                  }} />
+                      <div className="absolute inset-0 opacity-10" style={{
+                    backgroundImage: `linear-gradient(45deg, ${placeholder.style.textColor} 25%, transparent 25%, transparent 75%, ${placeholder.style.textColor} 75%)`,
+                    backgroundSize: '6px 6px'
+                  }} />
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
@@ -240,34 +214,15 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                       <div className="flex items-center gap-2 mt-2">
-                        {hasDirectSpotify && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                            onClick={() => window.open(directLinks.spotify, '_blank')}
-                          >
+                        {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(directLinks.spotify, '_blank')}>
                             <PlayCircle className="w-3 h-3 mr-1" />
                             Spotify
-                          </Button>
-                        )}
-                        {hasDirectApple && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                            onClick={() => window.open(directLinks.apple_music, '_blank')}
-                          >
+                          </Button>}
+                        {hasDirectApple && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(directLinks.apple_music, '_blank')}>
                             <ExternalLink className="w-3 h-3 mr-1" />
                             Apple Music
-                          </Button>
-                        )}
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground"
-                          onClick={() => window.open(searchLinks.genius, '_blank')}
-                        >
+                          </Button>}
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(searchLinks.genius, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Genius
                         </Button>
@@ -276,14 +231,14 @@ const RapperDiscography = ({
                     {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
                         {item.role}
                       </Badge>}
-                  </div>
-                })}
+                  </div>;
+            })}
             </div>
           </TabsContent>
 
         </Tabs>
         
-        <div className="flex items-center justify-center gap-2 pt-6 border-t border-rap-carbon/20 mt-6">
+        <div className="flex items-center justify-center gap-2 pt-6 border-t border-rap-carbon/20 mt-6 my-[25px] py-[23px]">
           {data?.cached && <Badge variant="secondary" className="text-xs">
               Cached
             </Badge>}
