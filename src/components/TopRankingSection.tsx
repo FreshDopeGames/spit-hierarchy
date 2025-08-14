@@ -92,8 +92,33 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           <div className="flex-shrink-0">
             <Button 
               size="sm"
-              onClick={() => navigate(rapperUrl)}
-              className="bg-rap-gold hover:bg-rap-gold-dark text-rap-carbon font-mogra font-bold"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                console.log('🔘 Button clicked!', { 
+                  rapperName: rapper.name, 
+                  rapperUrl, 
+                  event: e 
+                });
+                
+                // Try multiple navigation methods for debugging
+                try {
+                  console.log('🚀 Attempting React Router navigation...');
+                  navigate(rapperUrl);
+                  
+                  // Fallback: direct window navigation after a delay
+                  setTimeout(() => {
+                    console.log('⚡ Fallback: Using window.location...');
+                    window.location.href = rapperUrl;
+                  }, 100);
+                } catch (error) {
+                  console.error('❌ Navigation error:', error);
+                  // Emergency fallback
+                  window.location.href = rapperUrl;
+                }
+              }}
+              className="bg-rap-gold hover:bg-rap-gold-dark text-rap-carbon font-mogra font-bold cursor-pointer relative z-10"
+              style={{ pointerEvents: 'auto' }}
             >
               <Eye className="w-3 h-3 mr-1" />
               View
