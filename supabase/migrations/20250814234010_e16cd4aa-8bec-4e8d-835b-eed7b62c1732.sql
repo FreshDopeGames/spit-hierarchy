@@ -1,0 +1,1 @@
+UPDATE public.rappers SET verified = false WHERE verified = true;

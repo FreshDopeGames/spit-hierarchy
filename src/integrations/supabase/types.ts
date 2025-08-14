@@ -7,7 +7,7 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instanciate createClient with right options
+  // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "12.2.3 (519615d)"
@@ -2173,9 +2173,9 @@ export type Database = {
       }
       check_musicbrainz_rate_limit: {
         Args: {
-          p_user_id?: string
           p_ip_address?: string
           p_max_requests?: number
+          p_user_id?: string
           p_window_minutes?: number
         }
         Returns: boolean
@@ -2183,8 +2183,8 @@ export type Database = {
       check_rate_limit: {
         Args: {
           action_type: string
-          user_uuid?: string
           max_requests?: number
+          user_uuid?: string
           window_seconds?: number
         }
         Returns: boolean
@@ -2199,8 +2199,8 @@ export type Database = {
       }
       fetch_musicbrainz_discography: {
         Args: {
-          p_rapper_id: string
           p_force_refresh?: boolean
+          p_rapper_id: string
           p_user_id?: string
         }
         Returns: Json
@@ -2208,13 +2208,13 @@ export type Database = {
       get_category_voting_analytics: {
         Args: Record<PropertyKey, never>
         Returns: {
+          average_rating: number
+          description: string
           id: string
           name: string
-          description: string
           total_votes: number
-          unique_voters: number
           unique_rappers: number
-          average_rating: number
+          unique_voters: number
         }[]
       }
       get_position_delta: {
@@ -2224,35 +2224,35 @@ export type Database = {
       get_public_category_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
+          average_rating: number
           category_id: string
           category_name: string
           total_votes: number
-          unique_voters: number
           unique_rappers: number
-          average_rating: number
+          unique_voters: number
         }[]
       }
       get_public_profile: {
         Args: { user_uuid?: string }
         Returns: {
-          id: string
-          username: string
-          full_name: string
           avatar_url: string
           bio: string
           created_at: string
+          full_name: string
+          id: string
+          username: string
         }[]
       }
       get_public_rapper_voting_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
+          average_rating: number
           id: string
           name: string
           total_votes: number
           unique_voters: number
-          average_rating: number
-          votes_last_7_days: number
           votes_last_30_days: number
+          votes_last_7_days: number
         }[]
       }
       get_rapper_top5_count: {
@@ -2270,28 +2270,28 @@ export type Database = {
       get_rapper_voting_analytics: {
         Args: Record<PropertyKey, never>
         Returns: {
+          average_rating: number
           id: string
           name: string
           total_votes: number
           unique_voters: number
-          average_rating: number
-          votes_last_7_days: number
           votes_last_30_days: number
+          votes_last_7_days: number
         }[]
       }
       get_trending_rappers: {
         Args: { days_back?: number }
         Returns: {
+          momentum_score: number
           rapper_id: string
           rapper_name: string
-          recent_votes: number
           recent_average_rating: number
+          recent_votes: number
           total_votes: number
-          momentum_score: number
         }[]
       }
       get_user_ranking_preview_items: {
-        Args: { ranking_uuid: string; item_limit?: number }
+        Args: { item_limit?: number; ranking_uuid: string }
         Returns: {
           item_position: number
           item_reason: string
@@ -2301,13 +2301,13 @@ export type Database = {
       get_user_voting_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
-          user_id: string
-          total_votes: number
-          categories_used: number
           average_rating_given: number
+          categories_used: number
           first_vote_date: string
           last_vote_date: string
+          total_votes: number
           unique_rappers_voted: number
+          user_id: string
         }[]
       }
       get_vote_weight: {
@@ -2315,7 +2315,7 @@ export type Database = {
         Returns: number
       }
       has_role: {
-        Args: { _user_id: string; _role: string }
+        Args: { _role: string; _user_id: string }
         Returns: boolean
       }
       is_admin: {
