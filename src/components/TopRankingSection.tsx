@@ -50,24 +50,13 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     });
 
     return (
-      <div
+      <Link 
+        to={`/rapper/${rapper.slug || rapper.id}`}
         className={cn(
-          "relative rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 group",
+          "relative block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group cursor-pointer",
           isTopTwo ? "h-80" : "h-64"
         )}
       >
-        <Link 
-          to={`/rapper/${rapper.slug || rapper.id}`}
-          className="block w-full h-full"
-          onClick={() => {
-            console.log('Rapper card data:', {
-              name: rapper.name,
-              slug: rapper.slug,
-              id: rapper.id,
-              url: `/rapper/${rapper.slug || rapper.id}`
-            });
-          }}
-        >
           <img 
             src={imageToDisplay}
             alt={rapper.name}
@@ -99,8 +88,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               )}
             </div>
           </div>
-        </Link>
-      </div>
+      </Link>
     );
   };
 
