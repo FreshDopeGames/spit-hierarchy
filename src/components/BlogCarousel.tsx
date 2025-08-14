@@ -124,7 +124,7 @@ const BlogCarousel = () => {
                         objectFit="cover" 
                         sizes="(max-width: 768px) 100vw, 100vw" 
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-black/30" />
+                      <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
                       
                       <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
                         {post.blog_categories?.name && (
