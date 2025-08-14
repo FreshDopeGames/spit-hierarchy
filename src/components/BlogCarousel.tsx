@@ -1,5 +1,5 @@
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
@@ -77,14 +77,16 @@ const BlogCarousel = () => {
   }, [emblaApi]);
 
   // Set up event listeners
-  useState(() => {
+  useEffect(() => {
     if (!emblaApi) return;
     
     onSelect();
     emblaApi.on('select', onSelect);
     
-    return () => emblaApi.off('select', onSelect);
-  });
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, onSelect]);
 
   const getImageData = (post: any) => {
     if (!post.featured_image_url) {
@@ -127,26 +129,25 @@ const BlogCarousel = () => {
                       <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
                       
                       <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
-                        {post.blog_categories?.name && (
-                          <Badge className="mb-2 sm:mb-3 bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
-                            {post.blog_categories.name}
-                          </Badge>
-                        )}
                         <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
                           {post.title}
                         </h3>
-                        <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4">
-                          <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
-                          <span className="text-rap-smoke">
-                            {format(new Date(post.published_at), "MMMM d, yyyy")}
-                          </span>
+                        <div className="flex items-center justify-between text-sm sm:text-base mb-3 sm:mb-4">
+                          <div className="flex items-center">
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
+                            <span className="text-rap-smoke">
+                              {format(new Date(post.published_at), "MMMM d, yyyy")}
+                            </span>
+                          </div>
+                          {post.blog_categories?.name && (
+                            <Badge className="bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
+                              {post.blog_categories.name}
+                            </Badge>
+                          )}
                         </div>
                         <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
                           {post.excerpt}
                         </p>
-                        <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-sm sm:text-base md:text-lg h-auto">
-                          Read More
-                        </Button>
                       </div>
                     </div>
                   </Link>
@@ -176,18 +177,26 @@ const BlogCarousel = () => {
             </Button>
           </div>
 
-          <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-center gap-2 sm:gap-3 z-10">
-            {featuredPosts.map((_, index) => (
-              <button 
-                key={index} 
-                className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 ${
-                  currentIndex === index 
-                    ? "bg-rap-gold scale-110" 
-                    : "bg-gray-400 opacity-60 hover:opacity-80"
-                }`} 
-                onClick={() => scrollTo(index)} 
-              />
-            ))}
+          <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 z-10">
+            <div></div> {/* Spacer */}
+            <div className="flex gap-2 sm:gap-3">
+              {featuredPosts.map((_, index) => (
+                <button 
+                  key={index} 
+                  className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 ${
+                    currentIndex === index 
+                      ? "bg-rap-gold scale-110" 
+                      : "bg-gray-400 opacity-60 hover:opacity-80"
+                  }`} 
+                  onClick={() => scrollTo(index)} 
+                />
+              ))}
+            </div>
+            <Link to="/blog">
+              <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-xs sm:text-sm h-auto">
+                Read More
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

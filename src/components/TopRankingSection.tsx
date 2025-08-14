@@ -1,10 +1,11 @@
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { Star, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 type Rapper = Tables<"rappers">;
 
@@ -50,76 +51,55 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
 
     return (
       <div
-        className={`${cardHeight} overflow-hidden rounded-lg border-2 border-rap-gold bg-carbon-gradient min-h-[256px] sm:min-h-[384px] flex flex-col`}
+        className={cn(
+          "relative rounded-lg overflow-hidden transition-all duration-300 hover:scale-105 group",
+          isTopTwo ? "h-80" : "h-64"
+        )}
       >
-        {/* Image Section */}
-        <div className={`${imageHeight} relative overflow-hidden flex-shrink-0`}>
+        <Link 
+          to={`/rapper/${rapper.slug || rapper.id}`}
+          className="block w-full h-full"
+          onClick={() => {
+            console.log('Rapper card data:', {
+              name: rapper.name,
+              slug: rapper.slug,
+              id: rapper.id,
+              url: `/rapper/${rapper.slug || rapper.id}`
+            });
+          }}
+        >
           <img 
             src={imageToDisplay}
             alt={rapper.name}
             className="w-full h-full object-cover"
             loading="lazy"
           />
-        </div>
-        
-        {/* Text Content Section */}
-        <div className={`flex-1 ${isTopTwo ? 'p-2 sm:p-3' : 'p-2 sm:p-2'} flex items-center gap-3 sm:gap-4`}>
-          <div className={`flex-shrink-0 ${isTopTwo ? 'w-12 h-12 sm:w-14 sm:h-14' : 'w-10 h-10 sm:w-12 sm:h-12'} bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light rounded-lg flex items-center justify-center`}>
-            <span className={`${rankingTextSize} font-mogra font-bold text-rap-carbon leading-none`}>
-              {position}
-            </span>
-          </div>
-          <div className="flex-1 min-w-0">
-            <h3 className={`${nameTextSize} font-mogra text-white leading-tight mb-1 truncate`}>
-              {rapper.name}
-            </h3>
-            <div className="flex items-center gap-1 mb-2">
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          
+          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+            <div className="flex items-center justify-between mb-2">
+              <div className="flex items-center space-x-2">
+                <span className="text-2xl font-bold bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center">
+                  {position}
+                </span>
+                <h3 className="text-lg font-bold truncate">
+                  {rapper.name}
+                </h3>
+              </div>
+            </div>
+            
+            <div className="flex items-center gap-2">
               {voteCount === 0 ? (
                 <>
-                  <Star className="w-3 h-3 sm:w-4 sm:h-4 text-rap-gold/70" />
-                  <span className="text-rap-gold/70 font-kaushan text-xs italic">Vote to rank</span>
+                  <Star className="w-4 h-4 text-yellow-400" />
+                  <span className="text-sm text-gray-300">Vote to rank</span>
                 </>
               ) : (
-                <p className="text-rap-silver text-xs sm:text-sm font-bold">Votes: {voteCount.toLocaleString()}</p>
+                <span className="text-sm text-gray-300">Votes: {voteCount.toLocaleString()}</span>
               )}
             </div>
           </div>
-          <div className="flex-shrink-0">
-            <Button 
-              size="sm"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                console.log('🔘 Button clicked!', { 
-                  rapperName: rapper.name, 
-                  rapperUrl, 
-                  event: e 
-                });
-                
-                // Try multiple navigation methods for debugging
-                try {
-                  console.log('🚀 Attempting React Router navigation...');
-                  navigate(rapperUrl);
-                  
-                  // Fallback: direct window navigation after a delay
-                  setTimeout(() => {
-                    console.log('⚡ Fallback: Using window.location...');
-                    window.location.href = rapperUrl;
-                  }, 100);
-                } catch (error) {
-                  console.error('❌ Navigation error:', error);
-                  // Emergency fallback
-                  window.location.href = rapperUrl;
-                }
-              }}
-              className="bg-rap-gold hover:bg-rap-gold-dark text-rap-carbon font-mogra font-bold cursor-pointer relative z-10"
-              style={{ pointerEvents: 'auto' }}
-            >
-              <Eye className="w-3 h-3 mr-1" />
-              View
-            </Button>
-          </div>
-        </div>
+        </Link>
       </div>
     );
   };
