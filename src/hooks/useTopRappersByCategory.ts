@@ -5,25 +5,84 @@ export const useTopRappersByCategory = () => {
   return useQuery({
     queryKey: ["top-rappers-by-category"],
     queryFn: async () => {
-      // Return mock data for now due to TypeScript complexity
-      return {
-        lyrical_ability: [
-          { rapper_id: "1", rapper_name: "Kendrick Lamar", average_rating: 9.2, vote_count: 45 },
-          { rapper_id: "2", rapper_name: "J. Cole", average_rating: 8.9, vote_count: 38 },
-          { rapper_id: "3", rapper_name: "Nas", average_rating: 8.7, vote_count: 42 }
-        ],
-        flow: [
-          { rapper_id: "4", rapper_name: "Eminem", average_rating: 9.1, vote_count: 51 },
-          { rapper_id: "5", rapper_name: "Big Sean", average_rating: 8.4, vote_count: 29 },
-          { rapper_id: "6", rapper_name: "Logic", average_rating: 8.2, vote_count: 33 }
-        ],
-        delivery: [
-          { rapper_id: "7", rapper_name: "Denzel Curry", average_rating: 8.8, vote_count: 26 },
-          { rapper_id: "8", rapper_name: "JID", average_rating: 8.6, vote_count: 31 },
-          { rapper_id: "9", rapper_name: "Danny Brown", average_rating: 8.3, vote_count: 24 }
-        ]
-      };
+      try {
+        // Get voting categories
+        const { data: categories, error: categoriesError } = await supabase
+          .from('voting_categories')
+          .select('id, name')
+          .in('name', ['lyrical_ability', 'flow', 'delivery']);
 
+        if (categoriesError) throw categoriesError;
+
+        const result: Record<string, any[]> = {};
+
+        // For each category, get top rappers by average rating
+        for (const category of categories || []) {
+          const { data: votes, error: votesError } = await supabase
+            .from('votes')
+            .select(`
+              rapper_id,
+              rating,
+              rappers!inner(id, name, slug)
+            `)
+            .eq('category_id', category.id)
+            .order('rating', { ascending: false });
+
+          if (votesError) throw votesError;
+
+          // Group by rapper and calculate averages
+          const rapperStats: Record<string, { 
+            rapper_id: string; 
+            rapper_name: string; 
+            slug: string; 
+            total_rating: number; 
+            vote_count: number 
+          }> = {};
+
+          votes?.forEach(vote => {
+            const rapperId = vote.rapper_id;
+            const rapperName = (vote.rappers as any)?.name;
+            const rapperSlug = (vote.rappers as any)?.slug;
+            
+            if (!rapperStats[rapperId]) {
+              rapperStats[rapperId] = {
+                rapper_id: rapperId,
+                rapper_name: rapperName,
+                slug: rapperSlug,
+                total_rating: 0,
+                vote_count: 0
+              };
+            }
+            rapperStats[rapperId].total_rating += vote.rating;
+            rapperStats[rapperId].vote_count += 1;
+          });
+
+          // Calculate averages and sort
+          const topRappers = Object.values(rapperStats)
+            .filter(rapper => rapper.vote_count >= 3) // Minimum votes for reliability
+            .map(rapper => ({
+              rapper_id: rapper.rapper_id,
+              rapper_name: rapper.rapper_name,
+              slug: rapper.slug,
+              average_rating: rapper.total_rating / rapper.vote_count,
+              vote_count: rapper.vote_count
+            }))
+            .sort((a, b) => b.average_rating - a.average_rating)
+            .slice(0, 3);
+
+          result[category.name] = topRappers;
+        }
+
+        return result;
+      } catch (error) {
+        console.error('Error fetching top rappers by category:', error);
+        // Fallback to empty data
+        return {
+          lyrical_ability: [],
+          flow: [],
+          delivery: []
+        };
+      }
     },
     staleTime: 1000 * 60 * 30, // 30 minutes
   });

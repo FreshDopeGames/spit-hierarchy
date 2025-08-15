@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Crown, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
 import { useTopRappersByCategory } from "@/hooks/useTopRappersByCategory";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
@@ -75,17 +76,21 @@ const TopRappersByCategoryCard = () => {
                     };
 
                     return (
-                      <div key={rapper.rapper_id} 
-                           className="bg-gray-800 border border-rap-gold/20 rounded-lg p-3">
+                      <Link 
+                        key={rapper.rapper_id} 
+                        to={`/rapper/${rapper.slug || rapper.rapper_id}`}
+                        className="block bg-gray-800 border border-rap-gold/20 rounded-lg p-3 hover:border-rap-gold/50 hover:bg-gray-700/50 transition-all duration-200 cursor-pointer group"
+                        onClick={() => window.scrollTo(0, 0)}
+                      >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30">
+                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
                             <RapperAvatarItem rapper={rapper} />
                           </div>
                           
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
-                              <span className="text-rap-platinum font-kaushan text-sm">
+                              <span className="text-rap-platinum font-kaushan text-sm group-hover:text-rap-gold transition-colors">
                                 {rapper.rapper_name}
                               </span>
                             </div>
@@ -99,7 +104,7 @@ const TopRappersByCategoryCard = () => {
                             </div>
                           </div>
                         </div>
-                      </div>
+                      </Link>
                     );
                   })}
                 </div>
