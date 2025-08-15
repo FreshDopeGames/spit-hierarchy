@@ -48,14 +48,9 @@ const TopVotedRappersCard = () => {
                   <p className="text-rap-smoke text-base font-kaushan">{rapper.unique_voters} unique voters</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
-                <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra text-2xl">{rapper.total_votes}</p>
-                  <p className="text-rap-smoke font-kaushan text-base">Total Votes</p>
-                </div>
-                <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-lg">
-                  {Number(rapper.average_rating || 0).toFixed(1)}
-                </Badge>
+              <div className="text-center">
+                <p className="text-rap-platinum font-bold font-mogra text-2xl">{rapper.total_votes}</p>
+                <p className="text-rap-smoke font-kaushan text-base">Total Votes</p>
               </div>
             </div>
           ))}
