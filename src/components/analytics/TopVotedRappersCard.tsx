@@ -38,22 +38,22 @@ const TopVotedRappersCard = () => {
       <CardContent>
         <div className="space-y-3">
           {topRappers.map((rapper: any, index: number) => (
-            <div key={rapper.id} className="flex items-center justify-between p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg">
+            <div key={rapper.id} className="flex items-center justify-between p-3 bg-black border border-rap-gold/20 rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-gradient-to-r from-rap-gold to-rap-silver rounded-full flex items-center justify-center text-rap-carbon font-bold text-sm font-mogra">
                   #{index + 1}
                 </div>
                 <div>
                   <h4 className="text-rap-platinum font-medium font-kaushan">{rapper.name}</h4>
-                  <p className="text-rap-smoke text-sm font-kaushan">{rapper.unique_voters} unique voters</p>
+                  <p className="text-rap-smoke text-base font-kaushan">{rapper.unique_voters} unique voters</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4 text-sm">
+              <div className="flex items-center gap-4">
                 <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra">{rapper.total_votes}</p>
-                  <p className="text-rap-smoke font-kaushan">Total Votes</p>
+                  <p className="text-rap-platinum font-bold font-mogra text-2xl">{rapper.total_votes}</p>
+                  <p className="text-rap-smoke font-kaushan text-base">Total Votes</p>
                 </div>
-                <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
+                <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-lg">
                   {Number(rapper.average_rating || 0).toFixed(1)}
                 </Badge>
               </div>
