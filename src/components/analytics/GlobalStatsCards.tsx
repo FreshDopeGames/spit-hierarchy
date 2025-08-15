@@ -89,7 +89,7 @@ const GlobalStatsCards = () => {
                 <stat.icon className="w-5 h-5 text-rap-carbon" />
               </div>
               <div>
-                <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide">{stat.label}</p>
+                <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]">{stat.label}</p>
                 <p className="text-rap-platinum font-extrabold text-lg font-merienda">{stat.value}</p>
               </div>
             </div>
