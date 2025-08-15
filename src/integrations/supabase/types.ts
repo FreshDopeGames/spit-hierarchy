@@ -2096,6 +2096,160 @@ export type Database = {
       }
     }
     Views: {
+      blog_post_like_counts: {
+        Row: {
+          like_count: number | null
+          post_id: string | null
+        }
+        Relationships: []
+      }
+      comment_like_counts: {
+        Row: {
+          comment_id: string | null
+          like_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comment_likes_comment_id_fkey"
+            columns: ["comment_id"]
+            isOneToOne: false
+            referencedRelation: "comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      poll_results: {
+        Row: {
+          option_id: string | null
+          poll_id: string | null
+          vote_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "poll_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "poll_options"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "poll_votes_poll_id_fkey"
+            columns: ["poll_id"]
+            isOneToOne: false
+            referencedRelation: "polls"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      ranking_vote_counts: {
+        Row: {
+          avg_vote_weight: number | null
+          ranking_id: string | null
+          rapper_id: string | null
+          total_vote_weight: number | null
+          vote_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranking_votes_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "official_rankings"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranking_votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rapper_popularity_stats: {
+        Row: {
+          average_position: number | null
+          rapper_id: string | null
+          times_in_top_five: number | null
+          times_ranked_first: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_top_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_top_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "user_top_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      rapper_vote_counts: {
+        Row: {
+          average_rating: number | null
+          category_id: string | null
+          rapper_id: string | null
+          unique_voter_count: number | null
+          vote_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "votes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "voting_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "votes_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_vote_stats: {
         Row: {
           average_rating: number | null
