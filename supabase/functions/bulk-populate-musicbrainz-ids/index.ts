@@ -47,7 +47,7 @@ serve(async (req) => {
     }
 
     // Check if user is admin
-    const { data: isAdmin } = await supabaseService.rpc('is_admin');
+    const { data: isAdmin } = await supabaseAnon.rpc('is_admin');
     if (!isAdmin) {
       return json({ success: false, error: 'Admin access required' }, 403);
     }
