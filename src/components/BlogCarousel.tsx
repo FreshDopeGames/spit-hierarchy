@@ -132,7 +132,7 @@ const BlogCarousel = () => {
                         <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
                           {post.title}
                         </h3>
-                        <div className="flex items-center justify-between text-sm sm:text-base mb-3 sm:mb-4">
+                        <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
                             <span className="text-rap-smoke">
