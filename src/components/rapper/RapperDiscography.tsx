@@ -152,11 +152,11 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(externalLinks.spotify, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(externalLinks.spotify, '_blank')}>
                           <PlayCircle className="w-3 h-3 mr-1" />
                           Spotify
                         </Button>
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Apple Music
                         </Button>
@@ -210,15 +210,15 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                        {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(directLinks.spotify, '_blank')}>
+                        {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(directLinks.spotify, '_blank')}>
                             <PlayCircle className="w-3 h-3 mr-1" />
                             Spotify
                           </Button>}
-                        {hasDirectApple && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(directLinks.apple_music, '_blank')}>
+                        {hasDirectApple && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(directLinks.apple_music, '_blank')}>
                             <ExternalLink className="w-3 h-3 mr-1" />
                             Apple Music
                           </Button>}
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(searchLinks.genius, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(searchLinks.genius, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Genius
                         </Button>
