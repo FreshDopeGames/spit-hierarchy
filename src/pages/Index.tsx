@@ -133,15 +133,18 @@ const Index = () => {
             {!isLoading && topActiveRankings.length > 0 && (
               <>
                 {topActiveRankings.map((ranking, index) => (
-                  <TopRappersGrid 
-                    key={ranking.id}
-                    title={ranking.title}
-                    description={ranking.description}
-                    rappers={ranking.rappers}
-                    showViewAll={true}
-                    viewAllLink={`/rankings/official/${ranking.slug}`}
-                    rankingId={ranking.id}
-                  />
+                  <section key={ranking.id} className="py-8 px-6">
+                    <div className="max-w-4xl mx-auto">
+                      <TopRappersGrid 
+                        title={ranking.title}
+                        description={ranking.description}
+                        rappers={ranking.rappers}
+                        showViewAll={true}
+                        viewAllLink={`/rankings/official/${ranking.slug}`}
+                        rankingId={ranking.id}
+                      />
+                    </div>
+                  </section>
                 ))}
               </>
             )}
