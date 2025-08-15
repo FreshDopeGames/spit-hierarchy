@@ -67,7 +67,10 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             />
             
             {/* Rapper info - positioned below image */}
-            <div className="text-center space-y-1 flex flex-col justify-start h-12">
+            <div className={cn(
+              "text-center space-y-1 flex flex-col justify-start",
+              isTopTwo ? "h-16" : "h-12"
+            )}>
               {/* Rapper name */}
               <h3 className={cn(
                 "font-mogra leading-tight font-normal text-rap-gold",
