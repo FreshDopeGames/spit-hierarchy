@@ -15,9 +15,10 @@ interface RapperWithVotes extends Rapper {
 interface TopRankingSectionProps {
   rappers: RapperWithVotes[];
   rankingId?: string;
+  rankingSlug?: string;
 }
 
-const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
+const TopRankingSection = ({ rappers, rankingId, rankingSlug }: TopRankingSectionProps) => {
   // Component to render individual ranking card using RapperCard foundation
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
@@ -29,9 +30,13 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       ? rapper.ranking_votes 
       : (rapper.total_votes || 0);
 
+    const linkTo = rankingSlug 
+      ? `/rankings/official/${rankingSlug}`
+      : `/rapper/${rapper.slug || rapper.id}`;
+
     return (
       <Link 
-        to={`/rapper/${rapper.slug || rapper.id}`}
+        to={linkTo}
         onClick={() => window.scrollTo(0, 0)}
         className="block"
       >

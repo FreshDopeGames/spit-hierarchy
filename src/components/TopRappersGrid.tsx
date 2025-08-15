@@ -16,6 +16,7 @@ interface TopRappersGridProps {
   showViewAll?: boolean;
   viewAllLink?: string;
   rankingId?: string;
+  rankingSlug?: string;
 }
 
 interface RapperWithVotes extends Rapper {
@@ -28,7 +29,8 @@ const TopRappersGrid = ({
   rappers: providedRappers,
   showViewAll = false,
   viewAllLink = "/all-rappers",
-  rankingId
+  rankingId,
+  rankingSlug
 }: TopRappersGridProps) => {
   // Only fetch default data if no rappers are provided
   const {
@@ -137,7 +139,7 @@ const TopRappersGrid = ({
             }
           </div>
           
-          <TopRankingSection rappers={sortedRappers} rankingId={rankingId} />
+          <TopRankingSection rappers={sortedRappers} rankingId={rankingId} rankingSlug={rankingSlug} />
         </CardContent>
       </Card>
     </section>
