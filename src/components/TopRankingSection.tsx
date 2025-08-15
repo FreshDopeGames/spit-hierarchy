@@ -1,9 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
-import { useNavigationState } from "@/hooks/useNavigationState";
 import { cn } from "@/lib/utils";
 
 type Rapper = Tables<"rappers">;
@@ -18,8 +18,6 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
-  const { navigateToRapper } = useNavigationState();
-  
   // Component to render individual ranking card using RapperCard foundation
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
@@ -31,19 +29,18 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       ? rapper.ranking_votes 
       : (rapper.total_votes || 0);
 
-    const handleCardClick = (e: React.MouseEvent) => {
-      e.preventDefault();
-      navigateToRapper(rapper.slug || rapper.id, 1);
-    };
-
     return (
-      <Card 
-        className={cn(
-          "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group",
-          isTopTwo ? "h-80" : "h-64"
-        )}
-        onClick={handleCardClick}
+      <Link 
+        to={`/rapper/${rapper.slug || rapper.id}`}
+        onClick={() => window.scrollTo(0, 0)}
+        className="block"
       >
+        <Card 
+          className={cn(
+            "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 relative overflow-hidden group",
+            isTopTwo ? "h-80" : "h-64"
+          )}
+        >
         {/* Rap culture accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
@@ -97,6 +94,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           </div>
         </CardContent>
       </Card>
+      </Link>
     );
   };
 
