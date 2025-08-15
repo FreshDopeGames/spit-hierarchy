@@ -36,41 +36,41 @@ const Analytics = () => {
       
       <div className="container mx-auto px-4 py-8 md:py-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 bg-rap-carbon-light border border-rap-gold/30 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[80px] sm:min-h-[60px] py-3 sm:py-2">
+          <TabsList className="grid w-full grid-cols-5 bg-rap-carbon-light border border-rap-gold/30 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
             <TabsTrigger 
               value="platform" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
             >
-              <BarChart3 className="w-4 h-4" />
-              <span className="hidden sm:inline">Platform</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="members" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
-            >
-              <Users className="w-4 h-4" />
-              <span className="hidden sm:inline">Members</span>
-            </TabsTrigger>
-            <TabsTrigger 
-              value="achievements" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
-            >
-              <Trophy className="w-4 h-4" />
-              <span className="hidden sm:inline">Achievements</span>
+              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Platform</span>
             </TabsTrigger>
             <TabsTrigger 
               value="rapper-stats" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
             >
-              <Music className="w-4 h-4" />
-              <span className="hidden sm:inline">Rapper Stats</span>
+              <Music className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Rappers</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="members" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+            >
+              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Members</span>
+            </TabsTrigger>
+            <TabsTrigger 
+              value="achievements" 
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+            >
+              <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">Awards</span>
             </TabsTrigger>
             <TabsTrigger 
               value="stats" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex items-center gap-2"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
             >
-              <User className="w-4 h-4" />
-              <span className="hidden sm:inline">My Stats</span>
+              <User className="w-3 h-3 sm:w-4 sm:h-4" />
+              <span className="hidden xs:inline">My Stats</span>
             </TabsTrigger>
           </TabsList>
 
