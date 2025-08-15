@@ -20,11 +20,12 @@ interface RankingPreviewCardProps {
 }
 
 const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCardProps) => {
-  // Get the top rapper's image for the background, fallback to placeholder
-  const backgroundImage = items[0]?.rapper.image_url || getOptimizedPlaceholder('original');
+  // Get the top 5 rappers for the mosaic
+  const topFiveRappers = items.slice(0, 5);
   
-  // Create a collage effect by showing multiple rapper images if available
-  const topRappers = items.slice(0, 3);
+  // Split into top row (2 images) and bottom row (3 images)
+  const topRowRappers = topFiveRappers.slice(0, 2);
+  const bottomRowRappers = topFiveRappers.slice(2, 5);
   
   return (
     <Link 
@@ -33,48 +34,67 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
       onClick={() => window.scrollTo(0, 0)}
     >
       <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-rap-gold/30 group-hover:border-rap-gold/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-rap-gold/20">
-        {/* Background Image */}
-        <div className="absolute inset-0">
-          <img 
-            src={backgroundImage}
-            alt={ranking.title}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-            loading="lazy"
-            onError={(e) => {
-              const target = e.target as HTMLImageElement;
-              if (!target.src.includes(getOptimizedPlaceholder('original'))) {
-                target.src = getOptimizedPlaceholder('original');
-              }
-            }}
-          />
-        </div>
-        
-        {/* Gradient Overlay - darker than BlogCarousel for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
-        
-        {/* Top Rappers Mini Gallery */}
-        {topRappers.length > 1 && (
-          <div className="absolute top-4 right-4 flex -space-x-2">
-            {topRappers.slice(1).map((item, index) => (
-              <div 
-                key={item.rapper.id}
-                className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/30 overflow-hidden bg-rap-carbon"
-                style={{ zIndex: topRappers.length - index }}
-              >
+        {/* Rapper Mosaic Background */}
+        <div className="absolute inset-0 grid grid-rows-2 group-hover:scale-105 transition-transform duration-500">
+          {/* Top Row - 2 Images */}
+          <div className="grid grid-cols-2">
+            {topRowRappers.map((item, index) => (
+              <div key={item.rapper.id} className="relative">
                 <img 
-                  src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
+                  src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
                   className="w-full h-full object-cover"
                   loading="lazy"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder('thumb');
+                    target.src = getOptimizedPlaceholder('medium');
                   }}
                 />
               </div>
             ))}
+            {/* Fill empty spots if less than 2 rappers */}
+            {topRowRappers.length < 2 && (
+              <div className="bg-rap-carbon">
+                <img 
+                  src={getOptimizedPlaceholder('medium')}
+                  alt="Placeholder"
+                  className="w-full h-full object-cover opacity-30"
+                />
+              </div>
+            )}
           </div>
-        )}
+          
+          {/* Bottom Row - 3 Images */}
+          <div className="grid grid-cols-3">
+            {bottomRowRappers.map((item, index) => (
+              <div key={item.rapper.id} className="relative">
+                <img 
+                  src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
+                  alt={item.rapper.name}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = getOptimizedPlaceholder('medium');
+                  }}
+                />
+              </div>
+            ))}
+            {/* Fill empty spots if less than 3 rappers in bottom row */}
+            {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
+              <div key={`placeholder-${index}`} className="bg-rap-carbon">
+                <img 
+                  src={getOptimizedPlaceholder('medium')}
+                  alt="Placeholder"
+                  className="w-full h-full object-cover opacity-30"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+        
+        {/* Gradient Overlay - darker for better text readability */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
         
         {/* Content */}
         <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
