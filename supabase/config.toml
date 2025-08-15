@@ -2,3 +2,6 @@ project_id = "xzcmkssadekswmiqfbff"
 
 [functions.fetch-rapper-discography]
 verify_jwt = false
+
+[functions.bulk-populate-musicbrainz-ids]
+verify_jwt = false
