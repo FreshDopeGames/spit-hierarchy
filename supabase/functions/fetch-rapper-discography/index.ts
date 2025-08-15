@@ -282,6 +282,12 @@ serve(async (req) => {
       const isSingle = primaryType === 'Single' || secondary.includes('Single');
       if (isSingle) continue;
 
+      // Skip albums without release dates - they break career length calculations
+      if (!rg['first-release-date']) {
+        console.log(`Skipping album "${rg.title}" - no release date`);
+        continue;
+      }
+
       const isMixtape = secondary.some((t) => t.toLowerCase().includes('mixtape'));
       const releaseType = isMixtape ? 'mixtape' : 'album';
 
