@@ -24,48 +24,60 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
   const { isHot, voteVelocity } = useIsHotRapper(rapper.id);
   const { data: imageUrl } = useRapperImage(rapper.id);
 
+  const handleCardClick = (e: React.MouseEvent) => {
+    // Debug logging
+    console.log('Card clicked:', { 
+      name: rapper.name, 
+      slug: rapper.slug, 
+      id: rapper.id, 
+      url: `/rapper/${rapper.slug || rapper.id}` 
+    });
+  };
+
+  const handleVoteClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent card navigation when vote button is clicked
+    setSelectedRapper(rapper);
+  };
+
   return (
     <>
-      <Card className="bg-rap-carbon border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20">
-        {/* Rap culture accent bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
-        
-        <CardContent className="p-6">
-          {/* Ranking Badge */}
-          {sortBy === "rating" && (
-            <div className="absolute -top-2 -left-2 bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-mogra shadow-lg shadow-rap-gold/50">
-              #{index + 1}
-            </div>
-          )}
+      <Link to={`/rapper/${rapper.slug || rapper.id}`} onClick={handleCardClick}>
+        <Card className="bg-rap-carbon border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20 cursor-pointer">
+          {/* Rap culture accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
+          
+          <CardContent className="p-6">
+            {/* Ranking Badge */}
+            {sortBy === "rating" && (
+              <div className="absolute -top-2 -left-2 bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-mogra shadow-lg shadow-rap-gold/50">
+                #{index + 1}
+              </div>
+            )}
 
-          {/* Hot Badge */}
-          {isHot && (
-            <div className="absolute top-2 right-2 z-10">
-              <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
-            </div>
-          )}
+            {/* Hot Badge */}
+            {isHot && (
+              <div className="absolute top-2 right-2 z-10">
+                <HotBadge isHot={isHot} voteVelocity={voteVelocity} variant="compact" />
+              </div>
+            )}
 
-          {/* Rapper Image - Make it clickable */}
-          <Link to={`/rapper/${rapper.slug || rapper.id}`}>
-            <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center cursor-pointer group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
+            {/* Rapper Image */}
+            <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
               <img 
                 src={imageUrl} 
                 alt={rapper.name}
                 className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
               />
             </div>
-          </Link>
 
-          {/* Rapper Info */}
-          <div className="space-y-3">
-            <div className="flex items-start justify-between">
-              <Link to={`/rapper/${rapper.slug || rapper.id}`}>
-                <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-gold transition-colors cursor-pointer font-mogra">{rapper.name}</h3>
-              </Link>
-              {rapper.verified && (
-                <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
-              )}
-            </div>
+            {/* Rapper Info */}
+            <div className="space-y-3">
+              <div className="flex items-start justify-between">
+                <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-gold transition-colors font-mogra">{rapper.name}</h3>
+                {rapper.verified && (
+                  <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
+                )}
+              </div>
 
             {rapper.real_name && (
               <p className="text-rap-smoke text-sm font-kaushan">{rapper.real_name}</p>
@@ -108,7 +120,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
 
             {/* Vote Button */}
             <Button
-              onClick={() => setSelectedRapper(rapper)}
+              onClick={handleVoteClick}
               className="w-full bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30"
             >
               Cast Royal Decree
@@ -116,6 +128,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
           </div>
         </CardContent>
       </Card>
+    </Link>
 
       {/* Vote Modal */}
       {selectedRapper && (
