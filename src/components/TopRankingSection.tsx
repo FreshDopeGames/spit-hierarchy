@@ -37,7 +37,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       >
         <Card 
           className={cn(
-            "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 relative overflow-hidden group",
+            "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 relative overflow-hidden",
             isTopTwo ? "h-80" : "h-76"
           )}
         >
@@ -46,7 +46,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           {position}
         </div>
         
-        <CardContent className="p-3 relative bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300">
+        <CardContent className="p-3 relative bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal">
           {/* Rapper avatar image - smaller with padding */}
           <div className="flex flex-col items-center space-y-1">
             <img 
