@@ -99,7 +99,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         {/* Content - Positioned in bottom area */}
         <div className="absolute bottom-0 left-0 right-0 h-[57%] flex flex-col justify-center p-4 sm:p-6">
           {/* Category Badge */}
-          <div>
+          <div className="mb-3">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-mogra bg-rap-gold/20 text-rap-gold border border-rap-gold/30 backdrop-blur-sm">
               {ranking.category}
             </span>
