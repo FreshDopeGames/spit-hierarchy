@@ -34,8 +34,8 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
       onClick={() => window.scrollTo(0, 0)}
     >
       <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-rap-gold/30 group-hover:border-rap-gold/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-rap-gold/20">
-        {/* Rapper Mosaic Background - Top 2/3 of card */}
-        <div className="absolute inset-0 h-2/3 grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
+        {/* Rapper Mosaic Background - Top portion of card */}
+        <div className="absolute inset-0 h-[43%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2">
             {topRowRappers.map((item, index) => (
@@ -93,13 +93,13 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           </div>
         </div>
         
-        {/* Gradient Overlay - Only bottom 1/3 for text area */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/95 via-black/80 to-transparent" />
+        {/* Gradient Overlay - Bottom area for text */}
+        <div className="absolute bottom-0 left-0 right-0 h-[57%] bg-gradient-to-t from-black/95 via-black/80 to-transparent" />
         
-        {/* Content - Positioned in bottom 1/3 */}
-        <div className="absolute bottom-0 left-0 right-0 h-1/3 flex flex-col justify-end p-4 sm:p-6">
+        {/* Content - Positioned in bottom area */}
+        <div className="absolute bottom-0 left-0 right-0 h-[57%] flex flex-col justify-center p-4 sm:p-6">
           {/* Category Badge */}
-          <div className="mb-3">
+          <div>
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-mogra bg-rap-gold/20 text-rap-gold border border-rap-gold/30 backdrop-blur-sm">
               {ranking.category}
             </span>
