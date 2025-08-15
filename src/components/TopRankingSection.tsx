@@ -41,8 +41,8 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             isTopTwo ? "h-80" : "h-64"
           )}
         >
-        {/* Position indicator - top right corner */}
-        <div className="absolute top-3 right-3 bg-rap-gold text-rap-carbon rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold font-mogra z-10">
+        {/* Position indicator - top left corner */}
+        <div className="absolute top-3 left-3 bg-rap-gold text-rap-carbon rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold font-mogra z-10">
           {position}
         </div>
         
