@@ -63,7 +63,7 @@ const TopRappersByCategoryCard = () => {
                         <img 
                           src={imageToDisplay}
                           alt={rapper.rapper_name} 
-                          className="w-full h-full object-cover rounded-full"
+                          className="w-full h-full object-cover rounded-lg"
                           loading="lazy"
                           onError={(e) => {
                             const target = e.target as HTMLImageElement;
@@ -83,8 +83,8 @@ const TopRappersByCategoryCard = () => {
                         onClick={() => window.scrollTo(0, 0)}
                       >
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
-                            <RapperAvatarItem rapper={rapper} />
+                          <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
+                             <RapperAvatarItem rapper={rapper} />
                           </div>
                           
                           <div className="flex-1">
