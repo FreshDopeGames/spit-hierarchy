@@ -47,7 +47,7 @@ const CategoryPerformanceCard = () => {
           {categoryAnalytics.map((category: any) => (
             <div 
               key={category.id} 
-              className={`p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg ${
+              className={`p-3 bg-gray-900 border border-rap-gold/20 rounded-lg ${
                 isMobile 
                   ? 'flex flex-col space-y-3' 
                   : 'flex items-center justify-between'
