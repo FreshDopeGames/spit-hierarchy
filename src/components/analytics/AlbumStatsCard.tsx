@@ -31,7 +31,7 @@ const AlbumStatsCard = () => {
       <CardHeader className="pb-3">
         <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
           <Disc3 className="w-5 h-5" />
-          Album & Mixtape Stats
+          Albums & Mixtapes
         </CardTitle>
       </CardHeader>
       <CardContent>
