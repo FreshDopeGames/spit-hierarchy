@@ -1,3 +1,4 @@
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Crown, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -15,7 +16,7 @@ const TopRappersByCategoryCard = () => {
         <CardHeader className="pb-3">
           <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
             <Crown className="w-5 h-5" />
-            Top Rappers by Category
+            Top Rappers by Skill
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -41,7 +42,7 @@ const TopRappersByCategoryCard = () => {
       <CardHeader className="pb-3">
         <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
           <Crown className="w-5 h-5" />
-          Top Rappers by Skill Category
+          Top Rappers by Skill
         </CardTitle>
       </CardHeader>
       <CardContent>
