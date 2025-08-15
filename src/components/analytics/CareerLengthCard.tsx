@@ -45,7 +45,7 @@ const CareerLengthCard = () => {
           <div className="flex items-center justify-center gap-2 text-rap-smoke">
             <TrendingUp className="w-4 h-4" />
             <span className="text-sm font-kaushan">
-              Based on {careerStats?.totalWithCareerData || 0} rappers with career data
+              Data from {careerStats?.totalWithCareerData || 0} rappers
             </span>
           </div>
         </div>

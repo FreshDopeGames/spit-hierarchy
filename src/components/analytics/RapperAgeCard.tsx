@@ -45,7 +45,7 @@ const RapperAgeCard = () => {
           <div className="flex items-center justify-center gap-2 text-rap-smoke">
             <Users className="w-4 h-4" />
             <span className="text-sm font-kaushan">
-              Based on {ageStats?.totalWithBirthYear || 0} rappers with birth year data
+              Data from {ageStats?.totalWithBirthYear || 0} rappers
             </span>
           </div>
         </div>
