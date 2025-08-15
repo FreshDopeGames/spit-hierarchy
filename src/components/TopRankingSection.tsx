@@ -49,9 +49,19 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       url: rapperUrl 
     });
 
-    const handleCardClick = () => {
+    const handleCardClick = (event: React.MouseEvent) => {
+      event.preventDefault();
+      event.stopPropagation();
       console.log('Card clicked:', { name: rapper.name, url: rapperUrl });
-      navigate(rapperUrl);
+      console.log('Navigating to:', rapperUrl);
+      
+      try {
+        window.location.href = rapperUrl;
+      } catch (error) {
+        console.error('Navigation failed:', error);
+        // Fallback navigation
+        window.location.pathname = rapperUrl;
+      }
     };
 
     return (
