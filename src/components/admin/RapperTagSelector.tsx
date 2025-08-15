@@ -89,13 +89,12 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
       {/* Selected Tags */}
       {selectedTagsData.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-muted-foreground mb-2">Selected Tags</h4>
+          <h4 className="text-sm font-medium text-rap-platinum mb-2">Selected Tags</h4>
           <div className="flex flex-wrap gap-2">
             {selectedTagsData.map((tag) => (
               <Badge
                 key={tag.id}
-                variant="secondary"
-                className="cursor-pointer hover:opacity-75"
+                className="cursor-pointer hover:opacity-75 border-0 text-white font-medium"
                 style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
                 onClick={() => handleTagToggle(tag.id)}
               >
@@ -109,13 +108,13 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
       {/* Available Tags */}
       {availableTags.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-muted-foreground mb-2">Available Tags</h4>
+          <h4 className="text-sm font-medium text-rap-platinum mb-2">Available Tags</h4>
           <div className="flex flex-wrap gap-2">
             {availableTags.map((tag) => (
               <Badge
                 key={tag.id}
                 variant="outline"
-                className="cursor-pointer hover:bg-muted/50"
+                className="cursor-pointer hover:bg-rap-gold/10 border-rap-gold/50 text-rap-platinum hover:text-rap-gold transition-colors"
                 onClick={() => handleTagToggle(tag.id)}
               >
                 {tag.name}
@@ -127,14 +126,14 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
 
       {/* Create New Tag */}
       <div>
-        <h4 className="text-sm font-medium text-muted-foreground mb-2">Create New Tag</h4>
+        <h4 className="text-sm font-medium text-rap-platinum mb-2">Create New Tag</h4>
         {!isCreatingNewTag ? (
           <Button
             type="button"
             variant="outline"
             size="sm"
             onClick={() => setIsCreatingNewTag(true)}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 border-rap-gold/50 text-rap-platinum hover:bg-rap-gold/10 hover:text-rap-gold"
           >
             <Plus className="h-4 w-4" />
             Add New Tag
@@ -155,7 +154,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
                   setNewTagName("");
                 }
               }}
-              className="flex-1"
+              className="flex-1 bg-rap-carbon border-rap-gold/30 text-rap-platinum"
               autoFocus
             />
             <Button
@@ -163,6 +162,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
               size="sm"
               onClick={handleCreateTag}
               disabled={!newTagName.trim() || createTagMutation.isPending}
+              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold/80"
             >
               Create
             </Button>
@@ -174,6 +174,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
                 setIsCreatingNewTag(false);
                 setNewTagName("");
               }}
+              className="border-rap-gold/50 text-rap-platinum hover:bg-rap-gold/10"
             >
               Cancel
             </Button>
