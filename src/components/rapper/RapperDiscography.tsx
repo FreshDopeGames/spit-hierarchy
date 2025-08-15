@@ -133,9 +133,7 @@ const RapperDiscography = ({
                   backgroundColor: placeholder.style.bgColor,
                   background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
                 }}>
-                      <Disc3 className="w-6 h-6" style={{
-                    color: placeholder.style.textColor
-                  }} />
+                      <Disc3 className="w-6 h-6 text-rap-gold" />
                       <div className="absolute inset-0 opacity-10" style={{
                     backgroundImage: `radial-gradient(circle at 30% 70%, ${placeholder.style.textColor} 1px, transparent 1px)`,
                     backgroundSize: '8px 8px'
@@ -193,9 +191,7 @@ const RapperDiscography = ({
                   backgroundColor: placeholder.style.bgColor,
                   background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
                 }}>
-                      <Music className="w-6 h-6" style={{
-                    color: placeholder.style.textColor
-                  }} />
+                      <Music className="w-6 h-6 text-rap-burgundy" />
                       <div className="absolute inset-0 opacity-10" style={{
                     backgroundImage: `linear-gradient(45deg, ${placeholder.style.textColor} 25%, transparent 25%, transparent 75%, ${placeholder.style.textColor} 75%)`,
                     backgroundSize: '6px 6px'
