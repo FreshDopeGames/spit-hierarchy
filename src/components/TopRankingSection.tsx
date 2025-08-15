@@ -38,7 +38,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         <Card 
           className={cn(
             "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 relative overflow-hidden group",
-            isTopTwo ? "h-96" : "h-80"
+            isTopTwo ? "h-72" : "h-64"
           )}
         >
         {/* Position indicator - top left corner */}
@@ -46,9 +46,9 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           {position}
         </div>
         
-        <CardContent className="p-3 h-full relative bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300">
+        <CardContent className="p-3 relative bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300">
           {/* Rapper avatar image - smaller with padding */}
-          <div className="flex flex-col items-center space-y-2 h-full">
+          <div className="flex flex-col items-center space-y-1">
             <img 
               src={imageToDisplay}
               alt={rapper.name || "Rapper"}
@@ -67,7 +67,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             />
             
             {/* Rapper info - positioned below image */}
-            <div className="text-center space-y-1 flex flex-col justify-start h-16">
+            <div className="text-center space-y-1 flex flex-col justify-start h-auto">
               {/* Rapper name */}
               <h3 className={cn(
                 "font-mogra leading-tight font-normal text-rap-gold",
