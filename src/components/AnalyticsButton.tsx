@@ -13,7 +13,7 @@ const AnalyticsButton = () => {
 
   return <div className="text-center mt-4 mb-12">
       {user ? <Link to="/analytics" onClick={handleAnalyticsClick}>
-          <Button size="lg" className="font-merienda text-lg shadow-xl shadow-rap-silver/40 border border-rap-silver/30 bg-rap-gold font-extrabold hover:bg-white hover:text-rap-gold-dark text-white">
+          <Button size="lg" className="font-mogra text-lg shadow-xl shadow-rap-silver/40 border border-rap-silver/30 bg-rap-gold font-extrabold hover:bg-white hover:text-rap-gold-dark text-rap-charcoal">
             <BarChart3 className="w-5 h-5 mr-2" />
             All Analytics
           </Button>
