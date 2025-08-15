@@ -6,11 +6,11 @@ export const useTopRappersByCategory = () => {
     queryKey: ["top-rappers-by-category"],
     queryFn: async () => {
       try {
-        // Get voting categories
+        // Get voting categories - using actual category names from the database
         const { data: categories, error: categoriesError } = await supabase
           .from('voting_categories')
           .select('id, name')
-          .in('name', ['lyrical_ability', 'flow', 'delivery']);
+          .in('name', ['Lyrical Ability', 'Flow On Beats', 'Technical Skill']);
 
         if (categoriesError) throw categoriesError;
 
@@ -70,7 +70,7 @@ export const useTopRappersByCategory = () => {
             .sort((a, b) => b.average_rating - a.average_rating)
             .slice(0, 3);
 
-          result[category.name] = topRappers;
+          result[category.name.toLowerCase().replace(/\s+/g, '_')] = topRappers;
         }
 
         return result;
@@ -79,8 +79,8 @@ export const useTopRappersByCategory = () => {
         // Fallback to empty data
         return {
           lyrical_ability: [],
-          flow: [],
-          delivery: []
+          flow_on_beats: [],
+          technical_skill: []
         };
       }
     },
