@@ -151,7 +151,7 @@ const RapperDiscography = ({
                         {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
                         <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(externalLinks.spotify, '_blank')}>
                           <PlayCircle className="w-3 h-3 mr-1" />
                           Spotify
@@ -209,7 +209,7 @@ const RapperDiscography = ({
                         {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
                         {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
                       </div>
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
                         {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground" onClick={() => window.open(directLinks.spotify, '_blank')}>
                             <PlayCircle className="w-3 h-3 mr-1" />
                             Spotify
