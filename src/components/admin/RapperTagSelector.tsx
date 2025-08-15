@@ -154,7 +154,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
                   setNewTagName("");
                 }
               }}
-              className="flex-1 bg-rap-carbon border-rap-gold/30 text-rap-platinum"
+              className="flex-1 bg-white border-rap-gold/30 text-gray-900 placeholder:text-gray-500"
               autoFocus
             />
             <Button
