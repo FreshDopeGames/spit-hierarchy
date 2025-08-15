@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useAchievements } from "@/hooks/useAchievements";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -9,14 +8,16 @@ import AchievementViewModeSelector from "./AchievementViewModeSelector";
 import AchievementStatsCards from "./AchievementStatsCards";
 import AchievementEmptyState from "./AchievementEmptyState";
 import { Trophy, Award, Target } from "lucide-react";
-
 const UserAchievements = () => {
-  const { achievements, getEarnedAchievements, getTotalPoints, isLoading } = useAchievements();
+  const {
+    achievements,
+    getEarnedAchievements,
+    getTotalPoints,
+    isLoading
+  } = useAchievements();
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
-
   if (isLoading) {
-    return (
-      <div className="space-y-4 sm:space-y-6">
+    return <div className="space-y-4 sm:space-y-6">
         <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
           Your Achievements
         </h3>
@@ -27,27 +28,19 @@ const UserAchievements = () => {
             <div className="h-16 sm:h-20 bg-rap-carbon/50 rounded" />
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
   const earnedAchievements = getEarnedAchievements();
   const totalPoints = getTotalPoints();
-
-  return (
-    <div className="space-y-4 sm:space-y-6">
-      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
-        Your Achievements
-      </h3>
+  return <div className="space-y-4 sm:space-y-6">
+      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">Achievements</h3>
 
       {/* Achievement Stats */}
-      <AchievementStatsCards 
-        stats={{
-          earnedCount: earnedAchievements.length,
-          totalCount: achievements.length,
-          totalPoints: totalPoints
-        }}
-      />
+      <AchievementStatsCards stats={{
+      earnedCount: earnedAchievements.length,
+      totalCount: achievements.length,
+      totalPoints: totalPoints
+    }} />
 
       {/* View Mode Selector */}
       <div className="flex justify-between items-center">
@@ -58,29 +51,13 @@ const UserAchievements = () => {
       </div>
 
       {/* Achievement Content */}
-      {achievements.length > 0 ? (
-        <>
-          {viewMode === 'cards' && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {achievements.map((achievement) => (
-                <AchievementCard 
-                  key={achievement.id} 
-                  achievement={achievement} 
-                  showProgress={true}
-                />
-              ))}
-            </div>
-          )}
+      {achievements.length > 0 ? <>
+          {viewMode === 'cards' && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+              {achievements.map(achievement => <AchievementCard key={achievement.id} achievement={achievement} showProgress={true} />)}
+            </div>}
 
-          {viewMode === 'table' && (
-            <AchievementTable achievements={achievements} showProgress={true} />
-          )}
-        </>
-      ) : (
-        <AchievementEmptyState type="earned" />
-      )}
-    </div>
-  );
+          {viewMode === 'table' && <AchievementTable achievements={achievements} showProgress={true} />}
+        </> : <AchievementEmptyState type="earned" />}
+    </div>;
 };
-
 export default UserAchievements;
