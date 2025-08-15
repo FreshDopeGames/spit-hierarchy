@@ -49,9 +49,14 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       url: rapperUrl 
     });
 
+    const handleCardClick = () => {
+      console.log('Card clicked:', { name: rapper.name, url: rapperUrl });
+      navigate(rapperUrl);
+    };
+
     return (
-      <Link 
-        to={`/rapper/${rapper.slug || rapper.id}`}
+      <div 
+        onClick={handleCardClick}
         className={cn(
           "relative block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group cursor-pointer",
           isTopTwo ? "h-80" : "h-64"
@@ -63,9 +68,9 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             className="w-full h-full object-cover"
             loading="lazy"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
           
-          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+          <div className="absolute bottom-0 left-0 right-0 p-4 text-white pointer-events-none">
             <div className="flex items-center justify-between mb-2">
               <div className="flex items-center space-x-2">
                 <span className="text-2xl font-bold bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center">
@@ -88,7 +93,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               )}
             </div>
           </div>
-      </Link>
+      </div>
     );
   };
 
