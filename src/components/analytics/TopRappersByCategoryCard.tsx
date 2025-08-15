@@ -51,23 +51,30 @@ const TopRappersByCategoryCard = () => {
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {(rappers || []).slice(0, 3).map((rapper: any, index: number) => (
-                    <div key={rapper.rapper_id} 
-                         className="bg-black/80 border border-rap-gold/20 rounded-lg p-3">
-                      <div className="flex items-center gap-2 mb-1">
-                        {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
-                        <span className="text-rap-platinum font-kaushan text-sm">
-                          {rapper.rapper_name}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
-                          {rapper.average_rating?.toFixed(1)} avg
-                        </Badge>
-                        <span className="text-rap-smoke text-xs font-kaushan">
-                          {rapper.vote_count} votes
-                        </span>
-                      </div>
-                    </div>
+                     <div key={rapper.rapper_id} 
+                          className="bg-gray-800 border border-rap-gold/20 rounded-lg p-3">
+                       <div className="flex items-center gap-3">
+                         {/* Avatar placeholder - will be added later */}
+                         <div className="w-10 h-10 bg-rap-smoke/20 rounded-full flex-shrink-0"></div>
+                         
+                         <div className="flex-1">
+                           <div className="flex items-center gap-2 mb-1">
+                             {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
+                             <span className="text-rap-platinum font-kaushan text-sm">
+                               {rapper.rapper_name}
+                             </span>
+                           </div>
+                           <div className="flex items-center justify-between">
+                             <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
+                               {rapper.average_rating?.toFixed(1)} avg
+                             </Badge>
+                             <span className="text-rap-platinum text-xs font-kaushan">
+                               {rapper.vote_count} votes
+                             </span>
+                           </div>
+                         </div>
+                       </div>
+                     </div>
                   ))}
                 </div>
               </div>
