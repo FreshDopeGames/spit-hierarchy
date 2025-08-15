@@ -50,45 +50,51 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     });
 
     return (
-      <Link 
-        to={rapperUrl}
+      <div 
         className={cn(
-          "relative block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group cursor-pointer",
+          "relative rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group",
           isTopTwo ? "h-80" : "h-64"
         )}
       >
-          <img 
-            src={imageToDisplay}
-            alt={rapper.name}
-            className="w-full h-full object-cover"
-            loading="lazy"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
-          
-          <div className="absolute bottom-0 left-0 right-0 p-4 text-white pointer-events-none">
-            <div className="flex items-center justify-between mb-2">
-              <div className="flex items-center space-x-2">
-                <span className="text-2xl font-bold bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center">
-                  {position}
-                </span>
-                <h3 className="text-lg font-bold truncate">
-                  {rapper.name}
-                </h3>
-              </div>
-            </div>
-            
-            <div className="flex items-center gap-2">
-              {voteCount === 0 ? (
-                <>
-                  <Star className="w-4 h-4 text-yellow-400" />
-                  <span className="text-sm text-gray-300">Vote to rank</span>
-                </>
-              ) : (
-                <span className="text-sm text-gray-300">Votes: {voteCount.toLocaleString()}</span>
-              )}
+        {/* Invisible clickable overlay */}
+        <Link 
+          to={rapperUrl}
+          className="absolute inset-0 z-10 cursor-pointer"
+          aria-label={`View ${rapper.name} profile`}
+        />
+        
+        <img 
+          src={imageToDisplay}
+          alt={rapper.name}
+          className="w-full h-full object-cover"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none"></div>
+        
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white pointer-events-none">
+          <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center space-x-2">
+              <span className="text-2xl font-bold bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center">
+                {position}
+              </span>
+              <h3 className="text-lg font-bold truncate">
+                {rapper.name}
+              </h3>
             </div>
           </div>
-      </Link>
+          
+          <div className="flex items-center gap-2">
+            {voteCount === 0 ? (
+              <>
+                <Star className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm text-gray-300">Vote to rank</span>
+              </>
+            ) : (
+              <span className="text-sm text-gray-300">Votes: {voteCount.toLocaleString()}</span>
+            )}
+          </div>
+        </div>
+      </div>
     );
   };
 
