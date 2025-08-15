@@ -16,6 +16,7 @@ export const useAlbumStats = () => {
       const { data: albums, error } = await supabase
         .from("rapper_albums")
         .select(`
+          rapper_id,
           album:albums(release_type)
         `);
 
