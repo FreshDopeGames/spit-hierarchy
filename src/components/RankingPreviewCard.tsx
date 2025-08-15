@@ -34,12 +34,12 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
       onClick={() => window.scrollTo(0, 0)}
     >
       <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-rap-gold/30 group-hover:border-rap-gold/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-rap-gold/20">
-        {/* Rapper Mosaic Background */}
-        <div className="absolute inset-0 grid grid-rows-2 group-hover:scale-105 transition-transform duration-500">
+        {/* Rapper Mosaic Background - Top 2/3 of card */}
+        <div className="absolute inset-0 h-2/3 grid grid-rows-2 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-2 gap-[1px]">
             {topRowRappers.map((item, index) => (
-              <div key={item.rapper.id} className="relative">
+              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden">
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
@@ -53,21 +53,21 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
               </div>
             ))}
             {/* Fill empty spots if less than 2 rappers */}
-            {topRowRappers.length < 2 && (
-              <div className="bg-rap-carbon">
+            {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
+              <div key={`top-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40">
                 <img 
                   src={getOptimizedPlaceholder('medium')}
                   alt="Placeholder"
                   className="w-full h-full object-cover opacity-30"
                 />
               </div>
-            )}
+            ))}
           </div>
           
           {/* Bottom Row - 3 Images */}
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-3 gap-[1px]">
             {bottomRowRappers.map((item, index) => (
-              <div key={item.rapper.id} className="relative">
+              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden">
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
@@ -82,7 +82,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             ))}
             {/* Fill empty spots if less than 3 rappers in bottom row */}
             {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
-              <div key={`placeholder-${index}`} className="bg-rap-carbon">
+              <div key={`bottom-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40">
                 <img 
                   src={getOptimizedPlaceholder('medium')}
                   alt="Placeholder"
@@ -93,11 +93,11 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           </div>
         </div>
         
-        {/* Gradient Overlay - darker for better text readability */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent" />
+        {/* Gradient Overlay - Only bottom 1/3 for text area */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/95 via-black/80 to-transparent" />
         
-        {/* Content */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
+        {/* Content - Positioned in bottom 1/3 */}
+        <div className="absolute bottom-0 left-0 right-0 h-1/3 flex flex-col justify-end p-4 sm:p-6">
           {/* Category Badge */}
           <div className="mb-3">
             <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-mogra bg-rap-gold/20 text-rap-gold border border-rap-gold/30 backdrop-blur-sm">

@@ -57,7 +57,7 @@ const HomepageRankingSection = () => {
               rapper:rappers(*)
             `)
             .eq("ranking_id", ranking.id)
-            .eq("is_ranked", true)
+            
             .order("position")
             .limit(5);
 
