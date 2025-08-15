@@ -1509,6 +1509,7 @@ export type Database = {
           musicbrainz_id: string | null
           name: string
           origin: string | null
+          origins_description: string | null
           real_name: string | null
           slug: string
           spotify_id: string | null
@@ -1536,6 +1537,7 @@ export type Database = {
           musicbrainz_id?: string | null
           name: string
           origin?: string | null
+          origins_description?: string | null
           real_name?: string | null
           slug: string
           spotify_id?: string | null
@@ -1563,6 +1565,7 @@ export type Database = {
           musicbrainz_id?: string | null
           name?: string
           origin?: string | null
+          origins_description?: string | null
           real_name?: string | null
           slug?: string
           spotify_id?: string | null

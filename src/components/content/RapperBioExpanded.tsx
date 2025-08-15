@@ -35,7 +35,7 @@ const RapperBioExpanded = ({
           {rapper.origin && <div>
               <h4 className="text-lg font-semibold text-rap-gold mb-2 font-merienda">Origins</h4>
               <p className="text-rap-smoke font-kaushan">
-                Hailing from {rapper.origin}, {rapper.name} brings a unique perspective to hip-hop that reflects their geographical and cultural background. This regional influence is evident in their style, flow, and lyrical content.
+                {rapper.origins_description || `Hailing from ${rapper.origin}, ${rapper.name} brings a unique perspective to hip-hop that reflects their geographical and cultural background. This regional influence is evident in their style, flow, and lyrical content.`}
               </p>
             </div>}
         </CardContent>

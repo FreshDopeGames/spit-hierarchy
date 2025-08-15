@@ -10,6 +10,7 @@ export interface RapperFormData {
   death_month: string;
   death_day: string;
   bio: string;
+  origins_description: string;
   verified: boolean;
   spotify_id: string;
   instagram_handle: string;

@@ -166,6 +166,18 @@ export const RapperFormFields = ({
           rows={3}
         />
       </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="origins_description" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Origins Description</Label>
+        <Textarea
+          id="origins_description"
+          value={formData.origins_description}
+          onChange={onInputChange("origins_description")}
+          placeholder="Enter custom origins description (optional)"
+          className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
+          rows={3}
+        />
+      </div>
     </>
   );
 };
