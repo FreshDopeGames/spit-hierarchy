@@ -39,7 +39,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
     return (
       <Card 
         className={cn(
-          "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group",
+          "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group",
           isTopTwo ? "h-80" : "h-64"
         )}
         onClick={handleCardClick}
