@@ -26,16 +26,16 @@ const CategoryPerformanceCard = () => {
   });
 
   if (isLoading) {
-    return <Card className="bg-black border-rap-gold border-2 shadow-lg shadow-rap-gold/20 animate-pulse">
+    return <Card className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20 animate-pulse">
         <CardContent className="p-6">
-          <div className="h-32 bg-gray-900 rounded"></div>
+          <div className="h-32 bg-rap-carbon-light rounded"></div>
         </CardContent>
       </Card>;
   }
 
   if (!categoryAnalytics || categoryAnalytics.length === 0) return null;
 
-  return <Card className="bg-black border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
       <CardHeader>
         <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-3xl font-extrabold">
           <TrendingUp className="w-5 h-5" />
@@ -47,7 +47,7 @@ const CategoryPerformanceCard = () => {
           {categoryAnalytics.map((category: any) => (
             <div 
               key={category.id} 
-              className={`p-3 bg-gray-900 border border-rap-gold/20 rounded-lg ${
+              className={`p-3 bg-rap-carbon/30 border border-rap-gold/20 rounded-lg ${
                 isMobile 
                   ? 'flex flex-col space-y-3' 
                   : 'flex items-center justify-between'
