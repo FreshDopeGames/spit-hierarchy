@@ -41,9 +41,6 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             isTopTwo ? "h-80" : "h-64"
           )}
         >
-        {/* Rap culture accent bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
-        
         {/* Position indicator - top right corner */}
         <div className="absolute top-3 right-3 bg-rap-gold text-rap-carbon rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold font-mogra z-10">
           {position}
