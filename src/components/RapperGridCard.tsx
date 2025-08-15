@@ -119,12 +119,12 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             )}
 
             {/* Vote Button */}
-            <Button
+              {/*<Button
               onClick={handleVoteClick}
               className="w-full bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra shadow-lg shadow-rap-gold/30"
             >
               Cast Royal Decree
-            </Button>
+            </Button>*/}
           </div>
         </CardContent>
       </Card>
