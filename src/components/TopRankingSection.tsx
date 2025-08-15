@@ -1,9 +1,9 @@
-import { useNavigate, Link } from "react-router-dom";
+import React from "react";
+import { Card, CardContent } from "@/components/ui/card";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
-import { Star, Eye } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useNavigationState } from "@/hooks/useNavigationState";
 import { cn } from "@/lib/utils";
 
 type Rapper = Tables<"rappers">;
@@ -18,9 +18,9 @@ interface TopRankingSectionProps {
 }
 
 const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
-  const navigate = useNavigate();
+  const { navigateToRapper } = useNavigationState();
   
-  // Component to render individual ranking card with structured layout
+  // Component to render individual ranking card using RapperCard foundation
   const RankingCard = ({ rapper, position, isTopTwo }: { rapper: RapperWithVotes; position: number; isTopTwo: boolean }) => {
     const imageSize = isTopTwo ? 'original' : 'large';
     const { data: imageUrl } = useRapperImage(rapper.id, imageSize);
@@ -31,63 +31,72 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       ? rapper.ranking_votes 
       : (rapper.total_votes || 0);
 
-    // Card dimensions
-    const cardHeight = isTopTwo ? "h-96 sm:h-112" : "h-80 sm:h-96";
-    const imageHeight = isTopTwo ? "h-64 sm:h-72" : "h-52 sm:h-64";
-    
-    const rankingTextSize = isTopTwo ? "text-3xl sm:text-4xl" : "text-2xl sm:text-3xl";
-    const nameTextSize = isTopTwo ? "text-lg sm:text-xl" : "text-base sm:text-lg";
-
-    const rapperUrl = `/rapper/${rapper.slug || rapper.id}`;
-    
-    // Debug logging
-    console.log('Rapper card data:', { 
-      name: rapper.name, 
-      slug: rapper.slug, 
-      id: rapper.id, 
-      url: rapperUrl 
-    });
+    const handleCardClick = (e: React.MouseEvent) => {
+      e.preventDefault();
+      navigateToRapper(rapper.slug || rapper.id, 1);
+    };
 
     return (
-      <Link 
-        to={rapperUrl}
+      <Card 
         className={cn(
-          "relative block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group cursor-pointer",
+          "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 cursor-pointer relative overflow-hidden group",
           isTopTwo ? "h-80" : "h-64"
         )}
+        onClick={handleCardClick}
       >
-        <img 
-          src={imageToDisplay}
-          alt={rapper.name}
-          className="w-full h-full object-cover"
-          loading="lazy"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+        {/* Rap culture accent bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
         
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-          <div className="flex items-center justify-between mb-2">
-            <div className="flex items-center space-x-2">
-              <span className="text-2xl font-bold bg-primary text-primary-foreground rounded-full w-8 h-8 flex items-center justify-center">
-                {position}
-              </span>
-              <h3 className="text-lg font-bold truncate">
+        {/* Position indicator - top right corner */}
+        <div className="absolute top-3 right-3 bg-rap-gold text-rap-carbon rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold font-mogra z-10">
+          {position}
+        </div>
+        
+        <CardContent className="p-0 h-full relative">
+          {/* Rapper avatar image - full card background */}
+          <div className="w-full h-full bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal rounded-lg flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300 overflow-hidden">
+            <img 
+              src={imageToDisplay}
+              alt={rapper.name || "Rapper"}
+              className="w-full h-full object-cover"
+              loading="lazy"
+              onError={(e) => {
+                // Fallback to optimized placeholder if image fails to load
+                const target = e.target as HTMLImageElement;
+                if (!target.src.includes(placeholderImage)) {
+                  target.src = placeholderImage;
+                }
+              }}
+            />
+            {/* Gradient overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+          </div>
+
+          {/* Rapper info - positioned at bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
+            <div className="space-y-2">
+              {/* Rapper name */}
+              <h3 className={cn(
+                "font-mogra leading-tight font-normal text-rap-gold truncate",
+                isTopTwo ? "text-xl" : "text-lg"
+              )}>
                 {rapper.name}
               </h3>
+              
+              {/* Vote count */}
+              <div className="flex items-center gap-2">
+                {voteCount === 0 ? (
+                  <span className="text-sm text-rap-smoke font-kaushan">No votes yet</span>
+                ) : (
+                  <span className="text-sm text-rap-platinum font-kaushan">
+                    {voteCount.toLocaleString()} votes
+                  </span>
+                )}
+              </div>
             </div>
           </div>
-          
-          <div className="flex items-center gap-2">
-            {voteCount === 0 ? (
-              <>
-                <Star className="w-4 h-4 text-yellow-400" />
-                <span className="text-sm text-gray-300">Vote to rank</span>
-              </>
-            ) : (
-              <span className="text-sm text-gray-300">Votes: {voteCount.toLocaleString()}</span>
-            )}
-          </div>
-        </div>
-      </Link>
+        </CardContent>
+      </Card>
     );
   };
 
