@@ -2,6 +2,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Crown, Trophy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useTopRappersByCategory } from "@/hooks/useTopRappersByCategory";
+import { useRapperImage } from "@/hooks/useImageStyle";
+import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 const TopRappersByCategoryCard = () => {
   const { data: topRappers, isLoading } = useTopRappersByCategory();
@@ -50,32 +52,56 @@ const TopRappersByCategoryCard = () => {
                   {category.replace('_', ' ')}
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {(rappers || []).slice(0, 3).map((rapper: any, index: number) => (
-                     <div key={rapper.rapper_id} 
-                          className="bg-gray-800 border border-rap-gold/20 rounded-lg p-3">
-                       <div className="flex items-center gap-3">
-                         {/* Avatar placeholder - will be added later */}
-                         <div className="w-10 h-10 bg-rap-smoke/20 rounded-full flex-shrink-0"></div>
-                         
-                         <div className="flex-1">
-                           <div className="flex items-center gap-2 mb-1">
-                             {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
-                             <span className="text-rap-platinum font-kaushan text-sm">
-                               {rapper.rapper_name}
-                             </span>
-                           </div>
-                           <div className="flex items-center justify-between">
-                             <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
-                               {rapper.average_rating?.toFixed(1)} avg
-                             </Badge>
-                             <span className="text-rap-platinum text-xs font-kaushan">
-                               {rapper.vote_count} votes
-                             </span>
-                           </div>
-                         </div>
-                       </div>
-                     </div>
-                  ))}
+                  {(rappers || []).slice(0, 3).map((rapper: any, index: number) => {
+                    const RapperAvatarItem = ({ rapper }: { rapper: any }) => {
+                      const { data: imageUrl } = useRapperImage(rapper.rapper_id, 'thumb');
+                      const placeholderImage = getOptimizedPlaceholder('thumb');
+                      const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
+
+                      return (
+                        <img 
+                          src={imageToDisplay}
+                          alt={rapper.rapper_name} 
+                          className="w-full h-full object-cover rounded-full"
+                          loading="lazy"
+                          onError={(e) => {
+                            const target = e.target as HTMLImageElement;
+                            if (!target.src.includes(placeholderImage)) {
+                              target.src = placeholderImage;
+                            }
+                          }}
+                        />
+                      );
+                    };
+
+                    return (
+                      <div key={rapper.rapper_id} 
+                           className="bg-gray-800 border border-rap-gold/20 rounded-lg p-3">
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30">
+                            <RapperAvatarItem rapper={rapper} />
+                          </div>
+                          
+                          <div className="flex-1">
+                            <div className="flex items-center gap-2 mb-1">
+                              {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
+                              <span className="text-rap-platinum font-kaushan text-sm">
+                                {rapper.rapper_name}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between">
+                              <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
+                                {rapper.average_rating?.toFixed(1)} avg
+                              </Badge>
+                              <span className="text-rap-platinum text-xs font-kaushan">
+                                {rapper.vote_count} votes
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             ))
