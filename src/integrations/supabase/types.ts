@@ -401,6 +401,13 @@ export type Database = {
             foreignKeyName: "comment_likes_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comment_likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "user_achievement_progress"
             referencedColumns: ["user_id"]
           },
@@ -450,6 +457,13 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -901,6 +915,30 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      profile_access_logs: {
+        Row: {
+          access_type: string
+          accessed_profile_id: string
+          accessor_user_id: string | null
+          created_at: string | null
+          id: string
+        }
+        Insert: {
+          access_type: string
+          accessed_profile_id: string
+          accessor_user_id?: string | null
+          created_at?: string | null
+          id?: string
+        }
+        Update: {
+          access_type?: string
+          accessed_profile_id?: string
+          accessor_user_id?: string | null
+          created_at?: string | null
+          id?: string
+        }
+        Relationships: []
       }
       profiles: {
         Row: {
@@ -1887,6 +1925,13 @@ export type Database = {
             foreignKeyName: "fk_user_rankings_profiles"
             columns: ["user_id"]
             isOneToOne: false
+            referencedRelation: "public_profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "fk_user_rankings_profiles"
+            columns: ["user_id"]
+            isOneToOne: false
             referencedRelation: "user_achievement_progress"
             referencedColumns: ["user_id"]
           },
@@ -2140,6 +2185,33 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      public_profiles: {
+        Row: {
+          avatar_url: string | null
+          bio_preview: string | null
+          created_at: string | null
+          first_name: string | null
+          id: string | null
+          username: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          bio_preview?: never
+          created_at?: string | null
+          first_name?: never
+          id?: string | null
+          username?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          bio_preview?: never
+          created_at?: string | null
+          first_name?: never
+          id?: string | null
+          username?: string | null
+        }
+        Relationships: []
       }
       ranking_vote_counts: {
         Row: {
@@ -2400,6 +2472,17 @@ export type Database = {
           username: string
         }[]
       }
+      get_public_profile_safe: {
+        Args: { profile_user_id: string }
+        Returns: {
+          avatar_url: string
+          bio_preview: string
+          created_at: string
+          first_name: string
+          id: string
+          username: string
+        }[]
+      }
       get_public_rapper_voting_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -2486,6 +2569,10 @@ export type Database = {
       is_moderator_or_admin: {
         Args: Record<PropertyKey, never>
         Returns: boolean
+      }
+      log_profile_access: {
+        Args: { access_type?: string; accessed_id: string }
+        Returns: undefined
       }
       populate_all_rankings_with_missing_rappers: {
         Args: Record<PropertyKey, never>
