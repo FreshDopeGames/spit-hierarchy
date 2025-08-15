@@ -46,13 +46,16 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
           {position}
         </div>
         
-        <CardContent className="p-0 h-full relative">
-          {/* Rapper avatar image - full card background */}
-          <div className="w-full h-full bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal rounded-lg flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300 overflow-hidden">
+        <CardContent className="p-5 h-full relative bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300">
+          {/* Rapper avatar image - smaller with padding */}
+          <div className="flex flex-col items-center space-y-4 h-full">
             <img 
               src={imageToDisplay}
               alt={rapper.name || "Rapper"}
-              className="w-full h-full object-cover"
+              className={cn(
+                "object-cover rounded-lg border-2 border-rap-gold/30",
+                isTopTwo ? "w-32 h-32" : "w-24 h-24"
+              )}
               loading="lazy"
               onError={(e) => {
                 // Fallback to optimized placeholder if image fails to load
@@ -62,23 +65,19 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
                 }
               }}
             />
-            {/* Gradient overlay for text readability */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
-          </div>
-
-          {/* Rapper info - positioned at bottom */}
-          <div className="absolute bottom-0 left-0 right-0 p-4 text-white">
-            <div className="space-y-2">
+            
+            {/* Rapper info - positioned below image */}
+            <div className="text-center space-y-2 flex-1 flex flex-col justify-end">
               {/* Rapper name */}
               <h3 className={cn(
-                "font-mogra leading-tight font-normal text-rap-gold truncate",
+                "font-mogra leading-tight font-normal text-rap-gold",
                 isTopTwo ? "text-xl" : "text-lg"
               )}>
                 {rapper.name}
               </h3>
               
               {/* Vote count */}
-              <div className="flex items-center gap-2">
+              <div className="flex items-center justify-center gap-2">
                 {voteCount === 0 ? (
                   <span className="text-sm text-rap-smoke font-kaushan">No votes yet</span>
                 ) : (
