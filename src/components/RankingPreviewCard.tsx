@@ -39,7 +39,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2 gap-[1px]">
             {topRowRappers.map((item, index) => (
-              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden">
+              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden border-[3px] border-black">
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
@@ -54,7 +54,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             ))}
             {/* Fill empty spots if less than 2 rappers */}
             {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
-              <div key={`top-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40">
+              <div key={`top-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40 border-[3px] border-black">
                 <img 
                   src={getOptimizedPlaceholder('medium')}
                   alt="Placeholder"
@@ -67,7 +67,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           {/* Bottom Row - 3 Images */}
           <div className="grid grid-cols-3 gap-[1px]">
             {bottomRowRappers.map((item, index) => (
-              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden">
+              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden border-[3px] border-black">
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
@@ -82,7 +82,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             ))}
             {/* Fill empty spots if less than 3 rappers in bottom row */}
             {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
-              <div key={`bottom-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40">
+              <div key={`bottom-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40 border-[3px] border-black">
                 <img 
                   src={getOptimizedPlaceholder('medium')}
                   alt="Placeholder"
