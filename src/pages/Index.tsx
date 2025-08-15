@@ -133,7 +133,7 @@ const Index = () => {
             {!isLoading && topActiveRankings.length > 0 && (
               <>
                 {topActiveRankings.map((ranking, index) => (
-                  <section key={ranking.id} className="py-8 px-6">
+                  <section key={ranking.id} className="py-4 px-6">
                     <div className="max-w-4xl mx-auto">
                       <TopRappersGrid 
                         title={ranking.title}
