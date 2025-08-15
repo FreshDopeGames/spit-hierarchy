@@ -102,11 +102,11 @@ const RapperDiscography = ({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
             <TabsTrigger value="albums" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
-              <Disc3 className="w-4 h-4 mr-2 flex-shrink-0" />
+              <Disc3 className="w-4 h-4 mr-2 flex-shrink-0 text-rap-gold" />
               <span className="truncate">Albums ({albums.length})</span>
             </TabsTrigger>
             <TabsTrigger value="mixtapes" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
-              <Music className="w-4 h-4 mr-2 flex-shrink-0" />
+              <Music className="w-4 h-4 mr-2 flex-shrink-0 text-rap-burgundy" />
               <span className="truncate">Mixtapes ({mixtapes.length})</span>
             </TabsTrigger>
           </TabsList>
