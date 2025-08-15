@@ -192,7 +192,7 @@ const BlogCarousel = () => {
                 />
               ))}
             </div>
-            <Link to="/blog">
+            <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
               <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-xs sm:text-sm h-auto">
                 Read More
               </Button>
