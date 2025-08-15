@@ -8,7 +8,7 @@ const TopRappersByCategoryCard = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-rap-carbon border-rap-gold/30">
+      <Card className="bg-black border-rap-gold/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
             <Crown className="w-5 h-5" />
@@ -34,7 +34,7 @@ const TopRappersByCategoryCard = () => {
   }
 
   return (
-    <Card className="bg-rap-carbon border-rap-gold/30">
+    <Card className="bg-black border-rap-gold/30">
       <CardHeader className="pb-3">
         <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
           <Crown className="w-5 h-5" />
@@ -52,7 +52,7 @@ const TopRappersByCategoryCard = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
                   {(rappers || []).slice(0, 3).map((rapper: any, index: number) => (
                     <div key={rapper.rapper_id} 
-                         className="bg-rap-carbon-light border border-rap-gold/20 rounded-lg p-3">
+                         className="bg-black/80 border border-rap-gold/20 rounded-lg p-3">
                       <div className="flex items-center gap-2 mb-1">
                         {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
                         <span className="text-rap-platinum font-kaushan text-sm">

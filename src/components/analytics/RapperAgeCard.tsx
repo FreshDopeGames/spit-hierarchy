@@ -7,7 +7,7 @@ const RapperAgeCard = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-rap-carbon border-rap-gold/30">
+      <Card className="bg-black border-rap-gold/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
             <Calendar className="w-5 h-5" />
@@ -25,7 +25,7 @@ const RapperAgeCard = () => {
   }
 
   return (
-    <Card className="bg-rap-carbon border-rap-gold/30">
+    <Card className="bg-black border-rap-gold/30">
       <CardHeader className="pb-3">
         <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
           <Calendar className="w-5 h-5" />
