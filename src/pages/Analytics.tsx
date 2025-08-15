@@ -40,36 +40,41 @@ const Analytics = () => {
             <TabsTrigger 
               value="platform" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              aria-label="Platform Analytics"
             >
-              <BarChart3 className="w-3 h-3 sm:w-4 sm:h-4" />
+              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Platform</span>
             </TabsTrigger>
             <TabsTrigger 
               value="rapper-stats" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              aria-label="Rapper Statistics"
             >
-              <Music className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Music className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Rappers</span>
             </TabsTrigger>
             <TabsTrigger 
               value="members" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              aria-label="Member Analytics"
             >
-              <Users className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Users className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Members</span>
             </TabsTrigger>
             <TabsTrigger 
               value="achievements" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              aria-label="Awards and Achievements"
             >
-              <Trophy className="w-3 h-3 sm:w-4 sm:h-4" />
+              <Trophy className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Awards</span>
             </TabsTrigger>
             <TabsTrigger 
               value="stats" 
               className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              aria-label="My Personal Statistics"
             >
-              <User className="w-3 h-3 sm:w-4 sm:h-4" />
+              <User className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">My Stats</span>
             </TabsTrigger>
           </TabsList>
