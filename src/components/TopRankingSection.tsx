@@ -49,24 +49,9 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
       url: rapperUrl 
     });
 
-    const handleCardClick = (event: React.MouseEvent) => {
-      event.preventDefault();
-      event.stopPropagation();
-      console.log('Card clicked:', { name: rapper.name, url: rapperUrl });
-      console.log('Navigating to:', rapperUrl);
-      
-      try {
-        window.location.href = rapperUrl;
-      } catch (error) {
-        console.error('Navigation failed:', error);
-        // Fallback navigation
-        window.location.pathname = rapperUrl;
-      }
-    };
-
     return (
-      <div 
-        onClick={handleCardClick}
+      <Link 
+        to={rapperUrl}
         className={cn(
           "relative block rounded-lg overflow-hidden transition-all duration-300 hover:shadow-lg hover:shadow-primary/20 group cursor-pointer",
           isTopTwo ? "h-80" : "h-64"
@@ -103,7 +88,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
               )}
             </div>
           </div>
-      </div>
+      </Link>
     );
   };
 
