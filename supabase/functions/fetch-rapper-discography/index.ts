@@ -288,6 +288,14 @@ serve(async (req) => {
         continue;
       }
 
+      // Skip non-studio album types (compilations, soundtracks, live albums, etc.)
+      const excludedSecondaryTypes = ['Compilation', 'Soundtrack', 'Live', 'Remix', 'Spokenword'];
+      const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
+      if (hasExcludedType) {
+        console.log(`Skipping album "${rg.title}" - excluded type: ${secondary.filter(t => excludedSecondaryTypes.includes(t)).join(', ')}`);
+        continue;
+      }
+
       const isMixtape = secondary.some((t) => t.toLowerCase().includes('mixtape'));
       const releaseType = isMixtape ? 'mixtape' : 'album';
 
