@@ -16,16 +16,16 @@ const TopRappersByCategoryCard = () => {
         <CardHeader className="pb-3">
           <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
             <Crown className="w-5 h-5" />
-            Top Rappers by Skill
+            Top Rappers by Category
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-6">
-            {[...Array(3)].map((_, i) => (
+            {[...Array(5)].map((_, i) => (
               <div key={i} className="space-y-3">
                 <div className="h-6 bg-rap-smoke/20 rounded w-1/3"></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {[...Array(3)].map((_, j) => (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {[...Array(5)].map((_, j) => (
                     <div key={j} className="h-16 bg-rap-smoke/20 rounded"></div>
                   ))}
                 </div>
@@ -40,10 +40,10 @@ const TopRappersByCategoryCard = () => {
   return (
     <Card className="bg-black border-rap-gold/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
-          <Crown className="w-5 h-5" />
-          Top Rappers by Skill
-        </CardTitle>
+          <CardTitle className="text-rap-gold flex items-center gap-2 font-mogra">
+            <Crown className="w-5 h-5" />
+            Top Rappers by Category
+          </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-6">
@@ -53,8 +53,8 @@ const TopRappersByCategoryCard = () => {
                 <h4 className="text-rap-gold font-mogra text-lg capitalize">
                   {category.replace(/_/g, ' ').replace('on beats', 'On Beats')}
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {(rappers || []).slice(0, 3).map((rapper: any, index: number) => {
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+                  {(rappers || []).slice(0, 5).map((rapper: any, index: number) => {
                     const RapperAvatarItem = ({ rapper }: { rapper: any }) => {
                       const { data: imageUrl } = useRapperImage(rapper.rapper_id, 'thumb');
                       const placeholderImage = getOptimizedPlaceholder('thumb');

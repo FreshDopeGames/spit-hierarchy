@@ -21,13 +21,8 @@ export const useTopRappersByCategory = () => {
 
         console.log('Available voting categories:', allCategories);
 
-        // Filter for skill-related categories (more flexible matching)
-        const skillCategories = allCategories?.filter(cat => 
-          cat.name.toLowerCase().includes('lyrical') ||
-          cat.name.toLowerCase().includes('flow') ||
-          cat.name.toLowerCase().includes('technical') ||
-          cat.name.toLowerCase().includes('skill')
-        ) || [];
+        // Use all voting categories instead of just skill-related ones
+        const skillCategories = allCategories || [];
 
         console.log('Filtered skill categories:', skillCategories);
 
@@ -91,7 +86,7 @@ export const useTopRappersByCategory = () => {
               vote_count: rapper.vote_count
             }))
             .sort((a, b) => b.average_rating - a.average_rating)
-            .slice(0, 3);
+            .slice(0, 5);
 
           console.log(`Top rappers for ${category.name}:`, topRappers);
 
