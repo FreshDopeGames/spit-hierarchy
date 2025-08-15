@@ -21,8 +21,10 @@ export const useTopRappersByCategory = () => {
 
         console.log('Available voting categories:', allCategories);
 
-        // Use all voting categories instead of just skill-related ones
-        const skillCategories = allCategories || [];
+        // Use all voting categories except "Overall"
+        const skillCategories = (allCategories || []).filter(category => 
+          category.name.toLowerCase() !== 'overall'
+        );
 
         console.log('Filtered skill categories:', skillCategories);
 
