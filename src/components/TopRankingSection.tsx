@@ -38,7 +38,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
         <Card 
           className={cn(
             "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 relative overflow-hidden group",
-            isTopTwo ? "h-72" : "h-64"
+            isTopTwo ? "h-80" : "h-72"
           )}
         >
         {/* Position indicator - top left corner */}
@@ -67,7 +67,7 @@ const TopRankingSection = ({ rappers, rankingId }: TopRankingSectionProps) => {
             />
             
             {/* Rapper info - positioned below image */}
-            <div className="text-center space-y-1 flex flex-col justify-start h-auto">
+            <div className="text-center space-y-1 flex flex-col justify-start h-12">
               {/* Rapper name */}
               <h3 className={cn(
                 "font-mogra leading-tight font-normal text-rap-gold",
