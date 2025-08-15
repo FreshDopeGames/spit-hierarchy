@@ -35,9 +35,9 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
     >
       <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-rap-gold/30 group-hover:border-rap-gold/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-rap-gold/20">
         {/* Rapper Mosaic Background - Top 2/3 of card */}
-        <div className="absolute inset-0 h-2/3 grid grid-rows-2 group-hover:scale-105 transition-transform duration-500">
+        <div className="absolute inset-0 h-2/3 grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
-          <div className="grid grid-cols-2 gap-[1px]">
+          <div className="grid grid-cols-2">
             {topRowRappers.map((item, index) => (
               <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden border-[3px] border-black">
                 <img 
@@ -65,7 +65,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           </div>
           
           {/* Bottom Row - 3 Images */}
-          <div className="grid grid-cols-3 gap-[1px]">
+          <div className="grid grid-cols-3">
             {bottomRowRappers.map((item, index) => (
               <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden border-[3px] border-black">
                 <img 
