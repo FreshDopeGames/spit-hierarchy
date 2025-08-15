@@ -65,22 +65,22 @@ const CategoryPerformanceCard = () => {
                   {category.description}
                 </p>
               </div>
-              <div className={`flex items-center gap-4 text-sm ${
+              <div className={`flex items-center gap-4 ${
                 isMobile ? 'justify-center' : ''
               }`}>
                 <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra">{category.total_votes}</p>
-                  <p className="text-rap-smoke font-kaushan">Votes</p>
+                  <p className="text-rap-platinum font-bold font-mogra text-2xl">{category.total_votes}</p>
+                  <p className="text-rap-smoke font-kaushan text-base">Votes</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra">{category.unique_voters}</p>
-                  <p className="text-rap-smoke font-kaushan">Voters</p>
+                  <p className="text-rap-platinum font-bold font-mogra text-2xl">{category.unique_voters}</p>
+                  <p className="text-rap-smoke font-kaushan text-base">Voters</p>
                 </div>
                 <div className="text-center">
-                  <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30">
+                  <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-lg">
                     {Number(category.average_rating || 0).toFixed(1)}
                   </Badge>
-                  <p className="text-rap-smoke font-kaushan">Avg.</p>
+                  <p className="text-rap-smoke font-kaushan text-base">Avg.</p>
                 </div>
               </div>
             </div>
