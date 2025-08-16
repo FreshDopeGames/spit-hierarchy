@@ -5,6 +5,12 @@ interface ProfileStatsProps {
   memberStats: any;
 }
 
+const formatMemberSince = (dateString: string): string => {
+  if (!dateString) return "Unknown";
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(date);
+};
+
 const ProfileStats = ({ memberStats }: ProfileStatsProps) => {
   if (!memberStats) return null;
 
@@ -13,7 +19,7 @@ const ProfileStats = ({ memberStats }: ProfileStatsProps) => {
       <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda mb-4 text-center">
         Stats
       </h3>
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 sm:gap-6">
         <div className="text-center p-3 sm:p-4 bg-rap-carbon/30 rounded-lg border border-rap-gold/20">
           <div className="text-xl sm:text-2xl font-extrabold text-rap-gold font-merienda">
             {memberStats.total_votes || 0}
@@ -36,6 +42,14 @@ const ProfileStats = ({ memberStats }: ProfileStatsProps) => {
           </div>
           <div className="text-xs sm:text-sm text-rap-smoke font-merienda">
             Voting Streak
+          </div>
+        </div>
+        <div className="text-center p-3 sm:p-4 bg-rap-carbon/30 rounded-lg border border-rap-gold/20">
+          <div className="text-xl sm:text-2xl font-extrabold text-rap-platinum font-merienda">
+            {formatMemberSince(memberStats.created_at)}
+          </div>
+          <div className="text-xs sm:text-sm text-rap-smoke font-merienda">
+            Member Since
           </div>
         </div>
       </div>
