@@ -119,18 +119,12 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           
           {/* Stats Row */}
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4 text-xs sm:text-sm">
-              <div className="flex items-center gap-1 text-rap-smoke">
-                <Users className="w-4 h-4" />
-                <span>{items.length} Rappers</span>
+            {totalVotes > 0 && (
+              <div className="flex items-center gap-1 text-rap-smoke text-xs sm:text-sm">
+                <TrendingUp className="w-4 h-4" />
+                <span>{totalVotes.toLocaleString()} Votes</span>
               </div>
-              {totalVotes > 0 && (
-                <div className="flex items-center gap-1 text-rap-smoke">
-                  <TrendingUp className="w-4 h-4" />
-                  <span>{totalVotes.toLocaleString()} Votes</span>
-                </div>
-              )}
-            </div>
+            )}
             
             {/* View Ranking CTA */}
             <div className="flex items-center gap-1 text-rap-gold group-hover:text-rap-gold-light transition-colors duration-300 text-xs sm:text-sm font-kaushan">
