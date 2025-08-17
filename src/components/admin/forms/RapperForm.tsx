@@ -59,7 +59,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     enabled: !!rapper?.id,
   });
 
-  // Initialize form data when rapper or existing tags change
+  // Initialize form data when rapper changes (separate effect for tags)
   useEffect(() => {
     if (rapper) {
       setFormData({
@@ -78,7 +78,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         spotify_id: rapper.spotify_id || "",
         instagram_handle: rapper.instagram_handle || "",
         twitter_handle: rapper.twitter_handle || "",
-        tags: existingTags,
+        tags: [],
       });
     } else {
       setFormData({
@@ -100,7 +100,14 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         tags: [],
       });
     }
-  }, [rapper, existingTags]);
+  }, [rapper]);
+
+  // Update tags separately when they're loaded
+  useEffect(() => {
+    if (existingTags.length > 0) {
+      setFormData(prev => ({ ...prev, tags: existingTags }));
+    }
+  }, [existingTags]);
 
   const validateForm = (): string[] => {
     const errors: string[] = [];
