@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink, PlayCircle } from "lucide-react";
 import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDiscography";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { format } from "date-fns";
 import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
 interface RapperDiscographyProps {
@@ -21,6 +22,7 @@ const RapperDiscography = ({
     error
   } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
   const refreshMutation = useRefreshDiscography();
+  const { isAdmin } = useSecurityContext();
   const [activeTab, setActiveTab] = useState("albums");
   const handleRefresh = () => {
     refreshMutation.mutate(rapperId);
@@ -235,18 +237,18 @@ const RapperDiscography = ({
         </Tabs>
         
         <div className="flex items-center justify-center gap-2 pt-6 border-t border-rap-carbon/20 mt-6 my-[25px] py-[23px]">
-          {data?.cached && <Badge variant="secondary" className="text-xs">
+          {isAdmin && data?.cached && <Badge variant="secondary" className="text-xs">
               Cached
             </Badge>}
           {isLoading && <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
               Loading...
             </Badge>}
-          <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2">
+          {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2">
             <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
             <span className="text-sm font-medium">
               {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
             </span>
-          </Button>
+          </Button>}
         </div>
       </CardContent>
     </Card>;
