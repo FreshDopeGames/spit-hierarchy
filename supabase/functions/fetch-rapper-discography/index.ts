@@ -288,13 +288,22 @@ serve(async (req) => {
         continue;
       }
 
-      // Enhanced filtering for non-studio releases
-      const excludedSecondaryTypes = [
-        'Compilation', 'Soundtrack', 'Live', 'Remix', 'Spokenword', 
-        'Mixtape/Street', 'DJ-mix', 'Audio drama', 'Field recording',
-        'Promotional', 'Bootleg', 'Interview', 'Demo'
+      // Strict filtering: Only include releases with primary-type "Album" and no conflicting secondary types
+      // Allow only pure albums or albums with harmless technical secondary types
+      const allowedSecondaryTypes = [
+        'Stereo', 'Mono', 'Remaster', 'Deluxe edition'
       ];
-      const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
+      
+      // Only include if primary type is Album AND no secondary types OR only allowed secondary types
+      const isPureAlbum = primaryType === 'Album' && (
+        secondary.length === 0 || 
+        secondary.every(type => allowedSecondaryTypes.includes(type))
+      );
+      
+      if (!isPureAlbum) {
+        console.log(`Skipping album "${rg.title}" - primary-type: ${primaryType}, secondary-types: [${secondary.join(', ')}]`);
+        continue;
+      }
       
       // Additional title-based filtering for common non-studio releases
       const titleLower = rg.title.toLowerCase();
@@ -306,11 +315,8 @@ serve(async (req) => {
       ];
       const hasSuspiciousTitle = excludedTitlePatterns.some(pattern => titleLower.includes(pattern));
       
-      if (hasExcludedType || hasSuspiciousTitle) {
-        const reason = hasExcludedType 
-          ? `excluded type: ${secondary.filter(t => excludedSecondaryTypes.includes(t)).join(', ')}`
-          : `suspicious title pattern`;
-        console.log(`Skipping album "${rg.title}" - ${reason}`);
+      if (hasSuspiciousTitle) {
+        console.log(`Skipping album "${rg.title}" - suspicious title pattern`);
         continue;
       }
 
