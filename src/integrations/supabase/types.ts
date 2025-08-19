@@ -401,13 +401,6 @@ export type Database = {
             foreignKeyName: "comment_likes_user_id_fkey"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "public_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comment_likes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "user_achievement_progress"
             referencedColumns: ["user_id"]
           },
@@ -457,13 +450,6 @@ export type Database = {
             columns: ["user_id"]
             isOneToOne: false
             referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "public_profiles"
             referencedColumns: ["id"]
           },
           {
@@ -1925,13 +1911,6 @@ export type Database = {
             foreignKeyName: "fk_user_rankings_profiles"
             columns: ["user_id"]
             isOneToOne: false
-            referencedRelation: "public_profiles"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_user_rankings_profiles"
-            columns: ["user_id"]
-            isOneToOne: false
             referencedRelation: "user_achievement_progress"
             referencedColumns: ["user_id"]
           },
@@ -2185,33 +2164,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
-      }
-      public_profiles: {
-        Row: {
-          avatar_url: string | null
-          bio_preview: string | null
-          created_at: string | null
-          first_name: string | null
-          id: string | null
-          username: string | null
-        }
-        Insert: {
-          avatar_url?: string | null
-          bio_preview?: never
-          created_at?: string | null
-          first_name?: never
-          id?: string | null
-          username?: string | null
-        }
-        Update: {
-          avatar_url?: string | null
-          bio_preview?: never
-          created_at?: string | null
-          first_name?: never
-          id?: string | null
-          username?: string | null
-        }
-        Relationships: []
       }
       ranking_vote_counts: {
         Row: {
