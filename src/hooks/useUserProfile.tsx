@@ -35,11 +35,9 @@ export const useUserProfile = () => {
         setLoading(true);
         setError(null);
         
-        // Users can view their own complete profile with the new RLS policy
+        // Use secure function to get own complete profile
         const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('id', user.id)
+          .rpc('get_own_profile')
           .single();
 
         if (error) {

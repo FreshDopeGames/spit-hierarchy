@@ -25,11 +25,9 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     queryKey: ['user-profile', user?.id],
     queryFn: async () => {
       if (!user?.id) return null;
-      // Users can view their own profile with the new RLS policy
+      // Use secure function to get own profile data
       const { data, error } = await supabase
-        .from('profiles')
-        .select('username, full_name, avatar_url')
-        .eq('id', user.id)
+        .rpc('get_own_profile')
         .single();
       if (error) throw error;
       return data;

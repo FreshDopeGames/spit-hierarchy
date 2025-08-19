@@ -38,9 +38,7 @@ const BlogPostsTab = ({ onEditPost, onNewPost }: BlogPostsTabProps) => {
       
       if (authorIds.length > 0) {
         const { data: profiles, error: profilesError } = await supabase
-          .from('profiles')
-          .select('id, username, full_name')
-          .in('id', authorIds);
+          .rpc('search_profiles_admin', { search_term: '' });
         
         if (profilesError) throw profilesError;
         profilesData = profiles || [];

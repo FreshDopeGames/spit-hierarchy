@@ -18,7 +18,7 @@ export const usePublicProfile = (userId: string | undefined) => {
       
       // Use the secure function to get public profile data
       const { data, error } = await supabase
-        .rpc('get_public_profile', { user_uuid: userId });
+        .rpc('get_profile_for_display', { profile_user_id: userId });
       
       if (error) throw error;
       return data?.[0] || null;
@@ -37,7 +37,7 @@ export const usePublicProfiles = (userIds: string[]) => {
       const profiles = await Promise.all(
         userIds.map(async (id) => {
           const { data, error } = await supabase
-            .rpc('get_public_profile', { user_uuid: id });
+            .rpc('get_profile_for_display', { profile_user_id: id });
           
           if (error) {
             console.error(`Error fetching profile for ${id}:`, error);
@@ -60,11 +60,9 @@ export const useAuthenticatedProfiles = (userIds: string[]) => {
     queryFn: async () => {
       if (!userIds.length) return [];
       
-      // This will work with our RLS policy for authenticated users
+      // Use secure batch function for multiple profiles
       const { data, error } = await supabase
-        .from('profiles')
-        .select('id, username, avatar_url, full_name, bio, created_at')
-        .in('id', userIds);
+        .rpc('get_profiles_batch', { profile_user_ids: userIds });
       
       if (error) throw error;
       return data || [];

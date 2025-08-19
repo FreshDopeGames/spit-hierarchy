@@ -13,10 +13,10 @@ const AnalyticsDebugInfo = () => {
         .from("votes")
         .select("*", { count: "exact", head: true });
 
-      // Get user count  
-      const { count: userCount } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
+      // Get user count using admin function
+      const { data: allProfiles } = await supabase
+        .rpc('search_profiles_admin', { search_term: '' });
+      const userCount = allProfiles?.length || 0;
 
       // Get recent votes for trends
       const { data: recentVotes } = await supabase

@@ -2398,9 +2398,45 @@ export type Database = {
           unique_voters: number
         }[]
       }
+      get_own_profile: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avatar_url: string
+          bio: string
+          birthdate: string
+          created_at: string
+          full_name: string
+          id: string
+          location: string
+          preferred_image_style: Database["public"]["Enums"]["image_style"]
+          social_links: Json
+          updated_at: string
+          username: string
+        }[]
+      }
       get_position_delta: {
         Args: { p_ranking_id: string; p_rapper_id: string }
         Returns: number
+      }
+      get_profile_for_display: {
+        Args: { profile_user_id: string }
+        Returns: {
+          avatar_url: string
+          bio_preview: string
+          created_at: string
+          full_name: string
+          id: string
+          username: string
+        }[]
+      }
+      get_profiles_batch: {
+        Args: { profile_user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          first_name: string
+          id: string
+          username: string
+        }[]
       }
       get_public_category_stats: {
         Args: Record<PropertyKey, never>
@@ -2420,6 +2456,15 @@ export type Database = {
           bio: string
           created_at: string
           full_name: string
+          id: string
+          username: string
+        }[]
+      }
+      get_public_profile_minimal: {
+        Args: { profile_user_id: string }
+        Returns: {
+          avatar_url: string
+          first_name: string
           id: string
           username: string
         }[]
@@ -2549,6 +2594,16 @@ export type Database = {
       reset_all_voting_data: {
         Args: Record<PropertyKey, never>
         Returns: Json
+      }
+      search_profiles_admin: {
+        Args: { search_term?: string }
+        Returns: {
+          avatar_url: string
+          created_at: string
+          full_name: string
+          id: string
+          username: string
+        }[]
       }
     }
     Enums: {

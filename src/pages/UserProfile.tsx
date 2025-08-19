@@ -27,9 +27,7 @@ const UserProfile = () => {
     queryFn: async () => {
       if (!user) return null;
       const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
+        .rpc('get_own_profile')
         .maybeSingle();
       if (error) throw error;
       return data;

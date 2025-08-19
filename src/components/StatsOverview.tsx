@@ -36,13 +36,10 @@ const StatsOverview = () => {
         .limit(1)
         .single();
 
-      // Get newest member
-      const { data: newestMember } = await supabase
-        .from("profiles")
-        .select("username")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
+      // Get newest member using admin search function
+      const { data: adminProfiles } = await supabase
+        .rpc('search_profiles_admin', { search_term: '' });
+      const newestMember = adminProfiles?.[0];
 
       // Get top commenter
       const { data: topCommenter } = await supabase
@@ -56,10 +53,7 @@ const StatsOverview = () => {
       let topCommenterName = "N/A";
       if (topCommenter) {
         const { data: commenterProfile } = await supabase
-          .from("profiles")
-          .select("username")
-          .eq("id", topCommenter.id)
-          .single();
+          .rpc('get_public_profile_minimal', { profile_user_id: topCommenter.id });
         topCommenterName = commenterProfile?.username || "N/A";
       }
 
@@ -75,10 +69,7 @@ const StatsOverview = () => {
       let topVoterName = "N/A";
       if (topVoter) {
         const { data: voterProfile } = await supabase
-          .from("profiles")
-          .select("username")
-          .eq("id", topVoter.id)
-          .single();
+          .rpc('get_public_profile_minimal', { profile_user_id: topVoter.id });
         topVoterName = voterProfile?.username || "N/A";
       }
 

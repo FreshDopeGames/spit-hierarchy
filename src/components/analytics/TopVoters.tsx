@@ -17,9 +17,7 @@ const TopVoters = () => {
       if (votingStats && votingStats.length > 0) {
         const userIds = votingStats.map(stat => stat.user_id);
         const { data: profiles, error: profilesError } = await supabase
-          .from("profiles")
-          .select("id, username, full_name")
-          .in("id", userIds);
+          .rpc('get_profiles_batch', { profile_user_ids: userIds });
         
         if (profilesError) console.error("Error fetching profiles:", profilesError);
 
