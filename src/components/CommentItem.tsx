@@ -26,7 +26,7 @@ interface Comment {
   profiles: {
     username: string;
     avatar_url: string | null;
-  };
+  } | null;
   comment_likes: Array<{
     id: string;
     user_id: string;
@@ -91,12 +91,12 @@ const CommentItem = ({
         <div className={`${isMobile ? 'flex flex-col gap-2' : 'flex items-start gap-3'}`}>
           <div className="flex items-start gap-3">
             <SmallAvatar 
-              avatarUrl={comment.profiles.avatar_url} 
-              username={comment.profiles.username}
+              avatarUrl={comment.profiles?.avatar_url || null} 
+              username={comment.profiles?.username || "Anonymous User"}
               size="sm"
             />
             <div className="flex items-center gap-2">
-              <span className="text-rap-gold font-mogra">{comment.profiles.username}</span>
+              <span className="text-rap-gold font-mogra">{comment.profiles?.username || "Anonymous User"}</span>
               <span className="text-rap-smoke text-sm font-merienda">
                 {formatTimeAgo(comment.created_at)}
               </span>
@@ -176,7 +176,7 @@ const CommentItem = ({
                 <textarea
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
-                  placeholder={`Reply to ${comment.profiles.username}...`}
+                  placeholder={`Reply to ${comment.profiles?.username || "user"}...`}
                   className="w-full bg-transparent text-rap-platinum placeholder-rap-smoke border-none resize-none focus:outline-none font-merienda"
                   rows={2}
                 />
