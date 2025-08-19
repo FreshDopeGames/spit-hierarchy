@@ -2386,6 +2386,13 @@ export type Database = {
         }
         Returns: Json
       }
+      find_user_by_username: {
+        Args: { search_username: string }
+        Returns: {
+          id: string
+          username: string
+        }[]
+      }
       get_category_voting_analytics: {
         Args: Record<PropertyKey, never>
         Returns: {

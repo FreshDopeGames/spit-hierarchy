@@ -13,21 +13,17 @@ export const usePublicUserData = () => {
       setLoading(true);
       setNotFound(false);
 
-      // First, find the user ID by username
-      // We'll need a secure function for this lookup
-      const { data: profilesData, error: profilesError } = await supabase
-        .from("profiles")
-        .select("id")
-        .eq("username", username)
-        .single();
+      // First, find the user ID by username using our secure function
+      const { data: userLookup, error: lookupError } = await supabase
+        .rpc('find_user_by_username', { search_username: username });
       
-      if (profilesError || !profilesData) {
-        console.error("Error finding user by username:", profilesError);
+      if (lookupError || !userLookup || userLookup.length === 0) {
+        console.error("Error finding user by username:", lookupError);
         setNotFound(true);
         return;
       }
       
-      const userId = profilesData.id;
+      const userId = userLookup[0].id;
       
       // Now get the full public profile data using our new secure function
       const { data: profileData, error: profileError } = await supabase
