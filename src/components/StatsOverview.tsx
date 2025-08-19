@@ -8,10 +8,9 @@ const StatsOverview = () => {
   const { data: stats, isLoading } = useQuery({
     queryKey: ["site-stats"],
     queryFn: async () => {
-      // Get total members (registered users)
-      const { count: totalMembers } = await supabase
-        .from("profiles")
-        .select("*", { count: "exact", head: true });
+      // Get total members (registered users) using secure function
+      const { data: totalMembers } = await supabase
+        .rpc("get_total_member_count");
 
       // Get total votes
       const { count: totalVotes } = await supabase

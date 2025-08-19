@@ -2519,6 +2519,10 @@ export type Database = {
           votes_last_7_days: number
         }[]
       }
+      get_total_member_count: {
+        Args: Record<PropertyKey, never>
+        Returns: number
+      }
       get_trending_rappers: {
         Args: { days_back?: number }
         Returns: {
