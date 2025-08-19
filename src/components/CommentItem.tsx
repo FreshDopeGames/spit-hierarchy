@@ -23,10 +23,10 @@ interface Comment {
   user_id: string;
   comment_text: string;
   created_at: string;
-  profiles: {
+  profiles?: {
     username: string;
     avatar_url: string | null;
-  } | null;
+  };
   comment_likes: Array<{
     id: string;
     user_id: string;

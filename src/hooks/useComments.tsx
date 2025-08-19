@@ -14,7 +14,7 @@ interface Comment {
   parent_id: string | null;
   created_at: string;
   updated_at: string;
-  profiles: {
+  profiles?: {
     username: string;
     avatar_url: string | null;
   };
@@ -39,11 +39,11 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
   const { data: comments = [], isLoading } = useQuery({
     queryKey: ["comments", contentType, contentId],
     queryFn: async () => {
+      // First, fetch comments and replies without profile joins
       const { data, error } = await supabase
         .from("comments")
         .select(`
           *,
-          profiles(username, avatar_url),
           comment_likes(id, user_id)
         `)
         .eq("content_type", contentType)
@@ -60,7 +60,6 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
             .from("comments")
             .select(`
               *,
-              profiles(username, avatar_url),
               comment_likes(id, user_id)
             `)
             .eq("parent_id", comment.id)
@@ -74,6 +73,41 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
           };
         })
       );
+
+      // Extract all unique user IDs from comments and replies
+      const allComments = commentsWithReplies.flatMap(comment => [comment, ...(comment.replies || [])]);
+      const uniqueUserIds = [...new Set(allComments.map(comment => comment.user_id))];
+
+      // Fetch profiles in batch using our secure function
+      if (uniqueUserIds.length > 0) {
+        const { data: profilesData, error: profilesError } = await supabase
+          .rpc('get_public_profiles_batch', { profile_user_ids: uniqueUserIds });
+
+        if (profilesError) {
+          console.error("Error fetching profiles:", profilesError);
+        } else {
+          // Create a map of user_id to profile for quick lookup
+          const profileMap = new Map(profilesData?.map(profile => [profile.id, profile]) || []);
+
+          // Add profile data to comments and replies
+          const enrichedComments = commentsWithReplies.map(comment => ({
+            ...comment,
+            profiles: profileMap.get(comment.user_id) ? {
+              username: profileMap.get(comment.user_id)!.username,
+              avatar_url: profileMap.get(comment.user_id)!.avatar_url
+            } : undefined,
+            replies: comment.replies?.map(reply => ({
+              ...reply,
+              profiles: profileMap.get(reply.user_id) ? {
+                username: profileMap.get(reply.user_id)!.username,
+                avatar_url: profileMap.get(reply.user_id)!.avatar_url
+              } : undefined
+            }))
+          }));
+
+          return enrichedComments as Comment[];
+        }
+      }
 
       return commentsWithReplies as Comment[];
     }
