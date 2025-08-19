@@ -16,7 +16,8 @@ interface DatabaseRanking {
 interface UserProfile {
   id: string;
   username: string;
-  full_name: string | null;
+  first_name?: string;
+  avatar_url?: string;
 }
 
 interface PreviewItem {

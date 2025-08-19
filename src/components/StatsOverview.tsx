@@ -54,7 +54,7 @@ const StatsOverview = () => {
       if (topCommenter) {
         const { data: commenterProfile } = await supabase
           .rpc('get_public_profile_minimal', { profile_user_id: topCommenter.id });
-        topCommenterName = commenterProfile?.username || "N/A";
+        topCommenterName = commenterProfile?.[0]?.username || "N/A";
       }
 
       // Get top voter
@@ -70,7 +70,7 @@ const StatsOverview = () => {
       if (topVoter) {
         const { data: voterProfile } = await supabase
           .rpc('get_public_profile_minimal', { profile_user_id: topVoter.id });
-        topVoterName = voterProfile?.username || "N/A";
+        topVoterName = voterProfile?.[0]?.username || "N/A";
       }
 
       return {

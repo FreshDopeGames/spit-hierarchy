@@ -6,7 +6,7 @@ interface PublicProfile {
   username: string;
   full_name: string;
   avatar_url: string | null;
-  bio: string | null;
+  bio_preview: string | null;
   created_at: string;
 }
 
