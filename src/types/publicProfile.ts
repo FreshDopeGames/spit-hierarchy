@@ -3,16 +3,17 @@ export interface MemberStats {
   total_votes: number;
   status: string;
   consecutive_voting_days: number;
+  total_comments: number;
+  ranking_lists_created: number;
+  top_five_created: number;
 }
 
 export interface PublicProfile {
   id: string;
   username: string;
-  full_name: string | null;
   created_at: string;
-  member_stats: MemberStats | null;
-  bio_preview?: string | null;
-  location?: string | null;
+  member_stats: MemberStats;
+  bio?: string | null;
   avatar_url?: string | null;
 }
 

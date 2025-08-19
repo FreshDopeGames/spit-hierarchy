@@ -2460,6 +2460,17 @@ export type Database = {
           username: string
         }[]
       }
+      get_public_profile_full: {
+        Args: { profile_user_id: string }
+        Returns: {
+          avatar_url: string
+          bio: string
+          created_at: string
+          id: string
+          member_stats: Json
+          username: string
+        }[]
+      }
       get_public_profile_minimal: {
         Args: { profile_user_id: string }
         Returns: {
@@ -2476,6 +2487,14 @@ export type Database = {
           bio_preview: string
           created_at: string
           first_name: string
+          id: string
+          username: string
+        }[]
+      }
+      get_public_profiles_batch: {
+        Args: { profile_user_ids: string[] }
+        Returns: {
+          avatar_url: string
           id: string
           username: string
         }[]

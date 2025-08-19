@@ -16,7 +16,6 @@ interface MemberStats {
 interface ProfileData {
   id: string;
   username: string;
-  full_name: string | null;
   created_at: string;
   member_stats: MemberStats | null;
   bio?: string | null;
@@ -104,12 +103,6 @@ const UnifiedProfileHeader = ({
             <h1 className="text-3xl md:text-4xl font-bold text-rap-platinum font-mogra mb-2">
               {profile.username}
             </h1>
-            {profile.full_name && (
-              <p className="text-rap-smoke font-kaushan text-lg md:text-xl mb-3">
-                {profile.full_name}
-              </p>
-            )}
-            
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-4">
               <Badge className={`font-kaushan border ${getStatusColor(profile.member_stats?.status)}`}>
                 <Trophy className="w-3 h-3 mr-1" />

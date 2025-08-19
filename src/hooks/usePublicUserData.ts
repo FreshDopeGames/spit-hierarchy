@@ -1,4 +1,3 @@
-
 import { useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { PublicProfile, RankingWithItems, SimpleRankingItem } from "@/types/publicProfile";
@@ -14,54 +13,50 @@ export const usePublicUserData = () => {
       setLoading(true);
       setNotFound(false);
 
-      // First, find the user ID by username using the secure function
-      // Since we can't query profiles by username directly anymore, 
-      // we need to find the user through a different approach
+      // First, find the user ID by username
+      // We'll need a secure function for this lookup
+      const { data: profilesData, error: profilesError } = await supabase
+        .from("profiles")
+        .select("id")
+        .eq("username", username)
+        .single();
       
-      // For now, we'll need to use a different strategy since the RLS policies
-      // prevent direct username lookups. We'll create a public function for this.
-      const { data: userLookup, error: lookupError } = await supabase
-        .rpc('find_user_by_username' as any, { search_username: username }) as { data: any, error: any };
-      
-      if (lookupError || !userLookup || !Array.isArray(userLookup) || userLookup.length === 0) {
-        console.error("Error finding user by username:", lookupError);
+      if (profilesError || !profilesData) {
+        console.error("Error finding user by username:", profilesError);
         setNotFound(true);
         return;
       }
       
-      const userId = userLookup[0].id;
+      const userId = profilesData.id;
       
-      // Now get the public profile data using our secure function
+      // Now get the full public profile data using our new secure function
       const { data: profileData, error: profileError } = await supabase
-        .rpc('get_public_profile', { user_uuid: userId });
+        .rpc('get_public_profile_full', { profile_user_id: userId })
+        .single();
 
-      if (profileError || !profileData || profileData.length === 0) {
+      if (profileError || !profileData) {
         console.error("Error fetching profile:", profileError);
         setNotFound(true);
         return;
       }
       
-      const profileInfo = profileData[0];
-
-      // Fetch member stats separately with better error handling
-      const { data: memberStatsData, error: memberStatsError } = await supabase
-        .from("member_stats")
-        .select("total_votes, status, consecutive_voting_days")
-        .eq("id", userId)
-        .single();
-
-      if (memberStatsError) {
-        console.log("Member stats not found for user, using defaults");
-      }
-
       setProfile({
-        ...profileInfo,
-        id: userId,
-        location: null, // Not included in public profile for security
-        member_stats: memberStatsError ? null : memberStatsData
+        id: profileData.id,
+        username: profileData.username,
+        avatar_url: profileData.avatar_url,
+        bio: profileData.bio,
+        created_at: profileData.created_at,
+        member_stats: profileData.member_stats as {
+          total_votes: number;
+          status: string;
+          consecutive_voting_days: number;
+          total_comments: number;
+          ranking_lists_created: number;
+          top_five_created: number;
+        }
       });
 
-      // Fetch user's public rankings with enhanced data
+      // Fetch user's public rankings
       const { data: rankingsData, error: rankingsError } = await supabase
         .from("user_rankings")
         .select("id, title, description, category, created_at, slug")
@@ -77,19 +72,15 @@ export const usePublicUserData = () => {
         const rankingsWithItems: RankingWithItems[] = await Promise.all(
           rankingsData.map(async (ranking) => {
             const { data: items } = await supabase
-              .from("user_ranking_items")
-              .select(`
-                position,
-                reason,
-                rapper:rappers!inner(name, real_name, origin)
-              `)
-              .eq("ranking_id", ranking.id)
-              .order("position");
+              .rpc('get_user_ranking_preview_items', { 
+                ranking_uuid: ranking.id, 
+                item_limit: 10 
+              });
 
             const simpleItems: SimpleRankingItem[] = (items || []).map(item => ({
-              position: item.position,
-              reason: item.reason,
-              rapper_name: (item.rapper as { name: string; real_name?: string; origin?: string }).name
+              position: item.item_position,
+              reason: item.item_reason,
+              rapper_name: item.rapper_name
             }));
 
             return {

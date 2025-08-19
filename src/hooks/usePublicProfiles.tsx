@@ -4,24 +4,45 @@ import { supabase } from '@/integrations/supabase/client';
 interface PublicProfile {
   id: string;
   username: string;
-  full_name: string;
   avatar_url: string | null;
-  bio_preview: string | null;
+  bio: string | null;
   created_at: string;
+  member_stats: {
+    total_votes: number;
+    status: string;
+    consecutive_voting_days: number;
+    total_comments: number;
+    ranking_lists_created: number;
+    top_five_created: number;
+  };
 }
 
 export const usePublicProfile = (userId: string | undefined) => {
   return useQuery({
-    queryKey: ['public-profile', userId],
+    queryKey: ['public-profile-full', userId],
     queryFn: async () => {
       if (!userId) return null;
       
-      // Use the secure function to get public profile data
+      // Use the new secure function to get full public profile data
       const { data, error } = await supabase
-        .rpc('get_profile_for_display', { profile_user_id: userId });
+        .rpc('get_public_profile_full', { profile_user_id: userId })
+        .single();
       
       if (error) throw error;
-      return data?.[0] || null;
+      
+      // Transform the response to match our interface
+      if (data) {
+        return {
+          id: data.id,
+          username: data.username,
+          avatar_url: data.avatar_url,
+          bio: data.bio,
+          created_at: data.created_at,
+          member_stats: data.member_stats
+        };
+      }
+      
+      return null;
     },
     enabled: !!userId,
   });
@@ -29,25 +50,16 @@ export const usePublicProfile = (userId: string | undefined) => {
 
 export const usePublicProfiles = (userIds: string[]) => {
   return useQuery({
-    queryKey: ['public-profiles', userIds.sort()],
+    queryKey: ['public-profiles-batch', userIds.sort()],
     queryFn: async () => {
       if (!userIds.length) return [];
       
-      // Get public profiles for multiple users
-      const profiles = await Promise.all(
-        userIds.map(async (id) => {
-          const { data, error } = await supabase
-            .rpc('get_profile_for_display', { profile_user_id: id });
-          
-          if (error) {
-            console.error(`Error fetching profile for ${id}:`, error);
-            return null;
-          }
-          return data?.[0] || null;
-        })
-      );
+      // Use the new batch function for better performance
+      const { data, error } = await supabase
+        .rpc('get_public_profiles_batch', { profile_user_ids: userIds });
       
-      return profiles.filter(Boolean) as PublicProfile[];
+      if (error) throw error;
+      return data || [];
     },
     enabled: userIds.length > 0,
   });
@@ -60,9 +72,9 @@ export const useAuthenticatedProfiles = (userIds: string[]) => {
     queryFn: async () => {
       if (!userIds.length) return [];
       
-      // Use secure batch function for multiple profiles
+      // Use the new public profiles batch function
       const { data, error } = await supabase
-        .rpc('get_profiles_batch', { profile_user_ids: userIds });
+        .rpc('get_public_profiles_batch', { profile_user_ids: userIds });
       
       if (error) throw error;
       return data || [];
