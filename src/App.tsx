@@ -24,6 +24,8 @@ import About from "./pages/About";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
 import CommunityCypher from "./pages/CommunityCypher";
+import VSMatches from "./pages/VSMatches";
+import VSMatchDetail from "./pages/VSMatchDetail";
 import Admin from "./pages/Admin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
@@ -88,6 +90,8 @@ function App() {
                   <Route path="/rankings" element={<Rankings />} />
                   <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
                   <Route path="/rankings/user/:id" element={<UserRankingDetail />} />
+                  <Route path="/vs" element={<VSMatches />} />
+                  <Route path="/vs/:slug" element={<VSMatchDetail />} />
                   <Route path="/user/:username" element={<PublicUserProfile />} />
                   <Route path="/community-cypher" element={<CommunityCypher />} />
                   

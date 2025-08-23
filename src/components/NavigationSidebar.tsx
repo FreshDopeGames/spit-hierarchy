@@ -5,7 +5,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar, PenTool, Pen, MessageSquare } from "lucide-react";
+import { Music, Trophy, User, BarChart3, Settings, LogIn, Home, Menu, Info, Calendar, PenTool, Pen, MessageSquare, Swords } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
@@ -135,6 +135,18 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               >
                 <Music className="w-4 h-4 mr-3" />
                 All Rappers
+              </Button>
+            </Link>
+
+            <Link to="/vs" onClick={() => handleNavClick('/vs')}>
+              <Button 
+                variant="ghost" 
+                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+              >
+                <Swords className="w-4 h-4 mr-3" />
+                VS Matches
               </Button>
             </Link>
 

@@ -2118,6 +2118,144 @@ export type Database = {
         }
         Relationships: []
       }
+      vs_match_votes: {
+        Row: {
+          created_at: string
+          id: string
+          rapper_choice_id: string
+          user_id: string
+          vote_date: string
+          vs_match_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rapper_choice_id: string
+          user_id: string
+          vote_date?: string
+          vs_match_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rapper_choice_id?: string
+          user_id?: string
+          vote_date?: string
+          vs_match_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_match_votes_rapper_choice_id_fkey"
+            columns: ["rapper_choice_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_match_votes_rapper_choice_id_fkey"
+            columns: ["rapper_choice_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_match_votes_rapper_choice_id_fkey"
+            columns: ["rapper_choice_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_match_votes_vs_match_id_fkey"
+            columns: ["vs_match_id"]
+            isOneToOne: false
+            referencedRelation: "vs_matches"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vs_matches: {
+        Row: {
+          created_at: string
+          created_by: string
+          description: string | null
+          id: string
+          rapper_1_id: string
+          rapper_2_id: string
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          created_by: string
+          description?: string | null
+          id?: string
+          rapper_1_id: string
+          rapper_2_id: string
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          created_by?: string
+          description?: string | null
+          id?: string
+          rapper_1_id?: string
+          rapper_2_id?: string
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vs_matches_rapper_1_id_fkey"
+            columns: ["rapper_1_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_matches_rapper_1_id_fkey"
+            columns: ["rapper_1_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_matches_rapper_1_id_fkey"
+            columns: ["rapper_1_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_matches_rapper_2_id_fkey"
+            columns: ["rapper_2_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_matches_rapper_2_id_fkey"
+            columns: ["rapper_2_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "vs_matches_rapper_2_id_fkey"
+            columns: ["rapper_2_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       blog_post_like_counts: {
