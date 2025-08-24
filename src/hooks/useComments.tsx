@@ -26,7 +26,7 @@ interface Comment {
 }
 
 interface UseCommentsProps {
-  contentType: "rapper" | "blog" | "ranking";
+  contentType: "rapper" | "blog" | "ranking" | "vs_match";
   contentId: string;
 }
 

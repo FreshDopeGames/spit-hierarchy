@@ -6,8 +6,14 @@ import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 type Rapper = Tables<"rappers">;
 
+interface RapperData {
+  id: string;
+  name: string;
+  slug?: string;
+}
+
 interface RapperAvatarProps {
-  rapper: Rapper;
+  rapper: RapperData;
   size?: "sm" | "md" | "lg" | "xl";
   imageUrl?: string | null; // Allow passing image URL directly for batch loading
 }

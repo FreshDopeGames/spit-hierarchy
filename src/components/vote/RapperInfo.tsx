@@ -6,8 +6,18 @@ import { useRapperPercentile } from "@/hooks/useRapperPercentile";
 
 type Rapper = Tables<"rappers">;
 
+interface RapperData {
+  id: string;
+  name: string;
+  real_name: string | null;
+  origin: string | null;
+  birth_year: number | null;
+  average_rating: number | null;
+  total_votes: number | null;
+}
+
 interface RapperInfoProps {
-  rapper: Rapper;
+  rapper: RapperData;
 }
 
 const RapperInfo = ({ rapper }: RapperInfoProps) => {
