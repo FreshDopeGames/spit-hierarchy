@@ -122,15 +122,15 @@ const Index = () => {
           <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
+
+            {/* Featured Rankings Section */}
+            <HomepageRankingSection />
             
             {/* Hero Section */}
             <HeroSection />
 
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
-
-            {/* Featured Rankings Section */}
-            <HomepageRankingSection />
 
             {/* All Rankings Button */}
             <div className="mb-12 text-center">
