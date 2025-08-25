@@ -125,12 +125,6 @@ const Index = () => {
 
             {/* Featured Rankings Section */}
             <HomepageRankingSection />
-            
-            {/* Hero Section */}
-            <HeroSection />
-
-            {/* Featured Blog Posts Carousel */}
-            <BlogCarousel />
 
             {/* All Rankings Button */}
             <div className="mb-12 text-center">
@@ -143,6 +137,12 @@ const Index = () => {
                 </Button>
               </Link>
             </div>
+            
+            {/* Hero Section */}
+            <HeroSection />
+
+            {/* Featured Blog Posts Carousel */}
+            <BlogCarousel />
 
             {/* Strategic Ad Placement */}
             <ContentAdUnit size="large" />
