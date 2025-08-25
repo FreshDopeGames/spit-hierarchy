@@ -5,9 +5,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAllRappers } from "@/hooks/useAllRappers";
 import { VSMatch, CreateVSMatchData, UpdateVSMatchData } from "@/types/vsMatches";
-import { Loader2, Search } from "lucide-react";
+import { Loader2 } from "lucide-react";
+import RapperSelector from "./RapperSelector";
 
 interface AdminVSMatchDialogProps {
   open: boolean;
@@ -29,15 +29,6 @@ const AdminVSMatchDialog = ({
   const [rapper1Id, setRapper1Id] = useState("");
   const [rapper2Id, setRapper2Id] = useState("");
   const [status, setStatus] = useState<"draft" | "published" | "archived">("draft");
-  const [rapperSearch, setRapperSearch] = useState("");
-
-  const { 
-    rappersData, 
-    isLoading: isLoadingRappers,
-    handleSearchInput
-  } = useAllRappers({
-    itemsPerPage: 100
-  });
 
   // Reset form when dialog opens/closes or vsMatch changes
   useEffect(() => {
@@ -57,11 +48,6 @@ const AdminVSMatchDialog = ({
       }
     }
   }, [open, vsMatch]);
-
-  // Update rapper search when rapperSearch changes
-  useEffect(() => {
-    handleSearchInput(rapperSearch);
-  }, [rapperSearch, handleSearchInput]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -85,9 +71,6 @@ const AdminVSMatchDialog = ({
     }
   };
 
-  const availableRappers = (rappersData?.rappers || []).filter(rapper => 
-    rapper.id !== rapper1Id && rapper.id !== rapper2Id
-  );
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -106,7 +89,7 @@ const AdminVSMatchDialog = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Kendrick Lamar vs Drake"
-              className="bg-rap-carbon-light border-rap-gold/30 text-rap-platinum"
+              className="bg-white border-rap-gold/30 text-black placeholder:text-gray-500"
               required
             />
           </div>
@@ -118,86 +101,41 @@ const AdminVSMatchDialog = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this matchup..."
-              className="bg-rap-carbon-light border-rap-gold/30 text-rap-platinum"
+              className="bg-white border-rap-gold/30 text-black placeholder:text-gray-500"
               rows={3}
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-rap-platinum">Rapper 1</Label>
-              <div className="space-y-2">
-                <div className="relative">
-                  <Search className="absolute left-3 top-3 h-4 w-4 text-rap-platinum/50" />
-                  <Input
-                    placeholder="Search rappers..."
-                    value={rapperSearch}
-                    onChange={(e) => setRapperSearch(e.target.value)}
-                    className="pl-10 bg-rap-carbon-light border-rap-gold/30 text-rap-platinum"
-                  />
-                </div>
-                <Select value={rapper1Id} onValueChange={setRapper1Id} required>
-                  <SelectTrigger className="bg-rap-carbon-light border-rap-gold/30 text-rap-platinum">
-                    <SelectValue placeholder="Select first rapper" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-rap-carbon-light border-rap-gold/30">
-                    {isLoadingRappers ? (
-                      <SelectItem value="loading" disabled>
-                        <Loader2 className="h-4 w-4 animate-spin" />
-                      </SelectItem>
-                    ) : (
-                      availableRappers.map((rapper) => (
-                        <SelectItem 
-                          key={rapper.id} 
-                          value={rapper.id}
-                          className="text-rap-platinum hover:bg-rap-gold/10"
-                        >
-                          {rapper.name}
-                        </SelectItem>
-                      ))
-                    )}
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <RapperSelector
+              label="Rapper 1"
+              value={rapper1Id}
+              onChange={setRapper1Id}
+              excludeIds={[rapper2Id]}
+              placeholder="Select first rapper"
+              required
+            />
 
-            <div className="space-y-2">
-              <Label className="text-rap-platinum">Rapper 2</Label>
-              <Select value={rapper2Id} onValueChange={setRapper2Id} required>
-                <SelectTrigger className="bg-rap-carbon-light border-rap-gold/30 text-rap-platinum">
-                  <SelectValue placeholder="Select second rapper" />
-                </SelectTrigger>
-                <SelectContent className="bg-rap-carbon-light border-rap-gold/30">
-                  {isLoadingRappers ? (
-                    <SelectItem value="loading" disabled>
-                      <Loader2 className="h-4 w-4 animate-spin" />
-                    </SelectItem>
-                  ) : (
-                    availableRappers.map((rapper) => (
-                      <SelectItem 
-                        key={rapper.id} 
-                        value={rapper.id}
-                        className="text-rap-platinum hover:bg-rap-gold/10"
-                      >
-                        {rapper.name}
-                      </SelectItem>
-                    ))
-                  )}
-                </SelectContent>
-              </Select>
-            </div>
+            <RapperSelector
+              label="Rapper 2"
+              value={rapper2Id}
+              onChange={setRapper2Id}
+              excludeIds={[rapper1Id]}
+              placeholder="Select second rapper"
+              required
+            />
           </div>
 
           <div className="space-y-2">
             <Label className="text-rap-platinum">Status</Label>
             <Select value={status} onValueChange={(value) => setStatus(value as "draft" | "published" | "archived")}>
-              <SelectTrigger className="bg-rap-carbon-light border-rap-gold/30 text-rap-platinum">
+              <SelectTrigger className="bg-white border-rap-gold/30 text-black">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-rap-carbon-light border-rap-gold/30">
-                <SelectItem value="draft" className="text-rap-platinum">Draft</SelectItem>
-                <SelectItem value="published" className="text-rap-platinum">Published</SelectItem>
-                <SelectItem value="archived" className="text-rap-platinum">Archived</SelectItem>
+              <SelectContent className="bg-white border-rap-gold/30 z-50">
+                <SelectItem value="draft" className="text-black hover:bg-rap-gold/10">Draft</SelectItem>
+                <SelectItem value="published" className="text-black hover:bg-rap-gold/10">Published</SelectItem>
+                <SelectItem value="archived" className="text-black hover:bg-rap-gold/10">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>
