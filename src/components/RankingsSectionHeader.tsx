@@ -33,7 +33,7 @@ const RankingsSectionHeader = () => {
     }
   });
 
-  const title = headerData?.title || "Spit Hierarchy:" break "The Original Rap GOAT Hierarchy";
+  const title = headerData?.title || "Spit Hierarchy: The Original Rap GOAT Hierarchy";
   const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
   const backgroundImage = headerData?.background_image_url;
 
