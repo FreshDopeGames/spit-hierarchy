@@ -120,14 +120,14 @@ const Index = () => {
         {/* Main Content with increased top padding to account for fixed header */}
         <main className="pt-20 sm:pt-24 w-full overflow-x-hidden">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
+            {/* Rankings Section with Prominent Header */}
+            <RankingsSectionHeader />
+            
             {/* Hero Section */}
             <HeroSection />
 
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
-
-            {/* Rankings Section with Prominent Header */}
-            <RankingsSectionHeader />
 
             {/* Featured Rankings Section */}
             <HomepageRankingSection />
