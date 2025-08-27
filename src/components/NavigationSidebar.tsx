@@ -49,10 +49,10 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
     <Button 
       variant="outline" 
       size="icon" 
-      className="border-2 text-black hover:opacity-80 shadow-lg"
+      className="border-2 text-[var(--theme-background)] hover:opacity-80 shadow-lg"
       style={{ 
         backgroundColor: theme.colors.primary, 
-        borderColor: 'black'
+        borderColor: 'hsl(var(--theme-border))'
       }}
     >
       <Menu className="h-4 w-4" />
@@ -76,7 +76,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
       </SheetTrigger>
       <SheetContent 
         side="left" 
-        className="w-80 bg-black shadow-2xl"
+        className="w-80 bg-[var(--theme-background)] shadow-2xl"
         style={{ borderColor: `${theme.colors.primary}50` }}
       >
         <SheetHeader className="pb-6">
@@ -102,7 +102,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/" onClick={() => handleNavClick('/')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 style={{ 
                   '--hover-color': theme.colors.primary 
                 } as React.CSSProperties}
@@ -117,7 +117,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/rankings" onClick={() => handleNavClick('/rankings')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                 onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
@@ -129,7 +129,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/all-rappers" onClick={() => handleNavClick('/all-rappers')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                 onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
@@ -141,7 +141,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/vs" onClick={() => handleNavClick('/vs')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                 onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
@@ -153,7 +153,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/blog" onClick={() => handleNavClick('/blog')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                 onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
@@ -165,7 +165,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/community-cypher" onClick={() => handleNavClick('/community-cypher')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                 onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
@@ -177,7 +177,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             <Link to="/about" onClick={() => handleNavClick('/about')}>
               <Button 
                 variant="ghost" 
-                className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                 onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                 onMouseLeave={(e) => e.currentTarget.style.color = ''}
               >
@@ -231,7 +231,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                         alt={displayName || 'User'}
                         style={{ imageRendering: 'crisp-edges' }}
                       />
-                      <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
+                      <AvatarFallback className="bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-primary)] text-[var(--theme-background)]">
                         <User className="w-4 h-4" />
                       </AvatarFallback>
                     </Avatar>
@@ -247,7 +247,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                 <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                     onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                     onMouseLeave={(e) => e.currentTarget.style.color = ''}
                   >
@@ -259,7 +259,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                 <Link to="/admin" onClick={() => handleNavClick('/admin')}>
                   <Button 
                     variant="ghost" 
-                    className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                     onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                     onMouseLeave={(e) => e.currentTarget.style.color = ''}
                   >
@@ -274,7 +274,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                     signOut();
                   }} 
                   variant="ghost" 
-                  className="w-full justify-start text-rap-platinum font-merienda bg-transparent"
+                  className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                   onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                   onMouseLeave={(e) => e.currentTarget.style.color = ''}
                 >
@@ -284,7 +284,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               </>
             ) : (
               <>
-                <h3 className="text-rap-gold font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
+                <h3 className="text-[var(--theme-primary)] font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
                 
                 <Link to="/auth" onClick={() => handleNavClick('/auth')}>
                   <Button 
