@@ -108,9 +108,9 @@ const AdminRankingDialog = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       {showTrigger && <RankingDialogTrigger ranking={ranking} />}
-      <DialogContent className="bg-rap-carbon border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
+      <DialogContent className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-mogra text-rap-gold">
+          <DialogTitle className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)]">
             {ranking ? "Edit Ranking" : "Create New Ranking"}
           </DialogTitle>
         </DialogHeader>
@@ -126,14 +126,14 @@ const AdminRankingDialog = ({
                 type="button" 
                 variant="outline" 
                 onClick={() => setOpen(false)}
-                className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-charcoal"
+                className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-surface)]"
               >
                 Cancel
               </Button>
               <Button 
                 type="submit" 
                 disabled={isLoading}
-                className="bg-rap-gold hover:bg-white hover:text-rap-gold-dark text-rap-charcoal font-mogra"
+                className="bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)] font-[var(--theme-font-heading)]"
               >
                 {isLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
                 {ranking ? "Update" : "Create"}

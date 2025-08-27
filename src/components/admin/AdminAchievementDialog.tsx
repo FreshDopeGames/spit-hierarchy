@@ -24,9 +24,9 @@ const AdminAchievementDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-rap-gold/30">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--theme-background)] border border-[var(--theme-border)]">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
+          <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-xl">
             {achievement ? `Edit ${achievement.name}` : "Add New Achievement"}
           </DialogTitle>
         </DialogHeader>

@@ -17,14 +17,14 @@ interface AdminAchievementTableProps {
 const getRarityColor = (rarity: string) => {
   switch (rarity) {
     case 'legendary':
-      return 'bg-gradient-to-r from-yellow-400 to-orange-500 text-black';
+      return 'bg-gradient-to-r from-yellow-400 to-orange-500 text-[var(--theme-background)]';
     case 'epic':
-      return 'bg-gradient-to-r from-purple-500 to-pink-500 text-white';
+      return 'bg-gradient-to-r from-purple-500 to-pink-500 text-[var(--theme-textInverted)]';
     case 'rare':
-      return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-white';
+      return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-[var(--theme-textInverted)]';
     case 'common':
     default:
-      return 'bg-gray-500 text-white';
+      return 'bg-[var(--theme-textMuted)] text-[var(--theme-textInverted)]';
   }
 };
 
@@ -44,11 +44,11 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
     return (
       <div className="space-y-4">
         {Array.from({ length: 5 }).map((_, i) => (
-          <Card key={i} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/20 animate-pulse">
+          <Card key={i} className="bg-[var(--theme-surface)] border-[var(--theme-border)] animate-pulse">
             <CardContent className="p-4">
-              <div className="h-4 bg-rap-charcoal rounded mb-2"></div>
-              <div className="h-3 bg-rap-charcoal rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-rap-charcoal rounded w-1/2"></div>
+              <div className="h-4 bg-[var(--theme-background)] rounded mb-2"></div>
+              <div className="h-3 bg-[var(--theme-background)] rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-[var(--theme-background)] rounded w-1/2"></div>
             </CardContent>
           </Card>
         ))}
@@ -58,11 +58,11 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
 
   if (achievements.length === 0) {
     return (
-      <Card className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/20">
+      <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
         <CardContent className="p-8 text-center">
-          <Trophy className="w-16 h-16 text-rap-gold mx-auto mb-4" />
-          <h3 className="text-xl font-bold text-rap-platinum mb-2">No Achievements Yet</h3>
-          <p className="text-rap-smoke">Create your first achievement to get started.</p>
+          <Trophy className="w-16 h-16 text-[var(--theme-primary)] mx-auto mb-4" />
+          <h3 className="text-xl font-bold text-[var(--theme-text)] mb-2">No Achievements Yet</h3>
+          <p className="text-[var(--theme-textMuted)]">Create your first achievement to get started.</p>
         </CardContent>
       </Card>
     );
@@ -72,27 +72,27 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
     <div className="overflow-x-auto">
       <Table>
         <TableHeader>
-          <TableRow className="border-rap-gold/20">
-            <TableHead className="text-rap-gold font-bold">Name</TableHead>
-            <TableHead className="text-rap-gold font-bold">Description</TableHead>
-            <TableHead className="text-rap-gold font-bold">Type</TableHead>
-            <TableHead className="text-rap-gold font-bold">Rarity</TableHead>
-            <TableHead className="text-rap-gold font-bold">Points</TableHead>
-            <TableHead className="text-rap-gold font-bold">Threshold</TableHead>
-            <TableHead className="text-rap-gold font-bold">Status</TableHead>
-            <TableHead className="text-rap-gold font-bold">Actions</TableHead>
+          <TableRow className="border-[var(--theme-border)]">
+            <TableHead className="text-[var(--theme-primary)] font-bold">Name</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Description</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Type</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Rarity</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Points</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Threshold</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Status</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-bold">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {achievements.map((achievement) => (
-            <TableRow key={achievement.id} className="border-rap-gold/10 hover:bg-rap-carbon/30">
+            <TableRow key={achievement.id} className="border-[var(--theme-border)] hover:bg-[var(--theme-surface)]">
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
                   <span className="text-lg">{achievement.icon}</span>
-                  <span className="text-rap-platinum font-semibold">{achievement.name}</span>
+                  <span className="text-[var(--theme-text)] font-semibold">{achievement.name}</span>
                 </div>
               </TableCell>
-              <TableCell className="text-rap-smoke max-w-xs">
+              <TableCell className="text-[var(--theme-textMuted)] max-w-xs">
                 <div className="truncate" title={achievement.description}>
                   {achievement.description}
                 </div>
@@ -100,7 +100,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
               <TableCell>
                 <div className="flex items-center gap-2">
                   {getTypeIcon(achievement.type)}
-                  <span className="text-rap-platinum capitalize">{achievement.type.replace('_', ' ')}</span>
+                  <span className="text-[var(--theme-text)] capitalize">{achievement.type.replace('_', ' ')}</span>
                 </div>
               </TableCell>
               <TableCell>
@@ -108,15 +108,15 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
                   {achievement.rarity}
                 </Badge>
               </TableCell>
-              <TableCell className="text-rap-gold font-bold">
+              <TableCell className="text-[var(--theme-primary)] font-bold">
                 {achievement.points}
               </TableCell>
-              <TableCell className="text-rap-silver">
+              <TableCell className="text-[var(--theme-textMuted)]">
                 {achievement.threshold_value ? (
                   <div className="text-xs">
                     <div>{achievement.threshold_value}</div>
                     {achievement.threshold_field && (
-                      <div className="text-rap-smoke">{achievement.threshold_field}</div>
+                      <div className="text-[var(--theme-textMuted)]">{achievement.threshold_field}</div>
                     )}
                   </div>
                 ) : (
@@ -125,7 +125,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
               </TableCell>
               <TableCell>
                 <Badge variant={achievement.is_active ? "default" : "secondary"} 
-                       className={achievement.is_active ? "bg-green-600 text-white" : "bg-gray-600 text-white"}>
+                       className={achievement.is_active ? "bg-green-600 text-[var(--theme-textInverted)]" : "bg-[var(--theme-textMuted)] text-[var(--theme-textInverted)]"}>
                   {achievement.is_active ? "Active" : "Inactive"}
                 </Badge>
               </TableCell>
@@ -135,7 +135,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
                     onClick={() => onEdit(achievement)}
                     size="sm"
                     variant="outline"
-                    className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20"
+                    className="border-[var(--theme-border)] text-[var(--theme-primary)] hover:bg-[var(--theme-surface)]"
                   >
                     <Edit className="w-3 h-3" />
                   </Button>
@@ -143,7 +143,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
                     onClick={() => onDelete(achievement.id)}
                     size="sm"
                     variant="outline"
-                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20"
+                    className="border-red-500/30 text-red-500 hover:bg-red-500/20"
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>

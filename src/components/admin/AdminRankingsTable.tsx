@@ -42,36 +42,36 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
     return (
       <div className="space-y-4">
         {rankings.map((ranking) => (
-          <Card key={ranking.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-gold/30">
+          <Card key={ranking.id} className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
             <CardContent className="p-4">
               <div className="space-y-3">
                 {/* Header with title and featured status */}
                 <div className="flex items-start justify-between gap-2">
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium text-rap-platinum font-kaushan text-lg truncate">
+                    <h3 className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)] text-lg truncate">
                       {ranking.title}
                     </h3>
-                    <p className="text-sm text-rap-smoke font-kaushan mt-1">
+                    <p className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)] mt-1">
                       /{ranking.slug}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
                     {ranking.is_featured && (
-                      <Star className="w-4 h-4 text-rap-gold flex-shrink-0" />
+                      <Star className="w-4 h-4 text-[var(--theme-primary)] flex-shrink-0" />
                     )}
                   </div>
                 </div>
 
                 {/* Category and Status */}
                 <div className="flex items-center gap-2 flex-wrap">
-                  <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30">
+                  <Badge variant="secondary" className="bg-[var(--theme-surface)] text-[var(--theme-text)] border-[var(--theme-border)]">
                     {ranking.category}
                   </Badge>
                   <Badge 
                     variant={ranking.is_featured ? "default" : "secondary"}
                     className={ranking.is_featured 
-                      ? "bg-rap-gold/20 text-rap-gold border-rap-gold/30" 
-                      : "bg-rap-smoke/20 text-rap-smoke border-rap-smoke/30"
+                      ? "bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30" 
+                      : "bg-[var(--theme-textMuted)]/20 text-[var(--theme-textMuted)] border-[var(--theme-textMuted)]/30"
                     }
                   >
                     {ranking.is_featured ? "Featured" : "Standard"}
@@ -85,7 +85,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                       <Badge
                         key={assignment.tag_id}
                         variant="outline"
-                        className="text-xs border-rap-gold/30 text-rap-platinum"
+                        className="text-xs border-[var(--theme-border)] text-[var(--theme-text)]"
                         style={{ borderColor: assignment.ranking_tags.color }}
                       >
                         {assignment.ranking_tags.name}
@@ -95,8 +95,8 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                 )}
 
                 {/* Actions */}
-                <div className="flex items-center justify-between pt-2 border-t border-rap-gold/20">
-                  <span className="text-sm text-rap-smoke font-kaushan">
+                <div className="flex items-center justify-between pt-2 border-t border-[var(--theme-border)]">
+                  <span className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                     Order: {ranking.display_order}
                   </span>
                   <div className="flex items-center gap-2">
@@ -104,7 +104,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                       variant="ghost"
                       size="sm"
                       onClick={() => window.open(`/rankings/official/${ranking.slug}`, '_blank')}
-                      className="text-rap-platinum hover:text-rap-gold h-8 w-8 p-0"
+                      className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] h-8 w-8 p-0"
                     >
                       <Eye className="w-4 h-4" />
                     </Button>
@@ -112,7 +112,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                       variant="ghost"
                       size="sm"
                       onClick={() => onEdit(ranking)}
-                      className="text-rap-platinum hover:text-rap-gold h-8 w-8 p-0"
+                      className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] h-8 w-8 p-0"
                     >
                       <Edit className="w-4 h-4" />
                     </Button>
@@ -120,7 +120,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                       variant="ghost"
                       size="sm"
                       onClick={() => onDelete(ranking)}
-                      className="text-rap-platinum hover:text-red-400 h-8 w-8 p-0"
+                      className="text-[var(--theme-text)] hover:text-red-400 h-8 w-8 p-0"
                     >
                       <Trash2 className="w-4 h-4" />
                     </Button>
@@ -135,33 +135,33 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
   }
 
   return (
-    <div className="rounded-md border border-rap-gold/30">
+    <div className="rounded-md border border-[var(--theme-border)]">
       <Table>
         <TableHeader>
-          <TableRow className="border-rap-gold/30">
-            <TableHead className="text-rap-platinum font-kaushan">Title</TableHead>
-            <TableHead className="text-rap-platinum font-kaushan">Category</TableHead>
-            <TableHead className="text-rap-platinum font-kaushan">Tags</TableHead>
-            <TableHead className="text-rap-platinum font-kaushan">Order</TableHead>
-            <TableHead className="text-rap-platinum font-kaushan">Status</TableHead>
-            <TableHead className="text-rap-platinum font-kaushan">Actions</TableHead>
+          <TableRow className="border-[var(--theme-border)]">
+            <TableHead className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Title</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Category</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Tags</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Order</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Status</TableHead>
+            <TableHead className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {rankings.map((ranking) => (
-            <TableRow key={ranking.id} className="border-rap-gold/20">
+            <TableRow key={ranking.id} className="border-[var(--theme-border)]">
               <TableCell>
                 <div className="space-y-1">
-                  <div className="font-medium text-rap-platinum font-kaushan">
+                  <div className="font-medium text-[var(--theme-text)] font-[var(--theme-font-heading)]">
                     {ranking.title}
                   </div>
-                  <div className="text-sm text-rap-smoke font-kaushan">
+                  <div className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                     /{ranking.slug}
                   </div>
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30">
+                <Badge variant="secondary" className="bg-[var(--theme-surface)] text-[var(--theme-text)] border-[var(--theme-border)]">
                   {ranking.category}
                 </Badge>
               </TableCell>
@@ -171,7 +171,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                     <Badge
                       key={assignment.tag_id}
                       variant="outline"
-                      className="text-xs border-rap-gold/30 text-rap-platinum"
+                      className="text-xs border-[var(--theme-border)] text-[var(--theme-text)]"
                       style={{ borderColor: assignment.ranking_tags.color }}
                     >
                       {assignment.ranking_tags.name}
@@ -180,20 +180,20 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                 </div>
               </TableCell>
               <TableCell>
-                <span className="text-rap-platinum font-kaushan">
+                <span className="text-[var(--theme-text)] font-[var(--theme-font-body)]">
                   {ranking.display_order}
                 </span>
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   {ranking.is_featured && (
-                    <Star className="w-4 h-4 text-rap-gold" />
+                    <Star className="w-4 h-4 text-[var(--theme-primary)]" />
                   )}
                   <Badge 
                     variant={ranking.is_featured ? "default" : "secondary"}
                     className={ranking.is_featured 
-                      ? "bg-rap-gold/20 text-rap-gold border-rap-gold/30" 
-                      : "bg-rap-smoke/20 text-rap-smoke border-rap-smoke/30"
+                      ? "bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30" 
+                      : "bg-[var(--theme-textMuted)]/20 text-[var(--theme-textMuted)] border-[var(--theme-textMuted)]/30"
                     }
                   >
                     {ranking.is_featured ? "Featured" : "Standard"}
@@ -206,7 +206,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                     variant="ghost"
                     size="sm"
                     onClick={() => window.open(`/rankings/official/${ranking.slug}`, '_blank')}
-                    className="text-rap-platinum hover:text-rap-gold"
+                    className="text-[var(--theme-text)] hover:text-[var(--theme-primary)]"
                   >
                     <Eye className="w-4 h-4" />
                   </Button>
@@ -214,7 +214,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                     variant="ghost"
                     size="sm"
                     onClick={() => onEdit(ranking)}
-                    className="text-rap-platinum hover:text-rap-gold"
+                    className="text-[var(--theme-text)] hover:text-[var(--theme-primary)]"
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -222,7 +222,7 @@ const AdminRankingsTable = ({ rankings, onEdit, onDelete }: AdminRankingsTablePr
                     variant="ghost"
                     size="sm"
                     onClick={() => onDelete(ranking)}
-                    className="text-rap-platinum hover:text-red-400"
+                    className="text-[var(--theme-text)] hover:text-red-400"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>

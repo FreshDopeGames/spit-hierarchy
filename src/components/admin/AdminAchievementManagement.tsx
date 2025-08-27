@@ -138,7 +138,7 @@ const AdminAchievementManagement = () => {
       <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
         <CardContent className="p-6">
           <div className="mb-4">
-            <Label htmlFor="search" className="text-rap-platinum font-bold">
+            <Label htmlFor="search" className="text-[var(--theme-text)] font-bold">
               Search Achievements:
             </Label>
             <Input 
@@ -147,7 +147,7 @@ const AdminAchievementManagement = () => {
               placeholder="Search by name or description..." 
               value={searchTerm} 
               onChange={handleSearchChange} 
-              className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] bg-rap-platinum" 
+              className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]" 
             />
           </div>
 
@@ -172,17 +172,17 @@ const AdminAchievementManagement = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-rap-gold/20 text-rap-gold rounded disabled:opacity-50"
+            className="px-4 py-2 bg-[var(--theme-surface)] text-[var(--theme-primary)] rounded disabled:opacity-50 border border-[var(--theme-border)]"
           >
             Previous
           </button>
-          <span className="text-rap-platinum">
+          <span className="text-[var(--theme-text)]">
             Page {currentPage} of {totalPages} ({totalItems} total)
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-rap-gold/20 text-rap-gold rounded disabled:opacity-50"
+            className="px-4 py-2 bg-[var(--theme-surface)] text-[var(--theme-primary)] rounded disabled:opacity-50 border border-[var(--theme-border)]"
           >
             Next
           </button>
