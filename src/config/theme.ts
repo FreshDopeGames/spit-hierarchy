@@ -1,4 +1,6 @@
 
+import { hexToHsl } from '@/lib/utils';
+
 export interface ThemeConfig {
   colors: {
     primary: string;
@@ -51,26 +53,26 @@ export interface ThemeConfig {
 
 export const defaultTheme: ThemeConfig = {
   colors: {
-    primary: '45 85% 55%', // rap-gold HSL - matches current site
-    primaryLight: '48 89% 70%',
-    primaryDark: '42 80% 38%',
-    secondary: '346 100% 25%', // rap-burgundy HSL - matches current site
-    secondaryLight: '346 100% 32%',
-    secondaryDark: '346 100% 18%',
-    accent: '122 39% 49%', // rap-forest HSL
-    accentLight: '122 36% 58%',
-    accentDark: '122 48% 40%',
-    background: '0 0% 5%', // rap-carbon HSL - matches current site
-    backgroundLight: '0 0% 10%', // rap-carbon-light HSL
-    backgroundDark: '0 0% 0%',
-    surface: '0 0% 17%',
-    text: '60 8% 90%', // rap-platinum HSL - matches current site
-    textLight: '0 0% 100%',
-    textMuted: '0 0% 75%', // bright silver HSL
-    border: '45 85% 55%', // Use primary gold for borders to match current site
-    success: '122 39% 49%',
-    warning: '36 100% 50%',
-    error: '4 90% 58%',
+    primary: '#D4AF37', // rap-gold - matches current site
+    primaryLight: '#E8C547',
+    primaryDark: '#B8941F',
+    secondary: '#800020', // rap-burgundy - matches current site
+    secondaryLight: '#A6002A',
+    secondaryDark: '#5A0016',
+    accent: '#6B8E23', // rap-forest
+    accentLight: '#7BA428',
+    accentDark: '#5A7A1E',
+    background: '#0D0D0D', // rap-carbon - matches current site
+    backgroundLight: '#1A1A1A', // rap-carbon-light
+    backgroundDark: '#000000',
+    surface: '#2B2B2B',
+    text: '#E8E6E3', // rap-platinum - matches current site
+    textLight: '#FFFFFF',
+    textMuted: '#BFBFBF', // bright silver
+    border: '#D4AF37', // Use primary gold for borders to match current site
+    success: '#6B8E23',
+    warning: '#FF8C00',
+    error: '#DC143C',
   },
   fonts: {
     heading: 'Mogra, cursive', // Matches current site usage
@@ -135,12 +137,14 @@ export const applyThemeToDOM = (theme: ThemeConfig): void => {
   
   const root = document.documentElement;
   
-  // Apply color variables (HSL format)
+  // Apply color variables (convert hex to HSL for CSS custom properties)
   Object.entries(theme.colors).forEach(([key, value]) => {
-    root.style.setProperty(`--theme-${key}`, value);
+    // Convert hex to HSL format for CSS variables
+    const hslValue = value.startsWith('#') ? hexToHsl(value) : value;
+    root.style.setProperty(`--theme-${key}`, hslValue);
     // Also set core variables for primary colors to ensure consistency
     if (key === 'primary') {
-      root.style.setProperty('--primary', value);
+      root.style.setProperty('--primary', hslValue);
     }
   });
   
