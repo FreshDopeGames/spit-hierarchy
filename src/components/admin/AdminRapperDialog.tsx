@@ -28,9 +28,9 @@ const AdminRapperDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-black border border-rap-gold/30">
+      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
+          <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-xl">
             {rapper ? `Edit ${rapper.name}` : "Add New Rapper"}
           </DialogTitle>
         </DialogHeader>
@@ -40,13 +40,13 @@ const AdminRapperDialog = ({
             <TabsList className="grid w-full grid-cols-2 mb-6 bg-transparent">
               <TabsTrigger 
                 value="details" 
-                className="bg-rap-gold text-rap-carbon data-[state=active]:bg-white data-[state=active]:text-rap-carbon"
+                className="bg-[var(--theme-primary)] text-[var(--theme-background)] data-[state=active]:bg-[var(--theme-background)] data-[state=active]:text-[var(--theme-primary)]"
               >
                 Rapper Details
               </TabsTrigger>
               <TabsTrigger 
                 value="avatar" 
-                className="bg-rap-gold text-rap-carbon data-[state=active]:bg-white data-[state=active]:text-rap-carbon"
+                className="bg-[var(--theme-primary)] text-[var(--theme-background)] data-[state=active]:bg-[var(--theme-background)] data-[state=active]:text-[var(--theme-primary)]"
               >
                 Avatar Upload
               </TabsTrigger>

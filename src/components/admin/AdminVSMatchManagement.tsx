@@ -66,20 +66,20 @@ const AdminVSMatchManagement = () => {
   const getStatusBadge = (status: string) => {
     switch (status) {
       case "published":
-        return <Badge className="bg-green-500 text-white">Published</Badge>;
+        return <Badge className="bg-green-500/90 text-white border-green-500/20">Published</Badge>;
       case "draft":
-        return <Badge variant="secondary">Draft</Badge>;
+        return <Badge variant="secondary" className="bg-[var(--theme-surface)] text-[var(--theme-text)] border-[var(--theme-border)]">Draft</Badge>;
       case "archived":
-        return <Badge variant="outline">Archived</Badge>;
+        return <Badge variant="outline" className="border-[var(--theme-border)] text-[var(--theme-text)]">Archived</Badge>;
       default:
-        return <Badge variant="outline">{status}</Badge>;
+        return <Badge variant="outline" className="border-[var(--theme-border)] text-[var(--theme-text)]">{status}</Badge>;
     }
   };
 
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <div className="text-rap-platinum">Loading VS Matches...</div>
+        <div className="text-[var(--theme-text)]">Loading VS Matches...</div>
       </div>
     );
   }
@@ -93,7 +93,7 @@ const AdminVSMatchManagement = () => {
       >
         <Button
           onClick={handleCreate}
-          className="bg-rap-gold text-rap-carbon hover:bg-rap-gold/90"
+          className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90"
         >
           <Plus className="w-4 h-4 mr-2" />
           Create VS Match
@@ -102,13 +102,13 @@ const AdminVSMatchManagement = () => {
 
       <div className="grid gap-4">
         {!vsMatches || vsMatches.length === 0 ? (
-          <Card className="bg-rap-carbon-light border-rap-gold/30">
+          <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
             <CardContent className="flex flex-col items-center justify-center py-8">
-              <Swords className="w-12 h-12 text-rap-gold/50 mb-4" />
-              <p className="text-rap-platinum text-center mb-4">No VS matches created yet</p>
+              <Swords className="w-12 h-12 text-[var(--theme-primary)] opacity-50 mb-4" />
+              <p className="text-[var(--theme-text)] text-center mb-4">No VS matches created yet</p>
               <Button
                 onClick={handleCreate}
-                className="bg-rap-gold text-rap-carbon hover:bg-rap-gold/90"
+                className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 Create First VS Match
@@ -117,15 +117,15 @@ const AdminVSMatchManagement = () => {
           </Card>
         ) : (
           vsMatches.map((match) => (
-            <Card key={match.id} className="bg-rap-carbon-light border-rap-gold/30">
+            <Card key={match.id} className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
               <CardHeader>
                 <div className="flex items-start justify-between">
                   <div>
-                    <CardTitle className="text-rap-gold font-ceviche text-lg font-thin">
+                    <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg">
                       {match.title}
                     </CardTitle>
                     {match.description && (
-                      <p className="text-rap-platinum/70 text-sm mt-1">
+                      <p className="text-[var(--theme-text)] opacity-70 text-sm mt-1">
                         {match.description}
                       </p>
                     )}
@@ -137,7 +137,7 @@ const AdminVSMatchManagement = () => {
                         variant="ghost"
                         size="sm"
                         asChild
-                        className="text-rap-platinum hover:text-rap-gold hover:bg-rap-gold/10"
+                        className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10"
                       >
                         <Link to={`/vs/${match.slug}`}>
                           <Eye className="w-4 h-4" />
@@ -147,7 +147,7 @@ const AdminVSMatchManagement = () => {
                         variant="ghost"
                         size="sm"
                         onClick={() => handleEdit(match)}
-                        className="text-rap-platinum hover:text-rap-gold hover:bg-rap-gold/10"
+                        className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10"
                       >
                         <Edit className="w-4 h-4" />
                       </Button>
@@ -161,15 +161,15 @@ const AdminVSMatchManagement = () => {
                             <Trash2 className="w-4 h-4" />
                           </Button>
                         </AlertDialogTrigger>
-                        <AlertDialogContent className="bg-rap-carbon border-rap-gold/30">
+                        <AlertDialogContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
                           <AlertDialogHeader>
-                            <AlertDialogTitle className="text-rap-gold">Delete VS Match</AlertDialogTitle>
-                            <AlertDialogDescription className="text-rap-platinum/70">
+                            <AlertDialogTitle className="text-[var(--theme-primary)]">Delete VS Match</AlertDialogTitle>
+                            <AlertDialogDescription className="text-[var(--theme-text)] opacity-70">
                               Are you sure you want to delete "{match.title}"? This action cannot be undone.
                             </AlertDialogDescription>
                           </AlertDialogHeader>
                           <AlertDialogFooter>
-                            <AlertDialogCancel className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/10">
+                            <AlertDialogCancel className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">
                               Cancel
                             </AlertDialogCancel>
                             <AlertDialogAction
@@ -187,18 +187,18 @@ const AdminVSMatchManagement = () => {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="flex items-center justify-center text-rap-platinum">
+                <div className="flex items-center justify-center text-[var(--theme-text)]">
                   <div className="text-center">
-                    <div className="text-sm text-rap-platinum/70 mb-1">Rapper 1</div>
+                    <div className="text-sm text-[var(--theme-text)] opacity-70 mb-1">Rapper 1</div>
                     <div className="font-medium">{match.rapper_1.name}</div>
                   </div>
-                  <div className="mx-8 text-2xl text-rap-gold">VS</div>
+                  <div className="mx-8 text-2xl text-[var(--theme-primary)]">VS</div>
                   <div className="text-center">
-                    <div className="text-sm text-rap-platinum/70 mb-1">Rapper 2</div>
+                    <div className="text-sm text-[var(--theme-text)] opacity-70 mb-1">Rapper 2</div>
                     <div className="font-medium">{match.rapper_2.name}</div>
                   </div>
                 </div>
-                <div className="mt-4 text-xs text-rap-platinum/50 text-center">
+                <div className="mt-4 text-xs text-[var(--theme-text)] opacity-50 text-center">
                   Created: {new Date(match.created_at).toLocaleDateString()}
                 </div>
               </CardContent>

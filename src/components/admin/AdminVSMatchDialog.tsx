@@ -74,34 +74,34 @@ const AdminVSMatchDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-black border border-rap-gold/30">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche text-xl font-thin">
+          <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-xl">
             {vsMatch ? "Edit VS Match" : "Create VS Match"}
           </DialogTitle>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="title" className="text-rap-platinum">Title</Label>
+            <Label htmlFor="title" className="text-[var(--theme-text)]">Title</Label>
             <Input
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Kendrick Lamar vs Drake"
-              className="bg-white border-rap-gold/30 text-black placeholder:text-gray-500"
+              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-text)] placeholder:opacity-50"
               required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-rap-platinum">Description (Optional)</Label>
+            <Label htmlFor="description" className="text-[var(--theme-text)]">Description (Optional)</Label>
             <Textarea
               id="description"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this matchup..."
-              className="bg-white border-rap-gold/30 text-black placeholder:text-gray-500"
+              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-text)] placeholder:opacity-50"
               rows={3}
             />
           </div>
@@ -127,15 +127,15 @@ const AdminVSMatchDialog = ({
           </div>
 
           <div className="space-y-2">
-            <Label className="text-rap-platinum">Status</Label>
+            <Label className="text-[var(--theme-text)]">Status</Label>
             <Select value={status} onValueChange={(value) => setStatus(value as "draft" | "published" | "archived")}>
-              <SelectTrigger className="bg-white border-rap-gold/30 text-black">
+              <SelectTrigger className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-white border-rap-gold/30 z-50">
-                <SelectItem value="draft" className="text-black hover:bg-rap-gold/10">Draft</SelectItem>
-                <SelectItem value="published" className="text-black hover:bg-rap-gold/10">Published</SelectItem>
-                <SelectItem value="archived" className="text-black hover:bg-rap-gold/10">Archived</SelectItem>
+              <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)] z-50">
+                <SelectItem value="draft" className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">Draft</SelectItem>
+                <SelectItem value="published" className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">Published</SelectItem>
+                <SelectItem value="archived" className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -145,14 +145,14 @@ const AdminVSMatchDialog = ({
               type="button"
               variant="outline"
               onClick={() => onOpenChange(false)}
-              className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold/10"
+              className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isSubmitting || !title.trim() || !rapper1Id || !rapper2Id || rapper1Id === rapper2Id}
-              className="bg-rap-gold text-rap-carbon hover:bg-rap-gold/90"
+              className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {vsMatch ? "Update Match" : "Create Match"}

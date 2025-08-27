@@ -33,16 +33,16 @@ const AdminRapperDeleteDialog = ({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-rap-carbon border-rap-gold/30">
+      <AlertDialogContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <AlertDialogHeader>
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-rap-burgundy" />
-            <AlertDialogTitle className="text-rap-platinum">
+            <AlertTriangle className="h-5 w-5 text-red-500" />
+            <AlertDialogTitle className="text-[var(--theme-primary)]">
               Delete Rapper
             </AlertDialogTitle>
           </div>
-          <AlertDialogDescription className="text-rap-smoke">
-            Are you sure you want to delete <strong className="text-rap-gold">{rapper.name}</strong>? 
+          <AlertDialogDescription className="text-[var(--theme-text)] opacity-70">
+            Are you sure you want to delete <strong className="text-[var(--theme-primary)]">{rapper.name}</strong>? 
             This action cannot be undone and will remove all associated data including votes, 
             rankings, and statistics.
           </AlertDialogDescription>
@@ -50,14 +50,14 @@ const AdminRapperDeleteDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel 
             disabled={isDeleting}
-            className="border-rap-smoke text-rap-platinum hover:bg-rap-smoke/20"
+            className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-surface)]/20"
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isDeleting}
-            className="bg-rap-burgundy hover:bg-rap-burgundy/80 text-white"
+            className="bg-red-500 hover:bg-red-600 text-white"
           >
             {isDeleting ? (
               <>

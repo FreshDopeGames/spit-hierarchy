@@ -69,7 +69,7 @@ const AdminRapperPagination = ({
 
   return (
     <div className="space-y-3 sm:space-y-4 px-2 sm:px-0">
-      <div className="text-center text-xs sm:text-sm text-rap-smoke">
+      <div className="text-center text-xs sm:text-sm text-[var(--theme-text)] opacity-70">
         <span className="hidden sm:inline">Showing </span>
         <span className="font-medium">{startItem}-{endItem}</span>
         <span className="hidden sm:inline"> of </span>
@@ -86,8 +86,8 @@ const AdminRapperPagination = ({
               className={`${
                 currentPage === 1 
                   ? 'pointer-events-none opacity-50' 
-                  : 'cursor-pointer hover:bg-rap-gold/20 hover:text-rap-gold'
-              } text-rap-platinum border-rap-gold/30 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10`}
+                  : 'cursor-pointer hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)]'
+              } text-[var(--theme-text)] border-[var(--theme-primary)]/30 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10`}
             >
               <span className="hidden sm:inline">Previous</span>
               <span className="sm:hidden">Prev</span>
@@ -101,9 +101,9 @@ const AdminRapperPagination = ({
                 isActive={page === currentPage}
                 className={`cursor-pointer text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10 min-w-[32px] sm:min-w-[40px] ${
                   page === currentPage
-                    ? 'bg-rap-gold text-rap-carbon'
-                    : 'text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold'
-                } border-rap-gold/30`}
+                    ? 'bg-[var(--theme-primary)] text-[var(--theme-background)]'
+                    : 'text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)]'
+                } border-[var(--theme-primary)]/30`}
               >
                 {page}
               </PaginationLink>
@@ -116,8 +116,8 @@ const AdminRapperPagination = ({
               className={`${
                 currentPage === totalPages 
                   ? 'pointer-events-none opacity-50' 
-                  : 'cursor-pointer hover:bg-rap-gold/20 hover:text-rap-gold'
-              } text-rap-platinum border-rap-gold/30 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10`}
+                  : 'cursor-pointer hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)]'
+              } text-[var(--theme-text)] border-[var(--theme-primary)]/30 text-xs sm:text-sm px-2 sm:px-3 py-1.5 sm:py-2 h-8 sm:h-10`}
             >
               <span className="hidden sm:inline">Next</span>
               <span className="sm:hidden">Next</span>

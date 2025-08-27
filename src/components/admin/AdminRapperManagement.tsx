@@ -131,13 +131,13 @@ const AdminRapperManagement = () => {
         </button>
       </AdminTabHeader>
 
-      <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
+      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <CardContent className="p-6">
           <div className="mb-4">
-            <Label htmlFor="search" className="text-rap-platinum font-bold">
+            <Label htmlFor="search" className="text-[var(--theme-text)] font-bold">
               Search Rappers:
             </Label>
-            <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] bg-rap-platinum" />
+            <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]" />
           </div>
 
           {isLoading ? <div className="text-center py-8">

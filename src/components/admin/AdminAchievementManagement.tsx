@@ -135,7 +135,7 @@ const AdminAchievementManagement = () => {
         </button>
       </AdminTabHeader>
 
-      <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
+      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <CardContent className="p-6">
           <div className="mb-4">
             <Label htmlFor="search" className="text-[var(--theme-text)] font-bold">

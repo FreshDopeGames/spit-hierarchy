@@ -91,7 +91,7 @@ const AdminRankingsManagement = () => {
         <AdminRankingDialog onRankingCreated={handleRankingCreated} />
       </AdminTabHeader>
 
-      <Card className="bg-carbon-fiber border border-[var(--theme-border)]">
+      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <CardContent className="p-6">
           {isLoading ? (
             <div className="text-center py-8">
