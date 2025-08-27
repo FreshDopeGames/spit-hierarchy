@@ -35,19 +35,19 @@ const RapperHeader = ({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-black border-rap-burgundy/40 relative overflow-hidden mb-8">
-        {/* Rap culture accent bar */}
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rap-burgundy via-rap-forest to-rap-silver"></div>
+      <Card className="bg-[var(--theme-surface)] border-[var(--theme-secondary)]/40 relative overflow-hidden mb-8">
+        {/* Theme accent bar */}
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--theme-secondary)] via-[var(--theme-accent)] to-[var(--theme-primary)]"></div>
         
         <CardContent className="p-8 mb-8">
           <div className="grid md:grid-cols-3 gap-8">
             {/* Rapper Image */}
             <div className="md:col-span-1">
-              <div className="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center relative">
+              <div className="w-full aspect-square rounded-xl overflow-hidden bg-gradient-to-br from-[var(--theme-secondary)] to-[var(--theme-accent)] flex items-center justify-center relative">
                 {/* Loading spinner overlay */}
                 <div className="absolute inset-0 flex items-center justify-center" aria-label="Loading avatar">
                   {/* Spinner shown until image fires onLoad */}
-                  <div className="w-10 h-10 rounded-full border-2 border-rap-gold/30 border-t-rap-gold animate-spin"></div>
+                  <div className="w-10 h-10 rounded-full border-2 border-[var(--theme-primary)]/30 border-t-[var(--theme-primary)] animate-spin"></div>
                 </div>
                 <img 
                   src={imageToDisplay} 
@@ -75,9 +75,9 @@ const RapperHeader = ({
               <div className="flex items-start justify-between">
                 <div>
                   <div className="flex items-center gap-3 mb-2">
-                    <h1 className="text-4xl font-bold text-rap-platinum font-mogra">{rapper.name}</h1>
+                    <h1 className="text-4xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)]">{rapper.name}</h1>
                   </div>
-                  {rapper.real_name && <p className="text-rap-smoke text-lg font-kaushan">{rapper.real_name}</p>}
+                  {rapper.real_name && <p className="text-[var(--theme-textMuted)] text-lg font-[var(--theme-font-body)]">{rapper.real_name}</p>}
                 </div>
               </div>
 

@@ -28,17 +28,17 @@ const RapperDiscography = ({
     refreshMutation.mutate(rapperId);
   };
   if (isLoading) {
-    return <Card className="bg-black border-rap-gold/20">
+    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
         <CardHeader>
-          <div className="h-6 bg-rap-carbon-light rounded w-1/3 animate-pulse"></div>
+          <div className="h-6 bg-[var(--theme-backgroundLight)] rounded w-1/3 animate-pulse"></div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => <div key={i} className="flex gap-4 animate-pulse">
-                <div className="w-16 h-16 bg-rap-carbon-light rounded"></div>
+                <div className="w-16 h-16 bg-[var(--theme-backgroundLight)] rounded"></div>
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-rap-carbon-light rounded w-3/4"></div>
-                  <div className="h-3 bg-rap-carbon-light rounded w-1/2"></div>
+                  <div className="h-4 bg-[var(--theme-backgroundLight)] rounded w-3/4"></div>
+                  <div className="h-3 bg-[var(--theme-backgroundLight)] rounded w-1/2"></div>
                 </div>
               </div>)}
           </div>
@@ -48,15 +48,15 @@ const RapperDiscography = ({
   if (error) {
     const isNotFound = error?.message?.includes('404') || error?.message?.includes('not found');
     const isRateLimit = error?.message?.includes('Rate limit') || error?.message?.includes('429');
-    return <Card className="bg-black border-rap-burgundy/30">
+    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-secondary)]/30">
         <CardContent className="p-6 text-center">
-          <div className="text-rap-burgundy mb-4">
+          <div className="text-[var(--theme-secondary)] mb-4">
             {isNotFound ? "No discography data found on MusicBrainz" : isRateLimit ? "Rate limit reached" : "Failed to load discography data"}
           </div>
-          <p className="text-sm text-rap-smoke mb-4">
+          <p className="text-sm text-[var(--theme-textMuted)] mb-4">
             {isNotFound ? "This artist may not be in the MusicBrainz database yet." : isRateLimit ? "Too many requests. Please try again in a few minutes." : "There was an error connecting to the music database."}
           </p>
-          <Button onClick={handleRefresh} variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10" disabled={refreshMutation.isPending}>
+          <Button onClick={handleRefresh} variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10" disabled={refreshMutation.isPending}>
             <RefreshCw className={`w-4 h-4 mr-2 ${refreshMutation.isPending ? 'animate-spin' : ''}`} />
             {isNotFound ? 'Search Again' : 'Retry'}
           </Button>
@@ -88,12 +88,12 @@ const RapperDiscography = ({
     const seconds = Math.floor(ms % 60000 / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
-  return <Card className="bg-black border-rap-gold/20 shadow-lg shadow-rap-gold/10 min-h-[600px] sm:min-h-[500px]">
+  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)] shadow-lg shadow-[var(--theme-primary)]/10 min-h-[600px] sm:min-h-[500px]">
       <CardHeader className="pb-6 sm:pb-8">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="text-xl font-mogra text-rap-platinum">Discography</h3>
-            <p className="text-sm text-rap-smoke mt-1">
+            <h3 className="text-xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">Discography</h3>
+            <p className="text-sm text-[var(--theme-textMuted)] mt-1">
               {isLoading ? 'Fetching from MusicBrainz...' : 'commercial and underground projects'}
             </p>
           </div>
@@ -104,18 +104,18 @@ const RapperDiscography = ({
         <Tabs value={activeTab} onValueChange={setActiveTab}>
           <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
             <TabsTrigger value="albums" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
-              <Disc3 className="w-4 h-4 mr-2 flex-shrink-0 text-rap-gold" />
+              <Disc3 className="w-4 h-4 mr-2 flex-shrink-0 text-[var(--theme-primary)]" />
               <span className="truncate">Albums ({albums.length})</span>
             </TabsTrigger>
             <TabsTrigger value="mixtapes" className="py-4 px-4 sm:py-3 sm:px-4 text-sm font-medium transition-all duration-200 rounded-md w-full flex items-center justify-center">
-              <Music className="w-4 h-4 mr-2 flex-shrink-0 text-rap-burgundy" />
+              <Music className="w-4 h-4 mr-2 flex-shrink-0 text-[var(--theme-secondary)]" />
               <span className="truncate">Mixtapes ({mixtapes.length})</span>
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="albums" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-                {albums.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+                {albums.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                   No albums found in discography
                 </div> : albums.map(item => {
               const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
