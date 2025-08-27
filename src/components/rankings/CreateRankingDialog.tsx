@@ -79,10 +79,10 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="bg-rap-carbon border-rap-gold/20 text-rap-platinum sm:max-w-[525px]">
+      <DialogContent className="bg-[var(--theme-surface)] border-[var(--theme-border)] text-[var(--theme-text)] sm:max-w-[525px]">
         <DialogHeader>
-          <DialogTitle className="text-2xl font-mogra text-rap-gold">Create New Ranking</DialogTitle>
-          <DialogDescription className="text-rap-smoke">
+          <DialogTitle className="text-2xl font-[var(--theme-fontPrimary)] text-[var(--theme-primary)]">Create New Ranking</DialogTitle>
+          <DialogDescription className="text-[var(--theme-textMuted)]">
             Fill in the details below to create your new ranking list.
           </DialogDescription>
         </DialogHeader>
@@ -93,9 +93,9 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-mogra text-rap-platinum">Title</FormLabel>
+                  <FormLabel className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)]">Title</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Top 10 Lyrical Rappers" {...field} className="bg-gray-100 border-rap-gold/30 text-rap-carbon" />
+                    <Input placeholder="e.g., Top 10 Lyrical Rappers" {...field} className="bg-[var(--theme-card)] border-[var(--theme-border)] text-[var(--theme-text)]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -106,12 +106,12 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-mogra text-rap-platinum">Description</FormLabel>
+                  <FormLabel className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)]">Description</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="Describe what your ranking is about..."
                       {...field}
-                      className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
+                      className="bg-[var(--theme-card)] border-[var(--theme-border)] text-[var(--theme-text)]"
                     />
                   </FormControl>
                   <FormMessage />
@@ -123,9 +123,9 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
               name="category"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-mogra text-rap-platinum">Category</FormLabel>
+                  <FormLabel className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)]">Category</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Lyrical Ability" {...field} className="bg-gray-100 border-rap-gold/30 text-rap-carbon" />
+                    <Input placeholder="e.g., Lyrical Ability" {...field} className="bg-[var(--theme-card)] border-[var(--theme-border)] text-[var(--theme-text)]" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,10 +135,10 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
               control={form.control}
               name="isPublic"
               render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-rap-gold/30 p-3">
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border border-[var(--theme-border)] p-3">
                   <div className="space-y-0.5">
-                    <FormLabel className="text-sm font-mogra text-rap-platinum">Public Ranking</FormLabel>
-                    <FormDescription className="text-xs text-rap-smoke">
+                    <FormLabel className="text-sm font-[var(--theme-fontPrimary)] text-[var(--theme-text)]">Public Ranking</FormLabel>
+                    <FormDescription className="text-xs text-[var(--theme-textMuted)]">
                       Make this ranking visible to everyone.
                     </FormDescription>
                   </div>
@@ -148,7 +148,7 @@ const CreateRankingDialog = ({ children }: CreateRankingDialogProps) => {
                 </FormItem>
               )}
             />
-            <Button type="submit" disabled={isPending} className="w-full bg-rap-gold hover:bg-rap-gold-light text-rap-charcoal font-mogra">
+            <Button type="submit" disabled={isPending} className="w-full bg-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/80 text-[var(--theme-background)] font-[var(--theme-fontPrimary)]">
               {isPending ? "Creating..." : "Create Ranking"}
             </Button>
           </form>

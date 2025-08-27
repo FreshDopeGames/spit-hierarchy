@@ -40,23 +40,23 @@ const BlogFilters = ({
     <>
       {/* Active Filters */}
       {(selectedCategory !== 'all' || selectedTag) && (
-        <div className="mb-6 p-4 bg-carbon-fiber border border-rap-gold/40 rounded-lg">
+        <div className="mb-6 p-4 bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2 flex-wrap">
-              <span className="text-rap-gold font-kaushan">Active filters:</span>
+              <span className="text-[var(--theme-primary)] font-[var(--theme-fontSecondary)]">Active filters:</span>
               {selectedCategory !== 'all' && (
-                <Badge variant="outline" className="border-rap-gold text-rap-gold">
+                <Badge variant="outline" className="border-[var(--theme-primary)] text-[var(--theme-primary)]">
                   Category: {categories?.find(c => c.id === selectedCategory)?.name}
                 </Badge>
               )}
               {selectedTag && (
-                <Badge variant="outline" className="border-rap-forest text-rap-forest">
+                <Badge variant="outline" className="border-[var(--theme-accent)] text-[var(--theme-accent)]">
                   <Tag className="w-3 h-3 mr-1" />
                   Tag: {tags?.find(t => t.slug === selectedTag)?.name}
                 </Badge>
               )}
             </div>
-            <Button variant="ghost" size="sm" onClick={onClearFilters} className="text-rap-silver hover:text-rap-gold">
+            <Button variant="ghost" size="sm" onClick={onClearFilters} className="text-[var(--theme-textMuted)] hover:text-[var(--theme-primary)]">
               Clear All
             </Button>
           </div>
@@ -67,15 +67,15 @@ const BlogFilters = ({
       <div className="mb-8 grid grid-cols-1 md:grid-cols-2 gap-6">
         {/* Category Filter Dropdown */}
         <div>
-          <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Category</h2>
+          <h2 className="text-2xl font-[var(--theme-fontPrimary)] text-[var(--theme-primary)] mb-4">Filter by Category</h2>
           <Select value={selectedCategory || 'all'} onValueChange={onCategoryChange}>
-            <SelectTrigger className="w-full md:w-64 bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold">
+            <SelectTrigger className="w-full md:w-64 bg-[var(--theme-backgroundLight)] border-2 border-[var(--theme-primary)]/50 text-[var(--theme-primary)]">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
-            <SelectContent className="bg-rap-carbon border-rap-gold/50">
-              <SelectItem value="all" className="text-rap-gold">All Posts</SelectItem>
+            <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+              <SelectItem value="all" className="text-[var(--theme-text)]">All Posts</SelectItem>
               {categories?.map(category => (
-                <SelectItem key={category.id} value={category.id} className="text-rap-gold">
+                <SelectItem key={category.id} value={category.id} className="text-[var(--theme-text)]">
                   {category.name}
                 </SelectItem>
               ))}
@@ -86,15 +86,15 @@ const BlogFilters = ({
         {/* Tag Filter Dropdown */}
         {tags && tags.length > 0 && (
           <div>
-            <h2 className="text-2xl font-ceviche text-rap-gold mb-4">Filter by Tag</h2>
+            <h2 className="text-2xl font-[var(--theme-fontPrimary)] text-[var(--theme-primary)] mb-4">Filter by Tag</h2>
             <Select value={selectedTag || 'all'} onValueChange={onTagChange}>
-              <SelectTrigger className="w-full md:w-64 bg-rap-carbon-light border-2 border-rap-forest/50 text-rap-forest">
+              <SelectTrigger className="w-full md:w-64 bg-[var(--theme-backgroundLight)] border-2 border-[var(--theme-accent)]/50 text-[var(--theme-accent)]">
                 <SelectValue placeholder="Select a tag" />
               </SelectTrigger>
-              <SelectContent className="bg-rap-carbon border-rap-forest/50">
-                <SelectItem value="all" className="text-rap-forest">All Tags</SelectItem>
+              <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+                <SelectItem value="all" className="text-[var(--theme-text)]">All Tags</SelectItem>
                 {tags.map(tag => (
-                  <SelectItem key={tag.id} value={tag.slug} className="text-rap-forest">
+                  <SelectItem key={tag.id} value={tag.slug} className="text-[var(--theme-text)]">
                     {tag.name}
                   </SelectItem>
                 ))}

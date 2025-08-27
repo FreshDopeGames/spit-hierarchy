@@ -58,18 +58,18 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
 
   if (isLoading) {
     return (
-      <Card className="bg-black border-rap-burgundy/40">
-        <CardHeader>
-          <CardTitle className="text-rap-platinum font-mogra">Skill Ratings</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="animate-pulse space-y-4">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i} className="h-8 bg-rap-carbon rounded" />
-            ))}
-          </div>
-        </CardContent>
-      </Card>
+    <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+      <CardHeader>
+        <CardTitle className="text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Skill Ratings</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <div className="animate-pulse space-y-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="h-8 bg-[var(--theme-backgroundLight)] rounded" />
+          ))}
+        </div>
+      </CardContent>
+    </Card>
     );
   }
 
@@ -86,34 +86,34 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
   const overallScaled = Math.round((calculatedOverall / 10) * 100);
 
   return (
-    <Card className="bg-black border-rap-burgundy/40">
+    <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
       <CardHeader>
-        <CardTitle className="text-rap-platinum font-mogra">Skill Ratings</CardTitle>
+        <CardTitle className="text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Skill Ratings</CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Overall Rating - Always calculated from skills */}
-        <div className="bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 via-rap-gold/30 border border-rap-gold/30 rounded-lg p-4">
+        <div className="bg-gradient-to-r from-[var(--theme-secondary)]/30 to-[var(--theme-accent)]/30 via-[var(--theme-primary)]/30 border border-[var(--theme-primary)]/30 rounded-lg p-4">
           <div className="flex items-center gap-2 mb-3">
-            <Trophy className="w-5 h-5 text-rap-gold" />
-            <span className="text-lg font-bold text-rap-platinum font-mogra">Overall Rating</span>
+            <Trophy className="w-5 h-5 text-[var(--theme-primary)]" />
+            <span className="text-lg font-bold text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Overall Rating</span>
           </div>
           <div className="space-y-3">
             <div className="flex justify-between items-center">
-              <span className="text-sm text-rap-smoke font-kaushan">Calculated from all skills</span>
+              <span className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Calculated from all skills</span>
               <div className="text-right">
                 <div className="flex items-center gap-2">
-                  <span className="text-rap-platinum font-bold text-2xl font-mogra">{overallScaled}/100</span>
+                  <span className="text-[var(--theme-text)] font-bold text-2xl font-[var(--theme-fontPrimary)]">{overallScaled}/100</span>
                   {percentile !== null && !percentileLoading && overallScaled > 0 && (
                     <div className="flex items-center gap-1">
-                      <TrendingUp className="w-4 h-4 text-rap-gold" />
-                      <span className="text-rap-gold text-sm font-kaushan">({formatPercentileText(percentile)})</span>
+                      <TrendingUp className="w-4 h-4 text-[var(--theme-primary)]" />
+                      <span className="text-[var(--theme-primary)] text-sm font-[var(--theme-fontSecondary)]">({formatPercentileText(percentile)})</span>
                     </div>
                   )}
                 </div>
-                <span className="text-rap-smoke text-sm font-kaushan">(Average of {attributesWithVotes.length} skills)</span>
+                <span className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-fontSecondary)]">(Average of {attributesWithVotes.length} skills)</span>
               </div>
             </div>
-            <Progress value={overallPercentage} className="h-4 bg-rap-carbon" />
+            <Progress value={overallPercentage} className="h-4 bg-[var(--theme-backgroundLight)]" />
           </div>
         </div>
 
@@ -123,26 +123,26 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
             <div className="flex justify-end">
               <button
                 onClick={onVoteClick}
-                className="px-4 py-2 rounded-md bg-rap-burgundy hover:bg-rap-burgundy/80 text-rap-platinum font-kaushan"
+                className="px-4 py-2 rounded-md bg-[var(--theme-secondary)] hover:bg-[var(--theme-secondary)]/80 text-[var(--theme-background)] font-[var(--theme-fontSecondary)]"
               >
                 Rate Rapper
               </button>
             </div>
           )}
-          <h3 className="text-sm font-semibold text-rap-smoke uppercase tracking-wider font-kaushan">Individual Skills</h3>
+          <h3 className="text-sm font-semibold text-[var(--theme-textMuted)] uppercase tracking-wider font-[var(--theme-fontSecondary)]">Individual Skills</h3>
           {attributeCategories.map((category: any) => {
             const percentage = (category.averageRating / 10) * 100;
             const scaledRating = Math.round((category.averageRating / 10) * 100);
             return (
               <div key={category.id} className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-sm font-medium text-rap-platinum font-kaushan">{category.name}</span>
+                  <span className="text-sm font-medium text-[var(--theme-text)] font-[var(--theme-fontSecondary)]">{category.name}</span>
                   <div className="text-right">
-                    <span className="text-rap-platinum font-bold text-lg font-merienda">{scaledRating}/100</span>
-                    <span className="text-rap-smoke text-sm ml-2 font-kaushan">({category.totalVotes} votes)</span>
+                    <span className="text-[var(--theme-text)] font-bold text-lg font-[var(--theme-fontSecondary)]">{scaledRating}/100</span>
+                    <span className="text-[var(--theme-textMuted)] text-sm ml-2 font-[var(--theme-fontSecondary)]">({category.totalVotes} votes)</span>
                   </div>
                 </div>
-                <Progress value={percentage} className="h-3 bg-rap-charcoal" />
+                <Progress value={percentage} className="h-3 bg-[var(--theme-backgroundLight)]" />
               </div>
             );
           })}
@@ -150,7 +150,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
 
         {attributeCategories.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-rap-smoke font-kaushan">No skill ratings yet. Be the first to rate this rapper!</p>
+            <p className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">No skill ratings yet. Be the first to rate this rapper!</p>
           </div>
         )}
       </CardContent>

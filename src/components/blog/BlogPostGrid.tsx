@@ -56,7 +56,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {posts.map(post => (
-        <Card key={post.id} className="bg-carbon-fiber border border-rap-gold/40 overflow-hidden shadow-xl shadow-rap-gold/20 hover:shadow-rap-gold/40 transition-all duration-300 group">
+        <Card key={post.id} className="bg-[var(--theme-surface)] border border-[var(--theme-border)] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
           <Link to={`/blog/${post.slug}`}>
             <div className="overflow-hidden hover:invert transition-all duration-300">
               <ResponsiveImage
@@ -70,13 +70,13 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
           </Link>
           
           <CardContent className="p-6">
-            <div className="flex items-center gap-2 text-rap-smoke font-kaushan text-sm mb-3">
+            <div className="flex items-center gap-2 text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] text-sm mb-3">
               <Calendar className="w-4 h-4" />
-              <span className="font-merienda">{formatDate(post.published_at)}</span>
+              <span className="font-[var(--theme-fontSecondary)]">{formatDate(post.published_at)}</span>
               {post.blog_categories?.name && (
                 <>
                   <span>•</span>
-                  <Badge variant="outline" className="border-rap-forest text-rap-forest font-merienda">
+                  <Badge variant="outline" className="border-[var(--theme-accent)] text-[var(--theme-accent)] font-[var(--theme-fontSecondary)]">
                     {post.blog_categories.name}
                   </Badge>
                 </>
@@ -84,12 +84,12 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
             </div>
             
             <Link to={`/blog/${post.slug}`}>
-              <h3 className="font-ceviche text-rap-platinum hover:text-rap-gold transition-colors cursor-pointer mb-3 leading-tight text-4xl">
+              <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors cursor-pointer mb-3 leading-tight text-4xl">
                 {post.title}
               </h3>
             </Link>
             
-            <p className="text-rap-silver font-merienda leading-relaxed mb-4">
+            <p className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] leading-relaxed mb-4">
               {post.excerpt || `${post.title.substring(0, 100)}...`}
             </p>
 
@@ -100,7 +100,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
                   <Badge 
                     key={index} 
                     variant="outline" 
-                    className="border-rap-forest/50 text-rap-forest hover:bg-rap-forest/20 cursor-pointer text-xs" 
+                    className="border-[var(--theme-accent)]/50 text-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/20 cursor-pointer text-xs" 
                     onClick={(e) => {
                       e.preventDefault();
                       onTagClick(pt.blog_tags.slug);
@@ -116,7 +116,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
             <Link to={`/blog/${post.slug}`}>
               <Button 
                 variant="outline" 
-                className="bg-rap-carbon-light border-2 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20 group"
+                className="bg-[var(--theme-backgroundLight)] border-2 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/20 group"
               >
                 Read More
                 <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
