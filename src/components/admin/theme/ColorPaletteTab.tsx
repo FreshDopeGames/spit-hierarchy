@@ -25,7 +25,7 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
             
             return (
               <div key={key} className="space-y-2">
-                <Label className="text-white font-medium capitalize">
+                <Label className="text-[var(--theme-text)] font-medium capitalize">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
                 </Label>
                 <div className="flex gap-2">
@@ -33,23 +33,23 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
                     type="color"
                     value={isValid ? value : '#000000'}
                     onChange={(e) => onColorChange(key, e.target.value)}
-                    className="w-16 h-10 p-1 border-2 border-gray-300 bg-white"
+                    className="w-16 h-10 p-1 border-2 border-[var(--theme-border)] bg-[var(--theme-surface)]"
                   />
                   <Input
                     type="text"
                     value={value}
                     onChange={(e) => onColorChange(key, e.target.value)}
-                    className={`flex-1 bg-white border-2 text-black placeholder:text-gray-500 ${
-                      isValid ? 'border-gray-300' : 'border-red-500'
+                    className={`flex-1 bg-[var(--theme-surface)] border-2 text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)] ${
+                      isValid ? 'border-[var(--theme-border)]' : 'border-red-500'
                     }`}
                     placeholder="#FFFFFF"
                   />
                 </div>
                 <div 
-                  className="w-full h-8 rounded border-2 border-gray-300 flex items-center justify-center text-xs font-medium"
+                  className="w-full h-8 rounded border-2 border-[var(--theme-border)] flex items-center justify-center text-xs font-medium"
                   style={{ 
-                    backgroundColor: isValid ? value : '#CCCCCC',
-                    color: isValid ? contrastColor : '#666666'
+                    backgroundColor: isValid ? value : 'hsl(var(--theme-surface))',
+                    color: isValid ? contrastColor : 'hsl(var(--theme-textMuted))'
                   }}
                 >
                   {isValid ? 'Preview' : 'Invalid Color'}
