@@ -28,10 +28,20 @@ export const ThemeProvider = ({ children }: { children: ReactNode }) => {
 
   const updateTheme = (updates: Partial<ThemeConfig>) => {
     if (isPreviewMode) {
-      const newPreviewTheme = { ...(previewTheme || theme), ...updates };
+      const newPreviewTheme = { 
+        ...previewTheme, 
+        colors: { ...previewTheme?.colors, ...updates.colors },
+        fonts: { ...previewTheme?.fonts, ...updates.fonts },
+        ...updates 
+      };
       setPreviewTheme(newPreviewTheme);
     } else {
-      const newTheme = { ...theme, ...updates };
+      const newTheme = { 
+        ...theme, 
+        colors: { ...theme.colors, ...updates.colors },
+        fonts: { ...theme.fonts, ...updates.fonts },
+        ...updates 
+      };
       setPreviewTheme(newTheme);
       setIsPreviewMode(true);
     }
