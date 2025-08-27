@@ -41,10 +41,7 @@ const HeaderNavigation = ({
           {/* Right: User Menu */}
           <div className="flex items-center">
             {isLoading ? (
-              <div className="flex items-center space-x-3">
-                <AvatarSkeleton size={isScrolled ? 'sm' : 'md'} />
-                <TextSkeleton width="w-16" height="h-4" />
-              </div>
+              <AvatarSkeleton size={isScrolled ? 'sm' : 'md'} />
             ) : user ? (
               <UserProfileDropdown 
                 userProfile={userProfile} 
