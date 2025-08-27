@@ -18,36 +18,36 @@ const RankingCard = ({
   
   return (
     <Link to={rankingLink} className="block group">
-      <Card className="h-full bg-gradient-to-br from-black via-rap-carbon-light to-rap-charcoal border-rap-silver/30 hover:border-rap-gold/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-rap-gold/20">
+      <Card className="h-full bg-gradient-to-br from-[var(--theme-background)] via-[var(--theme-surface)] to-[var(--theme-backgroundLight)] border-[var(--theme-border)] hover:border-[var(--theme-primary)]/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-[var(--theme-primary)]/20">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2 mb-2">
             <div className="flex items-center gap-2 flex-wrap">
               {ranking.isOfficial ? (
-                <Badge variant="default" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
+                <Badge variant="default" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30 font-[var(--theme-fontSecondary)]">
                   <Crown className="w-3 h-3 mr-1" />
                   Official
                 </Badge>
               ) : (
-                <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
+                <Badge variant="secondary" className="bg-[var(--theme-accent)]/20 text-[var(--theme-accent)] border-[var(--theme-accent)]/30 font-[var(--theme-fontSecondary)]">
                   <Users className="w-3 h-3 mr-1" />
                   Community
                 </Badge>
               )}
               
               {ranking.category && (
-                <Badge variant="outline" className="border-rap-smoke/30 text-rap-smoke font-kaushan text-xs">
+                <Badge variant="outline" className="border-[var(--theme-textMuted)]/30 text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] text-xs">
                   {ranking.category}
                 </Badge>
               )}
             </div>
           </div>
           
-          <h3 className="text-xl font-bold text-rap-platinum group-hover:text-rap-gold transition-colors font-mogra line-clamp-2">
+          <h3 className="text-xl font-bold text-[var(--theme-text)] group-hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-fontPrimary)] line-clamp-2">
             {ranking.title}
           </h3>
           
           {ranking.description && (
-            <p className="text-rap-smoke text-sm font-merienda line-clamp-2 leading-relaxed">
+            <p className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-fontSecondary)] line-clamp-2 leading-relaxed">
               {ranking.description}
             </p>
           )}
@@ -57,16 +57,16 @@ const RankingCard = ({
           {/* Top Rappers Preview */}
           {ranking.rappers && ranking.rappers.length > 0 && (
             <div className="mb-4">
-              <h4 className="text-sm font-semibold text-rap-silver mb-2 font-merienda">
+              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-2 font-[var(--theme-fontSecondary)]">
                 Top {Math.min(ranking.rappers.length, 3)}:
               </h4>
               <div className="space-y-1">
                 {ranking.rappers.slice(0, 3).map((rapper, index) => (
                   <div key={index} className="flex items-center gap-2 text-sm">
-                    <span className="w-5 h-5 rounded-full bg-rap-gold text-rap-carbon text-xs font-bold flex items-center justify-center font-mogra">
+                    <span className="w-5 h-5 rounded-full bg-[var(--theme-primary)] text-[var(--theme-background)] text-xs font-bold flex items-center justify-center font-[var(--theme-fontPrimary)]">
                       {rapper.rank}
                     </span>
-                    <span className="text-rap-platinum font-merienda truncate">
+                    <span className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate">
                       {rapper.name}
                     </span>
                   </div>
@@ -76,15 +76,15 @@ const RankingCard = ({
           )}
           
           {/* Stats and Meta Information */}
-          <div className="flex items-center justify-between text-xs text-rap-smoke border-t border-rap-smoke/20 pt-3">
+          <div className="flex items-center justify-between text-xs text-[var(--theme-textMuted)] border-t border-[var(--theme-border)] pt-3">
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-1">
                 <Eye className="w-3 h-3" />
-                <span className="font-merienda">{ranking.views || 0}</span>
+                <span className="font-[var(--theme-fontSecondary)]">{ranking.views || 0}</span>
               </div>
               <div className="flex items-center gap-1">
-                <Star className="w-3 h-3 text-rap-gold" />
-                <span className="font-merienda">{ranking.totalVotes || 0} votes</span>
+                <Star className="w-3 h-3 text-[var(--theme-primary)]" />
+                <span className="font-[var(--theme-fontSecondary)]">{ranking.totalVotes || 0} votes</span>
               </div>
             </div>
             
@@ -92,14 +92,14 @@ const RankingCard = ({
               {!ranking.isOfficial && (
                 <div className="flex items-center gap-1">
                   <User className="w-3 h-3" />
-                  <span className="font-merienda truncate max-w-20">
+                  <span className="font-[var(--theme-fontSecondary)] truncate max-w-20">
                     {ranking.author}
                   </span>
                 </div>
               )}
               <div className="flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
-                <span className="font-merienda">
+                <span className="font-[var(--theme-fontSecondary)]">
                   {ranking.timeAgo}
                 </span>
               </div>

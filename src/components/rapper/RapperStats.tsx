@@ -10,21 +10,21 @@ interface RapperStatsProps {
 
 const RapperStats = ({ rapper }: RapperStatsProps) => {
   return (
-    <Card className="bg-black border-rap-burgundy/40">
+    <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
       <CardContent className="p-8">
-        <h2 className="text-2xl font-bold text-rap-platinum mb-4 font-mogra">Community Stats</h2>
+        <h2 className="text-2xl font-bold text-[var(--theme-text)] mb-4 font-[var(--theme-fontPrimary)]">Community Stats</h2>
         <div className="grid md:grid-cols-2 gap-6">
           <div className="text-center">
-            <div className="text-3xl font-bold text-rap-gold mb-2 font-mogra">
+            <div className="text-3xl font-bold text-[var(--theme-primary)] mb-2 font-[var(--theme-fontPrimary)]">
               {rapper.total_votes || 0}
             </div>
-            <div className="text-rap-smoke font-kaushan">Total Votes</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Total Votes</div>
           </div>
           <div className="text-center">
-            <div className="text-3xl font-bold text-rap-burgundy mb-2 font-mogra">
+            <div className="text-3xl font-bold text-[var(--theme-accent)] mb-2 font-[var(--theme-fontPrimary)]">
               {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
             </div>
-            <div className="text-rap-smoke font-kaushan">Average Rating</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Average Rating</div>
           </div>
         </div>
       </CardContent>

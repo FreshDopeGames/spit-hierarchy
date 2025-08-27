@@ -6,7 +6,7 @@ import TopVotedRappersCard from "./TopVotedRappersCard";
 const VotingAnalytics = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+      <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-primary)] mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
         Platform Analytics
       </h3>
 

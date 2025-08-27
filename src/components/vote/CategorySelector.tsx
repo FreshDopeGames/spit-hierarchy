@@ -23,19 +23,19 @@ const CategorySelector = ({
 
   return (
     <div className="space-y-2">
-      <Label htmlFor="category" className="text-rap-smoke font-kaushan">
+      <Label htmlFor="category" className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">
         Skill Category
       </Label>
       <Select value={categoryId} onValueChange={setCategoryId}>
-        <SelectTrigger className="bg-rap-carbon/50 border-rap-gold/30 text-rap-platinum font-kaushan min-h-[2.5rem] [&>span]:!text-clip [&>span]:!whitespace-normal [&>span]:!line-clamp-none">
+        <SelectTrigger className="bg-[var(--theme-surface)]/50 border-[var(--theme-primary)]/30 text-[var(--theme-text)] font-[var(--theme-fontSecondary)] min-h-[2.5rem] [&>span]:!text-clip [&>span]:!whitespace-normal [&>span]:!line-clamp-none">
           <SelectValue placeholder="Select a skill to rate..." />
         </SelectTrigger>
-        <SelectContent className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 text-gray-900 dark:text-gray-100">
+        <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)] text-[var(--theme-text)]">
           {filteredCategories?.map(category => (
             <SelectItem 
               key={category.id} 
               value={category.id} 
-              className="font-kaushan focus:bg-gray-100 dark:focus:bg-gray-700 focus:text-gray-900 dark:focus:text-gray-100"
+              className="font-[var(--theme-fontSecondary)] focus:bg-[var(--theme-surface)] focus:text-[var(--theme-text)]"
             >
               {category.name}
             </SelectItem>
@@ -43,7 +43,7 @@ const CategorySelector = ({
         </SelectContent>
       </Select>
       {selectedCategoryData && (
-        <p className="text-sm font-kaushan text-rap-gold">{selectedCategoryData.description}</p>
+        <p className="text-sm font-[var(--theme-fontSecondary)] text-[var(--theme-primary)]">{selectedCategoryData.description}</p>
       )}
     </div>
   );
