@@ -20,7 +20,7 @@ const RankingHeader = ({
       >
         {title}
       </h1>
-      <p className="text-lg sm:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+      <p className="text-lg sm:text-xl text-[var(--theme-textMuted)] max-w-3xl mx-auto leading-relaxed">
         {description}
       </p>
     </div>

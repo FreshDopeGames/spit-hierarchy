@@ -1,6 +1,6 @@
 
 import { Link } from "react-router-dom";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { useAuth } from "@/hooks/useAuth";
 import { useTheme } from "@/hooks/useTheme";
 
@@ -19,9 +19,9 @@ const HeroSection = () => {
       {!user && (
         <div className="mt-6">
           <Link to="/auth">
-            <Button size="lg" className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra text-base sm:text-lg shadow-xl shadow-rap-gold/40 border border-rap-gold/30 px-6 sm:px-8">
+            <ThemedButton size="lg" variant="default" className="font-[var(--theme-font-display)] text-base sm:text-lg shadow-xl px-6 sm:px-8">
               Join The Cypher
-            </Button>
+            </ThemedButton>
           </Link>
         </div>
       )}

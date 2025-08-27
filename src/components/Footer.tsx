@@ -8,7 +8,7 @@ const Footer = () => {
   const CypherIcon = PenTool || Pen || MessageSquare;
 
   return (
-    <footer className="bg-black border-t border-rap-gold/30 mt-0">
+    <footer className="bg-[var(--theme-background)] border-t border-[var(--theme-border)] mt-0">
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -19,23 +19,23 @@ const Footer = () => {
                 alt="Logo" 
                 className="h-8 w-auto mr-3" 
               />
-              <span className="text-rap-gold font-ceviche text-xl tracking-wider">
+              <span className="text-[var(--theme-primary)] font-[var(--theme-font-display)] text-xl tracking-wider">
                 Spit Hierarchy
               </span>
             </div>
-            <p className="text-white/90 font-merienda text-sm">
+            <p className="text-[var(--theme-text)] font-[var(--theme-font-body)] text-sm">
               The ultimate destination for ranking and discovering the greatest rappers of all time.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-rap-gold font-mogra text-lg mb-4">Explore</h3>
+            <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/rankings" 
-                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Trophy className="w-4 h-4 mr-2" />
@@ -45,7 +45,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/all-rappers" 
-                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Music className="w-4 h-4 mr-2" />
@@ -55,7 +55,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/blog" 
-                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Calendar className="w-4 h-4 mr-2" />
@@ -65,7 +65,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Info className="w-4 h-4 mr-2" />
@@ -77,12 +77,12 @@ const Footer = () => {
 
           {/* Community */}
           <div>
-            <h3 className="text-rap-gold font-mogra text-lg mb-4">Community</h3>
+            <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg mb-4">Community</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/community-cypher" 
-                  className="flex items-center text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <CypherIcon className="w-4 h-4 mr-2" />
@@ -92,7 +92,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/auth" 
-                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Join Spit Hierarchy
@@ -101,7 +101,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/analytics" 
-                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Analytics
@@ -112,12 +112,12 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h3 className="text-rap-gold font-mogra text-lg mb-4">Legal</h3>
+            <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/privacy" 
-                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Privacy Policy
@@ -126,7 +126,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/terms" 
-                  className="text-white/90 hover:text-rap-gold transition-colors font-merienda"
+                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Terms of Use
@@ -136,8 +136,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-rap-gold/30 mt-8 pt-8 text-center">
-          <p className="text-white/80 font-merienda text-sm">
+        <div className="border-t border-[var(--theme-border)] mt-8 pt-8 text-center">
+          <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-sm">
             © 2025 Spit Hierarchy. All rights reserved. Keep the culture alive.
           </p>
         </div>

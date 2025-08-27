@@ -22,8 +22,8 @@ const Admin = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <div className="text-rap-platinum text-xl font-mogra animate-pulse">Loading...</div>
+      <div className="min-h-screen bg-[var(--theme-background)] flex items-center justify-center">
+        <div className="text-[var(--theme-primary)] text-xl font-[var(--theme-font-heading)] animate-pulse">Loading...</div>
       </div>
     );
   }
@@ -33,25 +33,25 @@ const Admin = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+    <div className="min-h-screen bg-[var(--theme-background)]">
       <HeaderNavigation isScrolled={isScrolled} />
       
       <main className="max-w-7xl mx-auto p-6 pt-24">
-        <h1 className="text-4xl font-bold text-rap-platinum mb-8 font-ceviche">
+        <h1 className="text-4xl font-bold text-[var(--theme-primary)] mb-8 font-[var(--theme-font-heading)]">
           Admin Dashboard
         </h1>
 
         <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 bg-rap-carbon-light/50 gap-1 h-auto p-2">
-            <TabsTrigger value="rappers" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Rappers</TabsTrigger>
-            <TabsTrigger value="rankings" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Rankings</TabsTrigger>
-            <TabsTrigger value="blog" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Blog</TabsTrigger>
-            <TabsTrigger value="polls" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Polls</TabsTrigger>
-            <TabsTrigger value="vs-matches" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">VS Matches</TabsTrigger>
-            <TabsTrigger value="achievements" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Achievements</TabsTrigger>
-            <TabsTrigger value="headers" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Headers</TabsTrigger>
-            <TabsTrigger value="theme" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Theme</TabsTrigger>
-            <TabsTrigger value="data" className="text-xs sm:text-sm py-3 font-bold text-rap-gold">Data</TabsTrigger>
+          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 bg-[var(--theme-surface)] gap-1 h-auto p-2">
+            <TabsTrigger value="rappers" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Rappers</TabsTrigger>
+            <TabsTrigger value="rankings" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Rankings</TabsTrigger>
+            <TabsTrigger value="blog" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Blog</TabsTrigger>
+            <TabsTrigger value="polls" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Polls</TabsTrigger>
+            <TabsTrigger value="vs-matches" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">VS Matches</TabsTrigger>
+            <TabsTrigger value="achievements" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Achievements</TabsTrigger>
+            <TabsTrigger value="headers" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Headers</TabsTrigger>
+            <TabsTrigger value="theme" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Theme</TabsTrigger>
+            <TabsTrigger value="data" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Data</TabsTrigger>
           </TabsList>
 
           <TabsContent value="rappers">
