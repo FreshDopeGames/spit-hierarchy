@@ -33,7 +33,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
       className="block group"
       onClick={() => window.scrollTo(0, 0)}
     >
-      <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-rap-gold/30 group-hover:border-rap-gold/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-rap-gold/20">
+      <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-[color:var(--theme-primary)]/30 group-hover:border-[color:var(--theme-primary)]/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-[color:var(--theme-primary)]/20">
         {/* Rapper Mosaic Background - Top portion of card */}
         <div className="absolute inset-0 h-[43%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
@@ -100,19 +100,19 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         <div className="absolute bottom-0 left-0 right-0 h-[57%] flex flex-col justify-center p-4 sm:p-6">
           {/* Category Badge */}
           <div className="mb-3">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-mogra bg-rap-gold/20 text-rap-gold border border-rap-gold/30 backdrop-blur-sm">
+            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-[var(--theme-font-heading)] bg-[color:var(--theme-primary)]/20 text-[color:var(--theme-primary)] border border-[color:var(--theme-primary)]/30 backdrop-blur-sm">
               {ranking.category}
             </span>
           </div>
           
           {/* Title */}
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-ceviche text-white mb-2 sm:mb-3 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)] group-hover:text-rap-gold transition-colors duration-300">
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-[var(--theme-font-heading)] text-white mb-2 sm:mb-3 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)] group-hover:text-[color:var(--theme-primary)] transition-colors duration-300">
             {ranking.title}
           </h3>
           
           {/* Description */}
           {ranking.description && (
-            <p className="text-rap-silver text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 drop-shadow-[1px_1px_4px_rgba(0,0,0,0.8)]">
+            <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 drop-shadow-[1px_1px_4px_rgba(0,0,0,0.8)]">
               {ranking.description}
             </p>
           )}
@@ -120,14 +120,14 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           {/* Stats Row */}
           <div className="flex items-center justify-between">
             {totalVotes > 0 && (
-              <div className="flex items-center gap-1 text-rap-smoke text-xs sm:text-sm">
+              <div className="flex items-center gap-1 text-[color:var(--theme-textMuted)] text-xs sm:text-sm">
                 <TrendingUp className="w-4 h-4" />
                 <span>{totalVotes.toLocaleString()} Votes</span>
               </div>
             )}
             
             {/* View Ranking CTA */}
-            <div className="flex items-center gap-1 text-rap-gold group-hover:text-rap-gold-light transition-colors duration-300 text-xs sm:text-sm font-kaushan">
+            <div className="flex items-center gap-1 text-[color:var(--theme-primary)] group-hover:text-[color:var(--theme-primaryLight)] transition-colors duration-300 text-xs sm:text-sm font-[var(--theme-font-body)]">
               <Award className="w-4 h-4" />
               <span>View Ranking</span>
             </div>
@@ -135,7 +135,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         </div>
         
         {/* Hover State Overlay */}
-        <div className="absolute inset-0 bg-rap-gold/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-[color:var(--theme-primary)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       </div>
     </Link>
   );

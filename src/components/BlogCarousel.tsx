@@ -105,7 +105,7 @@ const BlogCarousel = () => {
     <section className="mb-16">
       {/* Embla carousel container */}
       <div className="flex justify-center">
-        <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-carbon-fiber border border-rap-gold/30 shadow-lg shadow-rap-gold/20">
+        <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {featuredPosts.map(post => (
@@ -122,24 +122,24 @@ const BlogCarousel = () => {
                       />
                       <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
                       
-                      <div className="absolute bottom-6 sm:bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-ceviche mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
+                       <div className="absolute bottom-6 sm:bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
                           {post.title}
                         </h3>
                         <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
                           <div className="flex items-center">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-rap-smoke" />
-                            <span className="text-rap-smoke">
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[color:var(--theme-textMuted)]" />
+                            <span className="text-[color:var(--theme-textMuted)]">
                               {format(new Date(post.published_at), "MMMM d, yyyy")}
                             </span>
                           </div>
                           {post.blog_categories?.name && (
-                            <Badge className="bg-rap-forest/20 text-rap-forest border-rap-forest/30 text-xs sm:text-sm">
+                            <Badge className="bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm">
                               {post.blog_categories.name}
                             </Badge>
                           )}
                         </div>
-                        <p className="text-rap-silver text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
+                        <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
                           {post.excerpt}
                         </p>
                       </div>
@@ -175,11 +175,11 @@ const BlogCarousel = () => {
             <div></div> {/* Spacer */}
             <div className="flex gap-2 sm:gap-3">
               {featuredPosts.map((_, index) => (
-                <button 
+                 <button 
                   key={index} 
                   className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 ${
                     currentIndex === index 
-                      ? "bg-rap-gold scale-110" 
+                      ? "bg-[var(--theme-primary)] scale-110" 
                       : "bg-gray-400 opacity-60 hover:opacity-80"
                   }`} 
                   onClick={() => scrollTo(index)} 
@@ -187,7 +187,7 @@ const BlogCarousel = () => {
               ))}
             </div>
             <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
-              <Button variant="link" className="text-rap-gold hover:text-rap-gold-light p-0 text-xs sm:text-sm h-auto">
+              <Button variant="link" className="text-[color:var(--theme-primary)] hover:text-[color:var(--theme-primaryLight)] p-0 text-xs sm:text-sm h-auto">
                 Read More
               </Button>
             </Link>
@@ -198,7 +198,7 @@ const BlogCarousel = () => {
       {/* More Articles Button - moved below carousel */}
       <div className="text-center mt-6">
         <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
-          <Button variant="secondary" size="sm" className="bg-rap-gold/10 text-rap-gold hover:bg-rap-gold/20 border-rap-gold/30">
+          <Button variant="secondary" size="sm" className="bg-[color:var(--theme-primary)]/10 text-[color:var(--theme-primary)] hover:bg-[color:var(--theme-primary)]/20 border-[color:var(--theme-primary)]/30">
             More Slick Talk
           </Button>
         </Link>

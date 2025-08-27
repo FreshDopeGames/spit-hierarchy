@@ -45,23 +45,23 @@ const RisingLegendsSection = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <TrendingUp className="w-6 h-6 text-rap-forest" />
-            <h2 className="text-3xl font-ceviche text-rap-forest mb-0 animate-text-glow tracking-wider">
+            <TrendingUp className="w-6 h-6 text-[color:var(--theme-accent)]" />
+            <h2 className="text-3xl font-[var(--theme-font-heading)] text-[color:var(--theme-accent)] mb-0 animate-text-glow tracking-wider">
               Rising Legends of 2024
             </h2>
-            <Crown className="w-6 h-6 text-rap-forest" />
+            <Crown className="w-6 h-6 text-[color:var(--theme-accent)]" />
           </div>
-          <p className="text-rap-platinum font-kaushan text-lg">
+          <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-lg">
             The next generation ascending to greatness
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Card key={i} className="bg-carbon-fiber border-rap-forest/20 animate-pulse">
+            <Card key={i} className="bg-[var(--theme-surface)] border-[color:var(--theme-accent)]/20 animate-pulse">
               <CardContent className="p-4">
-                <div className="h-32 bg-rap-carbon-light rounded-lg mb-3"></div>
-                <div className="h-3 bg-rap-carbon-light rounded mb-2"></div>
-                <div className="h-2 bg-rap-carbon-light rounded w-2/3"></div>
+                <div className="h-32 bg-[var(--theme-backgroundLight)] rounded-lg mb-3"></div>
+                <div className="h-3 bg-[var(--theme-backgroundLight)] rounded mb-2"></div>
+                <div className="h-2 bg-[var(--theme-backgroundLight)] rounded w-2/3"></div>
               </CardContent>
             </Card>
           ))}
@@ -78,20 +78,20 @@ const RisingLegendsSection = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <TrendingUp className="w-6 h-6 text-rap-forest" />
-            <h2 className="text-3xl font-ceviche text-rap-forest mb-0 animate-text-glow tracking-wider text-border">
+            <TrendingUp className="w-6 h-6 text-[color:var(--theme-accent)]" />
+            <h2 className="text-3xl font-[var(--theme-font-heading)] text-[color:var(--theme-accent)] mb-0 animate-text-glow tracking-wider text-border">
               Rising Legends of 2025
             </h2>
-            <Crown className="w-6 h-6 text-rap-forest" />
+            <Crown className="w-6 h-6 text-[color:var(--theme-accent)]" />
           </div>
-          <p className="text-rap-platinum font-merienda text-lg">
+          <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-lg">
             The next generation ascending to greatness
           </p>
         </div>
-        <Card className="bg-carbon-fiber border border-rap-forest/40 shadow-2xl shadow-rap-forest/20">
+        <Card className="bg-[var(--theme-surface)] border border-[color:var(--theme-accent)]/40 shadow-2xl shadow-[color:var(--theme-accent)]/20">
           <CardContent className="p-8 text-center">
-            <TrendingUp className="w-16 h-16 text-rap-forest mx-auto mb-4" />
-            <p className="text-rap-smoke font-merienda">The rising stars are yet to be crowned.</p>
+            <TrendingUp className="w-16 h-16 text-[color:var(--theme-accent)] mx-auto mb-4" />
+            <p className="text-[color:var(--theme-textMuted)] font-[var(--theme-font-body)]">The rising stars are yet to be crowned.</p>
           </CardContent>
         </Card>
       </div>
@@ -102,13 +102,13 @@ const RisingLegendsSection = () => {
     <div className="mb-12">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <TrendingUp className="w-6 h-6 text-rap-forest" />
-          <h2 className="text-3xl font-ceviche text-rap-forest mb-0 animate-text-glow tracking-wider">
+          <TrendingUp className="w-6 h-6 text-[color:var(--theme-accent)]" />
+          <h2 className="text-3xl font-[var(--theme-font-heading)] text-[color:var(--theme-accent)] mb-0 animate-text-glow tracking-wider">
             Rising Legends of 2024
           </h2>
-          <Crown className="w-6 h-6 text-rap-forest" />
+          <Crown className="w-6 h-6 text-[color:var(--theme-accent)]" />
         </div>
-        <p className="text-rap-platinum font-kaushan text-lg">
+        <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-lg">
           The next generation ascending to greatness
         </p>
       </div>
@@ -126,7 +126,7 @@ const RisingLegendsSection = () => {
 
       <div className="text-center mt-8">
         <Link to="/rankings/official/rising-legends-2024">
-          <Button className="bg-rap-forest hover:bg-rap-forest-light text-rap-platinum font-mogra shadow-xl shadow-rap-forest/40 border border-rap-forest/30" size="lg">
+          <Button className="bg-[var(--theme-accent)] hover:bg-[var(--theme-accentLight)] text-[color:var(--theme-text)] font-[var(--theme-font-heading)] shadow-xl shadow-[color:var(--theme-accent)]/40 border border-[color:var(--theme-accent)]/30" size="lg">
             View Complete Rising Legends List
           </Button>
         </Link>

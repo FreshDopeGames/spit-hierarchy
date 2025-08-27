@@ -46,23 +46,23 @@ const LyricalMastersSection = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Mic className="w-6 h-6 text-rap-burgundy" />
-            <h2 className="text-3xl font-ceviche text-rap-burgundy mb-0 animate-text-glow tracking-wider">
+            <Mic className="w-6 h-6 text-[color:var(--theme-secondary)]" />
+            <h2 className="text-3xl font-[var(--theme-font-heading)] text-[color:var(--theme-secondary)] mb-0 animate-text-glow tracking-wider">
               Lyrical Masters
             </h2>
-            <Crown className="w-6 h-6 text-rap-burgundy" />
+            <Crown className="w-6 h-6 text-[color:var(--theme-secondary)]" />
           </div>
-          <p className="text-rap-platinum font-kaushan text-lg">
+          <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-lg">
             The supreme wordsmiths of hip-hop
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Card key={i} className="bg-carbon-fiber border-rap-burgundy/20 animate-pulse">
+            <Card key={i} className="bg-[var(--theme-surface)] border-[color:var(--theme-secondary)]/20 animate-pulse">
               <CardContent className="p-4">
-                <div className="h-32 bg-rap-carbon-light rounded-lg mb-3"></div>
-                <div className="h-3 bg-rap-carbon-light rounded mb-2"></div>
-                <div className="h-2 bg-rap-carbon-light rounded w-2/3"></div>
+                <div className="h-32 bg-[var(--theme-backgroundLight)] rounded-lg mb-3"></div>
+                <div className="h-3 bg-[var(--theme-backgroundLight)] rounded mb-2"></div>
+                <div className="h-2 bg-[var(--theme-backgroundLight)] rounded w-2/3"></div>
               </CardContent>
             </Card>
           ))}
@@ -79,20 +79,20 @@ const LyricalMastersSection = () => {
       <div className="mb-12">
         <div className="text-center mb-8">
           <div className="flex items-center justify-center gap-3 mb-4">
-            <Mic className="w-6 h-6 text-rap-burgundy" />
-            <h2 className="text-3xl font-ceviche text-rap-burgundy mb-0 animate-text-glow tracking-wider text-border">
+            <Mic className="w-6 h-6 text-[color:var(--theme-secondary)]" />
+            <h2 className="text-3xl font-[var(--theme-font-heading)] text-[color:var(--theme-secondary)] mb-0 animate-text-glow tracking-wider text-border">
               Lyrical Masters
             </h2>
-            <Crown className="w-6 h-6 text-rap-burgundy" />
+            <Crown className="w-6 h-6 text-[color:var(--theme-secondary)]" />
           </div>
-          <p className="text-rap-platinum font-merienda text-lg">
+          <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-lg">
             The supreme wordsmiths of hip-hop
           </p>
         </div>
-        <Card className="bg-carbon-fiber border border-rap-burgundy/40 shadow-2xl shadow-rap-burgundy/20">
+        <Card className="bg-[var(--theme-surface)] border border-[color:var(--theme-secondary)]/40 shadow-2xl shadow-[color:var(--theme-secondary)]/20">
           <CardContent className="p-8 text-center">
-            <Mic className="w-16 h-16 text-rap-burgundy mx-auto mb-4" />
-            <p className="text-rap-smoke font-merienda">The lyrical legends await their crowning.</p>
+            <Mic className="w-16 h-16 text-[color:var(--theme-secondary)] mx-auto mb-4" />
+            <p className="text-[color:var(--theme-textMuted)] font-[var(--theme-font-body)]">The lyrical legends await their crowning.</p>
           </CardContent>
         </Card>
       </div>
@@ -103,13 +103,13 @@ const LyricalMastersSection = () => {
     <div className="mb-12">
       <div className="text-center mb-8">
         <div className="flex items-center justify-center gap-3 mb-4">
-          <Mic className="w-6 h-6 text-rap-burgundy" />
-          <h2 className="text-3xl font-ceviche text-rap-burgundy mb-0 animate-text-glow tracking-wider">
+          <Mic className="w-6 h-6 text-[color:var(--theme-secondary)]" />
+          <h2 className="text-3xl font-[var(--theme-font-heading)] text-[color:var(--theme-secondary)] mb-0 animate-text-glow tracking-wider">
             Lyrical Masters
           </h2>
-          <Crown className="w-6 h-6 text-rap-burgundy" />
+          <Crown className="w-6 h-6 text-[color:var(--theme-secondary)]" />
         </div>
-        <p className="text-rap-platinum font-kaushan text-lg">
+        <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-lg">
           The supreme wordsmiths of hip-hop
         </p>
       </div>
@@ -127,7 +127,7 @@ const LyricalMastersSection = () => {
 
       <div className="text-center mt-8">
         <Link to="/rankings/official/lyrical-masters">
-          <Button className="bg-gradient-to-r from-rap-burgundy to-rap-burgundy-light hover:from-rap-burgundy-light hover:to-rap-burgundy font-mogra shadow-xl shadow-rap-burgundy/40 border border-rap-burgundy/30" size="lg">
+          <Button className="bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-secondaryLight)] hover:from-[var(--theme-secondaryLight)] hover:to-[var(--theme-secondary)] font-[var(--theme-font-heading)] shadow-xl shadow-[color:var(--theme-secondary)]/40 border border-[color:var(--theme-secondary)]/30" size="lg">
             View Complete Lyrical Masters List
           </Button>
         </Link>

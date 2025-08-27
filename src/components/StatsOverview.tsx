@@ -90,18 +90,18 @@ const StatsOverview = () => {
     return (
       <div className="mb-8 sm:mb-12">
         <div className="text-center mb-6 sm:mb-8 px-4">
-          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-ceviche text-rap-gold mb-2 tracking-wider break-words">
+          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-[var(--theme-font-heading)] text-[color:var(--theme-primary)] mb-2 tracking-wider break-words">
             Site Statistics
           </h2>
-          <p className="text-rap-platinum font-merienda text-base sm:text-lg">
+          <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-base sm:text-lg">
             Numbers from the community
           </p>
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Card key={i} className="bg-carbon-fiber border-rap-gold/20 animate-pulse">
+            <Card key={i} className="bg-[var(--theme-surface)] border-[color:var(--theme-primary)]/20 animate-pulse">
               <CardContent className="p-3 sm:p-4">
-                <div className="h-12 sm:h-16 bg-rap-carbon-light rounded"></div>
+                <div className="h-12 sm:h-16 bg-[var(--theme-backgroundLight)] rounded"></div>
               </CardContent>
             </Card>
           ))}
@@ -115,75 +115,75 @@ const StatsOverview = () => {
       icon: Music,
       label: "Rappers",
       value: stats?.totalRappers || 0,
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: Users,
       label: "Members",
       value: stats?.totalMembers || 0,
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: Vote,
       label: "Total Votes",
       value: stats?.totalVotes || 0,
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: Trophy,
       label: "Top Voter",
       value: stats?.topVoter || "N/A",
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: TrendingUp,
       label: "Top Rated",
       value: stats?.topRapper || "N/A",
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: MessageCircle,
       label: "Comments",
       value: stats?.totalComments || 0,
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: Crown,
       label: "Top Commenter",
       value: stats?.topCommenter || "N/A",
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     },
     {
       icon: UserPlus,
       label: "Newest Member",
       value: stats?.newestMember || "N/A",
-      color: "from-rap-gold to-rap-gold-light"
+      color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
     }
   ];
 
   return (
     <div className="mb-8 sm:mb-12">
       <div className="text-center mb-6 sm:mb-8 px-4">
-        <h2 className="font-ceviche text-rap-gold mb-2 tracking-wider text-2xl sm:text-3xl lg:text-5xl break-words">
+        <h2 className="font-[var(--theme-font-heading)] text-[color:var(--theme-primary)] mb-2 tracking-wider text-2xl sm:text-3xl lg:text-5xl break-words">
           Site Statistics
         </h2>
-        <p className="text-rap-platinum font-merienda text-base sm:text-lg">
+        <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-base sm:text-lg">
           Numbers from the community
         </p>
       </div>
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map((stat, index) => (
-          <Card key={index} className="bg-carbon-fiber border border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 shadow-lg shadow-rap-gold/20 relative overflow-hidden group">
-            <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
+          <Card key={index} className="bg-[var(--theme-surface)] border border-[color:var(--theme-primary)]/40 hover:border-[color:var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 shadow-lg shadow-[color:var(--theme-primary)]/20 relative overflow-hidden group">
+            <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg flex-shrink-0`}>
-                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-rap-carbon" />
+                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[color:var(--theme-background)]" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm font-merienda tracking-wide text-rap-platinum truncate">{stat.label}</p>
-                  <p className="text-sm sm:text-base font-merienda font-extrabold text-rap-gold-light break-words">{stat.value}</p>
+                  <p className="text-xs sm:text-sm font-[var(--theme-font-body)] tracking-wide text-[color:var(--theme-text)] truncate">{stat.label}</p>
+                  <p className="text-sm sm:text-base font-[var(--theme-font-body)] font-extrabold text-[color:var(--theme-primaryLight)] break-words">{stat.value}</p>
                 </div>
               </div>
             </CardContent>
