@@ -48,22 +48,22 @@ const RapperCard = ({
   
   return (
     <Card 
-      className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 hover:border-rap-gold/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group"
+      className="bg-gradient-to-br from-[var(--theme-background)] via-[var(--theme-surface)] to-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/40 hover:border-[var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group"
       onClick={handleCardClick}
     >
-      {/* Rap culture accent bar */}
-      <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
+      {/* Theme accent bar */}
+      <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
       
       {/* Position indicator for ranked items */}
       {position && (
-        <div className="absolute top-2 right-2 bg-rap-gold text-rap-carbon rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold font-mogra z-10">
+        <div className="absolute top-2 right-2 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full w-8 h-8 flex items-center justify-center text-sm font-bold font-[var(--theme-fontPrimary)] z-10">
           {position}
         </div>
       )}
       
       <CardContent className={compact ? "p-4" : "p-6"}>
         {/* Rapper image or placeholder - 1:1 aspect ratio */}
-        <div className={`w-full aspect-square bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal rounded-lg ${compact ? "mb-3" : "mb-4"} flex items-center justify-center relative group-hover:from-rap-burgundy/20 group-hover:via-rap-forest/20 group-hover:to-rap-charcoal transition-all duration-300 overflow-hidden`}>
+        <div className={`w-full aspect-square bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-backgroundLight)] to-[var(--theme-background)] rounded-lg ${compact ? "mb-3" : "mb-4"} flex items-center justify-center relative group-hover:from-[var(--theme-accent)]/20 group-hover:via-[var(--theme-secondary)]/20 group-hover:to-[var(--theme-background)] transition-all duration-300 overflow-hidden`}>
           <img 
             src={imageToDisplay}
             alt={rapper.name || "Rapper"}
@@ -82,22 +82,22 @@ const RapperCard = ({
         {/* Rapper Info */}
         <div className={compact ? "space-y-2" : "space-y-3"}>
           <div className="flex items-start justify-between">
-            <h3 className={`font-mogra ${compact ? "text-base" : "text-lg"} leading-tight transition-colors font-normal text-rap-gold`}>{rapper.name}</h3>
-            {rapper.verified && <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />}
+            <h3 className={`font-[var(--theme-fontPrimary)] ${compact ? "text-base" : "text-lg"} leading-tight transition-colors font-normal text-[var(--theme-primary)]`}>{rapper.name}</h3>
+            {rapper.verified && <Verified className="w-5 h-5 text-[var(--theme-secondary)] flex-shrink-0" />}
           </div>
 
-          {rapper.real_name && <p className="text-rap-smoke text-sm font-medium font-kaushan">{rapper.real_name}</p>}
+          {rapper.real_name && <p className="text-[var(--theme-textMuted)] text-sm font-medium font-[var(--theme-fontSecondary)]">{rapper.real_name}</p>}
 
           {!compact && (
             <div className="flex flex-wrap gap-2 text-xs">
               {rapper.origin && (
-                <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
+                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-2 py-1 rounded-full font-[var(--theme-fontSecondary)]">
                   <MapPin className="w-3 h-3" />
                   <span>{rapper.origin}</span>
                 </div>
               )}
               {birthdate && (
-                <div className="flex items-center gap-1 text-rap-platinum bg-rap-carbon/60 px-2 py-1 rounded-full font-kaushan">
+                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-2 py-1 rounded-full font-[var(--theme-fontSecondary)]">
                   <Calendar className="w-3 h-3" />
                   <span>{birthdate}</span>
                 </div>
@@ -109,37 +109,37 @@ const RapperCard = ({
           {!compact && (
             <div className="grid grid-cols-3 gap-2">
               {/* Overall Rating */}
-              <div className="bg-gradient-to-r from-rap-gold-dark to-rap-gold-light px-2 py-2 rounded-lg border border-rap-silver/20 text-center">
-                <div className="text-rap-carbon font-bold text-lg font-mogra leading-none">
+              <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary)]/80 px-2 py-2 rounded-lg border border-[var(--theme-border)] text-center">
+                <div className="text-[var(--theme-textLight)] font-bold text-lg font-[var(--theme-fontPrimary)] leading-none">
                   {overallRating}
                 </div>
-                <div className="text-rap-carbon/70 text-xs font-kaushan mt-1">
+                <div className="text-[var(--theme-textLight)]/70 text-xs font-[var(--theme-fontSecondary)] mt-1">
                   Overall
                 </div>
               </div>
 
               {/* Top 5 Count */}
-              <div className="bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-2 py-2 rounded-lg border border-rap-silver/20 text-center">
+              <div className="bg-gradient-to-r from-[var(--theme-accent)]/30 to-[var(--theme-secondary)]/30 px-2 py-2 rounded-lg border border-[var(--theme-border)] text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
-                  <Crown className="w-4 h-4 text-rap-gold" />
-                  <span className="text-rap-platinum font-bold text-lg font-mogra leading-none">
+                  <Crown className="w-4 h-4 text-[var(--theme-primary)]" />
+                  <span className="text-[var(--theme-text)] font-bold text-lg font-[var(--theme-fontPrimary)] leading-none">
                     {stats?.top5_count || 0}
                   </span>
                 </div>
-                <div className="text-rap-smoke text-xs font-kaushan">
+                <div className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-fontSecondary)]">
                   Top 5s
                 </div>
               </div>
 
               {/* Ranking Votes */}
-              <div className="bg-gradient-to-r from-rap-forest/30 to-rap-burgundy/30 px-2 py-2 rounded-lg border border-rap-silver/20 text-center">
+              <div className="bg-gradient-to-r from-[var(--theme-secondary)]/30 to-[var(--theme-accent)]/30 px-2 py-2 rounded-lg border border-[var(--theme-border)] text-center">
                 <div className="flex items-center justify-center gap-1 mb-1">
-                  <Vote className="w-4 h-4 text-rap-silver" />
-                  <span className="text-rap-platinum font-bold text-lg font-mogra leading-none">
+                  <Vote className="w-4 h-4 text-[var(--theme-secondary)]" />
+                  <span className="text-[var(--theme-text)] font-bold text-lg font-[var(--theme-fontPrimary)] leading-none">
                     {stats?.ranking_votes || 0}
                   </span>
                 </div>
-                <div className="text-rap-smoke text-xs font-kaushan">
+                <div className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-fontSecondary)]">
                   Votes
                 </div>
               </div>
