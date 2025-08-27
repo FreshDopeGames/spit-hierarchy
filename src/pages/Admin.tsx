@@ -54,39 +54,39 @@ const Admin = () => {
             <TabsTrigger value="data" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Data</TabsTrigger>
           </TabsList>
 
-          <TabsContent value="rappers">
+          <TabsContent value="rappers" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
             <AdminRapperManagement />
           </TabsContent>
 
-          <TabsContent value="rankings">
+          <TabsContent value="rankings" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
             <AdminRankingsManagement />
           </TabsContent>
 
-        <TabsContent value="blog">
+        <TabsContent value="blog" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
           <BlogManagement />
         </TabsContent>
 
-        <TabsContent value="polls">
+        <TabsContent value="polls" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
           <PollManagement />
         </TabsContent>
 
-        <TabsContent value="vs-matches">
+        <TabsContent value="vs-matches" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
           <AdminVSMatchManagement />
         </TabsContent>
 
-        <TabsContent value="achievements">
+        <TabsContent value="achievements" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
           <AdminAchievementManagement />
         </TabsContent>
 
-        <TabsContent value="headers">
+        <TabsContent value="headers" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
           <SectionHeaderManagement />
         </TabsContent>
 
-          <TabsContent value="theme">
+          <TabsContent value="theme" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
             <ThemeManagement />
           </TabsContent>
 
-          <TabsContent value="data">
+          <TabsContent value="data" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
             <AdminDataManagement />
           </TabsContent>
         </Tabs>

@@ -142,9 +142,20 @@ export const applyThemeToDOM = (theme: ThemeConfig): void => {
     // Convert hex to HSL format for CSS variables
     const hslValue = value.startsWith('#') ? hexToHsl(value) : value;
     root.style.setProperty(`--theme-${key}`, hslValue);
-    // Also set core variables for primary colors to ensure consistency
+    
+    // Also set standard shadcn variables to ensure UI components use theme colors
     if (key === 'primary') {
       root.style.setProperty('--primary', hslValue);
+    }
+    if (key === 'background') {
+      root.style.setProperty('--background', hslValue);
+    }
+    if (key === 'surface') {
+      root.style.setProperty('--muted', hslValue);
+    }
+    if (key === 'text') {
+      root.style.setProperty('--foreground', hslValue);
+      root.style.setProperty('--muted-foreground', hslValue);
     }
   });
   
