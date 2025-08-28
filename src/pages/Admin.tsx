@@ -4,6 +4,7 @@ import { Navigate } from "react-router-dom";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement";
@@ -19,6 +20,19 @@ const Admin = () => {
   const { user, isAuthenticated } = useSecureAuth();
   const { isAdmin, isLoading } = useSecurityContext();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [activeTab, setActiveTab] = useState("rappers");
+
+  const tabOptions = [
+    { value: "rappers", label: "Rappers" },
+    { value: "rankings", label: "Rankings" },
+    { value: "blog", label: "Blog" },
+    { value: "polls", label: "Polls" },
+    { value: "vs-matches", label: "VS Matches" },
+    { value: "achievements", label: "Achievements" },
+    { value: "headers", label: "Headers" },
+    { value: "theme", label: "Theme" },
+    { value: "data", label: "Data" }
+  ];
 
   if (isLoading) {
     return (
@@ -32,63 +46,78 @@ const Admin = () => {
     return <Navigate to="/auth" replace />;
   }
 
+  const renderTabContent = () => {
+    switch (activeTab) {
+      case "rappers":
+        return <AdminRapperManagement />;
+      case "rankings":
+        return <AdminRankingsManagement />;
+      case "blog":
+        return <BlogManagement />;
+      case "polls":
+        return <PollManagement />;
+      case "vs-matches":
+        return <AdminVSMatchManagement />;
+      case "achievements":
+        return <AdminAchievementManagement />;
+      case "headers":
+        return <SectionHeaderManagement />;
+      case "theme":
+        return <ThemeManagement />;
+      case "data":
+        return <AdminDataManagement />;
+      default:
+        return <AdminRapperManagement />;
+    }
+  };
+
   return (
     <div className="min-h-screen bg-[var(--theme-background)]">
       <HeaderNavigation isScrolled={isScrolled} />
       
-      <main className="max-w-7xl mx-auto p-6 pt-24">
-        <h1 className="text-4xl font-bold text-[var(--theme-primary)] mb-8 font-[var(--theme-font-heading)]">
+      <main className="max-w-7xl mx-auto p-4 sm:p-6 pt-24">
+        <h1 className="text-2xl sm:text-4xl font-bold text-[var(--theme-primary)] mb-6 sm:mb-8 font-[var(--theme-font-heading)]">
           Admin Dashboard
         </h1>
 
-        <Tabs defaultValue="rappers" className="space-y-6">
-          <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 lg:grid-cols-9 bg-[var(--theme-surface)] gap-1 h-auto p-2">
-            <TabsTrigger value="rappers" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Rappers</TabsTrigger>
-            <TabsTrigger value="rankings" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Rankings</TabsTrigger>
-            <TabsTrigger value="blog" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Blog</TabsTrigger>
-            <TabsTrigger value="polls" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Polls</TabsTrigger>
-            <TabsTrigger value="vs-matches" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">VS Matches</TabsTrigger>
-            <TabsTrigger value="achievements" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Achievements</TabsTrigger>
-            <TabsTrigger value="headers" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Headers</TabsTrigger>
-            <TabsTrigger value="theme" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Theme</TabsTrigger>
-            <TabsTrigger value="data" className="text-xs sm:text-sm py-3 font-bold text-[var(--theme-primary)]">Data</TabsTrigger>
+        {/* Mobile/Tablet Dropdown Navigation */}
+        <div className="lg:hidden mb-6">
+          <Select value={activeTab} onValueChange={setActiveTab}>
+            <SelectTrigger className="w-full bg-[var(--theme-surface)] border border-[var(--theme-border)] text-[var(--theme-primary)] font-medium">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)] z-50">
+              {tabOptions.map((option) => (
+                <SelectItem 
+                  key={option.value} 
+                  value={option.value}
+                  className="text-[var(--theme-primary)] hover:bg-[var(--theme-background)] cursor-pointer"
+                >
+                  {option.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Desktop Tabs Navigation */}
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <TabsList className="hidden lg:grid w-full grid-cols-9 bg-[var(--theme-surface)] gap-1 h-auto p-2">
+            {tabOptions.map((option) => (
+              <TabsTrigger 
+                key={option.value}
+                value={option.value} 
+                className="text-xs xl:text-sm py-3 font-bold text-[var(--theme-primary)]"
+              >
+                {option.label}
+              </TabsTrigger>
+            ))}
           </TabsList>
 
-          <TabsContent value="rappers" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-            <AdminRapperManagement />
-          </TabsContent>
-
-          <TabsContent value="rankings" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-            <AdminRankingsManagement />
-          </TabsContent>
-
-        <TabsContent value="blog" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-          <BlogManagement />
-        </TabsContent>
-
-        <TabsContent value="polls" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-          <PollManagement />
-        </TabsContent>
-
-        <TabsContent value="vs-matches" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-          <AdminVSMatchManagement />
-        </TabsContent>
-
-        <TabsContent value="achievements" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-          <AdminAchievementManagement />
-        </TabsContent>
-
-        <TabsContent value="headers" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-          <SectionHeaderManagement />
-        </TabsContent>
-
-          <TabsContent value="theme" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-            <ThemeManagement />
-          </TabsContent>
-
-          <TabsContent value="data" className="bg-[var(--theme-background)] p-6 rounded-lg border border-[var(--theme-border)]">
-            <AdminDataManagement />
-          </TabsContent>
+          {/* Tab Content */}
+          <div className="bg-[var(--theme-background)] p-3 sm:p-6 rounded-lg border border-[var(--theme-border)]">
+            {renderTabContent()}
+          </div>
         </Tabs>
       </main>
     </div>
