@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const themedLabelVariants = cva(
-  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[var(--theme-text)] font-[var(--theme-font-body)]"
+  "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 text-[var(--theme-element-label-color,var(--theme-text))] font-[var(--theme-element-label-fontFamily,var(--theme-font-body))]"
 );
 
 const ThemedLabel = React.forwardRef<
