@@ -2,14 +2,17 @@
 import React from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Palette, Type, Layout } from "lucide-react";
+import { Palette, Type, Layout, Wand2 } from "lucide-react";
 import ThemeManagementHeader from "./theme/ThemeManagementHeader";
 import ColorPaletteTab from "./theme/ColorPaletteTab";
 import TypographyTab from "./theme/TypographyTab";
 import LayoutTab from "./theme/LayoutTab";
 import ThemePreview from "./theme/ThemePreview";
+import EnhancedThemeManagement from "./theme/EnhancedThemeManagement";
 
 const ThemeManagement = () => {
+  const [useEnhancedTheme, setUseEnhancedTheme] = React.useState(true);
+  
   const {
     theme,
     previewTheme,
@@ -40,8 +43,29 @@ const ThemeManagement = () => {
     });
   };
 
+  if (useEnhancedTheme) {
+    return <EnhancedThemeManagement />;
+  }
+
   return (
     <div className="space-y-6">
+      {/* Theme Mode Switcher */}
+      <div className="flex items-center justify-between p-4 bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg">
+        <div>
+          <h3 className="text-lg font-semibold text-[var(--theme-primary)]">Theme Mode</h3>
+          <p className="text-sm text-[var(--theme-textMuted)]">
+            Choose between basic or enhanced theme management
+          </p>
+        </div>
+        <button
+          onClick={() => setUseEnhancedTheme(true)}
+          className="px-4 py-2 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-md hover:opacity-90 transition-opacity"
+        >
+          <Wand2 className="w-4 h-4 mr-2 inline" />
+          Switch to Enhanced Mode
+        </button>
+      </div>
+
       <ThemeManagementHeader 
         theme={theme}
         previewTheme={previewTheme}
