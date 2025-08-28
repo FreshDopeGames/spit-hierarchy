@@ -1,8 +1,8 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Mic, Crown } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
@@ -58,13 +58,13 @@ const LyricalMastersSection = () => {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
           {Array.from({ length: 5 }).map((_, i) => (
-            <Card key={i} className="bg-[var(--theme-surface)] border-[color:var(--theme-secondary)]/20 animate-pulse">
-              <CardContent className="p-4">
+            <ThemedCard key={i} className="animate-pulse">
+              <ThemedCardContent className="p-4">
                 <div className="h-32 bg-[var(--theme-backgroundLight)] rounded-lg mb-3"></div>
                 <div className="h-3 bg-[var(--theme-backgroundLight)] rounded mb-2"></div>
                 <div className="h-2 bg-[var(--theme-backgroundLight)] rounded w-2/3"></div>
-              </CardContent>
-            </Card>
+              </ThemedCardContent>
+            </ThemedCard>
           ))}
         </div>
       </div>
@@ -89,12 +89,12 @@ const LyricalMastersSection = () => {
             The supreme wordsmiths of hip-hop
           </p>
         </div>
-        <Card className="bg-[var(--theme-surface)] border border-[color:var(--theme-secondary)]/40 shadow-2xl shadow-[color:var(--theme-secondary)]/20">
-          <CardContent className="p-8 text-center">
+        <ThemedCard className="shadow-2xl shadow-[color:var(--theme-secondary)]/20">
+          <ThemedCardContent className="p-8 text-center">
             <Mic className="w-16 h-16 text-[color:var(--theme-secondary)] mx-auto mb-4" />
             <p className="text-[color:var(--theme-textMuted)] font-[var(--theme-font-body)]">The lyrical legends await their crowning.</p>
-          </CardContent>
-        </Card>
+          </ThemedCardContent>
+        </ThemedCard>
       </div>
     );
   }
@@ -127,9 +127,9 @@ const LyricalMastersSection = () => {
 
       <div className="text-center mt-8">
         <Link to="/rankings/official/lyrical-masters">
-          <Button className="bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-secondaryLight)] hover:from-[var(--theme-secondaryLight)] hover:to-[var(--theme-secondary)] font-[var(--theme-font-heading)] shadow-xl shadow-[color:var(--theme-secondary)]/40 border border-[color:var(--theme-secondary)]/30" size="lg">
+          <ThemedButton variant="secondary" size="lg" className="shadow-xl shadow-[color:var(--theme-secondary)]/40">
             View Complete Lyrical Masters List
-          </Button>
+          </ThemedButton>
         </Link>
       </div>
     </div>

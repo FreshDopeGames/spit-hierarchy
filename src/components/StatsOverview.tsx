@@ -1,7 +1,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Users, Vote, MessageCircle, TrendingUp, Music, UserPlus, Crown, Trophy } from "lucide-react";
 
 const StatsOverview = () => {
@@ -99,11 +99,11 @@ const StatsOverview = () => {
         </div>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
           {Array.from({ length: 8 }).map((_, i) => (
-            <Card key={i} className="bg-[var(--theme-surface)] border-[color:var(--theme-primary)]/20 animate-pulse">
-              <CardContent className="p-3 sm:p-4">
+            <ThemedCard key={i} className="animate-pulse">
+              <ThemedCardContent className="p-3 sm:p-4">
                 <div className="h-12 sm:h-16 bg-[var(--theme-backgroundLight)] rounded"></div>
-              </CardContent>
-            </Card>
+              </ThemedCardContent>
+            </ThemedCard>
           ))}
         </div>
       </div>
@@ -174,9 +174,9 @@ const StatsOverview = () => {
       
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {statCards.map((stat, index) => (
-          <Card key={index} className="bg-[var(--theme-surface)] border border-[color:var(--theme-primary)]/40 hover:border-[color:var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 shadow-lg shadow-[color:var(--theme-primary)]/20 relative overflow-hidden group">
+          <ThemedCard key={index} className="hover:border-[color:var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 shadow-lg shadow-[color:var(--theme-primary)]/20 relative overflow-hidden group">
             <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
-            <CardContent className="p-3 sm:p-4">
+            <ThemedCardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2 sm:space-x-3">
                 <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg flex-shrink-0`}>
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[color:var(--theme-background)]" />
@@ -186,8 +186,8 @@ const StatsOverview = () => {
                   <p className="text-sm sm:text-base font-[var(--theme-font-body)] font-extrabold text-[color:var(--theme-primaryLight)] break-words">{stat.value}</p>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </ThemedCardContent>
+          </ThemedCard>
         ))}
       </div>
     </div>

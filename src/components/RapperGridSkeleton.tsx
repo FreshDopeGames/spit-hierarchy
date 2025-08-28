@@ -1,16 +1,16 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 
 const RapperGridSkeleton = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
       {Array.from({ length: 12 }).map((_, i) => (
-        <Card key={i} className="bg-gradient-to-br from-[var(--theme-background)] via-[var(--theme-surface)] to-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/40 animate-pulse relative overflow-hidden">
+        <ThemedCard key={i} className="animate-pulse relative overflow-hidden">
           {/* Theme accent bar */}
           <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
           
-          <CardContent className="p-6">
+          <ThemedCardContent className="p-6">
             {/* Image skeleton - aspect-square to match RapperCard */}
             <div className="w-full aspect-square bg-[var(--theme-surface)]/60 rounded-lg mb-4"></div>
             
@@ -41,8 +41,8 @@ const RapperGridSkeleton = () => {
                 <div className="h-3 bg-[var(--theme-surface)]/40 rounded w-8 mx-auto"></div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </ThemedCardContent>
+        </ThemedCard>
       ))}
     </div>
   );

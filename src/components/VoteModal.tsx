@@ -3,14 +3,14 @@ import { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Star } from "lucide-react";
 import { toast } from "sonner";
 import CategorySelector from "./vote/CategorySelector";
@@ -152,16 +152,16 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           />
 
           {selectedCategoryData && (
-            <Card className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)]/20">
-              <CardContent className="p-4">
+            <ThemedCard className="bg-[var(--theme-backgroundLight)]">
+              <ThemedCardContent className="p-4">
                 <h3 className="font-semibold text-[var(--theme-text)] mb-2 font-[var(--theme-font-body)]">
                   {selectedCategoryData.name}
                 </h3>
                 <p className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                   {selectedCategoryData.description}
                 </p>
-              </CardContent>
-            </Card>
+              </ThemedCardContent>
+            </ThemedCard>
           )}
 
           <RatingSlider
@@ -176,13 +176,14 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             </span>
           </div>
 
-          <Button
+          <ThemedButton
             onClick={handleSubmit}
             disabled={!category || voteMutation.isPending}
-            className="w-full bg-[var(--theme-secondary)] hover:bg-[var(--theme-secondary)]/80 text-[var(--theme-textLight)] font-[var(--theme-font-body)]"
+            variant="secondary"
+            className="w-full"
           >
             {voteMutation.isPending ? "Submitting..." : existingVote ? "Update Vote" : "Submit Vote"}
-          </Button>
+          </ThemedButton>
         </div>
       </DialogContent>
     </Dialog>

@@ -4,7 +4,7 @@ import { ThemedButton } from "@/components/ui/themed-button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Label } from "@/components/ui/label";
-import { Progress } from "@/components/ui/progress";
+import { ThemedProgress } from "@/components/ui/themed-progress";
 import { Input } from "@/components/ui/input";
 import { Plus, Lock } from "lucide-react";
 import { usePollVoting } from "@/hooks/usePollVoting";
@@ -106,7 +106,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
-                  <Progress value={result.percentage} className="h-2" />
+                  <ThemedProgress value={result.percentage} className="h-2" />
                 </div>
               ))}
               
@@ -146,7 +146,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
-                  <Progress value={result.percentage} className="h-2" />
+                  <ThemedProgress value={result.percentage} className="h-2" />
                 </div>
               );
             })}

@@ -2,8 +2,8 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { MessageCircle, X, ChevronUp } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import { useAuth } from "@/hooks/useAuth";
 import { useComments } from "@/hooks/useComments";
 import CommentItem from "./CommentItem";
@@ -70,47 +70,46 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
       {/* Collapsed Comment Bubble - reduced horizontal padding */}
       {!isExpanded && (
         <div className="fixed bottom-6 right-6 z-50">
-          <Button
+          <ThemedButton
             onClick={() => setIsExpanded(true)}
-            className={`bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 rounded-full h-14 px-4 shadow-lg shadow-[var(--theme-primary)]/30 transition-transform duration-300 font-[var(--theme-font-body)] ${
+            className={`rounded-full h-14 px-4 shadow-lg shadow-[var(--theme-primary)]/30 transition-transform duration-300 ${
               shouldAnimate ? 'animate-slow-bounce' : ''
             }`}
+            variant="default"
           >
             <MessageCircle className="w-5 h-5 mr-2" />
             <span className="font-semibold">{isLoading ? "..." : totalComments}</span>
-          </Button>
+          </ThemedButton>
         </div>
       )}
 
       {/* Expanded Comment Modal */}
       {isExpanded && (
         <div className="fixed inset-x-0 bottom-0 z-50 bg-black/80 backdrop-blur-sm">
-          <Card className="bg-[var(--theme-surface)]/90 border-[var(--theme-border)]/50 border-2 rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[var(--theme-primary)]/20">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">
+          <ThemedCard className="rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[var(--theme-primary)]/20">
+            <ThemedCardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
+              <ThemedCardTitle>
                 Comments on this {getContentTypeLabel()} ({totalComments})
-              </CardTitle>
+              </ThemedCardTitle>
               <div className="flex items-center gap-2">
-                <Button
+                <ThemedButton
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsExpanded(false)}
-                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] hover:bg-[var(--theme-primary)]/20"
                 >
                   <ChevronUp className="w-5 h-5" />
-                </Button>
-                <Button
+                </ThemedButton>
+                <ThemedButton
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsExpanded(false)}
-                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] hover:bg-[var(--theme-primary)]/20"
                 >
                   <X className="w-5 h-5" />
-                </Button>
+                </ThemedButton>
               </div>
-            </CardHeader>
+            </ThemedCardHeader>
             
-            <CardContent className="overflow-y-auto max-h-[50vh]">
+            <ThemedCardContent className="overflow-y-auto max-h-[50vh]">
               {!user ? (
                 <div className="text-center py-8">
                   <MessageCircle className="w-12 h-12 text-[var(--theme-primary)]/60 mx-auto mb-4" />
@@ -119,9 +118,9 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                     Sign in to read and share your thoughts about this {getContentTypeLabel()}.
                   </p>
                   <Link to="/auth">
-                    <Button className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 font-[var(--theme-font-heading)]">
+                    <ThemedButton variant="default">
                       Sign In to Comment
-                    </Button>
+                    </ThemedButton>
                   </Link>
                 </div>
               ) : (
@@ -137,14 +136,14 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                       rows={3}
                     />
                     <div className="flex justify-end mt-2">
-                      <Button 
+                      <ThemedButton 
                         size="sm" 
                         onClick={handleCommentSubmit}
                         disabled={!newComment.trim() || isCreatingComment}
-                        className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 font-[var(--theme-font-heading)]"
+                        variant="default"
                       >
                         {isCreatingComment ? "Posting..." : "Post Comment"}
-                      </Button>
+                      </ThemedButton>
                     </div>
                   </div>
 
@@ -179,8 +178,8 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                   </div>
                 </div>
               )}
-            </CardContent>
-          </Card>
+            </ThemedCardContent>
+          </ThemedCard>
         </div>
       )}
     </>
