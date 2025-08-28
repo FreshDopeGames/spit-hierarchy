@@ -152,98 +152,87 @@ const EnhancedThemeManagement = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-        {/* Main Controls */}
-        <div className="space-y-6">
-          <Tabs defaultValue="colors" className="space-y-4">
-            <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-5 p-2 gap-1 rounded-lg">
-              <TabsTrigger 
-                value="colors" 
-                className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-              >
-                <Palette className="w-4 h-4 mr-1" />
-                Colors
-              </TabsTrigger>
-              <TabsTrigger 
-                value="typography" 
-                className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-              >
-                <Type className="w-4 h-4 mr-1" />
-                Fonts
-              </TabsTrigger>
-              <TabsTrigger 
-                value="gradients" 
-                className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-              >
-                <Wand2 className="w-4 h-4 mr-1" />
-                Gradients
-              </TabsTrigger>
-              <TabsTrigger 
-                value="elements" 
-                className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-              >
-                <Layout className="w-4 h-4 mr-1" />
-                Elements
-              </TabsTrigger>
-              <TabsTrigger 
-                value="preview" 
-                className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-              >
-                <Eye className="w-4 h-4 mr-1" />
-                Preview
-              </TabsTrigger>
-            </TabsList>
+      {/* Main Controls */}
+      <div className="space-y-6">
+        <Tabs defaultValue="colors" className="space-y-4">
+          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-5 p-2 gap-1 rounded-lg">
+            <TabsTrigger 
+              value="colors" 
+              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
+            >
+              <Palette className="w-4 h-4 mr-1" />
+              Colors
+            </TabsTrigger>
+            <TabsTrigger 
+              value="typography" 
+              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
+            >
+              <Type className="w-4 h-4 mr-1" />
+              Fonts
+            </TabsTrigger>
+            <TabsTrigger 
+              value="gradients" 
+              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
+            >
+              <Wand2 className="w-4 h-4 mr-1" />
+              Gradients
+            </TabsTrigger>
+            <TabsTrigger 
+              value="elements" 
+              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
+            >
+              <Layout className="w-4 h-4 mr-1" />
+              Elements
+            </TabsTrigger>
+            <TabsTrigger 
+              value="preview" 
+              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
+            >
+              <Eye className="w-4 h-4 mr-1" />
+              Preview
+            </TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="colors" className="space-y-4">
-              <ColorPaletteTab theme={currentTheme} onColorChange={handleColorChange} />
-            </TabsContent>
+          <TabsContent value="colors" className="space-y-4">
+            <ColorPaletteTab theme={currentTheme} onColorChange={handleColorChange} />
+          </TabsContent>
 
-            <TabsContent value="typography" className="space-y-4">
-              <TypographyTab theme={currentTheme} onFontChange={handleFontChange} />
-            </TabsContent>
+          <TabsContent value="typography" className="space-y-4">
+            <TypographyTab theme={currentTheme} onFontChange={handleFontChange} />
+          </TabsContent>
 
-            <TabsContent value="gradients" className="space-y-4">
-              <GradientBuilder
-                gradients={currentTheme.gradients}
-                onGradientChange={handleGradientChange}
-                selectedGradient={selectedGradient}
-                onSelectGradient={setSelectedGradient}
-              />
-            </TabsContent>
+          <TabsContent value="gradients" className="space-y-4">
+            <GradientBuilder
+              gradients={currentTheme.gradients}
+              onGradientChange={handleGradientChange}
+              selectedGradient={selectedGradient}
+              onSelectGradient={setSelectedGradient}
+            />
+          </TabsContent>
 
-            <TabsContent value="elements" className="space-y-4">
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <EnhancedThemePreview
-                  theme={currentTheme}
-                  selectedElement={selectedElement}
-                  onElementSelect={setSelectedElement}
-                />
-                <ElementCustomizer
-                  selectedElement={selectedElement}
-                  theme={currentTheme}
-                  onThemeUpdate={handleThemeUpdate}
-                />
-              </div>
-            </TabsContent>
-
-            <TabsContent value="preview" className="space-y-4">
+          <TabsContent value="elements" className="space-y-4">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
               <EnhancedThemePreview
                 theme={currentTheme}
                 selectedElement={selectedElement}
                 onElementSelect={setSelectedElement}
               />
-            </TabsContent>
-          </Tabs>
-        </div>
+              <ElementCustomizer
+                selectedElement={selectedElement}
+                theme={currentTheme}
+                onThemeUpdate={handleThemeUpdate}
+              />
+            </div>
+          </TabsContent>
 
-        {/* Preview Sidebar */}
-        <div className="space-y-6">
-          <EnhancedThemePreview
-            theme={currentTheme}
-            selectedElement={selectedElement}
-            onElementSelect={setSelectedElement}
-          />
-        </div>
+          <TabsContent value="preview" className="space-y-4">
+            <EnhancedThemePreview
+              theme={currentTheme}
+              selectedElement={selectedElement}
+              onElementSelect={setSelectedElement}
+            />
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
