@@ -43,7 +43,7 @@ const BackToTopButton = ({ hasCommentBubble = false }: BackToTopButtonProps) => 
     <Button 
       onClick={scrollToTop} 
       aria-label="Back to top" 
-      className={`${positionClasses} bg-rap-gold text-rap-carbon hover:bg-rap-gold/80 rounded-full h-12 w-12 p-0 shadow-lg shadow-rap-gold/30 transition-all duration-300 hover:scale-110`}
+      className={`${positionClasses} bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 rounded-full h-12 w-12 p-0 shadow-lg shadow-[var(--theme-primary)]/30 transition-all duration-300 hover:scale-110`}
     >
       <ChevronUp className="w-5 h-5" />
     </Button>

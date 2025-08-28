@@ -52,8 +52,8 @@ const AuthGuard = ({ children, requireAuth = false, adminOnly = false }: AuthGua
 
   if (loading || (adminOnly && rolesLoading)) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex items-center justify-center">
-        <div className="text-rap-gold text-xl font-mogra animate-pulse">Loading...</div>
+      <div className="min-h-screen bg-[var(--theme-background)] flex items-center justify-center">
+        <div className="text-[var(--theme-primary)] text-xl font-[var(--theme-font-heading)] animate-pulse">Loading...</div>
       </div>
     );
   }
