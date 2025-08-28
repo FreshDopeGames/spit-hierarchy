@@ -256,13 +256,24 @@
   color: hsl(210 60% 15%) !important;
 }
 
-/* Fix input field text visibility - only apply to inputs and selects, not textareas */
-input, select {
-  color: hsl(0 0% 5%) !important; /* Dark text */
+/* Input field styling using theme variables */
+input:not([class*="themed"]) {
+  color: hsl(var(--foreground)) !important;
+  background-color: hsl(var(--input)) !important;
 }
 
-input::placeholder {
-  color: hsl(0 0% 40%) !important; /* Darker placeholder text */
+input:not([class*="themed"])::placeholder {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Allow themed inputs to use their own styling */
+.themed-input {
+  background-color: hsl(var(--theme-element-input-bg, var(--theme-surface))) !important;
+  color: hsl(var(--theme-element-input-color, var(--theme-text))) !important;
+}
+
+.themed-input::placeholder {
+  color: hsl(var(--theme-element-input-placeholder-color, var(--theme-textMuted))) !important;
 }
 
 /* Force dropdown menu backgrounds to be visible */
