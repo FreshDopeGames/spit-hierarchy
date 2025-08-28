@@ -136,9 +136,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-md mx-auto bg-rap-carbon border-rap-burgundy/30">
+      <DialogContent className="max-w-md mx-auto bg-[var(--theme-background)] border-[var(--theme-border)]/30">
         <DialogHeader className="space-y-0 pb-4">
-          <DialogTitle className="text-rap-platinum font-mogra text-xl">
+          <DialogTitle className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-xl">
             Rate {rapper.name}
           </DialogTitle>
         </DialogHeader>
@@ -152,12 +152,12 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           />
 
           {selectedCategoryData && (
-            <Card className="bg-rap-carbon-light border-rap-burgundy/20">
+            <Card className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)]/20">
               <CardContent className="p-4">
-                <h3 className="font-semibold text-rap-platinum mb-2 font-kaushan">
+                <h3 className="font-semibold text-[var(--theme-text)] mb-2 font-[var(--theme-font-body)]">
                   {selectedCategoryData.name}
                 </h3>
-                <p className="text-sm text-rap-smoke font-kaushan">
+                <p className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                   {selectedCategoryData.description}
                 </p>
               </CardContent>
@@ -169,9 +169,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             setRating={setRating}
           />
 
-          <div className="flex items-center gap-2 text-rap-gold">
+          <div className="flex items-center gap-2 text-[var(--theme-primary)]">
             <Star className="w-5 h-5 fill-current" />
-            <span className="font-semibold font-kaushan">
+            <span className="font-semibold font-[var(--theme-font-body)]">
               {rating[0]}/10
             </span>
           </div>
@@ -179,7 +179,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           <Button
             onClick={handleSubmit}
             disabled={!category || voteMutation.isPending}
-            className="w-full bg-rap-burgundy hover:bg-rap-burgundy/80 text-rap-platinum font-kaushan"
+            className="w-full bg-[var(--theme-secondary)] hover:bg-[var(--theme-secondary)]/80 text-[var(--theme-textLight)] font-[var(--theme-font-body)]"
           >
             {voteMutation.isPending ? "Submitting..." : existingVote ? "Update Vote" : "Submit Vote"}
           </Button>

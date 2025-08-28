@@ -86,8 +86,8 @@ const CommentItem = ({
   };
 
   return (
-    <div className={`${depth > 0 ? 'ml-8 border-l border-rap-gold/30 pl-4' : ''}`}>
-      <div className="bg-rap-carbon/30 border border-rap-gold/20 rounded-lg p-4 mb-4">
+    <div className={`${depth > 0 ? 'ml-8 border-l border-[var(--theme-border)]/30 pl-4' : ''}`}>
+      <div className="bg-[var(--theme-background)]/30 border border-[var(--theme-border)]/20 rounded-lg p-4 mb-4">
         <div className={`${isMobile ? 'flex flex-col gap-2' : 'flex items-start gap-3'}`}>
           <div className="flex items-start gap-3">
             <SmallAvatar 
@@ -96,14 +96,14 @@ const CommentItem = ({
               size="sm"
             />
             <div className="flex items-center gap-2">
-              <span className="text-rap-gold font-mogra">{comment.profiles?.username || "Anonymous User"}</span>
-              <span className="text-rap-smoke text-sm font-merienda">
+              <span className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">{comment.profiles?.username || "Anonymous User"}</span>
+              <span className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-font-body)]">
                 {formatTimeAgo(comment.created_at)}
               </span>
             </div>
           </div>
           <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
-            <p className={`text-rap-platinum font-merienda mb-3 whitespace-pre-wrap ${isMobile ? 'text-sm' : ''}`}>
+            <p className={`text-[var(--theme-text)] font-[var(--theme-font-body)] mb-3 whitespace-pre-wrap ${isMobile ? 'text-sm' : ''}`}>
               {comment.comment_text}
             </p>
             <div className="flex items-center gap-4">
@@ -112,8 +112,8 @@ const CommentItem = ({
                 size="sm"
                 onClick={() => onLike(comment.id)}
                 disabled={isLiking}
-                className={`text-rap-gold hover:text-rap-gold-light hover:bg-rap-gold/20 h-auto p-1 font-merienda ${
-                  isLiked ? 'text-rap-gold-light' : ''
+                className={`text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] hover:bg-[var(--theme-primary)]/20 h-auto p-1 font-[var(--theme-font-body)] ${
+                  isLiked ? 'text-[var(--theme-primaryLight)]' : ''
                 }`}
               >
                 <Mic className={`w-4 h-4 mr-1 ${isLiked ? 'fill-current' : ''}`} />
@@ -125,7 +125,7 @@ const CommentItem = ({
                   variant="ghost"
                   size="sm"
                   onClick={() => setShowReplyForm(!showReplyForm)}
-                  className="text-rap-gold hover:text-rap-gold-light hover:bg-rap-gold/20 h-auto p-1 font-merienda"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] hover:bg-[var(--theme-primary)]/20 h-auto p-1 font-[var(--theme-font-body)]"
                 >
                   <Reply className="w-4 h-4 mr-1" />
                   Reply
@@ -139,23 +139,23 @@ const CommentItem = ({
                       variant="ghost"
                       size="sm"
                       disabled={isDeletingComment}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-400/20 h-auto p-1 font-merienda"
+                      className="text-red-400 hover:text-red-300 hover:bg-red-400/20 h-auto p-1 font-[var(--theme-font-body)]"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
                       Delete
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="bg-rap-carbon border-rap-gold/50">
+                  <AlertDialogContent className="bg-[var(--theme-background)] border-[var(--theme-border)]/50">
                     <AlertDialogHeader>
-                      <AlertDialogTitle className="text-rap-gold font-mogra">
+                      <AlertDialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">
                         Delete Comment
                       </AlertDialogTitle>
-                      <AlertDialogDescription className="text-rap-platinum font-merienda">
+                      <AlertDialogDescription className="text-[var(--theme-text)] font-[var(--theme-font-body)]">
                         Are you sure you want to delete this comment? This action cannot be undone.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                      <AlertDialogCancel className="bg-rap-smoke text-rap-carbon hover:bg-rap-smoke/80">
+                      <AlertDialogCancel className="bg-[var(--theme-textMuted)] text-[var(--theme-background)] hover:bg-[var(--theme-textMuted)]/80">
                         Cancel
                       </AlertDialogCancel>
                       <AlertDialogAction 
@@ -172,12 +172,12 @@ const CommentItem = ({
 
             {/* Reply Form */}
             {showReplyForm && (
-              <div className="mt-3 bg-rap-carbon/50 border border-rap-gold/30 rounded-lg p-3">
+              <div className="mt-3 bg-[var(--theme-background)]/50 border border-[var(--theme-border)]/30 rounded-lg p-3">
                 <textarea
                   value={replyText}
                   onChange={(e) => setReplyText(e.target.value)}
                   placeholder={`Reply to ${comment.profiles?.username || "user"}...`}
-                  className="w-full bg-transparent text-rap-platinum placeholder-rap-smoke border-none resize-none focus:outline-none font-merienda"
+                  className="w-full bg-transparent text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] border-none resize-none focus:outline-none font-[var(--theme-font-body)]"
                   rows={2}
                 />
                 <div className="flex justify-end gap-2 mt-2">
@@ -185,7 +185,7 @@ const CommentItem = ({
                     variant="ghost"
                     size="sm"
                     onClick={() => setShowReplyForm(false)}
-                    className="text-rap-smoke hover:text-rap-platinum font-merienda"
+                    className="text-[var(--theme-textMuted)] hover:text-[var(--theme-text)] font-[var(--theme-font-body)]"
                   >
                     Cancel
                   </Button>
@@ -193,7 +193,7 @@ const CommentItem = ({
                     size="sm"
                     onClick={handleReplySubmit}
                     disabled={!replyText.trim()}
-                    className="bg-rap-gold text-black hover:bg-rap-gold/80 font-mogra"
+                    className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 font-[var(--theme-font-heading)]"
                   >
                     Reply
                   </Button>

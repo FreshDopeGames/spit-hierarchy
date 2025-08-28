@@ -159,7 +159,7 @@ const AuthForm = ({
       {!isLogin && (
         <>
           <div className="space-y-2">
-            <Label htmlFor="username" className="text-rap-platinum font-kaushan">Username *</Label>
+            <Label htmlFor="username" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Username *</Label>
             <div className="relative">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <Input 
@@ -171,14 +171,14 @@ const AuthForm = ({
                 onBlur={handleUsernameBlur}
                 required={!isLogin} 
                 maxLength={30}
-                className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-kaushan" 
+                className="pl-10 bg-white border-[var(--theme-border)]/30 text-black placeholder-gray-500 focus:border-[var(--theme-secondary)] font-[var(--theme-font-body)]"
               />
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-rap-platinum font-kaushan">Full Name</Label>
-            <div className="relative font-merienda text-rap-gold">
+            <Label htmlFor="fullName" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Full Name</Label>
+            <div className="relative font-[var(--theme-font-body)] text-[var(--theme-primary)]">
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
               <Input 
                 id="fullName" 
@@ -187,7 +187,7 @@ const AuthForm = ({
                 value={fullName} 
                 onChange={(e) => handleFullNameChange(e.target.value)} 
                 maxLength={100}
-                className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-kaushan" 
+                className="pl-10 bg-white border-[var(--theme-border)]/30 text-black placeholder-gray-500 focus:border-[var(--theme-secondary)] font-[var(--theme-font-body)]" 
               />
             </div>
           </div>
@@ -195,7 +195,7 @@ const AuthForm = ({
       )}
       
       <div className="space-y-2">
-        <Label htmlFor="email" className="text-rap-platinum font-kaushan">Email *</Label>
+        <Label htmlFor="email" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Email *</Label>
         <div className="relative">
           <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input 
@@ -207,13 +207,13 @@ const AuthForm = ({
             onBlur={handleEmailBlur}
             required 
             maxLength={254}
-            className="pl-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-merienda" 
+            className="pl-10 bg-white border-[var(--theme-border)]/30 text-black placeholder-gray-500 focus:border-[var(--theme-secondary)] font-[var(--theme-font-body)]" 
           />
         </div>
       </div>
       
       <div className="space-y-2">
-        <Label htmlFor="password" className="text-rap-platinum font-kaushan">Password *</Label>
+        <Label htmlFor="password" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Password *</Label>
         <div className="relative">
           <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
           <Input 
@@ -226,7 +226,7 @@ const AuthForm = ({
             onBlur={handlePasswordBlur}
             required 
             maxLength={128}
-            className="pl-10 pr-10 bg-white border-rap-burgundy/30 text-black placeholder-gray-500 focus:border-rap-burgundy font-merienda" 
+            className="pl-10 pr-10 bg-white border-[var(--theme-border)]/30 text-black placeholder-gray-500 focus:border-[var(--theme-secondary)] font-[var(--theme-font-body)]" 
           />
           <button
             type="button"
@@ -238,7 +238,7 @@ const AuthForm = ({
         </div>
         
         {!isLogin && showPasswordRequirements && (
-          <div className="text-xs text-rap-smoke bg-rap-carbon/30 p-3 rounded border border-rap-burgundy/20">
+          <div className="text-xs text-[var(--theme-textMuted)] bg-[var(--theme-background)]/30 p-3 rounded border border-[var(--theme-border)]/20">
             <p className="font-semibold mb-2">Password Requirements:</p>
             <ul className="space-y-1">
               <li>• At least 8 characters long</li>
@@ -254,7 +254,7 @@ const AuthForm = ({
       <Button 
         type="submit" 
         disabled={loading || validationErrors.length > 0} 
-        className="w-full font-merienda bg-rap-gold text-black font-extrabold text-2xl disabled:opacity-50"
+        className="w-full font-[var(--theme-font-body)] bg-[var(--theme-primary)] text-[var(--theme-background)] font-extrabold text-2xl disabled:opacity-50"
       >
         {loading ? "Processing..." : isLogin ? "Sign In" : "Join the Hierarchy"}
       </Button>

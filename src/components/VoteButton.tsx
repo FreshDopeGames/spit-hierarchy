@@ -98,12 +98,12 @@ const VoteButton = ({
 
   const getButtonColor = () => {
     if (hasVoted) {
-      return 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-white border border-green-500/50 shadow-lg'; // Green gradient when voted today
+      return 'bg-gradient-to-r from-green-600 to-green-500 hover:from-green-500 hover:to-green-400 text-[var(--theme-textLight)] border border-green-500/50 shadow-lg'; // Green gradient when voted today
     }
     if (isPending) {
-      return 'bg-yellow-600 hover:bg-yellow-600 text-white';
+      return 'bg-yellow-600 hover:bg-yellow-600 text-[var(--theme-textLight)]';
     }
-    return 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon';
+    return 'bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)]';
   };
 
   const renderButtonContent = () => {

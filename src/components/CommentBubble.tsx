@@ -72,7 +72,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
         <div className="fixed bottom-6 right-6 z-50">
           <Button
             onClick={() => setIsExpanded(true)}
-            className={`bg-rap-gold text-black hover:bg-rap-gold/80 rounded-full h-14 px-4 shadow-lg shadow-rap-gold/30 transition-transform duration-300 font-merienda ${
+            className={`bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 rounded-full h-14 px-4 shadow-lg shadow-[var(--theme-primary)]/30 transition-transform duration-300 font-[var(--theme-font-body)] ${
               shouldAnimate ? 'animate-slow-bounce' : ''
             }`}
           >
@@ -85,9 +85,9 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
       {/* Expanded Comment Modal */}
       {isExpanded && (
         <div className="fixed inset-x-0 bottom-0 z-50 bg-black/80 backdrop-blur-sm">
-          <Card className="bg-carbon-fiber/90 border-rap-gold/50 border-2 rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-rap-gold/20">
+          <Card className="bg-[var(--theme-surface)]/90 border-[var(--theme-border)]/50 border-2 rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[var(--theme-primary)]/20">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
-              <CardTitle className="text-rap-gold font-mogra">
+              <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">
                 Comments on this {getContentTypeLabel()} ({totalComments})
               </CardTitle>
               <div className="flex items-center gap-2">
@@ -95,7 +95,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsExpanded(false)}
-                  className="text-rap-gold hover:text-rap-gold-light hover:bg-rap-gold/20"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] hover:bg-[var(--theme-primary)]/20"
                 >
                   <ChevronUp className="w-5 h-5" />
                 </Button>
@@ -103,7 +103,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                   variant="ghost"
                   size="sm"
                   onClick={() => setIsExpanded(false)}
-                  className="text-rap-gold hover:text-rap-gold-light hover:bg-rap-gold/20"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] hover:bg-[var(--theme-primary)]/20"
                 >
                   <X className="w-5 h-5" />
                 </Button>
@@ -113,13 +113,13 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
             <CardContent className="overflow-y-auto max-h-[50vh]">
               {!user ? (
                 <div className="text-center py-8">
-                  <MessageCircle className="w-12 h-12 text-rap-gold/60 mx-auto mb-4" />
-                  <h3 className="text-rap-gold font-mogra mb-2">Join the Conversation</h3>
-                  <p className="text-rap-platinum mb-4 font-merienda">
+                  <MessageCircle className="w-12 h-12 text-[var(--theme-primary)]/60 mx-auto mb-4" />
+                  <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-2">Join the Conversation</h3>
+                  <p className="text-[var(--theme-text)] mb-4 font-[var(--theme-font-body)]">
                     Sign in to read and share your thoughts about this {getContentTypeLabel()}.
                   </p>
                   <Link to="/auth">
-                    <Button className="bg-rap-gold text-black hover:bg-rap-gold/80 font-mogra">
+                    <Button className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 font-[var(--theme-font-heading)]">
                       Sign In to Comment
                     </Button>
                   </Link>
@@ -127,13 +127,13 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
               ) : (
                 <div className="space-y-4">
                   {/* Comment Input */}
-                  <div className="bg-rap-carbon/50 border border-rap-gold/30 rounded-lg p-4">
-                    <ResponsiveInstructions className="text-rap-gold/80 mb-2" />
+                  <div className="bg-[var(--theme-background)]/50 border border-[var(--theme-border)]/30 rounded-lg p-4">
+                    <ResponsiveInstructions className="text-[var(--theme-primary)]/80 mb-2" />
                     <textarea
                       value={newComment}
                       onChange={(e) => setNewComment(e.target.value)}
                       placeholder={`Share your thoughts about this ${getContentTypeLabel()}...`}
-                      className="w-full bg-transparent text-rap-platinum placeholder-rap-smoke border-none resize-none focus:outline-none font-merienda"
+                      className="w-full bg-transparent text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] border-none resize-none focus:outline-none font-[var(--theme-font-body)]"
                       rows={3}
                     />
                     <div className="flex justify-end mt-2">
@@ -141,7 +141,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                         size="sm" 
                         onClick={handleCommentSubmit}
                         disabled={!newComment.trim() || isCreatingComment}
-                        className="bg-rap-gold text-black hover:bg-rap-gold/80 font-mogra"
+                        className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/80 font-[var(--theme-font-heading)]"
                       >
                         {isCreatingComment ? "Posting..." : "Post Comment"}
                       </Button>
@@ -152,13 +152,13 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
                   <div className="space-y-0">
                     {isLoading ? (
                       <div className="text-center py-4">
-                        <p className="text-rap-platinum font-merienda">Loading comments...</p>
+                        <p className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Loading comments...</p>
                       </div>
                     ) : comments.length === 0 ? (
                       <div className="text-center py-8">
-                        <MessageCircle className="w-12 h-12 text-rap-gold/60 mx-auto mb-4" />
-                        <h3 className="text-rap-gold font-mogra mb-2">No Comments Yet</h3>
-                        <p className="text-rap-platinum font-merienda">
+                        <MessageCircle className="w-12 h-12 text-[var(--theme-primary)]/60 mx-auto mb-4" />
+                        <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-2">No Comments Yet</h3>
+                        <p className="text-[var(--theme-text)] font-[var(--theme-font-body)]">
                           Be the first to share your thoughts about this {getContentTypeLabel()}!
                         </p>
                       </div>

@@ -80,16 +80,16 @@ const VoteWithNoteModal = ({ isOpen, onClose, onSubmit, rapperId, rankingId }: V
 
   return (
     <Dialog open={isOpen} onOpenChange={handleClose}>
-      <DialogContent className="bg-black/90 border-purple-500/30 text-white max-w-md">
+      <DialogContent className="bg-[var(--theme-background)]/90 border-[var(--theme-border)]/30 text-[var(--theme-text)] max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-purple-400 to-blue-400 bg-clip-text text-transparent">
+          <DialogTitle className="text-xl font-bold bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-accent)] bg-clip-text text-transparent">
             Vote with Note
           </DialogTitle>
         </DialogHeader>
 
         <div className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="vote-note" className="text-gray-300">
+            <Label htmlFor="vote-note" className="text-[var(--theme-textMuted)]">
               Why are you voting for this rapper? (Optional)
             </Label>
             <Textarea
@@ -97,10 +97,10 @@ const VoteWithNoteModal = ({ isOpen, onClose, onSubmit, rapperId, rankingId }: V
               value={note}
               onChange={(e) => setNote(e.target.value)}
               placeholder="Share your thoughts on what makes this rapper stand out..."
-              className="bg-black/50 border-purple-500/30 text-white placeholder-gray-400 min-h-[100px]"
+              className="bg-[var(--theme-background)]/50 border-[var(--theme-border)]/30 text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] min-h-[100px]"
               maxLength={500}
             />
-            <div className="text-xs text-gray-400 text-right">
+            <div className="text-xs text-[var(--theme-textMuted)] text-right">
               {note.length}/500 characters
             </div>
           </div>
@@ -109,14 +109,14 @@ const VoteWithNoteModal = ({ isOpen, onClose, onSubmit, rapperId, rankingId }: V
             <Button
               variant="outline"
               onClick={handleClose}
-              className="border-purple-500/30 text-purple-300 hover:bg-purple-500/20"
+              className="border-[var(--theme-border)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/20"
             >
               Cancel
             </Button>
             <Button
               onClick={handleSubmit}
               disabled={saveVoteNoteMutation.isPending}
-              className="bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700"
+              className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-accent)] hover:from-[var(--theme-primaryDark)] hover:to-[var(--theme-accentDark)]"
             >
               <ArrowUp className="w-4 h-4 mr-2" />
               {saveVoteNoteMutation.isPending ? "Submitting..." : "Submit Vote"}
