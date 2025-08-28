@@ -38,11 +38,11 @@ const UnifiedProfileHeader = ({
 }: UnifiedProfileHeaderProps) => {
   const getStatusColor = (status?: string) => {
     switch (status) {
-      case 'diamond': return 'bg-blue-500/20 text-blue-400 border-blue-400/30';
-      case 'platinum': return 'bg-gray-300/20 text-gray-300 border-gray-300/30';
-      case 'gold': return 'bg-yellow-500/20 text-yellow-400 border-yellow-400/30';
-      case 'silver': return 'bg-gray-400/20 text-gray-400 border-gray-400/30';
-      default: return 'bg-orange-600/20 text-orange-400 border-orange-400/30';
+      case 'diamond': return 'bg-[var(--theme-accent)]/20 text-[var(--theme-accent)] border-[var(--theme-accent)]/30';
+      case 'platinum': return 'bg-[var(--theme-secondary)]/20 text-[var(--theme-secondary)] border-[var(--theme-secondary)]/30';
+      case 'gold': return 'bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30';
+      case 'silver': return 'bg-[var(--theme-textMuted)]/20 text-[var(--theme-textMuted)] border-[var(--theme-textMuted)]/30';
+      default: return 'bg-[var(--theme-primaryDark)]/20 text-[var(--theme-primaryDark)] border-[var(--theme-primaryDark)]/30';
     }
   };
 
@@ -90,7 +90,7 @@ const UnifiedProfileHeader = ({
   const progress = calculateProgress();
 
   return (
-    <Card className="bg-carbon-fiber border-rap-burgundy/40 mb-8">
+    <Card className="bg-[var(--theme-surface)] border-[var(--theme-secondary)]/40 mb-8">
       <CardContent className="p-8">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6">
           <div className="flex-shrink-0">
@@ -100,19 +100,19 @@ const UnifiedProfileHeader = ({
             />
           </div>
           <div className="text-center md:text-left flex-1">
-            <h1 className="text-3xl md:text-4xl font-bold text-rap-platinum font-mogra mb-2">
+            <h1 className="text-3xl md:text-4xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-2">
               {profile.username}
             </h1>
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-4">
-              <Badge className={`font-kaushan border ${getStatusColor(profile.member_stats?.status)}`}>
+              <Badge className={`font-[var(--theme-font-body)] border ${getStatusColor(profile.member_stats?.status)}`}>
                 <Trophy className="w-3 h-3 mr-1" />
                 {formatStatus(profile.member_stats?.status)} Member
               </Badge>
-              <div className="flex items-center gap-1 text-rap-smoke font-kaushan text-sm">
+              <div className="flex items-center gap-1 text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-sm">
                 <Calendar className="w-4 h-4" />
                 Joined {new Date(profile.created_at).toLocaleDateString()}
               </div>
-              <div className="flex items-center gap-1 text-rap-gold font-kaushan text-sm">
+              <div className="flex items-center gap-1 text-[var(--theme-primary)] font-[var(--theme-font-body)] text-sm">
                 <Target className="w-4 h-4" />
                 {getVoteMultiplier(profile.member_stats?.status)}x Vote Multiplier
               </div>
@@ -121,13 +121,13 @@ const UnifiedProfileHeader = ({
             {/* Member Progress */}
             {nextStatus && (
               <div className="mb-4">
-                <div className="flex items-center justify-between text-sm text-rap-smoke font-kaushan mb-2">
+                <div className="flex items-center justify-between text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)] mb-2">
                   <span>Progress to {nextStatus.next}</span>
                   <span>{Math.round(progress)}%</span>
                 </div>
-                <Progress value={progress} className="h-2 bg-rap-carbon-light">
+                <Progress value={progress} className="h-2 bg-[var(--theme-background)]">
                   <div 
-                    className="h-full bg-gradient-to-r from-rap-gold-dark to-rap-gold-light transition-all duration-300" 
+                    className="h-full bg-gradient-to-r from-[var(--theme-primaryDark)] to-[var(--theme-primaryLight)] transition-all duration-300" 
                     style={{ width: `${progress}%` }}
                   />
                 </Progress>
@@ -137,12 +137,12 @@ const UnifiedProfileHeader = ({
             {/* Additional profile info */}
             <div className="space-y-2">
               {profile.bio && (
-                <p className="text-rap-platinum font-kaushan text-sm max-w-2xl">
+                <p className="text-[var(--theme-text)] font-[var(--theme-font-body)] text-sm max-w-2xl">
                   {profile.bio}
                 </p>
               )}
               {profile.location && (
-                <div className="flex items-center justify-center md:justify-start gap-1 text-rap-smoke font-kaushan text-sm">
+                <div className="flex items-center justify-center md:justify-start gap-1 text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-sm">
                   <MapPin className="w-4 h-4" />
                   {profile.location}
                 </div>
@@ -152,30 +152,30 @@ const UnifiedProfileHeader = ({
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-rap-smoke/20 pt-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-[var(--theme-textMuted)]/20 pt-6">
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-rap-gold font-mogra mb-1">
+            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
               {profile.member_stats?.total_votes || 0}
             </div>
-            <div className="text-rap-smoke font-kaushan text-xs md:text-sm">Total Votes Cast</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Total Votes Cast</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-rap-gold font-mogra mb-1">
+            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
               {rankingsCount}
             </div>
-            <div className="text-rap-smoke font-kaushan text-xs md:text-sm">Public Rankings</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Public Rankings</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-rap-gold font-mogra mb-1">
+            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
               {profile.member_stats?.consecutive_voting_days || 0}
             </div>
-            <div className="text-rap-smoke font-kaushan text-xs md:text-sm">Day Voting Streak</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Day Voting Streak</div>
           </div>
           <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-rap-gold font-mogra mb-1">
+            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
               {profile.member_stats?.total_comments || 0}
             </div>
-            <div className="text-rap-smoke font-kaushan text-xs md:text-sm">Comments Posted</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Comments Posted</div>
           </div>
         </div>
       </CardContent>

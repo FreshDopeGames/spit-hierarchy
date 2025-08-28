@@ -13,19 +13,19 @@ const ProfileAchievements = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-black border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
+      <Card className="bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20">
         <CardHeader>
-          <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-lg sm:text-xl">
+          <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
             <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
             Achievements
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="animate-pulse space-y-4">
-            <div className="h-12 sm:h-16 bg-rap-carbon/50 rounded" />
+            <div className="h-12 sm:h-16 bg-[var(--theme-surface)] rounded" />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div className="h-16 sm:h-20 bg-rap-carbon/50 rounded" />
-              <div className="h-16 sm:h-20 bg-rap-carbon/50 rounded" />
+              <div className="h-16 sm:h-20 bg-[var(--theme-surface)] rounded" />
+              <div className="h-16 sm:h-20 bg-[var(--theme-surface)] rounded" />
             </div>
           </div>
         </CardContent>
@@ -50,23 +50,23 @@ const ProfileAchievements = () => {
   });
 
   return (
-    <Card className="bg-black border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
+    <Card className="bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20">
       <CardHeader>
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-lg sm:text-xl">
+          <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
             <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
             Achievements
           </CardTitle>
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
             <div className="text-center sm:text-right">
-              <div className="text-rap-silver text-xs sm:text-sm">Total Points</div>
-              <div className="text-rap-gold font-bold text-lg sm:text-xl">{getTotalPoints()}</div>
+              <div className="text-[var(--theme-secondary)] text-xs sm:text-sm">Total Points</div>
+              <div className="text-[var(--theme-primary)] font-bold text-lg sm:text-xl">{getTotalPoints()}</div>
             </div>
             <Link to="/analytics?tab=achievements">
               <Button 
                 variant="outline" 
                 size="sm"
-                className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon w-full sm:w-auto text-xs sm:text-sm"
+                className="border-[var(--theme-primary)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)] w-full sm:w-auto text-xs sm:text-sm"
               >
                 View All Achievements
               </Button>
@@ -76,17 +76,17 @@ const ProfileAchievements = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-rap-carbon-light border border-rap-gold/30 mb-4">
+          <TabsList className="grid w-full grid-cols-2 bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 mb-4">
             <TabsTrigger 
               value="overview" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-text)] text-xs sm:text-sm"
             >
               <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Recent
             </TabsTrigger>
             <TabsTrigger 
               value="table" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-text)] text-xs sm:text-sm"
             >
               <Table className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               All Progress
@@ -106,9 +106,9 @@ const ProfileAchievements = () => {
               </div>
             ) : (
               <div className="text-center py-6 sm:py-8">
-                <Award className="w-10 h-10 sm:w-12 sm:h-12 text-rap-gold/50 mx-auto mb-3" />
-                <h3 className="text-base sm:text-lg font-bold text-rap-silver mb-2">No Achievements Yet</h3>
-                <p className="text-rap-platinum text-xs sm:text-sm px-4">
+                <Award className="w-10 h-10 sm:w-12 sm:h-12 text-[var(--theme-primary)]/50 mx-auto mb-3" />
+                <h3 className="text-base sm:text-lg font-bold text-[var(--theme-secondary)] mb-2">No Achievements Yet</h3>
+                <p className="text-[var(--theme-text)] text-xs sm:text-sm px-4">
                   Start voting and engaging to earn your first achievements!
                 </p>
               </div>
@@ -117,7 +117,7 @@ const ProfileAchievements = () => {
 
           <TabsContent value="table">
             <div className="space-y-4">
-              <div className="text-sm text-rap-silver">
+              <div className="text-sm text-[var(--theme-secondary)]">
                 Track your progress on all {achievements.length} available achievements
               </div>
               <AchievementTable 
@@ -128,7 +128,7 @@ const ProfileAchievements = () => {
                 <Link to="/analytics?tab=achievements">
                   <Button 
                     variant="outline"
-                    className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+                    className="border-[var(--theme-primary)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
                   >
                     View All Achievements
                   </Button>
