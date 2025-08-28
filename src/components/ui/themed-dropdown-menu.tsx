@@ -117,7 +117,6 @@ const ThemedDropdownMenuItem = React.forwardRef<
     ref={ref}
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm text-sm outline-none transition-colors",
-      "focus:bg-[var(--theme-primary)]/20 focus:text-[var(--theme-primary)]",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
       inset && "pl-8",
       className
@@ -129,7 +128,10 @@ const ThemedDropdownMenuItem = React.forwardRef<
       fontWeight: 'var(--theme-element-dropdown_item-fontWeight, 500)',
       lineHeight: 'var(--theme-element-dropdown_item-lineHeight, 1.25)',
       padding: 'var(--theme-element-dropdown_item-padding, 0.625rem 0.75rem)',
-    }}
+      // Hover and focus states using CSS variables
+      '--hover-bg': 'hsl(var(--theme-element-dropdown_item-hover-bg, var(--theme-primary)))',
+      '--hover-color': 'hsl(var(--theme-element-dropdown_item-hover-color, var(--theme-primary-foreground)))',
+    } as React.CSSProperties & Record<string, string>}
     {...props}
   />
 ));

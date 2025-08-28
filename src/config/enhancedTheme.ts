@@ -29,9 +29,11 @@ export interface TypographyConfig {
 export interface ElementConfig {
   background?: string;
   color?: string;
+  hoverBackground?: string;
+  hoverColor?: string;
+  gradient?: string;
   border?: BorderConfig;
   typography?: TypographyConfig;
-  gradient?: string; // gradient ID
   shadow?: string;
   padding?: string;
   margin?: string;
@@ -283,6 +285,8 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     dropdown_item: {
       background: 'transparent',
       color: '#E8E6E3',
+      hoverBackground: '#D4AF37',
+      hoverColor: '#0D0D0D',
       typography: { fontSize: '0.875rem', fontWeight: '500', lineHeight: '1.25' },
       padding: '0.625rem 0.75rem'
     }
@@ -406,6 +410,16 @@ const applyElementConfig = (root: HTMLElement, elementName: string, config: Elem
   if (config.color) {
     const colorValue = config.color.startsWith('#') ? hexToHsl(config.color) : config.color;
     root.style.setProperty(`--theme-element-${elementName}-color`, colorValue);
+  }
+  
+  if (config.hoverBackground) {
+    const hoverBgValue = config.hoverBackground.startsWith('#') ? hexToHsl(config.hoverBackground) : config.hoverBackground;
+    root.style.setProperty(`--theme-element-${elementName}-hover-bg`, hoverBgValue);
+  }
+  
+  if (config.hoverColor) {
+    const hoverColorValue = config.hoverColor.startsWith('#') ? hexToHsl(config.hoverColor) : config.hoverColor;
+    root.style.setProperty(`--theme-element-${elementName}-hover-color`, hoverColorValue);
   }
   
   if (config.gradient) {

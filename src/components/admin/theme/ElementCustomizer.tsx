@@ -281,6 +281,25 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                   theme={theme}
                 />
 
+                {/* Hover States for Dropdown Items */}
+                {selectedElement === 'dropdown_item' && (
+                  <>
+                    <ColorDropdown
+                      label="Hover Background"
+                      value={elementConfig.hoverBackground}
+                      onChange={(value) => updateElementConfig({ hoverBackground: value })}
+                      theme={theme}
+                    />
+                    
+                    <ColorDropdown
+                      label="Hover Text Color"
+                      value={elementConfig.hoverColor}
+                      onChange={(value) => updateElementConfig({ hoverColor: value })}
+                      theme={theme}
+                    />
+                  </>
+                )}
+
                 {/* Gradient */}
                 {theme.gradients.length > 0 && (
                   <div className="space-y-2">

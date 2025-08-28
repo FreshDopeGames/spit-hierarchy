@@ -273,3 +273,19 @@ input::placeholder {
   box-shadow: var(--theme-element-dropdown-shadow, 0 10px 15px rgba(212, 175, 55, 0.2)) !important;
   z-index: 50 !important;
 }
+
+/* Dropdown Item Hover States */
+[data-radix-dropdown-menu-item][data-highlighted] {
+  background-color: var(--hover-bg) !important;
+  color: var(--hover-color) !important;
+}
+
+[data-radix-dropdown-menu-item]:hover {
+  background-color: var(--hover-bg) !important;
+  color: var(--hover-color) !important;
+}
+
+[data-radix-dropdown-menu-item]:focus {
+  background-color: var(--hover-bg) !important;
+  color: var(--hover-color) !important;
+}
