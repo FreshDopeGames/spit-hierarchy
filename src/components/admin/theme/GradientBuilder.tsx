@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { Plus, Trash2 } from "lucide-react";
-import { GradientConfig, gradientToCSS } from "@/config/enhancedTheme";
+import { GradientConfig, gradientToCSS, defaultEnhancedTheme } from "@/config/enhancedTheme";
 
 interface GradientBuilderProps {
   gradients: GradientConfig[];
@@ -25,8 +25,8 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
       type: 'linear',
       direction: 45,
       stops: [
-        { color: '#000000', position: 0 },
-        { color: '#FFFFFF', position: 100 }
+        { color: defaultEnhancedTheme.colors.background, position: 0 },
+        { color: defaultEnhancedTheme.colors.primary, position: 100 }
       ]
     };
     
@@ -52,7 +52,7 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
 
   const handleAddStop = (gradient: GradientConfig) => {
     const newStop = {
-      color: '#808080',
+      color: defaultEnhancedTheme.colors.surface,
       position: 50
     };
     
@@ -227,21 +227,39 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
               <div className="space-y-3">
                 {editingGradient.stops.map((stop, index) => (
                   <div key={index} className="flex items-center gap-3 p-3 border border-[var(--theme-border)] rounded">
-                    <div className="flex items-center gap-2 flex-1">
-                      <Input
-                        type="color"
-                        value={stop.color}
-                        onChange={(e) => handleStopChange(editingGradient, index, 'color', e.target.value)}
-                        className="w-12 h-8 p-0 border-0"
-                      />
-                      <Input
-                        type="text"
-                        value={stop.color}
-                        onChange={(e) => handleStopChange(editingGradient, index, 'color', e.target.value)}
-                        className="flex-1"
-                        placeholder="#000000"
-                      />
-                    </div>
+                     <div className="flex items-center gap-2 flex-1">
+                       <Select
+                         value={stop.color}
+                         onValueChange={(value) => handleStopChange(editingGradient, index, 'color', value)}
+                       >
+                         <SelectTrigger className="flex-1">
+                           <SelectValue>
+                             <div className="flex items-center gap-2">
+                               <div 
+                                 className="w-4 h-4 rounded border border-[var(--theme-border)]"
+                                 style={{ backgroundColor: stop.color }}
+                               />
+                               <span className="capitalize">
+                                 {Object.entries(defaultEnhancedTheme.colors).find(([_, color]) => color === stop.color)?.[0] || 'Custom'}
+                               </span>
+                             </div>
+                           </SelectValue>
+                         </SelectTrigger>
+                         <SelectContent>
+                           {Object.entries(defaultEnhancedTheme.colors).map(([colorName, colorValue]) => (
+                             <SelectItem key={colorName} value={colorValue}>
+                               <div className="flex items-center gap-2">
+                                 <div 
+                                   className="w-4 h-4 rounded border border-[var(--theme-border)]"
+                                   style={{ backgroundColor: colorValue }}
+                                 />
+                                 <span className="capitalize">{colorName.replace(/([A-Z])/g, ' $1').trim()}</span>
+                               </div>
+                             </SelectItem>
+                           ))}
+                         </SelectContent>
+                       </Select>
+                     </div>
                     <div className="flex items-center gap-2">
                       <Label className="text-xs whitespace-nowrap">Position:</Label>
                       <Input
