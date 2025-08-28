@@ -26,18 +26,18 @@ const CategoryPerformanceCard = () => {
   });
 
   if (isLoading) {
-    return <Card className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20 animate-pulse">
+    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20 animate-pulse">
         <CardContent className="p-6">
-          <div className="h-32 bg-rap-carbon-light rounded"></div>
+          <div className="h-32 bg-[var(--theme-background)] rounded"></div>
         </CardContent>
       </Card>;
   }
 
   if (!categoryAnalytics || categoryAnalytics.length === 0) return null;
 
-  return <Card className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20">
       <CardHeader>
-        <CardTitle className="text-rap-gold font-merienda flex items-center gap-2 text-3xl font-extrabold">
+        <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-3xl font-extrabold">
           <TrendingUp className="w-5 h-5" />
           Category Performance
         </CardTitle>
@@ -47,19 +47,19 @@ const CategoryPerformanceCard = () => {
           {categoryAnalytics.map((category: any) => (
             <div 
               key={category.id} 
-              className={`p-3 bg-black border border-rap-gold/20 rounded-lg ${
+              className={`p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg ${
                 isMobile 
                   ? 'flex flex-col space-y-3' 
                   : 'flex items-center justify-between'
               }`}
             >
               <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
-                <h4 className={`text-rap-platinum font-medium font-kaushan text-3xl ${
+                <h4 className={`text-[var(--theme-text)] font-medium font-[var(--theme-font-body)] text-3xl ${
                   isMobile ? 'text-center' : 'text-left'
                 }`}>
                   {category.name}
                 </h4>
-                <p className={`text-rap-smoke font-kaushan text-base ${
+                <p className={`text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base ${
                   isMobile ? 'text-center' : 'text-left'
                 }`}>
                   {category.description}
@@ -69,18 +69,18 @@ const CategoryPerformanceCard = () => {
                 isMobile ? 'justify-center' : ''
               }`}>
                 <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra text-2xl">{category.total_votes}</p>
-                  <p className="text-rap-smoke font-kaushan text-base">Votes</p>
+                  <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)] text-2xl">{category.total_votes}</p>
+                  <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Votes</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-rap-platinum font-bold font-mogra text-2xl">{category.unique_voters}</p>
-                  <p className="text-rap-smoke font-kaushan text-base">Voters</p>
+                  <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)] text-2xl">{category.unique_voters}</p>
+                  <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Voters</p>
                 </div>
                 <div className="text-center">
-                  <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 text-lg">
+                  <Badge variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-primary)]/30 text-lg">
                     {Number(category.average_rating || 0).toFixed(1)}
                   </Badge>
-                  <p className="text-rap-smoke font-kaushan text-base">Avg.</p>
+                  <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Avg.</p>
                 </div>
               </div>
             </div>

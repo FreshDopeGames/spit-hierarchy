@@ -36,9 +36,9 @@ const AnalyticsDebugInfo = () => {
   if (!debugInfo) return null;
 
   return (
-    <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20 mb-6">
+    <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20 mb-6">
       <CardHeader>
-        <CardTitle className="text-rap-gold font-mogra flex items-center gap-2">
+        <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2">
           <Database className="w-5 h-5" />
           Analytics Data Status
         </CardTitle>
@@ -47,26 +47,26 @@ const AnalyticsDebugInfo = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
-              <Vote className="w-4 h-4 text-rap-gold" />
-              <span className="text-rap-platinum font-bold">{debugInfo.totalVotes}</span>
+              <Vote className="w-4 h-4 text-[var(--theme-primary)]" />
+              <span className="text-[var(--theme-text)] font-bold">{debugInfo.totalVotes}</span>
             </div>
-            <p className="text-rap-smoke text-sm">Total Votes</p>
+            <p className="text-[var(--theme-textMuted)] text-sm">Total Votes</p>
           </div>
           
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
-              <Users className="w-4 h-4 text-rap-gold" />
-              <span className="text-rap-platinum font-bold">{debugInfo.totalUsers}</span>
+              <Users className="w-4 h-4 text-[var(--theme-primary)]" />
+              <span className="text-[var(--theme-text)] font-bold">{debugInfo.totalUsers}</span>
             </div>
-            <p className="text-rap-smoke text-sm">Users</p>
+            <p className="text-[var(--theme-textMuted)] text-sm">Users</p>
           </div>
           
           <div className="text-center">
             <div className="flex items-center justify-center gap-2 mb-1">
-              <Database className="w-4 h-4 text-rap-gold" />
-              <span className="text-rap-platinum font-bold">{debugInfo.recentVotes}</span>
+              <Database className="w-4 h-4 text-[var(--theme-primary)]" />
+              <span className="text-[var(--theme-text)] font-bold">{debugInfo.recentVotes}</span>
             </div>
-            <p className="text-rap-smoke text-sm">Recent Votes (7d)</p>
+            <p className="text-[var(--theme-textMuted)] text-sm">Recent Votes (7d)</p>
           </div>
         </div>
       </CardContent>

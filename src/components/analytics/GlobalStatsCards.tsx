@@ -57,40 +57,40 @@ const GlobalStatsCards = () => {
       icon: Vote,
       label: "Total Votes",
       value: globalStats.totalVotes,
-      color: "from-rap-burgundy to-rap-forest"
+      color: "from-[var(--theme-primaryDark)] to-[var(--theme-accent)]"
     },
     {
       icon: Users,
       label: "Active Voters",
       value: globalStats.activeVoters,
-      color: "from-rap-forest to-rap-gold"
+      color: "from-[var(--theme-accent)] to-[var(--theme-primary)]"
     },
     {
       icon: Award,
       label: "Rated Rappers",
       value: globalStats.ratedRappers,
-      color: "from-rap-gold to-rap-silver"
+      color: "from-[var(--theme-primary)] to-[var(--theme-secondary)]"
     },
     {
       icon: Star,
       label: "Avg Rating",
       value: globalStats.avgRating.toFixed(1),
-      color: "from-rap-silver to-rap-platinum"
+      color: "from-[var(--theme-secondary)] to-[var(--theme-primaryLight)]"
     }
   ];
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {statCards.map((stat, index) => (
-        <Card key={index} className="bg-carbon-gradient border-rap-gold border-2 shadow-lg shadow-rap-gold/20">
+        <Card key={index} className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20">
           <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg`}>
-                <stat.icon className="w-5 h-5 text-rap-carbon" />
+                <stat.icon className="w-5 h-5 text-[var(--theme-background)]" />
               </div>
               <div>
-                <p className="text-rap-smoke text-sm font-merienda font-extrabold tracking-wide drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)]">{stat.label}</p>
-                <p className="text-rap-platinum font-extrabold text-lg font-merienda">{stat.value}</p>
+                <p className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-font-body)] font-extrabold tracking-wide">{stat.label}</p>
+                <p className="text-[var(--theme-text)] font-extrabold text-lg font-[var(--theme-font-heading)]">{stat.value}</p>
               </div>
             </div>
           </CardContent>
