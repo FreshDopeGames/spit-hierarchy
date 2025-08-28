@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import { toast } from "sonner";
@@ -85,36 +85,37 @@ const BlogPostsTab = ({ onEditPost, onNewPost }: BlogPostsTabProps) => {
   };
 
   return (
-    <Card className="bg-carbon-fiber border border-rap-gold/30">
-      <CardHeader>
-        <CardTitle className="text-rap-platinum font-mogra mb-4 text-center text-2xl">Blog Posts</CardTitle>
+    <ThemedCard>
+      <ThemedCardHeader>
+        <ThemedCardTitle className="mb-4 text-center text-2xl">Blog Posts</ThemedCardTitle>
         <div className="flex justify-between items-center">
           <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-rap-smoke w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--theme-textMuted)] w-4 h-4" />
             <Input 
               placeholder="Search posts..." 
               value={searchTerm} 
               onChange={(e) => setSearchTerm(e.target.value)} 
-              className="pl-10 bg-rap-carbon border-rap-smoke text-rap-platinum" 
+              className="pl-10 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]" 
             />
           </div>
-          <Button 
+          <ThemedButton 
             onClick={onNewPost} 
-            className="bg-rap-gold font-mogra ml-4"
+            className="font-[var(--theme-font-heading)] ml-4"
+            variant="default"
           >
             New Post
-          </Button>
+          </ThemedButton>
         </div>
-      </CardHeader>
-      <CardContent>
+      </ThemedCardHeader>
+      <ThemedCardContent>
         <BlogPostList
           posts={filteredPosts}
           isLoading={postsLoading}
           onEditPost={onEditPost}
           onDeletePost={handleDeletePost}
         />
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 };
 

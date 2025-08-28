@@ -1,7 +1,6 @@
-
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Upload, Check, X, Music } from "lucide-react";
 import { Tables, Database } from "@/integrations/supabase/types";
@@ -31,15 +30,15 @@ const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: 
   const hasImage = !!imageUrl;
 
   return (
-    <Card className={`bg-carbon-gradient transition-all duration-300 ${
+    <ThemedCard className={`transition-all duration-300 ${
       hasImage 
-        ? 'border-rap-forest/40 hover:border-rap-forest/70' 
-        : 'border-rap-burgundy/40 hover:border-rap-burgundy/70'
+        ? 'border-[var(--theme-success)]/40 hover:border-[var(--theme-success)]/70' 
+        : 'border-[var(--theme-error)]/40 hover:border-[var(--theme-error)]/70'
     }`}>
-      <CardContent className="p-3 sm:p-4">
+      <ThemedCardContent className="p-3 sm:p-4">
         <div className="space-y-3">
           {/* Image Preview */}
-          <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center">
+          <div className="aspect-square rounded-lg overflow-hidden bg-gradient-to-br from-[var(--theme-background)] to-[var(--theme-backgroundLight)] flex items-center justify-center">
             {imageUrl ? (
               <img 
                 src={imageUrl} 
@@ -48,17 +47,17 @@ const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: 
                 loading="lazy"
               />
             ) : (
-              <Music className="w-8 h-8 sm:w-12 sm:h-12 text-rap-platinum/50" />
+              <Music className="w-8 h-8 sm:w-12 sm:h-12 text-[var(--theme-textMuted)]" />
             )}
           </div>
 
           {/* Rapper Info */}
           <div className="space-y-1">
-            <h4 className="font-mogra text-rap-platinum text-xs sm:text-sm leading-tight line-clamp-2">
+            <h4 className="font-[var(--theme-font-heading)] text-[var(--theme-text)] text-xs sm:text-sm leading-tight line-clamp-2">
               {rapper.name}
             </h4>
             {rapper.real_name && (
-              <p className="text-rap-smoke text-xs font-kaushan line-clamp-1">
+              <p className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-font-body)] line-clamp-1">
                 {rapper.real_name}
               </p>
             )}
@@ -67,10 +66,10 @@ const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: 
           {/* Status Badge */}
           <Badge 
             variant="secondary" 
-            className={`text-xs font-kaushan w-full justify-center py-1 ${
+            className={`text-xs font-[var(--theme-font-body)] w-full justify-center py-1 ${
               hasImage 
-                ? 'bg-rap-forest/20 text-rap-forest border-rap-forest/30' 
-                : 'bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30'
+                ? 'bg-[var(--theme-success)]/20 text-[var(--theme-success)] border-[var(--theme-success)]/30' 
+                : 'bg-[var(--theme-error)]/20 text-[var(--theme-error)] border-[var(--theme-error)]/30'
             }`}
           >
             {hasImage ? (
@@ -95,12 +94,12 @@ const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: 
               className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
               disabled={isUploading}
             />
-            <Button
+            <ThemedButton
               className={`w-full min-h-[44px] ${
                 hasImage 
-                  ? 'bg-rap-forest/20 hover:bg-rap-forest/30 text-rap-forest border-rap-forest/30' 
-                  : 'bg-rap-burgundy hover:bg-rap-burgundy-light text-rap-platinum'
-              } font-kaushan text-xs sm:text-sm`}
+                  ? 'bg-[var(--theme-success)]/20 hover:bg-[var(--theme-success)]/30 text-[var(--theme-success)] border-[var(--theme-success)]/30' 
+                  : ''
+              } font-[var(--theme-font-body)] text-xs sm:text-sm`}
               variant={hasImage ? "outline" : "default"}
               disabled={isUploading}
               size="sm"
@@ -113,11 +112,11 @@ const StyleImageCard = ({ rapper, style, imageUrl, isUploading, onFileSelect }: 
               <span className="truncate">
                 {hasImage ? 'Replace' : 'Upload'} {styleLabels[style]}
               </span>
-            </Button>
+            </ThemedButton>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 };
 

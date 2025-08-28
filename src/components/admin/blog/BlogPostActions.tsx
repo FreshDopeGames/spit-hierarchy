@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 
 interface BlogPostActionsProps {
   isEditing: boolean;
@@ -11,21 +10,22 @@ interface BlogPostActionsProps {
 const BlogPostActions = ({ isEditing, isLoading, onCancel }: BlogPostActionsProps) => {
   return (
     <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-4">
-      <Button 
+      <ThemedButton 
         type="submit" 
         disabled={isLoading}
-        className="bg-rap-gold font-mogra text-black text-lg h-12 sm:h-11 flex-1 sm:flex-none"
+        className="font-[var(--theme-font-heading)] text-lg h-12 sm:h-11 flex-1 sm:flex-none"
+        variant="default"
       >
         {isLoading ? 'Saving...' : (isEditing ? 'Update Post' : 'Create Post')}
-      </Button>
-      <Button 
+      </ThemedButton>
+      <ThemedButton 
         type="button" 
         variant="outline" 
         onClick={onCancel}
-        className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold h-12 sm:h-11 flex-1 sm:flex-none"
+        className="h-12 sm:h-11 flex-1 sm:flex-none"
       >
         Cancel
-      </Button>
+      </ThemedButton>
     </div>
   );
 };

@@ -30,7 +30,7 @@ const InternalPageHeader = ({
           <Link to={backLink} onClick={() => window.scrollTo(0, 0)}>
             <Button 
               variant="outline" 
-              className="font-mogra shadow-lg text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
+              className="font-[var(--theme-font-heading)] shadow-lg text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2"
               style={{
                 borderColor: `${theme.colors.primary}50`,
                 color: theme.colors.primary,

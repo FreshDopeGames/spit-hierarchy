@@ -37,37 +37,37 @@ const UserProfileDropdown = ({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <div className="cursor-pointer hover:opacity-80 transition-opacity">
-          <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-rap-gold/50 hover:border-rap-gold`}>
+          <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-[var(--theme-primary)]/50 hover:border-[var(--theme-primary)]`}>
             <AvatarImage 
               src={avatarUrl} 
               alt={displayName || 'User'}
               style={{ imageRendering: 'crisp-edges' }}
               loading="eager"
             />
-            <AvatarFallback className="bg-gradient-to-r from-rap-burgundy to-rap-gold text-rap-platinum">
+            <AvatarFallback className="bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-primary)] text-[var(--theme-text)]">
               <User className="w-4 h-4" />
             </AvatarFallback>
           </Avatar>
         </div>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-black border-rap-gold/30 shadow-2xl shadow-rap-gold/20 border-2">
-        <div className="px-3 py-2 border-b border-rap-smoke/30">
-          <p className="text-rap-gold font-kaushan font-bold text-sm truncate">
+      <DropdownMenuContent align="end" className="w-56 bg-[var(--theme-background)] border-[var(--theme-border)] shadow-2xl shadow-[var(--theme-primary)]/20 border-2">
+        <div className="px-3 py-2 border-b border-[var(--theme-border)]/30">
+          <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] font-bold text-sm truncate">
             {displayName}
           </p>
         </div>
         
         <Link to="/profile">
-          <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+          <DropdownMenuItem className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)] font-[var(--theme-font-body)] cursor-pointer">
             <User className="w-4 h-4 mr-3" />
             View Profile
           </DropdownMenuItem>
         </Link>
         
-        <DropdownMenuSeparator className="bg-rap-smoke/30" />
+        <DropdownMenuSeparator className="bg-[var(--theme-border)]/30" />
         
         <Link to="/analytics">
-          <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+          <DropdownMenuItem className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)] font-[var(--theme-font-body)] cursor-pointer">
             <Trophy className="w-4 h-4 mr-3" />
             Analytics
           </DropdownMenuItem>
@@ -75,9 +75,9 @@ const UserProfileDropdown = ({
         
         {(isAdmin || canManageBlog) && (
           <>
-            <DropdownMenuSeparator className="bg-rap-smoke/30" />
+            <DropdownMenuSeparator className="bg-[var(--theme-border)]/30" />
             <Link to="/admin">
-              <DropdownMenuItem className="text-rap-platinum hover:bg-rap-gold/20 hover:text-rap-gold font-kaushan cursor-pointer">
+              <DropdownMenuItem className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)] font-[var(--theme-font-body)] cursor-pointer">
                 <Settings className="w-4 h-4 mr-3" />
                 Admin Panel
               </DropdownMenuItem>
@@ -85,9 +85,9 @@ const UserProfileDropdown = ({
           </>
         )}
         
-        <DropdownMenuSeparator className="bg-rap-smoke/30" />
+        <DropdownMenuSeparator className="bg-[var(--theme-border)]/30" />
         
-        <DropdownMenuItem onClick={signOut} className="text-rap-platinum hover:bg-rap-burgundy/20 hover:text-rap-burgundy font-kaushan cursor-pointer">
+        <DropdownMenuItem onClick={signOut} className="text-[var(--theme-text)] hover:bg-[var(--theme-secondary)]/20 hover:text-[var(--theme-secondary)] font-[var(--theme-font-body)] cursor-pointer">
           <LogOut className="w-4 h-4 mr-3" />
           Sign Out
         </DropdownMenuItem>

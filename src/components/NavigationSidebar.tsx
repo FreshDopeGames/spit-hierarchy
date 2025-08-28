@@ -93,7 +93,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
           {/* Main Navigation */}
           <div className="space-y-2">
             <h3 
-              className="font-ceviche mb-3 tracking-wider text-3xl"
+              className="font-[var(--theme-font-display)] mb-3 tracking-wider text-3xl"
               style={{ color: theme.colors.primary }}
             >
               Navigate
@@ -195,7 +195,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             {isUserDataLoading ? (
               <>
                 <h3 
-                  className="font-ceviche mb-3 tracking-wider text-3xl"
+                  className="font-[var(--theme-font-display)] mb-3 tracking-wider text-3xl"
                   style={{ color: theme.colors.primary }}
                 >
                   Loading...
@@ -208,7 +208,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
             ) : user ? (
               <>
                 <h3 
-                  className="font-ceviche mb-3 tracking-wider text-3xl"
+                  className="font-[var(--theme-font-display)] mb-3 tracking-wider text-3xl"
                   style={{ color: theme.colors.primary }}
                 >
                   User Menu
@@ -236,7 +236,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                       </AvatarFallback>
                     </Avatar>
                     <span 
-                      className="font-kaushan text-sm"
+                      className="font-[var(--theme-font-body)] text-sm"
                       style={{ color: `${theme.colors.primary}70` }}
                     >
                       {displayName}
@@ -284,7 +284,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
               </>
             ) : (
               <>
-                <h3 className="text-[var(--theme-primary)] font-mogra text-sm mb-3 tracking-wider">Get Started</h3>
+                <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-sm mb-3 tracking-wider">Get Started</h3>
                 
                 <Link to="/auth" onClick={() => handleNavClick('/auth')}>
                   <Button 

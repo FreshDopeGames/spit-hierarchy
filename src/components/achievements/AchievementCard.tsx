@@ -23,16 +23,16 @@ interface AchievementCardProps {
 }
 
 const rarityColors = {
-  common: "bg-gray-500",
+  common: "bg-[var(--theme-textMuted)]",
   rare: "bg-blue-500", 
-  epic: "bg-rap-gold",
+  epic: "bg-[var(--theme-primary)]",
   legendary: "bg-indigo-600"
 };
 
 const rarityBorders = {
-  common: "border-gray-500/30",
+  common: "border-[var(--theme-textMuted)]/30",
   rare: "border-blue-500/30",
-  epic: "border-rap-gold/30", 
+  epic: "border-[var(--theme-primary)]/30", 
   legendary: "border-indigo-600/30"
 };
 
@@ -40,7 +40,7 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
   const IconComponent = (LucideIcons as any)[achievement.icon] || LucideIcons.Star;
   
   return (
-    <Card className={`bg-gray-900 border-2 ${rarityBorders[achievement.rarity]} ${
+    <Card className={`bg-[var(--theme-surface)] border-2 ${rarityBorders[achievement.rarity]} ${
       achievement.is_earned ? 'opacity-100' : 'opacity-60'
     } transition-all hover:scale-105`}>
       <CardContent className="p-4">
@@ -51,7 +51,7 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
           
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between mb-2">
-              <h3 className="font-bold text-rap-gold truncate">{achievement.name}</h3>
+              <h3 className="font-bold text-[var(--theme-primary)] truncate">{achievement.name}</h3>
               <Badge 
                 variant="secondary" 
                 className={`${rarityColors[achievement.rarity]} text-white text-xs capitalize`}
@@ -60,12 +60,12 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
               </Badge>
             </div>
             
-            <p className="text-rap-platinum text-sm mb-2">{achievement.description}</p>
+            <p className="text-[var(--theme-text)] text-sm mb-2">{achievement.description}</p>
             
             <div className="flex items-center justify-between">
-              <span className="text-rap-silver text-xs">{achievement.points} points</span>
+              <span className="text-[var(--theme-textMuted)] text-xs">{achievement.points} points</span>
               {achievement.is_earned && achievement.earned_at && (
-                <span className="text-rap-gold text-xs">
+                <span className="text-[var(--theme-primary)] text-xs">
                   Earned {new Date(achievement.earned_at).toLocaleDateString()}
                 </span>
               )}
@@ -73,13 +73,13 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
             
             {showProgress && !achievement.is_earned && (
               <div className="mt-3">
-                <div className="flex justify-between text-xs text-rap-silver mb-1">
+                <div className="flex justify-between text-xs text-[var(--theme-textMuted)] mb-1">
                   <span>Progress</span>
                   <span>{Math.round(achievement.progress_percentage)}%</span>
                 </div>
                 <Progress 
                   value={achievement.progress_percentage} 
-                  className="h-2 bg-gray-800"
+                  className="h-2 bg-[var(--theme-surface)]"
                 />
               </div>
             )}

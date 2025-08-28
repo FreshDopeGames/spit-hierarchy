@@ -1,48 +1,51 @@
-
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
+
 const AboutHowItWorks = () => {
-  return <Card className="bg-rap-carbon border-rap-gold/100 shadow-lg shadow-rap-gold/20 border-2">
-      <CardHeader>
-        <CardTitle className="text-rap-gold font-ceviche font-normal text-5xl">
+  return (
+    <ThemedCard>
+      <ThemedCardHeader>
+        <ThemedCardTitle className="text-5xl font-normal">
           How It Works
-        </CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-6">
+        </ThemedCardTitle>
+      </ThemedCardHeader>
+      <ThemedCardContent className="space-y-6">
         <div className="space-y-4">
           <div className="flex items-start space-x-4">
-            <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg px-[15px]">1</div>
+            <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)] rounded-full w-8 h-8 flex items-center justify-center text-[var(--theme-background)] font-[var(--theme-font-heading)] shadow-lg px-[15px]">1</div>
             <div>
-              <h3 className="font-mogra text-rap-silver">Browse Artists</h3>
-              <p className="text-rap-platinum font-merienda">Explore our comprehensive database of rappers from all eras and regions.</p>
+              <h3 className="font-[var(--theme-font-heading)] text-[var(--theme-textLight)]">Browse Artists</h3>
+              <p className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Explore our comprehensive database of rappers from all eras and regions.</p>
             </div>
           </div>
           
           <div className="flex items-start space-x-4">
-            <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg px-[15px]">2</div>
+            <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)] rounded-full w-8 h-8 flex items-center justify-center text-[var(--theme-background)] font-[var(--theme-font-heading)] shadow-lg px-[15px]">2</div>
             <div>
-              <h3 className="font-mogra text-rap-silver">Cast Your Vote</h3>
-              <p className="text-rap-platinum font-merienda">Rate artists based on skills, impact, and your personal preference.</p>
+              <h3 className="font-[var(--theme-font-heading)] text-[var(--theme-textLight)]">Cast Your Vote</h3>
+              <p className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Rate artists based on skills, impact, and your personal preference.</p>
             </div>
           </div>
           
           <div className="flex items-start space-x-4">
-            <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg px-[15px]">3</div>
+            <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)] rounded-full w-8 h-8 flex items-center justify-center text-[var(--theme-background)] font-[var(--theme-font-heading)] shadow-lg px-[15px]">3</div>
             <div>
-              <h3 className="font-mogra text-rap-silver">Watch Rankings</h3>
-              <p className="text-rap-platinum font-merienda">See how your votes contribute to the live, community-driven rankings.</p>
+              <h3 className="font-[var(--theme-font-heading)] text-[var(--theme-textLight)]">Watch Rankings</h3>
+              <p className="text-[var(--theme-text)] font-[var(--theme-font-body)]">See how your votes contribute to the live, community-driven rankings.</p>
             </div>
           </div>
           
           <div className="flex items-start space-x-4">
-            <div className="bg-gradient-to-r from-rap-gold to-rap-gold-light rounded-full w-8 h-8 flex items-center justify-center text-rap-carbon font-mogra shadow-lg px-[15px]">4</div>
+            <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)] rounded-full w-8 h-8 flex items-center justify-center text-[var(--theme-background)] font-[var(--theme-font-heading)] shadow-lg px-[15px]">4</div>
             <div>
-              <h3 className="font-mogra text-rap-silver">Join the Debate</h3>
-              <p className="text-rap-platinum font-merienda">Engage with the community and defend your favorite artists.</p>
+              <h3 className="font-[var(--theme-font-heading)] text-[var(--theme-textLight)]">Join the Debate</h3>
+              <p className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Engage with the community and defend your favorite artists.</p>
             </div>
           </div>
         </div>
-      </CardContent>
-    </Card>;
+      </ThemedCardContent>
+    </ThemedCard>
+  );
 };
+
 export default AboutHowItWorks;

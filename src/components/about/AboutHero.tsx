@@ -15,18 +15,18 @@ const AboutHero = () => {
         />
         <div>
           <h1 
-            className="font-ceviche bg-clip-text text-transparent text-7xl"
+            className="font-[var(--theme-font-display)] bg-clip-text text-transparent text-7xl"
             style={{
               backgroundImage: `linear-gradient(to right, ${theme.colors.primary}, ${theme.colors.primaryLight})`
             }}
           >
             ABOUT SPIT HIERARCHY
           </h1>
-          <p className="text-rap-smoke font-merienda text-sm">The Culture's Voice</p>
+          <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-sm">The Culture's Voice</p>
         </div>
       </div>
       
-      <p className="text-rap-platinum font-merienda text-lg max-w-2xl mx-auto leading-relaxed">
+      <p className="text-[var(--theme-text)] font-[var(--theme-font-body)] text-lg max-w-2xl mx-auto leading-relaxed">
         Welcome to the ultimate destination for ranking and celebrating hip-hop's greatest lyricists. 
         Where the culture decides who truly deserves to be at the top of the game.
       </p>
