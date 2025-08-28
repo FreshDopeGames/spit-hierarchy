@@ -1,8 +1,8 @@
 import React from "react";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedInput } from "@/components/ui/themed-input";
+import { ThemedLabel } from "@/components/ui/themed-label";
+import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -135,9 +135,9 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
               <>
                 {/* Font Size */}
                 <div className="space-y-2">
-                  <Label>Font Size</Label>
+                  <ThemedLabel>Font Size</ThemedLabel>
                   <div className="flex items-center gap-2">
-                    <Input
+                    <ThemedInput
                       type="text"
                       value={typographyConfig?.fontSize || elementConfig?.typography?.fontSize || '1rem'}
                       onChange={(e) => {
@@ -149,7 +149,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                       placeholder="1rem"
                       className="flex-1"
                     />
-                    <Select
+                    <ThemedSelect
                       value={(typographyConfig?.fontSize || elementConfig?.typography?.fontSize || '1rem').includes('rem') ? 'rem' : 
                              (typographyConfig?.fontSize || elementConfig?.typography?.fontSize || '1rem').includes('px') ? 'px' : 'em'}
                       onValueChange={(unit) => {
@@ -161,22 +161,22 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                         updateElementConfig(updates);
                       }}
                     >
-                      <SelectTrigger className="w-20">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="rem">rem</SelectItem>
-                        <SelectItem value="px">px</SelectItem>
-                        <SelectItem value="em">em</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <ThemedSelectTrigger className="w-20">
+                        <ThemedSelectValue />
+                      </ThemedSelectTrigger>
+                      <ThemedSelectContent>
+                        <ThemedSelectItem value="rem">rem</ThemedSelectItem>
+                        <ThemedSelectItem value="px">px</ThemedSelectItem>
+                        <ThemedSelectItem value="em">em</ThemedSelectItem>
+                      </ThemedSelectContent>
+                    </ThemedSelect>
                   </div>
                 </div>
 
                 {/* Font Weight */}
                 <div className="space-y-2">
-                  <Label>Font Weight</Label>
-                  <Select
+                  <ThemedLabel>Font Weight</ThemedLabel>
+                  <ThemedSelect
                     value={typographyConfig?.fontWeight || elementConfig?.typography?.fontWeight || '400'}
                     onValueChange={(value) => {
                       const updates = isTypography 
@@ -185,27 +185,27 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                       updateElementConfig(updates);
                     }}
                   >
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="100">Thin (100)</SelectItem>
-                      <SelectItem value="200">Extra Light (200)</SelectItem>
-                      <SelectItem value="300">Light (300)</SelectItem>
-                      <SelectItem value="400">Regular (400)</SelectItem>
-                      <SelectItem value="500">Medium (500)</SelectItem>
-                      <SelectItem value="600">Semi Bold (600)</SelectItem>
-                      <SelectItem value="700">Bold (700)</SelectItem>
-                      <SelectItem value="800">Extra Bold (800)</SelectItem>
-                      <SelectItem value="900">Black (900)</SelectItem>
-                    </SelectContent>
-                  </Select>
+                    <ThemedSelectTrigger>
+                      <ThemedSelectValue />
+                    </ThemedSelectTrigger>
+                    <ThemedSelectContent>
+                      <ThemedSelectItem value="100">Thin (100)</ThemedSelectItem>
+                      <ThemedSelectItem value="200">Extra Light (200)</ThemedSelectItem>
+                      <ThemedSelectItem value="300">Light (300)</ThemedSelectItem>
+                      <ThemedSelectItem value="400">Regular (400)</ThemedSelectItem>
+                      <ThemedSelectItem value="500">Medium (500)</ThemedSelectItem>
+                      <ThemedSelectItem value="600">Semi Bold (600)</ThemedSelectItem>
+                      <ThemedSelectItem value="700">Bold (700)</ThemedSelectItem>
+                      <ThemedSelectItem value="800">Extra Bold (800)</ThemedSelectItem>
+                      <ThemedSelectItem value="900">Black (900)</ThemedSelectItem>
+                    </ThemedSelectContent>
+                  </ThemedSelect>
                 </div>
 
                 {/* Line Height */}
                 <div className="space-y-2">
-                  <Label>Line Height</Label>
-                  <Input
+                  <ThemedLabel>Line Height</ThemedLabel>
+                  <ThemedInput
                     type="text"
                     value={typographyConfig?.lineHeight || elementConfig?.typography?.lineHeight || '1.5'}
                     onChange={(e) => {
@@ -220,8 +220,8 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
                 {/* Letter Spacing */}
                 <div className="space-y-2">
-                  <Label>Letter Spacing</Label>
-                  <Input
+                  <ThemedLabel>Letter Spacing</ThemedLabel>
+                  <ThemedInput
                     type="text"
                     value={typographyConfig?.letterSpacing || elementConfig?.typography?.letterSpacing || 'normal'}
                     onChange={(e) => {
@@ -237,23 +237,23 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                 {/* Text Transform */}
                 {typographyConfig?.textTransform !== undefined && (
                   <div className="space-y-2">
-                    <Label>Text Transform</Label>
-                    <Select
+                    <ThemedLabel>Text Transform</ThemedLabel>
+                    <ThemedSelect
                       value={typographyConfig.textTransform || 'none'}
                       onValueChange={(value: 'none' | 'uppercase' | 'lowercase' | 'capitalize') => {
                         updateElementConfig({ textTransform: value });
                       }}
                     >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">None</SelectItem>
-                        <SelectItem value="uppercase">Uppercase</SelectItem>
-                        <SelectItem value="lowercase">Lowercase</SelectItem>
-                        <SelectItem value="capitalize">Capitalize</SelectItem>
-                      </SelectContent>
-                    </Select>
+                      <ThemedSelectTrigger>
+                        <ThemedSelectValue />
+                      </ThemedSelectTrigger>
+                      <ThemedSelectContent>
+                        <ThemedSelectItem value="none">None</ThemedSelectItem>
+                        <ThemedSelectItem value="uppercase">Uppercase</ThemedSelectItem>
+                        <ThemedSelectItem value="lowercase">Lowercase</ThemedSelectItem>
+                        <ThemedSelectItem value="capitalize">Capitalize</ThemedSelectItem>
+                      </ThemedSelectContent>
+                    </ThemedSelect>
                   </div>
                 )}
               </>
@@ -266,15 +266,15 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
               <>
                 {/* Background Color */}
                 <div className="space-y-2">
-                  <Label>Background Color</Label>
+                  <ThemedLabel>Background Color</ThemedLabel>
                   <div className="flex gap-2">
-                    <Input
+                    <ThemedInput
                       type="color"
                       value={elementConfig.background && isValidHex(elementConfig.background) ? elementConfig.background : '#000000'}
                       onChange={(e) => updateElementConfig({ background: e.target.value })}
                       className="w-16 h-10 p-1"
                     />
-                    <Input
+                    <ThemedInput
                       type="text"
                       value={elementConfig.background || ''}
                       onChange={(e) => updateElementConfig({ background: e.target.value })}
@@ -286,15 +286,15 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
                 {/* Text Color */}
                 <div className="space-y-2">
-                  <Label>Text Color</Label>
+                  <ThemedLabel>Text Color</ThemedLabel>
                   <div className="flex gap-2">
-                    <Input
+                    <ThemedInput
                       type="color"
                       value={elementConfig.color && isValidHex(elementConfig.color) ? elementConfig.color : '#FFFFFF'}
                       onChange={(e) => updateElementConfig({ color: e.target.value })}
                       className="w-16 h-10 p-1"
                     />
-                    <Input
+                    <ThemedInput
                       type="text"
                       value={elementConfig.color || ''}
                       onChange={(e) => updateElementConfig({ color: e.target.value })}
@@ -307,25 +307,25 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                 {/* Gradient */}
                 {theme.gradients.length > 0 && (
                   <div className="space-y-2">
-                    <Label>Gradient (overrides background)</Label>
-                    <Select
+                    <ThemedLabel>Gradient (overrides background)</ThemedLabel>
+                    <ThemedSelect
                       value={elementConfig.gradient || 'none'}
                       onValueChange={(value) => updateElementConfig({ 
                         gradient: value === 'none' ? undefined : value 
                       })}
                     >
-                      <SelectTrigger>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="none">No Gradient</SelectItem>
+                      <ThemedSelectTrigger>
+                        <ThemedSelectValue />
+                      </ThemedSelectTrigger>
+                      <ThemedSelectContent>
+                        <ThemedSelectItem value="none">No Gradient</ThemedSelectItem>
                         {theme.gradients.map((gradient) => (
-                          <SelectItem key={gradient.id} value={gradient.id}>
+                          <ThemedSelectItem key={gradient.id} value={gradient.id}>
                             {gradient.name}
-                          </SelectItem>
+                          </ThemedSelectItem>
                         ))}
-                      </SelectContent>
-                    </Select>
+                      </ThemedSelectContent>
+                    </ThemedSelect>
                   </div>
                 )}
 
@@ -333,12 +333,12 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
                 {/* Border Controls */}
                 <div className="space-y-4">
-                  <Label className="text-base font-semibold">Border</Label>
+                  <ThemedLabel className="text-base font-semibold">Border</ThemedLabel>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Width</Label>
-                      <Input
+                      <ThemedLabel>Width</ThemedLabel>
+                      <ThemedInput
                         type="text"
                         value={elementConfig.border?.width || '1px'}
                         onChange={(e) => updateElementConfig({
@@ -349,8 +349,8 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                     </div>
                     
                     <div className="space-y-2">
-                      <Label>Style</Label>
-                      <Select
+                      <ThemedLabel>Style</ThemedLabel>
+                      <ThemedSelect
                         value={elementConfig.border?.style || 'solid'}
                         onValueChange={(value: 'solid' | 'dashed' | 'dotted' | 'double' | 'groove' | 'ridge') => 
                           updateElementConfig({
@@ -358,26 +358,26 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                           })
                         }
                       >
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="solid">Solid</SelectItem>
-                          <SelectItem value="dashed">Dashed</SelectItem>
-                          <SelectItem value="dotted">Dotted</SelectItem>
-                          <SelectItem value="double">Double</SelectItem>
-                          <SelectItem value="groove">Groove</SelectItem>
-                          <SelectItem value="ridge">Ridge</SelectItem>
-                        </SelectContent>
-                      </Select>
+                        <ThemedSelectTrigger>
+                          <ThemedSelectValue />
+                        </ThemedSelectTrigger>
+                        <ThemedSelectContent>
+                          <ThemedSelectItem value="solid">Solid</ThemedSelectItem>
+                          <ThemedSelectItem value="dashed">Dashed</ThemedSelectItem>
+                          <ThemedSelectItem value="dotted">Dotted</ThemedSelectItem>
+                          <ThemedSelectItem value="double">Double</ThemedSelectItem>
+                          <ThemedSelectItem value="groove">Groove</ThemedSelectItem>
+                          <ThemedSelectItem value="ridge">Ridge</ThemedSelectItem>
+                        </ThemedSelectContent>
+                      </ThemedSelect>
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Color</Label>
+                      <ThemedLabel>Color</ThemedLabel>
                       <div className="flex gap-2">
-                        <Input
+                        <ThemedInput
                           type="color"
                           value={elementConfig.border?.color && isValidHex(elementConfig.border.color) ? elementConfig.border.color : '#000000'}
                           onChange={(e) => updateElementConfig({
@@ -385,7 +385,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                           })}
                           className="w-12 h-8 p-0"
                         />
-                        <Input
+                        <ThemedInput
                           type="text"
                           value={elementConfig.border?.color || ''}
                           onChange={(e) => updateElementConfig({
@@ -398,8 +398,8 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                     </div>
                     
                     <div className="space-y-2">
-                      <Label>Radius</Label>
-                      <Input
+                      <ThemedLabel>Radius</ThemedLabel>
+                      <ThemedInput
                         type="text"
                         value={elementConfig.border?.radius || '4px'}
                         onChange={(e) => updateElementConfig({
@@ -415,12 +415,12 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
                 {/* Spacing */}
                 <div className="space-y-4">
-                  <Label className="text-base font-semibold">Spacing</Label>
+                  <ThemedLabel className="text-base font-semibold">Spacing</ThemedLabel>
                   
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label>Padding</Label>
-                      <Input
+                      <ThemedLabel>Padding</ThemedLabel>
+                      <ThemedInput
                         type="text"
                         value={elementConfig.padding || ''}
                         onChange={(e) => updateElementConfig({ padding: e.target.value })}
@@ -429,8 +429,8 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                     </div>
                     
                     <div className="space-y-2">
-                      <Label>Margin</Label>
-                      <Input
+                      <ThemedLabel>Margin</ThemedLabel>
+                      <ThemedInput
                         type="text"
                         value={elementConfig.margin || ''}
                         onChange={(e) => updateElementConfig({ margin: e.target.value })}
@@ -442,8 +442,8 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
                 {/* Shadow */}
                 <div className="space-y-2">
-                  <Label>Box Shadow</Label>
-                  <Input
+                  <ThemedLabel>Box Shadow</ThemedLabel>
+                  <ThemedInput
                     type="text"
                     value={elementConfig.shadow || ''}
                     onChange={(e) => updateElementConfig({ shadow: e.target.value })}
