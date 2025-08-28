@@ -85,7 +85,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
   const sortedOptions = [...poll.poll_options].sort((a, b) => a.option_order - b.option_order);
 
   return (
-    <ThemedCard className="w-full bg-gradient-to-r from-[var(--theme-primaryLight)] via-[var(--theme-primary)] to-[var(--theme-primaryDark)] border-[var(--theme-primaryDark)] shadow-[var(--theme-shadow-lg)]">
+    <ThemedCard variant="primary">
       <ThemedCardHeader>
         <ThemedCardTitle className="text-lg font-bold text-[var(--theme-background)]">{poll.title}</ThemedCardTitle>
         {poll.description && (

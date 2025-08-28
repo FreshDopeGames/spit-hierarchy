@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { ImageIcon } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperAvatarUpload } from "@/hooks/useRapperAvatarUpload";

@@ -1,20 +1,38 @@
 
 import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
-const ThemedCard = React.forwardRef<
-  HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn(
-      "rounded-[var(--theme-radius-lg)] border border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)] shadow-[var(--theme-shadow-md)]",
-      className
-    )}
-    {...props}
-  />
-));
+const themedCardVariants = cva(
+  "rounded-[var(--theme-radius-lg)] border shadow-[var(--theme-shadow-md)]",
+  {
+    variants: {
+      variant: {
+        default: "border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)]",
+        gradient: "border-[var(--theme-border)] bg-[var(--theme-element-card-bg)] text-[var(--theme-text)]",
+        primary: "border-[var(--theme-primary)] bg-gradient-to-br from-[var(--theme-primaryLight)] to-[var(--theme-primary)] text-[var(--theme-textLight)]",
+        accent: "border-[var(--theme-accent)] bg-gradient-to-br from-[var(--theme-accentLight)] to-[var(--theme-accent)] text-[var(--theme-textLight)]",
+      },
+    },
+    defaultVariants: {
+      variant: "default",
+    },
+  }
+);
+
+export interface ThemedCardProps
+  extends React.HTMLAttributes<HTMLDivElement>,
+    VariantProps<typeof themedCardVariants> {}
+
+const ThemedCard = React.forwardRef<HTMLDivElement, ThemedCardProps>(
+  ({ className, variant, ...props }, ref) => (
+    <div
+      ref={ref}
+      className={cn(themedCardVariants({ variant }), className)}
+      {...props}
+    />
+  )
+);
 ThemedCard.displayName = "ThemedCard";
 
 const ThemedCardHeader = React.forwardRef<
@@ -83,4 +101,5 @@ export {
   ThemedCardTitle,
   ThemedCardDescription,
   ThemedCardContent,
+  themedCardVariants,
 };

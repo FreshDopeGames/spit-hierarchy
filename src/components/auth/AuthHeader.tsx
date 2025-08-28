@@ -1,5 +1,5 @@
 
-import { CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 
 interface AuthHeaderProps {
   isLogin: boolean;

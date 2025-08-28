@@ -2,7 +2,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Edit, Trash2, Star, Eye } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
 

@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import * as LucideIcons from "lucide-react";
 import { X } from "lucide-react";

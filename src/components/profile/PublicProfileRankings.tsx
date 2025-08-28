@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import { Trophy, Users, Eye } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { PublicProfile, RankingWithItems } from "@/types/publicProfile";
 

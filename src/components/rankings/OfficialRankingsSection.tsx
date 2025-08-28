@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import { Award } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import RankingCard from "./RankingCard";
 import { RankingWithItems } from "@/types/rankings";
 import { transformOfficialRankings } from "@/utils/rankingTransformers";

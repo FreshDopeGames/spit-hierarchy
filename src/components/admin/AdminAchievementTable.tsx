@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Edit, Trash2, Star, Coins } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";

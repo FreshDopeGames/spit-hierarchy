@@ -1,6 +1,6 @@
 
 import { useMemberStatus } from "@/hooks/useMemberStatus";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { TrendingUp, Vote, Trophy, Calendar, MessageCircle } from "lucide-react";
 
 const UserVotingDashboard = () => {

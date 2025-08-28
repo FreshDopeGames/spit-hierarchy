@@ -1,5 +1,5 @@
 
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;

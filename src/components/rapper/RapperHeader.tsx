@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, MapPin, Calendar, Music, Instagram, Twitter } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";

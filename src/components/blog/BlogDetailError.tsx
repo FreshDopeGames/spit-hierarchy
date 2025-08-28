@@ -1,7 +1,7 @@
 
 import { Link } from "react-router-dom";
 import InternalPageHeader from "@/components/InternalPageHeader";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 
 const BlogDetailError = () => {
   return (

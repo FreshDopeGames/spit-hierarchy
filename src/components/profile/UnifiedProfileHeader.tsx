@@ -1,5 +1,5 @@
 import { User, Trophy, Calendar, MapPin, Award, Target, TrendingUp } from "lucide-react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import AvatarDisplay from "@/components/avatar/AvatarDisplay";

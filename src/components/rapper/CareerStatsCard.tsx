@@ -1,4 +1,4 @@
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Disc3, Music, Calendar, Trophy, Building2 } from "lucide-react";
 import { useRapperCareerStats } from "@/hooks/useRapperDiscography";

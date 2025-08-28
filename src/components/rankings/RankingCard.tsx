@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Users, Eye, Star, Calendar, User } from "lucide-react";
 import { UnifiedRanking } from "@/types/rankings";
