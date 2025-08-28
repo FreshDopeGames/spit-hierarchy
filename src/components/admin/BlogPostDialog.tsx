@@ -111,9 +111,9 @@ const BlogPostDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto bg-rap-carbon border border-rap-gold/30">
+      <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-ceviche font-thin text-2xl sm:text-4xl">
+          <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] font-thin text-2xl sm:text-4xl">
             {post ? 'Edit Post' : 'Create New Post'}
           </DialogTitle>
         </DialogHeader>

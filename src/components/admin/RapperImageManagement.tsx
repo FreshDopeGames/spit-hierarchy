@@ -137,10 +137,10 @@ const RapperImageManagement = () => {
     return (
       <div className="space-y-6">
         <div className="animate-pulse">
-          <div className="h-8 bg-rap-carbon-light rounded w-64 mb-4"></div>
+          <div className="h-8 bg-[var(--theme-surface)] rounded w-64 mb-4"></div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {[...Array(6)].map((_, i) => (
-              <div key={i} className="h-32 bg-rap-carbon-light rounded"></div>
+              <div key={i} className="h-32 bg-[var(--theme-surface)] rounded"></div>
             ))}
           </div>
         </div>
@@ -165,9 +165,9 @@ const RapperImageManagement = () => {
       </div>
 
       {/* Rappers Grid for Selected Style */}
-      <Card className="bg-carbon-fiber border-rap-gold/30">
+      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <CardHeader className="pb-4 sm:pb-6">
-          <CardTitle className="text-rap-gold font-mogra flex items-center gap-2 text-lg sm:text-xl">
+          <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
             <Palette className="w-4 h-4 sm:w-5 sm:h-5" />
             <span className="break-words">
               {styleLabels[selectedStyle]} Images ({completionStats[selectedStyle] || 0}/{totalCount || 0})

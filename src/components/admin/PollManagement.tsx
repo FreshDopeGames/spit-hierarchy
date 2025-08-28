@@ -134,7 +134,7 @@ const PollManagement = () => {
 
       <div className="grid gap-4">
         {polls?.map((poll) => (
-          <Card key={poll.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-smoke/30 rounded-lg hover:border-rap-gold/50 transition-colors">
+          <Card key={poll.id} className="bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg hover:border-[var(--theme-primary)]/50 transition-colors">
             <CardHeader className="pb-3">
               <div className="space-y-2">
                 <CardTitle className="text-lg text-[var(--theme-text)] font-[var(--theme-font-heading)]">{poll.title}</CardTitle>
@@ -142,32 +142,32 @@ const PollManagement = () => {
                   {getStatusBadge(poll.status)}
                   {poll.is_featured && <Badge variant="outline" className="border-[var(--theme-primary)] text-[var(--theme-primary)]">Featured</Badge>}
                 </div>
-                <CardDescription className="text-rap-platinum font-[var(--theme-font-body)]">{poll.description}</CardDescription>
+                <CardDescription className="text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">{poll.description}</CardDescription>
               </div>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Type</p>
-                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="text-sm text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
                     {poll.type === 'single_choice' ? 'Single Choice' : 'Multiple Choice'}
                   </p>
                 </div>
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Placement</p>
-                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="text-sm text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
                     {getPlacementText(poll.placement, poll.blog_post_id)}
                   </p>
                 </div>
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Options</p>
-                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="text-sm text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
                     {poll.poll_options.length} options {poll.allow_write_in && '+ write-in'}
                   </p>
                 </div>
                 <div>
                   <p className="font-bold text-base text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-1">Created</p>
-                  <p className="text-sm text-rap-platinum font-[var(--theme-font-body)]">
+                  <p className="text-sm text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
                     {new Date(poll.created_at).toLocaleDateString()}
                   </p>
                 </div>
@@ -176,7 +176,7 @@ const PollManagement = () => {
               <div className="flex flex-col sm:flex-row justify-end gap-2">
                 <Button 
                   size="sm"
-                  className="w-full sm:w-auto bg-rap-gold hover:bg-rap-gold-light text-rap-carbon hover:text-rap-carbon"
+                  className="w-full sm:w-auto bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-[var(--theme-background)]"
                 >
                   <Eye className="h-4 w-4 mr-2" />
                   View Results
@@ -184,7 +184,8 @@ const PollManagement = () => {
                 <Button 
                   size="sm" 
                   onClick={() => handleEdit(poll)}
-                  className="w-full sm:w-auto bg-white hover:bg-gray-100 text-rap-carbon hover:text-rap-carbon"
+                  variant="secondary"
+                  className="w-full sm:w-auto"
                 >
                   <Edit className="h-4 w-4 mr-2" />
                   Edit
@@ -192,7 +193,8 @@ const PollManagement = () => {
                 <Button 
                   size="sm" 
                   onClick={() => handleDelete(poll.id)}
-                  className="w-full sm:w-auto bg-red-600 hover:bg-red-700 text-white hover:text-white"
+                  variant="destructive"
+                  className="w-full sm:w-auto"
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
                   Delete

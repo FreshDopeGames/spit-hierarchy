@@ -101,27 +101,27 @@ const BlogCategoryDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="w-[95vw] max-w-md bg-rap-carbon border border-rap-gold/30 max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-md bg-[var(--theme-surface)] border border-[var(--theme-border)] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-mogra text-lg sm:text-2xl">
+          <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg sm:text-2xl">
             {category ? 'Edit Category' : 'Create New Category'}
           </DialogTitle>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-rap-platinum text-sm sm:text-base">Name *</Label>
+            <Label htmlFor="name" className="text-[var(--theme-text)] text-sm sm:text-base">Name *</Label>
             <Input 
               id="name" 
               value={formData.name} 
               onChange={e => handleNameChange(e.target.value)} 
-              className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10" 
+              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10" 
               required 
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="slug" className="text-rap-platinum text-sm sm:text-base">Slug</Label>
+            <Label htmlFor="slug" className="text-[var(--theme-text)] text-sm sm:text-base">Slug</Label>
             <Input 
               id="slug" 
               value={formData.slug} 
@@ -129,13 +129,13 @@ const BlogCategoryDialog = ({
                 ...prev,
                 slug: e.target.value
               }))} 
-              className="bg-gray-100 border-rap-smoke text-rap-carbon h-11 sm:h-10" 
+              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10" 
               placeholder="auto-generated-from-name" 
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="description" className="text-rap-platinum text-sm sm:text-base">Description</Label>
+            <Label htmlFor="description" className="text-[var(--theme-text)] text-sm sm:text-base">Description</Label>
             <Textarea 
               id="description" 
               value={formData.description} 
@@ -143,7 +143,7 @@ const BlogCategoryDialog = ({
                 ...prev,
                 description: e.target.value
               }))} 
-              className="bg-gray-100 border-rap-smoke text-rap-carbon min-h-[80px]" 
+              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] min-h-[80px]" 
               rows={3} 
             />
           </div>
@@ -152,7 +152,7 @@ const BlogCategoryDialog = ({
             <Button 
               type="submit" 
               disabled={saveCategoryMutation.isPending} 
-              className="bg-rap-gold hover:bg-rap-gold-light text-rap-carbon font-mogra h-11 flex-1 sm:flex-none mx-[10px]"
+              className="bg-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/90 text-[var(--theme-background)] font-[var(--theme-font-heading)] h-11 flex-1 sm:flex-none mx-[10px]"
             >
               {saveCategoryMutation.isPending ? 'Saving...' : category ? 'Update Category' : 'Create Category'}
             </Button>
@@ -160,7 +160,7 @@ const BlogCategoryDialog = ({
               type="button" 
               variant="outline" 
               onClick={() => onOpenChange(false)} 
-              className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold h-11 flex-1 sm:flex-none font-mogra text-base"
+              className="border-[var(--theme-border)] text-[var(--theme-text)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)] h-11 flex-1 sm:flex-none font-[var(--theme-font-heading)] text-base"
             >
               Cancel
             </Button>

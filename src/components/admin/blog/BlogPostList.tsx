@@ -27,10 +27,10 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
   return (
     <div className="space-y-4">
       {posts?.map(post => (
-        <div key={post.id} className="bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border border-rap-smoke/30 rounded-lg p-4 hover:border-rap-gold/50 transition-colors">
+        <div key={post.id} className="bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg p-4 hover:border-[var(--theme-primary)]/50 transition-colors">
           <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
             <div className="flex-1 min-w-0">
-              <h3 className="text-lg font-semibold text-rap-platinum mb-2">{post.title}</h3>
+              <h3 className="text-lg font-semibold text-[var(--theme-text)] mb-2 font-[var(--theme-font-heading)]">{post.title}</h3>
               
               {/* Action buttons - shown below title on mobile, on the right on desktop */}
               <div className="flex gap-2 mb-4 sm:hidden">
@@ -38,7 +38,7 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
                   size="sm"
                   variant="outline"
                   onClick={() => window.open(`/blog/${post.id}`, '_blank')}
-                  className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold"
+                  className="border-[var(--theme-border)] text-[var(--theme-text)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
                 >
                   <Eye className="w-4 h-4" />
                 </Button>
@@ -46,7 +46,7 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
                   size="sm"
                   variant="outline"
                   onClick={() => onEditPost(post)}
-                  className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold"
+                  className="border-[var(--theme-border)] text-[var(--theme-text)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
                 >
                   <Edit className="w-4 h-4" />
                 </Button>

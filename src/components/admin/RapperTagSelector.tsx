@@ -114,7 +114,7 @@ const RapperTagSelector = ({ selectedTags, onTagsChange }: RapperTagSelectorProp
               <Badge
                 key={tag.id}
                 variant="outline"
-                className="cursor-pointer hover:bg-rap-gold/10 border-rap-gold/50 text-rap-platinum hover:text-rap-gold transition-colors"
+                className="cursor-pointer hover:bg-[var(--theme-primary)]/10 border-[var(--theme-primary)]/50 text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors"
                 onClick={() => handleTagToggle(tag.id)}
               >
                 {tag.name}

@@ -27,14 +27,14 @@ const BlogCategoriesTab = ({ onEditCategory, onNewCategory }: BlogCategoriesTabP
   });
 
   return (
-    <Card className="bg-carbon-fiber border border-rap-gold/30">
+    <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
       <CardHeader>
-        <CardTitle className="text-rap-platinum font-mogra mb-4 text-center text-2xl">Categories</CardTitle>
+        <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-4 text-center text-2xl">Categories</CardTitle>
         <div className="flex justify-between items-center">
           <div className="flex-1"></div>
           <Button 
             onClick={onNewCategory} 
-            className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-dark font-mogra"
+            className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90 font-[var(--theme-font-heading)]"
           >
             <Plus className="w-4 h-4 mr-2" />
             New Category

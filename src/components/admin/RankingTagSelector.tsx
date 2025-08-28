@@ -89,7 +89,7 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
       {/* Selected Tags */}
       {selectedTagObjects.length > 0 && (
         <div>
-          <Label className="text-rap-platinum font-kaushan text-sm">
+          <Label className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-sm">
             Selected Tags
           </Label>
           <div className="flex flex-wrap gap-2 mt-2">
@@ -97,14 +97,14 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
               <Badge
                 key={tag.id}
                 variant="outline"
-                className="text-rap-platinum border-rap-gold/30 bg-rap-gold/10 text-xs sm:text-sm h-8 sm:h-6 px-2 sm:px-3"
+                className="text-[var(--theme-text)] border-[var(--theme-primary)]/30 bg-[var(--theme-primary)]/10 text-xs sm:text-sm h-8 sm:h-6 px-2 sm:px-3"
                 style={{ borderColor: tag.color }}
               >
                 <span className="truncate max-w-[120px] sm:max-w-none">{tag.name}</span>
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="ml-1 h-auto p-0 text-rap-platinum hover:text-red-400 min-w-[16px]"
+                  className="ml-1 h-auto p-0 text-[var(--theme-text)] hover:text-[var(--theme-destructive)] min-w-[16px]"
                   onClick={() => handleTagToggle(tag.id)}
                 >
                   <X className="w-3 h-3" />
@@ -117,7 +117,7 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
 
       {/* Available Tags */}
       <div>
-        <Label className="text-rap-platinum font-kaushan text-sm">
+        <Label className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-sm">
           Available Tags
         </Label>
         <div className="flex flex-wrap gap-2 mt-2">
@@ -125,7 +125,7 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
             <Badge
               key={tag.id}
               variant="outline"
-              className="cursor-pointer text-rap-platinum border-rap-smoke/30 hover:border-rap-gold/50 hover:bg-rap-gold/10 transition-colors text-xs sm:text-sm h-8 sm:h-6 px-2 sm:px-3"
+              className="cursor-pointer text-[var(--theme-text)] border-[var(--theme-border)] hover:border-[var(--theme-primary)]/50 hover:bg-[var(--theme-primary)]/10 transition-colors text-xs sm:text-sm h-8 sm:h-6 px-2 sm:px-3"
               style={{ borderColor: tag.color }}
               onClick={() => handleTagToggle(tag.id)}
             >
@@ -142,7 +142,7 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
             variant="outline"
             size="sm"
             onClick={() => setIsCreating(true)}
-            className="border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/20 h-10 sm:h-9 w-full sm:w-auto"
+            className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 h-10 sm:h-9 w-full sm:w-auto"
           >
             <Plus className="w-4 h-4 mr-2" />
             Create New Tag
@@ -150,14 +150,14 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
         ) : (
           <div className="space-y-3">
             <div>
-              <Label className="text-rap-platinum font-kaushan text-sm">
+              <Label className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-sm">
                 New Tag Name
               </Label>
               <Input
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
                 placeholder="Enter tag name"
-                className="bg-rap-carbon border-rap-gold/30 text-rap-platinum h-11 sm:h-10 mt-1"
+                className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10 mt-1"
                 onKeyPress={(e) => e.key === 'Enter' && handleCreateTag()}
               />
             </div>
@@ -165,7 +165,7 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
               <Button
                 onClick={handleCreateTag}
                 disabled={!newTagName.trim() || createTagMutation.isPending}
-                className="bg-rap-gold text-rap-carbon hover:bg-rap-gold-light h-10 flex-1 sm:flex-none"
+                className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90 h-10 flex-1 sm:flex-none"
               >
                 Create
               </Button>
@@ -175,7 +175,7 @@ const RankingTagSelector = ({ selectedTags, onTagsChange }: RankingTagSelectorPr
                   setIsCreating(false);
                   setNewTagName("");
                 }}
-                className="border-rap-gold/30 text-rap-platinum h-10 flex-1 sm:flex-none"
+                className="border-[var(--theme-border)] text-[var(--theme-text)] h-10 flex-1 sm:flex-none"
               >
                 Cancel
               </Button>

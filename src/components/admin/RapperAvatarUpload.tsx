@@ -30,13 +30,13 @@ const RapperAvatarUpload = ({ rapper }: RapperAvatarUploadProps) => {
     : rapper;
 
   return (
-    <Card className="bg-carbon-fiber border border-rap-gold/30">
+    <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
       <CardHeader className="pb-4">
-        <CardTitle className="text-rap-gold font-ceviche text-lg font-normal flex items-center gap-2">
+        <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg font-normal flex items-center gap-2">
           <ImageIcon className="w-5 h-5" />
           Avatar Upload
           {newImageUrl && (
-            <span className="text-sm text-green-400 font-normal">✓ Updated</span>
+            <span className="text-sm text-[var(--theme-accent)] font-normal">✓ Updated</span>
           )}
         </CardTitle>
       </CardHeader>

@@ -56,8 +56,8 @@ const PlaceholderImageUpload = () => {
 
   return (
     <div className="space-y-4 p-4 border rounded-lg">
-      <h3 className="text-lg font-semibold">Upload Placeholder Image</h3>
-      <p className="text-sm text-gray-600">
+      <h3 className="text-lg font-semibold text-[var(--theme-text)] font-[var(--theme-font-heading)]">Upload Placeholder Image</h3>
+      <p className="text-sm text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
         Upload the "Spit Hierarchy" logo to use as the default placeholder image.
       </p>
       
@@ -77,7 +77,7 @@ const PlaceholderImageUpload = () => {
         </Button>
       </div>
 
-      <div className="text-xs text-gray-500">
+      <div className="text-xs text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
         <p>Once uploaded, copy the URL from the success message and update the PLACEHOLDER_IMAGE constant.</p>
       </div>
     </div>
