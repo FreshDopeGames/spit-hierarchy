@@ -79,25 +79,25 @@ const EnhancedThemeManagement = () => {
         </div>
         
         <div className="flex items-center gap-2">
-          {hasUnsavedChanges && (
-            <>
-              <Button
-                variant="outline"
-                onClick={handleExitPreview}
-                className="flex items-center gap-2"
-              >
-                <EyeOff className="w-4 h-4" />
-                Exit Preview
-              </Button>
-              <Button
-                onClick={handleApplyTheme}
-                className="flex items-center gap-2"
-              >
-                <Save className="w-4 h-4" />
-                Apply Changes
-              </Button>
-            </>
+          {isPreviewMode && (
+            <Button
+              variant="outline"
+              onClick={handleExitPreview}
+              className="flex items-center gap-2"
+            >
+              <EyeOff className="w-4 h-4" />
+              Exit Preview
+            </Button>
           )}
+          <Button
+            onClick={handleApplyTheme}
+            disabled={!hasUnsavedChanges}
+            className="flex items-center gap-2"
+            title={hasUnsavedChanges ? "Apply theme changes" : "No changes to apply"}
+          >
+            <Save className="w-4 h-4" />
+            {hasUnsavedChanges ? "Apply Changes" : "No Changes"}
+          </Button>
           <Button
             variant="outline"
             onClick={handleResetTheme}
