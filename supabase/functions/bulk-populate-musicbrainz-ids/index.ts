@@ -28,9 +28,6 @@ serve(async (req) => {
 
   try {
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
-    const supabaseAnon = createClient(supabaseUrl, supabaseAnonKey, {
-      auth: { autoRefreshToken: false, persistSession: false },
-    });
 
     // Verify admin access
     const authHeader = req.headers.get('authorization');
@@ -39,18 +36,38 @@ serve(async (req) => {
     }
 
     const token = authHeader.replace('Bearer ', '');
-    const { data: { user } } = await supabaseAnon.auth.getUser(token);
+    
+    // Create authenticated client with the user's token
+    const supabaseAuth = createClient(supabaseUrl, supabaseAnonKey, {
+      auth: { autoRefreshToken: false, persistSession: false },
+      global: {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      }
+    });
+
+    const { data: { user }, error: userError } = await supabaseAuth.auth.getUser(token);
     userId = user?.id || null;
 
-    if (!userId) {
+    if (userError || !userId) {
+      console.error('Authentication error:', userError);
       return json({ success: false, error: 'Invalid authentication' }, 401);
     }
 
-    // Check if user is admin
-    const { data: isAdmin } = await supabaseAnon.rpc('is_admin');
+    // Check if user is admin using the authenticated client
+    const { data: isAdmin, error: adminError } = await supabaseAuth.rpc('is_admin');
+    if (adminError) {
+      console.error('Admin check error:', adminError);
+      return json({ success: false, error: 'Failed to verify admin status' }, 500);
+    }
+    
     if (!isAdmin) {
+      console.log(`User ${userId} is not an admin`);
       return json({ success: false, error: 'Admin access required' }, 403);
     }
+
+    console.log(`Admin user ${userId} authenticated successfully`);
 
     const body = await req.json().catch(() => ({}));
     const { batchSize = 10, startFromIndex = 0 } = body as { batchSize?: number; startFromIndex?: number };
