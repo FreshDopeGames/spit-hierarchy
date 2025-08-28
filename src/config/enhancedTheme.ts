@@ -331,19 +331,55 @@ export const gradientToCSS = (gradient: GradientConfig): string => {
   }
 };
 
-// Apply enhanced theme to DOM
+// Storage and initialization
+export const ENHANCED_THEME_STORAGE_KEY = 'spit-hierarchy-enhanced-theme';
+
+// Get current enhanced theme from localStorage or default
+export const getCurrentEnhancedTheme = (): EnhancedThemeConfig => {
+  if (typeof window === 'undefined') return defaultEnhancedTheme;
+  
+  try {
+    const stored = localStorage.getItem(ENHANCED_THEME_STORAGE_KEY);
+    if (stored) {
+      return { ...defaultEnhancedTheme, ...JSON.parse(stored) };
+    }
+  } catch (error) {
+    console.error('Error loading enhanced theme from storage:', error);
+  }
+  
+  return defaultEnhancedTheme;
+};
+
+// Save enhanced theme to localStorage
+export const saveEnhancedTheme = (theme: Partial<EnhancedThemeConfig>): void => {
+  try {
+    const currentTheme = getCurrentEnhancedTheme();
+    const newTheme = { ...currentTheme, ...theme };
+    localStorage.setItem(ENHANCED_THEME_STORAGE_KEY, JSON.stringify(newTheme));
+  } catch (error) {
+    console.error('Error saving enhanced theme to storage:', error);
+  }
+};
+
+// Apply enhanced theme to DOM (includes ALL basic theme variables)
 export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
   if (typeof document === 'undefined') return;
   
   const root = document.documentElement;
   
-  // Apply color variables
+  // First, apply all basic theme variables to ensure compatibility
+  // This ensures components using --theme-* variables always work
   Object.entries(theme.colors).forEach(([key, value]) => {
     const hslValue = value.startsWith('#') ? hexToHsl(value) : value;
     root.style.setProperty(`--theme-${key}`, hslValue);
     
-    if (key === 'primary') root.style.setProperty('--primary', hslValue);
-    if (key === 'background') root.style.setProperty('--background', hslValue);
+    // Also set standard shadcn variables to ensure UI components use theme colors
+    if (key === 'primary') {
+      root.style.setProperty('--primary', hslValue);
+    }
+    if (key === 'background') {
+      root.style.setProperty('--background', hslValue);
+    }
     if (key === 'surface') {
       root.style.setProperty('--muted', hslValue);
       // Override popover background with surface color for dropdowns
@@ -357,24 +393,26 @@ export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
     }
   });
   
-  // Apply font variables
+  // Apply enhanced theme-specific variables
+  // Fonts (basic compatibility)
   Object.entries(theme.fonts).forEach(([key, value]) => {
     root.style.setProperty(`--theme-font-${key}`, value);
+    root.style.setProperty(`--enhanced-font-${key}`, value);
   });
   
-  // Apply typography variables
+  // Typography configurations
   Object.entries(theme.typography).forEach(([element, config]) => {
     Object.entries(config).forEach(([property, value]) => {
       root.style.setProperty(`--theme-typography-${element}-${property}`, value);
     });
   });
   
-  // Apply gradient variables
+  // Gradients
   theme.gradients.forEach(gradient => {
     root.style.setProperty(`--theme-gradient-${gradient.id}`, gradientToCSS(gradient));
   });
   
-  // Apply element variables
+  // Element configurations
   Object.entries(theme.elements).forEach(([elementType, configs]) => {
     if (typeof configs === 'object' && 'default' in configs) {
       // Button-style element with variants
@@ -387,17 +425,22 @@ export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
     }
   });
   
-  // Apply other variables
+  // Spacing (basic compatibility)
   Object.entries(theme.spacing).forEach(([key, value]) => {
     root.style.setProperty(`--theme-spacing-${key}`, value);
+    root.style.setProperty(`--enhanced-spacing-${key}`, value);
   });
   
+  // Border radius (basic compatibility)
   Object.entries(theme.borderRadius).forEach(([key, value]) => {
     root.style.setProperty(`--theme-radius-${key}`, value);
+    root.style.setProperty(`--enhanced-radius-${key}`, value);
   });
   
+  // Shadows (basic compatibility)
   Object.entries(theme.shadows).forEach(([key, value]) => {
     root.style.setProperty(`--theme-shadow-${key}`, value);
+    root.style.setProperty(`--enhanced-shadow-${key}`, value);
   });
 };
 

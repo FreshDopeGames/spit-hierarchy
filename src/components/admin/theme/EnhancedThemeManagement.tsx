@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Palette, Type, Wand2, Layout, Save, RotateCcw, Eye, EyeOff } from "lucide-react";
-import { EnhancedThemeConfig, defaultEnhancedTheme, applyEnhancedThemeToDOM } from "@/config/enhancedTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import EnhancedThemePreview from "./EnhancedThemePreview";
 import ColorPaletteTab from "./ColorPaletteTab";
 import TypographyTab from "./TypographyTab";
@@ -11,33 +11,25 @@ import ElementCustomizer from "./ElementCustomizer";
 import { toast } from "sonner";
 
 const EnhancedThemeManagement = () => {
-  const [theme, setTheme] = useState<EnhancedThemeConfig>(defaultEnhancedTheme);
-  const [previewTheme, setPreviewTheme] = useState<EnhancedThemeConfig | null>(null);
-  const [isPreviewMode, setIsPreviewMode] = useState(false);
   const [selectedElement, setSelectedElement] = useState<string | null>(null);
   const [selectedGradient, setSelectedGradient] = useState<string | null>(null);
-  // Toast notifications handled by sonner
+  
+  const {
+    theme,
+    previewTheme,
+    isPreviewMode,
+    hasUnsavedChanges,
+    updateTheme,
+    applyTheme,
+    resetTheme,
+    enterPreviewMode,
+    exitPreviewMode
+  } = useEnhancedTheme();
 
   const currentTheme = previewTheme || theme;
 
-  const handleThemeUpdate = (updates: Partial<EnhancedThemeConfig>) => {
-    const newTheme = {
-      ...currentTheme,
-      colors: { ...currentTheme.colors, ...updates.colors },
-      fonts: { ...currentTheme.fonts, ...updates.fonts },
-      typography: { ...currentTheme.typography, ...updates.typography },
-      gradients: updates.gradients || currentTheme.gradients,
-      elements: { ...currentTheme.elements, ...updates.elements },
-      ...updates
-    };
-
-    setPreviewTheme(newTheme);
-    setIsPreviewMode(true);
-    applyEnhancedThemeToDOM(newTheme);
-  };
-
   const handleColorChange = (colorKey: string, value: string) => {
-    handleThemeUpdate({
+    updateTheme({
       colors: {
         ...currentTheme.colors,
         [colorKey]: value
@@ -46,7 +38,7 @@ const EnhancedThemeManagement = () => {
   };
 
   const handleFontChange = (fontKey: string, value: string) => {
-    handleThemeUpdate({
+    updateTheme({
       fonts: {
         ...currentTheme.fonts,
         [fontKey]: value
@@ -55,45 +47,23 @@ const EnhancedThemeManagement = () => {
   };
 
   const handleGradientChange = (gradients: any[]) => {
-    handleThemeUpdate({ gradients });
+    updateTheme({ gradients });
   };
 
   const handleApplyTheme = () => {
-    if (previewTheme) {
-      setTheme(previewTheme);
-      // Save to localStorage
-      try {
-        localStorage.setItem('enhanced-theme', JSON.stringify(previewTheme));
-      } catch (error) {
-        console.error('Error saving theme:', error);
-      }
-      setPreviewTheme(null);
-      setIsPreviewMode(false);
-      toast.success("Theme changes have been saved successfully.");
-    }
+    applyTheme();
+    toast.success("Theme changes have been saved successfully.");
   };
 
   const handleResetTheme = () => {
-    setTheme(defaultEnhancedTheme);
-    setPreviewTheme(null);
-    setIsPreviewMode(false);
-    applyEnhancedThemeToDOM(defaultEnhancedTheme);
-    try {
-      localStorage.removeItem('enhanced-theme');
-    } catch (error) {
-      console.error('Error removing theme:', error);
-    }
+    resetTheme();
     toast.success("Theme has been reset to default settings.");
   };
 
   const handleExitPreview = () => {
-    setPreviewTheme(null);
-    setIsPreviewMode(false);
-    applyEnhancedThemeToDOM(theme);
+    exitPreviewMode();
     toast.info("Returned to saved theme settings.");
   };
-
-  const hasUnsavedChanges = isPreviewMode && previewTheme !== null;
 
   return (
     <div className="space-y-6">
@@ -220,7 +190,7 @@ const EnhancedThemeManagement = () => {
               <ElementCustomizer
                 selectedElement={selectedElement}
                 theme={currentTheme}
-                onThemeUpdate={handleThemeUpdate}
+                onThemeUpdate={updateTheme}
               />
             </div>
           </TabsContent>

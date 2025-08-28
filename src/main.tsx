@@ -5,8 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { HelmetProvider } from 'react-helmet-async';
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "@/hooks/useTheme";
+import { EnhancedThemeProvider } from "@/hooks/useEnhancedTheme";
 import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
+import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
 import PerformanceMonitor from "@/components/performance/PerformanceMonitor";
 import App from "./App.tsx";
@@ -40,14 +42,18 @@ createRoot(document.getElementById("root")!).render(
       <ContentSecurityPolicy />
       <PerformanceMonitor />
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider>
-          <SecureAuthProvider>
-            <SecurityProvider>
-              <App />
-              <Toaster />
-            </SecurityProvider>
-          </SecureAuthProvider>
-        </ThemeProvider>
+        <EnhancedThemeProvider>
+          <ThemeProvider>
+            <SecureAuthProvider>
+              <SecurityProvider>
+                <AchievementProvider>
+                  <App />
+                  <Toaster />
+                </AchievementProvider>
+              </SecurityProvider>
+            </SecureAuthProvider>
+          </ThemeProvider>
+        </EnhancedThemeProvider>
       </QueryClientProvider>
     </HelmetProvider>
   </StrictMode>
