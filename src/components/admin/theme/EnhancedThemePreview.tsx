@@ -5,6 +5,7 @@ import { ThemedInput } from "@/components/ui/themed-input";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedThemeConfig } from "@/config/enhancedTheme";
 import { cn } from "@/lib/utils";
+import { Menu, User, Home, Trophy, Users, BarChart3 } from "lucide-react";
 
 interface EnhancedThemePreviewProps {
   theme: EnhancedThemeConfig;
@@ -39,6 +40,93 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
         </p>
       </ThemedCardHeader>
       <ThemedCardContent className="space-y-8">
+        {/* Global Header Section */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-[var(--theme-primary)] mb-4">Global Header</h3>
+          <div
+            className="flex items-center justify-between transition-all duration-200"
+            style={{
+              background: theme.elements.global_header.background,
+              color: theme.elements.global_header.color,
+              border: `${theme.elements.global_header.border?.width} ${theme.elements.global_header.border?.style} ${theme.elements.global_header.border?.color}`,
+              borderRadius: theme.elements.global_header.border?.radius,
+              padding: theme.elements.global_header.padding || '1rem 2rem',
+              ...getElementStyle('global_header')
+            }}
+            onClick={(e) => handleElementClick('global_header', e)}
+          >
+            {/* Logo */}
+            <div className="flex items-center space-x-2">
+              <div
+                className="w-8 h-8 rounded font-bold text-sm flex items-center justify-center"
+                style={{ background: theme.colors.primary, color: theme.colors.background }}
+              >
+                RL
+              </div>
+              <span className="text-xl font-[var(--theme-font-heading)] font-bold">RapperLegends</span>
+            </div>
+
+            {/* Mobile Menu & User Actions */}
+            <div className="flex items-center space-x-4">
+              <button
+                className="p-2 rounded-lg transition-opacity hover:opacity-80 lg:hidden"
+                style={{ background: `${theme.colors.primary}20` }}
+              >
+                <Menu size={20} />
+              </button>
+              <button
+                className="px-4 py-2 rounded-lg transition-opacity hover:opacity-80 text-sm font-medium"
+                style={{ 
+                  background: theme.colors.primary, 
+                  color: theme.colors.background 
+                }}
+              >
+                Sign In
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation Section */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-[var(--theme-primary)] mb-4">Navigation</h3>
+          <div
+            className="transition-all duration-200"
+            style={{
+              background: theme.elements.navigation.background,
+              color: theme.elements.navigation.color,
+              border: `${theme.elements.navigation.border?.width} ${theme.elements.navigation.border?.style} ${theme.elements.navigation.border?.color}`,
+              borderRadius: theme.elements.navigation.border?.radius,
+              padding: theme.elements.navigation.padding,
+              ...getElementStyle('navigation')
+            }}
+            onClick={(e) => handleElementClick('navigation', e)}
+          >
+            <nav className="flex flex-wrap gap-6">
+              <a href="#" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <Home size={18} />
+                <span>Home</span>
+              </a>
+              <a href="#" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <Trophy size={18} />
+                <span>Rankings</span>
+              </a>
+              <a href="#" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <Users size={18} />
+                <span>All Rappers</span>
+              </a>
+              <a href="#" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <BarChart3 size={18} />
+                <span>Analytics</span>
+              </a>
+              <a href="#" className="flex items-center space-x-2 hover:opacity-80 transition-opacity">
+                <User size={18} />
+                <span>Profile</span>
+              </a>
+            </nav>
+          </div>
+        </div>
+
         {/* Typography Section */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-[var(--theme-primary)] mb-4">Typography</h3>
@@ -307,6 +395,49 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
               >
                 Confirm
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Footer Section */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-[var(--theme-primary)] mb-4">Footer</h3>
+          <div
+            className="transition-all duration-200"
+            style={{
+              background: theme.elements.footer.background,
+              color: theme.elements.footer.color,
+              border: `${theme.elements.footer.border?.width} ${theme.elements.footer.border?.style} ${theme.elements.footer.border?.color}`,
+              borderRadius: theme.elements.footer.border?.radius,
+              padding: theme.elements.footer.padding,
+              ...getElementStyle('footer')
+            }}
+            onClick={(e) => handleElementClick('footer', e)}
+          >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div>
+                <h4 className="font-semibold mb-3 font-[var(--theme-font-heading)]">RapperLegends</h4>
+                <p className="text-sm opacity-80">The ultimate destination for ranking your favorite rap artists.</p>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3 font-[var(--theme-font-heading)]">Quick Links</h4>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="#" className="hover:opacity-80 transition-opacity">About</a></li>
+                  <li><a href="#" className="hover:opacity-80 transition-opacity">Privacy Policy</a></li>
+                  <li><a href="#" className="hover:opacity-80 transition-opacity">Terms of Use</a></li>
+                </ul>
+              </div>
+              <div>
+                <h4 className="font-semibold mb-3 font-[var(--theme-font-heading)]">Community</h4>
+                <ul className="space-y-2 text-sm">
+                  <li><a href="#" className="hover:opacity-80 transition-opacity">Rankings</a></li>
+                  <li><a href="#" className="hover:opacity-80 transition-opacity">All Rappers</a></li>
+                  <li><a href="#" className="hover:opacity-80 transition-opacity">VS Matches</a></li>
+                </ul>
+              </div>
+            </div>
+            <div className="mt-6 pt-6 border-t text-center text-sm opacity-60" style={{ borderColor: theme.colors.border }}>
+              © 2024 RapperLegends. All rights reserved.
             </div>
           </div>
         </div>
