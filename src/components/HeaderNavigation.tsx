@@ -23,7 +23,7 @@ const HeaderNavigation = ({
   const isLoading = authLoading || (user && profileLoading) || securityLoading;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--theme-element-global_header-bg)] border-b border-[var(--theme-primary)] transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--theme-backgroundDark)] border-b border-[var(--theme-primary)] transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Left: Hamburger Menu using NavigationSidebar */}
