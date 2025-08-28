@@ -152,9 +152,9 @@ const EnhancedThemeManagement = () => {
         </div>
       )}
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
         {/* Main Controls */}
-        <div className="xl:col-span-2 space-y-6">
+        <div className="space-y-6">
           <Tabs defaultValue="colors" className="space-y-4">
             <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-5 p-2 gap-1 rounded-lg">
               <TabsTrigger 
@@ -236,12 +236,12 @@ const EnhancedThemeManagement = () => {
           </Tabs>
         </div>
 
-        {/* Element Customizer Sidebar */}
+        {/* Preview Sidebar */}
         <div className="space-y-6">
-          <ElementCustomizer
-            selectedElement={selectedElement}
+          <EnhancedThemePreview
             theme={currentTheme}
-            onThemeUpdate={handleThemeUpdate}
+            selectedElement={selectedElement}
+            onElementSelect={setSelectedElement}
           />
         </div>
       </div>
