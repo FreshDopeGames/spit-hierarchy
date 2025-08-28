@@ -31,26 +31,26 @@ const AdminAchievementDeleteDialog = ({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-[var(--theme-background)] border border-red-500/50">
+      <AlertDialogContent className="bg-theme-background border border-theme-error/50">
         <AlertDialogHeader>
-          <AlertDialogTitle className="text-[var(--theme-text)] font-[var(--theme-font-heading)]">
+          <AlertDialogTitle className="text-theme-text font-[var(--theme-font-heading)]">
             Delete Achievement
           </AlertDialogTitle>
-          <AlertDialogDescription className="text-[var(--theme-textMuted)]">
+          <AlertDialogDescription className="text-theme-textMuted">
             Are you sure you want to delete the achievement "{achievement.name}"? 
             This action cannot be undone and will affect all users who have earned this achievement.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel 
-            className="bg-[var(--theme-surface)] border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-background)]"
+            className="bg-theme-surface border-theme-border text-theme-text hover:bg-theme-background"
             disabled={isDeleting}
           >
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction 
             onClick={onConfirm}
-            className="bg-red-600 hover:bg-red-700 text-[var(--theme-textInverted)]"
+            className="bg-theme-error hover:bg-theme-errorDark text-theme-white"
             disabled={isDeleting}
           >
             {isDeleting ? "Deleting..." : "Delete Achievement"}

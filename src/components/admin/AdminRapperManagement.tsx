@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { ThemedInput as Input } from "@/components/ui/themed-input";
+import { ThemedLabel as Label } from "@/components/ui/themed-label";
 import { Users } from "lucide-react";
 import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
@@ -126,22 +126,22 @@ const AdminRapperManagement = () => {
 
   return <div className="space-y-6">
       <AdminTabHeader title="Rapper Management" icon={Users} description="Add, edit, and manage rapper profiles and information">
-        <button onClick={handleNewRapper} className="bg-[var(--theme-primary)] text-[var(--theme-background)] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity">
+        <button onClick={handleNewRapper} className="bg-theme-primary text-theme-background px-4 py-2 rounded-lg hover:bg-theme-primaryDark transition-colors">
           Add New Rapper
         </button>
       </AdminTabHeader>
 
-      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
+      <Card className="bg-theme-surface border border-theme-border">
         <CardContent className="p-6">
           <div className="mb-4">
-            <Label htmlFor="search" className="text-[var(--theme-text)] font-bold">
+            <Label htmlFor="search" className="text-theme-text font-bold">
               Search Rappers:
             </Label>
-            <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]" />
+            <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1" />
           </div>
 
           {isLoading ? <div className="text-center py-8">
-              <div className="text-[var(--theme-text)]">Loading rappers...</div>
+              <div className="text-theme-text">Loading rappers...</div>
             </div> : <AdminRapperTable rappers={rappers?.data || []} isLoading={isLoading} onEdit={handleEdit} onDelete={handleDelete} />}
         </CardContent>
       </Card>

@@ -22,10 +22,10 @@ interface AchievementTableProps {
 }
 
 const rarityColors = {
-  common: "bg-gray-500",
-  rare: "bg-blue-500",
-  epic: "bg-rap-gold", 
-  legendary: "bg-indigo-600"
+  common: "bg-theme-neutral",
+  rare: "bg-theme-info",
+  epic: "bg-theme-primary", 
+  legendary: "bg-theme-secondary"
 };
 
 const AchievementTable = ({ achievements, showProgress = true }: AchievementTableProps) => {
@@ -39,37 +39,37 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
           return (
             <div 
               key={achievement.id} 
-              className={`bg-gray-900 border border-rap-gold/30 rounded-lg p-4 ${
+              className={`bg-theme-surface border border-theme-border rounded-lg p-4 ${
                 achievement.is_earned ? 'opacity-100' : 'opacity-60'
               }`}
             >
               <div className="flex items-start space-x-3 mb-3">
                 <div className={`w-10 h-10 rounded-lg ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg flex-shrink-0`}>
-                  <IconComponent className="w-5 h-5 text-white" />
+                  <IconComponent className="w-5 h-5 text-theme-white" />
                 </div>
                 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-start justify-between mb-2">
-                    <h4 className="font-bold text-rap-gold text-sm truncate pr-2">{achievement.name}</h4>
+                    <h4 className="font-bold text-theme-primary text-sm truncate pr-2">{achievement.name}</h4>
                     <Badge 
                       variant="secondary" 
-                      className={`${rarityColors[achievement.rarity]} text-white text-xs capitalize flex-shrink-0`}
+                      className={`${rarityColors[achievement.rarity]} text-theme-white text-xs capitalize flex-shrink-0`}
                     >
                       {achievement.rarity}
                     </Badge>
                   </div>
                   
-                  <p className="text-rap-platinum text-xs mb-2 line-clamp-2">{achievement.description}</p>
+                  <p className="text-theme-text text-xs mb-2 line-clamp-2">{achievement.description}</p>
                   
                   <div className="flex items-center justify-between text-xs">
-                    <span className="text-rap-silver">{achievement.points} pts</span>
+                    <span className="text-theme-textMuted">{achievement.points} pts</span>
                     {achievement.is_earned ? (
-                      <span className="text-rap-gold font-medium">
+                      <span className="text-theme-success font-medium">
                         ✓ Earned
                       </span>
                     ) : (
                       showProgress && (
-                        <span className="text-rap-silver">
+                        <span className="text-theme-textMuted">
                           {Math.round(achievement.progress_percentage)}%
                         </span>
                       )
@@ -80,7 +80,7 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
                     <div className="mt-2">
                       <Progress 
                         value={achievement.progress_percentage} 
-                        className="h-1.5 bg-gray-800"
+                        className="h-1.5 bg-theme-surface"
                       />
                     </div>
                   )}
@@ -95,13 +95,13 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
       <div className="hidden lg:block overflow-x-auto">
         <table className="w-full">
           <thead>
-            <tr className="border-b border-rap-gold/30">
-              <th className="text-left py-3 px-4 text-rap-gold font-medium">Achievement</th>
-              <th className="text-left py-3 px-4 text-rap-gold font-medium">Description</th>
-              <th className="text-center py-3 px-4 text-rap-gold font-medium">Rarity</th>
-              <th className="text-center py-3 px-4 text-rap-gold font-medium">Points</th>
-              <th className="text-center py-3 px-4 text-rap-gold font-medium">Status</th>
-              {showProgress && <th className="text-center py-3 px-4 text-rap-gold font-medium">Progress</th>}
+            <tr className="border-b border-theme-border">
+              <th className="text-left py-3 px-4 text-theme-primary font-medium">Achievement</th>
+              <th className="text-left py-3 px-4 text-theme-primary font-medium">Description</th>
+              <th className="text-center py-3 px-4 text-theme-primary font-medium">Rarity</th>
+              <th className="text-center py-3 px-4 text-theme-primary font-medium">Points</th>
+              <th className="text-center py-3 px-4 text-theme-primary font-medium">Status</th>
+              {showProgress && <th className="text-center py-3 px-4 text-theme-primary font-medium">Progress</th>}
             </tr>
           </thead>
           <tbody>
@@ -111,35 +111,35 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
               return (
                 <tr 
                   key={achievement.id} 
-                  className={`border-b border-rap-gold/10 ${achievement.is_earned ? 'opacity-100' : 'opacity-60'}`}
+                  className={`border-b border-theme-border/30 ${achievement.is_earned ? 'opacity-100' : 'opacity-60'}`}
                 >
                   <td className="py-4 px-4">
                     <div className="flex items-center space-x-3">
                       <div className={`w-8 h-8 rounded ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg`}>
-                        <IconComponent className="w-4 h-4 text-white" />
+                        <IconComponent className="w-4 h-4 text-theme-white" />
                       </div>
-                      <span className="font-medium text-rap-platinum">{achievement.name}</span>
+                      <span className="font-medium text-theme-text">{achievement.name}</span>
                     </div>
                   </td>
-                  <td className="py-4 px-4 text-rap-silver text-sm max-w-xs">
+                  <td className="py-4 px-4 text-theme-textMuted text-sm max-w-xs">
                     {achievement.description}
                   </td>
                   <td className="py-4 px-4 text-center">
                     <Badge 
                       variant="secondary" 
-                      className={`${rarityColors[achievement.rarity]} text-white text-xs capitalize`}
+                      className={`${rarityColors[achievement.rarity]} text-theme-white text-xs capitalize`}
                     >
                       {achievement.rarity}
                     </Badge>
                   </td>
-                  <td className="py-4 px-4 text-center text-rap-silver font-medium">
+                  <td className="py-4 px-4 text-center text-theme-textMuted font-medium">
                     {achievement.points}
                   </td>
                   <td className="py-4 px-4 text-center">
                     {achievement.is_earned ? (
-                      <span className="text-rap-gold font-medium">✓ Earned</span>
+                      <span className="text-theme-success font-medium">✓ Earned</span>
                     ) : (
-                      <span className="text-rap-silver">Not Earned</span>
+                      <span className="text-theme-textMuted">Not Earned</span>
                     )}
                   </td>
                   {showProgress && (
@@ -148,14 +148,14 @@ const AchievementTable = ({ achievements, showProgress = true }: AchievementTabl
                         <div className="w-full max-w-20 mx-auto">
                           <Progress 
                             value={achievement.progress_percentage} 
-                            className="h-2 bg-gray-800"
+                            className="h-2 bg-theme-surface"
                           />
-                          <span className="text-xs text-rap-silver mt-1 block">
+                          <span className="text-xs text-theme-textMuted mt-1 block">
                             {Math.round(achievement.progress_percentage)}%
                           </span>
                         </div>
                       ) : (
-                        <span className="text-rap-gold text-sm">100%</span>
+                        <span className="text-theme-success text-sm">100%</span>
                       )}
                     </td>
                   )}

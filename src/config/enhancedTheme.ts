@@ -59,8 +59,26 @@ export interface EnhancedThemeConfig {
     textMuted: string;
     border: string;
     success: string;
+    successLight: string;
+    successDark: string;
     warning: string;
+    warningLight: string;
+    warningDark: string;
     error: string;
+    errorLight: string;
+    errorDark: string;
+    info: string;
+    infoLight: string;
+    infoDark: string;
+    neutral: string;
+    neutralLight: string;
+    neutralDark: string;
+    white: string;
+    black: string;
+    gray: string;
+    grayLight: string;
+    grayMid: string;
+    grayDark: string;
   };
   fonts: {
     heading: string;
@@ -138,9 +156,27 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     textLight: '#FFFFFF',
     textMuted: '#BFBFBF',
     border: '#D4AF37',
-    success: '#6B8E23',
-    warning: '#FF8C00',
-    error: '#DC143C',
+    success: '#22C55E',
+    successLight: '#4ADE80',
+    successDark: '#16A34A',
+    warning: '#F59E0B',
+    warningLight: '#FBBF24',
+    warningDark: '#D97706',
+    error: '#EF4444',
+    errorLight: '#F87171',
+    errorDark: '#DC2626',
+    info: '#3B82F6',
+    infoLight: '#60A5FA',
+    infoDark: '#2563EB',
+    neutral: '#6B7280',
+    neutralLight: '#9CA3AF',
+    neutralDark: '#4B5563',
+    white: '#FFFFFF',
+    black: '#000000',
+    gray: '#6B7280',
+    grayLight: '#D1D5DB',
+    grayMid: '#9CA3AF',
+    grayDark: '#374151',
   },
   fonts: {
     heading: 'Mogra, cursive',

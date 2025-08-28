@@ -6,54 +6,95 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 5%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 5%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 5%;
-    --secondary: 0 0% 95%;
-    --secondary-foreground: 0 0% 5%;
-    --muted: 0 0% 95%;
-    --muted-foreground: 0 0% 40%;
-    --accent: 0 0% 95%;
-    --accent-foreground: 0 0% 5%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 90%;
-    --input: 0 0% 95%;
-    --ring: 45 85% 55%;
+    /* Enhanced theme variables - using HSL format */
+    --theme-primary: 45 85% 55%;
+    --theme-primaryLight: 45 85% 60%;
+    --theme-primaryDark: 45 75% 43%;
+    --theme-secondary: 345 75% 25%;
+    --theme-secondaryLight: 345 81% 33%;
+    --theme-secondaryDark: 345 73% 18%;
+    --theme-accent: 82 57% 35%;
+    --theme-accentLight: 82 57% 40%;
+    --theme-accentDark: 82 50% 30%;
+    --theme-background: 0 0% 5%;
+    --theme-backgroundLight: 0 0% 10%;
+    --theme-backgroundDark: 0 0% 0%;
+    --theme-surface: 0 0% 17%;
+    --theme-text: 36 14% 91%;
+    --theme-textLight: 0 0% 100%;
+    --theme-textMuted: 0 0% 75%;
+    --theme-border: 45 85% 55%;
+    --theme-success: 142 71% 45%;
+    --theme-successLight: 142 69% 58%;
+    --theme-successDark: 142 76% 36%;
+    --theme-warning: 38 92% 50%;
+    --theme-warningLight: 43 96% 56%;
+    --theme-warningDark: 32 95% 44%;
+    --theme-error: 0 84% 60%;
+    --theme-errorLight: 0 77% 70%;
+    --theme-errorDark: 0 84% 51%;
+    --theme-info: 221 83% 53%;
+    --theme-infoLight: 213 93% 68%;
+    --theme-infoDark: 224 76% 48%;
+    --theme-neutral: 220 14% 46%;
+    --theme-neutralLight: 220 13% 69%;
+    --theme-neutralDark: 220 13% 26%;
+    --theme-white: 0 0% 100%;
+    --theme-black: 0 0% 0%;
+    --theme-gray: 220 14% 46%;
+    --theme-grayLight: 214 32% 91%;
+    --theme-grayMid: 220 13% 69%;
+    --theme-grayDark: 220 13% 18%;
+
+    /* Shadcn compatibility variables */
+    --background: var(--theme-background);
+    --foreground: var(--theme-text);
+    --card: var(--theme-surface);
+    --card-foreground: var(--theme-text);
+    --popover: var(--theme-surface);
+    --popover-foreground: var(--theme-text);
+    --primary: var(--theme-primary);
+    --primary-foreground: var(--theme-background);
+    --secondary: var(--theme-secondary);
+    --secondary-foreground: var(--theme-text);
+    --muted: var(--theme-surface);
+    --muted-foreground: var(--theme-textMuted);
+    --accent: var(--theme-accent);
+    --accent-foreground: var(--theme-text);
+    --destructive: var(--theme-error);
+    --destructive-foreground: var(--theme-white);
+    --border: var(--theme-border);
+    --input: var(--theme-surface);
+    --ring: var(--theme-primary);
     --radius: 0.5rem;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --chart-1: var(--theme-primary);
+    --chart-2: var(--theme-secondary);
+    --chart-3: var(--theme-accent);
+    --chart-4: var(--theme-info);
+    --chart-5: var(--theme-success);
   }
 
   .dark {
-    --background: 0 0% 5%;
-    --foreground: 0 0% 90%;
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 90%;
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 90%;
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 90%;
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 65%;
-    --accent: 0 0% 15%;
-    --accent-foreground: 0 0% 90%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 15%;
-    --input: 0 0% 15%;
-    --ring: 45 85% 55%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    /* Dark mode uses same enhanced theme variables */
+    --background: var(--theme-background);
+    --foreground: var(--theme-text);
+    --card: var(--theme-surface);
+    --card-foreground: var(--theme-text);
+    --popover: var(--theme-surface);
+    --popover-foreground: var(--theme-text);
+    --primary: var(--theme-primary);
+    --primary-foreground: var(--theme-background);
+    --secondary: var(--theme-secondary);
+    --secondary-foreground: var(--theme-text);
+    --muted: var(--theme-surface);
+    --muted-foreground: var(--theme-textMuted);
+    --accent: var(--theme-accent);
+    --accent-foreground: var(--theme-text);
+    --destructive: var(--theme-error);
+    --destructive-foreground: var(--theme-white);
+    --border: var(--theme-border);
+    --input: var(--theme-surface);
+    --ring: var(--theme-primary);
   }
 }
 

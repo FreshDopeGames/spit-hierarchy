@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { ThemedInput as Input } from "@/components/ui/themed-input";
+import { ThemedLabel as Label } from "@/components/ui/themed-label";
 import { Trophy } from "lucide-react";
 import AdminAchievementTable from "./AdminAchievementTable";
 import AdminAchievementDialog from "./AdminAchievementDialog";
@@ -129,16 +129,16 @@ const AdminAchievementManagement = () => {
       >
         <button 
           onClick={handleNewAchievement} 
-          className="bg-[var(--theme-primary)] text-[var(--theme-background)] px-4 py-2 rounded-lg hover:opacity-90 transition-opacity"
+          className="bg-theme-primary text-theme-background px-4 py-2 rounded-lg hover:bg-theme-primaryDark transition-colors"
         >
           Add New Achievement
         </button>
       </AdminTabHeader>
 
-      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
+      <Card className="bg-theme-surface border border-theme-border">
         <CardContent className="p-6">
           <div className="mb-4">
-            <Label htmlFor="search" className="text-[var(--theme-text)] font-bold">
+            <Label htmlFor="search" className="text-theme-text font-bold">
               Search Achievements:
             </Label>
             <Input 
@@ -147,13 +147,13 @@ const AdminAchievementManagement = () => {
               placeholder="Search by name or description..." 
               value={searchTerm} 
               onChange={handleSearchChange} 
-              className="mt-1 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]" 
+              className="mt-1" 
             />
           </div>
 
           {isLoading ? (
             <div className="text-center py-8">
-              <div className="text-[var(--theme-text)]">Loading achievements...</div>
+              <div className="text-theme-text">Loading achievements...</div>
             </div>
           ) : (
             <AdminAchievementTable 
@@ -172,17 +172,17 @@ const AdminAchievementManagement = () => {
           <button
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
-            className="px-4 py-2 bg-[var(--theme-surface)] text-[var(--theme-primary)] rounded disabled:opacity-50 border border-[var(--theme-border)]"
+            className="px-4 py-2 bg-theme-surface text-theme-primary rounded disabled:opacity-50 border border-theme-border hover:bg-theme-backgroundLight transition-colors"
           >
             Previous
           </button>
-          <span className="text-[var(--theme-text)]">
+          <span className="text-theme-text">
             Page {currentPage} of {totalPages} ({totalItems} total)
           </span>
           <button
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 bg-[var(--theme-surface)] text-[var(--theme-primary)] rounded disabled:opacity-50 border border-[var(--theme-border)]"
+            className="px-4 py-2 bg-theme-surface text-theme-primary rounded disabled:opacity-50 border border-theme-border hover:bg-theme-backgroundLight transition-colors"
           >
             Next
           </button>
