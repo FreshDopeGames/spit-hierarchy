@@ -91,6 +91,7 @@ export interface EnhancedThemeConfig {
     modal: ElementConfig;
     navigation: ElementConfig;
     footer: ElementConfig;
+    global_header: ElementConfig;
   };
   spacing: {
     xs: string;
@@ -255,6 +256,12 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
       color: '#BFBFBF',
       border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
       padding: '3rem 2rem'
+    },
+    global_header: {
+      background: '#000000',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
+      padding: '0px'
     }
   },
   spacing: {
