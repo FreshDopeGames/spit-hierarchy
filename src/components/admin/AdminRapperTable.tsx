@@ -1,7 +1,7 @@
 
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
+import { ThemedBadge } from "@/components/ui/themed-badge";
 import { AspectRatio } from "@/components/ui/aspect-ratio";
 import { Star, MapPin, Calendar, Music, Edit, Trash2 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
@@ -25,15 +25,15 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {Array.from({ length: 12 }).map((_, i) => (
-          <Card key={i} className="bg-[var(--theme-surface)] border border-[var(--theme-border)] animate-pulse">
-            <CardContent className="p-4">
+          <ThemedCard key={i} className="animate-pulse">
+            <ThemedCardContent className="p-4">
               <AspectRatio ratio={1} className="mb-3">
                 <div className="w-full h-full bg-[var(--theme-background)] opacity-50 rounded"></div>
               </AspectRatio>
               <div className="h-4 bg-[var(--theme-background)] opacity-50 rounded mb-2"></div>
               <div className="h-3 bg-[var(--theme-background)] opacity-50 rounded w-3/4"></div>
-            </CardContent>
-          </Card>
+            </ThemedCardContent>
+          </ThemedCard>
         ))}
       </div>
     );
@@ -41,13 +41,13 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
 
   if (rappers.length === 0) {
     return (
-      <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
-        <CardContent className="p-8 text-center">
+      <ThemedCard>
+        <ThemedCardContent className="p-8 text-center">
           <Music className="w-16 h-16 text-[var(--theme-primary)] mx-auto mb-4" />
           <h3 className="text-xl font-bold text-[var(--theme-primary)] mb-2">No Rappers Yet</h3>
           <p className="text-[var(--theme-text)] opacity-70">Add your first rapper to get started.</p>
-        </CardContent>
-      </Card>
+        </ThemedCardContent>
+      </ThemedCard>
     );
   }
 
@@ -65,8 +65,8 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (
-    <Card className="bg-[var(--theme-surface)] border border-[var(--theme-border)] hover:border-[var(--theme-primary)]/40 transition-all duration-300">
-      <CardContent className="p-4">
+    <ThemedCard className="hover:border-[var(--theme-primary)]/40 transition-all duration-300">
+      <ThemedCardContent className="p-4">
         {/* Rapper Image */}
         <AspectRatio ratio={1} className="mb-3">
           <div className="w-full h-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-primary)]/60 rounded-lg flex items-center justify-center overflow-hidden">
@@ -111,34 +111,33 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
                 {rapper.average_rating ? Number(rapper.average_rating).toFixed(1) : "—"}
               </span>
             </div>
-            <Badge variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] text-xs">
+            <ThemedBadge variant="ghost" className="text-xs">
               {rapper.total_votes || 0} votes
-            </Badge>
+            </ThemedBadge>
           </div>
 
           {/* Actions */}
           <div className="flex gap-2 pt-2">
-            <Button
+            <ThemedButton
               onClick={() => onEdit(rapper)}
               size="sm"
               variant="outline"
-              className="flex-1 border-[var(--theme-primary)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/20"
+              className="flex-1"
             >
               <Edit className="w-3 h-3 mr-1" />
               Edit
-            </Button>
-            <Button
+            </ThemedButton>
+            <ThemedButton
               onClick={() => onDelete(rapper.id)}
               size="sm"
-              variant="outline"
-              className="border-red-500/30 text-red-500 hover:bg-red-500/20"
+              variant="destructive"
             >
               <Trash2 className="w-3 h-3" />
-            </Button>
+            </ThemedButton>
           </div>
         </div>
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 };
 

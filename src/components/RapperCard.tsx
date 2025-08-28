@@ -1,6 +1,6 @@
 
 import React from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Verified, MapPin, Calendar, Crown, Vote } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { formatBirthdate } from "@/utils/zodiacUtils";
@@ -47,7 +47,7 @@ const RapperCard = ({
   };
   
   return (
-    <Card 
+    <ThemedCard 
       className="bg-gradient-to-br from-[var(--theme-background)] via-[var(--theme-surface)] to-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/40 hover:border-[var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group"
       onClick={handleCardClick}
     >
@@ -61,7 +61,7 @@ const RapperCard = ({
         </div>
       )}
       
-      <CardContent className={compact ? "p-4" : "p-6"}>
+      <ThemedCardContent className={compact ? "p-4" : "p-6"}>
         {/* Rapper image or placeholder - 1:1 aspect ratio */}
         <div className={`w-full aspect-square bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-backgroundLight)] to-[var(--theme-background)] rounded-lg ${compact ? "mb-3" : "mb-4"} flex items-center justify-center relative group-hover:from-[var(--theme-accent)]/20 group-hover:via-[var(--theme-secondary)]/20 group-hover:to-[var(--theme-background)] transition-all duration-300 overflow-hidden`}>
           <img 
@@ -146,8 +146,8 @@ const RapperCard = ({
             </div>
           )}
         </div>
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 };
 
