@@ -119,9 +119,9 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="bg-black border-rap-gold/50 max-w-5xl max-h-[95vh] overflow-y-auto">
+      <DialogContent className="bg-[var(--theme-surface)] border-[var(--theme-border)] max-w-5xl max-h-[95vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="text-rap-gold font-mogra">Crop Your Avatar</DialogTitle>
+          <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">Crop Your Avatar</DialogTitle>
         </DialogHeader>
         
         <div className="space-y-4">
@@ -153,17 +153,17 @@ const AvatarCropper = ({ isOpen, onClose, onCropComplete, imageFile }: AvatarCro
             style={{ display: 'none' }}
           />
           
-          <div className="flex justify-end space-x-2 pt-4 border-t border-rap-gold/30">
+          <div className="flex justify-end space-x-2 pt-4 border-t border-[var(--theme-border)]">
             <Button
               variant="outline"
               onClick={onClose}
-              className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/20"
+              className="border-[var(--theme-border)] text-[var(--theme-text)] hover:bg-[var(--theme-surface)]"
             >
               Cancel
             </Button>
             <Button
               onClick={handleCropComplete}
-              className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra"
+              className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryDark)] font-[var(--theme-font-heading)]"
               disabled={!completedCrop}
             >
               Apply Crop

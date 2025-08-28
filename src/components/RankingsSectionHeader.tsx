@@ -52,7 +52,7 @@ const RankingsSectionHeader = () => {
       />
       
       {/* Overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-rap-carbon/80 via-rap-carbon/60 to-rap-carbon/80" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-surface)]/80 via-[var(--theme-surface)]/60 to-[var(--theme-surface)]/80" />
       
       {/* Content */}
       <div className="relative z-10 px-6 text-center py-[30px] sm:py-6 lg:py-4">
@@ -76,7 +76,7 @@ const RankingsSectionHeader = () => {
           </div>
           
           {/* Subtitle */}
-          <p className="text-lg sm:text-base lg:text-lg text-rap-platinum font-kaushan max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-base lg:text-lg text-[var(--theme-text)] font-[var(--theme-font-body)] max-w-3xl mx-auto leading-relaxed">
             {subtitle}
           </p>
           
@@ -103,7 +103,7 @@ const RankingsSectionHeader = () => {
       </div>
       
       {/* Bottom fade effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-rap-carbon to-transparent" />
+      <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[var(--theme-surface)] to-transparent" />
     </div>
   );
 };

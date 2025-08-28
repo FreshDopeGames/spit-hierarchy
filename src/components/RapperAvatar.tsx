@@ -63,7 +63,7 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl }: Rappe
   
   return (
     <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-      <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light flex items-center justify-center border-2 border-rap-gold/30 group-hover:border-rap-gold transition-colors`}>
+      <div className={`${sizeClasses[size]} rounded-full overflow-hidden bg-gradient-to-br from-[var(--theme-surface)] to-[var(--theme-primary)]/20 flex items-center justify-center border-2 border-[var(--theme-border)] group-hover:border-[var(--theme-primary)] transition-colors`}>
         <img 
           src={imageToDisplay}
           alt={rapper.name} 

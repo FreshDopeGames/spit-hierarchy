@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Star, MapPin, Calendar, Verified } from "lucide-react";
 import { Link } from "react-router-dom";
 import VoteModal from "./VoteModal";
@@ -42,14 +42,14 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
   return (
     <>
       <Link to={`/rapper/${rapper.slug || rapper.id}`} onClick={handleCardClick}>
-        <Card className="bg-rap-carbon border-rap-burgundy/40 hover:border-rap-burgundy/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg shadow-rap-burgundy/20 cursor-pointer">
-          {/* Rap culture accent bar */}
-          <div className="absolute top-0 left-0 w-full h-1 bg-rap-gold"></div>
+        <ThemedCard className="hover:border-[var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 group relative overflow-hidden shadow-lg cursor-pointer">
+          {/* Theme accent bar */}
+          <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
           
-          <CardContent className="p-6">
+          <ThemedCardContent className="p-6">
             {/* Ranking Badge */}
             {sortBy === "rating" && (
-              <div className="absolute -top-2 -left-2 bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-mogra shadow-lg shadow-rap-gold/50">
+              <div className="absolute -top-2 -left-2 bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)] text-[var(--theme-background)] text-sm font-bold rounded-full w-8 h-8 flex items-center justify-center font-[var(--theme-font-heading)] shadow-lg">
                 #{index + 1}
               </div>
             )}
@@ -62,7 +62,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             )}
 
             {/* Rapper Image */}
-            <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-rap-burgundy to-rap-forest flex items-center justify-center group-hover:from-rap-burgundy-light group-hover:to-rap-forest-light transition-colors shadow-inner">
+            <div className="w-full h-48 rounded-lg mb-4 overflow-hidden bg-gradient-to-br from-[var(--theme-secondary)] to-[var(--theme-accent)] flex items-center justify-center group-hover:from-[var(--theme-secondaryDark)] group-hover:to-[var(--theme-accentDark)] transition-colors shadow-inner">
               <img 
                 src={imageUrl} 
                 alt={rapper.name}
@@ -73,25 +73,25 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             {/* Rapper Info */}
             <div className="space-y-3">
               <div className="flex items-start justify-between">
-                <h3 className="text-rap-platinum font-bold text-lg leading-tight hover:text-rap-gold transition-colors font-mogra">{rapper.name}</h3>
+                <h3 className="text-[var(--theme-text)] font-bold text-lg leading-tight hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-heading)]">{rapper.name}</h3>
                 {rapper.verified && (
-                  <Verified className="w-5 h-5 text-rap-forest flex-shrink-0" />
+                  <Verified className="w-5 h-5 text-[var(--theme-accent)] flex-shrink-0" />
                 )}
               </div>
 
             {rapper.real_name && (
-              <p className="text-rap-smoke text-sm font-kaushan">{rapper.real_name}</p>
+              <p className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-font-body)]">{rapper.real_name}</p>
             )}
 
             <div className="flex flex-wrap gap-2 text-xs">
               {rapper.origin && (
-                <div className="flex items-center gap-1 text-rap-platinum font-kaushan">
+                <div className="flex items-center gap-1 text-[var(--theme-text)] font-[var(--theme-font-body)]">
                   <MapPin className="w-3 h-3" />
                   <span>{rapper.origin}</span>
                 </div>
               )}
               {rapper.birth_year && (
-                <div className="flex items-center gap-1 text-rap-platinum font-kaushan">
+                <div className="flex items-center gap-1 text-[var(--theme-text)] font-[var(--theme-font-body)]">
                   <Calendar className="w-3 h-3" />
                   <span>{rapper.birth_year}</span>
                 </div>
@@ -101,19 +101,19 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
             {/* Stats */}
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1">
-                <Star className="w-4 h-4 text-rap-gold" />
-                <span className="text-rap-platinum font-semibold font-ceviche">
+                <Star className="w-4 h-4 text-[var(--theme-primary)]" />
+                <span className="text-[var(--theme-text)] font-semibold font-[var(--theme-font-body)]">
                   {rapper.average_rating || "—"}
                 </span>
               </div>
-              <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 font-kaushan">
-                {rapper.total_votes || 0} royal decrees
+              <Badge variant="secondary" className="bg-[var(--theme-secondary)]/20 text-[var(--theme-text)] border-[var(--theme-border)] font-[var(--theme-font-body)]">
+                {rapper.total_votes || 0} votes
               </Badge>
             </div>
 
             {/* Bio Preview */}
             {rapper.bio && (
-              <p className="text-rap-smoke text-sm line-clamp-2 font-kaushan">
+              <p className="text-[var(--theme-textMuted)] text-sm line-clamp-2 font-[var(--theme-font-body)]">
                 {rapper.bio}
               </p>
             )}
@@ -126,8 +126,8 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
               Cast Royal Decree
             </Button>*/}
           </div>
-        </CardContent>
-      </Card>
+        </ThemedCardContent>
+      </ThemedCard>
     </Link>
 
       {/* Vote Modal */}

@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
@@ -40,25 +40,25 @@ const TopRankingSection = ({ rappers, rankingId, rankingSlug }: TopRankingSectio
         onClick={() => window.scrollTo(0, 0)}
         className="block"
       >
-        <Card 
+        <ThemedCard 
           className={cn(
-            "bg-gradient-to-br from-black via-rap-carbon to-rap-carbon-light border-rap-gold/40 relative overflow-hidden",
+            "bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-background)] to-[var(--theme-surface)] border-[var(--theme-border)] relative overflow-hidden",
             isTopTwo ? "h-80" : "h-76"
           )}
         >
         {/* Position indicator - top left corner */}
-        <div className="absolute top-3 left-3 bg-rap-gold text-rap-carbon rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold font-mogra z-10">
+        <div className="absolute top-3 left-3 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full w-10 h-10 flex items-center justify-center text-lg font-bold font-[var(--theme-font-heading)] z-10">
           {position}
         </div>
         
-        <CardContent className="p-3 relative bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-charcoal">
+        <ThemedCardContent className="p-3 relative bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-background)] to-[var(--theme-surface)]">
           {/* Rapper avatar image - smaller with padding */}
           <div className="flex flex-col items-center space-y-1">
             <img 
               src={imageToDisplay}
               alt={rapper.name || "Rapper"}
               className={cn(
-                "object-cover rounded-lg border-2 border-rap-gold/30",
+                "object-cover rounded-lg border-2 border-[var(--theme-border)]",
                 isTopTwo ? "w-64 h-64" : "w-48 h-48"
               )}
               loading="lazy"
@@ -76,28 +76,28 @@ const TopRankingSection = ({ rappers, rankingId, rankingSlug }: TopRankingSectio
                "text-center space-y-1 flex flex-col justify-start",
                isTopTwo ? "h-20" : "h-12"
              )}>
-              {/* Rapper name */}
-              <h3 className={cn(
-                "font-mogra leading-tight font-normal text-rap-gold",
-                isTopTwo ? "text-xl" : "text-lg"
-              )}>
-                {rapper.name}
-              </h3>
-              
-              {/* Vote count */}
-              <div className="flex items-center justify-center gap-2">
-                {voteCount === 0 ? (
-                  <span className="text-sm text-rap-smoke font-kaushan">No votes yet</span>
-                ) : (
-                  <span className="text-sm text-rap-platinum font-kaushan">
-                    {voteCount.toLocaleString()} votes
-                  </span>
-                )}
-              </div>
+               {/* Rapper name */}
+               <h3 className={cn(
+                 "font-[var(--theme-font-heading)] leading-tight font-normal text-[var(--theme-primary)]",
+                 isTopTwo ? "text-xl" : "text-lg"
+               )}>
+                 {rapper.name}
+               </h3>
+               
+               {/* Vote count */}
+               <div className="flex items-center justify-center gap-2">
+                 {voteCount === 0 ? (
+                   <span className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">No votes yet</span>
+                 ) : (
+                   <span className="text-sm text-[var(--theme-text)] font-[var(--theme-font-body)]">
+                     {voteCount.toLocaleString()} votes
+                   </span>
+                 )}
+               </div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </ThemedCardContent>
+      </ThemedCard>
       </Link>
     );
   };

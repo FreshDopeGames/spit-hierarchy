@@ -8,13 +8,13 @@ interface PositionIconProps {
 const PositionIcon = ({ position }: PositionIconProps) => {
   switch (position) {
     case 1:
-      return <Crown className="w-6 h-6 text-rap-gold" />;
+      return <Crown className="w-6 h-6 text-[var(--theme-primary)]" />;
     case 2:
-      return <Trophy className="w-6 h-6 text-rap-silver" />;
+      return <Trophy className="w-6 h-6 text-[var(--theme-secondary)]" />;
     case 3:
-      return <Star className="w-6 h-6 text-orange-500" />;
+      return <Star className="w-6 h-6 text-[var(--theme-accent)]" />;
     default:
-      return <TrendingUp className="w-6 h-6 text-rap-platinum" />;
+      return <TrendingUp className="w-6 h-6 text-[var(--theme-textMuted)]" />;
   }
 };
 

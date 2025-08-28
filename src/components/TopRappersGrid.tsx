@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import PositionIcon from "@/components/PositionIcon";
@@ -104,10 +104,10 @@ const TopRappersGrid = ({
     return (
       <section className="mb-16">
         <div className="animate-pulse">
-          <div className="h-8 bg-rap-carbon-light rounded w-48 mb-4"></div>
+          <div className="h-8 bg-[var(--theme-surface)] rounded w-48 mb-4"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {Array.from({ length: 5 }).map((_, i) => 
-              <div key={i} className="h-64 bg-rap-carbon-light rounded"></div>
+              <div key={i} className="h-64 bg-[var(--theme-surface)] rounded"></div>
             )}
           </div>
         </div>
@@ -117,14 +117,14 @@ const TopRappersGrid = ({
 
   return (
     <section className="mb-16">
-      <Card className="bg-black border-rap-gold/30 shadow-lg shadow-rap-gold/20">
-        <CardContent className="p-8">
+      <ThemedCard className="shadow-lg">
+        <ThemedCardContent className="p-8">
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
             <div className="flex items-center gap-3">
               <PositionIcon position={1} />
               <div>
-                <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra">{title}</h2>
-                <p className="text-rap-smoke font-merienda text-sm sm:text-base mt-1">
+                <h2 className="text-2xl sm:text-3xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)]">{title}</h2>
+                <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-sm sm:text-base mt-1">
                   {description}
                 </p>
               </div>
@@ -132,16 +132,16 @@ const TopRappersGrid = ({
             
             {showViewAll && 
               <Link to={viewAllLink} className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
-                <Button className="w-full sm:w-auto bg-rap-gold text-rap-charcoal hover:bg-rap-gold/80 hover:text-rap-carbon font-mogra text-sm px-3 py-2">
+                <ThemedButton variant="default" size="lg" className="w-full sm:w-auto text-sm px-3 py-2">
                   View Full Ranking
-                </Button>
+                </ThemedButton>
               </Link>
             }
           </div>
           
           <TopRankingSection rappers={sortedRappers} rankingId={rankingId} rankingSlug={rankingSlug} />
-        </CardContent>
-      </Card>
+        </ThemedCardContent>
+      </ThemedCard>
     </section>
   );
 };

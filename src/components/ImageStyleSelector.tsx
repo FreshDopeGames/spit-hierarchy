@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Palette, Image } from "lucide-react";
 import { useImageStyle } from "@/hooks/useImageStyle";
@@ -38,37 +38,37 @@ const ImageStyleSelector = ({
   } = useImageStyle();
   if (compact) {
     return <div className={`flex items-center gap-2 ${className}`}>
-        <Palette className="w-4 h-4 text-rap-gold" />
-        <select value={currentStyle} onChange={e => setImageStyle(e.target.value as ImageStyle)} disabled={isUpdating} className="bg-carbon-fiber border border-rap-gold/30 text-rap-platinum text-sm rounded px-2 py-1 font-kaushan bg-black">
-          {Object.entries(styleLabels).map(([style, label]) => <option key={style} value={style} className="bg-carbon-fiber">
+        <Palette className="w-4 h-4 text-[var(--theme-primary)]" />
+        <select value={currentStyle} onChange={e => setImageStyle(e.target.value as ImageStyle)} disabled={isUpdating} className="bg-[var(--theme-surface)] border border-[var(--theme-border)] text-[var(--theme-text)] text-sm rounded px-2 py-1 font-[var(--theme-font-body)]">
+          {Object.entries(styleLabels).map(([style, label]) => <option key={style} value={style} className="bg-[var(--theme-surface)]">
               {label}
             </option>)}
         </select>
       </div>;
   }
-  return <Card className={`bg-carbon-fiber border-rap-gold/30 ${className}`}>
-      <CardContent className="p-6">
+  return <ThemedCard className={className}>
+      <ThemedCardContent className="p-6">
         <div className="flex items-center gap-3 mb-4">
-          <Image className="w-6 h-6 text-rap-gold" />
-          <h3 className="text-lg font-mogra text-rap-platinum">Image Style</h3>
-          <Badge variant="secondary" className="bg-rap-gold/20 text-rap-gold border-rap-gold/30 font-kaushan">
+          <Image className="w-6 h-6 text-[var(--theme-primary)]" />
+          <h3 className="text-lg font-[var(--theme-font-heading)] text-[var(--theme-text)]">Image Style</h3>
+          <Badge variant="secondary" className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border-[var(--theme-border)] font-[var(--theme-font-body)]">
             {styleLabels[currentStyle]}
           </Badge>
         </div>
         
-        <p className="text-rap-smoke text-sm mb-6 font-kaushan">
+        <p className="text-[var(--theme-textMuted)] text-sm mb-6 font-[var(--theme-font-body)]">
           Choose how you want to see rapper images displayed throughout the platform.
         </p>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-          {Object.entries(styleLabels).map(([style, label]) => <Button key={style} variant={currentStyle === style ? "default" : "outline"} onClick={() => setImageStyle(style as ImageStyle)} disabled={isUpdating} className={`p-3 h-auto flex flex-col items-center gap-2 font-kaushan ${currentStyle === style ? "bg-gradient-to-r from-rap-gold to-rap-gold-light text-rap-carbon" : "border-rap-gold/30 text-rap-platinum hover:bg-rap-gold/10"}`}>
+          {Object.entries(styleLabels).map(([style, label]) => <ThemedButton key={style} variant={currentStyle === style ? "default" : "outline"} onClick={() => setImageStyle(style as ImageStyle)} disabled={isUpdating} className="p-3 h-auto flex flex-col items-center gap-2">
               <span className="font-semibold text-xs">{label}</span>
               <span className="text-xs opacity-70 text-center leading-tight">
                 {styleDescriptions[style as ImageStyle]}
               </span>
-            </Button>)}
+            </ThemedButton>)}
         </div>
-      </CardContent>
-    </Card>;
+      </ThemedCardContent>
+    </ThemedCard>;
 };
 export default ImageStyleSelector;

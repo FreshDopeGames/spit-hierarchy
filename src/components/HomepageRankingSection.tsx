@@ -100,17 +100,17 @@ const HomepageRankingSection = () => {
     return (
       <section className="mb-16">
         <div className="mb-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra mb-2">
+          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-2">
             Featured Rankings
           </h2>
-          <p className="text-rap-smoke font-kaushan">
+          <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
             Discover the top rapper rankings voted by the community
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-[300px] sm:h-[350px] md:h-[400px] rounded-xl bg-rap-carbon/20 animate-pulse" />
+            <div key={i} className="h-[300px] sm:h-[350px] md:h-[400px] rounded-xl bg-[var(--theme-surface)]/20 animate-pulse" />
           ))}
         </div>
       </section>
@@ -124,10 +124,10 @@ const HomepageRankingSection = () => {
   return (
     <section className="mb-16">
       <div className="mb-8 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-rap-platinum font-mogra mb-2">
+        <h2 className="text-2xl sm:text-3xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-2">
           Featured Rankings
         </h2>
-        <p className="text-rap-smoke font-kaushan">
+        <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
           Discover the top rapper rankings voted by the community
         </p>
       </div>
