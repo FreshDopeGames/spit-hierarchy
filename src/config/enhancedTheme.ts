@@ -401,24 +401,38 @@ export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
   });
 };
 
+// Helper function to resolve theme color references
+const resolveThemeColor = (colorValue: string, theme: EnhancedThemeConfig): string => {
+  // Check if the color value is a theme color key
+  if (theme.colors.hasOwnProperty(colorValue)) {
+    return (theme.colors as any)[colorValue];
+  }
+  // Return the original value if it's not a theme color reference
+  return colorValue;
+};
+
 const applyElementConfig = (root: HTMLElement, elementName: string, config: ElementConfig, theme: EnhancedThemeConfig) => {
   if (config.background) {
-    const bgValue = config.background.startsWith('#') ? hexToHsl(config.background) : config.background;
+    const resolvedColor = resolveThemeColor(config.background, theme);
+    const bgValue = resolvedColor.startsWith('#') ? hexToHsl(resolvedColor) : resolvedColor;
     root.style.setProperty(`--theme-element-${elementName}-bg`, bgValue);
   }
   
   if (config.color) {
-    const colorValue = config.color.startsWith('#') ? hexToHsl(config.color) : config.color;
+    const resolvedColor = resolveThemeColor(config.color, theme);
+    const colorValue = resolvedColor.startsWith('#') ? hexToHsl(resolvedColor) : resolvedColor;
     root.style.setProperty(`--theme-element-${elementName}-color`, colorValue);
   }
   
   if (config.hoverBackground) {
-    const hoverBgValue = config.hoverBackground.startsWith('#') ? hexToHsl(config.hoverBackground) : config.hoverBackground;
+    const resolvedColor = resolveThemeColor(config.hoverBackground, theme);
+    const hoverBgValue = resolvedColor.startsWith('#') ? hexToHsl(resolvedColor) : resolvedColor;
     root.style.setProperty(`--theme-element-${elementName}-hover-bg`, hoverBgValue);
   }
   
   if (config.hoverColor) {
-    const hoverColorValue = config.hoverColor.startsWith('#') ? hexToHsl(config.hoverColor) : config.hoverColor;
+    const resolvedColor = resolveThemeColor(config.hoverColor, theme);
+    const hoverColorValue = resolvedColor.startsWith('#') ? hexToHsl(resolvedColor) : resolvedColor;
     root.style.setProperty(`--theme-element-${elementName}-hover-color`, hoverColorValue);
   }
   
@@ -430,7 +444,8 @@ const applyElementConfig = (root: HTMLElement, elementName: string, config: Elem
   }
   
   if (config.border) {
-    const borderColor = config.border.color.startsWith('#') ? hexToHsl(config.border.color) : config.border.color;
+    const resolvedColor = resolveThemeColor(config.border.color, theme);
+    const borderColor = resolvedColor.startsWith('#') ? hexToHsl(resolvedColor) : resolvedColor;
     root.style.setProperty(`--theme-element-${elementName}-border-width`, config.border.width);
     root.style.setProperty(`--theme-element-${elementName}-border-style`, config.border.style);
     root.style.setProperty(`--theme-element-${elementName}-border-color`, borderColor);
