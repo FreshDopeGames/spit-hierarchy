@@ -3,8 +3,8 @@ import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
+import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import AdminRapperManagement from "@/components/admin/AdminRapperManagement";
 import AdminRankingsManagement from "@/components/admin/AdminRankingsManagement";
@@ -82,43 +82,42 @@ const Admin = () => {
 
         {/* Mobile/Tablet Dropdown Navigation */}
         <div className="lg:hidden mb-6">
-          <Select value={activeTab} onValueChange={setActiveTab}>
-            <SelectTrigger className="w-full bg-[var(--theme-surface)] border border-[var(--theme-border)] text-[var(--theme-primary)] font-medium">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)] z-50">
+          <ThemedSelect value={activeTab} onValueChange={setActiveTab}>
+            <ThemedSelectTrigger className="w-full">
+              <ThemedSelectValue />
+            </ThemedSelectTrigger>
+            <ThemedSelectContent>
               {tabOptions.map((option) => (
-                <SelectItem 
+                <ThemedSelectItem 
                   key={option.value} 
                   value={option.value}
-                  className="text-[var(--theme-primary)] hover:bg-[var(--theme-background)] cursor-pointer"
                 >
                   {option.label}
-                </SelectItem>
+                </ThemedSelectItem>
               ))}
-            </SelectContent>
-          </Select>
+            </ThemedSelectContent>
+          </ThemedSelect>
         </div>
 
         {/* Desktop Tabs Navigation */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <TabsList className="hidden lg:grid w-full grid-cols-9 bg-[var(--theme-surface)] gap-1 h-auto p-2">
+        <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <ThemedTabsList className="hidden lg:grid w-full grid-cols-9 gap-1 h-auto p-2">
             {tabOptions.map((option) => (
-              <TabsTrigger 
+              <ThemedTabsTrigger 
                 key={option.value}
                 value={option.value} 
-                className="text-xs xl:text-sm py-3 font-bold text-[var(--theme-primary)]"
+                className="text-xs xl:text-sm py-3 font-bold"
               >
                 {option.label}
-              </TabsTrigger>
+              </ThemedTabsTrigger>
             ))}
-          </TabsList>
+          </ThemedTabsList>
 
           {/* Tab Content */}
           <div className="bg-[var(--theme-background)] p-3 sm:p-6 rounded-lg border border-[var(--theme-border)]">
             {renderTabContent()}
           </div>
-        </Tabs>
+        </ThemedTabs>
       </main>
     </div>
   );

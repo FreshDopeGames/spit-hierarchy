@@ -1,8 +1,8 @@
 
 import React from "react";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedLabel } from "@/components/ui/themed-label";
+import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { ThemeConfig } from "@/config/theme";
 
 interface TypographyTabProps {
@@ -33,27 +33,26 @@ const TypographyTab = ({ theme, onFontChange }: TypographyTabProps) => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {Object.entries(theme.fonts).map(([key, value]) => (
             <div key={key} className="space-y-2">
-              <Label className="text-[var(--theme-text)] font-[var(--theme-font-body)] capitalize">
+              <ThemedLabel className="capitalize">
                 {key} Font
-              </Label>
-              <Select value={value} onValueChange={(newValue) => onFontChange(key, newValue)}>
-                <SelectTrigger className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+              </ThemedLabel>
+              <ThemedSelect value={value} onValueChange={(newValue) => onFontChange(key, newValue)}>
+                <ThemedSelectTrigger>
+                  <ThemedSelectValue />
+                </ThemedSelectTrigger>
+                <ThemedSelectContent>
                   {fontOptions.map((font) => (
-                    <SelectItem 
+                    <ThemedSelectItem 
                       key={font.value} 
                       value={font.value}
-                      className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
                     >
                       <span style={{ fontFamily: font.value }}>
                         {font.label}
                       </span>
-                    </SelectItem>
+                    </ThemedSelectItem>
                   ))}
-                </SelectContent>
-              </Select>
+                </ThemedSelectContent>
+              </ThemedSelect>
               <div 
                 className="p-3 bg-[var(--theme-background)] border border-[var(--theme-border)] rounded text-[var(--theme-text)]"
                 style={{ fontFamily: value }}

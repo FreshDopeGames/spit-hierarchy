@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
-import { Input } from "@/components/ui/input";
+import { ThemedInput } from "@/components/ui/themed-input";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedThemeConfig } from "@/config/enhancedTheme";
 import { cn } from "@/lib/utils";
@@ -263,20 +263,12 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
         {/* Input Element */}
         <div className="space-y-4">
           <h3 className="text-lg font-semibold text-[var(--theme-primary)] mb-4">Input Element</h3>
-          <input
+          <ThemedInput
             type="text"
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full transition-all duration-200"
             style={{
-              background: theme.elements.input.background,
-              color: theme.elements.input.color,
-              border: `${theme.elements.input.border?.width} ${theme.elements.input.border?.style} ${theme.elements.input.border?.color}`,
-              borderRadius: theme.elements.input.border?.radius,
-              padding: theme.elements.input.padding,
-              fontSize: theme.elements.input.typography?.fontSize,
-              fontWeight: theme.elements.input.typography?.fontWeight,
-              lineHeight: theme.elements.input.typography?.lineHeight,
               ...getElementStyle('input')
             }}
             onClick={(e) => handleElementClick('input', e)}

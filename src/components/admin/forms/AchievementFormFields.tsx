@@ -1,8 +1,8 @@
 import { UseFormReturn } from "react-hook-form";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedInput } from "@/components/ui/themed-input";
+import { ThemedTextarea } from "@/components/ui/themed-textarea";
+import { ThemedLabel } from "@/components/ui/themed-label";
+import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { Switch } from "@/components/ui/switch";
 import { AchievementFormData } from "./achievementFormSchema";
 
@@ -43,56 +43,52 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
       <div className="space-y-4">
         {/* Name */}
         <div>
-          <Label htmlFor="name" className="text-rap-platinum font-bold">Name *</Label>
-          <Input
+          <ThemedLabel htmlFor="name">Name *</ThemedLabel>
+          <ThemedInput
             id="name"
             {...register("name")}
             placeholder="Achievement name"
-            className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
           />
           {errors.name && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.name.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
 
         {/* Description */}
         <div>
-          <Label htmlFor="description" className="text-rap-platinum font-bold">Description *</Label>
-          <Textarea
+          <ThemedLabel htmlFor="description">Description *</ThemedLabel>
+          <ThemedTextarea
             id="description"
             {...register("description")}
             placeholder="Achievement description"
-            className="bg-rap-carbon border-rap-gold/30 text-rap-platinum resize-none"
             rows={3}
           />
           {errors.description && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.description.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.description.message}</p>
           )}
         </div>
 
         {/* Icon */}
         <div>
-          <Label htmlFor="icon" className="text-rap-platinum font-bold">Icon *</Label>
-          <Input
+          <ThemedLabel htmlFor="icon">Icon *</ThemedLabel>
+          <ThemedInput
             id="icon"
             {...register("icon")}
             placeholder="🏆"
-            className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
           />
           {errors.icon && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.icon.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.icon.message}</p>
           )}
         </div>
 
         {/* Points */}
         <div>
-          <Label htmlFor="points" className="text-rap-platinum font-bold">Points *</Label>
-          <Input
+          <ThemedLabel htmlFor="points">Points *</ThemedLabel>
+          <ThemedInput
             id="points"
             type="number"
             {...register("points", { valueAsNumber: true })}
             placeholder="10"
-            className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
           />
           {errors.points && (
             <p className="text-rap-burgundy text-sm mt-1">{errors.points.message}</p>
@@ -103,48 +99,48 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
       <div className="space-y-4">
         {/* Type */}
         <div>
-          <Label className="text-rap-platinum font-bold">Type *</Label>
-          <Select value={watch("type")} onValueChange={(value) => setValue("type", value as any)}>
-            <SelectTrigger className="bg-rap-carbon border-rap-gold/30 text-rap-platinum">
-              <SelectValue placeholder="Select achievement type" />
-            </SelectTrigger>
-            <SelectContent className="bg-rap-carbon border-rap-gold/30">
+          <ThemedLabel>Type *</ThemedLabel>
+          <ThemedSelect value={watch("type")} onValueChange={(value) => setValue("type", value as any)}>
+            <ThemedSelectTrigger>
+              <ThemedSelectValue placeholder="Select achievement type" />
+            </ThemedSelectTrigger>
+            <ThemedSelectContent>
               {ACHIEVEMENT_TYPES.map((type) => (
-                <SelectItem key={type.value} value={type.value} className="text-rap-platinum hover:bg-rap-gold/20">
+                <ThemedSelectItem key={type.value} value={type.value}>
                   {type.label}
-                </SelectItem>
+                </ThemedSelectItem>
               ))}
-            </SelectContent>
-          </Select>
+            </ThemedSelectContent>
+          </ThemedSelect>
           {errors.type && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.type.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.type.message}</p>
           )}
         </div>
 
         {/* Rarity */}
         <div>
-          <Label className="text-rap-platinum font-bold">Rarity *</Label>
-          <Select value={watch("rarity")} onValueChange={(value) => setValue("rarity", value as any)}>
-            <SelectTrigger className="bg-rap-carbon border-rap-gold/30 text-rap-platinum">
-              <SelectValue placeholder="Select rarity" />
-            </SelectTrigger>
-            <SelectContent className="bg-rap-carbon border-rap-gold/30">
+          <ThemedLabel>Rarity *</ThemedLabel>
+          <ThemedSelect value={watch("rarity")} onValueChange={(value) => setValue("rarity", value as any)}>
+            <ThemedSelectTrigger>
+              <ThemedSelectValue placeholder="Select rarity" />
+            </ThemedSelectTrigger>
+            <ThemedSelectContent>
               {ACHIEVEMENT_RARITIES.map((rarity) => (
-                <SelectItem key={rarity.value} value={rarity.value} className="text-rap-platinum hover:bg-rap-gold/20">
+                <ThemedSelectItem key={rarity.value} value={rarity.value}>
                   {rarity.label}
-                </SelectItem>
+                </ThemedSelectItem>
               ))}
-            </SelectContent>
-          </Select>
+            </ThemedSelectContent>
+          </ThemedSelect>
           {errors.rarity && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.rarity.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.rarity.message}</p>
           )}
         </div>
 
         {/* Threshold Value */}
         <div>
-          <Label htmlFor="threshold_value" className="text-rap-platinum font-bold">Threshold Value</Label>
-          <Input
+          <ThemedLabel htmlFor="threshold_value">Threshold Value</ThemedLabel>
+          <ThemedInput
             id="threshold_value"
             type="number"
             {...register("threshold_value", { 
@@ -152,34 +148,33 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
               setValueAs: (value) => value === "" ? null : Number(value)
             })}
             placeholder="e.g., 10"
-            className="bg-rap-carbon border-rap-gold/30 text-rap-platinum"
           />
           {errors.threshold_value && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.threshold_value.message}</p>
+            <p className="text-red-400 text-sm mt-1">{errors.threshold_value.message}</p>
           )}
         </div>
 
         {/* Threshold Field */}
         <div>
-          <Label className="text-rap-platinum font-bold">Threshold Field</Label>
-          <Select 
+          <ThemedLabel>Threshold Field</ThemedLabel>
+          <ThemedSelect 
             value={watch("threshold_field") || ""} 
             onValueChange={(value) => setValue("threshold_field", value || null)}
           >
-            <SelectTrigger className="bg-rap-carbon border-rap-gold/30 text-rap-platinum">
-              <SelectValue placeholder="Select field to track" />
-            </SelectTrigger>
-            <SelectContent className="bg-rap-carbon border-rap-gold/30">
-              <SelectItem value="" className="text-rap-platinum hover:bg-rap-gold/20">
+            <ThemedSelectTrigger>
+              <ThemedSelectValue placeholder="Select field to track" />
+            </ThemedSelectTrigger>
+            <ThemedSelectContent>
+              <ThemedSelectItem value="">
                 None
-              </SelectItem>
+              </ThemedSelectItem>
               {THRESHOLD_FIELDS.map((field) => (
-                <SelectItem key={field.value} value={field.value} className="text-rap-platinum hover:bg-rap-gold/20">
+                <ThemedSelectItem key={field.value} value={field.value}>
                   {field.label}
-                </SelectItem>
+                </ThemedSelectItem>
               ))}
-            </SelectContent>
-          </Select>
+            </ThemedSelectContent>
+          </ThemedSelect>
         </div>
 
         {/* Active Status */}
@@ -189,9 +184,9 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             checked={watch("is_active")}
             onCheckedChange={(checked) => setValue("is_active", checked)}
           />
-          <Label htmlFor="is_active" className="text-rap-platinum font-bold">
+          <ThemedLabel htmlFor="is_active">
             Active
-          </Label>
+          </ThemedLabel>
         </div>
       </div>
     </div>

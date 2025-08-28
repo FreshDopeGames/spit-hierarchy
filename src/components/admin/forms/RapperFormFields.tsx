@@ -1,8 +1,8 @@
 
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedLabel } from "@/components/ui/themed-label";
+import { ThemedInput } from "@/components/ui/themed-input";
+import { ThemedTextarea } from "@/components/ui/themed-textarea";
+import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { RapperFormData } from "../types/RapperFormTypes";
 
 interface RapperFormFieldsProps {
@@ -42,139 +42,130 @@ export const RapperFormFields = ({
     <>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div className="space-y-2">
-          <Label htmlFor="name" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Name *</Label>
-          <Input
+          <ThemedLabel htmlFor="name">Name *</ThemedLabel>
+          <ThemedInput
             id="name"
             value={formData.name}
             onChange={onInputChange("name")}
             placeholder="Enter rapper name"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
             required
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="real_name" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Real Name</Label>
-          <Input
+          <ThemedLabel htmlFor="real_name">Real Name</ThemedLabel>
+          <ThemedInput
             id="real_name"
             value={formData.real_name}
             onChange={onInputChange("real_name")}
             placeholder="Enter real name"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="origin" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Origin</Label>
-          <Input
+          <ThemedLabel htmlFor="origin">Origin</ThemedLabel>
+          <ThemedInput
             id="origin"
             value={formData.origin}
             onChange={onInputChange("origin")}
             placeholder="Enter origin/location"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="birth_year" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Birth Year</Label>
-          <Input
+          <ThemedLabel htmlFor="birth_year">Birth Year</ThemedLabel>
+          <ThemedInput
             id="birth_year"
             type="number"
             value={formData.birth_year}
             onChange={onInputChange("birth_year")}
             placeholder="Enter birth year"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="birth_month" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Birth Month</Label>
-          <Select value={formData.birth_month} onValueChange={onSelectChange("birth_month")}>
-            <SelectTrigger className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)]">
-              <SelectValue placeholder="Select month" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">None</SelectItem>
+          <ThemedLabel htmlFor="birth_month">Birth Month</ThemedLabel>
+          <ThemedSelect value={formData.birth_month} onValueChange={onSelectChange("birth_month")}>
+            <ThemedSelectTrigger>
+              <ThemedSelectValue placeholder="Select month" />
+            </ThemedSelectTrigger>
+            <ThemedSelectContent>
+              <ThemedSelectItem value="none">None</ThemedSelectItem>
               {months.map(month => (
-                <SelectItem key={month.value} value={month.value}>
+                <ThemedSelectItem key={month.value} value={month.value}>
                   {month.label}
-                </SelectItem>
+                </ThemedSelectItem>
               ))}
-            </SelectContent>
-          </Select>
+            </ThemedSelectContent>
+          </ThemedSelect>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="birth_day" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Birth Day</Label>
-          <Select value={formData.birth_day} onValueChange={onSelectChange("birth_day")}>
-            <SelectTrigger className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)]">
-              <SelectValue placeholder="Select day" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="none">None</SelectItem>
+          <ThemedLabel htmlFor="birth_day">Birth Day</ThemedLabel>
+          <ThemedSelect value={formData.birth_day} onValueChange={onSelectChange("birth_day")}>
+            <ThemedSelectTrigger>
+              <ThemedSelectValue placeholder="Select day" />
+            </ThemedSelectTrigger>
+            <ThemedSelectContent>
+              <ThemedSelectItem value="none">None</ThemedSelectItem>
               {days.map(day => (
-                <SelectItem key={day.value} value={day.value}>
+                <ThemedSelectItem key={day.value} value={day.value}>
                   {day.label}
-                </SelectItem>
+                </ThemedSelectItem>
               ))}
-            </SelectContent>
-          </Select>
+            </ThemedSelectContent>
+          </ThemedSelect>
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="spotify_id" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Spotify ID</Label>
-          <Input
+          <ThemedLabel htmlFor="spotify_id">Spotify ID</ThemedLabel>
+          <ThemedInput
             id="spotify_id"
             value={formData.spotify_id}
             onChange={onInputChange("spotify_id")}
             placeholder="Enter Spotify ID"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="instagram_handle" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Instagram Handle</Label>
-          <Input
+          <ThemedLabel htmlFor="instagram_handle">Instagram Handle</ThemedLabel>
+          <ThemedInput
             id="instagram_handle"
             value={formData.instagram_handle}
             onChange={onInputChange("instagram_handle")}
             placeholder="Enter Instagram handle"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           />
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <Label htmlFor="twitter_handle" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Twitter Handle</Label>
-          <Input
+          <ThemedLabel htmlFor="twitter_handle">Twitter Handle</ThemedLabel>
+          <ThemedInput
             id="twitter_handle"
             value={formData.twitter_handle}
             onChange={onInputChange("twitter_handle")}
             placeholder="Enter Twitter handle"
-            className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="bio" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Bio</Label>
-        <Textarea
+        <ThemedLabel htmlFor="bio">Bio</ThemedLabel>
+        <ThemedTextarea
           id="bio"
           value={formData.bio}
           onChange={onInputChange("bio")}
           placeholder="Enter rapper bio"
-          className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           rows={3}
         />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="origins_description" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Origins Description</Label>
-        <Textarea
+        <ThemedLabel htmlFor="origins_description">Origins Description</ThemedLabel>
+        <ThemedTextarea
           id="origins_description"
           value={formData.origins_description}
           onChange={onInputChange("origins_description")}
           placeholder="Enter custom origins description (optional)"
-          className="bg-[var(--theme-backgroundLight)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)]"
           rows={3}
         />
       </div>

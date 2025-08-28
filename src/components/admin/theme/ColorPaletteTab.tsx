@@ -1,8 +1,8 @@
 
 import React from "react";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { ThemedInput } from "@/components/ui/themed-input";
+import { ThemedLabel } from "@/components/ui/themed-label";
 import { ThemeConfig } from "@/config/theme";
 import { isValidHex, getContrastTextColor } from "@/lib/utils";
 
@@ -25,22 +25,22 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
             
             return (
               <div key={key} className="space-y-2">
-                <Label className="text-[var(--theme-text)] font-medium capitalize">
+                <ThemedLabel className="capitalize">
                   {key.replace(/([A-Z])/g, ' $1').trim()}
-                </Label>
+                </ThemedLabel>
                 <div className="flex gap-2">
-                  <Input
+                  <ThemedInput
                     type="color"
                     value={isValid ? value : '#000000'}
                     onChange={(e) => onColorChange(key, e.target.value)}
-                    className="w-16 h-10 p-1 border-2 border-[var(--theme-border)] bg-[var(--theme-surface)]"
+                    className="w-16 h-10 p-1"
                   />
-                  <Input
+                  <ThemedInput
                     type="text"
                     value={value}
                     onChange={(e) => onColorChange(key, e.target.value)}
-                    className={`flex-1 bg-[var(--theme-surface)] border-2 text-[var(--theme-text)] placeholder:text-[var(--theme-textMuted)] ${
-                      isValid ? 'border-[var(--theme-border)]' : 'border-red-500'
+                    className={`flex-1 ${
+                      !isValid ? 'border-red-500' : ''
                     }`}
                     placeholder="#FFFFFF"
                   />
