@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { EnhancedThemeConfig, ElementConfig, TypographyConfig } from "@/config/enhancedTheme";
 import { isValidHex } from "@/lib/utils";
+import ColorDropdown from "./ColorDropdown";
 
 interface ElementCustomizerProps {
   selectedElement: string | null;
@@ -265,44 +266,20 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
             {isElement && elementConfig && (
               <>
                 {/* Background Color */}
-                <div className="space-y-2">
-                  <ThemedLabel>Background Color</ThemedLabel>
-                  <div className="flex gap-2">
-                    <ThemedInput
-                      type="color"
-                      value={elementConfig.background && isValidHex(elementConfig.background) ? elementConfig.background : '#000000'}
-                      onChange={(e) => updateElementConfig({ background: e.target.value })}
-                      className="w-16 h-10 p-1"
-                    />
-                    <ThemedInput
-                      type="text"
-                      value={elementConfig.background || ''}
-                      onChange={(e) => updateElementConfig({ background: e.target.value })}
-                      placeholder="#000000 or transparent"
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
+                <ColorDropdown
+                  label="Background Color"
+                  value={elementConfig.background}
+                  onChange={(value) => updateElementConfig({ background: value })}
+                  theme={theme}
+                />
 
                 {/* Text Color */}
-                <div className="space-y-2">
-                  <ThemedLabel>Text Color</ThemedLabel>
-                  <div className="flex gap-2">
-                    <ThemedInput
-                      type="color"
-                      value={elementConfig.color && isValidHex(elementConfig.color) ? elementConfig.color : '#FFFFFF'}
-                      onChange={(e) => updateElementConfig({ color: e.target.value })}
-                      className="w-16 h-10 p-1"
-                    />
-                    <ThemedInput
-                      type="text"
-                      value={elementConfig.color || ''}
-                      onChange={(e) => updateElementConfig({ color: e.target.value })}
-                      placeholder="#FFFFFF"
-                      className="flex-1"
-                    />
-                  </div>
-                </div>
+                <ColorDropdown
+                  label="Text Color"
+                  value={elementConfig.color}
+                  onChange={(value) => updateElementConfig({ color: value })}
+                  theme={theme}
+                />
 
                 {/* Gradient */}
                 {theme.gradients.length > 0 && (
@@ -375,26 +352,14 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <ThemedLabel>Color</ThemedLabel>
-                      <div className="flex gap-2">
-                        <ThemedInput
-                          type="color"
-                          value={elementConfig.border?.color && isValidHex(elementConfig.border.color) ? elementConfig.border.color : '#000000'}
-                          onChange={(e) => updateElementConfig({
-                            border: { ...elementConfig.border, color: e.target.value, width: elementConfig.border?.width || '1px', style: elementConfig.border?.style || 'solid', radius: elementConfig.border?.radius || '4px' }
-                          })}
-                          className="w-12 h-8 p-0"
-                        />
-                        <ThemedInput
-                          type="text"
-                          value={elementConfig.border?.color || ''}
-                          onChange={(e) => updateElementConfig({
-                            border: { ...elementConfig.border, color: e.target.value, width: elementConfig.border?.width || '1px', style: elementConfig.border?.style || 'solid', radius: elementConfig.border?.radius || '4px' }
-                          })}
-                          placeholder="#000000"
-                          className="flex-1"
-                        />
-                      </div>
+                      <ColorDropdown
+                        label="Color"
+                        value={elementConfig.border?.color}
+                        onChange={(value) => updateElementConfig({
+                          border: { ...elementConfig.border, color: value, width: elementConfig.border?.width || '1px', style: elementConfig.border?.style || 'solid', radius: elementConfig.border?.radius || '4px' }
+                        })}
+                        theme={theme}
+                      />
                     </div>
                     
                     <div className="space-y-2">
