@@ -88,6 +88,7 @@ export interface EnhancedThemeConfig {
     };
     card: ElementConfig;
     input: ElementConfig;
+    select: ElementConfig;
     modal: ElementConfig;
     navigation: ElementConfig;
     footer: ElementConfig;
@@ -232,6 +233,13 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
       shadow: '0 4px 6px rgba(212, 175, 55, 0.1)'
     },
     input: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '8px' },
+      typography: { fontSize: '1rem', fontWeight: '400', lineHeight: '1.5' },
+      padding: '0.75rem 1rem'
+    },
+    select: {
       background: '#2B2B2B',
       color: '#E8E6E3',
       border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '8px' },

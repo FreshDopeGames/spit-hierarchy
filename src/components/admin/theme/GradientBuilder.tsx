@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedInput } from "@/components/ui/themed-input";
+import { ThemedLabel } from "@/components/ui/themed-label";
+import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { Slider } from "@/components/ui/slider";
 import { Plus, Trash2 } from "lucide-react";
 import { GradientConfig, gradientToCSS, defaultEnhancedTheme } from "@/config/enhancedTheme";
@@ -94,10 +94,10 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
       <ThemedCard>
         <ThemedCardHeader>
           <ThemedCardTitle>Gradients</ThemedCardTitle>
-          <Button onClick={handleCreateGradient} size="sm" className="ml-auto">
+          <ThemedButton onClick={handleCreateGradient} size="sm" className="ml-auto">
             <Plus className="w-4 h-4 mr-2" />
             Add Gradient
-          </Button>
+          </ThemedButton>
         </ThemedCardHeader>
         <ThemedCardContent className="space-y-3">
           {gradients.map((gradient) => (
@@ -127,14 +127,14 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
                     </div>
                   </div>
                 </button>
-                <Button
+                <ThemedButton
                   variant="outline"
                   size="sm"
                   onClick={() => handleDeleteGradient(gradient.id)}
                   className="ml-2"
                 >
                   <Trash2 className="w-4 h-4" />
-                </Button>
+                </ThemedButton>
               </div>
             </div>
           ))}
@@ -150,7 +150,7 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
           <ThemedCardContent className="space-y-6">
             {/* Preview */}
             <div className="space-y-2">
-              <Label>Preview</Label>
+              <ThemedLabel>Preview</ThemedLabel>
               <div 
                 className="w-full h-16 rounded border border-[var(--theme-border)]"
                 style={{ background: gradientToCSS(editingGradient) }}
@@ -160,8 +160,8 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
             {/* Basic Properties */}
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label>Name</Label>
-                <Input
+                <ThemedLabel>Name</ThemedLabel>
+                <ThemedInput
                   value={editingGradient.name}
                   onChange={(e) => handleUpdateGradient({
                     ...editingGradient,
@@ -170,8 +170,8 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
                 />
               </div>
               <div className="space-y-2">
-                <Label>Type</Label>
-                <Select
+                <ThemedLabel>Type</ThemedLabel>
+                <ThemedSelect
                   value={editingGradient.type}
                   onValueChange={(value: 'linear' | 'radial' | 'conic') => 
                     handleUpdateGradient({
@@ -180,22 +180,22 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
                     })
                   }
                 >
-                  <SelectTrigger>
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="linear">Linear</SelectItem>
-                    <SelectItem value="radial">Radial</SelectItem>
-                    <SelectItem value="conic">Conic</SelectItem>
-                  </SelectContent>
-                </Select>
+                  <ThemedSelectTrigger>
+                    <ThemedSelectValue />
+                  </ThemedSelectTrigger>
+                  <ThemedSelectContent>
+                    <ThemedSelectItem value="linear">Linear</ThemedSelectItem>
+                    <ThemedSelectItem value="radial">Radial</ThemedSelectItem>
+                    <ThemedSelectItem value="conic">Conic</ThemedSelectItem>
+                  </ThemedSelectContent>
+                </ThemedSelect>
               </div>
             </div>
 
             {/* Direction (for linear and conic) */}
             {(editingGradient.type === 'linear' || editingGradient.type === 'conic') && (
               <div className="space-y-2">
-                <Label>Direction: {editingGradient.direction}°</Label>
+                <ThemedLabel>Direction: {editingGradient.direction}°</ThemedLabel>
                 <Slider
                   value={[editingGradient.direction]}
                   onValueChange={([value]) => handleUpdateGradient({
@@ -213,27 +213,27 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
             {/* Color Stops */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
-                <Label>Color Stops</Label>
-                <Button
+                <ThemedLabel>Color Stops</ThemedLabel>
+                <ThemedButton
                   variant="outline"
                   size="sm"
                   onClick={() => handleAddStop(editingGradient)}
                 >
                   <Plus className="w-4 h-4 mr-2" />
                   Add Stop
-                </Button>
+                </ThemedButton>
               </div>
               
               <div className="space-y-3">
                 {editingGradient.stops.map((stop, index) => (
                   <div key={index} className="flex items-center gap-3 p-3 border border-[var(--theme-border)] rounded">
                      <div className="flex items-center gap-2 flex-1">
-                       <Select
+                       <ThemedSelect
                          value={stop.color}
                          onValueChange={(value) => handleStopChange(editingGradient, index, 'color', value)}
                        >
-                         <SelectTrigger className="flex-1">
-                           <SelectValue>
+                         <ThemedSelectTrigger className="flex-1">
+                           <ThemedSelectValue>
                              <div className="flex items-center gap-2">
                                <div 
                                  className="w-4 h-4 rounded border border-[var(--theme-border)]"
@@ -243,11 +243,11 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
                                  {Object.entries(defaultEnhancedTheme.colors).find(([_, color]) => color === stop.color)?.[0] || 'Custom'}
                                </span>
                              </div>
-                           </SelectValue>
-                         </SelectTrigger>
-                         <SelectContent>
+                           </ThemedSelectValue>
+                         </ThemedSelectTrigger>
+                         <ThemedSelectContent>
                            {Object.entries(defaultEnhancedTheme.colors).map(([colorName, colorValue]) => (
-                             <SelectItem key={colorName} value={colorValue}>
+                             <ThemedSelectItem key={colorName} value={colorValue}>
                                <div className="flex items-center gap-2">
                                  <div 
                                    className="w-4 h-4 rounded border border-[var(--theme-border)]"
@@ -255,14 +255,14 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
                                  />
                                  <span className="capitalize">{colorName.replace(/([A-Z])/g, ' $1').trim()}</span>
                                </div>
-                             </SelectItem>
+                             </ThemedSelectItem>
                            ))}
-                         </SelectContent>
-                       </Select>
+                         </ThemedSelectContent>
+                       </ThemedSelect>
                      </div>
                     <div className="flex items-center gap-2">
-                      <Label className="text-xs whitespace-nowrap">Position:</Label>
-                      <Input
+                      <ThemedLabel className="text-xs whitespace-nowrap">Position:</ThemedLabel>
+                      <ThemedInput
                         type="number"
                         value={stop.position}
                         onChange={(e) => handleStopChange(editingGradient, index, 'position', parseInt(e.target.value) || 0)}
@@ -273,13 +273,13 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
                       <span className="text-xs text-[var(--theme-textMuted)]">%</span>
                     </div>
                     {editingGradient.stops.length > 2 && (
-                      <Button
+                      <ThemedButton
                         variant="outline"
                         size="sm"
                         onClick={() => handleRemoveStop(editingGradient, index)}
                       >
                         <Trash2 className="w-4 h-4" />
-                      </Button>
+                      </ThemedButton>
                     )}
                   </div>
                 ))}
@@ -288,7 +288,7 @@ const GradientBuilder = ({ gradients, onGradientChange, selectedGradient, onSele
 
             {/* CSS Output */}
             <div className="space-y-2">
-              <Label>CSS Output</Label>
+              <ThemedLabel>CSS Output</ThemedLabel>
               <div className="p-3 bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded font-mono text-sm">
                 {gradientToCSS(editingGradient)}
               </div>
