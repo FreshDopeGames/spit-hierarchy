@@ -93,6 +93,8 @@ export interface EnhancedThemeConfig {
     navigation: ElementConfig;
     footer: ElementConfig;
     global_header: ElementConfig;
+    dropdown: ElementConfig;
+    dropdown_item: ElementConfig;
   };
   spacing: {
     xs: string;
@@ -270,6 +272,19 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
       color: '#E8E6E3',
       border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
       padding: '0px'
+    },
+    dropdown: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' },
+      padding: '0.5rem 0',
+      shadow: '0 10px 15px rgba(212, 175, 55, 0.2)'
+    },
+    dropdown_item: {
+      background: 'transparent',
+      color: '#E8E6E3',
+      typography: { fontSize: '0.875rem', fontWeight: '500', lineHeight: '1.25' },
+      padding: '0.625rem 0.75rem'
     }
   },
   spacing: {
@@ -325,10 +340,16 @@ export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
     
     if (key === 'primary') root.style.setProperty('--primary', hslValue);
     if (key === 'background') root.style.setProperty('--background', hslValue);
-    if (key === 'surface') root.style.setProperty('--muted', hslValue);
+    if (key === 'surface') {
+      root.style.setProperty('--muted', hslValue);
+      // Override popover background with surface color for dropdowns
+      root.style.setProperty('--popover', hslValue);
+    }
     if (key === 'text') {
       root.style.setProperty('--foreground', hslValue);
       root.style.setProperty('--muted-foreground', hslValue);
+      // Override popover foreground with text color for dropdowns
+      root.style.setProperty('--popover-foreground', hslValue);
     }
   });
   

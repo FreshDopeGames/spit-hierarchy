@@ -264,3 +264,12 @@ input, select {
 input::placeholder {
   color: hsl(0 0% 40%) !important; /* Darker placeholder text */
 }
+
+/* Force dropdown menu backgrounds to be visible */
+[data-radix-dropdown-menu-content] {
+  background: hsl(var(--theme-element-dropdown-bg, var(--theme-surface))) !important;
+  color: hsl(var(--theme-element-dropdown-color, var(--theme-text))) !important;
+  border: var(--theme-element-dropdown-border-width, 1px) var(--theme-element-dropdown-border-style, solid) hsl(var(--theme-element-dropdown-border-color, var(--theme-border))) !important;
+  box-shadow: var(--theme-element-dropdown-shadow, 0 10px 15px rgba(212, 175, 55, 0.2)) !important;
+  z-index: 50 !important;
+}

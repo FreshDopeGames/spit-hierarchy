@@ -5,7 +5,7 @@ import { ThemedInput } from "@/components/ui/themed-input";
 import { Badge } from "@/components/ui/badge";
 import { EnhancedThemeConfig } from "@/config/enhancedTheme";
 import { cn } from "@/lib/utils";
-import { Menu, User, Home, Trophy, Users, BarChart3 } from "lucide-react";
+import { Menu, User, Home, Trophy, Users, BarChart3, LogOut } from "lucide-react";
 
 interface EnhancedThemePreviewProps {
   theme: EnhancedThemeConfig;
@@ -395,6 +395,86 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
               >
                 Confirm
               </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Dropdown Section */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold text-[var(--theme-primary)] mb-4">Dropdown Elements</h3>
+          <div className="space-y-4">
+            {/* Dropdown Container */}
+            <div
+              className="transition-all duration-200 p-4 max-w-sm"
+              style={{
+                background: theme.elements.dropdown.background,
+                color: theme.elements.dropdown.color,
+                border: `${theme.elements.dropdown.border?.width} ${theme.elements.dropdown.border?.style} ${theme.elements.dropdown.border?.color}`,
+                borderRadius: theme.elements.dropdown.border?.radius,
+                padding: theme.elements.dropdown.padding,
+                boxShadow: theme.elements.dropdown.shadow,
+                ...getElementStyle('dropdown')
+              }}
+              onClick={(e) => handleElementClick('dropdown', e)}
+            >
+              <div className="space-y-1">
+                <div className="px-3 py-2 border-b border-gray-200/30">
+                  <p className="text-sm font-bold" style={{ color: theme.colors.primary }}>
+                    John Doe
+                  </p>
+                </div>
+                
+                {/* Dropdown Items */}
+                <div
+                  className="transition-all duration-200 hover:opacity-80"
+                  style={{
+                    background: theme.elements.dropdown_item.background,
+                    color: theme.elements.dropdown_item.color,
+                    fontSize: theme.elements.dropdown_item.typography?.fontSize,
+                    fontWeight: theme.elements.dropdown_item.typography?.fontWeight,
+                    lineHeight: theme.elements.dropdown_item.typography?.lineHeight,
+                    padding: theme.elements.dropdown_item.padding,
+                    ...getElementStyle('dropdown_item')
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleElementClick('dropdown_item', e);
+                  }}
+                >
+                  <User size={16} className="inline mr-3" />
+                  View Profile
+                </div>
+                
+                <div className="h-px bg-gray-200/30 my-1"></div>
+                
+                <div
+                  className="transition-all duration-200 hover:opacity-80"
+                  style={{
+                    background: theme.elements.dropdown_item.background,
+                    color: theme.elements.dropdown_item.color,
+                    fontSize: theme.elements.dropdown_item.typography?.fontSize,
+                    fontWeight: theme.elements.dropdown_item.typography?.fontWeight,
+                    padding: theme.elements.dropdown_item.padding,
+                  }}
+                >
+                  <Trophy size={16} className="inline mr-3" />
+                  Analytics
+                </div>
+                
+                <div
+                  className="transition-all duration-200 hover:opacity-80"
+                  style={{
+                    background: theme.elements.dropdown_item.background,
+                    color: theme.elements.dropdown_item.color,
+                    fontSize: theme.elements.dropdown_item.typography?.fontSize,
+                    fontWeight: theme.elements.dropdown_item.typography?.fontWeight,
+                    padding: theme.elements.dropdown_item.padding,
+                  }}
+                >
+                  <LogOut size={16} className="inline mr-3" />
+                  Sign Out
+                </div>
+              </div>
             </div>
           </div>
         </div>

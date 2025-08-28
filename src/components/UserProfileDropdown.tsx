@@ -1,7 +1,13 @@
 
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { 
+  ThemedDropdownMenu, 
+  ThemedDropdownMenuContent, 
+  ThemedDropdownMenuItem, 
+  ThemedDropdownMenuSeparator, 
+  ThemedDropdownMenuTrigger 
+} from "@/components/ui/themed-dropdown-menu";
 import { User, Settings, LogOut, Trophy } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -34,65 +40,68 @@ const UserProfileDropdown = ({
   const displayName = userProfile?.username || userProfile?.full_name || user?.email;
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
+    <ThemedDropdownMenu>
+      <ThemedDropdownMenuTrigger asChild>
         <div className="cursor-pointer hover:opacity-80 transition-opacity">
-          <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-[var(--theme-primary)]/50 hover:border-[var(--theme-primary)]`}>
+          <Avatar className={`transition-all duration-300 ${isScrolled ? 'w-8 h-8' : 'w-10 h-10'} border-2 border-[hsl(var(--theme-primary))]/50 hover:border-[hsl(var(--theme-primary))]`}>
             <AvatarImage 
               src={avatarUrl} 
               alt={displayName || 'User'}
               style={{ imageRendering: 'crisp-edges' }}
               loading="eager"
             />
-            <AvatarFallback className="bg-gradient-to-r from-[var(--theme-secondary)] to-[var(--theme-primary)] text-[var(--theme-text)]">
+            <AvatarFallback className="bg-gradient-to-r from-[hsl(var(--theme-secondary))] to-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))]">
               <User className="w-4 h-4" />
             </AvatarFallback>
           </Avatar>
         </div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-56 bg-[var(--theme-background)] border-[var(--theme-border)] shadow-2xl shadow-[var(--theme-primary)]/20 border-2">
-        <div className="px-3 py-2 border-b border-[var(--theme-border)]/30">
-          <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] font-bold text-sm truncate">
+      </ThemedDropdownMenuTrigger>
+      <ThemedDropdownMenuContent align="end" className="w-56">
+        <div className="px-3 py-2 border-b" style={{ borderColor: 'hsl(var(--theme-border))/30' }}>
+          <p className="font-bold text-sm truncate" style={{ 
+            color: 'hsl(var(--theme-primary))', 
+            fontFamily: 'var(--theme-font-body)' 
+          }}>
             {displayName}
           </p>
         </div>
         
         <Link to="/profile">
-          <DropdownMenuItem className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)] font-[var(--theme-font-body)] cursor-pointer">
+          <ThemedDropdownMenuItem>
             <User className="w-4 h-4 mr-3" />
             View Profile
-          </DropdownMenuItem>
+          </ThemedDropdownMenuItem>
         </Link>
         
-        <DropdownMenuSeparator className="bg-[var(--theme-border)]/30" />
+        <ThemedDropdownMenuSeparator />
         
         <Link to="/analytics">
-          <DropdownMenuItem className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)] font-[var(--theme-font-body)] cursor-pointer">
+          <ThemedDropdownMenuItem>
             <Trophy className="w-4 h-4 mr-3" />
             Analytics
-          </DropdownMenuItem>
+          </ThemedDropdownMenuItem>
         </Link>
         
         {(isAdmin || canManageBlog) && (
           <>
-            <DropdownMenuSeparator className="bg-[var(--theme-border)]/30" />
+            <ThemedDropdownMenuSeparator />
             <Link to="/admin">
-              <DropdownMenuItem className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primary)] font-[var(--theme-font-body)] cursor-pointer">
+              <ThemedDropdownMenuItem>
                 <Settings className="w-4 h-4 mr-3" />
                 Admin Panel
-              </DropdownMenuItem>
+              </ThemedDropdownMenuItem>
             </Link>
           </>
         )}
         
-        <DropdownMenuSeparator className="bg-[var(--theme-border)]/30" />
+        <ThemedDropdownMenuSeparator />
         
-        <DropdownMenuItem onClick={signOut} className="text-[var(--theme-text)] hover:bg-[var(--theme-secondary)]/20 hover:text-[var(--theme-secondary)] font-[var(--theme-font-body)] cursor-pointer">
+        <ThemedDropdownMenuItem onClick={signOut}>
           <LogOut className="w-4 h-4 mr-3" />
           Sign Out
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
+        </ThemedDropdownMenuItem>
+      </ThemedDropdownMenuContent>
+    </ThemedDropdownMenu>
   );
 };
 
