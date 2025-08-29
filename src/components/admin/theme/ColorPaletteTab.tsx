@@ -4,7 +4,7 @@ import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from
 import { ThemedInput } from "@/components/ui/themed-input";
 import { ThemedLabel } from "@/components/ui/themed-label";
 import { ThemeConfig } from "@/config/theme";
-import { isValidHex, getContrastTextColor } from "@/lib/utils";
+import { isValidHex, getContrastTextColor, hslToHex, hexToHsl } from "@/lib/utils";
 
 interface ColorPaletteTabProps {
   theme: ThemeConfig;
@@ -20,8 +20,16 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
       <ThemedCardContent>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {Object.entries(theme.colors).map(([key, value]) => {
-            const isValid = isValidHex(value);
-            const contrastColor = isValid ? getContrastTextColor(value) : '#000000';
+            // Convert HSL to hex for display (value might be in HSL format like "45 85% 55%")
+            const hexValue = value.startsWith('#') ? value : hslToHex(value);
+            const isValidHexColor = isValidHex(hexValue);
+            const contrastColor = isValidHexColor ? getContrastTextColor(hexValue) : '#000000';
+            
+            const handleColorChange = (newHex: string) => {
+              // Convert hex back to HSL format for theme storage
+              const hslValue = hexToHsl(newHex);
+              onColorChange(key, hslValue);
+            };
             
             return (
               <div key={key} className="space-y-2">
@@ -31,30 +39,37 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
                 <div className="flex gap-2">
                   <ThemedInput
                     type="color"
-                    value={isValid ? value : '#000000'}
-                    onChange={(e) => onColorChange(key, e.target.value)}
+                    value={isValidHexColor ? hexValue : '#000000'}
+                    onChange={(e) => handleColorChange(e.target.value)}
                     className="w-16 h-10 p-1"
                   />
                   <ThemedInput
                     type="text"
-                    value={value}
-                    onChange={(e) => onColorChange(key, e.target.value)}
+                    value={hexValue}
+                    onChange={(e) => {
+                      if (isValidHex(e.target.value)) {
+                        handleColorChange(e.target.value);
+                      } else {
+                        // Allow direct editing, validation will show error
+                        onColorChange(key, e.target.value);
+                      }
+                    }}
                     className={`flex-1 ${
-                      !isValid ? 'border-red-500' : ''
+                      !isValidHexColor ? 'border-red-500' : ''
                     }`}
-                    placeholder="#FFFFFF"
+                    placeholder={hexValue}
                   />
                 </div>
                 <div 
                   className="w-full h-8 rounded border-2 border-[var(--theme-border)] flex items-center justify-center text-xs font-medium"
                   style={{ 
-                    backgroundColor: isValid ? value : 'hsl(var(--theme-surface))',
-                    color: isValid ? contrastColor : 'hsl(var(--theme-textMuted))'
+                    backgroundColor: isValidHexColor ? hexValue : 'hsl(var(--theme-surface))',
+                    color: isValidHexColor ? contrastColor : 'hsl(var(--theme-textMuted))'
                   }}
                 >
-                  {isValid ? 'Preview' : 'Invalid Color'}
+                  {isValidHexColor ? 'Preview' : 'Invalid Color'}
                 </div>
-                {!isValid && (
+                {!isValidHexColor && (
                   <p className="text-red-400 text-xs">
                     Please enter a valid hex color (e.g., #FF0000)
                   </p>
