@@ -1642,7 +1642,7 @@ export type Database = {
           created_at: string
           id: string
           is_active: boolean
-          section_name: string
+          section: string
           subtitle: string | null
           title: string
           updated_at: string
@@ -1652,7 +1652,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
-          section_name: string
+          section: string
           subtitle?: string | null
           title: string
           updated_at?: string
@@ -1662,7 +1662,7 @@ export type Database = {
           created_at?: string
           id?: string
           is_active?: boolean
-          section_name?: string
+          section?: string
           subtitle?: string | null
           title?: string
           updated_at?: string
