@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
+import { EnhancedThemeProvider } from "@/hooks/useEnhancedTheme";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import AuthGuard from "@/components/AuthGuard";
 import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
@@ -67,10 +68,11 @@ const queryClient = new QueryClient({
 function App() {
   return (
     <QueryClientProvider client={queryClient}>
-      <SecureAuthProvider>
-        <SecurityProvider>
-          <TooltipProvider>
-            <AchievementProvider>
+      <EnhancedThemeProvider>
+        <SecureAuthProvider>
+          <SecurityProvider>
+            <TooltipProvider>
+              <AchievementProvider>
               <Sonner />
               <ContentSecurityPolicy />
               <EmailConfirmationHandler />
@@ -127,10 +129,11 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
-            </AchievementProvider>
-          </TooltipProvider>
-        </SecurityProvider>
-      </SecureAuthProvider>
+              </AchievementProvider>
+            </TooltipProvider>
+          </SecurityProvider>
+        </SecureAuthProvider>
+      </EnhancedThemeProvider>
     </QueryClientProvider>
   );
 }

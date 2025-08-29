@@ -76,8 +76,7 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
       </SheetTrigger>
       <SheetContent 
         side="left" 
-        className="w-80 bg-[var(--theme-background)] shadow-2xl"
-        style={{ borderColor: `${theme.colors.primary}50` }}
+        className="w-80 bg-[hsl(var(--theme-element-navigation-bg))] shadow-2xl backdrop-blur-xl border-[hsl(var(--theme-element-navigation-border-color))]"
       >
         <SheetHeader className="pb-6">
           <SheetTitle className="flex items-center justify-center">
