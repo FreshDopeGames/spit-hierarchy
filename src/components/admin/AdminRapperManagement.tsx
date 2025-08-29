@@ -12,9 +12,7 @@ import AdminTabHeader from "./AdminTabHeader";
 import AdminRapperDeleteDialog from "./AdminRapperDeleteDialog";
 import { Tables } from "@/integrations/supabase/types";
 import { toast } from "sonner";
-
 type Rapper = Tables<"rappers">;
-
 const ITEMS_PER_PAGE = 28; // 4 rappers per row × 7 rows = 28 rappers per page
 
 const AdminRapperManagement = () => {
@@ -25,7 +23,6 @@ const AdminRapperManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rapperToDelete, setRapperToDelete] = useState<Rapper | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
-
   const {
     data: rappers,
     isLoading,
@@ -57,28 +54,22 @@ const AdminRapperManagement = () => {
     },
     staleTime: 5 * 60 * 1000 // 5 minutes
   });
-
   useEffect(() => {
     refetch();
   }, [currentPage, searchTerm, refetch]);
-
   const totalItems = rappers?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
   };
-
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
   };
-
   const handleEdit = (rapper: Rapper) => {
     setSelectedRapper(rapper);
     setDialogOpen(true);
   };
-
   const handleDelete = (id: string) => {
     const rapper = rappers?.data?.find(r => r.id === id);
     if (rapper) {
@@ -86,21 +77,16 @@ const AdminRapperManagement = () => {
       setDeleteDialogOpen(true);
     }
   };
-
   const confirmDelete = async () => {
     if (!rapperToDelete) return;
-    
     setIsDeleting(true);
     try {
-      const { error } = await supabase
-        .from("rappers")
-        .delete()
-        .eq("id", rapperToDelete.id);
-
+      const {
+        error
+      } = await supabase.from("rappers").delete().eq("id", rapperToDelete.id);
       if (error) {
         throw error;
       }
-
       toast.success(`${rapperToDelete.name} has been deleted successfully`);
       setDeleteDialogOpen(false);
       setRapperToDelete(null);
@@ -112,18 +98,15 @@ const AdminRapperManagement = () => {
       setIsDeleting(false);
     }
   };
-
   const handleDialogSuccess = () => {
     refetch();
     setSelectedRapper(null);
     setDialogOpen(false);
   };
-
   const handleNewRapper = () => {
     setSelectedRapper(null);
     setDialogOpen(true);
   };
-
   return <div className="space-y-6">
       <AdminTabHeader title="Rapper Management" icon={Users} description="Add, edit, and manage rapper profiles and information">
         <button onClick={handleNewRapper} className="bg-theme-primary text-theme-background px-4 py-2 rounded-lg hover:bg-theme-primaryDark transition-colors">
@@ -132,7 +115,7 @@ const AdminRapperManagement = () => {
       </AdminTabHeader>
 
       <Card className="bg-theme-surface border border-theme-border">
-        <CardContent className="p-6">
+        <CardContent className="p-6 bg-black">
           <div className="mb-4">
             <Label htmlFor="search" className="text-theme-text font-bold">
               Search Rappers:
@@ -150,14 +133,7 @@ const AdminRapperManagement = () => {
 
       <AdminRapperDialog open={dialogOpen} onOpenChange={setDialogOpen} rapper={selectedRapper} onSuccess={handleDialogSuccess} />
       
-      <AdminRapperDeleteDialog 
-        open={deleteDialogOpen}
-        onOpenChange={setDeleteDialogOpen}
-        rapper={rapperToDelete}
-        onConfirm={confirmDelete}
-        isDeleting={isDeleting}
-      />
+      <AdminRapperDeleteDialog open={deleteDialogOpen} onOpenChange={setDeleteDialogOpen} rapper={rapperToDelete} onConfirm={confirmDelete} isDeleting={isDeleting} />
     </div>;
 };
-
 export default AdminRapperManagement;
