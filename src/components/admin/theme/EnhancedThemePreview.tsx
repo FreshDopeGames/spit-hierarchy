@@ -46,11 +46,11 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
           <div
             className="flex items-center justify-between transition-all duration-200"
             style={{
-              background: theme.elements.global_header.background,
-              color: theme.elements.global_header.color,
-              border: `${theme.elements.global_header.border?.width} ${theme.elements.global_header.border?.style} ${theme.elements.global_header.border?.color}`,
-              borderRadius: theme.elements.global_header.border?.radius,
-              padding: theme.elements.global_header.padding || '1rem 2rem',
+              background: 'var(--theme-element-global_header-bg, var(--theme-surface))',
+              color: 'var(--theme-element-global_header-color, var(--theme-text))',
+              border: 'var(--theme-element-global_header-border, 1px solid var(--theme-border))',
+              borderRadius: 'var(--theme-element-global_header-border-radius, 8px)',
+              padding: 'var(--theme-element-global_header-padding, 1rem 2rem)',
               ...getElementStyle('global_header')
             }}
             onClick={(e) => handleElementClick('global_header', e)}
@@ -93,11 +93,11 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
           <div
             className="transition-all duration-200"
             style={{
-              background: theme.elements.navigation.background,
-              color: theme.elements.navigation.color,
-              border: `${theme.elements.navigation.border?.width} ${theme.elements.navigation.border?.style} ${theme.elements.navigation.border?.color}`,
-              borderRadius: theme.elements.navigation.border?.radius,
-              padding: theme.elements.navigation.padding,
+              background: 'var(--theme-element-navigation-bg, var(--theme-surface))',
+              color: 'var(--theme-element-navigation-color, var(--theme-text))',
+              border: 'var(--theme-element-navigation-border, 1px solid var(--theme-border))',
+              borderRadius: 'var(--theme-element-navigation-border-radius, 8px)',
+              padding: 'var(--theme-element-navigation-padding, 1rem)',
               ...getElementStyle('navigation')
             }}
             onClick={(e) => handleElementClick('navigation', e)}
@@ -234,16 +234,14 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             <button
               className="transition-all duration-200 hover:opacity-90"
               style={{
-                background: theme.elements.button.default.gradient 
-                  ? `var(--theme-gradient-${theme.elements.button.default.gradient})`
-                  : theme.elements.button.default.background,
-                color: theme.elements.button.default.color,
-                border: `${theme.elements.button.default.border?.width} ${theme.elements.button.default.border?.style} ${theme.elements.button.default.border?.color}`,
-                borderRadius: theme.elements.button.default.border?.radius,
-                padding: theme.elements.button.default.padding,
-                fontSize: theme.elements.button.default.typography?.fontSize,
-                fontWeight: theme.elements.button.default.typography?.fontWeight,
-                lineHeight: theme.elements.button.default.typography?.lineHeight,
+                background: 'var(--theme-element-button-default-bg, var(--theme-primary))',
+                color: 'var(--theme-element-button-default-color, var(--theme-background))',
+                border: 'var(--theme-element-button-default-border, none)',
+                borderRadius: 'var(--theme-element-button-default-border-radius, 8px)',
+                padding: 'var(--theme-element-button-default-padding, 0.5rem 1rem)',
+                fontSize: 'var(--theme-element-button-default-font-size, 1rem)',
+                fontWeight: 'var(--theme-element-button-default-font-weight, 500)',
+                lineHeight: 'var(--theme-element-button-default-line-height, 1.5)',
                 ...getElementStyle('button-default')
               }}
               onClick={(e) => handleElementClick('button-default', e)}
@@ -253,13 +251,13 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             <button
               className="transition-all duration-200 hover:opacity-90"
               style={{
-                background: theme.elements.button.secondary.background,
-                color: theme.elements.button.secondary.color,
-                border: `${theme.elements.button.secondary.border?.width} ${theme.elements.button.secondary.border?.style} ${theme.elements.button.secondary.border?.color}`,
-                borderRadius: theme.elements.button.secondary.border?.radius,
-                padding: theme.elements.button.secondary.padding,
-                fontSize: theme.elements.button.secondary.typography?.fontSize,
-                fontWeight: theme.elements.button.secondary.typography?.fontWeight,
+                background: 'var(--theme-element-button-secondary-bg, var(--theme-secondary))',
+                color: 'var(--theme-element-button-secondary-color, var(--theme-text))',
+                border: 'var(--theme-element-button-secondary-border, 1px solid var(--theme-border))',
+                borderRadius: 'var(--theme-element-button-secondary-border-radius, 8px)',
+                padding: 'var(--theme-element-button-secondary-padding, 0.5rem 1rem)',
+                fontSize: 'var(--theme-element-button-secondary-font-size, 1rem)',
+                fontWeight: 'var(--theme-element-button-secondary-font-weight, 500)',
                 ...getElementStyle('button-secondary')
               }}
               onClick={(e) => handleElementClick('button-secondary', e)}
@@ -269,13 +267,13 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             <button
               className="transition-all duration-200 hover:opacity-90"
               style={{
-                background: theme.elements.button.accent.background,
-                color: theme.elements.button.accent.color,
-                border: `${theme.elements.button.accent.border?.width} ${theme.elements.button.accent.border?.style} ${theme.elements.button.accent.border?.color}`,
-                borderRadius: theme.elements.button.accent.border?.radius,
-                padding: theme.elements.button.accent.padding,
-                fontSize: theme.elements.button.accent.typography?.fontSize,
-                fontWeight: theme.elements.button.accent.typography?.fontWeight,
+                background: 'var(--theme-element-button-accent-bg, var(--theme-accent))',
+                color: 'var(--theme-element-button-accent-color, var(--theme-background))',
+                border: 'var(--theme-element-button-accent-border, none)',
+                borderRadius: 'var(--theme-element-button-accent-border-radius, 8px)',
+                padding: 'var(--theme-element-button-accent-padding, 0.5rem 1rem)',
+                fontSize: 'var(--theme-element-button-accent-font-size, 1rem)',
+                fontWeight: 'var(--theme-element-button-accent-font-weight, 500)',
                 ...getElementStyle('button-accent')
               }}
               onClick={(e) => handleElementClick('button-accent', e)}
@@ -287,13 +285,13 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             <button
               className="transition-all duration-200 hover:opacity-90"
               style={{
-                background: theme.elements.button.outline.background,
-                color: theme.elements.button.outline.color,
-                border: `${theme.elements.button.outline.border?.width} ${theme.elements.button.outline.border?.style} ${theme.elements.button.outline.border?.color}`,
-                borderRadius: theme.elements.button.outline.border?.radius,
-                padding: theme.elements.button.outline.padding,
-                fontSize: theme.elements.button.outline.typography?.fontSize,
-                fontWeight: theme.elements.button.outline.typography?.fontWeight,
+                background: 'var(--theme-element-button-outline-bg, transparent)',
+                color: 'var(--theme-element-button-outline-color, var(--theme-primary))',
+                border: 'var(--theme-element-button-outline-border, 1px solid var(--theme-primary))',
+                borderRadius: 'var(--theme-element-button-outline-border-radius, 8px)',
+                padding: 'var(--theme-element-button-outline-padding, 0.5rem 1rem)',
+                fontSize: 'var(--theme-element-button-outline-font-size, 1rem)',
+                fontWeight: 'var(--theme-element-button-outline-font-weight, 500)',
                 ...getElementStyle('button-outline')
               }}
               onClick={(e) => handleElementClick('button-outline', e)}
@@ -303,15 +301,13 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             <button
               className="transition-all duration-200 hover:opacity-90"
               style={{
-                background: theme.elements.button.gradient.gradient 
-                  ? `var(--theme-gradient-${theme.elements.button.gradient.gradient})`
-                  : theme.elements.button.gradient.background,
-                color: theme.elements.button.gradient.color,
-                border: `${theme.elements.button.gradient.border?.width} ${theme.elements.button.gradient.border?.style} ${theme.elements.button.gradient.border?.color}`,
-                borderRadius: theme.elements.button.gradient.border?.radius,
-                padding: theme.elements.button.gradient.padding,
-                fontSize: theme.elements.button.gradient.typography?.fontSize,
-                fontWeight: theme.elements.button.gradient.typography?.fontWeight,
+                background: 'var(--theme-element-button-gradient-bg, linear-gradient(135deg, var(--theme-primary), var(--theme-accent)))',
+                color: 'var(--theme-element-button-gradient-color, var(--theme-background))',
+                border: 'var(--theme-element-button-gradient-border, none)',
+                borderRadius: 'var(--theme-element-button-gradient-border-radius, 8px)',
+                padding: 'var(--theme-element-button-gradient-padding, 0.5rem 1rem)',
+                fontSize: 'var(--theme-element-button-gradient-font-size, 1rem)',
+                fontWeight: 'var(--theme-element-button-gradient-font-weight, 500)',
                 ...getElementStyle('button-gradient')
               }}
               onClick={(e) => handleElementClick('button-gradient', e)}
@@ -327,12 +323,12 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
           <div
             className="transition-all duration-200"
             style={{
-              background: theme.elements.card.background,
-              color: theme.elements.card.color,
-              border: `${theme.elements.card.border?.width} ${theme.elements.card.border?.style} ${theme.elements.card.border?.color}`,
-              borderRadius: theme.elements.card.border?.radius,
-              padding: theme.elements.card.padding,
-              boxShadow: theme.elements.card.shadow,
+              background: 'var(--theme-element-card-bg, var(--theme-surface))',
+              color: 'var(--theme-element-card-color, var(--theme-text))',
+              border: 'var(--theme-element-card-border, 1px solid var(--theme-border))',
+              borderRadius: 'var(--theme-element-card-border-radius, 12px)',
+              padding: 'var(--theme-element-card-padding, 1.5rem)',
+              boxShadow: 'var(--theme-element-card-shadow, 0 2px 8px rgba(0, 0, 0, 0.1))',
               ...getElementStyle('card')
             }}
             onClick={(e) => handleElementClick('card', e)}
@@ -357,6 +353,11 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             onChange={(e) => setInputValue(e.target.value)}
             className="w-full transition-all duration-200"
             style={{
+              background: 'var(--theme-element-input-bg, var(--theme-background))',
+              color: 'var(--theme-element-input-color, var(--theme-text))',
+              border: 'var(--theme-element-input-border, 1px solid var(--theme-border))',
+              borderRadius: 'var(--theme-element-input-border-radius, 6px)',
+              padding: 'var(--theme-element-input-padding, 0.5rem 1rem)',
               ...getElementStyle('input')
             }}
             onClick={(e) => handleElementClick('input', e)}
@@ -370,12 +371,12 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
           <div
             className="transition-all duration-200 max-w-md mx-auto"
             style={{
-              background: theme.elements.modal.background,
-              color: theme.elements.modal.color,
-              border: `${theme.elements.modal.border?.width} ${theme.elements.modal.border?.style} ${theme.elements.modal.border?.color}`,
-              borderRadius: theme.elements.modal.border?.radius,
-              padding: theme.elements.modal.padding,
-              boxShadow: theme.elements.modal.shadow,
+              background: 'var(--theme-element-modal-bg, var(--theme-background))',
+              color: 'var(--theme-element-modal-color, var(--theme-text))',
+              border: 'var(--theme-element-modal-border, 1px solid var(--theme-border))',
+              borderRadius: 'var(--theme-element-modal-border-radius, 12px)',
+              padding: 'var(--theme-element-modal-padding, 2rem)',
+              boxShadow: 'var(--theme-element-modal-shadow, 0 10px 50px rgba(0, 0, 0, 0.3))',
               ...getElementStyle('modal')
             }}
             onClick={(e) => handleElementClick('modal', e)}
@@ -407,12 +408,12 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
             <div
               className="transition-all duration-200 p-4 max-w-sm"
               style={{
-                background: theme.elements.dropdown.background,
-                color: theme.elements.dropdown.color,
-                border: `${theme.elements.dropdown.border?.width} ${theme.elements.dropdown.border?.style} ${theme.elements.dropdown.border?.color}`,
-                borderRadius: theme.elements.dropdown.border?.radius,
-                padding: theme.elements.dropdown.padding,
-                boxShadow: theme.elements.dropdown.shadow,
+                background: 'var(--theme-element-dropdown-bg, var(--theme-surface))',
+                color: 'var(--theme-element-dropdown-color, var(--theme-text))',
+                border: 'var(--theme-element-dropdown-border, 1px solid var(--theme-border))',
+                borderRadius: 'var(--theme-element-dropdown-border-radius, 8px)',
+                padding: 'var(--theme-element-dropdown-padding, 0.5rem)',
+                boxShadow: 'var(--theme-element-dropdown-shadow, 0 4px 12px rgba(0, 0, 0, 0.15))',
                 ...getElementStyle('dropdown')
               }}
               onClick={(e) => handleElementClick('dropdown', e)}
@@ -428,12 +429,12 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
                 <div
                   className="transition-all duration-200 hover:opacity-80"
                   style={{
-                    background: theme.elements.dropdown_item.background,
-                    color: theme.elements.dropdown_item.color,
-                    fontSize: theme.elements.dropdown_item.typography?.fontSize,
-                    fontWeight: theme.elements.dropdown_item.typography?.fontWeight,
-                    lineHeight: theme.elements.dropdown_item.typography?.lineHeight,
-                    padding: theme.elements.dropdown_item.padding,
+                    background: 'var(--theme-element-dropdown_item-bg, transparent)',
+                    color: 'var(--theme-element-dropdown_item-color, var(--theme-text))',
+                    fontSize: 'var(--theme-element-dropdown_item-font-size, 0.875rem)',
+                    fontWeight: 'var(--theme-element-dropdown_item-font-weight, 400)',
+                    lineHeight: 'var(--theme-element-dropdown_item-line-height, 1.5)',
+                    padding: 'var(--theme-element-dropdown_item-padding, 0.5rem 0.75rem)',
                     ...getElementStyle('dropdown_item')
                   }}
                   onClick={(e) => {
@@ -450,11 +451,11 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
                 <div
                   className="transition-all duration-200 hover:opacity-80"
                   style={{
-                    background: theme.elements.dropdown_item.background,
-                    color: theme.elements.dropdown_item.color,
-                    fontSize: theme.elements.dropdown_item.typography?.fontSize,
-                    fontWeight: theme.elements.dropdown_item.typography?.fontWeight,
-                    padding: theme.elements.dropdown_item.padding,
+                    background: 'var(--theme-element-dropdown_item-bg, transparent)',
+                    color: 'var(--theme-element-dropdown_item-color, var(--theme-text))',
+                    fontSize: 'var(--theme-element-dropdown_item-font-size, 0.875rem)',
+                    fontWeight: 'var(--theme-element-dropdown_item-font-weight, 400)',
+                    padding: 'var(--theme-element-dropdown_item-padding, 0.5rem 0.75rem)',
                   }}
                 >
                   <Trophy size={16} className="inline mr-3" />
@@ -464,11 +465,11 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
                 <div
                   className="transition-all duration-200 hover:opacity-80"
                   style={{
-                    background: theme.elements.dropdown_item.background,
-                    color: theme.elements.dropdown_item.color,
-                    fontSize: theme.elements.dropdown_item.typography?.fontSize,
-                    fontWeight: theme.elements.dropdown_item.typography?.fontWeight,
-                    padding: theme.elements.dropdown_item.padding,
+                    background: 'var(--theme-element-dropdown_item-bg, transparent)',
+                    color: 'var(--theme-element-dropdown_item-color, var(--theme-text))',
+                    fontSize: 'var(--theme-element-dropdown_item-font-size, 0.875rem)',
+                    fontWeight: 'var(--theme-element-dropdown_item-font-weight, 400)',
+                    padding: 'var(--theme-element-dropdown_item-padding, 0.5rem 0.75rem)',
                   }}
                 >
                   <LogOut size={16} className="inline mr-3" />
@@ -485,11 +486,11 @@ const EnhancedThemePreview = ({ theme, selectedElement, onElementSelect }: Enhan
           <div
             className="transition-all duration-200"
             style={{
-              background: theme.elements.footer.background,
-              color: theme.elements.footer.color,
-              border: `${theme.elements.footer.border?.width} ${theme.elements.footer.border?.style} ${theme.elements.footer.border?.color}`,
-              borderRadius: theme.elements.footer.border?.radius,
-              padding: theme.elements.footer.padding,
+              background: 'var(--theme-element-footer-bg, var(--theme-background))',
+              color: 'var(--theme-element-footer-color, var(--theme-text))',
+              border: 'var(--theme-element-footer-border, 1px solid var(--theme-border))',
+              borderRadius: 'var(--theme-element-footer-border-radius, 8px)',
+              padding: 'var(--theme-element-footer-padding, 2rem)',
               ...getElementStyle('footer')
             }}
             onClick={(e) => handleElementClick('footer', e)}

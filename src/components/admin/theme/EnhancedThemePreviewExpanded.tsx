@@ -40,7 +40,13 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
       {/* Global Header */}
       <header 
         className="border-b border-[var(--theme-border)] pb-4"
-        style={getElementStyle('global_header')}
+        style={{
+          background: 'var(--theme-element-global_header-bg, var(--theme-background))',
+          color: 'var(--theme-element-global_header-color, var(--theme-text))',
+          padding: 'var(--theme-element-global_header-padding, 1rem)',
+          borderRadius: 'var(--theme-element-global_header-border-radius, 0)',
+          ...getElementStyle('global_header')
+        }}
         onClick={(e) => handleElementClick('global_header', e)}
       >
         <div className="flex items-center justify-between">
@@ -95,7 +101,13 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
       {/* Navigation */}
       <nav 
         className="border-b border-[var(--theme-border)] pb-4"
-        style={getElementStyle('navigation')}
+        style={{
+          background: 'var(--theme-element-navigation-bg, var(--theme-background))',
+          color: 'var(--theme-element-navigation-color, var(--theme-text))',
+          padding: 'var(--theme-element-navigation-padding, 1rem)',
+          borderRadius: 'var(--theme-element-navigation-border-radius, 0)',
+          ...getElementStyle('navigation')
+        }}
         onClick={(e) => handleElementClick('navigation', e)}
       >
         <div className="flex items-center space-x-6">
@@ -406,7 +418,13 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
       {/* Footer */}
       <footer 
         className="border-t border-[var(--theme-border)] pt-8 mt-12"
-        style={getElementStyle('footer')}
+        style={{
+          background: 'var(--theme-element-footer-bg, var(--theme-background))',
+          color: 'var(--theme-element-footer-color, var(--theme-text))',
+          padding: 'var(--theme-element-footer-padding, 2rem 1rem)',
+          borderRadius: 'var(--theme-element-footer-border-radius, 0)',
+          ...getElementStyle('footer')
+        }}
         onClick={(e) => handleElementClick('footer', e)}
       >
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
