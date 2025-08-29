@@ -4,7 +4,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Palette, Type, Layout, Wand2 } from "lucide-react";
 import ThemeManagementHeader from "./theme/ThemeManagementHeader";
-import ColorPaletteTab from "./theme/ColorPaletteTab";
+import BasicColorPaletteTab from "./theme/BasicColorPaletteTab";
 import TypographyTab from "./theme/TypographyTab";
 import LayoutTab from "./theme/LayoutTab";
 import ThemePreview from "./theme/ThemePreview";
@@ -95,7 +95,7 @@ const ThemeManagement = () => {
         </TabsList>
 
         <TabsContent value="colors" className="space-y-4">
-          <ColorPaletteTab theme={theme} onColorChange={handleColorChange} />
+          <BasicColorPaletteTab theme={theme} onColorChange={handleColorChange} />
         </TabsContent>
 
         <TabsContent value="fonts" className="space-y-4">

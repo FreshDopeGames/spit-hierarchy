@@ -104,15 +104,6 @@ export interface EnhancedThemeConfig {
     rarityLegendary: string;
     rarityMythic: string;
 
-    // Gradient definitions
-    gradientPrimary: string;
-    gradientSecondary: string;
-    gradientAccent: string;
-    gradientSuccess: string;
-    gradientWarning: string;
-    gradientError: string;
-    gradientNeutral: string;
-
     // Interactive state colors
     hoverBg: string;
     hoverColor: string;
@@ -243,15 +234,6 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     rarityLegendary: '38 92% 50%',    // Orange/Gold
     rarityMythic: '0 84% 60%',        // Red
 
-    // Gradient definitions
-    gradientPrimary: 'linear-gradient(135deg, hsl(45 75% 43%), hsl(45 85% 55%))',
-    gradientSecondary: 'linear-gradient(135deg, hsl(345 73% 18%), hsl(345 75% 25%))',
-    gradientAccent: 'linear-gradient(135deg, hsl(82 50% 30%), hsl(82 57% 35%))',
-    gradientSuccess: 'linear-gradient(135deg, hsl(142 76% 36%), hsl(142 71% 45%))',
-    gradientWarning: 'linear-gradient(135deg, hsl(32 95% 44%), hsl(38 92% 50%))',
-    gradientError: 'linear-gradient(135deg, hsl(0 84% 51%), hsl(0 84% 60%))',
-    gradientNeutral: 'linear-gradient(135deg, hsl(220 13% 26%), hsl(220 14% 46%))',
-
     // Interactive state colors
     hoverBg: '45 85% 55%',
     hoverColor: '0 0% 100%',
@@ -306,6 +288,46 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
       stops: [
         { color: '#6B8E23', position: 0 },
         { color: '#7BA428', position: 100 }
+      ]
+    },
+    {
+      id: 'success-gradient',
+      name: 'Success Gradient',
+      type: 'linear',
+      direction: 135,
+      stops: [
+        { color: '#22C55E', position: 0 },
+        { color: '#16A34A', position: 100 }
+      ]
+    },
+    {
+      id: 'warning-gradient',
+      name: 'Warning Gradient',
+      type: 'linear',
+      direction: 135,
+      stops: [
+        { color: '#F59E0B', position: 0 },
+        { color: '#D97706', position: 100 }
+      ]
+    },
+    {
+      id: 'error-gradient',
+      name: 'Error Gradient',
+      type: 'linear',
+      direction: 135,
+      stops: [
+        { color: '#EF4444', position: 0 },
+        { color: '#DC2626', position: 100 }
+      ]
+    },
+    {
+      id: 'neutral-gradient',
+      name: 'Neutral Gradient',
+      type: 'linear',
+      direction: 135,
+      stops: [
+        { color: '#6B7280', position: 0 },
+        { color: '#4B5563', position: 100 }
       ]
     }
   ],

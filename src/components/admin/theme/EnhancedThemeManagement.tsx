@@ -29,12 +29,16 @@ const EnhancedThemeManagement = () => {
   const currentTheme = previewTheme || theme;
 
   const handleColorChange = (colorKey: string, value: string) => {
-    updateTheme({
-      colors: {
-        ...currentTheme.colors,
-        [colorKey]: value
-      }
-    });
+    if (colorKey === 'gradients') {
+      updateTheme({ gradients: value as any });
+    } else {
+      updateTheme({
+        colors: {
+          ...currentTheme.colors,
+          [colorKey]: value
+        }
+      });
+    }
   };
 
   const handleFontChange = (fontKey: string, value: string) => {
@@ -125,7 +129,7 @@ const EnhancedThemeManagement = () => {
       {/* Main Controls */}
       <div className="space-y-6">
         <Tabs defaultValue="colors" className="space-y-4">
-          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-5 p-2 gap-1 rounded-lg">
+          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-4 p-2 gap-1 rounded-lg">
             <TabsTrigger 
               value="colors" 
               className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
@@ -139,13 +143,6 @@ const EnhancedThemeManagement = () => {
             >
               <Type className="w-4 h-4 mr-1" />
               Fonts
-            </TabsTrigger>
-            <TabsTrigger 
-              value="gradients" 
-              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-            >
-              <Wand2 className="w-4 h-4 mr-1" />
-              Gradients
             </TabsTrigger>
             <TabsTrigger 
               value="elements" 
@@ -169,15 +166,6 @@ const EnhancedThemeManagement = () => {
 
           <TabsContent value="typography" className="space-y-4">
             <TypographyTab theme={currentTheme} onFontChange={handleFontChange} />
-          </TabsContent>
-
-          <TabsContent value="gradients" className="space-y-4">
-            <GradientBuilder
-              gradients={currentTheme.gradients}
-              onGradientChange={handleGradientChange}
-              selectedGradient={selectedGradient}
-              onSelectGradient={setSelectedGradient}
-            />
           </TabsContent>
 
           <TabsContent value="elements" className="space-y-4">
