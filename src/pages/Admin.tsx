@@ -36,8 +36,8 @@ const Admin = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[var(--theme-background)] flex items-center justify-center">
-        <div className="text-[var(--theme-primary)] text-xl font-[var(--theme-font-heading)] animate-pulse">Loading...</div>
+      <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
+        <div className="text-[hsl(var(--theme-primary))] text-xl font-[var(--theme-font-heading)] animate-pulse">Loading...</div>
       </div>
     );
   }
@@ -72,11 +72,11 @@ const Admin = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[var(--theme-background)]">
+    <div className="min-h-screen bg-[hsl(var(--theme-background))]">
       <HeaderNavigation isScrolled={isScrolled} />
       
       <main className="max-w-7xl mx-auto p-4 sm:p-6 pt-24">
-        <h1 className="text-2xl sm:text-4xl font-bold text-[var(--theme-primary)] mb-6 sm:mb-8 font-[var(--theme-font-heading)]">
+        <h1 className="text-2xl sm:text-4xl font-bold text-[hsl(var(--theme-primary))] mb-6 sm:mb-8 font-[var(--theme-font-heading)]">
           Admin Dashboard
         </h1>
 
@@ -113,10 +113,10 @@ const Admin = () => {
             ))}
           </ThemedTabsList>
 
-          {/* Tab Content */}
-          <div className="bg-[var(--theme-background)] p-3 sm:p-6 rounded-lg border border-[var(--theme-border)]">
-            {renderTabContent()}
-          </div>
+        {/* Tab Content */}
+        <div className="bg-[hsl(var(--theme-surface))] p-3 sm:p-6 rounded-lg border border-[hsl(var(--theme-primary))] shadow-lg">
+          {renderTabContent()}
+        </div>
         </ThemedTabs>
       </main>
     </div>

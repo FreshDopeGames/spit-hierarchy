@@ -57,7 +57,7 @@ const UserProfileDropdown = ({
         </div>
       </ThemedDropdownMenuTrigger>
       <ThemedDropdownMenuContent align="end" className="w-56">
-        <div className="px-3 py-2 border-b" style={{ borderColor: 'hsl(var(--theme-border))/30' }}>
+        <div className="px-3 py-2 border-b" style={{ borderColor: 'rgba(255, 255, 255, 0.1)' }}>
           <p className="font-bold text-sm truncate" style={{ 
             color: 'hsl(var(--theme-primary))', 
             fontFamily: 'var(--theme-font-body)' 

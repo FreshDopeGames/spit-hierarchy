@@ -99,6 +99,7 @@ const ThemedDropdownMenuContent = React.forwardRef<
         borderRadius: 'var(--theme-element-dropdown-border-radius, 8px)',
         padding: 'var(--theme-element-dropdown-padding, 0.5rem 0)',
         boxShadow: 'var(--theme-element-dropdown-shadow, 0 10px 15px rgba(212, 175, 55, 0.2))',
+        zIndex: 9999,
       }}
       {...props}
     />
@@ -118,8 +119,9 @@ const ThemedDropdownMenuItem = React.forwardRef<
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm text-sm outline-none transition-colors",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      "hover:bg-[var(--theme-element-dropdown_item-hover-bg,var(--theme-primary))] hover:text-[var(--theme-element-dropdown_item-hover-color,var(--theme-background))]",
-      "focus:bg-[var(--theme-element-dropdown_item-hover-bg,var(--theme-primary))] focus:text-[var(--theme-element-dropdown_item-hover-color,var(--theme-background))]",
+      "hover:bg-[hsl(var(--theme-element-dropdown_item-hover-bg,0_0%_100%))] hover:text-[hsl(var(--theme-element-dropdown_item-hover-color,0_0%_5%))]",
+      "focus:bg-[hsl(var(--theme-element-dropdown_item-hover-bg,0_0%_100%))] focus:text-[hsl(var(--theme-element-dropdown_item-hover-color,0_0%_5%))]",
+      "border-b border-white/10 last:border-b-0",
       inset && "pl-8",
       className
     )}
