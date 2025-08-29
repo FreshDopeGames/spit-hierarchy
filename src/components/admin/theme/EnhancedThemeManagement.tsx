@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Palette, Type, Wand2, Layout, Save, RotateCcw, Eye, EyeOff } from "lucide-react";
 import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import EnhancedThemePreview from "./EnhancedThemePreview";
+import EnhancedThemePreviewExpanded from "./EnhancedThemePreviewExpanded";
 import ColorPaletteTab from "./ColorPaletteTab";
 import TypographyTab from "./TypographyTab";
 import GradientBuilder from "./GradientBuilder";
@@ -170,21 +171,21 @@ const EnhancedThemeManagement = () => {
 
           <TabsContent value="elements" className="space-y-4">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <EnhancedThemePreview
-                theme={currentTheme}
-                selectedElement={selectedElement}
-                onElementSelect={setSelectedElement}
-              />
               <ElementCustomizer
                 selectedElement={selectedElement}
                 theme={currentTheme}
                 onThemeUpdate={updateTheme}
               />
+              <EnhancedThemePreviewExpanded
+                theme={currentTheme}
+                selectedElement={selectedElement}
+                onElementSelect={setSelectedElement}
+              />
             </div>
           </TabsContent>
 
           <TabsContent value="preview" className="space-y-4">
-            <EnhancedThemePreview
+            <EnhancedThemePreviewExpanded
               theme={currentTheme}
               selectedElement={selectedElement}
               onElementSelect={setSelectedElement}

@@ -50,8 +50,10 @@ export const EnhancedThemeProvider: React.FC<EnhancedThemeProviderProps> = ({ ch
       const updatedTheme = { ...currentTheme, ...updates };
       setPreviewTheme(updatedTheme);
     } else {
+      // Automatically enter preview mode when making changes
       const updatedTheme = { ...theme, ...updates };
-      setTheme(updatedTheme);
+      setPreviewTheme(updatedTheme);
+      setIsPreviewMode(true);
     }
   };
 
@@ -85,7 +87,26 @@ export const EnhancedThemeProvider: React.FC<EnhancedThemeProviderProps> = ({ ch
     setPreviewTheme(null);
   };
 
-  const hasUnsavedChanges = isPreviewMode && previewTheme !== null;
+  // Deep comparison helper
+  const deepEqual = (obj1: any, obj2: any): boolean => {
+    if (obj1 === obj2) return true;
+    if (obj1 == null || obj2 == null) return false;
+    if (typeof obj1 !== 'object' || typeof obj2 !== 'object') return false;
+    
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+    
+    if (keys1.length !== keys2.length) return false;
+    
+    for (const key of keys1) {
+      if (!keys2.includes(key)) return false;
+      if (!deepEqual(obj1[key], obj2[key])) return false;
+    }
+    
+    return true;
+  };
+
+  const hasUnsavedChanges = previewTheme !== null && !deepEqual(theme, previewTheme);
 
   const contextValue: EnhancedThemeContextType = {
     theme,

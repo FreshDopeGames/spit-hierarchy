@@ -85,7 +85,7 @@ const ThemedDropdownMenuContent = React.forwardRef<
       ref={ref}
       sideOffset={sideOffset}
       className={cn(
-        "z-50 min-w-[8rem] overflow-hidden rounded-md p-1 shadow-md",
+        "z-50 min-w-[8rem] overflow-hidden rounded-[var(--theme-element-dropdown-border-radius,8px)] shadow-[var(--theme-element-dropdown-shadow,0_10px_15px_rgba(212,175,55,0.2))]",
         "data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0",
         "data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95",
         "data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2",
@@ -118,6 +118,8 @@ const ThemedDropdownMenuItem = React.forwardRef<
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm text-sm outline-none transition-colors",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
+      "hover:bg-[var(--theme-element-dropdown_item-hover-bg,var(--theme-primary))] hover:text-[var(--theme-element-dropdown_item-hover-color,var(--theme-background))]",
+      "focus:bg-[var(--theme-element-dropdown_item-hover-bg,var(--theme-primary))] focus:text-[var(--theme-element-dropdown_item-hover-color,var(--theme-background))]",
       inset && "pl-8",
       className
     )}
@@ -128,10 +130,7 @@ const ThemedDropdownMenuItem = React.forwardRef<
       fontWeight: 'var(--theme-element-dropdown_item-fontWeight, 500)',
       lineHeight: 'var(--theme-element-dropdown_item-lineHeight, 1.25)',
       padding: 'var(--theme-element-dropdown_item-padding, 0.625rem 0.75rem)',
-      // Hover and focus states using CSS variables
-      '--hover-bg': 'hsl(var(--theme-element-dropdown_item-hover-bg, var(--theme-primary)))',
-      '--hover-color': 'hsl(var(--theme-element-dropdown_item-hover-color, var(--theme-primary-foreground)))',
-    } as React.CSSProperties & Record<string, string>}
+    } as React.CSSProperties}
     {...props}
   />
 ));
