@@ -14,7 +14,7 @@ const ThemedSelectTrigger = React.forwardRef<
   <SelectPrimitive.Trigger
     ref={ref}
     className={cn(
-      "flex h-10 w-full items-center justify-between rounded-[var(--theme-element-select-border-radius,var(--theme-radius-md))] border border-[var(--theme-element-select-border-color,var(--theme-border))] bg-[var(--theme-element-select-bg,var(--theme-surface))] px-[var(--theme-element-select-padding,12px)] py-2 text-sm text-[var(--theme-element-select-color,var(--theme-text))] ring-offset-[var(--theme-background)] placeholder:text-[var(--theme-textMuted)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-[var(--theme-element-select-fontFamily,var(--theme-font-body))] [&>span]:line-clamp-1",
+      "flex h-10 w-full items-center justify-between rounded-[var(--theme-element-select-border-radius,var(--theme-radius-md))] border border-[var(--theme-element-select-border-color,var(--theme-border))] bg-[var(--theme-element-select-bg,var(--theme-surface))] pl-[var(--theme-element-select-padding-left,16px)] pr-[var(--theme-element-select-padding,12px)] py-2 text-sm text-[var(--theme-element-select-color,var(--theme-text))] ring-offset-[var(--theme-background)] placeholder:text-[var(--theme-textMuted)] focus:outline-none focus:ring-2 focus:ring-[var(--theme-primary)] focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 font-[var(--theme-element-select-fontFamily,var(--theme-font-body))] [&>span]:line-clamp-1",
       className
     )}
     {...props}
