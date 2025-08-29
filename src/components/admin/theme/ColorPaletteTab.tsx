@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { EnhancedThemeConfig, GradientConfig, gradientToCSS } from "@/config/enhancedTheme";
 import { isValidHex, getContrastTextColor, hslToHex, hexToHsl } from "@/lib/utils";
 import { Plus, Trash2 } from "lucide-react";
+import ColorDropdown from "./ColorDropdown";
 
 interface ColorPaletteTabProps {
   theme: EnhancedThemeConfig;
@@ -34,6 +35,38 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
       return gradient;
     });
     handleGradientChange(updatedGradients);
+  };
+
+  // Helper function to resolve color (theme key or hex) to hex value for display
+  const resolveColorToHex = (color: string): string => {
+    // Check if it's a theme color key
+    if (theme.colors[color as keyof typeof theme.colors]) {
+      return hslToHex(theme.colors[color as keyof typeof theme.colors]);
+    }
+    // Otherwise assume it's already a hex value
+    return color;
+  };
+
+  // Enhanced gradient to CSS function that handles theme color keys
+  const enhancedGradientToCSS = (gradient: GradientConfig): string => {
+    const stops = gradient.stops
+      .sort((a, b) => a.position - b.position)
+      .map(stop => {
+        const resolvedColor = resolveColorToHex(stop.color);
+        return `${resolvedColor} ${stop.position}%`;
+      })
+      .join(', ');
+
+    switch (gradient.type) {
+      case 'linear':
+        return `linear-gradient(${gradient.direction}deg, ${stops})`;
+      case 'radial':
+        return `radial-gradient(circle, ${stops})`;
+      case 'conic':
+        return `conic-gradient(from ${gradient.direction}deg, ${stops})`;
+      default:
+        return `linear-gradient(${gradient.direction}deg, ${stops})`;
+    }
   };
 
   const removeGradientStop = (gradientId: string, stopIndex: number) => {
@@ -155,7 +188,7 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
                   {/* Gradient Preview */}
                   <div 
                     className="w-20 h-10 rounded border-2 border-[var(--theme-border)]"
-                    style={{ background: gradientToCSS(gradient) }}
+                    style={{ background: enhancedGradientToCSS(gradient) }}
                   />
                   
                   {/* Gradient Name */}
@@ -209,7 +242,7 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
                     <ThemedLabel>Color Stops</ThemedLabel>
                     <Button
                       size="sm"
-                      onClick={() => addGradientStop(gradient.id, { color: '#ffffff', position: 50 })}
+                      onClick={() => addGradientStop(gradient.id, { color: 'primary', position: 50 })}
                       className="flex items-center gap-1"
                     >
                       <Plus className="w-3 h-3" />
@@ -220,19 +253,15 @@ const ColorPaletteTab = ({ theme, onColorChange }: ColorPaletteTabProps) => {
                   <div className="space-y-2">
                     {gradient.stops.map((stop, index) => (
                       <div key={index} className="flex items-center gap-2">
-                        <ThemedInput
-                          type="color"
-                          value={stop.color}
-                          onChange={(e) => updateGradientStop(gradient.id, index, { color: e.target.value })}
-                          className="w-12 h-8 p-1"
-                        />
-                        <ThemedInput
-                          type="text"
-                          value={stop.color}
-                          onChange={(e) => updateGradientStop(gradient.id, index, { color: e.target.value })}
-                          className="flex-1"
-                          placeholder="#ffffff"
-                        />
+                        <div className="flex-1">
+                          <ColorDropdown
+                            label=""
+                            value={stop.color}
+                            onChange={(color) => updateGradientStop(gradient.id, index, { color })}
+                            theme={theme}
+                            allowSpecialValues={false}
+                          />
+                        </div>
                         <ThemedInput
                           type="number"
                           value={stop.position}
