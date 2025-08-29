@@ -6,7 +6,7 @@ import { useTheme } from "@/hooks/useTheme";
 
 interface SectionHeader {
   id: string;
-  section_name: string;
+  section: string;
   title: string;
   subtitle: string | null;
   background_image_url: string | null;
@@ -24,7 +24,7 @@ const RankingsSectionHeader = () => {
       const {
         data,
         error
-      } = await supabase.from("section_headers").select("*").eq("section_name", "rankings").eq("is_active", true).single();
+      } = await supabase.from("section_headers").select("*").eq("section", "rankings").eq("is_active", true).single();
       if (error) {
         console.log("No custom header found, using default");
         return null;
@@ -60,7 +60,7 @@ const RankingsSectionHeader = () => {
           {/* Icon and Title */}
           <div className="flex items-center justify-center gap-4 mb-6 sm:gap-2 sm:mb-3 lg:mb-2">
             <Crown 
-              className="w-8 h-8 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" 
+              className="w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" 
               style={{ color: theme.colors.primary }}
             />
             <h1 
@@ -70,7 +70,7 @@ const RankingsSectionHeader = () => {
               {title}
             </h1>
             <TrendingUp 
-              className="w-8 h-8 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" 
+              className="w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" 
               style={{ color: theme.colors.primary }}
             />
           </div>
