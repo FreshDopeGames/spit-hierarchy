@@ -171,10 +171,10 @@ export interface EnhancedThemeConfig {
 
 export const defaultEnhancedTheme: EnhancedThemeConfig = {
   colors: {
-    // Core theme colors (HSL format)
-    primary: '45 85% 55%',
-    primaryLight: '45 85% 60%', 
-    primaryDark: '45 75% 43%',
+    // Core theme colors (HSL format) - Gold/Orange palette
+    primary: '37 82% 49%',        // #e59517
+    primaryLight: '44 95% 57%',   // #fac42b
+    primaryDark: '34 88% 40%',    // #c1740c
     secondary: '345 75% 25%',
     secondaryLight: '345 81% 33%',
     secondaryDark: '345 73% 18%',
@@ -195,7 +195,7 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     textInverted: '0 0% 5%',
     
     // Border
-    border: '45 85% 55%',
+    border: '37 82% 49%',
     
     // Status colors
     success: '142 71% 45%',
@@ -235,12 +235,12 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     rarityMythic: '0 84% 60%',        // Red
 
     // Interactive state colors
-    hoverBg: '45 85% 55%',
+    hoverBg: '37 82% 49%',
     hoverColor: '0 0% 100%',
-    activeBg: '45 75% 43%',
+    activeBg: '34 88% 40%',
     activeColor: '0 0% 100%',
-    focusBg: '45 85% 60%',
-    focusColor: '0 0% 100%',
+    focusBg: '44 95% 57%',
+    focusColor: '0 0% 0%',
   },
   fonts: {
     heading: 'Mogra, cursive',
@@ -425,7 +425,7 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     dropdown_item: {
       background: 'transparent',
       color: '#E8E6E3',
-      hoverBackground: '#D4AF37',
+      hoverBackground: '#FFFFFF',
       hoverColor: '#0D0D0D',
       typography: { fontSize: '0.875rem', fontWeight: '500', lineHeight: '1.25' },
       padding: '0.625rem 0.75rem'
