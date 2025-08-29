@@ -3,6 +3,7 @@ import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader 
 import { Badge } from "@/components/ui/badge";
 import { Crown, Users, Eye, Star, Calendar, User } from "lucide-react";
 import { UnifiedRanking } from "@/types/rankings";
+import RapperMosaic from "@/components/ui/RapperMosaic";
 
 interface RankingCardProps {
   ranking: UnifiedRanking;
@@ -60,7 +61,7 @@ const RankingCard = ({
               <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-2 font-[var(--theme-fontSecondary)]">
                 Top {Math.min(ranking.rappers.length, 3)}:
               </h4>
-              <div className="space-y-1">
+              <div className="space-y-1 mb-3">
                 {ranking.rappers.slice(0, 3).map((rapper, index) => (
                   <div key={index} className="flex items-center gap-2 text-sm">
                     <span className="w-5 h-5 rounded-full bg-[var(--theme-primary)] text-[var(--theme-background)] text-xs font-bold flex items-center justify-center font-[var(--theme-fontPrimary)]">
@@ -72,6 +73,17 @@ const RankingCard = ({
                   </div>
                 ))}
               </div>
+              
+              {/* Rapper Mosaic */}
+              <RapperMosaic 
+                rappers={ranking.rappers.slice(0, 5).map(rapper => ({
+                  id: `${rapper.rank}-${rapper.name}`,
+                  name: rapper.name,
+                  image_url: null // Will use placeholder images
+                }))}
+                size="small"
+                className="border border-[var(--theme-border)]/30"
+              />
             </div>
           )}
           
