@@ -1,4 +1,3 @@
-
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedBadge } from "@/components/ui/themed-badge";
@@ -7,25 +6,27 @@ import { Star, MapPin, Calendar, Music, Edit, Trash2 } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { formatBirthdate } from "@/utils/zodiacUtils";
-
 type Rapper = Tables<"rappers">;
 
 // Use the correct placeholder image path from the database
 const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
-
 interface AdminRapperTableProps {
   rappers: Rapper[];
   isLoading: boolean;
   onEdit: (rapper: Rapper) => void;
   onDelete: (id: string) => void;
 }
-
-const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperTableProps) => {
+const AdminRapperTable = ({
+  rappers,
+  isLoading,
+  onEdit,
+  onDelete
+}: AdminRapperTableProps) => {
   if (isLoading) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-        {Array.from({ length: 12 }).map((_, i) => (
-          <ThemedCard key={i} className="animate-pulse">
+    return <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        {Array.from({
+        length: 12
+      }).map((_, i) => <ThemedCard key={i} className="animate-pulse">
             <ThemedCardContent className="p-4">
               <AspectRatio ratio={1} className="mb-3">
                 <div className="w-full h-full bg-[var(--theme-background)] opacity-50 rounded"></div>
@@ -33,74 +34,61 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
               <div className="h-4 bg-[var(--theme-background)] opacity-50 rounded mb-2"></div>
               <div className="h-3 bg-[var(--theme-background)] opacity-50 rounded w-3/4"></div>
             </ThemedCardContent>
-          </ThemedCard>
-        ))}
-      </div>
-    );
+          </ThemedCard>)}
+      </div>;
   }
-
   if (rappers.length === 0) {
-    return (
-      <ThemedCard>
+    return <ThemedCard>
         <ThemedCardContent className="p-8 text-center">
           <Music className="w-16 h-16 text-[var(--theme-primary)] mx-auto mb-4" />
           <h3 className="text-xl font-bold text-[var(--theme-primary)] mb-2">No Rappers Yet</h3>
           <p className="text-[var(--theme-text)] opacity-70">Add your first rapper to get started.</p>
         </ThemedCardContent>
-      </ThemedCard>
-    );
+      </ThemedCard>;
   }
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      {rappers.map((rapper) => (
-        <RapperCardWithImage key={rapper.id} rapper={rapper} onEdit={onEdit} onDelete={onDelete} />
-      ))}
-    </div>
-  );
+  return <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      {rappers.map(rapper => <RapperCardWithImage key={rapper.id} rapper={rapper} onEdit={onEdit} onDelete={onDelete} />)}
+    </div>;
 };
-
-const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onEdit: (rapper: Rapper) => void; onDelete: (id: string) => void; }) => {
-  const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge size for admin table
+const RapperCardWithImage = ({
+  rapper,
+  onEdit,
+  onDelete
+}: {
+  rapper: Rapper;
+  onEdit: (rapper: Rapper) => void;
+  onDelete: (id: string) => void;
+}) => {
+  const {
+    data: imageUrl
+  } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge size for admin table
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
-
-  return (
-    <ThemedCard className="hover:border-[var(--theme-primary)]/40 transition-all duration-300">
-      <ThemedCardContent className="p-4">
+  return <ThemedCard className="hover:border-[var(--theme-primary)]/40 transition-all duration-300">
+      <ThemedCardContent className="p-4 bg-black">
         {/* Rapper Image */}
         <AspectRatio ratio={1} className="mb-3">
           <div className="w-full h-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-primary)]/60 rounded-lg flex items-center justify-center overflow-hidden">
-            <img 
-              src={imageUrl} 
-              alt={rapper.name}
-              className="w-full h-full object-cover"
-            />
+            <img src={imageUrl} alt={rapper.name} className="w-full h-full object-cover" />
           </div>
         </AspectRatio>
 
         {/* Rapper Info */}
         <div className="space-y-2">
           <div className="flex items-start justify-between">
-            <h3 className="text-[var(--theme-primary)] font-bold text-sm leading-tight">{rapper.name}</h3>
+            <h3 className="text-[var(--theme-primary)] font-bold text-sm leading-tight text-primary ">{rapper.name}</h3>
           </div>
 
-          {rapper.real_name && (
-            <p className="text-[var(--theme-text)] opacity-70 text-xs">{rapper.real_name}</p>
-          )}
+          {rapper.real_name && <p className="text-[var(--theme-text)] opacity-70 text-xs">{rapper.real_name}</p>}
 
           <div className="flex flex-wrap gap-1 text-xs">
-            {rapper.origin && (
-              <div className="flex items-center gap-1 text-[var(--theme-text)] opacity-60">
+            {rapper.origin && <div className="flex items-center gap-1 text-[var(--theme-text)] opacity-60">
                 <MapPin className="w-3 h-3" />
                 <span>{rapper.origin}</span>
-              </div>
-            )}
-            {birthdate && (
-              <div className="flex items-center gap-1 text-[var(--theme-text)] opacity-60">
+              </div>}
+            {birthdate && <div className="flex items-center gap-1 text-[var(--theme-text)] opacity-60">
                 <Calendar className="w-3 h-3" />
                 <span>{birthdate}</span>
-              </div>
-            )}
+              </div>}
           </div>
 
           {/* Stats */}
@@ -118,27 +106,16 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
 
           {/* Actions */}
           <div className="flex gap-2 pt-2">
-            <ThemedButton
-              onClick={() => onEdit(rapper)}
-              size="sm"
-              variant="outline"
-              className="flex-1"
-            >
+            <ThemedButton onClick={() => onEdit(rapper)} size="sm" variant="outline" className="flex-1">
               <Edit className="w-3 h-3 mr-1" />
               Edit
             </ThemedButton>
-            <ThemedButton
-              onClick={() => onDelete(rapper.id)}
-              size="sm"
-              variant="destructive"
-            >
+            <ThemedButton onClick={() => onDelete(rapper.id)} size="sm" variant="destructive">
               <Trash2 className="w-3 h-3" />
             </ThemedButton>
           </div>
         </div>
       </ThemedCardContent>
-    </ThemedCard>
-  );
+    </ThemedCard>;
 };
-
 export default AdminRapperTable;
