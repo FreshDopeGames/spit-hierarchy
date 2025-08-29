@@ -50,7 +50,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             placeholder="Achievement name"
           />
           {errors.name && (
-            <p className="text-red-400 text-sm mt-1">{errors.name.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.name.message}</p>
           )}
         </div>
 
@@ -64,7 +64,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             rows={3}
           />
           {errors.description && (
-            <p className="text-red-400 text-sm mt-1">{errors.description.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.description.message}</p>
           )}
         </div>
 
@@ -77,7 +77,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             placeholder="🏆"
           />
           {errors.icon && (
-            <p className="text-red-400 text-sm mt-1">{errors.icon.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.icon.message}</p>
           )}
         </div>
 
@@ -91,7 +91,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             placeholder="10"
           />
           {errors.points && (
-            <p className="text-rap-burgundy text-sm mt-1">{errors.points.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.points.message}</p>
           )}
         </div>
       </div>
@@ -113,7 +113,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             </ThemedSelectContent>
           </ThemedSelect>
           {errors.type && (
-            <p className="text-red-400 text-sm mt-1">{errors.type.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.type.message}</p>
           )}
         </div>
 
@@ -133,7 +133,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             </ThemedSelectContent>
           </ThemedSelect>
           {errors.rarity && (
-            <p className="text-red-400 text-sm mt-1">{errors.rarity.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.rarity.message}</p>
           )}
         </div>
 
@@ -150,7 +150,7 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
             placeholder="e.g., 10"
           />
           {errors.threshold_value && (
-            <p className="text-red-400 text-sm mt-1">{errors.threshold_value.message}</p>
+            <p className="text-[var(--theme-error)] text-sm mt-1">{errors.threshold_value.message}</p>
           )}
         </div>
 

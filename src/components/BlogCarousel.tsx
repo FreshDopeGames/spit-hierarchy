@@ -120,10 +120,10 @@ const BlogCarousel = () => {
                         objectFit="cover" 
                         sizes="(max-width: 768px) 100vw, 100vw" 
                       />
-                      <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-black/95 via-black/50 to-transparent" />
+                      <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-[var(--theme-background)]/95 via-[var(--theme-background)]/50 to-transparent" />
                       
                        <div className="absolute bottom-6 sm:bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)]">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_hsl(var(--theme-background)/0.8)]">
                           {post.title}
                         </h3>
                         <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
@@ -180,7 +180,7 @@ const BlogCarousel = () => {
                   className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 ${
                     currentIndex === index 
                       ? "bg-[var(--theme-primary)] scale-110" 
-                      : "bg-gray-400 opacity-60 hover:opacity-80"
+                      : "bg-[var(--theme-neutral)] opacity-60 hover:opacity-80"
                   }`} 
                   onClick={() => scrollTo(index)} 
                 />

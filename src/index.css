@@ -46,6 +46,31 @@
     --theme-grayMid: 220 13% 69%;
     --theme-grayDark: 220 13% 18%;
 
+    /* Achievement rarity colors */
+    --theme-rarity-common: 220 13% 69%;
+    --theme-rarity-uncommon: 142 71% 45%;
+    --theme-rarity-rare: 221 83% 53%;
+    --theme-rarity-epic: 262 83% 58%;
+    --theme-rarity-legendary: 38 92% 50%;
+    --theme-rarity-mythic: 0 84% 60%;
+
+    /* Gradient definitions */
+    --theme-gradient-primary: linear-gradient(135deg, hsl(45 75% 43%), hsl(45 85% 55%));
+    --theme-gradient-secondary: linear-gradient(135deg, hsl(345 73% 18%), hsl(345 75% 25%));
+    --theme-gradient-accent: linear-gradient(135deg, hsl(82 50% 30%), hsl(82 57% 35%));
+    --theme-gradient-success: linear-gradient(135deg, hsl(142 76% 36%), hsl(142 71% 45%));
+    --theme-gradient-warning: linear-gradient(135deg, hsl(32 95% 44%), hsl(38 92% 50%));
+    --theme-gradient-error: linear-gradient(135deg, hsl(0 84% 51%), hsl(0 84% 60%));
+    --theme-gradient-neutral: linear-gradient(135deg, hsl(220 13% 26%), hsl(220 14% 46%));
+
+    /* Interactive state colors */
+    --theme-hover-bg: 45 85% 55%;
+    --theme-hover-color: 0 0% 100%;
+    --theme-active-bg: 45 75% 43%;
+    --theme-active-color: 0 0% 100%;
+    --theme-focus-bg: 45 85% 60%;
+    --theme-focus-color: 0 0% 100%;
+
     /* Shadcn compatibility variables */
     --background: var(--theme-background);
     --foreground: var(--theme-text);
@@ -322,22 +347,22 @@ input:not([class*="themed"])::placeholder {
   background: hsl(var(--theme-element-dropdown-bg, var(--theme-surface))) !important;
   color: hsl(var(--theme-element-dropdown-color, var(--theme-text))) !important;
   border: var(--theme-element-dropdown-border-width, 1px) var(--theme-element-dropdown-border-style, solid) hsl(var(--theme-element-dropdown-border-color, var(--theme-border))) !important;
-  box-shadow: var(--theme-element-dropdown-shadow, 0 10px 15px rgba(212, 175, 55, 0.2)) !important;
+  box-shadow: var(--theme-element-dropdown-shadow, 0 10px 15px hsl(var(--theme-primary) / 0.2)) !important;
   z-index: 50 !important;
 }
 
 /* Dropdown Item Hover States */
 [data-radix-dropdown-menu-item][data-highlighted] {
-  background-color: var(--hover-bg) !important;
-  color: var(--hover-color) !important;
+  background-color: hsl(var(--theme-hover-bg)) !important;
+  color: hsl(var(--theme-hover-color)) !important;
 }
 
 [data-radix-dropdown-menu-item]:hover {
-  background-color: var(--hover-bg) !important;
-  color: var(--hover-color) !important;
+  background-color: hsl(var(--theme-hover-bg)) !important;
+  color: hsl(var(--theme-hover-color)) !important;
 }
 
 [data-radix-dropdown-menu-item]:focus {
-  background-color: var(--hover-bg) !important;
-  color: var(--hover-color) !important;
+  background-color: hsl(var(--theme-hover-bg)) !important;
+  color: hsl(var(--theme-hover-color)) !important;
 }

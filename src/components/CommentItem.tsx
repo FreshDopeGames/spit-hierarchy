@@ -139,7 +139,7 @@ const CommentItem = ({
                       variant="ghost"
                       size="sm"
                       disabled={isDeletingComment}
-                      className="text-red-400 hover:text-red-300 hover:bg-red-400/20 h-auto p-1 font-[var(--theme-font-body)]"
+                      className="text-[var(--theme-error)] hover:text-[var(--theme-errorDark)] hover:bg-[var(--theme-error)]/20 h-auto p-1 font-[var(--theme-font-body)]"
                     >
                       <Trash2 className="w-4 h-4 mr-1" />
                       Delete
@@ -160,7 +160,7 @@ const CommentItem = ({
                       </AlertDialogCancel>
                       <AlertDialogAction 
                         onClick={handleDelete}
-                        className="bg-red-600 text-white hover:bg-red-700"
+                        className="bg-[var(--theme-error)] text-[var(--theme-textLight)] hover:bg-[var(--theme-errorDark)]"
                       >
                         Delete
                       </AlertDialogAction>

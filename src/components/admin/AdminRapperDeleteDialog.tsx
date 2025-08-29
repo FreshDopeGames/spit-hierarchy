@@ -36,7 +36,7 @@ const AdminRapperDeleteDialog = ({
       <AlertDialogContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <AlertDialogHeader>
           <div className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-500" />
+            <AlertTriangle className="h-5 w-5 text-[var(--theme-error)]" />
             <AlertDialogTitle className="text-[var(--theme-primary)]">
               Delete Rapper
             </AlertDialogTitle>
@@ -57,7 +57,7 @@ const AdminRapperDeleteDialog = ({
           <AlertDialogAction
             onClick={onConfirm}
             disabled={isDeleting}
-            className="bg-red-500 hover:bg-red-600 text-white"
+            className="bg-[var(--theme-error)] hover:bg-[var(--theme-errorDark)] text-[var(--theme-textLight)]"
           >
             {isDeleting ? (
               <>

@@ -28,7 +28,7 @@ const CategorySelector = ({ selectedCategory, onCategoryChange }: CategorySelect
     return (
       <div className="flex flex-wrap gap-2">
         {Array.from({ length: 5 }).map((_, i) => (
-          <div key={i} className="h-10 w-32 bg-gray-700 rounded animate-pulse"></div>
+          <div key={i} className="h-10 w-32 bg-[var(--theme-surface)] rounded animate-pulse"></div>
         ))}
       </div>
     );

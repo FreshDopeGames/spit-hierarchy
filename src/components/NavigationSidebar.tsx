@@ -288,10 +288,9 @@ const NavigationSidebar = ({ trigger }: NavigationSidebarProps) => {
                 
                 <Link to="/auth" onClick={() => handleNavClick('/auth')}>
                   <Button 
-                    className="w-full font-merienda shadow-lg text-black font-extrabold text-xl"
+                    className="w-full font-merienda shadow-lg text-[var(--theme-textInverted)] font-extrabold text-xl bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryDark)]"
                     style={{ 
-                      backgroundColor: theme.colors.primary,
-                      boxShadow: `0 10px 25px ${theme.colors.primary}30`
+                      boxShadow: `0 10px 25px hsl(var(--theme-primary) / 0.3)`
                     }}
                   >
                     <LogIn className="w-4 h-4 mr-3" />

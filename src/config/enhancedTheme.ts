@@ -41,6 +41,7 @@ export interface ElementConfig {
 
 export interface EnhancedThemeConfig {
   colors: {
+    // Core theme colors
     primary: string;
     primaryLight: string;
     primaryDark: string;
@@ -50,14 +51,23 @@ export interface EnhancedThemeConfig {
     accent: string;
     accentLight: string;
     accentDark: string;
+    
+    // Background colors
     background: string;
     backgroundLight: string;
     backgroundDark: string;
     surface: string;
+    
+    // Text colors
     text: string;
     textLight: string;
     textMuted: string;
+    textInverted: string;
+    
+    // Border
     border: string;
+    
+    // Status colors - semantic colors for UI states
     success: string;
     successLight: string;
     successDark: string;
@@ -70,15 +80,46 @@ export interface EnhancedThemeConfig {
     info: string;
     infoLight: string;
     infoDark: string;
+    
+    // Neutral colors
     neutral: string;
     neutralLight: string;
     neutralDark: string;
+    
+    // Absolute colors
     white: string;
     black: string;
+    
+    // Gray palette for various UI needs
     gray: string;
     grayLight: string;
     grayMid: string;
     grayDark: string;
+
+    // Achievement rarity colors
+    rarityCommon: string;
+    rarityUncommon: string;
+    rarityRare: string;
+    rarityEpic: string;
+    rarityLegendary: string;
+    rarityMythic: string;
+
+    // Gradient definitions
+    gradientPrimary: string;
+    gradientSecondary: string;
+    gradientAccent: string;
+    gradientSuccess: string;
+    gradientWarning: string;
+    gradientError: string;
+    gradientNeutral: string;
+
+    // Interactive state colors
+    hoverBg: string;
+    hoverColor: string;
+    activeBg: string;
+    activeColor: string;
+    focusBg: string;
+    focusColor: string;
   };
   fonts: {
     heading: string;
@@ -139,44 +180,85 @@ export interface EnhancedThemeConfig {
 
 export const defaultEnhancedTheme: EnhancedThemeConfig = {
   colors: {
-    primary: '#D4AF37',
-    primaryLight: '#E8C547',
-    primaryDark: '#B8941F',
-    secondary: '#800020',
-    secondaryLight: '#A6002A',
-    secondaryDark: '#5A0016',
-    accent: '#6B8E23',
-    accentLight: '#7BA428',
-    accentDark: '#5A7A1E',
-    background: '#0D0D0D',
-    backgroundLight: '#1A1A1A',
-    backgroundDark: '#000000',
-    surface: '#2B2B2B',
-    text: '#E8E6E3',
-    textLight: '#FFFFFF',
-    textMuted: '#BFBFBF',
-    border: '#D4AF37',
-    success: '#22C55E',
-    successLight: '#4ADE80',
-    successDark: '#16A34A',
-    warning: '#F59E0B',
-    warningLight: '#FBBF24',
-    warningDark: '#D97706',
-    error: '#EF4444',
-    errorLight: '#F87171',
-    errorDark: '#DC2626',
-    info: '#3B82F6',
-    infoLight: '#60A5FA',
-    infoDark: '#2563EB',
-    neutral: '#6B7280',
-    neutralLight: '#9CA3AF',
-    neutralDark: '#4B5563',
-    white: '#FFFFFF',
-    black: '#000000',
-    gray: '#6B7280',
-    grayLight: '#D1D5DB',
-    grayMid: '#9CA3AF',
-    grayDark: '#374151',
+    // Core theme colors (HSL format)
+    primary: '45 85% 55%',
+    primaryLight: '45 85% 60%', 
+    primaryDark: '45 75% 43%',
+    secondary: '345 75% 25%',
+    secondaryLight: '345 81% 33%',
+    secondaryDark: '345 73% 18%',
+    accent: '82 57% 35%',
+    accentLight: '82 57% 40%',
+    accentDark: '82 50% 30%',
+    
+    // Background colors
+    background: '0 0% 5%',
+    backgroundLight: '0 0% 10%',
+    backgroundDark: '0 0% 0%',
+    surface: '0 0% 17%',
+    
+    // Text colors
+    text: '36 14% 91%',
+    textLight: '0 0% 100%',
+    textMuted: '0 0% 75%',
+    textInverted: '0 0% 5%',
+    
+    // Border
+    border: '45 85% 55%',
+    
+    // Status colors
+    success: '142 71% 45%',
+    successLight: '142 69% 58%',
+    successDark: '142 76% 36%',
+    warning: '38 92% 50%',
+    warningLight: '43 96% 56%',
+    warningDark: '32 95% 44%',
+    error: '0 84% 60%',
+    errorLight: '0 77% 70%',
+    errorDark: '0 84% 51%',
+    info: '221 83% 53%',
+    infoLight: '213 93% 68%',
+    infoDark: '224 76% 48%',
+    
+    // Neutral colors
+    neutral: '220 14% 46%',
+    neutralLight: '220 13% 69%',
+    neutralDark: '220 13% 26%',
+    
+    // Absolute colors
+    white: '0 0% 100%',
+    black: '0 0% 0%',
+    
+    // Gray palette
+    gray: '220 14% 46%',
+    grayLight: '214 32% 91%',
+    grayMid: '220 13% 69%',
+    grayDark: '220 13% 18%',
+
+    // Achievement rarity colors
+    rarityCommon: '220 13% 69%',      // Gray
+    rarityUncommon: '142 71% 45%',    // Green
+    rarityRare: '221 83% 53%',        // Blue  
+    rarityEpic: '262 83% 58%',        // Purple
+    rarityLegendary: '38 92% 50%',    // Orange/Gold
+    rarityMythic: '0 84% 60%',        // Red
+
+    // Gradient definitions
+    gradientPrimary: 'linear-gradient(135deg, hsl(45 75% 43%), hsl(45 85% 55%))',
+    gradientSecondary: 'linear-gradient(135deg, hsl(345 73% 18%), hsl(345 75% 25%))',
+    gradientAccent: 'linear-gradient(135deg, hsl(82 50% 30%), hsl(82 57% 35%))',
+    gradientSuccess: 'linear-gradient(135deg, hsl(142 76% 36%), hsl(142 71% 45%))',
+    gradientWarning: 'linear-gradient(135deg, hsl(32 95% 44%), hsl(38 92% 50%))',
+    gradientError: 'linear-gradient(135deg, hsl(0 84% 51%), hsl(0 84% 60%))',
+    gradientNeutral: 'linear-gradient(135deg, hsl(220 13% 26%), hsl(220 14% 46%))',
+
+    // Interactive state colors
+    hoverBg: '45 85% 55%',
+    hoverColor: '0 0% 100%',
+    activeBg: '45 75% 43%',
+    activeColor: '0 0% 100%',
+    focusBg: '45 85% 60%',
+    focusColor: '0 0% 100%',
   },
   fonts: {
     heading: 'Mogra, cursive',

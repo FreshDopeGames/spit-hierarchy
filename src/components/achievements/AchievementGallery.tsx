@@ -60,7 +60,7 @@ const AchievementGallery = () => {
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="h-32 bg-gray-800 rounded-lg animate-pulse" />
+          <div key={i} className="h-32 bg-[var(--theme-surface)] rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -112,32 +112,32 @@ const AchievementGallery = () => {
       {/* Stats Overview */}
       {stats && (
         <div className="grid grid-cols-3 gap-4">
-          <div className="bg-gray-900 border border-rap-gold/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-rap-gold">{stats.earned}</div>
-            <div className="text-sm text-rap-platinum">Earned</div>
+          <div className="bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-[var(--theme-primary)]">{stats.earned}</div>
+            <div className="text-sm text-[var(--theme-textMuted)]">Earned</div>
           </div>
-          <div className="bg-gray-900 border border-rap-gold/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-rap-silver">{stats.total}</div>
-            <div className="text-sm text-rap-platinum">Total</div>
+          <div className="bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-[var(--theme-secondary)]">{stats.total}</div>
+            <div className="text-sm text-[var(--theme-textMuted)]">Total</div>
           </div>
-          <div className="bg-gray-900 border border-rap-gold/30 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-rap-forest">{stats.points}</div>
-            <div className="text-sm text-rap-platinum">Points</div>
+          <div className="bg-[var(--theme-surface)] border border-[var(--theme-border)] rounded-lg p-4 text-center">
+            <div className="text-2xl font-bold text-[var(--theme-accent)]">{stats.points}</div>
+            <div className="text-sm text-[var(--theme-textMuted)]">Points</div>
           </div>
         </div>
       )}
 
       {/* Achievement Categories */}
       <Tabs defaultValue="all" className="w-full">
-        <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 bg-gray-900 border border-rap-gold/30">
-          <TabsTrigger value="all" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon">
+        <TabsList className="grid w-full grid-cols-4 md:grid-cols-7 bg-[var(--theme-surface)] border border-[var(--theme-border)]">
+          <TabsTrigger value="all" className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-textInverted)]">
             All
           </TabsTrigger>
           {Object.entries(typeIcons).map(([type, Icon]) => (
             <TabsTrigger 
               key={type} 
               value={type}
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon flex items-center gap-1"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-textInverted)] flex items-center gap-1"
             >
               <Icon className="w-4 h-4" />
               <span className="hidden sm:inline capitalize">{type}</span>

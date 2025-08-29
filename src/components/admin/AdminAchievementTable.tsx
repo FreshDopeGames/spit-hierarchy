@@ -17,14 +17,14 @@ interface AdminAchievementTableProps {
 const getRarityColor = (rarity: string) => {
   switch (rarity) {
     case 'legendary':
-      return 'bg-gradient-to-r from-yellow-400 to-orange-500 text-[var(--theme-background)]';
+      return 'bg-[var(--theme-rarity-legendary)] text-[var(--theme-textLight)]';
     case 'epic':
-      return 'bg-gradient-to-r from-purple-500 to-pink-500 text-[var(--theme-textInverted)]';
+      return 'bg-[var(--theme-rarity-epic)] text-[var(--theme-textLight)]';
     case 'rare':
-      return 'bg-gradient-to-r from-blue-500 to-cyan-500 text-[var(--theme-textInverted)]';
+      return 'bg-[var(--theme-rarity-rare)] text-[var(--theme-textLight)]';
     case 'common':
     default:
-      return 'bg-[var(--theme-textMuted)] text-[var(--theme-textInverted)]';
+      return 'bg-[var(--theme-rarity-common)] text-[var(--theme-textInverted)]';
   }
 };
 
@@ -125,7 +125,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
               </TableCell>
               <TableCell>
                 <Badge variant={achievement.is_active ? "default" : "secondary"} 
-                       className={achievement.is_active ? "bg-green-600 text-[var(--theme-textInverted)]" : "bg-[var(--theme-textMuted)] text-[var(--theme-textInverted)]"}>
+                       className={achievement.is_active ? "bg-[var(--theme-success)] text-[var(--theme-textLight)]" : "bg-[var(--theme-textMuted)] text-[var(--theme-textInverted)]"}>
                   {achievement.is_active ? "Active" : "Inactive"}
                 </Badge>
               </TableCell>
@@ -143,7 +143,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
                     onClick={() => onDelete(achievement.id)}
                     size="sm"
                     variant="outline"
-                    className="border-red-500/30 text-red-500 hover:bg-red-500/20"
+                    className="border-[var(--theme-error)]/30 text-[var(--theme-error)] hover:bg-[var(--theme-error)]/20"
                   >
                     <Trash2 className="w-3 h-3" />
                   </Button>
