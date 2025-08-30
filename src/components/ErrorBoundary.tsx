@@ -1,6 +1,6 @@
 
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { Button } from '@/components/ui/button';
+import { ThemedButton } from '@/components/ui/themed-button';
 import { AlertTriangle, RefreshCw } from 'lucide-react';
 
 interface Props {
@@ -49,20 +49,20 @@ class ErrorBoundary extends Component<Props, State> {
               We apologize for the inconvenience. Please try refreshing the page or contact support if the problem persists.
             </p>
             <div className="flex gap-3 justify-center">
-              <Button 
+              <ThemedButton 
                 onClick={this.handleReset}
                 variant="outline"
                 className="border-[var(--theme-primary)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
               >
                 Try Again
-              </Button>
-              <Button 
+              </ThemedButton>
+              <ThemedButton 
                 onClick={this.handleReload}
                 className="bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)]"
               >
                 <RefreshCw className="w-4 h-4 mr-2" />
                 Refresh Page
-              </Button>
+              </ThemedButton>
             </div>
           </div>
         </div>

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { PenTool, MessageSquare, ArrowUp, Clock } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedTextarea } from "@/components/ui/themed-textarea";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
@@ -66,17 +66,17 @@ const CommunityCypher = () => {
           {/* Join the Cypher Button - Only for non-authenticated users */}
           {!user && <div className="mb-8">
               <Link to="/auth">
-                <Button className="bg-black text-yellow-400 hover:bg-black/90 font-mogra text-lg px-8 py-3 shadow-lg">
+                <ThemedButton className="bg-[var(--theme-background)] text-[var(--theme-primary)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)] font-mogra text-lg px-8 py-3 shadow-lg">
                   <PenTool className="w-5 h-5 mr-2" />
                   Join the Cypher
-                </Button>
+                </ThemedButton>
               </Link>
             </div>}
         </div>
 
         {/* Comments Section */}
-        <Card className="bg-black/90 border-yellow-400/50 border-2 shadow-2xl shadow-yellow-400/20">
-          <CardContent className="p-6">
+        <ThemedCard className="bg-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/50 border-2 shadow-2xl shadow-[var(--theme-primary)]/20">
+          <ThemedCardContent className="p-6">
             {/* Sort Controls */}
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-4">
@@ -109,12 +109,12 @@ const CommunityCypher = () => {
             {/* Comment Input - Only for authenticated users */}
             {user ? <div className="bg-black/50 border border-yellow-400/30 rounded-lg p-4 mb-6">
                 <ResponsiveInstructions />
-                <Textarea value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥" className="w-full bg-transparent text-rap-platinum placeholder-yellow-400/60 border-none resize-none focus:outline-none font-merienda min-h-32" maxLength={maxCharacters} />
+                <ThemedTextarea value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥" className="w-full bg-transparent text-[var(--theme-text)] placeholder-[var(--theme-primary)]/60 border-none resize-none focus:outline-none font-[var(--theme-fontBody)] min-h-32" maxLength={maxCharacters} />
                 
                 <div className="flex justify-between items-center mt-3">
-                  <Button onClick={handleCommentSubmit} disabled={!newComment.trim() || isCreatingComment || isOverLimit} className="bg-yellow-400 text-black hover:bg-yellow-300 font-mogra disabled:opacity-50">
+                  <ThemedButton onClick={handleCommentSubmit} disabled={!newComment.trim() || isCreatingComment || isOverLimit} className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryLight)] font-mogra disabled:opacity-50">
                     {isCreatingComment ? "Dropping..." : "Drop Bars"}
-                  </Button>
+                  </ThemedButton>
                   
                   <span className={`text-sm font-mono ${isOverLimit ? 'text-red-400' : isNearLimit ? 'text-yellow-400' : 'text-yellow-400/60'}`}>
                     {characterCount}/{maxCharacters}
@@ -127,9 +127,9 @@ const CommunityCypher = () => {
                   Sign in to drop your bars and join the cypher.
                 </p>
                 <Link to="/auth">
-                  <Button className="bg-yellow-400 text-black hover:bg-yellow-300 font-mogra">
-                    Sign In to Battle
-                  </Button>
+                    <ThemedButton className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryLight)] font-mogra">
+                      Sign In to Battle
+                    </ThemedButton>
                 </Link>
               </div>}
 
@@ -148,14 +148,14 @@ const CommunityCypher = () => {
                   
                   {/* Load More Button */}
                   {hasMore && <div className="text-center mt-8">
-                      <Button onClick={loadMore} variant="outline" className="border-yellow-400/50 text-yellow-400 hover:bg-yellow-400/20 font-merienda">
+                      <ThemedButton onClick={loadMore} variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/20 font-merienda">
                         Load More Bars
-                      </Button>
+                      </ThemedButton>
                     </div>}
                 </>}
             </div>
-          </CardContent>
-        </Card>
+            </ThemedCardContent>
+        </ThemedCard>
       </div>
 
       <Footer />

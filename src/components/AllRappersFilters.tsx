@@ -1,7 +1,7 @@
 
 import React from "react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedInput } from "@/components/ui/themed-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Search, Loader2, Mic } from "lucide-react";
 
@@ -42,7 +42,7 @@ const AllRappersFilters = ({
         {/* Search */}
         <div className="relative">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[var(--theme-textMuted)] w-4 h-4" />
-          <Input placeholder="Search the culture..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-10 bg-[var(--theme-surface)]/90 border-[var(--theme-border)] text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)]/30 font-[var(--theme-fontSecondary)] !text-[var(--theme-text)]" />
+          <ThemedInput placeholder="Search the culture..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-10 bg-[var(--theme-surface)]/90 border-[var(--theme-border)] text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)]/30 font-[var(--theme-fontSecondary)] !text-[var(--theme-text)]" />
           {searchInput !== searchTerm && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-[var(--theme-textMuted)] animate-spin" />
             </div>}
@@ -50,7 +50,7 @@ const AllRappersFilters = ({
 
         {/* Location Filter (Debounced now) */}
         <div className="relative">
-          <Input placeholder="Filter by city/state..." value={locationInput} onChange={e => onLocationInput(e.target.value)} className="bg-[var(--theme-surface)]/90 border-[var(--theme-border)] text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)]/30 font-[var(--theme-fontSecondary)] !text-[var(--theme-text)]" />
+          <ThemedInput placeholder="Filter by city/state..." value={locationInput} onChange={e => onLocationInput(e.target.value)} className="bg-[var(--theme-surface)]/90 border-[var(--theme-border)] text-[var(--theme-text)] placeholder-[var(--theme-textMuted)] focus:border-[var(--theme-primary)] focus:ring-[var(--theme-primary)]/30 font-[var(--theme-fontSecondary)] !text-[var(--theme-text)]" />
           {locationInput !== locationFilter && <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-[var(--theme-textMuted)] animate-spin" />
             </div>}

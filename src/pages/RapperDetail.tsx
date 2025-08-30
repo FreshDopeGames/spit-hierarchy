@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useRefreshDiscography } from "@/hooks/useRapperDiscography";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ArrowLeft } from "lucide-react";
 import VoteModal from "@/components/VoteModal";
 import CommentBubble from "@/components/CommentBubble";
@@ -96,17 +96,17 @@ const RapperDetail = () => {
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
           <Link to="/all-rappers">
-            <Button variant="outline" className="mb-6 border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 font-kaushan">
+            <ThemedButton variant="outline" className="mb-6 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 font-kaushan">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To All Rappers
-            </Button>
+            </ThemedButton>
           </Link>
-          <Card className="bg-carbon-fiber border-rap-burgundy/30 shadow-lg shadow-rap-burgundy/20">
-            <CardContent className="p-8 text-center">
-              <h2 className="text-2xl font-mogra text-rap-silver mb-4">Pharaoh Not Found</h2>
-              <p className="text-rap-smoke font-kaushan">This pharaoh has vanished from the dynasty.</p>
-            </CardContent>
-          </Card>
+          <ThemedCard className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
+            <ThemedCardContent className="p-8 text-center">
+              <h2 className="text-2xl font-mogra text-[var(--theme-text)] mb-4">Pharaoh Not Found</h2>
+              <p className="text-[var(--theme-textMuted)] font-kaushan">This pharaoh has vanished from the dynasty.</p>
+            </ThemedCardContent>
+          </ThemedCard>
         </div>
       </div>
     );
@@ -147,10 +147,10 @@ const RapperDetail = () => {
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-8">
           {/* Back Button - Now properly preserves navigation state */}
           <Link to="/all-rappers" className="inline-block mb-6">
-            <Button variant="outline" className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold/10 hover:border-rap-gold font-kaushan shadow-lg shadow-rap-gold/20">
+            <ThemedButton variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 hover:border-[var(--theme-primary)] font-kaushan shadow-lg shadow-[var(--theme-primary)]/20">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To All Rappers
-            </Button>
+            </ThemedButton>
           </Link>
 
           {/* Rapper Header */}

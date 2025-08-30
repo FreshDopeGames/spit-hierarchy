@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import InternalPageHeader from "@/components/InternalPageHeader";
-import { Card, CardContent } from "@/components/ui/card";
+import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Separator } from "@/components/ui/separator";
 
 const PrivacyPolicy = () => {
@@ -28,8 +28,8 @@ const PrivacyPolicy = () => {
         />
         
         <div className="max-w-4xl mx-auto p-6 pb-20">
-          <Card className="bg-carbon-fiber border-rap-gold/30">
-            <CardContent className="p-8 space-y-8">
+          <ThemedCard className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30">
+            <ThemedCardContent className="p-8 space-y-8">
               
               <div className="text-rap-smoke text-sm">
                 Last updated: January 2025
@@ -166,8 +166,8 @@ const PrivacyPolicy = () => {
                 </p>
               </section>
 
-            </CardContent>
-          </Card>
+            </ThemedCardContent>
+          </ThemedCard>
         </div>
       </div>
     </div>

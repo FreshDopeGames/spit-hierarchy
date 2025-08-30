@@ -1,5 +1,5 @@
 
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { ThumbsUp, Star, Check, Clock, Plus } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
 import { useAuth } from "@/hooks/useAuth";
@@ -154,14 +154,14 @@ const VoteButton = ({
   };
 
   return (
-    <Button
+    <ThemedButton
       onClick={handleClick}
       disabled={isDisabled}
       size="sm"
       className={`${getButtonColor()} font-bold flex-1 sm:flex-none ${getButtonSizing()} transition-all duration-200 ${className}`}
     >
       {renderButtonContent()}
-    </Button>
+    </ThemedButton>
   );
 };
 
