@@ -49,9 +49,9 @@ const AchievementGallery = () => {
   if (!user) {
     return (
       <div className="text-center py-8">
-        <Award className="w-16 h-16 text-rap-gold mx-auto mb-4" />
-        <h3 className="text-xl font-bold text-white mb-2">Sign In to View Achievements</h3>
-        <p className="text-rap-platinum">Track your progress and unlock rewards!</p>
+        <Award className="w-16 h-16 text-[var(--theme-primary)] mx-auto mb-4" />
+        <h3 className="text-xl font-bold text-[var(--theme-text)] mb-2">Sign In to View Achievements</h3>
+        <p className="text-[var(--theme-textMuted)]">Track your progress and unlock rewards!</p>
       </div>
     );
   }

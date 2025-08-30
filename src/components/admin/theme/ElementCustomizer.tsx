@@ -4,9 +4,9 @@ import { ThemedInput } from "@/components/ui/themed-input";
 import { ThemedLabel } from "@/components/ui/themed-label";
 import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { Slider } from "@/components/ui/slider";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedSeparator } from "@/components/ui/themed-separator";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 import { EnhancedThemeConfig, ElementConfig, TypographyConfig } from "@/config/enhancedTheme";
 import { isValidHex } from "@/lib/utils";
 import ColorDropdown from "./ColorDropdown";
@@ -44,7 +44,18 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
       return theme.elements.button[buttonVariant];
     }
     
-    if (selectedElement in theme.elements) {
+    // Handle all other elements
+    const elementKeys = [
+      'page_background', 'container', 'section', 'sidebar', 'breadcrumb',
+      'textarea', 'checkbox', 'radio', 'switch', 'slider',
+      'badge', 'avatar', 'separator', 'accordion', 'tabs', 'tooltip',
+      'link', 'hover_overlay', 'focus_ring', 'navbar',
+      'modal_header', 'modal_footer', 'alert', 'notification', 'loading', 'skeleton',
+      'table', 'table_header', 'table_row', 'table_cell',
+      'card', 'input', 'select', 'modal', 'navigation', 'footer', 'global_header', 'dropdown', 'dropdown_item'
+    ];
+    
+    if (elementKeys.includes(selectedElement) && selectedElement in theme.elements) {
       const elementKey = selectedElement as keyof Omit<EnhancedThemeConfig['elements'], 'button'>;
       return theme.elements[elementKey] as ElementConfig;
     }
@@ -124,14 +135,14 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
         </ThemedCardTitle>
       </ThemedCardHeader>
       <ThemedCardContent>
-        <Tabs defaultValue={isTypography ? "typography" : "appearance"} className="space-y-4">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="typography">Typography</TabsTrigger>
-            <TabsTrigger value="appearance">Appearance</TabsTrigger>
-          </TabsList>
+        <ThemedTabs defaultValue={isTypography ? "typography" : "appearance"} className="space-y-4">
+          <ThemedTabsList className="grid w-full grid-cols-2">
+            <ThemedTabsTrigger value="typography">Typography</ThemedTabsTrigger>
+            <ThemedTabsTrigger value="appearance">Appearance</ThemedTabsTrigger>
+          </ThemedTabsList>
 
           {/* Typography Tab */}
-          <TabsContent value="typography" className="space-y-4">
+          <ThemedTabsContent value="typography" className="space-y-4">
             {(typographyConfig || elementConfig?.typography || isElement) && (
               <>
                 {/* Font Size */}
@@ -262,10 +273,10 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                 )}
               </>
             )}
-          </TabsContent>
+          </ThemedTabsContent>
 
           {/* Appearance Tab */}
-          <TabsContent value="appearance" className="space-y-4">
+          <ThemedTabsContent value="appearance" className="space-y-4">
             {isElement && elementConfig && (
               <>
                 {/* Background Color */}
@@ -328,7 +339,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                   </div>
                 )}
 
-                <Separator />
+                <ThemedSeparator />
 
                 {/* Border Controls */}
                 <div className="space-y-4">
@@ -398,7 +409,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                   </div>
                 </div>
 
-                <Separator />
+                <ThemedSeparator />
 
                 {/* Spacing */}
                 <div className="space-y-4">
@@ -439,8 +450,8 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                 </div>
               </>
             )}
-          </TabsContent>
-        </Tabs>
+          </ThemedTabsContent>
+        </ThemedTabs>
       </ThemedCardContent>
     </ThemedCard>
   );

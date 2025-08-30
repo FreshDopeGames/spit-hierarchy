@@ -276,13 +276,13 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
         <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">
           Form Elements
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="space-y-4">
             <div>
               <ThemedLabel 
                 htmlFor="sample-input"
-                style={getElementStyle('input-label')}
-                onClick={(e) => handleElementClick('input-label', e)}
+                style={getElementStyle('input')}
+                onClick={(e) => handleElementClick('input', e)}
               >
                 Sample Input
               </ThemedLabel>
@@ -299,8 +299,8 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
             <div>
               <ThemedLabel 
                 htmlFor="sample-select"
-                style={getElementStyle('select-label')}
-                onClick={(e) => handleElementClick('select-label', e)}
+                style={getElementStyle('select')}
+                onClick={(e) => handleElementClick('select', e)}
               >
                 Sample Select
               </ThemedLabel>
@@ -327,6 +327,50 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
 
           <div className="space-y-4">
             <div>
+              <ThemedLabel 
+                htmlFor="textarea-sample"
+                style={getElementStyle('textarea')}
+                onClick={(e) => handleElementClick('textarea', e)}
+              >
+                Textarea Element
+              </ThemedLabel>
+              <textarea
+                id="textarea-sample"
+                className="w-full min-h-[100px] rounded-[var(--theme-element-textarea-border-radius,8px)] border border-[var(--theme-element-textarea-border-color,var(--theme-border))] bg-[var(--theme-element-textarea-bg,var(--theme-surface))] px-3 py-2 text-[var(--theme-element-textarea-color,var(--theme-text))]"
+                placeholder="Enter your message..."
+                style={getElementStyle('textarea')}
+                onClick={(e) => handleElementClick('textarea', e)}
+              />
+            </div>
+
+            <div className="space-y-2">
+              <ThemedLabel>Form Controls</ThemedLabel>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    className="w-4 h-4 rounded bg-[var(--theme-element-checkbox-bg,var(--theme-surface))] border-[var(--theme-element-checkbox-border-color,var(--theme-primary))] text-[var(--theme-element-checkbox-color,var(--theme-primary))]"
+                    style={getElementStyle('checkbox')}
+                    onClick={(e) => handleElementClick('checkbox', e)}
+                  />
+                  <span className="text-sm">Checkbox</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="radio-group"
+                    className="w-4 h-4 rounded-full bg-[var(--theme-element-radio-bg,var(--theme-surface))] border-[var(--theme-element-radio-border-color,var(--theme-primary))] text-[var(--theme-element-radio-color,var(--theme-primary))]"
+                    style={getElementStyle('radio')}
+                    onClick={(e) => handleElementClick('radio', e)}
+                  />
+                  <span className="text-sm">Radio</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <div>
               <ThemedLabel htmlFor="email-input">Email Address</ThemedLabel>
               <ThemedInput
                 id="email-input"
@@ -343,6 +387,136 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
                 placeholder="+1 (555) 123-4567"
               />
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Content Elements */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">
+          Content Elements
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Badges</h3>
+            <div className="flex flex-wrap gap-2">
+              <span
+                className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-[var(--theme-element-badge-bg,var(--theme-primary))] text-[var(--theme-element-badge-color,var(--theme-background))]"
+                style={getElementStyle('badge')}
+                onClick={(e) => handleElementClick('badge', e)}
+              >
+                Primary Badge
+              </span>
+              <Badge variant="secondary">Secondary</Badge>
+              <Badge variant="outline">Outline</Badge>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Avatar</h3>
+            <div
+              className="relative flex h-16 w-16 shrink-0 overflow-hidden rounded-[var(--theme-element-avatar-border-radius,50%)] bg-[var(--theme-element-avatar-bg,var(--theme-surface))] border-2 border-[var(--theme-element-avatar-border-color,var(--theme-primary))]"
+              style={getElementStyle('avatar')}
+              onClick={(e) => handleElementClick('avatar', e)}
+            >
+              <div className="flex h-full w-full items-center justify-center text-[var(--theme-element-avatar-color,var(--theme-text))]">
+                <User className="w-8 h-8" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Separator</h3>
+            <div
+              className="shrink-0 bg-[var(--theme-element-separator-bg,var(--theme-border))] h-px w-full"
+              style={getElementStyle('separator')}
+              onClick={(e) => handleElementClick('separator', e)}
+            />
+            <p className="text-sm text-[var(--theme-textMuted)]">Horizontal separator</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Table Elements */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">
+          Table Elements
+        </h2>
+        <div className="rounded-lg overflow-hidden border border-[var(--theme-border)]">
+          <table className="w-full">
+            <thead
+              className="bg-[var(--theme-element-table_header-bg,var(--theme-surface))] text-[var(--theme-element-table_header-color,var(--theme-text))]"
+              style={getElementStyle('table_header')}
+              onClick={(e) => handleElementClick('table_header', e)}
+            >
+              <tr>
+                <th className="px-4 py-2 text-left font-semibold">Name</th>
+                <th className="px-4 py-2 text-left font-semibold">Role</th>
+                <th className="px-4 py-2 text-left font-semibold">Status</th>
+              </tr>
+            </thead>
+            <tbody
+              className="bg-[var(--theme-element-table-bg,var(--theme-background))]"
+              style={getElementStyle('table')}
+              onClick={(e) => handleElementClick('table', e)}
+            >
+              <tr
+                className="border-t border-[var(--theme-border)] hover:bg-[var(--theme-element-table_row-hover-bg,var(--theme-surface))]"
+                style={getElementStyle('table_row')}
+                onClick={(e) => handleElementClick('table_row', e)}
+              >
+                <td className="px-4 py-2">John Doe</td>
+                <td className="px-4 py-2">Admin</td>
+                <td className="px-4 py-2">Active</td>
+              </tr>
+              <tr className="border-t border-[var(--theme-border)] hover:bg-[var(--theme-element-table_row-hover-bg,var(--theme-surface))]">
+                <td className="px-4 py-2">Jane Smith</td>
+                <td className="px-4 py-2">User</td>
+                <td className="px-4 py-2">Inactive</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      {/* Feedback Elements */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">
+          Feedback Elements
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div
+            className="rounded-lg p-4 bg-[var(--theme-element-alert-bg,var(--theme-surface))] text-[var(--theme-element-alert-color,var(--theme-text))] border border-[var(--theme-element-alert-border-color,var(--theme-border))]"
+            style={getElementStyle('alert')}
+            onClick={(e) => handleElementClick('alert', e)}
+          >
+            <h4 className="font-semibold mb-2">Alert Component</h4>
+            <p className="text-sm">This is an alert message for user feedback.</p>
+          </div>
+
+          <div
+            className="rounded-lg p-4 bg-[var(--theme-element-notification-bg,var(--theme-background))] text-[var(--theme-element-notification-color,var(--theme-text))] border border-[var(--theme-element-notification-border-color,var(--theme-border))] shadow-lg"
+            style={getElementStyle('notification')}
+            onClick={(e) => handleElementClick('notification', e)}
+          >
+            <h4 className="font-semibold mb-2">Notification</h4>
+            <p className="text-sm">This is a notification with enhanced styling.</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Loading & Skeleton</h3>
+          <div className="flex items-center gap-4">
+            <div
+              className="animate-spin rounded-full h-8 w-8 border-b-2 border-[var(--theme-element-loading-color,var(--theme-primary))]"
+              style={getElementStyle('loading')}
+              onClick={(e) => handleElementClick('loading', e)}
+            />
+            <div
+              className="animate-pulse rounded h-4 bg-[var(--theme-element-skeleton-bg,var(--theme-surface))] w-32"
+              style={getElementStyle('skeleton')}
+              onClick={(e) => handleElementClick('skeleton', e)}
+            />
           </div>
         </div>
       </section>

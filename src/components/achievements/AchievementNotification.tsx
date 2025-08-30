@@ -66,13 +66,13 @@ const AchievementNotification = ({
     <div className={`fixed top-4 right-4 z-50 transition-all duration-300 ${
       isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
     }`}>
-      <Card className="bg-rap-carbon/95 border-2 border-rap-gold shadow-2xl shadow-rap-gold/30 min-w-80">
+      <Card className="bg-[var(--theme-surface)]/95 border-2 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30 min-w-80">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="font-bold text-rap-gold">🎉 Achievement Unlocked!</h3>
+            <h3 className="font-bold text-[var(--theme-primary)]">🎉 Achievement Unlocked!</h3>
             <button 
               onClick={handleClose}
-              className="text-rap-silver hover:text-rap-gold transition-colors"
+              className="text-[var(--theme-textMuted)] hover:text-[var(--theme-primary)] transition-colors"
             >
               <X className="w-4 h-4" />
             </button>
@@ -85,7 +85,7 @@ const AchievementNotification = ({
             
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
-                <h4 className="font-bold text-white">{achievement.name}</h4>
+                <h4 className="font-bold text-[var(--theme-text)]">{achievement.name}</h4>
                 <Badge 
                   variant="secondary" 
                   className={`bg-gradient-to-r ${rarityColors[achievement.rarity]} text-white text-xs capitalize`}
@@ -93,8 +93,8 @@ const AchievementNotification = ({
                   {achievement.rarity}
                 </Badge>
               </div>
-              <p className="text-rap-platinum text-sm mb-1">{achievement.description}</p>
-              <p className="text-rap-gold text-xs font-bold">+{achievement.points} points</p>
+              <p className="text-[var(--theme-textMuted)] text-sm mb-1">{achievement.description}</p>
+              <p className="text-[var(--theme-primary)] text-xs font-bold">+{achievement.points} points</p>
             </div>
           </div>
         </CardContent>

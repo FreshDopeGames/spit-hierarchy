@@ -243,76 +243,76 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
-          <Label htmlFor="name" className="text-rap-gold">Name *</Label>
+          <Label htmlFor="name" className="text-[var(--theme-primary)]">Name *</Label>
           <Input
             id="name"
             type="text"
             value={formData.name}
             onChange={(e) => handleInputChange("name", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             required
           />
         </div>
 
         <div>
-          <Label htmlFor="real_name" className="text-rap-gold">Real Name</Label>
+          <Label htmlFor="real_name" className="text-[var(--theme-primary)]">Real Name</Label>
           <Input
             id="real_name"
             type="text"
             value={formData.real_name}
             onChange={(e) => handleInputChange("real_name", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
           />
         </div>
       </div>
 
       <div>
-        <Label htmlFor="origin" className="text-rap-gold">Origin</Label>
+        <Label htmlFor="origin" className="text-[var(--theme-primary)]">Origin</Label>
         <Input
           id="origin"
           type="text"
           value={formData.origin}
           onChange={(e) => handleInputChange("origin", e.target.value)}
-          className="bg-white border-rap-gold/30 text-black"
+          className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
           placeholder="e.g., New York, NY"
         />
       </div>
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <Label htmlFor="birth_year" className="text-rap-gold">Birth Year</Label>
+          <Label htmlFor="birth_year" className="text-[var(--theme-primary)]">Birth Year</Label>
           <Input
             id="birth_year"
             type="number"
             value={formData.birth_year}
             onChange={(e) => handleInputChange("birth_year", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             min="1900"
             max={new Date().getFullYear()}
           />
         </div>
 
         <div>
-          <Label htmlFor="birth_month" className="text-rap-gold">Birth Month</Label>
+          <Label htmlFor="birth_month" className="text-[var(--theme-primary)]">Birth Month</Label>
           <Input
             id="birth_month"
             type="number"
             value={formData.birth_month}
             onChange={(e) => handleInputChange("birth_month", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             min="1"
             max="12"
           />
         </div>
 
         <div>
-          <Label htmlFor="birth_day" className="text-rap-gold">Birth Day</Label>
+          <Label htmlFor="birth_day" className="text-[var(--theme-primary)]">Birth Day</Label>
           <Input
             id="birth_day"
             type="number"
             value={formData.birth_day}
             onChange={(e) => handleInputChange("birth_day", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             min="1"
             max="31"
           />
@@ -321,39 +321,39 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
 
       <div className="grid grid-cols-3 gap-4">
         <div>
-          <Label htmlFor="death_year" className="text-rap-gold">Death Year (if applicable)</Label>
+          <Label htmlFor="death_year" className="text-[var(--theme-primary)]">Death Year (if applicable)</Label>
           <Input
             id="death_year"
             type="number"
             value={formData.death_year}
             onChange={(e) => handleInputChange("death_year", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             min="1900"
             max={new Date().getFullYear()}
           />
         </div>
 
         <div>
-          <Label htmlFor="death_month" className="text-rap-gold">Death Month</Label>
+          <Label htmlFor="death_month" className="text-[var(--theme-primary)]">Death Month</Label>
           <Input
             id="death_month"
             type="number"
             value={formData.death_month}
             onChange={(e) => handleInputChange("death_month", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             min="1"
             max="12"
           />
         </div>
 
         <div>
-          <Label htmlFor="death_day" className="text-rap-gold">Death Day</Label>
+          <Label htmlFor="death_day" className="text-[var(--theme-primary)]">Death Day</Label>
           <Input
             id="death_day"
             type="number"
             value={formData.death_day}
             onChange={(e) => handleInputChange("death_day", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             min="1"
             max="31"
           />
@@ -361,55 +361,55 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       </div>
 
       <div>
-        <Label htmlFor="bio" className="text-rap-gold">Bio</Label>
+        <Label htmlFor="bio" className="text-[var(--theme-primary)]">Bio</Label>
         <Textarea
           id="bio"
           value={formData.bio}
           onChange={(e) => handleInputChange("bio", e.target.value)}
-          className="bg-white border-rap-gold/30 text-black min-h-[100px]"
+          className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)] min-h-[100px]"
           placeholder="Enter rapper biography..."
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         <div>
-          <Label htmlFor="spotify_id" className="text-rap-gold">Spotify ID</Label>
+          <Label htmlFor="spotify_id" className="text-[var(--theme-primary)]">Spotify ID</Label>
           <Input
             id="spotify_id"
             type="text"
             value={formData.spotify_id}
             onChange={(e) => handleInputChange("spotify_id", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
           />
         </div>
 
         <div>
-          <Label htmlFor="instagram_handle" className="text-rap-gold">Instagram Handle</Label>
+          <Label htmlFor="instagram_handle" className="text-[var(--theme-primary)]">Instagram Handle</Label>
           <Input
             id="instagram_handle"
             type="text"
             value={formData.instagram_handle}
             onChange={(e) => handleInputChange("instagram_handle", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             placeholder="@username"
           />
         </div>
 
         <div>
-          <Label htmlFor="twitter_handle" className="text-rap-gold">Twitter Handle</Label>
+          <Label htmlFor="twitter_handle" className="text-[var(--theme-primary)]">Twitter Handle</Label>
           <Input
             id="twitter_handle"
             type="text"
             value={formData.twitter_handle}
             onChange={(e) => handleInputChange("twitter_handle", e.target.value)}
-            className="bg-white border-rap-gold/30 text-black"
+            className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
             placeholder="@username"
           />
         </div>
       </div>
 
       <div>
-        <Label className="text-rap-gold">Tags</Label>
+        <Label className="text-[var(--theme-primary)]">Tags</Label>
         <RapperTagSelector
           selectedTags={formData.tags}
           onTagsChange={(tags) => handleInputChange("tags", tags)}

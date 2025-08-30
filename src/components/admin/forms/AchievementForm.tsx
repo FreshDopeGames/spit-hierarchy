@@ -80,14 +80,14 @@ const AchievementForm = ({ achievement, onSuccess, onCancel }: AchievementFormPr
           type="button" 
           variant="outline" 
           onClick={onCancel}
-          className="border-rap-gold/30 text-rap-gold hover:bg-rap-gold/20"
+          className="border-[var(--theme-primary)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/20"
         >
           Cancel
         </Button>
         <Button 
           type="submit" 
           disabled={form.formState.isSubmitting}
-          className="bg-rap-gold text-rap-carbon hover:bg-rap-gold/90"
+          className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90"
         >
           {form.formState.isSubmitting 
             ? (achievement ? "Updating..." : "Creating...") 
