@@ -4,7 +4,7 @@ import { Menu, Home, Trophy, Music, Swords, PenTool, BookOpen, Info, BarChart3, 
 import { useTheme } from "@/hooks/useTheme";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import { Separator } from "@/components/ui/separator";
+import { ThemedSeparator } from "@/components/ui/themed-separator";
 import { useAuth } from "@/hooks/useAuth";
 import UserProfileDropdown from "@/components/UserProfileDropdown";
 
@@ -190,7 +190,7 @@ const NavigationSidebar = ({
             {/* Admin/Analytics Section for logged in users */}
             {user && (
               <>
-                <Separator className="my-6" />
+                <ThemedSeparator className="my-6" />
                 <div className="space-y-2">
                   {/* Analytics always visible to authenticated users */}
                   <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
@@ -236,7 +236,7 @@ const NavigationSidebar = ({
             {/* Sign in button for non-authenticated users */}
             {!user && (
               <>
-                <Separator className="my-6" />
+                <ThemedSeparator className="my-6" />
                 <Link to="/auth" onClick={() => handleNavClick('/auth')}>
                   <ThemedButton 
                     className="w-full font-merienda shadow-lg text-[var(--theme-textInverted)] font-extrabold text-xl bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryDark)]"
