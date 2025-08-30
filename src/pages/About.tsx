@@ -21,9 +21,9 @@ const About = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+    <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] relative">
       {/* Background overlay for future custom backgrounds */}
-      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+      <div className="absolute inset-0 bg-[var(--theme-element-page-background-bg,var(--theme-background))] opacity-90 z-0"></div>
       
       <div className="relative z-10">
         <HeaderNavigation isScrolled={isScrolled} />

@@ -131,22 +131,73 @@ export interface EnhancedThemeConfig {
   };
   gradients: GradientConfig[];
   elements: {
+    // Button variants
     button: {
       default: ElementConfig;
       secondary: ElementConfig;
       accent: ElementConfig;
       outline: ElementConfig;
       gradient: ElementConfig;
+      destructive: ElementConfig;
+      ghost: ElementConfig;
     };
-    card: ElementConfig;
+    
+    // Layout elements
+    page_background: ElementConfig;
+    container: ElementConfig;
+    section: ElementConfig;
+    sidebar: ElementConfig;
+    breadcrumb: ElementConfig;
+    
+    // Form elements
     input: ElementConfig;
+    textarea: ElementConfig;
     select: ElementConfig;
-    modal: ElementConfig;
+    checkbox: ElementConfig;
+    radio: ElementConfig;
+    switch: ElementConfig;
+    slider: ElementConfig;
+    
+    // Content elements
+    card: ElementConfig;
+    badge: ElementConfig;
+    avatar: ElementConfig;
+    separator: ElementConfig;
+    accordion: ElementConfig;
+    tabs: ElementConfig;
+    tooltip: ElementConfig;
+    
+    // Interactive elements
+    link: ElementConfig;
+    hover_overlay: ElementConfig;
+    focus_ring: ElementConfig;
+    
+    // Navigation elements
     navigation: ElementConfig;
+    navbar: ElementConfig;
     footer: ElementConfig;
     global_header: ElementConfig;
+    
+    // Dropdown elements
     dropdown: ElementConfig;
     dropdown_item: ElementConfig;
+    
+    // Modal elements
+    modal: ElementConfig;
+    modal_header: ElementConfig;
+    modal_footer: ElementConfig;
+    
+    // Feedback elements
+    alert: ElementConfig;
+    notification: ElementConfig;
+    loading: ElementConfig;
+    skeleton: ElementConfig;
+    
+    // Table elements
+    table: ElementConfig;
+    table_header: ElementConfig;
+    table_row: ElementConfig;
+    table_cell: ElementConfig;
   };
   spacing: {
     xs: string;
@@ -367,7 +418,207 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
         border: { width: '0px', style: 'solid', color: 'transparent', radius: '8px' },
         typography: { fontSize: '0.875rem', fontWeight: '600', lineHeight: '1.5' },
         padding: '0.5rem 1rem'
+      },
+      destructive: {
+        background: '#DC2626',
+        color: '#FFFFFF',
+        hoverBackground: '#B91C1C',
+        border: { width: '0px', style: 'solid', color: 'transparent', radius: '8px' },
+        typography: { fontSize: '0.875rem', fontWeight: '600', lineHeight: '1.5' },
+        padding: '0.5rem 1rem'
+      },
+      ghost: {
+        background: 'transparent',
+        color: '#E8E6E3',
+        hoverBackground: '#2B2B2B',
+        border: { width: '0px', style: 'solid', color: 'transparent', radius: '8px' },
+        typography: { fontSize: '0.875rem', fontWeight: '500', lineHeight: '1.5' },
+        padding: '0.5rem 1rem'
       }
+    },
+    
+    // Layout elements
+    page_background: {
+      background: 'linear-gradient(135deg, #0D0D0D, #1A1A1A, #0D0D0D)',
+      color: '#E8E6E3'
+    },
+    container: {
+      background: 'transparent',
+      color: '#E8E6E3',
+      padding: '0 1rem'
+    },
+    section: {
+      background: 'transparent',
+      color: '#E8E6E3',
+      padding: '2rem 0'
+    },
+    sidebar: {
+      background: '#1A1A1A',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
+      padding: '1rem'
+    },
+    breadcrumb: {
+      background: 'transparent',
+      color: '#BFBFBF',
+      typography: { fontSize: '0.875rem', fontWeight: '400', lineHeight: '1.25' },
+      padding: '0.5rem 0'
+    },
+    
+    // Form elements
+    textarea: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' },
+      padding: '0.75rem 1rem'
+    },
+    checkbox: {
+      background: '#2B2B2B',
+      color: '#D4AF37',
+      border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '4px' }
+    },
+    radio: {
+      background: '#2B2B2B',
+      color: '#D4AF37',
+      border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '50%' }
+    },
+    switch: {
+      background: '#2B2B2B',
+      color: '#D4AF37',
+      border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '12px' }
+    },
+    slider: {
+      background: '#2B2B2B',
+      color: '#D4AF37',
+      border: { width: '0px', style: 'solid', color: 'transparent', radius: '8px' }
+    },
+    
+    // Content elements
+    badge: {
+      background: '#D4AF37',
+      color: '#0D0D0D',
+      border: { width: '0px', style: 'solid', color: 'transparent', radius: '999px' },
+      typography: { fontSize: '0.75rem', fontWeight: '600', lineHeight: '1' },
+      padding: '0.25rem 0.75rem'
+    },
+    avatar: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '50%' }
+    },
+    separator: {
+      background: '#D4AF37',
+      color: 'transparent',
+      border: { width: '0px', style: 'solid', color: 'transparent', radius: '0px' }
+    },
+    accordion: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' },
+      padding: '1rem'
+    },
+    tabs: {
+      background: '#1A1A1A',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' }
+    },
+    tooltip: {
+      background: '#0D0D0D',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '6px' },
+      typography: { fontSize: '0.75rem', fontWeight: '500', lineHeight: '1.25' },
+      padding: '0.5rem 0.75rem',
+      shadow: '0 4px 6px rgba(212, 175, 55, 0.2)'
+    },
+    
+    // Interactive elements
+    link: {
+      background: 'transparent',
+      color: '#D4AF37',
+      hoverColor: '#E8C547',
+      typography: { fontSize: '1rem', fontWeight: '500', lineHeight: '1.5' }
+    },
+    hover_overlay: {
+      background: 'rgba(212, 175, 55, 0.1)',
+      color: 'transparent'
+    },
+    focus_ring: {
+      background: 'transparent',
+      color: '#D4AF37',
+      border: { width: '2px', style: 'solid', color: '#D4AF37', radius: '8px' }
+    },
+    
+    // Navigation elements
+    navbar: {
+      background: '#1A1A1A',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
+      padding: '1rem 2rem'
+    },
+    
+    // Modal elements
+    modal_header: {
+      background: '#1A1A1A',
+      color: '#E8E6E3',
+      border: { width: '0px', style: 'solid', color: 'transparent', radius: '0px' },
+      padding: '1.5rem'
+    },
+    modal_footer: {
+      background: '#1A1A1A',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
+      padding: '1rem 1.5rem'
+    },
+    
+    // Feedback elements
+    alert: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' },
+      padding: '1rem'
+    },
+    notification: {
+      background: '#0D0D0D',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' },
+      padding: '1rem',
+      shadow: '0 10px 15px rgba(212, 175, 55, 0.3)'
+    },
+    loading: {
+      background: 'transparent',
+      color: '#D4AF37'
+    },
+    skeleton: {
+      background: '#2B2B2B',
+      color: 'transparent',
+      border: { width: '0px', style: 'solid', color: 'transparent', radius: '4px' }
+    },
+    
+    // Table elements
+    table: {
+      background: '#2B2B2B',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '8px' }
+    },
+    table_header: {
+      background: '#1A1A1A',
+      color: '#D4AF37',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
+      typography: { fontSize: '0.875rem', fontWeight: '600', lineHeight: '1.25' },
+      padding: '0.75rem 1rem'
+    },
+    table_row: {
+      background: 'transparent',
+      color: '#E8E6E3',
+      hoverBackground: '#333333',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '0px' },
+      padding: '0.75rem 1rem'
+    },
+    table_cell: {
+      background: 'transparent',
+      color: '#E8E6E3',
+      typography: { fontSize: '0.875rem', fontWeight: '400', lineHeight: '1.25' },
+      padding: '0.75rem 1rem'
     },
     card: {
       background: '#2B2B2B',

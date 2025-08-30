@@ -28,7 +28,7 @@ const Analytics = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+    <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))]">
       <InternalPageHeader 
         title="Analytics Dashboard"
         subtitle="Track your progress and explore platform insights"
@@ -36,10 +36,10 @@ const Analytics = () => {
       
       <div className="container mx-auto px-4 py-8 md:py-12">
         <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-5 bg-rap-carbon-light border border-rap-gold/30 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
+          <TabsList className="grid w-full grid-cols-5 bg-[var(--theme-element-tabs-bg,var(--theme-surface))] border border-[var(--theme-element-tabs-border-color,var(--theme-border))] mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
             <TabsTrigger 
               value="platform" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Platform Analytics"
             >
               <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
@@ -47,7 +47,7 @@ const Analytics = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="rapper-stats" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Rapper Statistics"
             >
               <Music className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
@@ -55,7 +55,7 @@ const Analytics = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="members" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Member Analytics"
             >
               <Users className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
@@ -63,7 +63,7 @@ const Analytics = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="achievements" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Awards and Achievements"
             >
               <Trophy className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
@@ -71,7 +71,7 @@ const Analytics = () => {
             </TabsTrigger>
             <TabsTrigger 
               value="stats" 
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon text-rap-platinum flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="My Personal Statistics"
             >
               <User className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />

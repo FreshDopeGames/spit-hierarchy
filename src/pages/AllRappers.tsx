@@ -166,7 +166,7 @@ const AllRappers = () => {
   };
 
   if (isLoading && currentPage === 0) {
-    return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
+    return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col">
         <HeaderNavigation isScrolled={false} />
         <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
           <BlogPageHeader title="All Rappers" />
@@ -182,7 +182,7 @@ const AllRappers = () => {
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
 
-  return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
+  return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col">
       <HeaderNavigation isScrolled={false} />
       <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
         <BlogPageHeader title="All Rappers" />
@@ -191,7 +191,7 @@ const AllRappers = () => {
           
         </div>
         {/* Subtitle with total rappers */}
-        <p className="text-center text-rap-smoke text-xl font-kaushan mb-8">
+        <p className="text-center text-[var(--theme-textMuted)] text-xl font-[var(--theme-font-display)] mb-8">
           {total} legendary rappers • Showing {allRappers.length}
         </p>
         {/* Filters and Search */}

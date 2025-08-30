@@ -109,11 +109,11 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+    <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))]">
       <HeaderNavigation isScrolled={isScrolled} />
 
       <div className="pt-24 flex items-center justify-center p-4 min-h-screen">
-        <Card className="w-full max-w-md bg-carbon-fiber border-rap-burgundy/50">
+        <Card className="w-full max-w-md bg-[var(--theme-element-card-bg,var(--theme-surface))] border-[var(--theme-element-card-border-color,var(--theme-border))]">
           <AuthHeader isLogin={isLogin} />
           
           <CardContent className="space-y-6">
