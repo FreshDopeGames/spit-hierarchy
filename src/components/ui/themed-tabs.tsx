@@ -11,7 +11,7 @@ const ThemedTabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      "inline-flex h-10 items-center justify-center rounded-[var(--theme-element-tabs-border-radius,var(--theme-radius-md))] bg-[var(--theme-element-tabs-bg,var(--theme-surface))] p-1 text-[var(--theme-element-tabs-color,var(--theme-textMuted))] border border-[var(--theme-element-tabs-border-color,var(--theme-border))]",
+      "inline-flex h-10 items-center justify-center rounded-[var(--theme-element-tabs-border-radius,var(--theme-radius-md))] bg-[hsl(var(--theme-element-tabs-bg,var(--theme-surface)))] p-1 text-[hsl(var(--theme-element-tabs-color,var(--theme-textMuted)))] border border-[hsl(var(--theme-element-tabs-border-color,var(--theme-border)))]",
       className
     )}
     {...props}
@@ -26,7 +26,7 @@ const ThemedTabsTrigger = React.forwardRef<
   <TabsPrimitive.Trigger
     ref={ref}
     className={cn(
-      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-[var(--theme-background)] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[var(--theme-element-tabs-active-bg,var(--theme-background))] data-[state=active]:text-[var(--theme-element-tabs-active-color,var(--theme-primary))] data-[state=active]:shadow-sm text-[var(--theme-element-tabs-color,var(--theme-textMuted))] font-[var(--theme-element-tabs-fontFamily,var(--theme-font-body))]",
+      "inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1.5 text-sm font-medium ring-offset-[hsl(var(--theme-background))] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--theme-primary))] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 data-[state=active]:bg-[hsl(var(--theme-element-tabs-active-bg,var(--theme-background)))] data-[state=active]:text-[hsl(var(--theme-element-tabs-active-color,var(--theme-primary)))] data-[state=active]:shadow-sm text-[hsl(var(--theme-element-tabs-color,var(--theme-textMuted)))] font-[var(--theme-element-tabs-fontFamily,var(--theme-font-body))]",
       className
     )}
     {...props}
@@ -41,7 +41,7 @@ const ThemedTabsContent = React.forwardRef<
   <TabsPrimitive.Content
     ref={ref}
     className={cn(
-      "mt-2 ring-offset-[var(--theme-background)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)] focus-visible:ring-offset-2",
+      "mt-2 ring-offset-[hsl(var(--theme-background))] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--theme-primary))] focus-visible:ring-offset-2",
       className
     )}
     {...props}

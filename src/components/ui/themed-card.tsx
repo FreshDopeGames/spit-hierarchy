@@ -8,10 +8,10 @@ const themedCardVariants = cva(
   {
     variants: {
       variant: {
-        default: "border-[var(--theme-border)] bg-[var(--theme-surface)] text-[var(--theme-text)]",
-        gradient: "border-[var(--theme-border)] bg-[var(--theme-element-card-bg)] text-[var(--theme-text)]",
-        primary: "border-[var(--theme-primary)] bg-gradient-to-br from-[var(--theme-primaryLight)] to-[var(--theme-primary)] text-[var(--theme-textLight)]",
-        accent: "border-[var(--theme-accent)] bg-gradient-to-br from-[var(--theme-accentLight)] to-[var(--theme-accent)] text-[var(--theme-textLight)]",
+        default: "border-[hsl(var(--theme-border))] bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))]",
+        gradient: "border-[hsl(var(--theme-border))] bg-[hsl(var(--theme-element-card-bg))] text-[hsl(var(--theme-text))]",
+        primary: "border-[hsl(var(--theme-primary))] bg-gradient-to-br from-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] text-[hsl(var(--theme-textLight))]",
+        accent: "border-[hsl(var(--theme-accent))] bg-gradient-to-br from-[hsl(var(--theme-accentLight))] to-[hsl(var(--theme-accent))] text-[hsl(var(--theme-textLight))]",
       },
     },
     defaultVariants: {
@@ -54,7 +54,7 @@ const ThemedCardTitle = React.forwardRef<
   <h3
     ref={ref}
     className={cn(
-      "text-2xl font-semibold leading-none tracking-tight text-[var(--theme-primary)] font-[var(--theme-font-heading)]",
+      "text-2xl font-semibold leading-none tracking-tight text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]",
       className
     )}
     {...props}
@@ -68,7 +68,7 @@ const ThemedCardDescription = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <p
     ref={ref}
-    className={cn("text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]", className)}
+    className={cn("text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]", className)}
     {...props}
   />
 ));

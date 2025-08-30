@@ -23,7 +23,7 @@ const HeaderNavigation = ({
   const isLoading = authLoading || (user && profileLoading) || securityLoading;
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[var(--theme-black)] border-b border-[var(--theme-primary)] transition-all duration-300">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--theme-black))] border-b border-[hsl(var(--theme-primary))] transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Left: Hamburger Menu using NavigationSidebar */}
@@ -52,7 +52,7 @@ const HeaderNavigation = ({
             ) : (
               <Link 
                 to="/auth" 
-                className="bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)] px-4 py-2 rounded-lg font-[var(--theme-font-body)] font-medium transition-colors"
+                className="bg-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primaryLight))] text-[hsl(var(--theme-background))] px-4 py-2 rounded-lg font-[var(--theme-font-body)] font-medium transition-colors"
               >
                 Sign In
               </Link>
