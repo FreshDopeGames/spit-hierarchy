@@ -132,7 +132,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
 
           {/* Typography Tab */}
           <TabsContent value="typography" className="space-y-4">
-            {(typographyConfig || elementConfig?.typography) && (
+            {(typographyConfig || elementConfig?.typography || isElement) && (
               <>
                 {/* Font Size */}
                 <div className="space-y-2">
@@ -236,13 +236,16 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
                 </div>
 
                 {/* Text Transform */}
-                {typographyConfig?.textTransform !== undefined && (
+                {(typographyConfig?.textTransform !== undefined || isElement) && (
                   <div className="space-y-2">
                     <ThemedLabel>Text Transform</ThemedLabel>
                     <ThemedSelect
-                      value={typographyConfig.textTransform || 'none'}
+                      value={typographyConfig?.textTransform || elementConfig?.typography?.textTransform || 'none'}
                       onValueChange={(value: 'none' | 'uppercase' | 'lowercase' | 'capitalize') => {
-                        updateElementConfig({ textTransform: value });
+                        const updates = isTypography 
+                          ? { textTransform: value }
+                          : { typography: { ...elementConfig?.typography, textTransform: value } };
+                        updateElementConfig(updates);
                       }}
                     >
                       <ThemedSelectTrigger>
