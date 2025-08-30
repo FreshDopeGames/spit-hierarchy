@@ -8,7 +8,7 @@ import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigge
 import { ThemedDropdownMenu, ThemedDropdownMenuContent, ThemedDropdownMenuItem, ThemedDropdownMenuLabel, ThemedDropdownMenuSeparator, ThemedDropdownMenuTrigger } from '@/components/ui/themed-dropdown-menu';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Badge } from '@/components/ui/badge';
-import { ChevronDown, Settings, User, Mail, Phone, Download, Share, Edit, Trash, Plus } from 'lucide-react';
+import { ChevronDown, Settings, User, Mail, Phone, Download, Share, Edit, Trash, Plus, TrendingUp, Award } from 'lucide-react';
 
 interface EnhancedThemePreviewExpandedProps {
   theme: EnhancedThemeConfig;
@@ -476,6 +476,170 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
               </tr>
             </tbody>
           </table>
+        </div>
+      </section>
+
+      {/* Ranking Card Elements */}
+      <section className="space-y-6">
+        <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">
+          Ranking Card Elements
+        </h2>
+        <div className="space-y-4">
+          <h3 className="text-lg font-semibold">Ranking Preview Card</h3>
+          <div className="max-w-md">
+            <div className="group">
+              <div 
+                className="relative h-[300px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
+                style={{
+                  borderRadius: 'var(--theme-element-ranking_card-border-radius, 12px)',
+                  border: `var(--theme-element-ranking_card-border-width, 1px) var(--theme-element-ranking_card-border-style, solid) var(--theme-element-ranking_card-border-color, var(--theme-primary))`,
+                  backgroundColor: 'var(--theme-element-ranking_card-bg, #1A1A1A)',
+                  boxShadow: 'var(--theme-element-ranking_card-shadow, 0 4px 6px rgba(0, 0, 0, 0.2))'
+                }}
+                onClick={(e) => handleElementClick('ranking_card', e)}
+              >
+                {/* Rapper Mosaic Background */}
+                <div className="absolute inset-0 h-[43%] grid grid-rows-2 gap-0">
+                  <div className="grid grid-cols-2">
+                    <div 
+                      className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/40 to-muted/60"
+                      style={{
+                        border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                      }}
+                    />
+                    <div 
+                      className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/30 to-muted/50"
+                      style={{
+                        border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                      }}
+                    />
+                  </div>
+                  <div className="grid grid-cols-3">
+                    <div 
+                      className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/50 to-muted/70"
+                      style={{
+                        border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                      }}
+                    />
+                    <div 
+                      className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/40 to-muted/60"
+                      style={{
+                        border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                      }}
+                    />
+                    <div 
+                      className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/60 to-muted/80"
+                      style={{
+                        border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                      }}
+                    />
+                  </div>
+                </div>
+                
+                {/* Gradient Overlay */}
+                <div 
+                  className="absolute bottom-0 left-0 right-0 h-[57%]"
+                  style={{
+                    background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
+                  }}
+                />
+                
+                {/* Content */}
+                <div className="absolute bottom-0 left-0 right-0 h-[57%] flex flex-col justify-center p-4">
+                  {/* Category Badge */}
+                  <div className="mb-3">
+                    <span 
+                      className="inline-flex items-center backdrop-blur-sm"
+                      style={{
+                        backgroundColor: 'var(--theme-element-ranking_card_category_badge-bg, rgba(212, 175, 55, 0.2))',
+                        color: 'var(--theme-element-ranking_card_category_badge-color, #D4AF37)',
+                        border: `var(--theme-element-ranking_card_category_badge-border-width, 1px) var(--theme-element-ranking_card_category_badge-border-style, solid) var(--theme-element-ranking_card_category_badge-border-color, rgba(212, 175, 55, 0.3))`,
+                        borderRadius: 'var(--theme-element-ranking_card_category_badge-border-radius, 999px)',
+                        padding: 'var(--theme-element-ranking_card_category_badge-padding, 0.5rem 0.75rem)',
+                        fontSize: 'var(--theme-element-ranking_card_category_badge-font-size, 0.75rem)',
+                        fontWeight: 'var(--theme-element-ranking_card_category_badge-font-weight, 600)',
+                        lineHeight: 'var(--theme-element-ranking_card_category_badge-line-height, 1)'
+                      }}
+                      onClick={(e) => handleElementClick('ranking_card_category_badge', e)}
+                    >
+                      Hip Hop Legends
+                    </span>
+                  </div>
+                  
+                  {/* Title */}
+                  <h3 
+                    className="text-xl mb-2 leading-tight transition-colors duration-300"
+                    style={{
+                      fontFamily: 'var(--theme-font-heading)',
+                      color: 'var(--theme-element-ranking_card_title-color, #FFFFFF)',
+                      fontSize: 'var(--theme-element-ranking_card_title-font-size, 1.875rem)',
+                      fontWeight: 'var(--theme-element-ranking_card_title-font-weight, 700)',
+                      lineHeight: 'var(--theme-element-ranking_card_title-line-height, 1.2)',
+                      textShadow: 'var(--theme-element-ranking_card_title-shadow, 2px 2px 8px rgba(0, 0, 0, 0.8))'
+                    }}
+                    onClick={(e) => handleElementClick('ranking_card_title', e)}
+                  >
+                    Greatest of All Time
+                  </h3>
+                  
+                  {/* Description */}
+                  <p 
+                    className="text-sm mb-3 line-clamp-2"
+                    style={{
+                      color: 'var(--theme-element-ranking_card_description-color, #BFBFBF)',
+                      fontSize: 'var(--theme-element-ranking_card_description-font-size, 0.875rem)',
+                      fontWeight: 'var(--theme-element-ranking_card_description-font-weight, 400)',
+                      lineHeight: 'var(--theme-element-ranking_card_description-line-height, 1.5)',
+                      textShadow: 'var(--theme-element-ranking_card_description-shadow, 1px 1px 4px rgba(0, 0, 0, 0.8))'
+                    }}
+                    onClick={(e) => handleElementClick('ranking_card_description', e)}
+                  >
+                    The definitive ranking of hip hop legends who shaped the culture.
+                  </p>
+                  
+                  {/* Stats Row */}
+                  <div className="flex items-center justify-between">
+                    <div 
+                      className="flex items-center gap-1 text-xs"
+                      style={{
+                        color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
+                        fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
+                        fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
+                        lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
+                      }}
+                      onClick={(e) => handleElementClick('ranking_card_stats', e)}
+                    >
+                      <TrendingUp className="w-4 h-4" />
+                      <span>1,234 Votes</span>
+                    </div>
+                    
+                    <div 
+                      className="flex items-center gap-1 text-xs transition-colors duration-300"
+                      style={{
+                        color: 'var(--theme-element-ranking_card_cta-color, var(--theme-primary))',
+                        fontFamily: 'var(--theme-font-body)',
+                        fontSize: 'var(--theme-element-ranking_card_cta-font-size, 0.75rem)',
+                        fontWeight: 'var(--theme-element-ranking_card_cta-font-weight, 500)',
+                        lineHeight: 'var(--theme-element-ranking_card_cta-line-height, 1.25)'
+                      }}
+                      onClick={(e) => handleElementClick('ranking_card_cta', e)}
+                    >
+                      <Award className="w-4 h-4" />
+                      <span>View Ranking</span>
+                    </div>
+                  </div>
+                </div>
+                
+                {/* Hover State Overlay */}
+                <div 
+                  className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                  style={{
+                    background: 'var(--theme-element-ranking_card-hover-overlay, rgba(212, 175, 55, 0.05))'
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 

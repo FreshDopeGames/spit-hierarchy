@@ -44,7 +44,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
       return theme.elements.button[buttonVariant];
     }
     
-    // Handle all other elements
+    // Handle all other elements  
     const elementKeys = [
       'page_background', 'container', 'section', 'sidebar', 'breadcrumb',
       'textarea', 'checkbox', 'radio', 'switch', 'slider',
@@ -52,6 +52,7 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
       'link', 'hover_overlay', 'focus_ring', 'navbar',
       'modal_header', 'modal_footer', 'alert', 'notification', 'loading', 'skeleton',
       'table', 'table_header', 'table_row', 'table_cell',
+      'ranking_card', 'ranking_card_category_badge', 'ranking_card_title', 'ranking_card_description', 'ranking_card_stats', 'ranking_card_cta', 'ranking_card_avatar_border',
       'card', 'input', 'select', 'modal', 'navigation', 'footer', 'global_header', 'dropdown', 'dropdown_item'
     ];
     

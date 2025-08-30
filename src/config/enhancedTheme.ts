@@ -35,6 +35,9 @@ export interface ElementConfig {
   border?: BorderConfig;
   typography?: TypographyConfig;
   shadow?: string;
+  hoverShadow?: string;  // Special property for ranking cards
+  overlay?: string;      // Special property for ranking cards  
+  hoverOverlay?: string; // Special property for ranking cards
   padding?: string;
   margin?: string;
 }
@@ -192,6 +195,15 @@ export interface EnhancedThemeConfig {
     notification: ElementConfig;
     loading: ElementConfig;
     skeleton: ElementConfig;
+    
+    // Ranking card elements
+    ranking_card: ElementConfig;
+    ranking_card_category_badge: ElementConfig;
+    ranking_card_title: ElementConfig;
+    ranking_card_description: ElementConfig;
+    ranking_card_stats: ElementConfig;
+    ranking_card_cta: ElementConfig;
+    ranking_card_avatar_border: ElementConfig;
     
     // Table elements
     table: ElementConfig;
@@ -594,6 +606,54 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
       border: { width: '0px', style: 'solid', color: 'transparent', radius: '4px' }
     },
     
+    // Ranking card elements
+    ranking_card: {
+      background: '#1A1A1A',
+      color: '#E8E6E3',
+      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '12px' },
+      shadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
+      hoverShadow: '0 10px 25px rgba(212, 175, 55, 0.2)',
+      padding: '0',
+      overlay: 'linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent)',
+      hoverOverlay: 'rgba(212, 175, 55, 0.05)'
+    },
+    ranking_card_category_badge: {
+      background: 'rgba(212, 175, 55, 0.2)',
+      color: '#D4AF37',
+      border: { width: '1px', style: 'solid', color: 'rgba(212, 175, 55, 0.3)', radius: '999px' },
+      typography: { fontSize: '0.75rem', fontWeight: '600', lineHeight: '1' },
+      padding: '0.5rem 0.75rem'
+    },
+    ranking_card_title: {
+      background: 'transparent',
+      color: '#FFFFFF',
+      hoverColor: '#D4AF37',
+      typography: { fontSize: '1.875rem', fontWeight: '700', lineHeight: '1.2' },
+      shadow: '2px 2px 8px rgba(0, 0, 0, 0.8)'
+    },
+    ranking_card_description: {
+      background: 'transparent',
+      color: '#BFBFBF',
+      typography: { fontSize: '0.875rem', fontWeight: '400', lineHeight: '1.5' },
+      shadow: '1px 1px 4px rgba(0, 0, 0, 0.8)'
+    },
+    ranking_card_stats: {
+      background: 'transparent',
+      color: '#BFBFBF',
+      typography: { fontSize: '0.75rem', fontWeight: '400', lineHeight: '1.25' }
+    },
+    ranking_card_cta: {
+      background: 'transparent',
+      color: '#D4AF37',
+      hoverColor: '#E8C547',
+      typography: { fontSize: '0.75rem', fontWeight: '500', lineHeight: '1.25' }
+    },
+    ranking_card_avatar_border: {
+      background: 'transparent',
+      color: 'transparent',
+      border: { width: '3px', style: 'solid', color: '#000000', radius: '0px' }
+    },
+
     // Table elements
     table: {
       background: '#2B2B2B',
@@ -845,6 +905,7 @@ const resolveThemeColor = (colorValue: string, theme: EnhancedThemeConfig): stri
   return colorValue;
 };
 
+// Helper function to apply custom element properties
 const applyElementConfig = (root: HTMLElement, elementName: string, config: ElementConfig, theme: EnhancedThemeConfig) => {
   if (config.background) {
     const resolvedColor = resolveThemeColor(config.background, theme);
@@ -894,6 +955,20 @@ const applyElementConfig = (root: HTMLElement, elementName: string, config: Elem
   
   if (config.shadow) {
     root.style.setProperty(`--theme-element-${elementName}-shadow`, config.shadow);
+  }
+  
+  // Handle special ranking card properties
+  if (elementName === 'ranking_card') {
+    const rankingConfig = config as any;
+    if (rankingConfig.hoverShadow) {
+      root.style.setProperty(`--theme-element-${elementName}-hover-shadow`, rankingConfig.hoverShadow);
+    }
+    if (rankingConfig.overlay) {
+      root.style.setProperty(`--theme-element-${elementName}-overlay`, rankingConfig.overlay);
+    }
+    if (rankingConfig.hoverOverlay) {
+      root.style.setProperty(`--theme-element-${elementName}-hover-overlay`, rankingConfig.hoverOverlay);
+    }
   }
   
   if (config.padding) {

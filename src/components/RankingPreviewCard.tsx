@@ -33,13 +33,33 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
       className="block group"
       onClick={() => window.scrollTo(0, 0)}
     >
-      <div className="relative h-[300px] sm:h-[350px] md:h-[400px] rounded-xl overflow-hidden border border-[color:var(--theme-primary)]/30 group-hover:border-[color:var(--theme-primary)]/60 transition-all duration-300 group-hover:scale-[1.02] shadow-lg group-hover:shadow-xl shadow-black/20 group-hover:shadow-[color:var(--theme-primary)]/20">
+      <div 
+        className="relative h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
+        style={{
+          borderRadius: 'var(--theme-element-ranking_card-border-radius, 12px)',
+          border: `var(--theme-element-ranking_card-border-width, 1px) var(--theme-element-ranking_card-border-style, solid) var(--theme-element-ranking_card-border-color, var(--theme-primary))`,
+          backgroundColor: 'var(--theme-element-ranking_card-bg, #1A1A1A)',
+          boxShadow: 'var(--theme-element-ranking_card-shadow, 0 4px 6px rgba(0, 0, 0, 0.2))'
+        }}
+        onMouseEnter={(e) => {
+          e.currentTarget.style.boxShadow = 'var(--theme-element-ranking_card-hover-shadow, 0 10px 25px rgba(212, 175, 55, 0.2))';
+        }}
+        onMouseLeave={(e) => {
+          e.currentTarget.style.boxShadow = 'var(--theme-element-ranking_card-shadow, 0 4px 6px rgba(0, 0, 0, 0.2))';
+        }}
+      >
         {/* Rapper Mosaic Background - Top portion of card */}
         <div className="absolute inset-0 h-[43%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2">
             {topRowRappers.map((item, index) => (
-              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden border-[3px] border-black">
+              <div 
+                key={item.rapper.id} 
+                className="relative aspect-[3/2] overflow-hidden"
+                style={{
+                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                }}
+              >
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
@@ -54,7 +74,13 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             ))}
             {/* Fill empty spots if less than 2 rappers */}
             {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
-              <div key={`top-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40 border-[3px] border-black">
+              <div 
+                key={`top-placeholder-${index}`} 
+                className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                style={{
+                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                }}
+              >
                 <img 
                   src={getOptimizedPlaceholder('medium')}
                   alt="Placeholder"
@@ -67,7 +93,13 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           {/* Bottom Row - 3 Images */}
           <div className="grid grid-cols-3">
             {bottomRowRappers.map((item, index) => (
-              <div key={item.rapper.id} className="relative aspect-[3/2] overflow-hidden border-[3px] border-black">
+              <div 
+                key={item.rapper.id} 
+                className="relative aspect-[3/2] overflow-hidden"
+                style={{
+                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                }}
+              >
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
                   alt={item.rapper.name}
@@ -82,7 +114,13 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             ))}
             {/* Fill empty spots if less than 3 rappers in bottom row */}
             {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
-              <div key={`bottom-placeholder-${index}`} className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40 border-[3px] border-black">
+              <div 
+                key={`bottom-placeholder-${index}`} 
+                className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                style={{
+                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+                }}
+              >
                 <img 
                   src={getOptimizedPlaceholder('medium')}
                   alt="Placeholder"
@@ -94,25 +132,61 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         </div>
         
         {/* Gradient Overlay - Bottom area for text */}
-        <div className="absolute bottom-0 left-0 right-0 h-[57%] bg-gradient-to-t from-black/95 via-black/80 to-transparent" />
+        <div 
+          className="absolute bottom-0 left-0 right-0 h-[57%]"
+          style={{
+            background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
+          }}
+        />
         
         {/* Content - Positioned in bottom area */}
         <div className="absolute bottom-0 left-0 right-0 h-[57%] flex flex-col justify-center p-4 sm:p-6">
           {/* Category Badge */}
           <div className="mb-3">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs sm:text-sm font-[var(--theme-font-heading)] bg-[color:var(--theme-primary)]/20 text-[color:var(--theme-primary)] border border-[color:var(--theme-primary)]/30 backdrop-blur-sm">
+            <span 
+              className="inline-flex items-center backdrop-blur-sm"
+              style={{
+                backgroundColor: 'var(--theme-element-ranking_card_category_badge-bg, rgba(212, 175, 55, 0.2))',
+                color: 'var(--theme-element-ranking_card_category_badge-color, #D4AF37)',
+                border: `var(--theme-element-ranking_card_category_badge-border-width, 1px) var(--theme-element-ranking_card_category_badge-border-style, solid) var(--theme-element-ranking_card_category_badge-border-color, rgba(212, 175, 55, 0.3))`,
+                borderRadius: 'var(--theme-element-ranking_card_category_badge-border-radius, 999px)',
+                padding: 'var(--theme-element-ranking_card_category_badge-padding, 0.5rem 0.75rem)',
+                fontSize: 'var(--theme-element-ranking_card_category_badge-font-size, 0.75rem)',
+                fontWeight: 'var(--theme-element-ranking_card_category_badge-font-weight, 600)',
+                lineHeight: 'var(--theme-element-ranking_card_category_badge-line-height, 1)'
+              }}
+            >
               {ranking.category}
             </span>
           </div>
           
           {/* Title */}
-          <h3 className="text-xl sm:text-2xl md:text-3xl font-[var(--theme-font-heading)] text-white mb-2 sm:mb-3 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.8)] group-hover:text-[color:var(--theme-primary)] transition-colors duration-300">
+          <h3 
+            className="text-xl sm:text-2xl md:text-3xl mb-2 sm:mb-3 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))]"
+            style={{
+              fontFamily: 'var(--theme-font-heading)',
+              color: 'var(--theme-element-ranking_card_title-color, #FFFFFF)',
+              fontSize: 'var(--theme-element-ranking_card_title-font-size, 1.875rem)',
+              fontWeight: 'var(--theme-element-ranking_card_title-font-weight, 700)',
+              lineHeight: 'var(--theme-element-ranking_card_title-line-height, 1.2)',
+              textShadow: 'var(--theme-element-ranking_card_title-shadow, 2px 2px 8px rgba(0, 0, 0, 0.8))'
+            }}
+          >
             {ranking.title}
           </h3>
           
           {/* Description */}
           {ranking.description && (
-            <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2 drop-shadow-[1px_1px_4px_rgba(0,0,0,0.8)]">
+            <p 
+              className="text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2"
+              style={{
+                color: 'var(--theme-element-ranking_card_description-color, #BFBFBF)',
+                fontSize: 'var(--theme-element-ranking_card_description-font-size, 0.875rem)',
+                fontWeight: 'var(--theme-element-ranking_card_description-font-weight, 400)',
+                lineHeight: 'var(--theme-element-ranking_card_description-line-height, 1.5)',
+                textShadow: 'var(--theme-element-ranking_card_description-shadow, 1px 1px 4px rgba(0, 0, 0, 0.8))'
+              }}
+            >
               {ranking.description}
             </p>
           )}
@@ -120,14 +194,31 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           {/* Stats Row */}
           <div className="flex items-center justify-between">
             {totalVotes > 0 && (
-              <div className="flex items-center gap-1 text-[color:var(--theme-textMuted)] text-xs sm:text-sm">
+              <div 
+                className="flex items-center gap-1 text-xs sm:text-sm"
+                style={{
+                  color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
+                  fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
+                  fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
+                  lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
+                }}
+              >
                 <TrendingUp className="w-4 h-4" />
                 <span>{totalVotes.toLocaleString()} Votes</span>
               </div>
             )}
             
             {/* View Ranking CTA */}
-            <div className="flex items-center gap-1 text-[color:var(--theme-primary)] group-hover:text-[color:var(--theme-primaryLight)] transition-colors duration-300 text-xs sm:text-sm font-[var(--theme-font-body)]">
+            <div 
+              className="flex items-center gap-1 text-xs sm:text-sm transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_cta-hover-color,var(--theme-primaryLight))]"
+              style={{
+                color: 'var(--theme-element-ranking_card_cta-color, var(--theme-primary))',
+                fontFamily: 'var(--theme-font-body)',
+                fontSize: 'var(--theme-element-ranking_card_cta-font-size, 0.75rem)',
+                fontWeight: 'var(--theme-element-ranking_card_cta-font-weight, 500)',
+                lineHeight: 'var(--theme-element-ranking_card_cta-line-height, 1.25)'
+              }}
+            >
               <Award className="w-4 h-4" />
               <span>View Ranking</span>
             </div>
@@ -135,7 +226,12 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         </div>
         
         {/* Hover State Overlay */}
-        <div className="absolute inset-0 bg-[color:var(--theme-primary)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+        <div 
+          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+          style={{
+            background: 'var(--theme-element-ranking_card-hover-overlay, rgba(212, 175, 55, 0.05))'
+          }}
+        />
       </div>
     </Link>
   );
