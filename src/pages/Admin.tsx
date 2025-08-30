@@ -75,7 +75,7 @@ const Admin = () => {
     <div className="min-h-screen bg-[hsl(var(--theme-background))]">
       <HeaderNavigation isScrolled={isScrolled} />
       
-      <main className="max-w-7xl mx-auto p-4 sm:p-6 pt-24">
+      <main className="max-w-7xl mx-auto p-4 sm:p-6 pt-32">
         <h1 className="text-2xl sm:text-4xl font-bold text-[hsl(var(--theme-primary))] mb-6 sm:mb-8 font-[var(--theme-font-heading)]">
           Admin Dashboard
         </h1>
