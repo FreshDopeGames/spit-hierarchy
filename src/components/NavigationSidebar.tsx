@@ -6,7 +6,7 @@ import { ThemedButton } from "@/components/ui/themed-button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ThemedSeparator } from "@/components/ui/themed-separator";
 import { useAuth } from "@/hooks/useAuth";
-import UserProfileDropdown from "@/components/UserProfileDropdown";
+import { useUserProfile } from "@/hooks/useUserProfile";
 
 const NavigationSidebar = ({ 
   trigger, 
@@ -22,6 +22,7 @@ const NavigationSidebar = ({
   const location = useLocation();
   const { theme } = useTheme();
   const { user } = useAuth();
+  const { userProfile } = useUserProfile();
 
   const isOpen = open !== undefined ? open : internalOpen;
   const handleOpenChange = onOpenChange || setInternalOpen;
@@ -83,14 +84,13 @@ const NavigationSidebar = ({
           </SheetHeader>
           
           {/* User Profile Section */}
-          {user && (
-            <div className="p-6 border-b border-[var(--theme-border)]">
-              <UserProfileDropdown 
-                userProfile={null}
-                isAdmin={false} 
-                canManageBlog={false}
-                isScrolled={isScrolled}
-              />
+          {user && userProfile && (
+            <div className="p-6 border-b border-[hsl(var(--theme-border))]">
+              <div className="text-center">
+                <p className="font-merienda font-bold text-[hsl(var(--theme-text))]">
+                  {userProfile.username || 'User'}
+                </p>
+              </div>
             </div>
           )}
 
