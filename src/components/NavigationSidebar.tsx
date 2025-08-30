@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, Home, Trophy, Music, Swords, PenTool, BookOpen, Info, BarChart3, Settings, LogOut } from "lucide-react";
@@ -184,54 +185,50 @@ const NavigationSidebar = ({
                 About
               </ThemedButton>
             </Link>
-            
-            </div>
-            
-            {/* Admin/Analytics Section for logged in users */}
+
+            {/* Analytics and Admin for logged in users */}
             {user && (
               <>
-                <ThemedSeparator className="my-6" />
-                <div className="space-y-2">
-                  {/* Analytics always visible to authenticated users */}
-                  <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
-                    <ThemedButton 
-                      variant="ghost" 
-                      className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                      onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                      onMouseLeave={(e) => e.currentTarget.style.color = ''}
-                    >
-                      <BarChart3 className="w-4 h-4 mr-3" />
-                      Analytics
-                    </ThemedButton>
-                  </Link>
-
-                  <Link to="/admin" onClick={() => handleNavClick('/admin')}>
-                    <ThemedButton 
-                      variant="ghost" 
-                      className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                      onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                      onMouseLeave={(e) => e.currentTarget.style.color = ''}
-                    >
-                      <Settings className="w-4 h-4 mr-3" />
-                      Admin
-                    </ThemedButton>
-                  </Link>
-
-                  <ThemedButton onClick={() => {
-                    // signOut();
-                    handleNavClick('/');
-                  }}
+                <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
+                  <ThemedButton 
                     variant="ghost" 
                     className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
                     onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
                     onMouseLeave={(e) => e.currentTarget.style.color = ''}
                   >
-                    <LogOut className="w-4 h-4 mr-3" />
-                    Sign Out
+                    <BarChart3 className="w-4 h-4 mr-3" />
+                    Analytics
                   </ThemedButton>
-                </div>
+                </Link>
+
+                <Link to="/admin" onClick={() => handleNavClick('/admin')}>
+                  <ThemedButton 
+                    variant="ghost" 
+                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
+                    onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                  >
+                    <Settings className="w-4 h-4 mr-3" />
+                    Admin
+                  </ThemedButton>
+                </Link>
+
+                <ThemedButton onClick={() => {
+                  // signOut();
+                  handleNavClick('/');
+                }}
+                  variant="ghost" 
+                  className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
+                  onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
+                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                >
+                  <LogOut className="w-4 h-4 mr-3" />
+                  Sign Out
+                </ThemedButton>
               </>
             )}
+            
+            </div>
             
             {/* Sign in button for non-authenticated users */}
             {!user && (
