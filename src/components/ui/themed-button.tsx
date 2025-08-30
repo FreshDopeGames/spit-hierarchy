@@ -9,13 +9,13 @@ const themedButtonVariants = cva(
   {
     variants: {
       variant: {
-        default: "bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryDark)] font-[var(--theme-font-heading)]",
+        default: "bg-[var(--theme-element-button-default-bg,var(--theme-primary))] text-[var(--theme-element-button-default-color,var(--theme-background))] hover:bg-[var(--theme-primaryDark)] font-[var(--theme-font-heading)] border-[var(--theme-element-button-default-border-width,1px)] border-[var(--theme-element-button-default-border-style,solid)] border-[var(--theme-element-button-default-border-color,var(--theme-primary))] rounded-[var(--theme-element-button-default-border-radius,8px)] p-[var(--theme-element-button-default-padding,0.5rem_1rem)]",
         destructive: "bg-[var(--theme-error)] text-[var(--theme-textLight)] hover:opacity-90",
-        outline: "border border-[var(--theme-border)] bg-transparent text-[var(--theme-text)] hover:bg-[var(--theme-surface)] font-[var(--theme-font-body)]",
-        secondary: "bg-[var(--theme-secondary)] text-[var(--theme-textLight)] hover:bg-[var(--theme-secondaryDark)] font-[var(--theme-font-heading)]",
+        outline: "bg-[var(--theme-element-button-outline-bg,transparent)] text-[var(--theme-element-button-outline-color,var(--theme-text))] hover:bg-[var(--theme-surface)] font-[var(--theme-font-body)] border-[var(--theme-element-button-outline-border-width,1px)] border-[var(--theme-element-button-outline-border-style,solid)] border-[var(--theme-element-button-outline-border-color,var(--theme-border))] rounded-[var(--theme-element-button-outline-border-radius,8px)] p-[var(--theme-element-button-outline-padding,0.5rem_1rem)]",
+        secondary: "bg-[var(--theme-element-button-secondary-bg,var(--theme-secondary))] text-[var(--theme-element-button-secondary-color,var(--theme-textLight))] hover:bg-[var(--theme-secondaryDark)] font-[var(--theme-font-heading)] border-[var(--theme-element-button-secondary-border-width,1px)] border-[var(--theme-element-button-secondary-border-style,solid)] border-[var(--theme-element-button-secondary-border-color,var(--theme-secondary))] rounded-[var(--theme-element-button-secondary-border-radius,8px)] p-[var(--theme-element-button-secondary-padding,0.5rem_1rem)]",
         ghost: "text-[var(--theme-text)] hover:bg-[var(--theme-surface)]",
-        accent: "bg-[var(--theme-accent)] text-[var(--theme-textLight)] hover:bg-[var(--theme-accentDark)] font-[var(--theme-font-heading)]",
-        gradient: "bg-gradient-to-r from-[var(--theme-primaryDark)] via-[var(--theme-primary)] to-[var(--theme-primaryLight)] text-[var(--theme-background)] hover:opacity-90 font-[var(--theme-font-heading)]",
+        accent: "bg-[var(--theme-element-button-accent-bg,var(--theme-accent))] text-[var(--theme-element-button-accent-color,var(--theme-textLight))] hover:bg-[var(--theme-accentDark)] font-[var(--theme-font-heading)] border-[var(--theme-element-button-accent-border-width,1px)] border-[var(--theme-element-button-accent-border-style,solid)] border-[var(--theme-element-button-accent-border-color,var(--theme-accent))] rounded-[var(--theme-element-button-accent-border-radius,8px)] p-[var(--theme-element-button-accent-padding,0.5rem_1rem)]",
+        gradient: "bg-[var(--theme-element-button-gradient-bg,var(--theme-gradient-primary-gradient))] text-[var(--theme-element-button-gradient-color,var(--theme-background))] hover:opacity-90 font-[var(--theme-font-heading)] border-[var(--theme-element-button-gradient-border-width,0px)] border-[var(--theme-element-button-gradient-border-style,solid)] border-[var(--theme-element-button-gradient-border-color,transparent)] rounded-[var(--theme-element-button-gradient-border-radius,8px)] p-[var(--theme-element-button-gradient-padding,0.5rem_1rem)]",
       },
       size: {
         default: "h-10 px-4 py-2",
@@ -38,11 +38,19 @@ export interface ThemedButtonProps
 }
 
 const ThemedButton = React.forwardRef<HTMLButtonElement, ThemedButtonProps>(
-  ({ className, variant, size, asChild = false, ...props }, ref) => {
+  ({ className, variant, size, asChild = false, style, ...props }, ref) => {
     const Comp = asChild ? Slot : "button";
+    
+    // Apply element-specific styles for gradient variant
+    const elementStyle = variant === 'gradient' ? {
+      background: 'var(--theme-element-button-gradient-bg, var(--theme-gradient-primary-gradient, linear-gradient(135deg, #D4AF37, #E8C547)))',
+      ...style
+    } : style;
+    
     return (
       <Comp
         className={cn(themedButtonVariants({ variant, size, className }))}
+        style={elementStyle}
         ref={ref}
         {...props}
       />
