@@ -816,6 +816,7 @@ export const saveEnhancedTheme = (theme: Partial<EnhancedThemeConfig>): void => 
 export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
   if (typeof document === 'undefined') return;
   
+  console.log('Applying enhanced theme to DOM:', theme);
   const root = document.documentElement;
   
   // First, apply all basic theme variables to ensure compatibility
@@ -851,10 +852,14 @@ export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
     root.style.setProperty(`--enhanced-font-${key}`, value);
   });
   
-  // Typography configurations
-  Object.entries(theme.typography).forEach(([element, config]) => {
+  // Typography configurations with debugging
+  Object.entries(theme.typography).forEach(([key, config]) => {
     Object.entries(config).forEach(([property, value]) => {
-      root.style.setProperty(`--theme-typography-${element}-${property}`, value);
+      if (value) {
+        const cssVar = `--theme-typography-${key}-${property}`;
+        root.style.setProperty(cssVar, String(value));
+        console.log(`Applied typography: ${cssVar} = ${value}`);
+      }
     });
   });
   
@@ -863,16 +868,34 @@ export const applyEnhancedThemeToDOM = (theme: EnhancedThemeConfig): void => {
     root.style.setProperty(`--theme-gradient-${gradient.id}`, gradientToCSS(gradient));
   });
   
-  // Element configurations
-  Object.entries(theme.elements).forEach(([elementType, configs]) => {
-    if (typeof configs === 'object' && 'default' in configs) {
-      // Button-style element with variants
-      Object.entries(configs).forEach(([variant, config]) => {
-        applyElementConfig(root, `${elementType}-${variant}`, config, theme);
-      });
-    } else {
-      // Single element config
-      applyElementConfig(root, elementType, configs as ElementConfig, theme);
+  // Apply element styles recursively with debugging
+  const applyElementStyles = (obj: any, prefix: string) => {
+    Object.entries(obj).forEach(([key, value]) => {
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        // Recursively handle nested objects
+        applyElementStyles(value, `${prefix}-${key}`);
+      } else if (value !== null && value !== undefined) {
+        const cssVar = `${prefix}-${key}`;
+        root.style.setProperty(cssVar, String(value));
+        console.log(`Applied element CSS: ${cssVar} = ${value}`);
+      }
+    });
+  };
+
+  // Apply element styles
+  Object.entries(theme.elements).forEach(([elementKey, elementConfig]) => {
+    if (typeof elementConfig === 'object' && elementConfig !== null) {
+      if ('default' in elementConfig) {
+        // Button-style element with variants
+        Object.entries(elementConfig).forEach(([variant, config]) => {
+          if (typeof config === 'object' && config !== null) {
+            applyElementStyles(config, `--theme-element-${elementKey}-${variant}`);
+          }
+        });
+      } else {
+        // Single element config
+        applyElementStyles(elementConfig, `--theme-element-${elementKey}`);
+      }
     }
   });
   

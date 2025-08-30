@@ -30,10 +30,11 @@ const EnhancedThemePreviewExpanded: React.FC<EnhancedThemePreviewExpandedProps> 
     outlineOffset: '2px'
   });
 
-  const handleElementClick = (elementId: string, e: React.MouseEvent) => {
+  const handleElementClick = React.useCallback((elementId: string, e: React.MouseEvent) => {
     e.stopPropagation();
+    console.log('Element selected:', elementId);
     onElementSelect?.(elementId);
-  };
+  }, [onElementSelect]);
 
   return (
     <div className="w-full space-y-8 p-6 bg-[var(--theme-background)] text-[var(--theme-text)] min-h-screen">

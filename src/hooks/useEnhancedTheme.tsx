@@ -44,14 +44,33 @@ export const EnhancedThemeProvider: React.FC<EnhancedThemeProviderProps> = ({ ch
     applyEnhancedThemeToDOM(savedTheme);
   }, []);
 
+  // Deep merge helper function
+  const deepMerge = (target: any, source: any): any => {
+    if (source === null || source === undefined) return target;
+    if (target === null || target === undefined) return source;
+    if (typeof source !== 'object' || typeof target !== 'object') return source;
+    
+    const result = { ...target };
+    for (const key in source) {
+      if (source.hasOwnProperty(key)) {
+        if (typeof source[key] === 'object' && source[key] !== null && !Array.isArray(source[key])) {
+          result[key] = deepMerge(target[key], source[key]);
+        } else {
+          result[key] = source[key];
+        }
+      }
+    }
+    return result;
+  };
+
   const updateTheme = (updates: Partial<EnhancedThemeConfig>) => {
     if (isPreviewMode) {
       const currentTheme = previewTheme || theme;
-      const updatedTheme = { ...currentTheme, ...updates };
+      const updatedTheme = deepMerge(currentTheme, updates);
       setPreviewTheme(updatedTheme);
     } else {
       // Automatically enter preview mode when making changes
-      const updatedTheme = { ...theme, ...updates };
+      const updatedTheme = deepMerge(theme, updates);
       setPreviewTheme(updatedTheme);
       setIsPreviewMode(true);
     }

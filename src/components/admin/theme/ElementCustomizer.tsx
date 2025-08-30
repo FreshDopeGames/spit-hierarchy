@@ -64,16 +64,18 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
     return null;
   };
 
-  const updateElementConfig = (updates: Partial<ElementConfig | TypographyConfig>) => {
+  const updateElementConfig = React.useCallback((updates: Partial<ElementConfig | TypographyConfig>) => {
+    console.log(`Updating ${selectedElement}:`, { updates, currentConfig: getElementConfig() });
+    
     if (selectedElement.startsWith('typography-')) {
       const typographyKey = selectedElement.replace('typography-', '') as keyof EnhancedThemeConfig['typography'];
+      const currentTypography = theme.typography[typographyKey];
+      const updatedTypography = { ...currentTypography, ...updates } as TypographyConfig;
+      
       onThemeUpdate({
         typography: {
           ...theme.typography,
-          [typographyKey]: {
-            ...theme.typography[typographyKey],
-            ...updates
-          }
+          [typographyKey]: updatedTypography
         }
       });
       return;
@@ -81,15 +83,15 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
     
     if (selectedElement.startsWith('button-')) {
       const buttonVariant = selectedElement.replace('button-', '') as keyof EnhancedThemeConfig['elements']['button'];
+      const currentButton = theme.elements.button[buttonVariant];
+      const updatedButton = { ...currentButton, ...updates } as ElementConfig;
+      
       onThemeUpdate({
         elements: {
           ...theme.elements,
           button: {
             ...theme.elements.button,
-            [buttonVariant]: {
-              ...theme.elements.button[buttonVariant],
-              ...updates
-            }
+            [buttonVariant]: updatedButton
           }
         }
       });
@@ -98,17 +100,17 @@ const ElementCustomizer = ({ selectedElement, theme, onThemeUpdate }: ElementCus
     
     if (selectedElement in theme.elements && selectedElement !== 'button') {
       const elementKey = selectedElement as keyof Omit<EnhancedThemeConfig['elements'], 'button'>;
+      const currentElement = theme.elements[elementKey] as ElementConfig;
+      const updatedElement = { ...currentElement, ...updates } as ElementConfig;
+      
       onThemeUpdate({
         elements: {
           ...theme.elements,
-          [elementKey]: {
-            ...theme.elements[elementKey] as ElementConfig,
-            ...updates
-          }
+          [elementKey]: updatedElement
         }
       });
     }
-  };
+  }, [selectedElement, onThemeUpdate, theme]);
 
   const config = getElementConfig();
   if (!config) return null;
