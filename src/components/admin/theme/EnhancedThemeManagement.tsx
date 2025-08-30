@@ -1,19 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import { Palette, Type, Wand2, Layout, Save, RotateCcw, Eye, EyeOff } from "lucide-react";
+import { Palette, Type, Save, RotateCcw, Eye, EyeOff } from "lucide-react";
 import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import EnhancedThemePreview from "./EnhancedThemePreview";
-import EnhancedThemePreviewExpanded from "./EnhancedThemePreviewExpanded";
 import ColorPaletteTab from "./ColorPaletteTab";
 import TypographyTab from "./TypographyTab";
-import GradientBuilder from "./GradientBuilder";
-import ElementCustomizer from "./ElementCustomizer";
 import { toast } from "sonner";
 
 const EnhancedThemeManagement = () => {
-  const [selectedElement, setSelectedElement] = useState<string | null>(null);
-  const [selectedGradient, setSelectedGradient] = useState<string | null>(null);
   
   const {
     theme,
@@ -51,9 +46,6 @@ const EnhancedThemeManagement = () => {
     });
   };
 
-  const handleGradientChange = (gradients: any[]) => {
-    updateTheme({ gradients });
-  };
 
   const handleApplyTheme = () => {
     applyTheme();
@@ -130,7 +122,7 @@ const EnhancedThemeManagement = () => {
       {/* Main Controls */}
       <div className="space-y-6">
         <Tabs defaultValue="colors" className="space-y-4">
-          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-4 p-2 gap-1 rounded-lg">
+          <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 w-full grid grid-cols-3 p-2 gap-1 rounded-lg">
             <TabsTrigger 
               value="colors" 
               className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
@@ -144,13 +136,6 @@ const EnhancedThemeManagement = () => {
             >
               <Type className="w-4 h-4 mr-1" />
               Fonts
-            </TabsTrigger>
-            <TabsTrigger 
-              value="elements" 
-              className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-2 py-2 rounded-md"
-            >
-              <Layout className="w-4 h-4 mr-1" />
-              Elements
             </TabsTrigger>
             <TabsTrigger 
               value="preview" 
@@ -169,27 +154,8 @@ const EnhancedThemeManagement = () => {
             <TypographyTab theme={currentTheme} onFontChange={handleFontChange} />
           </TabsContent>
 
-          <TabsContent value="elements" className="space-y-4">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              <ElementCustomizer
-                selectedElement={selectedElement}
-                theme={currentTheme}
-                onThemeUpdate={updateTheme}
-              />
-              <EnhancedThemePreviewExpanded
-                theme={currentTheme}
-                selectedElement={selectedElement}
-                onElementSelect={setSelectedElement}
-              />
-            </div>
-          </TabsContent>
-
           <TabsContent value="preview" className="space-y-4">
-            <EnhancedThemePreviewExpanded
-              theme={currentTheme}
-              selectedElement={selectedElement}
-              onElementSelect={setSelectedElement}
-            />
+            <EnhancedThemePreview theme={currentTheme} />
           </TabsContent>
         </Tabs>
       </div>
