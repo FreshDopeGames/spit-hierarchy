@@ -76,7 +76,7 @@ const NavigationSidebar = ({
       >
         <div className="flex flex-col h-full">
           {/* Header */}
-          <SheetHeader className="px-6 py-1 text-center border-b border-[var(--theme-border)]">
+          <SheetHeader className="px-6 py-1 text-center">
             <div className="flex justify-center">
               <img 
                 src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
