@@ -15,7 +15,7 @@ const AdminTabHeader = ({ title, icon: Icon, description, children }: AdminTabHe
       <div className="flex items-center gap-3">
         {Icon && <Icon className="w-6 h-6 text-[var(--theme-primary)]" />}
         <div>
-          <h2 className="text-xl sm:text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)] font-mogra">
+          <h2 className="text-xl sm:text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)] [.theme-font-ceviche_&]:text-3xl [.theme-font-ceviche_&]:sm:text-4xl">
             {title}
           </h2>
           {description && (

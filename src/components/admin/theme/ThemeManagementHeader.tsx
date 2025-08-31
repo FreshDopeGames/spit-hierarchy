@@ -78,7 +78,7 @@ const ThemeManagementHeader = ({
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0">
-        <h2 className="text-xl sm:text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)] font-mogra">
+        <h2 className="text-xl sm:text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)] [.theme-font-ceviche_&]:text-3xl [.theme-font-ceviche_&]:sm:text-4xl">
           Theme Management
         </h2>
         <div className="flex flex-col sm:flex-row gap-2">

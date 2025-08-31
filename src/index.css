@@ -128,15 +128,60 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground font-merienda;
+    @apply bg-background text-foreground;
+    font-family: var(--theme-font-body);
   }
-  h1, h2 {
-    @apply font-merienda font-black uppercase tracking-wider;
+  h1 {
+    font-family: var(--theme-font-display);
+    @apply font-black uppercase tracking-wider;
+  }
+  h2, h3, h4, h5, h6 {
+    font-family: var(--theme-font-heading);
+    @apply font-black uppercase tracking-wider;
   }
   p {
-    @apply font-merienda;
+    font-family: var(--theme-font-body);
   }
 }
+
+/* Font scaling system for compact fonts like Ceviche One */
+.theme-font-ceviche h1, 
+.theme-font-ceviche [data-heading="h1"] { 
+  font-size: 1.8em !important; 
+}
+
+.theme-font-ceviche h2, 
+.theme-font-ceviche [data-heading="h2"] { 
+  font-size: 1.6em !important; 
+}
+
+.theme-font-ceviche h3, 
+.theme-font-ceviche [data-heading="h3"] { 
+  font-size: 1.4em !important; 
+}
+
+.theme-font-ceviche h4, 
+.theme-font-ceviche [data-heading="h4"] { 
+  font-size: 1.3em !important; 
+}
+
+.theme-font-ceviche h5, 
+.theme-font-ceviche [data-heading="h5"] { 
+  font-size: 1.2em !important; 
+}
+
+.theme-font-ceviche h6, 
+.theme-font-ceviche [data-heading="h6"] { 
+  font-size: 1.1em !important; 
+}
+
+/* Apply font scaling to utility classes too */
+.theme-font-ceviche .text-xl { font-size: 1.5rem !important; }
+.theme-font-ceviche .text-2xl { font-size: 2rem !important; }
+.theme-font-ceviche .text-3xl { font-size: 2.5rem !important; }
+.theme-font-ceviche .text-4xl { font-size: 3rem !important; }
+.theme-font-ceviche .text-5xl { font-size: 4rem !important; }
+.theme-font-ceviche .text-6xl { font-size: 5rem !important; }
 
 /* Add glow effects for the logo */
 @keyframes glow-pulse {

@@ -164,6 +164,20 @@ export const applyThemeToDOM = (theme: ThemeConfig): void => {
     root.style.setProperty(`--theme-font-${key}`, value);
   });
   
+  // Apply font scaling class based on heading font
+  const body = document.body;
+  // Remove existing theme font classes
+  body.classList.remove('theme-font-ceviche', 'theme-font-mogra', 'theme-font-merienda');
+  
+  // Add appropriate class based on heading font
+  if (theme.fonts.heading.includes('Ceviche One')) {
+    body.classList.add('theme-font-ceviche');
+  } else if (theme.fonts.heading.includes('Mogra')) {
+    body.classList.add('theme-font-mogra');
+  } else if (theme.fonts.heading.includes('Merienda')) {
+    body.classList.add('theme-font-merienda');
+  }
+  
   // Apply spacing variables
   Object.entries(theme.spacing).forEach(([key, value]) => {
     root.style.setProperty(`--theme-spacing-${key}`, value);
