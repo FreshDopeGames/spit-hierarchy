@@ -34,7 +34,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
       onClick={() => window.scrollTo(0, 0)}
     >
       <div 
-        className="relative h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
+        className="relative h-[380px] sm:h-[430px] md:h-[480px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: 'var(--theme-element-ranking_card-border-radius, 12px)',
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
@@ -210,9 +210,9 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             
             {/* View Ranking CTA */}
             <div 
-              className="flex items-center gap-1 text-xs sm:text-sm transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_cta-hover-color,var(--theme-primaryLight))]"
+              className="flex items-center gap-1 text-xs sm:text-sm transition-colors duration-300 group-hover:opacity-80"
               style={{
-                color: 'var(--theme-element-ranking_card_cta-color, var(--theme-primary))',
+                color: 'hsl(var(--theme-primary))',
                 fontFamily: 'var(--theme-font-body)',
                 fontSize: 'var(--theme-element-ranking_card_cta-font-size, 0.75rem)',
                 fontWeight: 'var(--theme-element-ranking_card_cta-font-weight, 500)',
