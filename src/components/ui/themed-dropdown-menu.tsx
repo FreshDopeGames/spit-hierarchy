@@ -120,8 +120,8 @@ const ThemedDropdownMenuItem = React.forwardRef<
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm text-sm outline-none transition-colors",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      "hover:bg-white hover:text-black",
-      "focus:bg-white focus:text-black",
+      "hover:!bg-white hover:!text-black",
+      "focus:!bg-white focus:!text-black",
       "border-b border-white/10 last:border-b-0",
       inset && "pl-8",
       className
