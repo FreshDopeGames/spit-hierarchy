@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Input } from "@/components/ui/input";
+import { ThemedInput } from "@/components/ui/themed-input";
 import { Label } from "@/components/ui/label";
 import { useRapperAutocomplete } from "@/hooks/useRapperAutocomplete";
 import { Loader2, Search, X, Check } from "lucide-react";
@@ -97,13 +97,13 @@ const RapperSelector = ({
       {/* Autocomplete Input */}
       <div className="relative" ref={dropdownRef}>
         <Search className="absolute left-3 top-3 h-4 w-4 text-[var(--theme-text-secondary)]" />
-        <Input
+        <ThemedInput
           ref={inputRef}
           placeholder={placeholder}
           value={searchTerm}
           onChange={handleInputChange}
           onFocus={() => hasMinLength && setShowDropdown(true)}
-          className="pl-10 pr-10 bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]"
+          className="pl-10 pr-10 !bg-white !text-black border-gray-300 placeholder:!text-gray-500"
           required={required}
         />
         
@@ -127,14 +127,14 @@ const RapperSelector = ({
 
         {/* Autocomplete Dropdown */}
         {showDropdown && (
-          <div className="absolute top-full left-0 right-0 mt-1 bg-[var(--theme-background)] border border-[var(--theme-border)] rounded-md shadow-lg max-h-60 overflow-y-auto z-50">
+          <div className="absolute top-full left-0 right-0 mt-1 !bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-50">
             {isSearching ? (
-              <div className="flex items-center gap-2 p-3 text-[var(--theme-text-secondary)]">
+              <div className="flex items-center gap-2 p-3 text-gray-600">
                 <Loader2 className="h-4 w-4 animate-spin" />
                 <span>Searching...</span>
               </div>
             ) : searchResults.length === 0 ? (
-              <div className="p-3 text-[var(--theme-text-secondary)]">
+              <div className="p-3 text-gray-600">
                 No rappers found
               </div>
             ) : (
@@ -142,13 +142,13 @@ const RapperSelector = ({
                 <button
                   key={rapper.id}
                   type="button"
-                  className="w-full text-left p-3 hover:bg-[var(--theme-primary)]/10 focus:bg-[var(--theme-primary)]/10 focus:outline-none border-b border-[var(--theme-border)] last:border-b-0"
+                  className="w-full text-left p-3 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none border-b border-gray-200 last:border-b-0"
                   onClick={() => handleRapperSelect(rapper)}
                 >
                   <div className="flex flex-col">
-                    <span className="font-medium text-[var(--theme-text)]">{rapper.name}</span>
+                    <span className="font-medium text-black">{rapper.name}</span>
                     {rapper.real_name && (
-                      <span className="text-sm text-[var(--theme-text-secondary)]">{rapper.real_name}</span>
+                      <span className="text-sm text-gray-600">{rapper.real_name}</span>
                     )}
                   </div>
                 </button>

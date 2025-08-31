@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { ThemedInput } from "@/components/ui/themed-input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -84,12 +84,12 @@ const AdminVSMatchDialog = ({
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title" className="text-[var(--theme-text)]">Title</Label>
-            <Input
+            <ThemedInput
               id="title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Kendrick Lamar vs Drake"
-              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-text)] placeholder:opacity-50"
+              className="!bg-white !text-black border-gray-300 placeholder:!text-gray-500"
               required
             />
           </div>
@@ -101,7 +101,7 @@ const AdminVSMatchDialog = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this matchup..."
-              className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] placeholder:text-[var(--theme-text)] placeholder:opacity-50"
+              className="!bg-white !text-black border-gray-300 placeholder:!text-gray-500"
               rows={3}
             />
           </div>
@@ -129,13 +129,13 @@ const AdminVSMatchDialog = ({
           <div className="space-y-2">
             <Label className="text-[var(--theme-text)]">Status</Label>
             <Select value={status} onValueChange={(value) => setStatus(value as "draft" | "published" | "archived")}>
-              <SelectTrigger className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)]">
+              <SelectTrigger className="!bg-white !text-black border-gray-300">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)] z-50">
-                <SelectItem value="draft" className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">Draft</SelectItem>
-                <SelectItem value="published" className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">Published</SelectItem>
-                <SelectItem value="archived" className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/10">Archived</SelectItem>
+              <SelectContent className="!bg-white border-gray-300 z-50">
+                <SelectItem value="draft" className="text-black hover:bg-gray-100">Draft</SelectItem>
+                <SelectItem value="published" className="text-black hover:bg-gray-100">Published</SelectItem>
+                <SelectItem value="archived" className="text-black hover:bg-gray-100">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>
