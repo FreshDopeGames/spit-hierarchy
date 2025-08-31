@@ -37,7 +37,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         className="relative h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: 'var(--theme-element-ranking_card-border-radius, 12px)',
-          border: `var(--theme-element-ranking_card-border-width, 1px) var(--theme-element-ranking_card-border-style, solid) var(--theme-element-ranking_card-border-color, var(--theme-primary))`,
+          border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) var(--theme-element-ranking_card-border-color, var(--theme-primary))`,
           backgroundColor: 'var(--theme-element-ranking_card-bg, #1A1A1A)',
           boxShadow: 'var(--theme-element-ranking_card-shadow, 0 4px 6px rgba(0, 0, 0, 0.2))'
         }}
