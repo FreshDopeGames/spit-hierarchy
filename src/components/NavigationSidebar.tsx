@@ -6,6 +6,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ThemedSeparator } from "@/components/ui/themed-separator";
+import { ThemedAvatar, ThemedAvatarImage, ThemedAvatarFallback } from "@/components/ui/themed-avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
 
@@ -87,9 +88,15 @@ const NavigationSidebar = ({
           
           {/* User Profile Section */}
           {user && userProfile && (
-            <div className="p-6 border-b border-[hsl(var(--theme-border))]">
-              <div className="text-center">
-                <p className="font-[var(--theme-font-body)] font-bold text-[hsl(var(--theme-text))]">
+            <div className="px-6 py-3">
+              <div className="flex items-center gap-3">
+                <ThemedAvatar className="h-10 w-10">
+                  <ThemedAvatarImage src={getAvatarUrl(userProfile.avatar_url)} />
+                  <ThemedAvatarFallback>
+                    {userProfile.username?.[0]?.toUpperCase() || 'U'}
+                  </ThemedAvatarFallback>
+                </ThemedAvatar>
+                <p className="font-[var(--theme-font-body)] font-bold text-[hsl(var(--theme-text))] text-lg">
                   {userProfile.username || 'User'}
                 </p>
               </div>
