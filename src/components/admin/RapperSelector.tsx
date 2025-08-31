@@ -1,3 +1,4 @@
+
 import { useState, useRef, useEffect } from "react";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Label } from "@/components/ui/label";
@@ -51,10 +52,14 @@ const RapperSelector = ({
     }
   }, [value, searchResults]);
 
-  // Show dropdown when typing
+  // Show dropdown when typing and has results
   useEffect(() => {
-    setShowDropdown(hasMinLength && searchResults.length > 0);
-  }, [hasMinLength, searchResults.length]);
+    if (hasMinLength && searchResults.length > 0 && !selectedRapper) {
+      setShowDropdown(true);
+    } else {
+      setShowDropdown(false);
+    }
+  }, [hasMinLength, searchResults.length, selectedRapper]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -79,14 +84,23 @@ const RapperSelector = ({
     setSelectedRapper(null);
     setSearchTerm("");
     onChange("");
+    setShowDropdown(false);
     inputRef.current?.focus();
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    const newValue = e.target.value;
+    setSearchTerm(newValue);
+    
     if (selectedRapper) {
       setSelectedRapper(null);
       onChange("");
+    }
+  };
+
+  const handleInputFocus = () => {
+    if (hasMinLength && searchResults.length > 0 && !selectedRapper) {
+      setShowDropdown(true);
     }
   };
 
@@ -96,15 +110,16 @@ const RapperSelector = ({
       
       {/* Autocomplete Input */}
       <div className="relative" ref={dropdownRef}>
-        <Search className="absolute left-3 top-3 h-4 w-4 text-[var(--theme-text-secondary)]" />
+        <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500 z-10" />
         <ThemedInput
           ref={inputRef}
           placeholder={placeholder}
           value={searchTerm}
           onChange={handleInputChange}
-          onFocus={() => hasMinLength && setShowDropdown(true)}
+          onFocus={handleInputFocus}
           className="pl-10 pr-10 !bg-white !text-black border-gray-300 placeholder:!text-gray-500"
           required={required}
+          autoComplete="off"
         />
         
         {/* Clear button */}
@@ -113,16 +128,16 @@ const RapperSelector = ({
             type="button"
             variant="ghost"
             size="sm"
-            className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-[var(--theme-surface)]"
+            className="absolute right-1 top-1 h-8 w-8 p-0 hover:bg-gray-100 z-10"
             onClick={clearSelection}
           >
-            <X className="h-4 w-4" />
+            <X className="h-4 w-4 text-gray-600" />
           </Button>
         )}
 
         {/* Selected indicator */}
         {selectedRapper && (
-          <Check className="absolute right-9 top-3 h-4 w-4 text-[var(--theme-accent)]" />
+          <Check className="absolute right-9 top-3 h-4 w-4 text-green-600 z-10" />
         )}
 
         {/* Autocomplete Dropdown */}
@@ -135,14 +150,14 @@ const RapperSelector = ({
               </div>
             ) : searchResults.length === 0 ? (
               <div className="p-3 text-gray-600">
-                No rappers found
+                No rappers found matching "{searchTerm}"
               </div>
             ) : (
               searchResults.map((rapper) => (
                 <button
                   key={rapper.id}
                   type="button"
-                  className="w-full text-left p-3 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none border-b border-gray-200 last:border-b-0"
+                  className="w-full text-left p-3 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none border-b border-gray-200 last:border-b-0 transition-colors"
                   onClick={() => handleRapperSelect(rapper)}
                 >
                   <div className="flex flex-col">
@@ -160,8 +175,8 @@ const RapperSelector = ({
 
       {/* Selected Rapper Display */}
       {selectedRapper && (
-        <div className="flex items-center justify-between p-2 bg-[var(--theme-primary)]/10 rounded border border-[var(--theme-primary)]/30">
-          <span className="text-sm text-[var(--theme-text)]">
+        <div className="flex items-center justify-between p-2 bg-green-50 rounded border border-green-200">
+          <span className="text-sm text-gray-800">
             Selected: <strong>{selectedRapper.name}</strong>
           </span>
           <Button
@@ -169,7 +184,7 @@ const RapperSelector = ({
             variant="ghost"
             size="sm"
             onClick={clearSelection}
-            className="h-6 px-2 text-xs hover:bg-[var(--theme-primary)]/20"
+            className="h-6 px-2 text-xs hover:bg-green-100 text-gray-600"
           >
             Clear
           </Button>
