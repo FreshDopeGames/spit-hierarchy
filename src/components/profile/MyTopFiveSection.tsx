@@ -44,12 +44,26 @@ const MyTopFiveSection = () => {
 
   if (isLoading) {
     return (
-      <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+      <div 
+        className="border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg"
+        style={{
+          backgroundColor: 'hsl(var(--theme-surface))',
+          borderColor: 'hsl(var(--theme-border))',
+          boxShadow: '0 10px 25px -5px hsl(var(--theme-primary)/0.1), 0 4px 6px -2px hsl(var(--theme-primary)/0.05)'
+        }}
+      >
         <div className="animate-pulse">
-          <div className="h-6 bg-rap-carbon-light rounded mb-4 w-32 mx-auto"></div>
+          <div 
+            className="h-6 rounded mb-4 w-32 mx-auto"
+            style={{ backgroundColor: 'hsl(var(--theme-surfaceSecondary))' }}
+          ></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 bg-rap-carbon-light rounded"></div>
+              <div 
+                key={i} 
+                className="h-24 rounded"
+                style={{ backgroundColor: 'hsl(var(--theme-surfaceSecondary))' }}
+              ></div>
             ))}
           </div>
         </div>
@@ -59,16 +73,33 @@ const MyTopFiveSection = () => {
 
   return (
     <>
-      <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+      <div 
+        className="border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg"
+        style={{
+          backgroundColor: 'hsl(var(--theme-surface))',
+          borderColor: 'hsl(var(--theme-border))',
+          boxShadow: '0 10px 25px -5px hsl(var(--theme-primary)/0.1), 0 4px 6px -2px hsl(var(--theme-primary)/0.05)'
+        }}
+      >
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda flex-1 text-center">
+          <h3 
+            className="text-lg sm:text-xl font-bold flex-1 text-center"
+            style={{ 
+              color: 'hsl(var(--theme-primary))',
+              fontFamily: 'var(--theme-font-heading)'
+            }}
+          >
             My Top 5
           </h3>
           <Button
             onClick={() => setIsShareOpen(true)}
             variant="outline"
             size="sm"
-            className="flex items-center gap-2 text-rap-gold border-rap-gold/30 hover:bg-rap-gold/10"
+            className="flex items-center gap-2 hover:opacity-90"
+            style={{
+              color: 'hsl(var(--theme-primary))',
+              borderColor: 'hsl(var(--theme-border))'
+            }}
           >
             <Share2 className="w-4 h-4" />
             Share

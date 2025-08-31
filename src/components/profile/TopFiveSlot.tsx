@@ -16,17 +16,35 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
   return (
     <div
       onClick={onClick}
-      className="bg-rap-carbon/30 border border-rap-gold/20 rounded-lg p-3 cursor-pointer hover:border-rap-gold/50 transition-colors group relative"
+      className="border rounded-lg p-3 cursor-pointer transition-colors group relative hover:opacity-90"
+      style={{
+        backgroundColor: 'hsl(var(--theme-surfaceSecondary))',
+        borderColor: 'hsl(var(--theme-border))',
+      }}
     >
       {/* Position number in top left */}
-      <div className="absolute top-3 left-3 text-lg text-rap-gold font-merienda font-bold bg-rap-carbon/80 rounded-full w-10 h-10 flex items-center justify-center border border-rap-gold/30 z-10">
+      <div 
+        className="absolute top-3 left-3 text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center border z-10"
+        style={{
+          color: 'hsl(var(--theme-primary))',
+          backgroundColor: 'hsl(var(--theme-surface))',
+          borderColor: 'hsl(var(--theme-primary))',
+          fontFamily: 'var(--theme-font-heading)'
+        }}
+      >
         #{position}
       </div>
       
       <div className="flex flex-col items-center space-y-4">
         {rapper ? (
           <>
-            <div className="w-60 h-40 rounded-lg overflow-hidden bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30">
+            <div 
+              className="w-60 h-40 rounded-lg overflow-hidden border"
+              style={{
+                backgroundColor: 'hsl(var(--theme-surface))',
+                borderColor: 'hsl(var(--theme-border))'
+              }}
+            >
               {rapper.image_url ? (
                 <img 
                   src={rapper.image_url} 
@@ -35,20 +53,38 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">
-                  <Music className="w-12 h-12 text-rap-platinum/50" />
+                  <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
                 </div>
               )}
             </div>
-            <div className="text-lg text-rap-platinum font-merienda font-bold text-center line-clamp-2">
+            <div 
+              className="text-lg font-bold text-center line-clamp-2"
+              style={{ 
+                color: 'hsl(var(--theme-text))',
+                fontFamily: 'var(--theme-font-body)'
+              }}
+            >
               {rapper.name}
             </div>
           </>
         ) : (
           <>
-            <div className="w-60 h-40 rounded-lg bg-rap-carbon-light border-2 border-dashed border-rap-gold/30 flex items-center justify-center group-hover:border-rap-gold/50">
-              <Music className="w-12 h-12 text-rap-platinum/30" />
+            <div 
+              className="w-60 h-40 rounded-lg border-2 border-dashed flex items-center justify-center group-hover:opacity-80"
+              style={{
+                backgroundColor: 'hsl(var(--theme-surface))',
+                borderColor: 'hsl(var(--theme-border))'
+              }}
+            >
+              <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
             </div>
-            <div className="text-lg text-rap-smoke font-merienda font-bold text-center">
+            <div 
+              className="text-lg font-bold text-center"
+              style={{ 
+                color: 'hsl(var(--theme-textMuted))',
+                fontFamily: 'var(--theme-font-body)'
+              }}
+            >
               Click to add rapper
             </div>
           </>

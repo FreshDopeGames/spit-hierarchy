@@ -7,6 +7,7 @@ import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { EnhancedThemeProvider } from "@/hooks/useEnhancedTheme";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
+import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 import AuthGuard from "@/components/AuthGuard";
 import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
 import EmailConfirmationHandler from "@/components/auth/EmailConfirmationHandler";
@@ -73,7 +74,8 @@ function App() {
           <SecurityProvider>
             <TooltipProvider>
               <AchievementProvider>
-              <Sonner />
+                <OnboardingProvider>
+                  <Sonner />
               <ContentSecurityPolicy />
               <EmailConfirmationHandler />
               <BrowserRouter>
@@ -129,6 +131,7 @@ function App() {
                   <Route path="*" element={<NotFound />} />
                 </Routes>
               </BrowserRouter>
+                </OnboardingProvider>
               </AchievementProvider>
             </TooltipProvider>
           </SecurityProvider>

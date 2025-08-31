@@ -13,9 +13,11 @@ import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileAchievements from "@/components/profile/ProfileAchievements";
 import VoteNotesSection from "@/components/profile/VoteNotesSection";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
+import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 
 const UserProfile = () => {
   const { user, loading: authLoading } = useAuth();
+  const { openOnboarding } = useOnboarding();
 
   // Set page title
   useEffect(() => {
@@ -186,6 +188,47 @@ const UserProfile = () => {
               <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
               
               <MyTopFiveSection />
+
+              {/* Show onboarding trigger if user has no top 5 */}
+              {memberStats?.top_five_created === 0 && (
+                <div 
+                  className="border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg text-center"
+                  style={{
+                    backgroundColor: 'hsl(var(--theme-surface))',
+                    borderColor: 'hsl(var(--theme-border))',
+                    boxShadow: '0 10px 25px -5px hsl(var(--theme-primary)/0.1), 0 4px 6px -2px hsl(var(--theme-primary)/0.05)'
+                  }}
+                >
+                  <h3 
+                    className="text-lg font-bold mb-2"
+                    style={{ 
+                      color: 'hsl(var(--theme-primary))',
+                      fontFamily: 'var(--theme-font-heading)'
+                    }}
+                  >
+                    Get Started with Your Top 5
+                  </h3>
+                  <p 
+                    className="mb-4"
+                    style={{ 
+                      color: 'hsl(var(--theme-textMuted))',
+                      fontFamily: 'var(--theme-font-body)'
+                    }}
+                  >
+                    Select your favorite rappers to personalize your experience and connect with the community.
+                  </p>
+                  <Button
+                    onClick={openOnboarding}
+                    style={{
+                      backgroundColor: 'hsl(var(--theme-primary))',
+                      color: 'hsl(var(--theme-textLight))'
+                    }}
+                    className="hover:opacity-90"
+                  >
+                    Choose My Top 5
+                  </Button>
+                </div>
+              )}
 
               <ProfileStats memberStats={memberStats} />
 
