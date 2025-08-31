@@ -121,8 +121,8 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
             <ThemedButton
               onClick={() => onEdit(rapper)}
               size="sm"
-              variant="outline"
-              className="flex-1"
+              variant="default"
+              className="flex-1 bg-[hsl(var(--theme-primary))] text-[hsl(var(--theme-background))] hover:bg-[hsl(var(--theme-primaryDark))]"
             >
               <Edit className="w-3 h-3 mr-1" />
               Edit
