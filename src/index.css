@@ -63,6 +63,10 @@
     --theme-gradient-error: linear-gradient(135deg, hsl(0 84% 51%), hsl(0 84% 60%));
     --theme-gradient-neutral: linear-gradient(135deg, hsl(220 13% 26%), hsl(220 14% 46%));
 
+    /* Aliases for component compatibility */
+    --theme-gradient-primary-gradient: var(--theme-gradient-primary);
+    --theme-textInverted: var(--theme-background);
+
     /* Interactive state colors */
     --theme-hover-bg: 45 85% 55%;
     --theme-hover-color: 0 0% 100%;
