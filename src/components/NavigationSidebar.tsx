@@ -76,12 +76,13 @@ const NavigationSidebar = ({
         <div className="flex flex-col h-full">
           {/* Header */}
           <SheetHeader className="p-6 text-center border-b border-[var(--theme-border)]">
-            <SheetTitle className="text-2xl font-mogra text-[var(--theme-primary)]">
-              Spit Hierarchy
-            </SheetTitle>
-            <p className="text-sm text-[var(--theme-textMuted)] font-merienda mt-2">
-              Where Real Recognize Real
-            </p>
+            <div className="flex justify-center">
+              <img 
+                src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
+                alt="Spit Hierarchy Logo" 
+                className="h-12 w-auto" 
+              />
+            </div>
           </SheetHeader>
           
           {/* User Profile Section */}
