@@ -1,4 +1,3 @@
-
 import { useState, useCallback, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -70,13 +69,11 @@ const BlogCarousel = () => {
     }
   }, [emblaApi]);
 
-  // Listen for slide changes
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrentIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
-  // Set up event listeners
   useEffect(() => {
     if (!emblaApi) return;
     
@@ -198,7 +195,12 @@ const BlogCarousel = () => {
       {/* More Articles Button - moved below carousel */}
       <div className="text-center mt-6">
         <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
-          <Button variant="secondary" size="sm" className="bg-[color:var(--theme-primary)]/10 text-[color:var(--theme-primary)] hover:bg-[color:var(--theme-primary)]/20 border-[color:var(--theme-primary)]/30">
+          <Button 
+            variant="secondary" 
+            size="sm" 
+            className="bg-[var(--theme-gradient-primary-gradient)] text-[color:var(--theme-textInverted)] hover:opacity-90"
+            style={{ background: 'var(--theme-gradient-primary-gradient)' }}
+          >
             More Slick Talk
           </Button>
         </Link>
