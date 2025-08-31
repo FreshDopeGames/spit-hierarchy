@@ -1,3 +1,4 @@
+
 import React from "react";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
 import { Check, ChevronRight, Circle } from "lucide-react";
@@ -43,8 +44,8 @@ const ThemedDropdownMenuSubTrigger = React.forwardRef<
     ref={ref}
     className={cn(
       "flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none",
-      "focus:bg-[var(--theme-element-dropdown_item-bg,var(--theme-primary))] focus:text-[var(--theme-element-dropdown_item-color,var(--theme-background))]",
-      "data-[state=open]:bg-[var(--theme-element-dropdown_item-bg,var(--theme-primary))] data-[state=open]:text-[var(--theme-element-dropdown_item-color,var(--theme-background))]",
+      "focus:bg-white focus:text-black",
+      "data-[state=open]:bg-white data-[state=open]:text-black",
       inset && "pl-8",
       className
     )}
@@ -119,8 +120,8 @@ const ThemedDropdownMenuItem = React.forwardRef<
     className={cn(
       "relative flex cursor-default select-none items-center rounded-sm text-sm outline-none transition-colors",
       "data-[disabled]:pointer-events-none data-[disabled]:opacity-50",
-      "hover:bg-[hsl(var(--theme-element-dropdown_item-hover-bg,0_0%_100%))] hover:text-[hsl(var(--theme-element-dropdown_item-hover-color,0_0%_5%))]",
-      "focus:bg-[hsl(var(--theme-element-dropdown_item-hover-bg,0_0%_100%))] focus:text-[hsl(var(--theme-element-dropdown_item-hover-color,0_0%_5%))]",
+      "hover:bg-white hover:text-black",
+      "focus:bg-white focus:text-black",
       "border-b border-white/10 last:border-b-0",
       inset && "pl-8",
       className

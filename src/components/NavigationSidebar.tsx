@@ -102,12 +102,7 @@ const NavigationSidebar = ({
             <Link to="/" onClick={() => handleNavClick('/')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                style={{ 
-                  '--hover-color': theme.colors.primary 
-                } as React.CSSProperties}
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <Home className="w-4 h-4 mr-3" />
                 Home
@@ -117,9 +112,7 @@ const NavigationSidebar = ({
             <Link to="/rankings" onClick={() => handleNavClick('/rankings')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <Trophy className="w-4 h-4 mr-3" />
                 Rankings
@@ -129,9 +122,7 @@ const NavigationSidebar = ({
             <Link to="/all-rappers" onClick={() => handleNavClick('/all-rappers')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <Music className="w-4 h-4 mr-3" />
                 All Rappers
@@ -141,9 +132,7 @@ const NavigationSidebar = ({
             <Link to="/vs" onClick={() => handleNavClick('/vs')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <Swords className="w-4 h-4 mr-3" />
                 VS Matches
@@ -153,9 +142,7 @@ const NavigationSidebar = ({
             <Link to="/blog" onClick={() => handleNavClick('/blog')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <BookOpen className="w-4 h-4 mr-3" />
                 Slick Talk
@@ -165,9 +152,7 @@ const NavigationSidebar = ({
             <Link to="/community-cypher" onClick={() => handleNavClick('/community-cypher')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <PenTool className="w-4 h-4 mr-3" />
                 Community Cypher
@@ -177,9 +162,7 @@ const NavigationSidebar = ({
             <Link to="/about" onClick={() => handleNavClick('/about')}>
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <Info className="w-4 h-4 mr-3" />
                 About
@@ -192,9 +175,7 @@ const NavigationSidebar = ({
                 <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
                   <ThemedButton 
                     variant="ghost" 
-                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                    onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
                   >
                     <BarChart3 className="w-4 h-4 mr-3" />
                     Analytics
@@ -204,9 +185,7 @@ const NavigationSidebar = ({
                 <Link to="/admin" onClick={() => handleNavClick('/admin')}>
                   <ThemedButton 
                     variant="ghost" 
-                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                    onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                    onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                    className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
                   >
                     <Settings className="w-4 h-4 mr-3" />
                     Admin
@@ -218,9 +197,7 @@ const NavigationSidebar = ({
                   handleNavClick('/');
                 }}
                   variant="ghost" 
-                  className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent"
-                  onMouseEnter={(e) => e.currentTarget.style.color = theme.colors.primary}
-                  onMouseLeave={(e) => e.currentTarget.style.color = ''}
+                  className="w-full justify-start text-[var(--theme-text)] font-merienda bg-transparent hover:bg-white hover:text-black transition-colors"
                 >
                   <LogOut className="w-4 h-4 mr-3" />
                   Sign Out
