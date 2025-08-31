@@ -2543,6 +2543,22 @@ export type Database = {
           unique_voters: number
         }[]
       }
+      get_own_complete_profile: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          avatar_url: string
+          bio: string
+          birthdate: string
+          created_at: string
+          full_name: string
+          id: string
+          location: string
+          preferred_image_style: Database["public"]["Enums"]["image_style"]
+          social_links: Json
+          updated_at: string
+          username: string
+        }[]
+      }
       get_own_profile: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -2592,17 +2608,6 @@ export type Database = {
           total_votes: number
           unique_rappers: number
           unique_voters: number
-        }[]
-      }
-      get_public_profile: {
-        Args: { user_uuid?: string }
-        Returns: {
-          avatar_url: string
-          bio: string
-          created_at: string
-          full_name: string
-          id: string
-          username: string
         }[]
       }
       get_public_profile_full: {
@@ -2736,6 +2741,10 @@ export type Database = {
         Returns: boolean
       }
       log_profile_access: {
+        Args: { access_type?: string; accessed_id: string }
+        Returns: undefined
+      }
+      log_profile_access_secure: {
         Args: { access_type?: string; accessed_id: string }
         Returns: undefined
       }
