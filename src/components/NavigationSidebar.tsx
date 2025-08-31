@@ -55,13 +55,13 @@ const NavigationSidebar = ({
     <ThemedButton 
       variant="outline" 
       size="icon" 
-      className="border-2 text-[var(--theme-background)] hover:opacity-80 shadow-lg"
+      className="border-2 hover:opacity-80 shadow-lg"
       style={{ 
         backgroundColor: theme.colors.primary, 
         borderColor: 'hsl(var(--theme-border))'
       }}
     >
-      <Menu className="h-4 w-4" />
+      <Menu className="h-4 w-4 text-black" />
     </ThemedButton>
   );
 
