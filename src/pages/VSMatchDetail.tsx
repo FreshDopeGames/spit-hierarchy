@@ -191,7 +191,8 @@ const VSMatchDetail = () => {
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
                       rapper={vsMatch!.rapper_1} 
-                      size="xl"
+                      size="2xl"
+                      variant="square"
                     />
                     <div>
                       <h2 className="text-2xl font-bold text-[var(--theme-textLight)] mb-2 font-mogra">
@@ -231,7 +232,8 @@ const VSMatchDetail = () => {
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
                       rapper={vsMatch!.rapper_2} 
-                      size="xl"
+                      size="2xl"
+                      variant="square"
                     />
                     <div>
                       <h2 className="text-2xl font-bold text-[var(--theme-textLight)] mb-2 font-mogra">
