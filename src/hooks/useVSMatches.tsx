@@ -4,6 +4,26 @@ import { useSecureAuth } from "./useSecureAuth";
 import { toast } from "sonner";
 import { VSMatch, VSMatchWithVoteCounts, CreateVSMatchData, UpdateVSMatchData } from "@/types/vsMatches";
 
+// Helper function to get additional rapper metadata
+const getRapperMetadata = async (rapperId: string) => {
+  // Get album count
+  const { data: albums } = await supabase
+    .from("rapper_albums")
+    .select("id")
+    .eq("rapper_id", rapperId);
+
+  // Get top 5 count
+  const { data: topFives } = await supabase
+    .from("user_top_rappers")
+    .select("id")
+    .eq("rapper_id", rapperId);
+
+  return {
+    album_count: albums?.length || 0,
+    top_five_count: topFives?.length || 0
+  };
+};
+
 export const useVSMatches = () => {
   const { user } = useSecureAuth();
 
@@ -46,8 +66,16 @@ export const useVSMatches = () => {
           // Check if current user has voted
           const user_vote = user ? votes.find(v => v.user_id === user.id)?.rapper_choice_id : undefined;
 
+          // Get additional metadata for both rappers
+          const [rapper1Metadata, rapper2Metadata] = await Promise.all([
+            getRapperMetadata(match.rapper_1_id),
+            getRapperMetadata(match.rapper_2_id)
+          ]);
+
           return {
             ...match,
+            rapper_1: { ...match.rapper_1, ...rapper1Metadata },
+            rapper_2: { ...match.rapper_2, ...rapper2Metadata },
             rapper_1_votes,
             rapper_2_votes,
             total_votes,
@@ -102,8 +130,16 @@ export const useVSMatchBySlug = (slug: string) => {
       // Check if current user has voted
       const user_vote = user ? votes.find(v => v.user_id === user.id)?.rapper_choice_id : undefined;
 
+      // Get additional metadata for both rappers
+      const [rapper1Metadata, rapper2Metadata] = await Promise.all([
+        getRapperMetadata(data.rapper_1_id),
+        getRapperMetadata(data.rapper_2_id)
+      ]);
+
       return {
         ...data,
+        rapper_1: { ...data.rapper_1, ...rapper1Metadata },
+        rapper_2: { ...data.rapper_2, ...rapper2Metadata },
         rapper_1_votes,
         rapper_2_votes,
         total_votes,

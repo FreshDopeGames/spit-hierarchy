@@ -10,6 +10,8 @@ export type VSMatchRapper = {
   average_rating: number | null;
   total_votes: number | null;
   verified: boolean | null;
+  album_count?: number;
+  top_five_count?: number;
 };
 
 export type VSMatchVote = Tables<"vs_match_votes">;
