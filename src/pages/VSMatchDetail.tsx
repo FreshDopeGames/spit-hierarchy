@@ -133,7 +133,7 @@ const VSMatchDetail = () => {
     return (
       <>
         <HeaderNavigation isScrolled={isScrolled} />
-        <div className="min-h-screen bg-gradient-to-br from-[#D4AF37] via-[#E8C547] to-[#D4AF37] pt-20">
+        <div className="min-h-screen pt-20" style={{ background: 'var(--theme-gradient-primary-gradient)' }}>
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-4xl mx-auto">
               <Skeleton className="h-8 w-3/4 bg-black/20 mb-4" />
@@ -160,7 +160,7 @@ const VSMatchDetail = () => {
       
       <HeaderNavigation isScrolled={isScrolled} />
       
-      <div className="min-h-screen bg-gradient-to-br from-[#D4AF37] via-[#E8C547] to-[#D4AF37] pt-20">
+      <div className="min-h-screen pt-20" style={{ background: 'var(--theme-gradient-primary-gradient)' }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
@@ -186,7 +186,7 @@ const VSMatchDetail = () => {
             {/* VS Matchup */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Rapper 1 */}
-              <Card className="bg-gradient-to-br from-[hsl(220_13%_26%)] to-[hsl(220_14%_46%)] border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30">
+              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'linear-gradient(135deg, hsl(var(--theme-neutralDark)), hsl(var(--theme-neutral)))' }}>
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
@@ -226,7 +226,7 @@ const VSMatchDetail = () => {
               </Card>
 
               {/* Rapper 2 */}
-              <Card className="bg-gradient-to-br from-[hsl(220_13%_26%)] to-[hsl(220_14%_46%)] border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30">
+              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'linear-gradient(135deg, hsl(var(--theme-neutralDark)), hsl(var(--theme-neutral)))' }}>
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
