@@ -166,7 +166,7 @@ const VSMatchDetail = () => {
             {/* VS Matchup */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Rapper 1 */}
-              <Card className="bg-[var(--theme-backgroundLight)] border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30">
+              <Card className="bg-gradient-to-br from-[hsl(220_13%_26%)] to-[hsl(220_14%_46%)] border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30">
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
@@ -206,7 +206,7 @@ const VSMatchDetail = () => {
               </Card>
 
               {/* Rapper 2 */}
-              <Card className="bg-[var(--theme-backgroundLight)] border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30">
+              <Card className="bg-gradient-to-br from-[hsl(220_13%_26%)] to-[hsl(220_14%_46%)] border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30">
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
