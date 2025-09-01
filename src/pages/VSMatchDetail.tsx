@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useVSMatchBySlug, useVSMatchVote } from "@/hooks/useVSMatches";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
@@ -10,6 +11,8 @@ import { toast } from "sonner";
 import SEOHead from "@/components/seo/SEOHead";
 import RapperAvatar from "@/components/RapperAvatar";
 import VSMatchCommentsSection from "@/components/VSMatchCommentsSection";
+import HeaderNavigation from "@/components/HeaderNavigation";
+import Footer from "@/components/Footer";
 import NotFound from "@/pages/NotFound";
 import { useIsMobile } from "@/hooks/use-mobile";
 
@@ -19,6 +22,17 @@ const VSMatchDetail = () => {
   const isMobile = useIsMobile();
   const { data: vsMatch, isLoading, error } = useVSMatchBySlug(slug!);
   const voteMatch = useVSMatchVote();
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  // Handle scroll for header styling
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   if (error || (!isLoading && !vsMatch)) {
     return <NotFound />;
@@ -117,18 +131,22 @@ const VSMatchDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#D4AF37] via-[#E8C547] to-[#D4AF37]">
-        <div className="container mx-auto px-4 py-8">
-          <div className="max-w-4xl mx-auto">
-            <Skeleton className="h-8 w-3/4 bg-black/20 mb-4" />
-            <Skeleton className="h-4 w-full bg-black/20 mb-8" />
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-              <Skeleton className="h-96 bg-black/20 rounded-lg" />
-              <Skeleton className="h-96 bg-black/20 rounded-lg" />
+      <>
+        <HeaderNavigation isScrolled={isScrolled} />
+        <div className="min-h-screen bg-gradient-to-br from-[#D4AF37] via-[#E8C547] to-[#D4AF37] pt-20">
+          <div className="container mx-auto px-4 py-8">
+            <div className="max-w-4xl mx-auto">
+              <Skeleton className="h-8 w-3/4 bg-black/20 mb-4" />
+              <Skeleton className="h-4 w-full bg-black/20 mb-8" />
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+                <Skeleton className="h-96 bg-black/20 rounded-lg" />
+                <Skeleton className="h-96 bg-black/20 rounded-lg" />
+              </div>
             </div>
           </div>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
@@ -140,7 +158,9 @@ const VSMatchDetail = () => {
         canonicalUrl={`/vs/${vsMatch!.slug}`}
       />
       
-      <div className="min-h-screen bg-gradient-to-br from-[#D4AF37] via-[#E8C547] to-[#D4AF37]">
+      <HeaderNavigation isScrolled={isScrolled} />
+      
+      <div className="min-h-screen bg-gradient-to-br from-[#D4AF37] via-[#E8C547] to-[#D4AF37] pt-20">
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
@@ -290,6 +310,8 @@ const VSMatchDetail = () => {
           </div>
         </div>
       </div>
+      
+      <Footer />
     </>
   );
 };
