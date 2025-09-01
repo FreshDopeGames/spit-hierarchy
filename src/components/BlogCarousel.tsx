@@ -137,7 +137,7 @@ const BlogCarousel = () => {
           <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 z-10">
             <div></div> {/* Spacer */}
             <div className="flex gap-2 sm:gap-3">
-              {featuredPosts.map((_, index) => <button key={index} className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 ${currentIndex === index ? "bg-[var(--theme-primary)] scale-110" : "bg-[var(--theme-neutral)] opacity-60 hover:opacity-80"}`} onClick={() => scrollTo(index)} />)}
+              {featuredPosts.map((_, index) => <button key={index} className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.8)] ${currentIndex === index ? "bg-[hsl(var(--theme-primary))] scale-110" : "bg-white/80 hover:bg-white/90"}`} onClick={() => scrollTo(index)} />)}
             </div>
             <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
               <Button variant="link" className="text-[color:var(--theme-primary)] hover:text-[color:var(--theme-primaryLight)] p-0 text-xs sm:text-sm h-auto">
