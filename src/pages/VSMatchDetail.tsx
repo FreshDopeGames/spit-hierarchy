@@ -160,7 +160,11 @@ const VSMatchDetail = () => {
       
       <HeaderNavigation isScrolled={isScrolled} />
       
-      <div className="min-h-screen pt-20" style={{ background: 'var(--theme-gradient-primary-gradient)' }}>
+      <div className="min-h-screen pt-20" style={{ 
+        background: 'var(--theme-gradient-primary-gradient)',
+        // Fallback in case CSS variable isn't loaded
+        backgroundImage: 'linear-gradient(135deg, #D4AF37 0%, #E8C547 100%)'
+      }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
             {/* Header */}
@@ -186,7 +190,11 @@ const VSMatchDetail = () => {
             {/* VS Matchup */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Rapper 1 */}
-              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'var(--theme-gradient-dark-gradient)' }}>
+              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ 
+                background: 'var(--theme-gradient-dark-gradient)',
+                // Fallback in case CSS variable isn't loaded
+                backgroundImage: 'linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%)'
+              }}>
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
@@ -227,7 +235,11 @@ const VSMatchDetail = () => {
               </Card>
 
               {/* Rapper 2 */}
-              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'var(--theme-gradient-dark-gradient)' }}>
+              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ 
+                background: 'var(--theme-gradient-dark-gradient)',
+                // Fallback in case CSS variable isn't loaded
+                backgroundImage: 'linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%)'
+              }}>
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 

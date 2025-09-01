@@ -60,7 +60,11 @@ const VSMatchCommentsSection = ({ vsMatchId, title }: VSMatchCommentsSectionProp
       </div>
 
       {/* Comments Section */}
-      <div className="border-4 border-[var(--theme-primary)] rounded-lg shadow-2xl shadow-[var(--theme-primary)]/20 p-6" style={{ background: 'var(--theme-gradient-dark-gradient)' }}>
+      <div className="border-4 border-[var(--theme-primary)] rounded-lg shadow-2xl shadow-[var(--theme-primary)]/20 p-6" style={{ 
+        background: 'var(--theme-gradient-dark-gradient)',
+        // Fallback in case CSS variable isn't loaded
+        backgroundImage: 'linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%)'
+      }}>
         {/* Sort Controls */}
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center gap-4">
