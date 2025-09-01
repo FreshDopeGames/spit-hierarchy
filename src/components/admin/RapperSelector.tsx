@@ -27,6 +27,7 @@ const RapperSelector = ({
   const [selectedRapper, setSelectedRapper] = useState<{id: string, name: string, real_name: string | null} | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevValueRef = useRef<string>(value);
 
   const {
     searchTerm,
@@ -40,16 +41,21 @@ const RapperSelector = ({
 
   // Find selected rapper when value changes externally
   useEffect(() => {
+    const prevValue = prevValueRef.current;
+    
     if (value && searchResults.length > 0) {
       const rapper = searchResults.find(r => r.id === value);
       if (rapper) {
         setSelectedRapper(rapper);
         setSearchTerm(rapper.name);
       }
-    } else if (!value) {
+    } else if (!value && prevValue) {
+      // Only clear when value changes from truthy to empty (external clear)
       setSelectedRapper(null);
       setSearchTerm("");
     }
+    
+    prevValueRef.current = value;
   }, [value, searchResults]);
 
   // Show dropdown when typing and has results
