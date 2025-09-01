@@ -65,7 +65,7 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
   return (
-    <ThemedCard variant="gradient" className="hover:border-[var(--theme-primary)]/40 transition-all duration-300">
+    <ThemedCard className="hover:border-[var(--theme-primary)]/40 transition-all duration-300" style={{background: 'linear-gradient(135deg, #0D0D0D, #1A1A1A, #0D0D0D)'}}>
       <ThemedCardContent className="p-4">
         {/* Rapper Image */}
         <AspectRatio ratio={1} className="mb-3">
