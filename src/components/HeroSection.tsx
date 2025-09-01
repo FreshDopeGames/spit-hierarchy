@@ -10,12 +10,12 @@ const HeroSection = () => {
 
   return (
     <div className="text-center mb-8 sm:mb-12 px-2 sm:px-0">
-      <h2 
+      <h3 
         className="font-[var(--theme-font-display)] mb-4 tracking-wider text-3xl sm:text-3xl md:text-4xl lg:text-6xl leading-tight break-words max-w-full"
         style={{ color: theme.colors.primary }}
       >
         FEATURED SLICK TALK
-      </h2>
+      </h3>
       {!user && (
         <div className="mt-6">
           <Link to="/auth">
