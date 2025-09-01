@@ -72,8 +72,8 @@ const ProfileHeader = ({
 
                 {/* Vote Multiplier Badge */}
                 <div className="flex items-center justify-center lg:justify-end mb-3">
-                  <div className="bg-gradient-to-r from-[var(--theme-primary)]-to-[var(--theme-secondary)] px-2 py-1 rounded-full">
-                    <div className="flex items-center gap-1 text-[var(--theme-background)] font-bold text-xs">
+                  <div className="bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] px-2 py-1 rounded-full">
+                    <div className="flex items-center gap-1 text-black font-bold text-xs">
                       <Star className="w-3 h-3" />
                       <span>{voteMultiplier}x Vote Power</span>
                     </div>
