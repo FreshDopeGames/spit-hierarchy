@@ -1,9 +1,11 @@
+
 import { Link } from "react-router-dom";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, Users, Eye, Star, Calendar, User } from "lucide-react";
 import { UnifiedRanking } from "@/types/rankings";
 import RapperMosaic from "@/components/ui/RapperMosaic";
+import { useState, useEffect, useRef } from "react";
 
 interface RankingCardProps {
   ranking: UnifiedRanking;
@@ -14,6 +16,30 @@ const RankingCard = ({
   ranking,
   isUserRanking = false
 }: RankingCardProps) => {
+  const [isInView, setIsInView] = useState(false);
+  const cardRef = useRef<HTMLAnchorElement>(null);
+
+  // Lazy loading observer
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsInView(true);
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: '50px' }
+    );
+
+    if (cardRef.current) {
+      observer.observe(cardRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   // Debug: Log ranking data
   console.log('RankingCard ranking data:', ranking);
   console.log('RankingCard rappers:', ranking.rappers);
@@ -22,7 +48,7 @@ const RankingCard = ({
   const rankingLink = isUserRanking && !ranking.isOfficial ? `/rankings/user/${ranking.slug}` : `/rankings/official/${ranking.slug}`;
   
   return (
-    <Link to={rankingLink} className="block group">
+    <Link ref={cardRef} to={rankingLink} className="block group">
       <Card className="h-full bg-gradient-to-br from-[var(--theme-background)] via-[var(--theme-surface)] to-[var(--theme-backgroundLight)] border-[var(--theme-border)] hover:border-[var(--theme-primary)]/50 transition-all duration-300 group-hover:shadow-lg group-hover:shadow-[var(--theme-primary)]/20">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-2 mb-2">
@@ -59,35 +85,32 @@ const RankingCard = ({
         </CardHeader>
         
         <CardContent className="pt-0">
-          {/* Top Rappers Preview */}
-          {ranking.rappers && ranking.rappers.length > 0 && (
+          {/* Rapper Mosaic - Only render when in view for lazy loading */}
+          {isInView && ranking.rappers && ranking.rappers.length > 0 && (
             <div className="mb-4">
-              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-2 font-[var(--theme-fontSecondary)]">
-                Top {Math.min(ranking.rappers.length, 3)}:
+              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-3 font-[var(--theme-fontSecondary)]">
+                Top {Math.min(ranking.rappers.length, 5)}:
               </h4>
-              <div className="space-y-1 mb-3">
-                {ranking.rappers.slice(0, 3).map((rapper, index) => (
-                  <div key={index} className="flex items-center gap-2 text-sm">
-                    <span className="w-5 h-5 rounded-full bg-[var(--theme-primary)] text-[var(--theme-background)] text-xs font-bold flex items-center justify-center font-[var(--theme-fontPrimary)]">
-                      {rapper.rank}
-                    </span>
-                    <span className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate">
-                      {rapper.name}
-                    </span>
-                  </div>
-                ))}
-              </div>
               
-              {/* Rapper Mosaic */}
               <RapperMosaic 
                 rappers={ranking.rappers.slice(0, 5).map(rapper => ({
                   id: `${rapper.rank}-${rapper.name}`,
                   name: rapper.name,
                   image_url: null // Will use placeholder images
                 }))}
-                size="small"
-                className="border border-[var(--theme-border)]/30"
+                size="medium"
+                className="border border-[var(--theme-border)]/50 shadow-sm"
               />
+            </div>
+          )}
+
+          {/* Loading placeholder when not in view */}
+          {!isInView && ranking.rappers && ranking.rappers.length > 0 && (
+            <div className="mb-4">
+              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-3 font-[var(--theme-fontSecondary)]">
+                Top {Math.min(ranking.rappers.length, 5)}:
+              </h4>
+              <div className="h-20 bg-[var(--theme-surface)]/30 border border-[var(--theme-border)]/30 rounded-md animate-pulse" />
             </div>
           )}
           
