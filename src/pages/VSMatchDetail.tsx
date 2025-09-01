@@ -165,19 +165,19 @@ const VSMatchDetail = () => {
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-3xl md:text-4xl font-bold text-[var(--theme-background)] mb-4 font-mogra drop-shadow-lg">
+              <h1 className="text-3xl md:text-4xl font-bold text-[var(--theme-textInverted)] mb-4 font-mogra drop-shadow-lg">
                 {vsMatch!.title}
               </h1>
               {vsMatch!.description && (
-                <p className="text-lg text-[var(--theme-background)]/80 max-w-2xl mx-auto drop-shadow-md">
+                <p className="text-lg text-[var(--theme-textInverted)]/80 max-w-2xl mx-auto drop-shadow-md">
                   {vsMatch!.description}
                 </p>
               )}
               <div className="flex items-center justify-center gap-4 mt-4">
-                <Badge variant="outline" className="text-[var(--theme-background)] border-[var(--theme-background)] bg-black/20 backdrop-blur-sm">
+                <Badge variant="outline" className="text-[var(--theme-textInverted)] border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
                   {vsMatch!.total_votes} total votes
                 </Badge>
-                <Badge variant="outline" className="text-[var(--theme-background)] border-[var(--theme-background)] bg-black/20 backdrop-blur-sm">
+                <Badge variant="outline" className="text-[var(--theme-textInverted)] border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
                   {new Date(vsMatch!.created_at).toLocaleDateString()}
                 </Badge>
               </div>
@@ -186,7 +186,7 @@ const VSMatchDetail = () => {
             {/* VS Matchup */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
               {/* Rapper 1 */}
-              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'linear-gradient(135deg, hsl(var(--theme-neutralDark)), hsl(var(--theme-neutral)))' }}>
+              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'var(--theme-gradient-dark-gradient)' }}>
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 
@@ -227,7 +227,7 @@ const VSMatchDetail = () => {
               </Card>
 
               {/* Rapper 2 */}
-              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'linear-gradient(135deg, hsl(var(--theme-neutralDark)), hsl(var(--theme-neutral)))' }}>
+              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ background: 'var(--theme-gradient-dark-gradient)' }}>
                 <CardContent className="p-6">
                   <div className="flex flex-col items-center text-center space-y-4">
                     <RapperAvatar 

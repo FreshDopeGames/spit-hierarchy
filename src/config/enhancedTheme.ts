@@ -392,6 +392,16 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
         { color: '#6B7280', position: 0 },
         { color: '#4B5563', position: 100 }
       ]
+    },
+    {
+      id: 'dark-gradient',
+      name: 'Dark Gradient',
+      type: 'linear',
+      direction: 135,
+      stops: [
+        { color: '#0D0D0D', position: 0 },
+        { color: '#1A1A1A', position: 100 }
+      ]
     }
   ],
   elements: {
