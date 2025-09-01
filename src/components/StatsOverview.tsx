@@ -178,7 +178,13 @@ const StatsOverview = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
             <ThemedCardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0" style={{ background: 'var(--theme-gradient-primary-gradient)' }}>
+                <div 
+                  className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0"
+                  style={{ 
+                    background: 'var(--theme-gradient-primary-gradient)',
+                    backgroundImage: 'var(--theme-gradient-primary-gradient)'
+                  }}
+                >
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[hsl(var(--theme-textInverted))]" />
                 </div>
                 <div className="min-w-0 flex-1">
