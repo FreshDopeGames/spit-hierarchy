@@ -102,7 +102,7 @@ const BlogCarousel = () => {
     <section className="mb-16">
       {/* Embla carousel container */}
       <div className="flex justify-center">
-        <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20">
+        <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border-4 border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20">
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {featuredPosts.map(post => (
@@ -120,23 +120,23 @@ const BlogCarousel = () => {
                       <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-[var(--theme-background)]/95 via-[var(--theme-background)]/50 to-transparent" />
                       
                        <div className="absolute bottom-6 sm:bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_hsl(var(--theme-background)/0.8)]">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.5)]">
                           {post.title}
                         </h3>
                         <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
                           <div className="flex items-center">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[color:var(--theme-textMuted)]" />
-                            <span className="text-[color:var(--theme-textMuted)]">
+                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[color:var(--theme-textMuted)] drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]" />
+                            <span className="text-[color:var(--theme-textMuted)] drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]">
                               {format(new Date(post.published_at), "MMMM d, yyyy")}
                             </span>
                           </div>
                           {post.blog_categories?.name && (
-                            <Badge className="bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm">
+                            <Badge className="bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]">
                               {post.blog_categories.name}
                             </Badge>
                           )}
                         </div>
-                        <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6">
+                        <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 drop-shadow-[2px_2px_4px_rgba(0,0,0,0.5)]">
                           {post.excerpt}
                         </p>
                       </div>
