@@ -85,7 +85,7 @@ const ProfileHeader = ({
                   <div className="text-[var(--theme-text)] text-xs font-[var(--theme-fontSecondary)]">
                     Achievement Points
                   </div>
-                  <div className="text-[var(--theme-primary)] font-bold text-lg font-[var(--theme-fontSecondary)]">
+                  <div className="text-[hsl(var(--theme-primary))] font-bold text-lg font-[var(--theme-fontSecondary)]">
                     {totalPoints}
                   </div>
                 </div>
