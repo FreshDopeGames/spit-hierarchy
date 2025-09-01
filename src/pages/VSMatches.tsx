@@ -49,6 +49,12 @@ const VSMatches = () => {
           subtitle="Head-to-head rapper matchups - vote for your favorites"
         />
 
+        <div className="container mx-auto px-4 py-4">
+          <h1 className="text-[var(--theme-textLight)] text-white text-4xl md:text-5xl font-bold text-center mb-8 font-mogra">
+            VS
+          </h1>
+        </div>
+
         <main className="container mx-auto px-4 py-8">
           {/* Filters */}
           <div className="flex flex-col sm:flex-row gap-4 mb-8">
