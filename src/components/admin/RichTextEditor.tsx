@@ -48,7 +48,7 @@ const RichTextEditor = ({ value, onChange, placeholder, className }: RichTextEdi
   return (
     <div className="space-y-2">
       {/* Toolbar */}
-      <div className="flex flex-wrap gap-1 p-2 bg-gray-50 border border-rap-smoke rounded-t-md">
+      <div className="flex flex-wrap gap-1 p-2 bg-white border border-gray-300 rounded-t-md">
         {toolbarButtons.map(({ icon: Icon, label, before, after }) => (
           <Button
             key={label}
@@ -56,7 +56,7 @@ const RichTextEditor = ({ value, onChange, placeholder, className }: RichTextEdi
             variant="ghost"
             size="sm"
             onClick={() => insertMarkdown(before, after)}
-            className="h-8 px-2 text-rap-carbon hover:bg-gray-200"
+            className="h-8 px-2 text-gray-900 hover:bg-gray-100"
             title={label}
           >
             <Icon className="w-4 h-4" />
@@ -75,7 +75,7 @@ const RichTextEditor = ({ value, onChange, placeholder, className }: RichTextEdi
       />
       
       {/* Help text */}
-      <div className="text-xs text-rap-smoke p-2 bg-gray-50 border border-rap-smoke rounded-b-md border-t-0">
+      <div className="text-xs text-gray-700 p-2 bg-white border border-gray-300 rounded-b-md border-t-0">
         <p className="mb-1"><strong>Markdown formatting supported:</strong></p>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <span>**bold** or *italic*</span>

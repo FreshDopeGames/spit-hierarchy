@@ -113,11 +113,11 @@ const BlogPostImageUpload = ({ imageUrl, onImageChange, label = "Featured Image"
 
   return (
     <div className="space-y-2">
-      <Label className="text-rap-platinum text-sm sm:text-base">{label}</Label>
+      <Label className="text-gray-900 text-sm sm:text-base">{label}</Label>
       
       {displayImage ? (
         <div className="relative">
-          <div className="relative w-full h-48 bg-gray-100 rounded border border-rap-smoke overflow-hidden">
+          <div className="relative w-full h-48 bg-white rounded border border-gray-300 overflow-hidden">
             <img 
               src={displayImage} 
               alt="Featured image preview" 
@@ -133,7 +133,7 @@ const BlogPostImageUpload = ({ imageUrl, onImageChange, label = "Featured Image"
               <X className="w-4 h-4" />
             </Button>
           </div>
-          <p className="text-xs text-rap-smoke mt-1">
+          <p className="text-xs text-gray-600 mt-1">
             Multiple sizes automatically generated for optimal performance
           </p>
         </div>
@@ -149,18 +149,18 @@ const BlogPostImageUpload = ({ imageUrl, onImageChange, label = "Featured Image"
           />
           <Label
             htmlFor="blog-image-upload"
-            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-rap-smoke rounded bg-gray-100 hover:bg-gray-200 cursor-pointer transition-colors"
+            className="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed border-gray-300 rounded bg-white hover:bg-gray-50 cursor-pointer transition-colors"
           >
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               {uploading ? (
-                <div className="text-rap-carbon">Uploading and optimizing...</div>
+                <div className="text-gray-900">Uploading and optimizing...</div>
               ) : (
                 <>
-                  <Upload className="w-8 h-8 mb-2 text-rap-carbon" />
-                  <p className="text-sm text-rap-carbon">
+                  <Upload className="w-8 h-8 mb-2 text-gray-900" />
+                  <p className="text-sm text-gray-900">
                     <span className="font-semibold">Click to upload</span> or drag and drop
                   </p>
-                  <p className="text-xs text-rap-carbon">PNG, JPG, WEBP up to 10MB (auto-optimized)</p>
+                  <p className="text-xs text-gray-600">PNG, JPG, WEBP up to 10MB (auto-optimized)</p>
                 </>
               )}
             </div>
