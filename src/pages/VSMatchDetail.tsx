@@ -110,8 +110,9 @@ const VSMatchDetail = () => {
         disabled={!user || hasUserVoted || voteMatch.isPending}
         className={`w-full ${hasVoted 
           ? 'bg-green-600 hover:bg-green-500 text-white' 
-          : 'bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)]'
-        } font-bold transition-all duration-200 font-mogra text-lg`}
+          : 'hover:bg-[hsl(var(--theme-primaryLight))]'
+        } font-bold transition-all duration-200 font-mogra text-lg text-[hsl(var(--theme-textInverted))]`}
+        style={!hasVoted ? { background: 'var(--theme-gradient-primary-gradient)' } : {}}
         size={isMobile ? "sm" : "default"}
       >
         {hasVoted ? (
