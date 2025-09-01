@@ -121,13 +121,16 @@ const VSMatches = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAndSortedMatches?.map((match) => (
                 <Link key={match.id} to={`/vs/${match.slug}`}>
-                  <Card className="border-4 border-[var(--theme-textInverted)] group-hover:border-[var(--theme-background)] bg-[var(--theme-gradient-primary-gradient)] transition-all duration-300 hover:shadow-lg group">
+                  <Card 
+                    className="border-4 border-[hsl(var(--theme-textInverted))] group-hover:border-[hsl(var(--theme-background))] transition-all duration-300 hover:shadow-lg group"
+                    style={{ background: 'var(--theme-gradient-primary-gradient)' }}
+                  >
                     <CardHeader>
-                      <h3 className="text-lg font-bold text-[var(--theme-textInverted)] text-gray-900 group-hover:text-[var(--theme-background)] transition-colors">
+                      <h3 className="text-lg font-bold text-[hsl(var(--theme-textInverted))] group-hover:text-[hsl(var(--theme-background))] transition-colors">
                         {match.title}
                       </h3>
                       {match.description && (
-                        <p className="text-sm text-[var(--theme-textInverted)]/80 text-gray-800 line-clamp-2">
+                        <p className="text-sm text-[hsl(var(--theme-textInverted))]/80 line-clamp-2">
                           {match.description}
                         </p>
                       )}
@@ -141,14 +144,14 @@ const VSMatches = () => {
                             size="md"
                             variant="square"
                           />
-                          <span className="text-sm font-semibold text-[var(--theme-textInverted)] text-gray-900 text-center">
+                          <span className="text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center">
                             {match.rapper_1.name}
                           </span>
                         </div>
                         
                         <div className="flex flex-col items-center">
                           <Swords className="w-8 h-8 text-[var(--theme-background)] mb-2" />
-                          <Badge variant="outline" className="text-xs text-[var(--theme-textInverted)] text-gray-900 border-[var(--theme-background)]">
+                          <Badge variant="outline" className="text-xs text-[hsl(var(--theme-textInverted))] border-[hsl(var(--theme-background))]">
                             {match.total_votes} votes
                           </Badge>
                         </div>
@@ -159,7 +162,7 @@ const VSMatches = () => {
                             size="md"
                             variant="square"
                           />
-                          <span className="text-sm font-semibold text-[var(--theme-textInverted)] text-gray-900 text-center">
+                          <span className="text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center">
                             {match.rapper_2.name}
                           </span>
                         </div>
@@ -167,9 +170,9 @@ const VSMatches = () => {
 
                       {/* Vote distribution */}
                       {match.total_votes > 0 && (
-                        <div className="w-full bg-[var(--theme-background)]/50 rounded-full h-2 mb-3">
+                        <div className="w-full bg-[hsl(var(--theme-background))]/50 rounded-full h-2 mb-3">
                           <div 
-                            className="bg-[var(--theme-background)] h-2 rounded-full transition-all duration-300"
+                            className="bg-[hsl(var(--theme-background))] h-2 rounded-full transition-all duration-300"
                             style={{ 
                               width: `${(match.rapper_1_votes / match.total_votes) * 100}%` 
                             }}
@@ -177,7 +180,7 @@ const VSMatches = () => {
                         </div>
                       )}
 
-                      <div className="text-xs text-[var(--theme-textInverted)]/70 text-gray-700 text-center">
+                      <div className="text-xs text-[hsl(var(--theme-textInverted))]/70 text-center">
                         {new Date(match.created_at).toLocaleDateString()}
                       </div>
                     </CardContent>
