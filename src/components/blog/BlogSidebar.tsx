@@ -2,6 +2,7 @@ import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader 
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, Vote } from "lucide-react";
 import { Link } from "react-router-dom";
+import ResponsiveImage from "@/components/ui/ResponsiveImage";
 interface RelatedPost {
   id: string;
   title: string;
@@ -28,7 +29,12 @@ const BlogSidebar = ({
             {relatedPosts.map(post => <Link key={post.id} to={`/blog/${post.slug}`} className="block group">
                 <div className="flex lg:flex-col gap-4 lg:gap-3 p-3 rounded-lg hover:bg-[var(--theme-backgroundLight)]/30 transition-colors">
                   <div className="flex-shrink-0 lg:w-full">
-                    <img src={post.imageUrl} alt={post.title} className="w-20 h-16 lg:w-full lg:h-32 object-cover rounded-md group-hover:opacity-80 transition-opacity" />
+                    <ResponsiveImage 
+                      src={post.imageUrl} 
+                      alt={post.title} 
+                      className="w-20 h-16 lg:w-full lg:h-32 object-cover rounded-md group-hover:opacity-80 transition-opacity" 
+                      context="thumbnail"
+                    />
                   </div>
                   <div className="flex-1 lg:w-full min-w-0 space-y-2">
                     <h4 className="font-[var(--theme-fontSecondary)] text-sm text-[var(--theme-text)] group-hover:text-[var(--theme-primary)] transition-colors line-clamp-3 leading-snug">
