@@ -37,7 +37,7 @@ const ProfileHeader = ({
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-10">
             {/* User Info Section */}
             <div className="flex-1 lg:flex-shrink">
-              <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] mb-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words">
+              <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] mb-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words text-yellow-600">
                 {profile?.username || profile?.full_name || user.email}
               </h2>
               
@@ -61,7 +61,7 @@ const ProfileHeader = ({
             {memberStats && <div className="flex-shrink-0 text-center lg:text-right lg:min-w-72">
                 <div className="flex items-center justify-center lg:justify-end mb-2">
                   <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--theme-primary)] mr-2" />
-                  <h3 className="text-sm sm:text-base font-bold text-[var(--theme-primary)] font-[var(--theme-fontSecondary)]">
+                  <h3 className="text-sm sm:text-base font-bold text-[var(--theme-primary)] font-[var(--theme-fontSecondary)] text-yellow-600">
                     Member Status
                   </h3>
                 </div>
@@ -72,7 +72,7 @@ const ProfileHeader = ({
 
                 {/* Vote Multiplier Badge */}
                 <div className="flex items-center justify-center lg:justify-end mb-3">
-                  <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-secondary)] px-2 py-1 rounded-full">
+                  <div className="bg-gradient-to-r from-[var(--theme-primary)]-to-[var(--theme-secondary)] px-2 py-1 rounded-full">
                     <div className="flex items-center gap-1 text-[var(--theme-background)] font-bold text-xs">
                       <Star className="w-3 h-3" />
                       <span>{voteMultiplier}x Vote Power</span>
