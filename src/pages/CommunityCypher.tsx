@@ -75,7 +75,7 @@ const CommunityCypher = () => {
         </div>
 
         {/* Comments Section */}
-        <ThemedCard className="bg-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/50 border-2 shadow-2xl shadow-[var(--theme-primary)]/20">
+        <ThemedCard className="bg-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/50 border-4 shadow-2xl shadow-[var(--theme-primary)]/20">
           <ThemedCardContent className="p-6 bg-black">
             {/* Sort Controls */}
             <div className="flex items-center justify-between mb-6">
