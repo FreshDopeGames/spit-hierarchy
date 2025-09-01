@@ -151,19 +151,19 @@ const BlogCarousel = () => {
             <Button 
               variant="ghost" 
               size="icon" 
-              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-12 sm:w-12" 
+              className="rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" 
               onClick={goToPrevious}
             >
-              <ChevronLeft className="h-5 w-5 sm:h-6 sm:w-6 relative z-10" />
+              <ChevronLeft className="h-5 w-5 sm:h-8 sm:w-8 relative z-10" />
               <span className="sr-only">Previous</span>
             </Button>
             <Button 
               variant="ghost" 
               size="icon" 
-              className="rounded-full bg-black/30 hover:bg-black/60 hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-12 sm:w-12" 
+              className="rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" 
               onClick={goToNext}
             >
-              <ChevronRight className="h-5 w-5 sm:h-6 sm:w-6 relative z-10" />
+              <ChevronRight className="h-5 w-5 sm:h-8 sm:w-8 relative z-10" />
               <span className="sr-only">Next</span>
             </Button>
           </div>
