@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import useEmblaCarousel from 'embla-carousel-react';
+
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -98,7 +99,7 @@ const BlogCarousel = () => {
                       <ResponsiveImage src={getImageData(post)} alt={post.title} className="w-full h-full" context="carousel" objectFit="cover" sizes="(max-width: 768px) 100vw, 100vw" />
                       <div className="absolute bottom-0 left-0 right-0 h-[70%] sm:h-[80%] bg-gradient-to-t from-[var(--theme-background)]/95 via-[var(--theme-background)]/50 to-transparent" />
                       
-                       <div className="absolute bottom-6 sm:bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full">
+                       <div className="absolute bottom-6 sm:bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                         <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_8px_rgba(0,0,0,0.5)]">
                           {post.title}
                         </h3>
@@ -160,4 +161,5 @@ const BlogCarousel = () => {
       </div>
     </section>;
 };
+
 export default BlogCarousel;
