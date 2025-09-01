@@ -1,0 +1,1 @@
+UPDATE vs_matches SET status = 'published' WHERE slug = 'kendrick-vs-drake';
