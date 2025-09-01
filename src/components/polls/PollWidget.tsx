@@ -87,9 +87,9 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
   return (
     <ThemedCard variant="primary">
       <ThemedCardHeader>
-        <ThemedCardTitle className="text-lg font-bold text-[var(--theme-background)]">{poll.title}</ThemedCardTitle>
+        <ThemedCardTitle className="text-2xl font-bold text-black">{poll.title}</ThemedCardTitle>
         {poll.description && (
-          <ThemedCardDescription className="font-bold text-[var(--theme-background)]">{poll.description}</ThemedCardDescription>
+          <ThemedCardDescription className="font-bold text-black">{poll.description}</ThemedCardDescription>
         )}
       </ThemedCardHeader>
       <ThemedCardContent>
@@ -101,8 +101,8 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               {results?.results.map((result) => (
                 <div key={result.optionId} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className="text-sm font-bold text-[var(--theme-background)]">{result.optionText}</span>
-                    <span className="text-sm font-bold text-[var(--theme-background)]">
+                    <span className="text-sm font-bold text-black">{result.optionText}</span>
+                    <span className="text-sm font-bold text-black">
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
@@ -110,16 +110,16 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 </div>
               ))}
               
-              <p className="text-sm font-bold text-[var(--theme-background)] text-center mt-4">
+              <p className="text-sm font-bold text-black text-center mt-4">
                 Total votes: {results?.totalVotes}
               </p>
             </div>
           ) : (
             // No results available - show locked state
             <div className="text-center py-8 space-y-4">
-              <Lock className="h-12 w-12 text-[var(--theme-background)] mx-auto" />
-              <h3 className="text-lg font-bold text-[var(--theme-background)]">Members Only</h3>
-              <p className="font-bold text-[var(--theme-background)]">
+              <Lock className="h-12 w-12 text-black mx-auto" />
+              <h3 className="text-lg font-bold text-black">Members Only</h3>
+              <p className="font-bold text-black">
                 Sign up to participate in this poll and see results
               </p>
               <GuestCallToAction />
@@ -134,15 +134,15 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               return (
                 <div key={result.optionId} className="space-y-2">
                   <div className="flex justify-between items-center">
-                    <span className={`text-sm font-bold flex items-center gap-2 text-[var(--theme-background)] ${isUserChoice ? 'text-[var(--theme-background)]' : ''}`}>
+                    <span className={`text-sm font-bold flex items-center gap-2 text-black ${isUserChoice ? 'text-black' : ''}`}>
                       {result.optionText}
                       {isUserChoice && (
-                        <span className="text-xs bg-[var(--theme-background)]/20 text-[var(--theme-background)] px-2 py-1 rounded font-bold">
+                        <span className="text-xs bg-[var(--theme-background)]/20 text-black px-2 py-1 rounded font-bold">
                           Your choice
                         </span>
                       )}
                     </span>
-                    <span className="text-sm font-bold text-[var(--theme-background)]">
+                    <span className="text-sm font-bold text-black">
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
@@ -151,7 +151,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               );
             })}
             
-            <p className="text-sm font-bold text-[var(--theme-background)] text-center mt-4">
+            <p className="text-sm font-bold text-black text-center mt-4">
               Total votes: {results?.totalVotes || 0}
             </p>
           </div>
@@ -163,7 +163,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 {sortedOptions.map((option) => (
                   <div key={option.id} className="flex items-center space-x-2">
                     <RadioGroupItem value={option.id} id={option.id} />
-                    <Label htmlFor={option.id} className="flex-1 font-bold text-[var(--theme-background)]">
+                    <Label htmlFor={option.id} className="flex-1 font-bold text-black">
                       {option.option_text}
                     </Label>
                   </div>
@@ -172,7 +172,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="write-in" id="write-in" />
-                      <Label htmlFor="write-in" className="cursor-pointer font-bold text-[var(--theme-background)]">
+                      <Label htmlFor="write-in" className="cursor-pointer font-bold text-black">
                         Other
                       </Label>
                     </div>
@@ -199,7 +199,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                         handleMultipleChoice(option.id, checked as boolean)
                       }
                     />
-                    <Label htmlFor={option.id} className="flex-1 font-bold text-[var(--theme-background)]">
+                    <Label htmlFor={option.id} className="flex-1 font-bold text-black">
                       {option.option_text}
                     </Label>
                   </div>
@@ -214,7 +214,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                           handleMultipleChoice('write-in', checked as boolean)
                         }
                       />
-                      <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-[var(--theme-background)]">
+                      <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black">
                         Other
                       </Label>
                     </div>
