@@ -1,9 +1,11 @@
+
 import { Button } from "@/components/ui/button";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Edit, Trash2, Star, Coins } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import * as LucideIcons from "lucide-react";
 
 type Achievement = Tables<"achievements">;
 
@@ -37,6 +39,22 @@ const getTypeIcon = (type: string) => {
     default:
       return <Coins className="w-4 h-4" />;
   }
+};
+
+const renderAchievementIcon = (iconName: string) => {
+  // First check if it's an emoji (contains non-ASCII characters)
+  if (/[\u{1F600}-\u{1F64F}]|[\u{1F300}-\u{1F5FF}]|[\u{1F680}-\u{1F6FF}]|[\u{1F1E0}-\u{1F1FF}]|[\u{2600}-\u{26FF}]|[\u{2700}-\u{27BF}]/u.test(iconName)) {
+    return <span className="text-2xl">{iconName}</span>;
+  }
+  
+  // Try to get the Lucide icon
+  const IconComponent = (LucideIcons as any)[iconName];
+  if (IconComponent) {
+    return <IconComponent className="w-5 h-5" />;
+  }
+  
+  // Fallback to Trophy icon if not found
+  return <Trophy className="w-5 h-5" />;
 };
 
 const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: AdminAchievementTableProps) => {
@@ -88,7 +106,7 @@ const AdminAchievementTable = ({ achievements, isLoading, onEdit, onDelete }: Ad
             <TableRow key={achievement.id} className="border-[var(--theme-border)] hover:bg-[var(--theme-surface)]">
               <TableCell className="font-medium">
                 <div className="flex items-center gap-2">
-                  <span className="text-lg">{achievement.icon}</span>
+                  {renderAchievementIcon(achievement.icon)}
                   <span className="text-[var(--theme-text)] font-semibold">{achievement.name}</span>
                 </div>
               </TableCell>
