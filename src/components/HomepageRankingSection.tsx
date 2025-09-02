@@ -87,7 +87,7 @@ const HomepageRankingSection = () => {
   if (isLoading) {
     return <section className="mb-16">
         <div className="mb-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-2">
+          <h2 className="font-ceviche text-primary text-4xl sm:text-6xl mb-2">
             Featured Rankings
           </h2>
           <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
@@ -105,7 +105,7 @@ const HomepageRankingSection = () => {
   }
   return <section className="mb-16">
       <div className="mb-8 text-center">
-        <h2 className="text-2xl sm:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-2">
+        <h2 className="font-ceviche text-primary text-4xl sm:text-6xl mb-2">
           Featured Rankings
         </h2>
         <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
