@@ -8,6 +8,7 @@ import { ThemedSeparator } from "@/components/ui/themed-separator";
 import { ThemedAvatar, ThemedAvatarImage, ThemedAvatarFallback } from "@/components/ui/themed-avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
+
 const NavigationSidebar = ({
   trigger,
   open,
@@ -54,7 +55,7 @@ const NavigationSidebar = ({
   const defaultTrigger = <ThemedButton variant="outline" size="icon" style={{
     backgroundColor: theme.colors.primary,
     borderColor: 'hsl(var(--theme-border))'
-  }} className="border-2 hover:opacity-80 shadow-lg bg-theme-primary">
+  }} className="border-2 hover:bg-white hover:opacity-100 shadow-lg bg-theme-primary">
       <Menu className="h-4 w-4 text-black" />
     </ThemedButton>;
   return <Sheet open={isOpen} onOpenChange={handleOpenChange}>
