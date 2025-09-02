@@ -56,14 +56,7 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl, variant
   // Use rapper image if available and not empty, otherwise use optimized placeholder
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
   
-  console.log('RapperAvatar loading:', {
-    rapperId: rapper.id,
-    rapperName: rapper.name,
-    size: imageSizeMap[size],
-    imageUrl,
-    imageToDisplay,
-    placeholderImage
-  });
+  // Debug info removed for production
   
   return (
     <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
@@ -73,12 +66,12 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl, variant
           alt={rapper.name} 
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
           loading="lazy"
-          onLoad={() => console.log('Image loaded successfully:', imageToDisplay)}
+          onLoad={() => {/* Image loaded */}}
           onError={(e) => {
             console.error('Image failed to load:', imageToDisplay);
             const target = e.target as HTMLImageElement;
             if (!target.src.includes(placeholderImage)) {
-              console.log('Falling back to placeholder:', placeholderImage);
+              // Using placeholder fallback
               target.src = placeholderImage;
             }
           }}

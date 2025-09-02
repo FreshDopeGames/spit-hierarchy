@@ -26,7 +26,7 @@ const RankingsSectionHeader = () => {
         error
       } = await supabase.from("section_headers").select("*").eq("section", "rankings").eq("is_active", true).single();
       if (error) {
-        console.log("No custom header found, using default");
+        
         return null;
       }
       return data as SectionHeader;

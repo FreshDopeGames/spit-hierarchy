@@ -40,9 +40,7 @@ const RankingCard = ({
     return () => observer.disconnect();
   }, []);
 
-  // Debug: Log ranking data
-  console.log('RankingCard ranking data:', ranking);
-  console.log('RankingCard rappers:', ranking.rappers);
+  // Debug data removed for production
   
   // Construct the proper link based on ranking type
   const rankingLink = isUserRanking && !ranking.isOfficial ? `/rankings/user/${ranking.slug}` : `/rankings/official/${ranking.slug}`;

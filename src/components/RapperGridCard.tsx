@@ -25,13 +25,7 @@ const RapperGridCard = ({ rapper, index, sortBy, selectedCategory }: RapperGridC
   const { data: imageUrl } = useRapperImage(rapper.id);
 
   const handleCardClick = (e: React.MouseEvent) => {
-    // Debug logging
-    console.log('Card clicked:', { 
-      name: rapper.name, 
-      slug: rapper.slug, 
-      id: rapper.id, 
-      url: `/rapper/${rapper.slug || rapper.id}` 
-    });
+    // Card navigation tracking removed for production
   };
 
   const handleVoteClick = (e: React.MouseEvent) => {

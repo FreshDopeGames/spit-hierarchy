@@ -25,7 +25,7 @@ const HomepageRankingSection = () => {
   const { data: rankingsData = [], isLoading } = useQuery({
     queryKey: ["homepage-rankings-preview"],
     queryFn: async () => {
-      console.log("🔄 Fetching homepage rankings preview...");
+      
       
       // Fetch top 3 official rankings by display order
       const { data: rankingsData, error: rankingsError } = await supabase
@@ -40,14 +40,14 @@ const HomepageRankingSection = () => {
       }
 
       if (!rankingsData || rankingsData.length === 0) {
-        console.log("📭 No rankings found");
+        
         return [];
       }
 
       // For each ranking, fetch the top 5 items with vote data
       const rankingsWithItems = await Promise.all(
         rankingsData.map(async (ranking) => {
-          console.log(`🎯 Fetching items for ranking: ${ranking.title}`);
+          
           
           // Get ranking items with rapper data
           const { data: itemsData, error: itemsError } = await supabase
@@ -78,7 +78,7 @@ const HomepageRankingSection = () => {
             votes: 0 // We could add individual vote counts here if needed
           }));
 
-          console.log(`✅ Found ${processedItems.length} items for ${ranking.title} with ${totalVotes} total votes`);
+          
 
           return {
             ...ranking,
@@ -88,7 +88,7 @@ const HomepageRankingSection = () => {
         })
       );
 
-      console.log(`🎉 Successfully loaded ${rankingsWithItems.length} rankings for homepage`);
+      
       return rankingsWithItems;
     },
     staleTime: 2 * 60 * 1000, // 2 minutes

@@ -38,18 +38,7 @@ const VoteButton = ({
   const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
   const voteMultiplier = getVoteMultiplier();
 
-  // Enhanced debug logging for voting state - only for this specific rapper
-  console.log(`🎯 VoteButton Debug for rapper ${rapperId}:`, {
-    rapperId,
-    rankingId,
-    hasVoted,
-    hasVotedToday: hasVoted,
-    currentStatus,
-    voteMultiplier,
-    user: !!user,
-    isDisabled,
-    isPending
-  });
+  // Enhanced debug logging removed for production
 
   const handleClick = async () => {
     if (isDisabled || !rapperId || !rankingId) {
@@ -69,7 +58,7 @@ const VoteButton = ({
       }
 
       try {
-        console.log(`🎯 Starting vote submission for rapper ${rapperId} in ranking ${rankingId}`);
+        // Vote submission started
         
         // Add to daily tracking for optimistic updates - only for this specific rapper
         addVoteToTracking(rapperId);
@@ -77,7 +66,7 @@ const VoteButton = ({
         // Submit the vote with enhanced error handling
         await submitRankingVote.mutateAsync({ rankingId, rapperId });
         
-        console.log(`✅ Vote submission completed successfully for rapper ${rapperId}`);
+        // Vote submission completed
       } catch (error) {
         console.error(`❌ Vote submission error for rapper ${rapperId}:`, error);
         // Error toast is handled by the mutation

@@ -1,76 +1,66 @@
+import React from 'react';
+import { handleError } from '@/utils/errorHandler';
 
-import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { ThemedButton } from '@/components/ui/themed-button';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
-
-interface Props {
-  children: ReactNode;
-  fallback?: ReactNode;
+interface ErrorBoundaryProps {
+  children: React.ReactNode;
+  fallback?: React.ComponentType<{ error: Error; resetError: () => void }>;
 }
 
-interface State {
+interface ErrorBoundaryState {
   hasError: boolean;
-  error?: Error;
+  error: Error | null;
 }
 
-class ErrorBoundary extends Component<Props, State> {
-  public state: State = {
-    hasError: false
-  };
+class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
+  constructor(props: ErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
 
-  public static getDerivedStateFromError(error: Error): State {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('ErrorBoundary caught an error:', error, errorInfo);
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    handleError(error, 'ErrorBoundary');
   }
 
-  private handleReload = () => {
-    window.location.reload();
+  resetError = () => {
+    this.setState({ hasError: false, error: null });
   };
 
-  private handleReset = () => {
-    this.setState({ hasError: false, error: undefined });
-  };
-
-  public render() {
+  render() {
     if (this.state.hasError) {
-      if (this.props.fallback) {
-        return this.props.fallback;
-      }
-
+      const FallbackComponent = this.props.fallback || DefaultErrorFallback;
       return (
-        <div className="min-h-screen bg-[var(--theme-background)] flex items-center justify-center p-4">
-          <div className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 rounded-lg p-8 max-w-md w-full text-center">
-            <AlertTriangle className="w-16 h-16 text-[var(--theme-primary)] mx-auto mb-4" />
-            <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-primary)] mb-4">Something went wrong</h2>
-            <p className="text-[var(--theme-textMuted)] mb-6">
-              We apologize for the inconvenience. Please try refreshing the page or contact support if the problem persists.
-            </p>
-            <div className="flex gap-3 justify-center">
-              <ThemedButton 
-                onClick={this.handleReset}
-                variant="outline"
-                className="border-[var(--theme-primary)]/30 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)] hover:text-[var(--theme-background)]"
-              >
-                Try Again
-              </ThemedButton>
-              <ThemedButton 
-                onClick={this.handleReload}
-                className="bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)]"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh Page
-              </ThemedButton>
-            </div>
-          </div>
-        </div>
+        <FallbackComponent 
+          error={this.state.error!} 
+          resetError={this.resetError} 
+        />
       );
     }
 
     return this.props.children;
   }
 }
+
+const DefaultErrorFallback = ({ error, resetError }: { error: Error; resetError: () => void }) => (
+  <div className="min-h-screen flex items-center justify-center bg-[var(--theme-background)]">
+    <div className="text-center p-8 max-w-md">
+      <h1 className="text-2xl font-bold text-[var(--theme-primary)] mb-4">
+        Something went wrong
+      </h1>
+      <p className="text-[var(--theme-textMuted)] mb-6">
+        {error.message || 'An unexpected error occurred'}
+      </p>
+      <button
+        onClick={resetError}
+        className="px-4 py-2 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-lg hover:opacity-90 transition-opacity"
+      >
+        Try again
+      </button>
+    </div>
+  </div>
+);
 
 export default ErrorBoundary;
