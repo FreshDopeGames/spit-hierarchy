@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
@@ -35,19 +34,19 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl, variant
   const imageUrl = providedImageUrl !== undefined ? providedImageUrl : fetchedImageUrl;
   
   const sizeClasses = {
-    sm: "w-12 h-12 sm:w-14 sm:h-14",
-    md: "w-16 h-16 sm:w-18 sm:h-18",
-    lg: "w-20 h-20 sm:w-24 sm:h-24",
-    xl: "w-24 h-24 sm:w-28 sm:h-28",
-    '2xl': "w-32 h-32 sm:w-40 sm:h-40"
+    sm: "w-24 h-24 sm:w-28 sm:h-28",
+    md: "w-32 h-32 sm:w-36 sm:h-36",
+    lg: "w-40 h-40 sm:w-48 sm:h-48",
+    xl: "w-48 h-48 sm:w-56 sm:h-56",
+    '2xl': "w-64 h-64 sm:w-80 sm:h-80"
   };
   
   const iconSizeClasses = {
-    sm: "w-6 h-6",
-    md: "w-8 h-8",
-    lg: "w-10 h-10",
-    xl: "w-12 h-12",
-    '2xl': "w-16 h-16"
+    sm: "w-12 h-12",
+    md: "w-16 h-16",
+    lg: "w-20 h-20",
+    xl: "w-24 h-24",
+    '2xl': "w-32 h-32"
   };
   
   // Use optimized placeholder based on size
