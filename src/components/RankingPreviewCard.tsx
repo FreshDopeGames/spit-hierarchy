@@ -133,14 +133,14 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         
         {/* Gradient Overlay - Bottom area for text */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[40%]"
+          className="absolute bottom-0 left-0 right-0 h-[25%]"
           style={{
             background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
           }}
         />
         
         {/* Content - Positioned in bottom area */}
-        <div className="absolute bottom-0 left-0 right-0 h-[40%] flex flex-col justify-end p-4 sm:p-6">
+        <div className="absolute bottom-0 left-0 right-0 h-[25%] flex flex-col justify-center p-3 sm:p-4">
           {/* Category Badge */}
           <div className="mb-1">
             <span 
