@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Navigate } from "react-router-dom";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
@@ -15,37 +14,53 @@ import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement"
 import AdminDataManagement from "@/components/admin/AdminDataManagement";
 import AdminAchievementManagement from "@/components/admin/AdminAchievementManagement";
 import AdminVSMatchManagement from "@/components/admin/AdminVSMatchManagement";
-
 const Admin = () => {
-  const { user, isAuthenticated } = useSecureAuth();
-  const { isAdmin, isLoading } = useSecurityContext();
+  const {
+    user,
+    isAuthenticated
+  } = useSecureAuth();
+  const {
+    isAdmin,
+    isLoading
+  } = useSecurityContext();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeTab, setActiveTab] = useState("rappers");
-
-  const tabOptions = [
-    { value: "rappers", label: "Rappers" },
-    { value: "rankings", label: "Rankings" },
-    { value: "blog", label: "Blog" },
-    { value: "polls", label: "Polls" },
-    { value: "vs-matches", label: "VS Matches" },
-    { value: "achievements", label: "Achievements" },
-    { value: "headers", label: "Headers" },
-    { value: "theme", label: "Theme" },
-    { value: "data", label: "Data" }
-  ];
-
+  const tabOptions = [{
+    value: "rappers",
+    label: "Rappers"
+  }, {
+    value: "rankings",
+    label: "Rankings"
+  }, {
+    value: "blog",
+    label: "Blog"
+  }, {
+    value: "polls",
+    label: "Polls"
+  }, {
+    value: "vs-matches",
+    label: "VS Matches"
+  }, {
+    value: "achievements",
+    label: "Achievements"
+  }, {
+    value: "headers",
+    label: "Headers"
+  }, {
+    value: "theme",
+    label: "Theme"
+  }, {
+    value: "data",
+    label: "Data"
+  }];
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
+    return <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
         <div className="text-[hsl(var(--theme-primary))] text-xl font-[var(--theme-font-heading)] animate-pulse">Loading...</div>
-      </div>
-    );
+      </div>;
   }
-
   if (!isAuthenticated || !isAdmin) {
     return <Navigate to="/auth" replace />;
   }
-
   const renderTabContent = () => {
     switch (activeTab) {
       case "rappers":
@@ -70,13 +85,11 @@ const Admin = () => {
         return <AdminRapperManagement />;
     }
   };
-
-  return (
-    <div className="min-h-screen bg-[hsl(var(--theme-background))]">
+  return <div className="min-h-screen bg-[hsl(var(--theme-background))]">
       <HeaderNavigation isScrolled={isScrolled} />
       
-      <main className="max-w-7xl mx-auto px-4 pb-4 sm:px-6 sm:pb-6 pt-40">
-        <h1 className="text-4xl sm:text-6xl font-ceviche text-primary mb-6 sm:mb-8">
+      <main className="max-w-7xl mx-auto px-4 pb-4 sm:px-6 sm:pb-6 pt-40 py-[80px]">
+        <h1 className="text-2xl sm:text-4xl font-bold text-[hsl(var(--theme-primary))] mb-6 sm:mb-8 font-[var(--theme-font-heading)]">
           Admin Dashboard
         </h1>
 
@@ -87,14 +100,9 @@ const Admin = () => {
               <ThemedSelectValue />
             </ThemedSelectTrigger>
             <ThemedSelectContent>
-              {tabOptions.map((option) => (
-                <ThemedSelectItem 
-                  key={option.value} 
-                  value={option.value}
-                >
+              {tabOptions.map(option => <ThemedSelectItem key={option.value} value={option.value}>
                   {option.label}
-                </ThemedSelectItem>
-              ))}
+                </ThemedSelectItem>)}
             </ThemedSelectContent>
           </ThemedSelect>
         </div>
@@ -102,15 +110,9 @@ const Admin = () => {
         {/* Desktop Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <ThemedTabsList className="hidden lg:grid w-full grid-cols-9 gap-1 h-auto p-2">
-            {tabOptions.map((option) => (
-              <ThemedTabsTrigger 
-                key={option.value}
-                value={option.value} 
-                className="text-xs xl:text-sm py-3 font-bold"
-              >
+            {tabOptions.map(option => <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                 {option.label}
-              </ThemedTabsTrigger>
-            ))}
+              </ThemedTabsTrigger>)}
           </ThemedTabsList>
 
         {/* Tab Content */}
@@ -119,8 +121,6 @@ const Admin = () => {
         </div>
         </ThemedTabs>
       </main>
-    </div>
-  );
+    </div>;
 };
-
 export default Admin;
