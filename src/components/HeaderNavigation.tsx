@@ -52,7 +52,7 @@ const HeaderNavigation = ({
             ) : (
               <Link 
                 to="/auth" 
-                className="bg-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primaryLight))] text-[hsl(var(--theme-background))] px-4 py-2 rounded-lg font-[var(--theme-font-body)] font-medium transition-colors"
+                className="bg-[hsl(var(--theme-primary))] border-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primaryLight))] text-[hsl(var(--theme-background))] px-4 py-2 rounded-lg font-[var(--theme-font-body)] font-medium transition-colors"
               >
                 Sign In
               </Link>
