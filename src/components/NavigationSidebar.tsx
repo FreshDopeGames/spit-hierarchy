@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Menu, Home, Trophy, Music, Swords, PenTool, BookOpen, Info, BarChart3, Settings, LogOut } from "lucide-react";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { ThemedSeparator } from "@/components/ui/themed-separator";
@@ -22,7 +22,7 @@ const NavigationSidebar = ({
   const [internalOpen, setInternalOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
-  const { theme } = useTheme();
+  const { theme } = useEnhancedTheme();
   const { user } = useAuth();
   const { userProfile } = useUserProfile();
 
