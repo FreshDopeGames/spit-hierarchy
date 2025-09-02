@@ -1,8 +1,7 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Crown, TrendingUp } from "lucide-react";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 
 interface SectionHeader {
   id: string;
@@ -14,7 +13,7 @@ interface SectionHeader {
 }
 
 const RankingsSectionHeader = () => {
-  const { theme } = useTheme();
+  const { theme } = useEnhancedTheme();
   
   const {
     data: headerData
@@ -47,7 +46,7 @@ const RankingsSectionHeader = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundBlendMode: 'overlay',
-          background: `linear-gradient(135deg, ${theme.colors.primary}20, ${theme.colors.backgroundLight} 50%, ${theme.colors.secondary}30)`
+          background: `linear-gradient(135deg, ${theme.colors.primary}20, ${theme.colors.background} 50%, ${theme.colors.secondary}30)`
         }}
       />
       
