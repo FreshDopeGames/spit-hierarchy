@@ -42,7 +42,9 @@ export const transformOfficialRankings = (rankings: RankingWithItems[]): Promise
       rappers: (ranking.items || []).map(item => ({
         rank: item.position || 0,
         name: item.rapper?.name || "Unknown",
-        reason: item.reason || ""
+        reason: item.reason || "",
+        id: item.rapper?.id || "",
+        image_url: item.rapper?.image_url || undefined
       })),
       likes: 0, // Remove fake likes
       views: 0, // Set to 0 until we implement view tracking
@@ -84,7 +86,9 @@ export const transformUserRankings = async (userRankingData: any): Promise<Unifi
       rappers: (ranking.preview_items || []).map((item: any) => ({
         rank: item.item_position || 0,
         name: item.rapper_name || "Unknown",
-        reason: item.item_reason || ""
+        reason: item.item_reason || "",
+        id: item.rapper_id || "",
+        image_url: item.rapper_image_url || undefined
       })),
       likes: 0, // Remove fake likes
       views: 0, // Set to 0 until we implement view tracking

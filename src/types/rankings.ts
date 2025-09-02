@@ -23,6 +23,8 @@ export interface UnifiedRanking {
     rank: number;
     name: string;
     reason: string;
+    id: string;
+    image_url?: string;
   }>;
   likes: number;
   views: number;
