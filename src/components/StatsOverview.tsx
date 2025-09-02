@@ -99,7 +99,7 @@ const StatsOverview = () => {
   if (isLoading) {
     return <div className="mb-8 sm:mb-12">
         <div className="text-center mb-6 sm:mb-8 px-4">
-          <h2 className="text-2xl sm:text-3xl lg:text-5xl font-[var(--theme-font-heading)] text-[color:var(--theme-primary)] mb-2 tracking-wider break-words">
+          <h2 className="font-ceviche text-primary mb-2 tracking-wider text-4xl sm:text-6xl break-words">
             Site Statistics
           </h2>
           <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-base sm:text-lg">
@@ -160,7 +160,7 @@ const StatsOverview = () => {
   }];
   return <div className="mb-8 sm:mb-12">
       <div className="text-center mb-6 sm:mb-8 px-4">
-        <h2 className="font-[var(--theme-font-heading)] text-[color:var(--theme-primary)] mb-2 tracking-wider text-2xl sm:text-3xl lg:text-5xl break-words">
+        <h2 className="font-ceviche text-primary mb-2 tracking-wider text-4xl sm:text-6xl break-words">
           Site Statistics
         </h2>
         <p className="text-[color:var(--theme-text)] font-[var(--theme-font-body)] text-base sm:text-lg">
