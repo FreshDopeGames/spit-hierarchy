@@ -192,13 +192,14 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               <div className="space-y-3">
                 {sortedOptions.map((option) => (
                   <div key={option.id} className="flex items-center space-x-2">
-                    <Checkbox
-                      id={option.id}
-                      checked={selectedOptions.includes(option.id)}
-                      onCheckedChange={(checked) => 
-                        handleMultipleChoice(option.id, checked as boolean)
-                      }
-                    />
+                     <Checkbox
+                       id={option.id}
+                       checked={selectedOptions.includes(option.id)}
+                       onCheckedChange={(checked) => 
+                         handleMultipleChoice(option.id, checked as boolean)
+                       }
+                       className="border-black"
+                     />
                     <Label htmlFor={option.id} className="flex-1 font-bold text-black">
                       {option.option_text}
                     </Label>
@@ -207,13 +208,14 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 {poll.allow_write_in && (
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                      <Checkbox
-                        id="write-in-multiple"
-                        checked={selectedOptions.includes('write-in')}
-                        onCheckedChange={(checked) => 
-                          handleMultipleChoice('write-in', checked as boolean)
-                        }
-                      />
+                       <Checkbox
+                         id="write-in-multiple"
+                         checked={selectedOptions.includes('write-in')}
+                         onCheckedChange={(checked) => 
+                           handleMultipleChoice('write-in', checked as boolean)
+                         }
+                         className="border-black"
+                       />
                       <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black">
                         Other
                       </Label>
