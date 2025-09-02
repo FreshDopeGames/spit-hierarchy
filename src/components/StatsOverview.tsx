@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Users, Vote, MessageCircle, TrendingUp, Music, UserPlus, Crown, Trophy } from "lucide-react";
+
 const StatsOverview = () => {
   const {
     data: stats,
@@ -173,10 +174,7 @@ const StatsOverview = () => {
             <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
             <ThemedCardContent className="p-3 sm:p-4">
               <div className="flex items-center space-x-2 sm:space-x-3">
-                <div style={{
-              background: 'var(--theme-gradient-primary-gradient)',
-              backgroundImage: 'var(--theme-gradient-primary-gradient)'
-            }} className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0 bg-yellow-600">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center shadow-lg flex-shrink-0 bg-gradient-to-br from-primary to-primary/80">
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-[hsl(var(--theme-textInverted))]" />
                 </div>
                 <div className="min-w-0 flex-1">
