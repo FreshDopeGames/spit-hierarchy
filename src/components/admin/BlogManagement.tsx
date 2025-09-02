@@ -1,7 +1,6 @@
-
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 import { PenTool } from "lucide-react";
 import BlogPostsTab from "./blog/BlogPostsTab";
 import BlogCategoriesTab from "./blog/BlogCategoriesTab";
@@ -62,36 +61,30 @@ const BlogManagement = () => {
         description="Create and manage blog posts and categories"
       />
 
-      <Tabs defaultValue="posts" className="space-y-4">
-        <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-border)] w-full grid grid-cols-2 p-2 gap-1 rounded-lg">
-          <TabsTrigger 
-            value="posts" 
-            className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-4 py-2 rounded-md"
-          >
+      <ThemedTabs defaultValue="posts" className="space-y-4">
+        <ThemedTabsList className="w-full grid grid-cols-2 p-2 gap-1">
+          <ThemedTabsTrigger value="posts">
             Posts
-          </TabsTrigger>
-          <TabsTrigger 
-            value="categories" 
-            className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-4 py-2 rounded-md"
-          >
+          </ThemedTabsTrigger>
+          <ThemedTabsTrigger value="categories">
             Categories
-          </TabsTrigger>
-        </TabsList>
+          </ThemedTabsTrigger>
+        </ThemedTabsList>
 
-        <TabsContent value="posts">
+        <ThemedTabsContent value="posts">
           <BlogPostsTab 
             onEditPost={handleEditPost}
             onNewPost={handleNewPost}
           />
-        </TabsContent>
+        </ThemedTabsContent>
 
-        <TabsContent value="categories">
+        <ThemedTabsContent value="categories">
           <BlogCategoriesTab 
             onEditCategory={handleEditCategory}
             onNewCategory={handleNewCategory}
           />
-        </TabsContent>
-      </Tabs>
+        </ThemedTabsContent>
+      </ThemedTabs>
 
       {/* Blog Post Dialog */}
       <BlogPostDialog
