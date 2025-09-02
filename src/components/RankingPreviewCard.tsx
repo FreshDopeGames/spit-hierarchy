@@ -51,7 +51,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         {/* Rapper Mosaic Background - Top portion of card */}
         <div className="absolute inset-0 h-[60%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
-          <div className="grid grid-cols-2">
+          <div className="grid grid-cols-2 gap-0">
             {topRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
@@ -91,7 +91,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           </div>
           
           {/* Bottom Row - 3 Images */}
-          <div className="grid grid-cols-3">
+          <div className="grid grid-cols-3 gap-0">
             {bottomRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
