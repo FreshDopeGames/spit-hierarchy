@@ -83,32 +83,83 @@ const RankingCard = ({
         </CardHeader>
         
         <CardContent className="pt-0">
-          {/* Rapper Mosaic - Only render when in view for lazy loading */}
+          {/* Top 5 Rappers Grid - Only render when in view for lazy loading */}
           {isInView && ranking.rappers && ranking.rappers.length > 0 && (
-            <div className="mb-4">
-              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-3 font-[var(--theme-fontSecondary)]">
+            <div className="mb-6">
+              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-4 font-[var(--theme-fontSecondary)]">
                 Top {Math.min(ranking.rappers.length, 5)}:
               </h4>
               
-              <RapperMosaic 
-                rappers={ranking.rappers.slice(0, 5).map(rapper => ({
-                  id: `${rapper.rank}-${rapper.name}`,
-                  name: rapper.name,
-                  image_url: null // Will use placeholder images
-                }))}
-                size="medium"
-                className="border border-[var(--theme-border)]/50 shadow-sm"
-              />
+              <div className="space-y-4">
+                {/* Top 2 Cards - Larger */}
+                {ranking.rappers.slice(0, 2).length > 0 && (
+                  <div className="grid grid-cols-2 gap-3">
+                    {ranking.rappers.slice(0, 2).map((rapper, index) => (
+                      <div key={`${rapper.rank}-${rapper.name}`} className="relative">
+                        <div className="bg-[var(--theme-surface)]/50 border border-[var(--theme-border)]/30 rounded-lg p-3 hover:bg-[var(--theme-surface)]/70 transition-colors">
+                          {/* Position indicator */}
+                          <div className="absolute -top-2 -left-2 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold font-[var(--theme-fontSecondary)] z-10">
+                            {index + 1}
+                          </div>
+                          <div className="flex flex-col items-center space-y-2">
+                            <div className="w-12 h-12 bg-[var(--theme-accent)]/20 rounded-full flex items-center justify-center border border-[var(--theme-border)]/30">
+                              <span className="text-xs font-bold text-[var(--theme-accent)]">
+                                {rapper.name.charAt(0)}
+                              </span>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs font-medium text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate max-w-16">
+                                {rapper.name}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                
+                {/* Cards 3-5 - Smaller Grid */}
+                {ranking.rappers.slice(2, 5).length > 0 && (
+                  <div className="grid grid-cols-3 gap-2">
+                    {ranking.rappers.slice(2, 5).map((rapper, index) => (
+                      <div key={`${rapper.rank}-${rapper.name}`} className="relative">
+                        <div className="bg-[var(--theme-surface)]/50 border border-[var(--theme-border)]/30 rounded-lg p-2 hover:bg-[var(--theme-surface)]/70 transition-colors">
+                          {/* Position indicator */}
+                          <div className="absolute -top-1 -left-1 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold font-[var(--theme-fontSecondary)] z-10">
+                            {index + 3}
+                          </div>
+                          <div className="flex flex-col items-center space-y-1">
+                            <div className="w-8 h-8 bg-[var(--theme-accent)]/20 rounded-full flex items-center justify-center border border-[var(--theme-border)]/30">
+                              <span className="text-xs font-bold text-[var(--theme-accent)]">
+                                {rapper.name.charAt(0)}
+                              </span>
+                            </div>
+                            <div className="text-center">
+                              <p className="text-xs font-medium text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate max-w-12">
+                                {rapper.name}
+                              </p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
           {/* Loading placeholder when not in view */}
           {!isInView && ranking.rappers && ranking.rappers.length > 0 && (
-            <div className="mb-4">
-              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-3 font-[var(--theme-fontSecondary)]">
+            <div className="mb-6">
+              <h4 className="text-sm font-semibold text-[var(--theme-textMuted)] mb-4 font-[var(--theme-fontSecondary)]">
                 Top {Math.min(ranking.rappers.length, 5)}:
               </h4>
-              <div className="h-20 bg-[var(--theme-surface)]/30 border border-[var(--theme-border)]/30 rounded-md animate-pulse" />
+              <div className="space-y-4">
+                <div className="h-20 bg-[var(--theme-surface)]/30 border border-[var(--theme-border)]/30 rounded-md animate-pulse" />
+                <div className="h-16 bg-[var(--theme-surface)]/30 border border-[var(--theme-border)]/30 rounded-md animate-pulse" />
+              </div>
             </div>
           )}
           
