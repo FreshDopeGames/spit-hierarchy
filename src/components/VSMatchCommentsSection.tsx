@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { MessageSquare, ArrowUp, Clock } from "lucide-react";
 import { ThemedButton } from "@/components/ui/themed-button";
@@ -51,10 +52,10 @@ const VSMatchCommentsSection = ({ vsMatchId, title }: VSMatchCommentsSectionProp
     <div className="w-full max-w-4xl mx-auto mt-16">
       {/* Comments Header */}
       <div className="mb-8">
-        <h2 className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] mb-4 font-mogra text-center">
+        <h2 className="text-2xl md:text-3xl font-bold text-black mb-4 font-mogra text-center">
           Battle Discussion
         </h2>
-        <p className="text-[var(--theme-textLight)] text-center mb-6">
+        <p className="text-black/80 text-center mb-6">
           Join the conversation about {title}
         </p>
       </div>
