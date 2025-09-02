@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { ThemedInput as Input } from "@/components/ui/themed-input";
 import { ThemedLabel as Label } from "@/components/ui/themed-label";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { Users } from "lucide-react";
 import AdminRapperTable from "./AdminRapperTable";
 import AdminRapperDialog from "./AdminRapperDialog";
@@ -20,6 +21,7 @@ const ITEMS_PER_PAGE = 28; // 4 rappers per row × 7 rows = 28 rappers per page
 const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+  const [avatarFilter, setAvatarFilter] = useState<"all" | "with_avatar" | "no_avatar">("all");
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -32,16 +34,31 @@ const AdminRapperManagement = () => {
     refetch,
     isFetching
   } = useQuery({
-    queryKey: ["rappers", currentPage, searchTerm],
+    queryKey: ["rappers", currentPage, searchTerm, avatarFilter],
     queryFn: async () => {
-      let query = supabase.from("rappers").select("*", {
-        count: "exact"
-      }).order("created_at", {
-        ascending: false
-      }).range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      let query = supabase
+        .from("rappers")
+        .select(`
+          *,
+          rapper_images!left(id)
+        `, {
+          count: "exact"
+        })
+        .order("created_at", {
+          ascending: false
+        })
+        .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      
       if (searchTerm) {
         query = query.ilike("name", `%${searchTerm}%`);
       }
+      
+      if (avatarFilter === "no_avatar") {
+        query = query.or("image_url.is.null,image_url.eq.").is("rapper_images.id", null);
+      } else if (avatarFilter === "with_avatar") {
+        query = query.or("image_url.not.is.null,rapper_images.id.not.is.null");
+      }
+      
       const {
         data,
         error,
@@ -60,7 +77,7 @@ const AdminRapperManagement = () => {
 
   useEffect(() => {
     refetch();
-  }, [currentPage, searchTerm, refetch]);
+  }, [currentPage, searchTerm, avatarFilter, refetch]);
 
   const totalItems = rappers?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -72,6 +89,11 @@ const AdminRapperManagement = () => {
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
     setCurrentPage(1); // Reset to first page on search
+  };
+
+  const handleAvatarFilterChange = (value: "all" | "with_avatar" | "no_avatar") => {
+    setAvatarFilter(value);
+    setCurrentPage(1); // Reset to first page on filter change
   };
 
   const handleEdit = (rapper: Rapper) => {
@@ -133,11 +155,29 @@ const AdminRapperManagement = () => {
 
       <Card className="bg-theme-surface border border-theme-border">
         <CardContent className="p-6">
-          <div className="mb-4">
-            <Label htmlFor="search" className="text-theme-text font-bold">
-              Search Rappers:
-            </Label>
-            <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1" />
+          <div className="mb-4 space-y-4">
+            <div>
+              <Label htmlFor="search" className="text-theme-text font-bold">
+                Search Rappers:
+              </Label>
+              <Input type="search" id="search" placeholder="Enter rapper name..." value={searchTerm} onChange={handleSearchChange} className="mt-1" />
+            </div>
+            
+            <div>
+              <Label className="text-theme-text font-bold">
+                Filter by Avatar:
+              </Label>
+              <Select value={avatarFilter} onValueChange={handleAvatarFilterChange}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Rappers</SelectItem>
+                  <SelectItem value="with_avatar">With Avatar</SelectItem>
+                  <SelectItem value="no_avatar">No Avatar</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {isLoading ? <div className="text-center py-8">
