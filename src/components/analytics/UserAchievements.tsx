@@ -18,7 +18,7 @@ const UserAchievements = () => {
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
   if (isLoading) {
     return <div className="space-y-4 sm:space-y-6">
-        <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+        <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl">
           Your Achievements
         </h3>
         <div className="animate-pulse space-y-4">
@@ -33,7 +33,7 @@ const UserAchievements = () => {
   const earnedAchievements = getEarnedAchievements();
   const totalPoints = getTotalPoints();
   return <div className="space-y-4 sm:space-y-6">
-      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">Achievements</h3>
+      <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl">Achievements</h3>
 
       {/* Achievement Stats */}
       <AchievementStatsCards stats={{
