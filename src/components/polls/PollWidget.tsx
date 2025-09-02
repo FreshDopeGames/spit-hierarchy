@@ -239,7 +239,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 (selectedOptions.includes('write-in') && !writeInOption.trim()) || 
                 isSubmitting
               }
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold"
+              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold border-black border"
               variant="accent"
             >
               {isSubmitting ? "Submitting..." : "Vote"}
