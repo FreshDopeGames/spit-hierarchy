@@ -4,7 +4,7 @@ import { useVSMatchBySlug, useVSMatchVote } from "@/hooks/useVSMatches";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Swords, MapPin, Calendar, Star, Check, ThumbsUp, Music, Trophy, Target } from "lucide-react";
 import { toast } from "sonner";
@@ -105,14 +105,14 @@ const VSMatchDetail = () => {
     const hasUserVoted = !!vsMatch?.user_vote;
 
     return (
-      <Button
+      <ThemedButton
         onClick={() => handleVote(rapperId)}
         disabled={!user || hasUserVoted || voteMatch.isPending}
+        variant={hasVoted ? "default" : "gradient"}
         className={`w-full ${hasVoted 
           ? 'bg-green-600 hover:bg-green-500 text-white' 
-          : 'hover:bg-[hsl(var(--theme-primaryLight))]'
-        } font-bold transition-all duration-200 font-mogra text-lg text-[hsl(var(--theme-textInverted))]`}
-        style={!hasVoted ? { background: 'var(--theme-gradient-primary-gradient)' } : {}}
+          : ''
+        } font-bold transition-all duration-200 font-mogra text-lg`}
         size={isMobile ? "sm" : "default"}
       >
         {hasVoted ? (
@@ -126,7 +126,7 @@ const VSMatchDetail = () => {
             {isMobile ? "Vote" : `Vote for ${rapperName}`}
           </>
         )}
-      </Button>
+      </ThemedButton>
     );
   };
 
