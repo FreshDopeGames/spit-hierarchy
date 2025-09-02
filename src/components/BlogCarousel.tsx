@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import useEmblaCarousel from 'embla-carousel-react';
-
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -154,12 +153,11 @@ const BlogCarousel = () => {
         <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
           <Button variant="secondary" size="sm" style={{
           background: 'var(--theme-gradient-primary-gradient)'
-        }} className="bg-[var(--theme-gradient-primary-gradient)] hover:opacity-90 font-mogra text-xl bg-yellow-600 hover:bg-yellow-500 text-black rounded-md">
+        }} className="bg-[var(--theme-primary-gradient)] hover:opacity-90 font-mogra text-xl bg-yellow-600 hover:bg-yellow-500 text-black rounded-md">
             More Slick Talk
           </Button>
         </Link>
       </div>
     </section>;
 };
-
 export default BlogCarousel;
