@@ -49,9 +49,9 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         }}
       >
         {/* Rapper Mosaic Background - Top portion of card */}
-        <div className="absolute inset-0 h-[75%] grid grid-rows-2 gap-0 space-y-0 group-hover:scale-105 transition-transform duration-500 overflow-hidden">
+        <div className="absolute inset-0 h-[43%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
-          <div className="grid grid-cols-2 gap-0 space-x-0">
+          <div className="grid grid-cols-2">
             {topRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
@@ -91,7 +91,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           </div>
           
           {/* Bottom Row - 3 Images */}
-          <div className="grid grid-cols-3 gap-0 space-x-0">
+          <div className="grid grid-cols-3">
             {bottomRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
@@ -133,14 +133,14 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         
         {/* Gradient Overlay - Bottom area for text */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[25%]"
+          className="absolute bottom-0 left-0 right-0 h-[57%]"
           style={{
             background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
           }}
         />
         
         {/* Content - Positioned in bottom area */}
-        <div className="absolute bottom-0 left-0 right-0 h-[25%] flex flex-col justify-start mt-5 p-3 sm:p-4">
+        <div className="absolute bottom-0 left-0 right-0 h-[57%] flex flex-col justify-center p-4 sm:p-6">
           {/* Category Badge */}
           <div className="mb-1">
             <span 
