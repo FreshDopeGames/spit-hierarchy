@@ -10,9 +10,7 @@ const HeroSection = () => {
     theme
   } = useEnhancedTheme();
   return <div className="text-center mb-8 sm:mb-12 px-2 sm:px-0">
-      <h2 style={{
-      color: theme.colors.primary
-    }} className="font-[var(--theme-font-display)] mb-4 tracking-wider text-3xl sm:text-3xl md:text-4xl leading-tight break-words max-w-full text-amber-500 lg:text-4xl">
+      <h2 className="font-ceviche text-primary mb-4 tracking-wider text-4xl sm:text-6xl leading-tight break-words max-w-full">
         FEATURED SLICK TALK
       </h2>
       {!user && <div className="mt-6">
