@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/seo/SEOHead";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import RapperAvatar from "@/components/RapperAvatar";
+
 const VSMatches = () => {
   const {
     data: vsMatches,
@@ -17,6 +18,7 @@ const VSMatches = () => {
   } = useVSMatches();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
+
   const filteredAndSortedMatches = vsMatches?.filter(match => match.title.toLowerCase().includes(searchTerm.toLowerCase()) || match.rapper_1.name.toLowerCase().includes(searchTerm.toLowerCase()) || match.rapper_2.name.toLowerCase().includes(searchTerm.toLowerCase()))?.sort((a, b) => {
     switch (sortBy) {
       case "newest":
@@ -29,7 +31,9 @@ const VSMatches = () => {
         return 0;
     }
   });
-  return <>
+
+  return (
+    <>
       <SEOHead title="VS Matches - Rap Battle Matchups" description="Discover head-to-head rapper matchups and vote for your favorites. Compare legends, rising stars, and iconic artists in epic VS battles." canonicalUrl="/vs" />
       
       <div className="min-h-screen bg-rap-dark">
@@ -71,7 +75,8 @@ const VSMatches = () => {
           </div>
 
           {/* VS Matches Grid */}
-          {isLoading ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({
             length: 6
           }).map((_, i) => <Card key={i} className="bg-rap-charcoal border-rap-burgundy/30">
@@ -88,14 +93,19 @@ const VSMatches = () => {
                     <Skeleton className="h-4 w-full bg-rap-smoke/20" />
                   </CardContent>
                 </Card>)}
-            </div> : filteredAndSortedMatches?.length === 0 ? <div className="text-center py-12">
+            </div>
+          ) : filteredAndSortedMatches?.length === 0 ? (
+            <div className="text-center py-12">
               <Swords className="w-16 h-16 text-rap-smoke mx-auto mb-4" />
               <h3 className="text-xl font-bold text-rap-platinum mb-2">No VS matches found</h3>
               <p className="text-rap-smoke">
                 {searchTerm ? "Try adjusting your search terms" : "Check back soon for epic matchups!"}
               </p>
-            </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredAndSortedMatches?.map(match => <Link key={match.id} to={`/vs/${match.slug}`}>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAndSortedMatches?.map(match => (
+                <Link key={match.id} to={`/vs/${match.slug}`}>
                   <Card className="border-4 border-primary bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] group-hover:border-[hsl(var(--theme-background))] transition-all duration-300 hover:shadow-lg group">
                     <CardHeader>
                       <h3 className="text-lg font-bold text-[hsl(var(--theme-textInverted))] group-hover:text-[hsl(var(--theme-background))] transition-colors">
@@ -142,10 +152,14 @@ const VSMatches = () => {
                       </div>
                     </CardContent>
                   </Card>
-                </Link>)}
-            </div>}
+                </Link>
+              ))}
+            </div>
+          )}
         </main>
       </div>
-    </>;
+    </>
+  );
 };
+
 export default VSMatches;
