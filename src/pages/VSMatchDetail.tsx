@@ -113,6 +113,10 @@ const VSMatchDetail = () => {
           ? 'bg-green-600 hover:bg-green-500 text-white' 
           : ''
         } font-bold transition-all duration-200 font-mogra text-lg`}
+        style={!hasVoted ? { 
+          background: 'linear-gradient(135deg, hsl(var(--theme-primary)) 0%, hsl(var(--theme-primaryLight)) 100%)',
+          color: 'hsl(var(--theme-background))'
+        } : {}}
         size={isMobile ? "sm" : "default"}
       >
         {hasVoted ? (
