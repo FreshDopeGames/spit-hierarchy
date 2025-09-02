@@ -168,19 +168,19 @@ const VSMatchDetail = () => {
           <div className="max-w-4xl mx-auto">
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-[var(--theme-textInverted)] text-gray-900 text-3xl md:text-4xl font-bold mb-4 font-mogra drop-shadow-lg">
+              <h1 className="text-black text-3xl md:text-4xl font-bold mb-4 font-mogra drop-shadow-lg">
                 {vsMatch!.title}
               </h1>
               {vsMatch!.description && (
-                <p className="text-[var(--theme-textInverted)]/80 text-gray-800 text-lg max-w-2xl mx-auto drop-shadow-md">
+                <p className="text-black/80 text-lg max-w-2xl mx-auto drop-shadow-md">
                   {vsMatch!.description}
                 </p>
               )}
               <div className="flex items-center justify-center gap-4 mt-4">
-                <Badge variant="outline" className="text-[var(--theme-textInverted)] text-gray-900 border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
+                <Badge variant="outline" className="text-black border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
                   {vsMatch!.total_votes} total votes
                 </Badge>
-                <Badge variant="outline" className="text-[var(--theme-textInverted)] text-gray-900 border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
+                <Badge variant="outline" className="text-black border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
                   {new Date(vsMatch!.created_at).toLocaleDateString()}
                 </Badge>
               </div>
