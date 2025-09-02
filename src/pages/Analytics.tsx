@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 import { BarChart3, User, Trophy, TrendingUp, Users, Music } from "lucide-react";
 import UserVotingDashboard from "@/components/analytics/UserVotingDashboard";
 import UserAchievements from "@/components/analytics/UserAchievements";
@@ -35,70 +35,70 @@ const Analytics = () => {
       />
       
       <div className="container mx-auto px-4 py-8 md:py-12">
-        <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
-          <TabsList className="grid w-full grid-cols-5 bg-[var(--theme-element-tabs-bg,var(--theme-surface))] border border-[var(--theme-element-tabs-border-color,var(--theme-border))] mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
-            <TabsTrigger 
+        <ThemedTabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
+          <ThemedTabsList className="grid w-full grid-cols-5 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
+            <ThemedTabsTrigger 
               value="platform" 
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Platform Analytics"
             >
               <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Platform</span>
-            </TabsTrigger>
-            <TabsTrigger 
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger 
               value="rapper-stats" 
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Rapper Statistics"
             >
               <Music className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Rappers</span>
-            </TabsTrigger>
-            <TabsTrigger 
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger 
               value="members" 
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Member Analytics"
             >
               <Users className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Members</span>
-            </TabsTrigger>
-            <TabsTrigger 
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger 
               value="achievements" 
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Awards and Achievements"
             >
               <Trophy className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Awards</span>
-            </TabsTrigger>
-            <TabsTrigger 
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger 
               value="stats" 
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-textMuted)] flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="My Personal Statistics"
             >
               <User className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">My Stats</span>
-            </TabsTrigger>
-          </TabsList>
+            </ThemedTabsTrigger>
+          </ThemedTabsList>
 
-          <TabsContent value="platform" className="space-y-6">
+          <ThemedTabsContent value="platform" className="space-y-6">
             <VotingAnalytics />
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="members" className="space-y-6">
+          <ThemedTabsContent value="members" className="space-y-6">
             <MemberAnalytics />
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="achievements" className="space-y-6">
+          <ThemedTabsContent value="achievements" className="space-y-6">
             <UserAchievements />
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="rapper-stats" className="space-y-6">
+          <ThemedTabsContent value="rapper-stats" className="space-y-6">
             <RapperStatsAnalytics />
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="stats" className="space-y-6">
+          <ThemedTabsContent value="stats" className="space-y-6">
             <UserVotingDashboard />
-          </TabsContent>
-        </Tabs>
+          </ThemedTabsContent>
+        </ThemedTabs>
       </div>
 
       <Footer />
