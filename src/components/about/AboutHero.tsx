@@ -1,9 +1,9 @@
 
 import React from "react";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 
 const AboutHero = () => {
-  const { theme } = useTheme();
+  const { theme } = useEnhancedTheme();
 
   return (
     <div className="text-center space-y-4 mb-12">

@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import NavigationSidebar from "./NavigationSidebar";
 
 interface InternalPageHeaderProps {
@@ -18,7 +18,7 @@ const InternalPageHeader = ({
   backLink = "/",
   backText = "Back Home"
 }: InternalPageHeaderProps) => {
-  const { theme } = useTheme();
+  const { theme } = useEnhancedTheme();
 
   return (
     <header 

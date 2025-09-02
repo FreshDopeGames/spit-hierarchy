@@ -1,13 +1,13 @@
 
 import React from 'react';
-import { useTheme } from '@/hooks/useTheme';
+import { useEnhancedTheme } from '@/hooks/useEnhancedTheme';
 
 interface BlogPageHeaderProps {
   title: string;
 }
 
 const BlogPageHeader = ({ title }: BlogPageHeaderProps) => {
-  const { theme } = useTheme();
+  const { theme } = useEnhancedTheme();
 
   return (
     <h1 

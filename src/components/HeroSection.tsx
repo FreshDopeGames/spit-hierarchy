@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { useAuth } from "@/hooks/useAuth";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 const HeroSection = () => {
   const {
     user
   } = useAuth();
   const {
     theme
-  } = useTheme();
+  } = useEnhancedTheme();
   return <div className="text-center mb-8 sm:mb-12 px-2 sm:px-0">
       <h2 style={{
       color: theme.colors.primary

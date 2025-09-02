@@ -1,5 +1,5 @@
 
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 
 interface RankingHeaderProps {
   title: string;
@@ -10,7 +10,7 @@ const RankingHeader = ({
   title,
   description
 }: RankingHeaderProps) => {
-  const { theme } = useTheme();
+  const { theme } = useEnhancedTheme();
 
   return (
     <div className="text-center mb-8 sm:mb-10 lg:mb-12">

@@ -1,5 +1,5 @@
 import { useFeaturedPolls } from "@/hooks/usePolls";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import PollWidget from "./PollWidget";
 const HomepagePoll = () => {
   const {
@@ -8,7 +8,7 @@ const HomepagePoll = () => {
   } = useFeaturedPolls();
   const {
     theme
-  } = useTheme();
+  } = useEnhancedTheme();
   if (isLoading || !polls || polls.length === 0) {
     return null;
   }

@@ -1,6 +1,6 @@
 
 import React from "react";
-import { useTheme } from "@/hooks/useTheme";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Palette, Type, Layout, Wand2 } from "lucide-react";
 import ThemeManagementHeader from "./theme/ThemeManagementHeader";
@@ -11,7 +11,7 @@ import ThemePreview from "./theme/ThemePreview";
 import EnhancedThemeManagement from "./theme/EnhancedThemeManagement";
 
 const ThemeManagement = () => {
-  const [useEnhancedTheme, setUseEnhancedTheme] = React.useState(true);
+  const [useEnhancedMode, setUseEnhancedMode] = React.useState(true);
   
   const {
     theme,
@@ -23,7 +23,7 @@ const ThemeManagement = () => {
     resetTheme,
     enterPreviewMode,
     exitPreviewMode
-  } = useTheme();
+  } = useEnhancedTheme();
 
   const handleColorChange = (colorKey: string, value: string) => {
     updateTheme({
@@ -43,7 +43,7 @@ const ThemeManagement = () => {
     });
   };
 
-  if (useEnhancedTheme) {
+  if (useEnhancedMode) {
     return <EnhancedThemeManagement />;
   }
 
@@ -58,7 +58,7 @@ const ThemeManagement = () => {
           </p>
         </div>
         <button
-          onClick={() => setUseEnhancedTheme(true)}
+          onClick={() => setUseEnhancedMode(true)}
           className="px-4 py-2 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-md hover:opacity-90 transition-opacity"
         >
           <Wand2 className="w-4 h-4 mr-2 inline" />
