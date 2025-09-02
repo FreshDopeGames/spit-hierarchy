@@ -49,16 +49,18 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         }}
       >
         {/* Rapper Mosaic Background - Top portion of card */}
-        <div className="absolute inset-0 h-[60%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
+        <div 
+          className="absolute inset-0 h-[75%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500 overflow-hidden"
+          style={{
+            border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
+          }}
+        >
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2 gap-0">
             {topRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
                 className="relative aspect-[3/2] overflow-hidden"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
-                }}
               >
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
@@ -77,9 +79,6 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
               <div 
                 key={`top-placeholder-${index}`} 
                 className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
-                }}
               >
                 <img 
                   src={getOptimizedPlaceholder('medium')}
@@ -96,9 +95,6 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
               <div 
                 key={item.rapper.id} 
                 className="relative aspect-[3/2] overflow-hidden"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
-                }}
               >
                 <img 
                   src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
@@ -117,9 +113,6 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
               <div 
                 key={`bottom-placeholder-${index}`} 
                 className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
-                }}
               >
                 <img 
                   src={getOptimizedPlaceholder('medium')}
