@@ -1,31 +1,25 @@
-
 import { useMemberStatus } from "@/hooks/useMemberStatus";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { TrendingUp, Vote, Trophy, Calendar, MessageCircle } from "lucide-react";
-
 const UserVotingDashboard = () => {
-  const { memberStats, currentStatus } = useMemberStatus();
-
+  const {
+    memberStats,
+    currentStatus
+  } = useMemberStatus();
   if (!memberStats) {
-    return (
-      <div className="space-y-4 sm:space-y-6">
+    return <div className="space-y-4 sm:space-y-6">
         <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-primary)] mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
           My Stats
         </h3>
         <div className="animate-pulse space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
-            {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-24 bg-[var(--theme-surface)]/50 rounded" />
-            ))}
+            {[...Array(5)].map((_, i) => <div key={i} className="h-24 bg-[var(--theme-surface)]/50 rounded" />)}
           </div>
         </div>
-      </div>
-    );
+      </div>;
   }
-
-  return (
-    <div className="space-y-4 sm:space-y-6">
-      <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-primary)] mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+  return <div className="space-y-4 sm:space-y-6">
+      <h3 className="font-[var(--theme-fontPrimary)] text-primary mb-3 sm:mb-4 font-thin text-4xl sm:text-4xl">
         My Stats
       </h3>
 
@@ -91,8 +85,6 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default UserVotingDashboard;
