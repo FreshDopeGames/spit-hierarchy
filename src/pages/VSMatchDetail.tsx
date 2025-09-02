@@ -162,9 +162,7 @@ const VSMatchDetail = () => {
       <HeaderNavigation isScrolled={isScrolled} />
       
       <div className="min-h-screen pt-20" style={{ 
-        background: 'var(--theme-gradient-primary-gradient)',
-        // Fallback in case CSS variable isn't loaded
-        backgroundImage: 'linear-gradient(135deg, #D4AF37 0%, #E8C547 100%)'
+        background: 'linear-gradient(135deg, #e59517 0%, #c1740c 100%)'
       }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
