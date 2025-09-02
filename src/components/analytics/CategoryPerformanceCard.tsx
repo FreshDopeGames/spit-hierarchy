@@ -1,14 +1,11 @@
-
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { TrendingUp } from "lucide-react";
 import { useIsMobile } from "@/hooks/use-mobile";
-
 const CategoryPerformanceCard = () => {
   const isMobile = useIsMobile();
-  
   const {
     data: categoryAnalytics,
     isLoading
@@ -24,7 +21,6 @@ const CategoryPerformanceCard = () => {
       return data?.filter(category => category.name !== 'Overall') || [];
     }
   });
-
   if (isLoading) {
     return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20 animate-pulse">
         <CardContent className="p-6">
@@ -32,10 +28,8 @@ const CategoryPerformanceCard = () => {
         </CardContent>
       </Card>;
   }
-
   if (!categoryAnalytics || categoryAnalytics.length === 0) return null;
-
-  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20">
+  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <CardHeader>
         <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-3xl font-extrabold">
           <TrendingUp className="w-5 h-5" />
@@ -44,30 +38,16 @@ const CategoryPerformanceCard = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {categoryAnalytics.map((category: any) => (
-            <div 
-              key={category.id} 
-              className={`p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg ${
-                isMobile 
-                  ? 'flex flex-col space-y-3' 
-                  : 'flex items-center justify-between'
-              }`}
-            >
+          {categoryAnalytics.map((category: any) => <div key={category.id} className={`p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg ${isMobile ? 'flex flex-col space-y-3' : 'flex items-center justify-between'}`}>
               <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
-                <h4 className={`text-[var(--theme-text)] font-medium font-[var(--theme-font-body)] text-3xl ${
-                  isMobile ? 'text-center' : 'text-left'
-                }`}>
+                <h4 className={`text-[var(--theme-text)] font-medium font-[var(--theme-font-body)] text-3xl ${isMobile ? 'text-center' : 'text-left'}`}>
                   {category.name}
                 </h4>
-                <p className={`text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base ${
-                  isMobile ? 'text-center' : 'text-left'
-                }`}>
+                <p className={`text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base ${isMobile ? 'text-center' : 'text-left'}`}>
                   {category.description}
                 </p>
               </div>
-              <div className={`flex items-center gap-4 ${
-                isMobile ? 'justify-center' : ''
-              }`}>
+              <div className={`flex items-center gap-4 ${isMobile ? 'justify-center' : ''}`}>
                 <div className="text-center">
                   <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)] text-2xl">{category.total_votes}</p>
                   <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Votes</p>
@@ -83,11 +63,9 @@ const CategoryPerformanceCard = () => {
                   <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Avg.</p>
                 </div>
               </div>
-            </div>
-          ))}
+            </div>)}
         </div>
       </CardContent>
     </Card>;
 };
-
 export default CategoryPerformanceCard;

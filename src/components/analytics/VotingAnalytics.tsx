@@ -1,12 +1,9 @@
-
 import GlobalStatsCards from "./GlobalStatsCards";
 import CategoryPerformanceCard from "./CategoryPerformanceCard";
 import TopVotedRappersCard from "./TopVotedRappersCard";
-
 const VotingAnalytics = () => {
-  return (
-    <div className="space-y-4 sm:space-y-6">
-      <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-primary)] mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+  return <div className="space-y-4 sm:space-y-6">
+      <h3 className="font-[var(--theme-fontPrimary)] text-primary mb-3 sm:mb-4 font-thin text-4xl sm:text-4xl">
         Platform Analytics
       </h3>
 
@@ -18,8 +15,6 @@ const VotingAnalytics = () => {
 
       {/* Top Voted Rappers */}
       <TopVotedRappersCard />
-    </div>
-  );
+    </div>;
 };
-
 export default VotingAnalytics;
