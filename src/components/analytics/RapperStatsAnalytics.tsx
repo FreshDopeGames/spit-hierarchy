@@ -8,7 +8,7 @@ import TopRappersByCategoryCard from "./TopRappersByCategoryCard";
 const RapperStatsAnalytics = () => {
   return (
     <div className="space-y-4 sm:space-y-6">
-      <h3 className="font-ceviche text-rap-gold mb-3 sm:mb-4 font-thin sm:text-6xl text-4xl">
+      <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl">
         Rapper Statistics
       </h3>
 
