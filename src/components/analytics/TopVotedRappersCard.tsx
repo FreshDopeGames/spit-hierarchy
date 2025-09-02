@@ -37,7 +37,7 @@ const TopVotedRappersCard = () => {
         <div className="space-y-3">
           {topRappers.map((rapper: any, index: number) => <div key={rapper.id} className="flex items-center justify-between p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-secondary)] rounded-full flex items-center justify-center text-[var(--theme-background)] font-bold text-sm font-[var(--theme-font-heading)]">
+                <div className="w-8 h-8 bg-[var(--theme-primary)] rounded-full flex items-center justify-center text-black font-bold text-sm font-[var(--theme-font-heading)]">
                   #{index + 1}
                 </div>
                 <div>
