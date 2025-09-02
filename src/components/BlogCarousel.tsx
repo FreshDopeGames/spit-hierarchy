@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import useEmblaCarousel from 'embla-carousel-react';
+
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -15,6 +16,7 @@ const BlogCarousel = () => {
     dragFree: false,
     containScroll: 'trimSnaps'
   });
+
   const {
     data: featuredPosts = [],
     isLoading
@@ -42,6 +44,7 @@ const BlogCarousel = () => {
     // 10 minutes - blog posts don't change frequently
     refetchOnWindowFocus: false
   });
+
   const goToPrevious = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev();
@@ -49,6 +52,7 @@ const BlogCarousel = () => {
       setCurrentIndex(prevIndex => prevIndex === 0 ? featuredPosts.length - 1 : prevIndex - 1);
     }
   }, [emblaApi, featuredPosts.length]);
+
   const goToNext = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollNext();
@@ -56,6 +60,7 @@ const BlogCarousel = () => {
       setCurrentIndex(prevIndex => prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1);
     }
   }, [emblaApi, featuredPosts.length]);
+
   const scrollTo = useCallback((index: number) => {
     if (emblaApi) {
       emblaApi.scrollTo(index);
@@ -63,10 +68,12 @@ const BlogCarousel = () => {
       setCurrentIndex(index);
     }
   }, [emblaApi]);
+
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrentIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
+
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
@@ -75,6 +82,7 @@ const BlogCarousel = () => {
       emblaApi.off('select', onSelect);
     };
   }, [emblaApi, onSelect]);
+
   const getImageData = (post: any) => {
     if (!post.featured_image_url) {
       return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=400&fit=crop";
@@ -85,7 +93,9 @@ const BlogCarousel = () => {
       return post.featured_image_url;
     }
   };
+
   if (isLoading || featuredPosts.length === 0) return null;
+
   return <section className="mb-16">
       {/* Embla carousel container */}
       <div className="flex justify-center">
@@ -151,13 +161,15 @@ const BlogCarousel = () => {
       {/* More Articles Button - moved below carousel */}
       <div className="text-center mt-6">
         <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
-          <Button variant="secondary" size="sm" style={{
-          background: 'var(--theme-gradient-primary-gradient)'
-        }} className="bg-[var(--theme-primary-gradient)] hover:opacity-90 font-mogra text-xl bg-yellow-600 hover:bg-yellow-500 text-black rounded-md">
+          <Button 
+            size="lg" 
+            className="bg-gradient-to-r from-[hsl(var(--theme-burgundy))] via-[hsl(var(--theme-gold))] to-[hsl(var(--theme-forest))] hover:from-[hsl(var(--theme-burgundy-light))] hover:via-[hsl(var(--theme-gold-light))] hover:to-[hsl(var(--theme-forest-light))] font-mogra text-xl shadow-xl shadow-[hsl(var(--theme-gold))]/40 border border-[hsl(var(--theme-gold))]/30 text-black"
+          >
             More Slick Talk
           </Button>
         </Link>
       </div>
     </section>;
 };
+
 export default BlogCarousel;
