@@ -4,13 +4,70 @@ import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader 
 import { Badge } from "@/components/ui/badge";
 import { Crown, Users, Eye, Star, Calendar, User } from "lucide-react";
 import { UnifiedRanking } from "@/types/rankings";
-import RapperMosaic from "@/components/ui/RapperMosaic";
 import { useState, useEffect, useRef } from "react";
+import { useRapperImage } from "@/hooks/useImageStyle";
 
 interface RankingCardProps {
   ranking: UnifiedRanking;
   isUserRanking?: boolean;
 }
+
+interface RapperAvatarProps {
+  rapper: {
+    id: string;
+    name: string;
+    image_url?: string;
+  };
+  size: 'large' | 'small';
+  position: number;
+}
+
+const RapperAvatar = ({ rapper, size, position }: RapperAvatarProps) => {
+  const { data: imageUrl, isLoading } = useRapperImage(rapper.id, size === 'large' ? 'medium' : 'thumb');
+  const displayImage = imageUrl || rapper.image_url;
+  
+  const sizeClasses = size === 'large' ? 'w-12 h-12' : 'w-8 h-8';
+  const positionClasses = size === 'large' 
+    ? 'absolute -top-2 -left-2 w-6 h-6 text-xs' 
+    : 'absolute -top-1 -left-1 w-5 h-5 text-xs';
+
+  return (
+    <div className="relative">
+      <div className="bg-[var(--theme-surface)]/50 border border-[var(--theme-border)]/30 rounded-lg p-3 hover:bg-[var(--theme-surface)]/70 transition-colors">
+        {/* Position indicator */}
+        <div className={`${positionClasses} bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full flex items-center justify-center font-bold font-[var(--theme-fontSecondary)] z-10`}>
+          {position}
+        </div>
+        <div className="flex flex-col items-center space-y-2">
+          <div className={`${sizeClasses} bg-[var(--theme-accent)]/20 rounded-full flex items-center justify-center border border-[var(--theme-border)]/30 overflow-hidden`}>
+            {isLoading ? (
+              <div className={`${sizeClasses} bg-[var(--theme-surface)] animate-pulse rounded-full`} />
+            ) : displayImage ? (
+              <img 
+                src={displayImage}
+                alt={rapper.name}
+                className={`${sizeClasses} object-cover rounded-full`}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.style.display = 'none';
+                  target.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+            ) : null}
+            <span className={`text-xs font-bold text-[var(--theme-accent)] ${displayImage && !isLoading ? 'hidden' : ''}`}>
+              {rapper.name.charAt(0)}
+            </span>
+          </div>
+          <div className="text-center">
+            <p className={`text-xs font-medium text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate ${size === 'large' ? 'max-w-16' : 'max-w-12'}`}>
+              {rapper.name}
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const RankingCard = ({
   ranking,
@@ -95,26 +152,12 @@ const RankingCard = ({
                 {ranking.rappers.slice(0, 2).length > 0 && (
                   <div className="grid grid-cols-2 gap-3">
                     {ranking.rappers.slice(0, 2).map((rapper, index) => (
-                      <div key={`${rapper.rank}-${rapper.name}`} className="relative">
-                        <div className="bg-[var(--theme-surface)]/50 border border-[var(--theme-border)]/30 rounded-lg p-3 hover:bg-[var(--theme-surface)]/70 transition-colors">
-                          {/* Position indicator */}
-                          <div className="absolute -top-2 -left-2 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold font-[var(--theme-fontSecondary)] z-10">
-                            {index + 1}
-                          </div>
-                          <div className="flex flex-col items-center space-y-2">
-                            <div className="w-12 h-12 bg-[var(--theme-accent)]/20 rounded-full flex items-center justify-center border border-[var(--theme-border)]/30">
-                              <span className="text-xs font-bold text-[var(--theme-accent)]">
-                                {rapper.name.charAt(0)}
-                              </span>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-xs font-medium text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate max-w-16">
-                                {rapper.name}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <RapperAvatar
+                        key={`${rapper.rank}-${rapper.name}`}
+                        rapper={rapper}
+                        size="large"
+                        position={index + 1}
+                      />
                     ))}
                   </div>
                 )}
@@ -123,26 +166,12 @@ const RankingCard = ({
                 {ranking.rappers.slice(2, 5).length > 0 && (
                   <div className="grid grid-cols-3 gap-2">
                     {ranking.rappers.slice(2, 5).map((rapper, index) => (
-                      <div key={`${rapper.rank}-${rapper.name}`} className="relative">
-                        <div className="bg-[var(--theme-surface)]/50 border border-[var(--theme-border)]/30 rounded-lg p-2 hover:bg-[var(--theme-surface)]/70 transition-colors">
-                          {/* Position indicator */}
-                          <div className="absolute -top-1 -left-1 bg-[var(--theme-primary)] text-[var(--theme-background)] rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold font-[var(--theme-fontSecondary)] z-10">
-                            {index + 3}
-                          </div>
-                          <div className="flex flex-col items-center space-y-1">
-                            <div className="w-8 h-8 bg-[var(--theme-accent)]/20 rounded-full flex items-center justify-center border border-[var(--theme-border)]/30">
-                              <span className="text-xs font-bold text-[var(--theme-accent)]">
-                                {rapper.name.charAt(0)}
-                              </span>
-                            </div>
-                            <div className="text-center">
-                              <p className="text-xs font-medium text-[var(--theme-text)] font-[var(--theme-fontSecondary)] truncate max-w-12">
-                                {rapper.name}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <RapperAvatar
+                        key={`${rapper.rank}-${rapper.name}`}
+                        rapper={rapper}
+                        size="small"
+                        position={index + 3}
+                      />
                     ))}
                   </div>
                 )}

@@ -2705,6 +2705,8 @@ export type Database = {
         Returns: {
           item_position: number
           item_reason: string
+          rapper_id: string
+          rapper_image_url: string
           rapper_name: string
         }[]
       }
