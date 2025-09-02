@@ -15,9 +15,9 @@ const HomepagePoll = () => {
   return <section className="px-6 py-[40px]">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
-          <h2 className="font-ceviche text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 tracking-wider leading-tight" style={{
+          <h2 style={{
           color: theme.colors.primary
-        }}>
+        }} className="font-ceviche text-3xl sm:text-4xl md:text-5xl lg:text-6xl mb-4 tracking-wider leading-tight text-primary">
             Community Polls
           </h2>
           <p className="text-muted-foreground">
