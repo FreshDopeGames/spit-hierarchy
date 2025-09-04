@@ -1,16 +1,11 @@
 
-/* SOCIAL_AUTH_DISABLED - This component is temporarily disabled but preserved for future restoration
-   See docs/SOCIAL_AUTH_RESTORATION.md for re-integration instructions */
-
-/* 
 import { Button } from "@/components/ui/button";
 
 interface SocialAuthButtonsProps {
   socialLoading: string | null;
-  onSocialAuth: (provider: 'google' | 'facebook' | 'twitter') => void;
+  onSocialAuth: (provider: 'google') => void;
 }
 
-// FUTURE_USE: This component structure is preserved for when social auth is re-enabled
 const SocialAuthButtons = ({ socialLoading, onSocialAuth }: SocialAuthButtonsProps) => {
   return (
     <div className="space-y-3">
@@ -18,7 +13,7 @@ const SocialAuthButtons = ({ socialLoading, onSocialAuth }: SocialAuthButtonsPro
         onClick={() => onSocialAuth('google')} 
         disabled={socialLoading === 'google'} 
         variant="outline" 
-        className="w-full bg-rap-carbon/50 border-rap-silver/30 text-rap-silver hover:bg-rap-burgundy/20 font-merienda"
+        className="w-full bg-[var(--theme-element-button-secondary-bg,var(--theme-surface))] border-[var(--theme-element-button-secondary-border-color,var(--theme-border))] text-[var(--theme-element-button-secondary-text-color,var(--theme-text))] hover:bg-[var(--theme-element-button-secondary-hover-bg,var(--theme-surface-hover))] font-merienda"
       >
         {socialLoading === 'google' ? "Connecting..." : (
           <>
@@ -32,54 +27,8 @@ const SocialAuthButtons = ({ socialLoading, onSocialAuth }: SocialAuthButtonsPro
           </>
         )}
       </Button>
-
-      <Button 
-        onClick={() => onSocialAuth('facebook')} 
-        disabled={socialLoading === 'facebook'} 
-        variant="outline" 
-        className="w-full bg-blue-600/20 border-blue-500/30 text-rap-silver hover:bg-blue-600/30 font-merienda"
-      >
-        {socialLoading === 'facebook' ? "Connecting..." : (
-          <>
-            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z" />
-            </svg>
-            Continue with Facebook
-          </>
-        )}
-      </Button>
-
-      <Button 
-        onClick={() => onSocialAuth('twitter')} 
-        disabled={socialLoading === 'twitter'} 
-        variant="outline" 
-        className="w-full bg-rap-carbon/20 border-rap-smoke/30 text-rap-silver hover:bg-rap-carbon/30 font-merienda"
-      >
-        {socialLoading === 'twitter' ? "Connecting..." : (
-          <>
-            <svg className="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-            </svg>
-            Continue with X
-          </>
-        )}
-      </Button>
     </div>
   );
 };
 
 export default SocialAuthButtons;
-SOCIAL_AUTH_DISABLED */
-
-// FUTURE_USE: SocialAuthButtonsProps interface preserved for restoration
-export interface SocialAuthButtonsProps {
-  socialLoading: string | null;
-  onSocialAuth: (provider: 'google' | 'facebook' | 'twitter') => void;
-}
-
-// Temporary placeholder component - remove this when restoring social auth
-const SocialAuthButtonsDisabled = () => {
-  return null;
-};
-
-export default SocialAuthButtonsDisabled;
