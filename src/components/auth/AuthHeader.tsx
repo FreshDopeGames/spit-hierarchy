@@ -16,7 +16,7 @@ const AuthHeader = ({ isLogin }: AuthHeaderProps) => {
             className="w-8 h-8 object-contain"
           />
         </div>
-        <h1 className="font-ceviche bg-gradient-to-r from-rap-silver to-rap-platinum bg-clip-text text-transparent text-3xl font-normal">
+        <h1 className="font-ceviche text-3xl font-normal" style={{ color: '#e39516' }}>
           Spit Hierarchy
         </h1>
       </div>
