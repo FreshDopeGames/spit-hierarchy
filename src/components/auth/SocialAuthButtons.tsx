@@ -13,7 +13,7 @@ const SocialAuthButtons = ({ socialLoading, onSocialAuth }: SocialAuthButtonsPro
         onClick={() => onSocialAuth('google')} 
         disabled={socialLoading === 'google'} 
         variant="outline" 
-        className="w-full bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary-dark)] text-black border-none hover:from-[var(--theme-primary-dark)] hover:to-[var(--theme-primary)] font-merienda"
+        className="w-full bg-gradient-to-r from-[#e39516] to-[#c0720c] text-black border-none hover:from-[#c0720c] hover:to-[#e39516] font-merienda"
       >
         {socialLoading === 'google' ? "Connecting..." : (
           <>
