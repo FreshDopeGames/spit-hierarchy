@@ -111,6 +111,7 @@ const Auth = () => {
           <AuthHeader isLogin={isLogin} />
           
           <CardContent className="space-y-6">
+            {/* SOCIAL_AUTH_DISABLED - Temporarily hidden Google Sign-In
             <SocialAuthButtons 
               socialLoading={socialLoading}
               onSocialAuth={handleSocialAuth}
@@ -123,6 +124,7 @@ const Auth = () => {
               </span>
               <div className="flex-grow border-t border-[var(--theme-element-divider-color,var(--theme-border))]"></div>
             </div>
+            SOCIAL_AUTH_DISABLED */}
 
             <AuthForm
               isLogin={isLogin}
