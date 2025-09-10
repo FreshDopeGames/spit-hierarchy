@@ -8,7 +8,7 @@ const AuthToggle = ({
   onToggle
 }: AuthToggleProps) => {
   return <div className="text-center space-y-4">
-      <ThemedButton onClick={onToggle} variant={isLogin ? "gradient" : "outline"} size="lg" className="w-full font-merienda font-semibold text-black">
+      <ThemedButton onClick={onToggle} variant="default" size="lg" className="w-full font-merienda font-semibold">
         {isLogin ? "New to the game? Join the Culture" : "Already in the crew? Sign In"}
       </ThemedButton>
       
