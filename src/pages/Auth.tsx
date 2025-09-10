@@ -14,7 +14,7 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [username, setUsername] = useState("");
-  const [fullName, setFullName] = useState("");
+  
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -79,8 +79,7 @@ const Auth = () => {
           options: {
             emailRedirectTo: `${window.location.origin}/`,
             data: {
-              username,
-              full_name: fullName
+              username
             }
           }
         });
@@ -130,12 +129,10 @@ const Auth = () => {
               email={email}
               password={password}
               username={username}
-              fullName={fullName}
               loading={loading}
               onEmailChange={setEmail}
               onPasswordChange={setPassword}
               onUsernameChange={setUsername}
-              onFullNameChange={setFullName}
               onSubmit={handleAuth}
             />
             

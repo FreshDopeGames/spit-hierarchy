@@ -12,12 +12,10 @@ interface AuthFormProps {
   email: string;
   password: string;
   username: string;
-  fullName: string;
   loading: boolean;
   onEmailChange: (email: string) => void;
   onPasswordChange: (password: string) => void;
   onUsernameChange: (username: string) => void;
-  onFullNameChange: (fullName: string) => void;
   onSubmit: (e: React.FormEvent) => void;
 }
 
@@ -26,12 +24,10 @@ const AuthForm = ({
   email,
   password,
   username,
-  fullName,
   loading,
   onEmailChange,
   onPasswordChange,
   onUsernameChange,
-  onFullNameChange,
   onSubmit
 }: AuthFormProps) => {
   const [validationErrors, setValidationErrors] = useState<string[]>([]);
@@ -109,10 +105,6 @@ const AuthForm = ({
     }
   };
 
-  const handleFullNameChange = (value: string) => {
-    const sanitized = sanitizeInput(value);
-    onFullNameChange(sanitized);
-  };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -176,21 +168,6 @@ const AuthForm = ({
             </div>
           </div>
           
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-[var(--theme-text)] font-[var(--theme-font-body)]">Full Name</Label>
-            <div className="relative font-[var(--theme-font-body)] text-[var(--theme-primary)]">
-              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 w-4 h-4" />
-              <Input 
-                id="fullName" 
-                type="text" 
-                placeholder="Enter your full name" 
-                value={fullName} 
-                onChange={(e) => handleFullNameChange(e.target.value)} 
-                maxLength={100}
-                className="pl-10 bg-white border-[var(--theme-border)]/30 text-black placeholder-gray-500 focus:border-[var(--theme-secondary)] font-[var(--theme-font-body)]" 
-              />
-            </div>
-          </div>
         </>
       )}
       
