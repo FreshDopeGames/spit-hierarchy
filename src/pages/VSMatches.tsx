@@ -1,5 +1,4 @@
 import { useState } from "react";
-import HeaderNavigation from "@/components/HeaderNavigation";
 import { useVSMatches } from "@/hooks/useVSMatches";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,13 +36,17 @@ const VSMatches = () => {
     <>
       <SEOHead title="VS Matches - Rap Battle Matchups" description="Discover head-to-head rapper matchups and vote for your favorites. Compare legends, rising stars, and iconic artists in epic VS battles." canonicalUrl="/vs" />
       
-      <div className="min-h-screen bg-rap-dark">
-        <InternalPageHeader title="VS Matches" subtitle="Head-to-head rapper matchups - vote for your favorites" />
-
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-[var(--theme-textLight)] text-white text-4xl md:text-5xl font-bold text-center mb-8 font-mogra">
+      <HeaderNavigation isScrolled={false} />
+      
+      <div className="max-w-7xl mx-auto pt-20 px-4 pb-12">
+        {/* Page Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-6xl md:text-8xl font-ceviche text-rap-gold mb-4 lg:text-6xl text-primary ">
             VS
           </h1>
+          <p className="text-lg text-rap-platinum font-merienda max-w-3xl mx-auto">
+            Who ya got?
+          </p>
         </div>
 
         <main className="container mx-auto px-4 py-8">
