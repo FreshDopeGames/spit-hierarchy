@@ -31,9 +31,9 @@ const RankingItemCard = ({
 
   const getCardStyling = () => {
     if (isTopFive) {
-      return "bg-rap-carbon/50 border-rap-gold/40 shadow-xl hover:bg-rap-carbon/70 hover:shadow-2xl hover:border-rap-gold/60";
+      return "bg-black border-rap-gold/40 shadow-xl hover:bg-black/90 hover:shadow-2xl hover:border-rap-gold/60";
     }
-    return "bg-rap-carbon/30 border-rap-platinum/30 hover:bg-rap-carbon/40 hover:border-rap-platinum/40";
+    return "bg-black border-rap-platinum/30 hover:bg-black/90 hover:border-rap-platinum/40";
   };
 
   const getCardHeight = () => {

@@ -92,7 +92,7 @@ const VoteButton = ({
     if (isPending) {
       return 'bg-yellow-600 hover:bg-yellow-600 text-[var(--theme-textLight)]';
     }
-    return 'bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryLight)] text-[var(--theme-background)]';
+    return 'bg-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primaryLight))] text-[hsl(var(--theme-textInverted))]';
   };
 
   const renderButtonContent = () => {

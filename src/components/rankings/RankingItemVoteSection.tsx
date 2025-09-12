@@ -57,7 +57,7 @@ const RankingItemVoteSection = ({
       <VoteButton
         onVote={() => onVote(rapperName || '')}
         disabled={!userLoggedIn}
-        className={`${isTopFive ? 'bg-rap-gold hover:bg-rap-gold-light text-rap-carbon' : 'bg-rap-gold/80 hover:bg-rap-gold text-rap-carbon'} ${getVoteButtonSizing()} ${getVoteButtonWidth()} transition-all duration-200`}
+        className={`${getVoteButtonSizing()} ${getVoteButtonWidth()} transition-all duration-200`}
         rankingId={rankingId}
         rapperId={rapperId}
         showWeightedVoting={true}

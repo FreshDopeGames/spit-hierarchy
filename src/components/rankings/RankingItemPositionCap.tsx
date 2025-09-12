@@ -1,6 +1,7 @@
 
 import React from "react";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 
 interface RankingItemPositionCapProps {
   position: number;
@@ -11,10 +12,11 @@ interface RankingItemPositionCapProps {
 
 const RankingItemPositionCap = ({ position, isTopFive, voteCount, visualRank }: RankingItemPositionCapProps) => {
   const isMobile = useIsMobile();
+  const { theme } = useEnhancedTheme();
 
   const getPositionGradient = (position: number) => {
     if (position <= 5) {
-      return "bg-gradient-to-br from-rap-gold-dark via-rap-gold to-rap-gold-light";
+      return "bg-gradient-to-br from-[hsl(var(--theme-primaryDark))] via-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryLight))]";
     }
     return "bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400";
   };
