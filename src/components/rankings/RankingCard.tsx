@@ -51,7 +51,7 @@ const RankingCard = ({
             {topRowRappers.map((rapper) => (
               <div 
                 key={rapper.id} 
-                className="relative aspect-[3/2] overflow-hidden"
+                className="relative aspect-[4/3] overflow-hidden"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
@@ -71,7 +71,7 @@ const RankingCard = ({
             {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
               <div 
                 key={`top-placeholder-${index}`} 
-                className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
@@ -91,7 +91,7 @@ const RankingCard = ({
             {bottomRowRappers.map((rapper) => (
               <div 
                 key={rapper.id} 
-                className="relative aspect-[3/2] overflow-hidden"
+                className="relative aspect-[4/3] overflow-hidden"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
@@ -111,7 +111,7 @@ const RankingCard = ({
             {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
               <div 
                 key={`bottom-placeholder-${index}`} 
-                className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}

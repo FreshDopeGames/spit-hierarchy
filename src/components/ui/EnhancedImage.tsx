@@ -26,7 +26,7 @@ const EnhancedImage: React.FC<EnhancedImageProps> = ({
   // Enhanced CSS classes for optimal image rendering
   const imageClasses = cn(
     // Base image styling
-    "w-full h-full object-cover",
+    "w-full h-full object-cover object-top",
     // Image rendering optimizations
     "[image-rendering:high-quality]",
     "[image-rendering:-webkit-optimize-contrast]", 

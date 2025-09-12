@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { TrendingUp, Users, Award } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
+import EnhancedImage from "@/components/ui/EnhancedImage";
 
 type Rapper = Tables<"rappers">;
 type OfficialRanking = Tables<"official_rankings">;
@@ -55,19 +56,18 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             {topRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
-                className="relative aspect-[3/2] overflow-hidden"
+                className="relative aspect-[4/3] overflow-hidden"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={item.rapper.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  size="thumb"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder('medium');
+                    target.src = getOptimizedPlaceholder('thumb');
                   }}
                 />
               </div>
@@ -76,15 +76,16 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
               <div 
                 key={`top-placeholder-${index}`} 
-                className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={getOptimizedPlaceholder('thumb')}
                   alt="Placeholder"
-                  className="w-full h-full object-cover opacity-30"
+                  className="opacity-30"
+                  size="thumb"
                 />
               </div>
             ))}
@@ -95,19 +96,18 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             {bottomRowRappers.map((item, index) => (
               <div 
                 key={item.rapper.id} 
-                className="relative aspect-[3/2] overflow-hidden"
+                className="relative aspect-[4/3] overflow-hidden"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={item.rapper.image_url || getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={item.rapper.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  size="thumb"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder('medium');
+                    target.src = getOptimizedPlaceholder('thumb');
                   }}
                 />
               </div>
@@ -116,15 +116,16 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
             {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
               <div 
                 key={`bottom-placeholder-${index}`} 
-                className="relative aspect-[3/2] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                 style={{
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={getOptimizedPlaceholder('thumb')}
                   alt="Placeholder"
-                  className="w-full h-full object-cover opacity-30"
+                  className="opacity-30"
+                  size="thumb"
                 />
               </div>
             ))}
