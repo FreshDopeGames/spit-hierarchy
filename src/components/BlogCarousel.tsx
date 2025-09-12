@@ -49,6 +49,20 @@ const BlogCarousel = () => {
     refetchOnWindowFocus: false
   });
 
+  const autoRotateToNext = useCallback(() => {
+    if (emblaApi) {
+      emblaApi.scrollNext();
+    } else {
+      setCurrentIndex(prevIndex => prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1);
+    }
+    // Reset progress bar after auto-rotation
+    setTimeout(() => {
+      progressKeyRef.current += 1;
+      setIsProgressActive(false);
+      setTimeout(() => setIsProgressActive(true), 50);
+    }, 100);
+  }, [emblaApi, featuredPosts.length]);
+
   const resetAutoRotate = useCallback(() => {
     if (autoRotateIntervalRef.current) {
       clearInterval(autoRotateIntervalRef.current);
@@ -58,11 +72,9 @@ const BlogCarousel = () => {
     setTimeout(() => setIsProgressActive(true), 50);
     
     if (!isPaused && featuredPosts.length > 1) {
-      autoRotateIntervalRef.current = setInterval(() => {
-        goToNext();
-      }, 8000);
+      autoRotateIntervalRef.current = setInterval(autoRotateToNext, 8000);
     }
-  }, [isPaused, featuredPosts.length]);
+  }, [isPaused, featuredPosts.length, autoRotateToNext]);
 
   const goToPrevious = useCallback(() => {
     if (emblaApi) {
