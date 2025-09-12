@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 import { Trophy, Users, Plus } from "lucide-react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
@@ -34,18 +34,24 @@ const Rankings = () => {
         </div>
 
         {/* Tabs Navigation */}
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-            <TabsList className="grid w-full sm:w-auto grid-cols-2 bg-black/50 border border-rap-gold/20">
-              <TabsTrigger value="official" className="data-[state=active]:bg-rap-gold data-[state=active]:text-rap-carbon font-mogra">
+            <ThemedTabsList className="grid w-full sm:w-auto grid-cols-2 bg-black/50 border border-[hsl(var(--theme-primary))]/20">
+              <ThemedTabsTrigger 
+                value="official" 
+                className="data-[state=active]:bg-[hsl(var(--theme-primary))] data-[state=active]:text-[hsl(var(--theme-textInverted))] data-[state=active]:shadow-md data-[state=active]:border-[hsl(var(--theme-primary))] font-mogra transition-all duration-200"
+              >
                 <Trophy className="w-4 h-4 mr-2" />
                 Official Rankings
-              </TabsTrigger>
-              <TabsTrigger value="community" className="data-[state=active]:bg-rap-burgundy data-[state=active]:text-white font-mogra">
+              </ThemedTabsTrigger>
+              <ThemedTabsTrigger 
+                value="community" 
+                className="data-[state=active]:bg-[hsl(var(--theme-primary))] data-[state=active]:text-[hsl(var(--theme-textInverted))] data-[state=active]:shadow-md data-[state=active]:border-[hsl(var(--theme-primary))] font-mogra transition-all duration-200"
+              >
                 <Users className="w-4 h-4 mr-2" />
                 Community Rankings
-              </TabsTrigger>
-            </TabsList>
+              </ThemedTabsTrigger>
+            </ThemedTabsList>
 
             {/* Create Ranking Button - Only show for authenticated users on community tab */}
             {user && activeTab === "community" && <CreateRankingDialog>
@@ -57,18 +63,18 @@ const Rankings = () => {
           </div>
 
           {/* Tab Content */}
-          <TabsContent value="official" className="mt-0">
+          <ThemedTabsContent value="official" className="mt-0">
             {loading ? <div className="text-center py-8">
                 <p className="text-rap-platinum font-merienda">
                   Loading official rankings...
                 </p>
               </div> : <OfficialRankingsSection rankings={officialRankings} />}
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="community" className="mt-0">
+          <ThemedTabsContent value="community" className="mt-0">
             <UserRankingsSection />
-          </TabsContent>
-        </Tabs>
+          </ThemedTabsContent>
+        </ThemedTabs>
       </div>
 
       <Footer />
