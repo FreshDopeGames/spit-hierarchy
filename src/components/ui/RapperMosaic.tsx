@@ -57,11 +57,11 @@ const RapperMosaic = ({ rappers, size = 'small', className = '' }: RapperMosaicP
         ))}
         {/* Fill empty spots if less than 2 rappers */}
         {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
-          <div key={`top-placeholder-${index}`} className={`relative overflow-hidden bg-[var(--theme-surface)]/30 ${config.border} border-[var(--theme-background)]`}>
+          <div key={`top-placeholder-${index}`} className={`relative overflow-hidden ${config.border} border-[var(--theme-background)]`} style={{ backgroundColor: 'hsl(var(--theme-surfaceSecondary))' }}>
             <img 
               src={getOptimizedPlaceholder('thumb')}
               alt="Placeholder"
-              className="w-full h-full object-cover opacity-30"
+              className="w-full h-full object-cover opacity-70"
             />
           </div>
         ))}
@@ -85,11 +85,11 @@ const RapperMosaic = ({ rappers, size = 'small', className = '' }: RapperMosaicP
         ))}
         {/* Fill empty spots if less than 3 rappers in bottom row */}
         {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
-          <div key={`bottom-placeholder-${index}`} className={`relative overflow-hidden bg-[var(--theme-surface)]/30 ${config.border} border-[var(--theme-background)]`}>
+          <div key={`bottom-placeholder-${index}`} className={`relative overflow-hidden ${config.border} border-[var(--theme-background)]`} style={{ backgroundColor: 'hsl(var(--theme-surfaceSecondary))' }}>
             <img 
               src={getOptimizedPlaceholder('thumb')}
               alt="Placeholder"
-              className="w-full h-full object-cover opacity-30"
+              className="w-full h-full object-cover opacity-70"
             />
           </div>
         ))}
