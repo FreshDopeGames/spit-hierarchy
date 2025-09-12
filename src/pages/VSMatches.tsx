@@ -1,4 +1,5 @@
 import { useState } from "react";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import { useVSMatches } from "@/hooks/useVSMatches";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,8 +36,6 @@ const VSMatches = () => {
   return (
     <>
       <SEOHead title="VS Matches - Rap Battle Matchups" description="Discover head-to-head rapper matchups and vote for your favorites. Compare legends, rising stars, and iconic artists in epic VS battles." canonicalUrl="/vs" />
-      
-      <HeaderNavigation isScrolled={false} />
       
       <div className="min-h-screen bg-rap-dark">
         <InternalPageHeader title="VS Matches" subtitle="Head-to-head rapper matchups - vote for your favorites" />
