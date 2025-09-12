@@ -95,7 +95,7 @@ function App() {
                         <Route path="/rapper/:id" element={<RapperDetail />} />
                         <Route path="/rankings" element={<Rankings />} />
                         <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
-                        <Route path="/rankings/user/:id" element={<UserRankingDetail />} />
+                        <Route path="/rankings/community-rankings/:slug" element={<UserRankingDetail />} />
                         <Route path="/vs" element={<VSMatches />} />
                         <Route path="/vs/:slug" element={<VSMatchDetail />} />
                         <Route path="/user/:username" element={<PublicUserProfile />} />

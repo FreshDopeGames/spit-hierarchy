@@ -20,7 +20,7 @@ const RankingCard = ({
   const bottomRowRappers = topFiveRappers.slice(2, 5);
   
   // Construct the proper link based on ranking type
-  const rankingLink = isUserRanking && !ranking.isOfficial ? `/rankings/user/${ranking.slug}` : `/rankings/official/${ranking.slug}`;
+  const rankingLink = isUserRanking && !ranking.isOfficial ? `/rankings/community-rankings/${ranking.slug}` : `/rankings/official/${ranking.slug}`;
   
   return (
     <Link 

@@ -52,7 +52,7 @@ const PublicProfileRankings = ({ profile, rankings }: PublicProfileRankingsProps
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {rankings.map(ranking => (
-          <Link key={ranking.id} to={`/rankings/user/${ranking.slug}`} className="block">
+          <Link key={ranking.id} to={`/rankings/community-rankings/${ranking.slug}`} className="block">
             <Card className="bg-[var(--theme-surface)] border-[var(--theme-textMuted)]/30 hover:border-[var(--theme-primary)]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[var(--theme-primary)]/20 group">
               <CardContent className="p-6">
                 {/* Header */}
