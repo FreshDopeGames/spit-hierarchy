@@ -2543,6 +2543,10 @@ export type Database = {
           unique_voters: number
         }[]
       }
+      get_official_ranking_vote_count: {
+        Args: { ranking_uuid: string }
+        Returns: number
+      }
       get_own_complete_profile: {
         Args: Record<PropertyKey, never>
         Returns: {
@@ -2703,12 +2707,19 @@ export type Database = {
       get_user_ranking_preview_items: {
         Args: { item_limit?: number; ranking_uuid: string }
         Returns: {
+          id: string
+          is_ranked: boolean
           item_position: number
-          item_reason: string
           rapper_id: string
           rapper_image_url: string
           rapper_name: string
+          rapper_slug: string
+          reason: string
         }[]
+      }
+      get_user_ranking_vote_count: {
+        Args: { ranking_uuid: string }
+        Returns: number
       }
       get_user_voting_stats: {
         Args: Record<PropertyKey, never>
