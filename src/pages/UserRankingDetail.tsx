@@ -9,6 +9,8 @@ import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import OfficialRankingItems from "@/components/rankings/OfficialRankingItems";
+import { RankingItemWithDelta } from "@/hooks/useRankingData";
 
 interface UserRankingData {
   id: string;
@@ -22,14 +24,17 @@ interface UserRankingData {
     username: string;
   } | null;
   user_ranking_items: Array<{
+    id: string;
     position: number;
     reason: string | null;
+    is_ranked: boolean;
     rapper: {
       id: string;
       name: string;
       real_name: string | null;
       origin: string | null;
       slug?: string | null;
+      total_votes: number | null;
     };
   }>;
 }
@@ -45,6 +50,17 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
   const [ranking, setRanking] = useState<UserRankingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [displayCount, setDisplayCount] = useState(20);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollTop = window.scrollY;
+      setIsScrolled(scrollTop > 100);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     if (slug) {
@@ -69,14 +85,17 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
           user_id,
           profiles!inner(username),
           user_ranking_items!inner(
+            id,
             position,
             reason,
+            is_ranked,
             rapper:rappers!inner(
               id,
               name,
               real_name,
               origin,
-              slug
+              slug,
+              total_votes
             )
           )
         `)
@@ -166,9 +185,36 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
   const sortedItems = ranking.user_ranking_items.sort((a, b) => a.position - b.position);
   const isOwner = user && user.id === ranking.user_id;
 
+  // Transform user ranking items to match RankingItemWithDelta interface
+  const rankingItems: RankingItemWithDelta[] = sortedItems.map((item) => ({
+    id: item.id,
+    position: item.position,
+    reason: item.reason,
+    is_ranked: item.is_ranked,
+    vote_velocity_7_days: 0,
+    vote_velocity_24_hours: 0,
+    rapper: {
+      id: item.rapper.id,
+      name: item.rapper.name,
+      origin: item.rapper.origin,
+      total_votes: item.rapper.total_votes,
+      slug: item.rapper.slug
+    },
+    position_delta: 0,
+    ranking_votes: 0,
+    dynamic_position: item.position,
+    visual_rank: item.position
+  }));
+
+  const handleLoadMore = () => {
+    setDisplayCount(prev => prev + 20);
+  };
+
+  const hasMore = displayCount < rankingItems.length;
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      <HeaderNavigation isScrolled={false} />
+      <HeaderNavigation isScrolled={isScrolled} />
       
       <div className="max-w-6xl mx-auto pt-20 px-4">
         {/* Back Navigation */}
@@ -180,7 +226,7 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
         </div>
 
         {/* Ranking Header */}
-        <Card className="bg-carbon-fiber border-rap-burgundy/40 mb-8">
+        <Card className="bg-black border-rap-burgundy/40 mb-8">
           <CardContent className="p-8">
             <div className="flex items-center gap-2 mb-4">
               <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
@@ -211,7 +257,16 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
             <div className="flex items-center justify-between text-rap-smoke border-t border-rap-smoke/20 pt-6">
               <div className="flex items-center gap-6">
                 <span className="font-kaushan">
-                  by <span className="text-rap-gold">{ranking.profiles?.username || "Unknown User"}</span>
+                  by {user ? (
+                    <Link 
+                      to={`/user/${ranking.profiles?.username || "unknown"}`}
+                      className="text-rap-gold hover:text-rap-gold-light transition-colors hover:underline"
+                    >
+                      {ranking.profiles?.username || "Unknown User"}
+                    </Link>
+                  ) : (
+                    <span className="text-rap-gold">{ranking.profiles?.username || "Unknown User"}</span>
+                  )}
                   {isOwner && <span className="text-rap-smoke ml-2">(You)</span>}
                 </span>
                 <span className="font-kaushan">
@@ -233,43 +288,18 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
           </CardContent>
         </Card>
 
-        {/* Ranking Items */}
-        <div className="space-y-4 mb-8">
-          {sortedItems.map((item) => (
-            <Card key={item.rapper.id} className="bg-carbon-fiber border-rap-silver/30 hover:border-rap-gold/50 transition-colors">
-              <CardContent className="p-6">
-                <div className="flex items-center gap-6">
-                  <div className="flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-rap-burgundy-dark via-rap-burgundy to-rap-burgundy-light shadow-lg">
-                    <span className="text-white font-mogra text-lg font-bold">
-                      {item.position}
-                    </span>
-                  </div>
-                  
-                  <div className="flex-1">
-                    <Link to={`/rapper/${item.rapper.slug || item.rapper.id}`} className="text-xl font-bold text-rap-platinum hover:text-rap-gold transition-colors font-mogra">
-                      {item.rapper.name}
-                    </Link>
-                    {item.rapper.real_name && (
-                      <p className="text-rap-smoke font-kaushan">
-                        {item.rapper.real_name}
-                      </p>
-                    )}
-                    {item.rapper.origin && (
-                      <p className="text-rap-smoke text-sm font-kaushan">
-                        {item.rapper.origin}
-                      </p>
-                    )}
-                    {item.reason && (
-                      <p className="text-rap-smoke mt-2 font-kaushan italic">
-                        "{item.reason}"
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        {/* Ranking Items with Voting */}
+        <OfficialRankingItems
+          items={rankingItems}
+          onVote={() => {}} // VoteButton handles everything internally
+          userLoggedIn={!!user}
+          hotThreshold={0} // No hot threshold for community rankings
+          displayCount={displayCount}
+          onLoadMore={handleLoadMore}
+          hasMore={hasMore}
+          loading={false}
+          rankingId={ranking.id}
+        />
       </div>
 
       {/* Footer - positioned at the bottom of all page content */}

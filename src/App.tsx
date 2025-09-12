@@ -24,6 +24,7 @@ import OfficialRankingDetail from "./pages/OfficialRankingDetail";
 import UserRankingDetail from "./pages/UserRankingDetail";
 import UserRankingRedirect from "@/components/UserRankingRedirect";
 import PublicUserProfile from "./pages/PublicUserProfile";
+import PublicUserProfileByUsername from "./pages/PublicUserProfileByUsername";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
 import BlogDetail from "./pages/BlogDetail";
@@ -99,7 +100,7 @@ function App() {
                         <Route path="/rankings/community-rankings/:slug" element={<UserRankingRedirect />} />
                         <Route path="/vs" element={<VSMatches />} />
                         <Route path="/vs/:slug" element={<VSMatchDetail />} />
-                        <Route path="/user/:username" element={<PublicUserProfile />} />
+                        <Route path="/user/:username" element={<PublicUserProfileByUsername />} />
                         <Route path="/community-cypher" element={<CommunityCypher />} />
                         
                         {/* Protected Routes */}
