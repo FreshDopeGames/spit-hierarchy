@@ -117,22 +117,22 @@ const VSMatches = () => {
                     </CardHeader>
                     <CardContent>
                       {/* Head-to-head display */}
-                      <div className="flex items-center justify-between mb-4">
-                        <div className="flex flex-col items-center space-y-2">
+                      <div className="flex items-center justify-center gap-4 sm:gap-6 mb-4">
+                        <div className="flex flex-col items-center space-y-2 flex-1">
                           <RapperAvatar rapper={match.rapper_1} size="md" variant="square" />
                           <span className="text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center">
                             {match.rapper_1.name}
                           </span>
                         </div>
                         
-                        <div className="flex flex-col items-center">
+                        <div className="flex flex-col items-center px-2">
                           <Swords className="w-8 h-8 text-[var(--theme-background)] mb-2" />
                           <Badge variant="outline" className="text-xs text-[hsl(var(--theme-textInverted))] border-[hsl(var(--theme-background))]">
                             {match.total_votes} votes
                           </Badge>
                         </div>
                         
-                        <div className="flex flex-col items-center space-y-2">
+                        <div className="flex flex-col items-center space-y-2 flex-1">
                           <RapperAvatar rapper={match.rapper_2} size="md" variant="square" />
                           <span className="text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center">
                             {match.rapper_2.name}
