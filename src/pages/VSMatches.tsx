@@ -47,6 +47,7 @@ const VSMatches = () => {
               Who you got?
             </p>
           </div>
+        </div>
         
 
         <div className="container mx-auto px-4 py-4">
