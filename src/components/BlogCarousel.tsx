@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
@@ -11,6 +11,10 @@ import useEmblaCarousel from 'embla-carousel-react';
 
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isProgressActive, setIsProgressActive] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
+  const autoRotateIntervalRef = useRef<NodeJS.Timeout>();
+  const progressKeyRef = useRef(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: true,
     dragFree: false,
@@ -45,13 +49,29 @@ const BlogCarousel = () => {
     refetchOnWindowFocus: false
   });
 
+  const resetAutoRotate = useCallback(() => {
+    if (autoRotateIntervalRef.current) {
+      clearInterval(autoRotateIntervalRef.current);
+    }
+    progressKeyRef.current += 1; // Force progress bar restart
+    setIsProgressActive(false);
+    setTimeout(() => setIsProgressActive(true), 50);
+    
+    if (!isPaused && featuredPosts.length > 1) {
+      autoRotateIntervalRef.current = setInterval(() => {
+        goToNext();
+      }, 8000);
+    }
+  }, [isPaused, featuredPosts.length]);
+
   const goToPrevious = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev();
     } else {
       setCurrentIndex(prevIndex => prevIndex === 0 ? featuredPosts.length - 1 : prevIndex - 1);
     }
-  }, [emblaApi, featuredPosts.length]);
+    resetAutoRotate();
+  }, [emblaApi, featuredPosts.length, resetAutoRotate]);
 
   const goToNext = useCallback(() => {
     if (emblaApi) {
@@ -67,7 +87,8 @@ const BlogCarousel = () => {
     } else {
       setCurrentIndex(index);
     }
-  }, [emblaApi]);
+    resetAutoRotate();
+  }, [emblaApi, resetAutoRotate]);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -82,6 +103,29 @@ const BlogCarousel = () => {
       emblaApi.off('select', onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  // Auto-rotation setup
+  useEffect(() => {
+    resetAutoRotate();
+    return () => {
+      if (autoRotateIntervalRef.current) {
+        clearInterval(autoRotateIntervalRef.current);
+      }
+    };
+  }, [resetAutoRotate]);
+
+  const handleMouseEnter = () => {
+    setIsPaused(true);
+    if (autoRotateIntervalRef.current) {
+      clearInterval(autoRotateIntervalRef.current);
+    }
+    setIsProgressActive(false);
+  };
+
+  const handleMouseLeave = () => {
+    setIsPaused(false);
+    resetAutoRotate();
+  };
 
   const getImageData = (post: any) => {
     if (!post.featured_image_url) {
@@ -99,7 +143,11 @@ const BlogCarousel = () => {
   return <section className="mb-16">
       {/* Embla carousel container */}
       <div className="flex justify-center">
-        <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border-4 border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20">
+        <div 
+          className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border-4 border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20"
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {featuredPosts.map(post => <div key={post.id} className="flex-[0_0_100%] min-w-0">
@@ -126,6 +174,16 @@ const BlogCarousel = () => {
                         <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
                           {post.excerpt}
                         </p>
+                      </div>
+                      
+                      {/* Progress Bar */}
+                      <div className="absolute bottom-0 left-0 w-full h-1 bg-black/30">
+                        <div 
+                          key={progressKeyRef.current}
+                          className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${
+                            isProgressActive && !isPaused ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'
+                          }`}
+                        />
                       </div>
                     </div>
                   </Link>

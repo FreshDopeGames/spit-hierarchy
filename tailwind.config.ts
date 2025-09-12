@@ -172,6 +172,10 @@ export default {
 						transform: 'translateY(-15px)',
 						animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
 					}
+				},
+				'progress': {
+					'0%': { width: '0%' },
+					'100%': { width: '100%' }
 				}
 			},
 			animation: {
@@ -180,7 +184,8 @@ export default {
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
-				'slow-bounce': 'slow-bounce 2s ease-in-out'
+				'slow-bounce': 'slow-bounce 2s ease-in-out',
+				'progress': 'progress 8s linear forwards'
 			}
 		}
 	},
