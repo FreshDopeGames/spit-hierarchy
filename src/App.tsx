@@ -22,6 +22,7 @@ import RapperDetail from "./pages/RapperDetail";
 import Rankings from "./pages/Rankings";
 import OfficialRankingDetail from "./pages/OfficialRankingDetail";
 import UserRankingDetail from "./pages/UserRankingDetail";
+import UserRankingRedirect from "@/components/UserRankingRedirect";
 import PublicUserProfile from "./pages/PublicUserProfile";
 import About from "./pages/About";
 import Blog from "./pages/Blog";
@@ -95,7 +96,7 @@ function App() {
                         <Route path="/rapper/:id" element={<RapperDetail />} />
                         <Route path="/rankings" element={<Rankings />} />
                         <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
-                        <Route path="/rankings/community-rankings/:slug" element={<UserRankingDetail />} />
+                        <Route path="/rankings/community-rankings/:slug" element={<UserRankingRedirect />} />
                         <Route path="/vs" element={<VSMatches />} />
                         <Route path="/vs/:slug" element={<VSMatchDetail />} />
                         <Route path="/user/:username" element={<PublicUserProfile />} />

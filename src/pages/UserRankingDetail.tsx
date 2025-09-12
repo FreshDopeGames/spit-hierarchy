@@ -34,8 +34,13 @@ interface UserRankingData {
   }>;
 }
 
-const UserRankingDetail = () => {
-  const { slug } = useParams();
+interface UserRankingDetailProps {
+  overrideSlug?: string;
+}
+
+const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
+  const { slug: paramSlug } = useParams();
+  const slug = overrideSlug || paramSlug;
   const { user } = useAuth();
   const [ranking, setRanking] = useState<UserRankingData | null>(null);
   const [loading, setLoading] = useState(true);
