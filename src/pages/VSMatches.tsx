@@ -1,5 +1,4 @@
 import { useState } from "react";
-import HeaderNavigation from "@/components/HeaderNavigation";
 import { useVSMatches } from "@/hooks/useVSMatches";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -37,8 +36,17 @@ const VSMatches = () => {
     <>
       <SEOHead title="VS Matches - Rap Battle Matchups" description="Discover head-to-head rapper matchups and vote for your favorites. Compare legends, rising stars, and iconic artists in epic VS battles." canonicalUrl="/vs" />
       
-      <div className="min-h-screen bg-rap-dark">
-        <InternalPageHeader title="VS Matches" subtitle="Head-to-head rapper matchups - vote for your favorites" />
+      <div className="min-h-screen bg-[hsl(var(--theme-background))]">
+        {/* Header Section */}
+        <div className="bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] py-16 md:py-20">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold text-[hsl(var(--theme-textLight))] mb-4 font-ceviche">
+              VS
+            </h1>
+            <p className="text-xl md:text-2xl text-[hsl(var(--theme-textLight))]/80 font-merienda">
+              Who you got?
+            </p>
+          </div>  
 
         <div className="container mx-auto px-4 py-4">
           <h1 className="text-[var(--theme-textLight)] text-white text-4xl md:text-5xl font-bold text-center mb-8 font-mogra">
