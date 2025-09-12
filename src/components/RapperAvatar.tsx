@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
+import EnhancedImage from "@/components/ui/EnhancedImage";
 
 type Rapper = Tables<"rappers">;
 
@@ -67,17 +68,17 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl, variant
   return (
     <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
       <div className={`${sizeClasses[size]} ${variant === 'square' ? 'rounded-lg' : 'rounded-full'} overflow-hidden bg-gradient-to-br from-[var(--theme-surface)] to-[var(--theme-primary)]/20 flex items-center justify-center border-2 ${borderColorClass} transition-colors`}>
-        <img 
+        <EnhancedImage 
           src={imageToDisplay}
           alt={rapper.name} 
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-          loading="lazy"
+          className="group-hover:scale-110 transition-transform duration-300"
+          size={imageSizeMap[size]}
+          priority={size === 'xl' || size === '2xl'}
           onLoad={() => {/* Image loaded */}}
           onError={(e) => {
             console.error('Image failed to load:', imageToDisplay);
             const target = e.target as HTMLImageElement;
             if (!target.src.includes(placeholderImage)) {
-              // Using placeholder fallback
               target.src = placeholderImage;
             }
           }}

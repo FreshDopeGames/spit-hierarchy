@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { TrendingUp, Users, Award, User } from "lucide-react";
 import { UnifiedRanking } from "@/types/rankings";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
+import EnhancedImage from "@/components/ui/EnhancedImage";
 
 interface RankingCardProps {
   ranking: UnifiedRanking;
@@ -55,14 +56,13 @@ const RankingCard = ({
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={rapper.image_url || getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={rapper.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  size="thumb"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder('medium');
+                    target.src = getOptimizedPlaceholder('thumb');
                   }}
                 />
               </div>
@@ -76,10 +76,11 @@ const RankingCard = ({
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={getOptimizedPlaceholder('thumb')}
                   alt="Placeholder"
-                  className="w-full h-full object-cover opacity-30"
+                  className="opacity-30"
+                  size="thumb"
                 />
               </div>
             ))}
@@ -95,14 +96,13 @@ const RankingCard = ({
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={rapper.image_url || getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={rapper.name}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
+                  size="thumb"
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder('medium');
+                    target.src = getOptimizedPlaceholder('thumb');
                   }}
                 />
               </div>
@@ -116,10 +116,11 @@ const RankingCard = ({
                   border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
-                <img 
-                  src={getOptimizedPlaceholder('medium')}
+                <EnhancedImage 
+                  src={getOptimizedPlaceholder('thumb')}
                   alt="Placeholder"
-                  className="w-full h-full object-cover opacity-30"
+                  className="opacity-30"
+                  size="thumb"
                 />
               </div>
             ))}

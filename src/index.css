@@ -317,6 +317,22 @@
   }
 }
 
+/* Enhanced image rendering optimizations */
+.smooth-rendering {
+  image-rendering: -webkit-optimize-contrast;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  image-rendering: smooth;
+}
+
+.transform-gpu {
+  transform: translateZ(0);
+}
+
+.translate-z-0 {
+  transform: translateZ(0);
+}
+
 /* Security: Prevent content injection in toasts */
 [data-sonner-toast] * {
   white-space: pre-wrap;
