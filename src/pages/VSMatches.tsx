@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useVSMatches } from "@/hooks/useVSMatches";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -45,7 +46,7 @@ const VSMatches = () => {
             VS
           </h1>
           <p className="text-lg text-rap-platinum font-merienda max-w-3xl mx-auto">
-            Who ya got?
+            Who ya got??
           </p>
         </div>
 
