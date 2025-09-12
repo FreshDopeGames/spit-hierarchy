@@ -36,7 +36,7 @@ const VSMatches = () => {
     <>
       <SEOHead title="VS Matches - Rap Battle Matchups" description="Discover head-to-head rapper matchups and vote for your favorites. Compare legends, rising stars, and iconic artists in epic VS battles." canonicalUrl="/vs" />
       
-      <div className="min-h-screen bg-[hsl(var(--theme-background))]">
+      <div className="min-h-screen bg-rap-dark">
         {/* Header Section */}
         <div className="bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] py-16 md:py-20">
           <div className="container mx-auto px-4 text-center">
@@ -46,7 +46,8 @@ const VSMatches = () => {
             <p className="text-xl md:text-2xl text-[hsl(var(--theme-textLight))]/80 font-merienda">
               Who you got?
             </p>
-          </div>  
+          </div>
+        
 
         <div className="container mx-auto px-4 py-4">
           <h1 className="text-[var(--theme-textLight)] text-white text-4xl md:text-5xl font-bold text-center mb-8 font-mogra">
