@@ -31,6 +31,7 @@ export const useRankingsData = () => {
       // Fetch items for each ranking
       const rankingsWithItems = await Promise.all(
         (rankingsData || []).map(async ranking => {
+          // Fetch items without is_ranked filter to get up to 5 items
           const { data: itemsData, error: itemsError } = await supabase
             .from("ranking_items")
             .select(`
@@ -38,16 +39,22 @@ export const useRankingsData = () => {
               rapper:rappers(*)
             `)
             .eq("ranking_id", ranking.id)
-            .eq("is_ranked", true) // Only get manually ranked items for preview
             .order("position")
-            .limit(5); // Only get top 5 for display
+            .limit(5); // Get top 5 for display
 
           if (itemsError) {
             console.error(`Error fetching items for ranking ${ranking.id}:`, itemsError);
-            return { ...ranking, items: [] };
           }
 
-          return { ...ranking, items: itemsData || [] };
+          // Get vote count for this ranking
+          const { data: voteCount } = await supabase
+            .rpc('get_official_ranking_vote_count', { ranking_uuid: ranking.id });
+
+          return { 
+            ...ranking, 
+            items: itemsData || [],
+            totalVotes: voteCount || 0
+          };
         })
       );
 

@@ -27,9 +27,10 @@ const getRankingVoteCount = async (rankingId: string, isOfficial: boolean): Prom
   }
 };
 
-export const transformOfficialRankings = (rankings: RankingWithItems[]): Promise<UnifiedRanking[]> => {
+export const transformOfficialRankings = (rankings: (RankingWithItems & { totalVotes?: number })[]): Promise<UnifiedRanking[]> => {
   return Promise.all(rankings.map(async (ranking) => {
-    const totalVotes = await getRankingVoteCount(ranking.id, true);
+    // Use totalVotes if provided, otherwise fetch it
+    const totalVotes = ranking.totalVotes ?? await getRankingVoteCount(ranking.id, true);
     
     return {
       id: ranking.id,
@@ -73,7 +74,8 @@ export const transformUserRankings = async (userRankingData: any): Promise<Unifi
       ? ranking.profiles as { username: string | null }
       : null;
 
-    const totalVotes = await getRankingVoteCount(ranking.id || "", false);
+    // Use totalVotes if provided, otherwise fetch it
+    const totalVotes = ranking.totalVotes ?? await getRankingVoteCount(ranking.id || "", false);
 
     return {
       id: ranking.id || "",
@@ -86,7 +88,7 @@ export const transformUserRankings = async (userRankingData: any): Promise<Unifi
       rappers: (ranking.preview_items || []).map((item: any) => ({
         rank: item.item_position || 0,
         name: item.rapper_name || "Unknown",
-        reason: item.item_reason || "",
+        reason: item.reason || "",
         id: item.rapper_id || "",
         image_url: item.rapper_image_url || undefined
       })),

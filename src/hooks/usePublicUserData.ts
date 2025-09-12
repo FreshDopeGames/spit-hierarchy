@@ -75,7 +75,7 @@ export const usePublicUserData = () => {
 
             const simpleItems: SimpleRankingItem[] = (items || []).map(item => ({
               position: item.item_position,
-              reason: item.item_reason,
+              reason: item.reason,
               rapper_name: item.rapper_name
             }));
 

@@ -89,11 +89,16 @@ export const useOptimizedUserRankings = ({
             { ranking_uuid: ranking.id, item_limit: 5 }
           );
 
+          // Get vote count for community ranking
+          const { data: voteCount } = await supabase
+            .rpc('get_user_ranking_vote_count', { ranking_uuid: ranking.id });
+
           const userProfile = profilesMap.get(ranking.user_id);
 
           return {
             ...ranking,
             preview_items: items || [],
+            totalVotes: voteCount || 0,
             profiles: userProfile ? { username: userProfile.username } : null
           };
         })

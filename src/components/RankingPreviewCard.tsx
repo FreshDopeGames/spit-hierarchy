@@ -193,20 +193,18 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           
           {/* Stats Row */}
           <div className="flex items-center justify-between">
-            {totalVotes > 0 && (
-              <div 
-                className="flex items-center gap-1 text-xs sm:text-sm"
-                style={{
-                  color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
-                  fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
-                  fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
-                  lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
-                }}
-              >
-                <TrendingUp className="w-4 h-4" />
-                <span>{totalVotes.toLocaleString()} Votes</span>
-              </div>
-            )}
+            <div 
+              className="flex items-center gap-1 text-xs sm:text-sm"
+              style={{
+                color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
+                fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
+                fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
+                lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
+              }}
+            >
+              <TrendingUp className="w-4 h-4" />
+              <span>{totalVotes.toLocaleString()} Votes</span>
+            </div>
             
             {/* View Ranking CTA */}
             <div 
