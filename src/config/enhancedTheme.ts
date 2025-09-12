@@ -620,7 +620,7 @@ export const defaultEnhancedTheme: EnhancedThemeConfig = {
     ranking_card: {
       background: '#1A1A1A',
       color: '#E8E6E3',
-      border: { width: '1px', style: 'solid', color: '#D4AF37', radius: '12px' },
+      border: { width: '4px', style: 'solid', color: '#D4AF37', radius: '12px' },
       shadow: '0 4px 6px rgba(0, 0, 0, 0.2)',
       hoverShadow: '0 10px 25px rgba(212, 175, 55, 0.2)',
       padding: '0',
