@@ -1,6 +1,7 @@
 
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 import CommentBubble from "@/components/CommentBubble";
@@ -90,6 +91,17 @@ const OfficialRankingDetail = () => {
       <HeaderNavigation isScrolled={isScrolled} />
       
       <main className="max-w-4xl mx-auto p-6 pt-24">
+        {/* Back to Rankings Navigation */}
+        <div className="mb-8">
+          <Link 
+            to="/rankings" 
+            className="flex items-center space-x-2 text-rap-gold hover:text-rap-gold-light transition-colors font-kaushan"
+          >
+            <ArrowLeft className="w-5 h-5" />
+            <span>Back to Rankings</span>
+          </Link>
+        </div>
+
         <OfficialRankingHeader
           title={ranking.title}
           description={ranking.description}
