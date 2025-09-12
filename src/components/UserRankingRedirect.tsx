@@ -17,16 +17,18 @@ const UserRankingRedirect = () => {
         return;
       }
 
-      // Check if the slug is a UUID (old format)
+      // Handle old formats: pure UUID or "user-{uuid}"
       const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+      const userUuidMatch = slug.match(/^user-([0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12})$/i);
+      const lookupId = uuidRegex.test(slug) ? slug : (userUuidMatch ? userUuidMatch[1] : null);
       
-      if (uuidRegex.test(slug)) {
-        // This is an old UUID-based URL, look up the ranking to get the slug
+      if (lookupId) {
+        // Old UUID-based URL detected, look up the ranking to get the slug
         try {
           const { data, error } = await supabase
             .from("user_rankings")
             .select("slug")
-            .eq("id", slug)
+            .eq("id", lookupId)
             .maybeSingle();
 
           if (!error && data?.slug) {

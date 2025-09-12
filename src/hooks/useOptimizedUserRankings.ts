@@ -34,6 +34,7 @@ export const useOptimizedUserRankings = ({
         .from("user_rankings")
         .select(`
           id,
+          slug,
           title,
           description,
           category,
