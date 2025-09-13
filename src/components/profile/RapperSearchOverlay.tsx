@@ -29,7 +29,7 @@ const RapperSearchOverlay = ({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent 
-        className="max-w-md"
+        className="max-w-[90vw] sm:max-w-md"
         style={{
           backgroundColor: 'hsl(var(--theme-surface))',
           borderColor: 'hsl(var(--theme-border))'
@@ -106,7 +106,7 @@ const RapperSearchOverlay = ({
               <div
                 key={rapper.id}
                 onClick={() => handleRapperClick(rapper.id)}
-                className="flex items-center space-x-3 p-3 border rounded-lg cursor-pointer transition-colors hover:opacity-90"
+                className="flex items-center space-x-3 p-3 sm:p-4 border rounded-lg cursor-pointer transition-colors hover:opacity-90 min-h-[44px]"
                 style={{
                   backgroundColor: 'hsl(var(--theme-surfaceSecondary))',
                   borderColor: 'hsl(var(--theme-border))'

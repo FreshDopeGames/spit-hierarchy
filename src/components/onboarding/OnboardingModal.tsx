@@ -62,7 +62,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     return (
       <Dialog open={isOpen} onOpenChange={() => {}}>
         <DialogContent 
-          className="max-w-2xl p-0 gap-0 overflow-hidden"
+          className="max-w-[95vw] sm:max-w-2xl p-0 gap-0 overflow-hidden"
           style={{
             backgroundColor: 'hsl(var(--theme-surface))',
             border: '2px solid hsl(var(--theme-primary))',
@@ -79,7 +79,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
             </button>
 
             <div 
-              className="p-8 text-center"
+              className="p-4 sm:p-6 md:p-8 text-center"
               style={{
                 background: 'linear-gradient(135deg, hsl(var(--theme-surface)) 0%, hsl(var(--theme-surfaceSecondary)) 100%)'
               }}
@@ -92,7 +92,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                   <Trophy className="w-10 h-10" style={{ color: 'hsl(var(--theme-textLight))' }} />
                 </div>
                 <h2 
-                  className="text-3xl font-bold mb-4"
+                  className="text-2xl sm:text-3xl font-bold mb-4"
                   style={{ 
                     color: 'hsl(var(--theme-text))',
                     fontFamily: 'var(--theme-font-heading)'
@@ -108,7 +108,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
                 <div className="text-center">
                   <div 
                     className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3"
@@ -171,14 +171,14 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                 </div>
               </div>
 
-              <div className="flex gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Button
                   onClick={() => setCurrentStep(2)}
                   style={{
                     backgroundColor: 'hsl(var(--theme-primary))',
                     color: 'hsl(var(--theme-textLight))'
                   }}
-                  className="px-8 py-3 text-lg hover:opacity-90"
+                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:opacity-90"
                 >
                   Get Started
                 </Button>
@@ -189,7 +189,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                     borderColor: 'hsl(var(--theme-border))',
                     color: 'hsl(var(--theme-textMuted))'
                   }}
-                  className="px-8 py-3 text-lg hover:bg-black/5"
+                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:bg-black/5"
                 >
                   Skip for Now
                 </Button>
@@ -205,7 +205,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     <>
       <Dialog open={isOpen} onOpenChange={() => {}}>
         <DialogContent 
-          className="max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0"
+          className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0"
           style={{
             backgroundColor: 'hsl(var(--theme-surface))',
             border: '2px solid hsl(var(--theme-primary))',
@@ -221,10 +221,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
               <X className="w-5 h-5" />
             </button>
 
-            <div className="p-6">
+            <div className="p-3 sm:p-4 md:p-6">
               <DialogHeader className="mb-6">
                 <DialogTitle 
-                  className="text-2xl text-center"
+                  className="text-xl sm:text-2xl text-center"
                   style={{ 
                     color: 'hsl(var(--theme-text))',
                     fontFamily: 'var(--theme-font-heading)'
@@ -274,7 +274,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
 
                 {/* Mobile Layout */}
                 <div className="block lg:hidden">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
                     {slots.map((slot) => (
                       <TopFiveSlot
                         key={slot.position}
@@ -287,7 +287,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                 </div>
               </div>
 
-              <div className="flex gap-4 justify-center">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Button
                   onClick={handleComplete}
                   disabled={!canComplete}
@@ -295,7 +295,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                     backgroundColor: canComplete ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-surfaceSecondary))',
                     color: canComplete ? 'hsl(var(--theme-textLight))' : 'hsl(var(--theme-textMuted))'
                   }}
-                  className="px-8 py-3 text-lg hover:opacity-90 disabled:hover:opacity-100"
+                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:opacity-90 disabled:hover:opacity-100"
                 >
                   Complete Setup
                 </Button>
@@ -306,7 +306,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                     borderColor: 'hsl(var(--theme-border))',
                     color: 'hsl(var(--theme-textMuted))'
                   }}
-                  className="px-8 py-3 text-lg hover:bg-black/5"
+                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:bg-black/5"
                 >
                   Skip for Now
                 </Button>

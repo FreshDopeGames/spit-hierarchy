@@ -24,7 +24,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
     >
       {/* Position number in top left */}
       <div 
-        className="absolute top-3 left-3 text-lg font-bold rounded-full w-10 h-10 flex items-center justify-center border z-10"
+        className="absolute top-2 sm:top-3 left-2 sm:left-3 text-sm sm:text-lg font-bold rounded-full w-8 h-8 sm:w-10 sm:h-10 flex items-center justify-center border z-10"
         style={{
           color: 'hsl(var(--theme-primary))',
           backgroundColor: 'hsl(var(--theme-surface))',
@@ -39,7 +39,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
         {rapper ? (
           <>
             <div 
-              className="w-60 h-40 rounded-lg overflow-hidden border"
+              className="w-full max-w-60 h-32 sm:h-40 rounded-lg overflow-hidden border"
               style={{
                 backgroundColor: 'hsl(var(--theme-surface))',
                 borderColor: 'hsl(var(--theme-border))'
@@ -58,7 +58,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
               )}
             </div>
             <div 
-              className="text-lg font-bold text-center line-clamp-2"
+              className="text-sm sm:text-lg font-bold text-center line-clamp-2"
               style={{ 
                 color: 'hsl(var(--theme-text))',
                 fontFamily: 'var(--theme-font-body)'
@@ -70,7 +70,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
         ) : (
           <>
             <div 
-              className="w-60 h-40 rounded-lg border-2 border-dashed flex items-center justify-center group-hover:opacity-80"
+              className="w-full max-w-60 h-32 sm:h-40 rounded-lg border-2 border-dashed flex items-center justify-center group-hover:opacity-80"
               style={{
                 backgroundColor: 'hsl(var(--theme-surface))',
                 borderColor: 'hsl(var(--theme-border))'
@@ -79,7 +79,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
               <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
             </div>
             <div 
-              className="text-lg font-bold text-center"
+              className="text-sm sm:text-lg font-bold text-center"
               style={{ 
                 color: 'hsl(var(--theme-textMuted))',
                 fontFamily: 'var(--theme-font-body)'
