@@ -23,7 +23,7 @@ const Footer = () => {
                 Spit Hierarchy
               </span>
             </div>
-            <p className="text-[var(--theme-text)] font-[var(--theme-font-body)] text-sm">
+            <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] text-sm">
               The ultimate destination for ranking and discovering the greatest rappers of all time.
             </p>
           </div>
@@ -35,7 +35,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/rankings" 
-                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Trophy className="w-4 h-4 mr-2" />
@@ -45,7 +45,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/all-rappers" 
-                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Music className="w-4 h-4 mr-2" />
@@ -55,7 +55,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/blog" 
-                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Calendar className="w-4 h-4 mr-2" />
@@ -65,7 +65,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Info className="w-4 h-4 mr-2" />
@@ -82,7 +82,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/community-cypher" 
-                  className="flex items-center text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <CypherIcon className="w-4 h-4 mr-2" />
@@ -92,7 +92,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/auth" 
-                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Join Spit Hierarchy
@@ -101,7 +101,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/analytics" 
-                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Analytics
@@ -117,7 +117,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/privacy" 
-                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Privacy Policy
@@ -126,7 +126,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/terms" 
-                  className="text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Terms of Use
@@ -136,8 +136,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-[var(--theme-border)] mt-8 pt-8 text-center">
-          <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-sm">
+        <div className="border-t border-[var(--theme-primary)] mt-8 pt-8 text-center">
+          <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] text-sm">
             © 2025 Spit Hierarchy. All rights reserved. Keep the culture alive.
           </p>
         </div>
