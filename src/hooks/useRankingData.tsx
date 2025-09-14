@@ -96,18 +96,18 @@ export const useRankingData = (rankingId: string) => {
 
       if (error) throw error;
 
-      // Get weighted vote counts for this specific ranking
+      // Get aggregated vote counts from the view for this specific ranking
       const { data: voteData, error: voteError } = await supabase
-        .from("ranking_votes")
-        .select("rapper_id, vote_weight")
+        .from("ranking_vote_counts")
+        .select("rapper_id, total_vote_weight")
         .eq("ranking_id", rankingId);
 
       if (voteError) throw voteError;
 
-      // Aggregate vote counts by rapper
+      // Create vote counts map from the aggregated data
       const voteCounts: Record<string, number> = {};
-      voteData.forEach(vote => {
-        voteCounts[vote.rapper_id] = (voteCounts[vote.rapper_id] || 0) + vote.vote_weight;
+      voteData?.forEach(vote => {
+        voteCounts[vote.rapper_id] = vote.total_vote_weight || 0;
       });
 
       // Get position deltas and enhance with vote data
