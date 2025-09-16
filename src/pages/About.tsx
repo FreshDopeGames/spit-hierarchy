@@ -28,7 +28,7 @@ const About = () => {
       <div className="relative z-10">
         <HeaderNavigation isScrolled={isScrolled} />
         
-        <div className="pt-24 max-w-4xl mx-auto p-6 space-y-8">
+        <div className="pt-24 max-w-4xl mx-auto p-6 space-y-8 pb-5">
           <AboutHero />
           <AboutWhatWeDo />
           <AboutFeatures />

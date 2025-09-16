@@ -116,7 +116,7 @@ const Index = () => {
         <HeaderNavigation isScrolled={isScrolled} />
 
         {/* Main Content with increased top padding to account for fixed header */}
-        <main className="pt-20 sm:pt-24 w-full overflow-x-hidden">
+        <main className="pt-20 sm:pt-24 w-full overflow-x-hidden pb-5">
           <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
