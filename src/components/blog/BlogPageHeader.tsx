@@ -10,10 +10,7 @@ const BlogPageHeader = ({ title }: BlogPageHeaderProps) => {
   const { theme } = useEnhancedTheme();
 
   return (
-    <h1 
-      className="text-6xl font-ceviche text-center mb-12"
-      style={{ color: theme.colors.primary }}
-    >
+    <h1 className="text-6xl font-ceviche text-center mb-12 text-[var(--theme-primary)]">
       {title}
     </h1>
   );
