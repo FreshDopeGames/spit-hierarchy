@@ -21,13 +21,13 @@ const InternalPageHeader = ({
   const { theme } = useEnhancedTheme();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black py-2 sm:py-3 border-b border-[var(--theme-primary)]/30">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black py-2 sm:py-3 border-b border-[hsl(var(--theme-primary))]/30">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 flex items-center justify-between h-full">
         <div className="flex items-center">
           <Link to={backLink} onClick={() => window.scrollTo(0, 0)}>
             <Button 
               variant="outline" 
-              className="font-[var(--theme-font-heading)] shadow-lg text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] bg-transparent hover:bg-[var(--theme-primary)]/20 hover:text-[var(--theme-primaryLight)] transition-all duration-200"
+              className="font-[var(--theme-font-heading)] shadow-lg text-xs sm:text-sm px-2 sm:px-4 py-1 sm:py-2 border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/20 hover:text-[hsl(var(--theme-primaryLight))] transition-all duration-200"
               style={{
                 boxShadow: '0 4px 6px hsl(var(--theme-primary) / 0.2)'
               }}
