@@ -138,7 +138,7 @@ const Footer = () => {
 
         <div className="border-t border-[var(--theme-primary)] mt-8 pt-8 text-center">
           <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] text-sm">
-            © 2025 Spit Hierarchy. All rights reserved. Keep the culture alive.
+            © 2025 Fresh Dope Biz LLC. All rights reserved. Keep the culture alive.
           </p>
         </div>
       </div>

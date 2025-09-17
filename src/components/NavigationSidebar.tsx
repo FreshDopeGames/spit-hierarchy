@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Menu, Home, Trophy, Music, Swords, PenTool, BookOpen, Info, BarChart3, Settings, LogOut } from "lucide-react";
+import { Menu, Home, Trophy, Music, Swords, PenTool, BookOpen, Info, BarChart3, Settings, LogOut, Shield, FileText } from "lucide-react";
 import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
@@ -136,6 +136,20 @@ const NavigationSidebar = ({
               <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <Info className="w-4 h-4 mr-3" />
                 About
+              </ThemedButton>
+            </Link>
+
+            <Link to="/privacy" onClick={() => handleNavClick('/privacy')}>
+              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                <Shield className="w-4 h-4 mr-3" />
+                Privacy Policy
+              </ThemedButton>
+            </Link>
+
+            <Link to="/terms" onClick={() => handleNavClick('/terms')}>
+              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                <FileText className="w-4 h-4 mr-3" />
+                Terms of Service
               </ThemedButton>
             </Link>
 
