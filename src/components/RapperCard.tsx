@@ -48,7 +48,7 @@ const RapperCard = ({
   
   return (
     <ThemedCard 
-      className="bg-gradient-to-br from-[var(--theme-background)] via-[var(--theme-surface)] to-[var(--theme-backgroundLight)] border-[var(--theme-primary)]/40 hover:border-[var(--theme-primary)]/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group"
+      className="bg-gradient-to-br from-[#0D0D0D] to-[#1A1A1A] border-4 border-[hsl(var(--theme-primary))]/40 hover:border-[hsl(var(--theme-primary))]/70 transition-all duration-300 hover:transform hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group"
       onClick={handleCardClick}
     >
       {/* Theme accent bar */}
