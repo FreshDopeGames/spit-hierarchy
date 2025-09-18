@@ -8,7 +8,7 @@ const Footer = () => {
   const CypherIcon = PenTool || Pen || MessageSquare;
 
   return (
-    <footer className="bg-[hsl(var(--theme-black))] border-t border-[var(--theme-primary)] mt-5">
+    <footer className="bg-[hsl(var(--theme-black))] border-t border-[hsl(var(--theme-primary))] mt-5">
       <div className="max-w-7xl mx-auto px-4 pt-4 pb-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Brand Section */}
@@ -19,23 +19,23 @@ const Footer = () => {
                 alt="Logo" 
                 className="h-8 w-auto mr-3" 
               />
-              <span className="text-[var(--theme-primary)] font-[var(--theme-font-display)] text-xl tracking-wider">
+              <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-display)] text-xl tracking-wider">
                 Spit Hierarchy
               </span>
             </div>
-            <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] text-sm">
+            <p className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] text-sm">
               The ultimate destination for ranking and discovering the greatest rappers of all time.
             </p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg mb-4">Explore</h3>
+            <h3 className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-lg mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/rankings" 
-                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Trophy className="w-4 h-4 mr-2" />
@@ -45,7 +45,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/all-rappers" 
-                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Music className="w-4 h-4 mr-2" />
@@ -55,7 +55,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/blog" 
-                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Calendar className="w-4 h-4 mr-2" />
@@ -65,7 +65,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/about" 
-                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <Info className="w-4 h-4 mr-2" />
@@ -77,12 +77,12 @@ const Footer = () => {
 
           {/* Community */}
           <div>
-            <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg mb-4">Community</h3>
+            <h3 className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-lg mb-4">Community</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/community-cypher" 
-                  className="flex items-center text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   <CypherIcon className="w-4 h-4 mr-2" />
@@ -92,7 +92,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/auth" 
-                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Join Spit Hierarchy
@@ -101,7 +101,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/analytics" 
-                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Analytics
@@ -112,12 +112,12 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h3 className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
+            <h3 className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
                   to="/privacy" 
-                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Privacy Policy
@@ -126,7 +126,7 @@ const Footer = () => {
               <li>
                 <Link 
                   to="/terms" 
-                  className="text-[var(--theme-primary)] hover:text-[var(--theme-primaryLight)] transition-colors font-[var(--theme-font-body)]"
+                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Terms of Use
@@ -136,8 +136,8 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-[var(--theme-primary)] mt-8 pt-8 text-center">
-          <p className="text-[var(--theme-primary)] font-[var(--theme-font-body)] text-sm">
+        <div className="border-t border-[hsl(var(--theme-primary))] mt-8 pt-8 text-center">
+          <p className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] text-sm">
             © 2025 Fresh Dope Biz LLC. All rights reserved. Keep the culture alive.
           </p>
         </div>
