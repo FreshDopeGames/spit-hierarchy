@@ -10,7 +10,7 @@ import { AchievementProvider } from "@/components/achievements/AchievementProvid
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 import AuthGuard from "@/components/AuthGuard";
-import ContentSecurityPolicy from "@/components/security/ContentSecurityPolicy";
+import AppInitializer from "@/components/AppInitializer";
 import EmailConfirmationHandler from "@/components/auth/EmailConfirmationHandler";
 import ScrollToTop from "@/components/ScrollToTop";
 import Index from "./pages/Index";
@@ -71,78 +71,62 @@ const queryClient = new QueryClient({
 
 function App() {
   return (
-    <QueryClientProvider client={queryClient}>
-      <EnhancedThemeProvider>
-        <SecureAuthProvider>
-          <SecurityProvider>
-            <TooltipProvider>
-              <AchievementProvider>
-                <ErrorBoundary>
-                  <OnboardingProvider>
-                    <Sonner />
-                    <ContentSecurityPolicy />
-                    <EmailConfirmationHandler />
-                    <BrowserRouter>
-                      <ScrollToTop />
-                      <Routes>
-                        <Route path="/" element={<Index />} />
-                        <Route path="/auth" element={<Auth />} />
-                        <Route path="/about" element={<About />} />
-                        <Route path="/privacy" element={<PrivacyPolicy />} />
-                        <Route path="/terms" element={<TermsOfUse />} />
-                        <Route path="/blog" element={<Blog />} />
-                        <Route path="/blog/:slug" element={<BlogDetail />} />
-                        <Route path="/rappers" element={<AllRappers />} />
-                        <Route path="/all-rappers" element={<AllRappers />} />
-                        <Route path="/rapper/:id" element={<RapperDetail />} />
-                        <Route path="/rankings" element={<Rankings />} />
-                        <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
-                        <Route path="/rankings/community-rankings/:slug" element={<UserRankingRedirect />} />
-                        <Route path="/vs" element={<VSMatches />} />
-                        <Route path="/vs/:slug" element={<VSMatchDetail />} />
-                        <Route path="/user/:username" element={<PublicUserProfileByUsername />} />
-                        <Route path="/community-cypher" element={<CommunityCypher />} />
-                        
-                        {/* Protected Routes */}
-                        <Route 
-                          path="/profile" 
-                          element={
-                            <AuthGuard requireAuth>
-                              <UserProfile />
-                            </AuthGuard>
-                          } 
-                        />
-                        <Route 
-                          path="/analytics" 
-                          element={
-                            <AuthGuard requireAuth>
-                              <Analytics />
-                            </AuthGuard>
-                          } 
-                        />
-                        
-                        {/* Admin Routes */}
-                        <Route 
-                          path="/admin" 
-                          element={
-                            <AuthGuard requireAuth adminOnly>
-                              <Admin />
-                            </AuthGuard>
-                          } 
-                        />
-                        
-                        {/* Catch all route */}
-                        <Route path="*" element={<NotFound />} />
-                      </Routes>
-                    </BrowserRouter>
-                  </OnboardingProvider>
-                </ErrorBoundary>
-              </AchievementProvider>
-            </TooltipProvider>
-          </SecurityProvider>
-        </SecureAuthProvider>
-      </EnhancedThemeProvider>
-    </QueryClientProvider>
+    <AppInitializer>
+      <BrowserRouter>
+        <ScrollToTop />
+        <EmailConfirmationHandler />
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/auth" element={<Auth />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<TermsOfUse />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:slug" element={<BlogDetail />} />
+          <Route path="/rappers" element={<AllRappers />} />
+          <Route path="/all-rappers" element={<AllRappers />} />
+          <Route path="/rapper/:id" element={<RapperDetail />} />
+          <Route path="/rankings" element={<Rankings />} />
+          <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
+          <Route path="/rankings/community-rankings/:slug" element={<UserRankingRedirect />} />
+          <Route path="/vs" element={<VSMatches />} />
+          <Route path="/vs/:slug" element={<VSMatchDetail />} />
+          <Route path="/user/:username" element={<PublicUserProfileByUsername />} />
+          <Route path="/community-cypher" element={<CommunityCypher />} />
+          
+          {/* Protected Routes */}
+          <Route 
+            path="/profile" 
+            element={
+              <AuthGuard requireAuth>
+                <UserProfile />
+              </AuthGuard>
+            } 
+          />
+          <Route 
+            path="/analytics" 
+            element={
+              <AuthGuard requireAuth>
+                <Analytics />
+              </AuthGuard>
+            } 
+          />
+          
+          {/* Admin Routes */}
+          <Route 
+            path="/admin" 
+            element={
+              <AuthGuard requireAuth adminOnly>
+                <Admin />
+              </AuthGuard>
+            } 
+          />
+          
+          {/* Catch all route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </AppInitializer>
   );
 }
 
