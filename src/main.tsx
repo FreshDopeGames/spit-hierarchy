@@ -39,10 +39,10 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <HelmetProvider>
-      <ContentSecurityPolicy />
-      <PerformanceMonitor />
       <QueryClientProvider client={queryClient}>
         <EnhancedThemeProvider>
+          <ContentSecurityPolicy />
+          <PerformanceMonitor />
           <SecureAuthProvider>
             <SecurityProvider>
               <AchievementProvider>
