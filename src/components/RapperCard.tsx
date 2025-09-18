@@ -86,7 +86,7 @@ const RapperCard = ({
             {rapper.verified && <Verified className="w-5 h-5 text-[var(--theme-secondary)] flex-shrink-0" />}
           </div>
 
-          {rapper.real_name && <p className="text-[var(--theme-textMuted)] text-sm font-medium font-[var(--theme-fontSecondary)]">{rapper.real_name}</p>}
+          
 
           {!compact && (
             <div className="flex flex-wrap gap-2 text-xs">
