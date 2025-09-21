@@ -106,7 +106,7 @@ export const generateSearchVariations = (searchTerm: string): string[] => {
 };
 
 /**
- * Creates PostgREST-compatible OR query patterns for multiple search variations
+ * Creates PostgREST-compatible OR query patterns using unaccent for accent-insensitive search
  */
 export const createSearchOrQuery = (searchTerm: string, columns: string[] = ['name']): string => {
   const variations = generateSearchVariations(searchTerm);
@@ -116,7 +116,8 @@ export const createSearchOrQuery = (searchTerm: string, columns: string[] = ['na
   
   variations.forEach(variation => {
     columns.forEach(column => {
-      patterns.push(`${column}.ilike.%${variation}%`);
+      // Use unaccent on both column and search term for accent-insensitive matching
+      patterns.push(`unaccent(${column}).ilike.unaccent(%${variation}%)`);
     });
   });
 

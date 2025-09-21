@@ -2791,6 +2791,14 @@ export type Database = {
           username: string
         }[]
       }
+      unaccent: {
+        Args: { "": string }
+        Returns: string
+      }
+      unaccent_init: {
+        Args: { "": unknown }
+        Returns: unknown
+      }
     }
     Enums: {
       achievement_rarity: "common" | "rare" | "epic" | "legendary"

@@ -52,9 +52,15 @@ The application now only supports email/password authentication:
 # Enhanced Search Functionality - Special Character Handling
 
 ## Overview
-Implemented comprehensive text normalization and search enhancement to handle special characters, accents, and symbols in rapper searches across all components.
+Implemented comprehensive text normalization and enhanced search functionality using PostgreSQL's `unaccent` extension to handle special characters, accents, and symbols in rapper searches across all components.
 
 ## Implementation Details
+
+### Database Enhancement
+**PostgreSQL Extension**: Enabled `unaccent` extension for database-level accent normalization
+- Allows accent-insensitive matching directly in SQL queries  
+- Handles accented characters in both search input and database content
+- More efficient than application-level normalization alone
 
 ### Text Normalization Utility (`src/utils/textNormalization.ts`)
 Created comprehensive text processing functions:
@@ -62,14 +68,30 @@ Created comprehensive text processing functions:
 - **Symbol replacement**: $→S, €→E, £→L for currency symbols
 - **Punctuation handling**: Removes commas, preserves hyphens in names
 - **Search variations**: Generates multiple patterns for each search term
+- **Database integration**: Uses `unaccent()` function in PostgREST queries
 - **Relevance sorting**: Smart algorithm for ranking search results
 
 ### Character Handling Rules
-1. **Accented Characters**: André 3000 → Andre 3000, Aminé → Amine
+1. **Accented Characters**: André 3000 ↔ Andre 3000, Aminé ↔ Amine (bidirectional)
 2. **Currency Symbols**: A$AP Rocky → ASAP Rocky, Joey Bada$$ → Joey BadaSS
 3. **Punctuation**: Tyler, The Creator → Tyler The Creator (comma removed)
 4. **Hyphens**: Jay-Z → preserved (meaningful separators kept)
 5. **Case Insensitive**: All searches converted to lowercase
+
+### Database Query Enhancement
+**PostgreSQL Integration**:
+```sql
+-- Example query using unaccent extension
+SELECT * FROM rappers 
+WHERE unaccent(name) ILIKE unaccent('%andre%') 
+   OR unaccent(real_name) ILIKE unaccent('%andre%')
+```
+
+**Key Benefits**:
+- "andre" matches "André 3000" in database
+- "asap" matches "A$AP Rocky"
+- "amine" matches "Aminé"  
+- "tyler creator" matches "Tyler, The Creator"
 
 ### Search Pattern Generation
 For each search term, creates multiple variations:
@@ -84,13 +106,14 @@ For each search term, creates multiple variations:
 Enhanced three core search functions:
 
 1. **`useRapperSearch.ts`**: Top 5 component rapper selection
-2. **`useRapperAutocomplete.ts`**: Admin and form autocomplete fields
+2. **`useRapperAutocomplete.ts`**: Admin and form autocomplete fields  
 3. **`useAllRappers.ts`**: All Rappers page search functionality
 
 ### Performance Optimizations
 - Maintained existing debouncing (300ms for autocomplete, 2s for All Rappers)
 - Limited search variations to prevent query overflow
 - Prioritized exact matches over fuzzy matches
+- PostgreSQL `unaccent()` for efficient database-level normalization
 - Preserved result caching and stale-time settings
 
 ### Search Result Ranking
@@ -106,11 +129,11 @@ Smart relevance algorithm:
 ### Examples
 | User Input | Matches | Reason |
 |------------|---------|---------|
-| "andre 3000" | André 3000 | Accent normalization |
+| "andre" | André 3000 | Database unaccent matching |
 | "asap rocky" | A$AP Rocky | Symbol replacement |
 | "tyler creator" | Tyler, The Creator | Punctuation handling |
 | "joey badass" | Joey Bada$$ | Symbol + spacing |
-| "amine" | Aminé | Accent normalization |
+| "amine" | Aminé | Database unaccent matching |
 
 ### Backward Compatibility
 - Preserves all existing search functionality
@@ -134,5 +157,8 @@ Test cases should include:
 - Mixed case inputs
 - Empty and edge case inputs
 - Performance with large result sets
+- Database accent matching
+
+**Database Dependencies**: Requires PostgreSQL `unaccent` extension (✅ enabled in production)
 
 This enhancement significantly improves user experience by making rapper searches more intuitive and forgiving of typing variations.
