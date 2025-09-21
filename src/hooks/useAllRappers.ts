@@ -2,6 +2,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { createSearchOrQuery } from "@/utils/textNormalization";
 
 export interface UseAllRappersOptions {
   itemsPerPage?: number;
@@ -64,9 +65,10 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
       
       let query = supabase.from("rappers").select("*", { count: "exact" });
 
-      // Apply search filter
+      // Apply enhanced search filter with normalization
       if (searchTerm) {
-        query = query.or(`name.ilike.%${searchTerm}%,real_name.ilike.%${searchTerm}%`);
+        const searchOrQuery = createSearchOrQuery(searchTerm, ['name', 'real_name']);
+        query = query.or(searchOrQuery);
       }
 
       // Apply location filter

@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { createSearchOrQuery, sortBySearchRelevance } from "@/utils/textNormalization";
 
 interface UseRapperAutocompleteOptions {
   excludeIds?: string[];
@@ -36,14 +37,17 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
         query = query.not("id", "in", `(${options.excludeIds.join(",")})`);
       }
 
-      // Search by name and real_name with multiple strategies
-      const searchPattern = `%${debouncedSearchTerm}%`;
-      query = query.or(`name.ilike.${searchPattern},real_name.ilike.${searchPattern}`);
+      // Use enhanced search with normalization for both name and real_name
+      const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
+      query = query.or(searchOrQuery);
 
-      const { data, error } = await query.order("name");
+      const { data, error } = await query;
 
       if (error) throw error;
-      return data || [];
+      
+      // Sort results by relevance instead of just alphabetical
+      const sortedResults = sortBySearchRelevance(data || [], debouncedSearchTerm);
+      return sortedResults;
     },
     enabled: debouncedSearchTerm.length >= 2,
     staleTime: 5 * 60 * 1000, // 5 minutes

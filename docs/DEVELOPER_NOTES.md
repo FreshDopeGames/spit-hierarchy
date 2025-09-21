@@ -46,3 +46,93 @@ The application now only supports email/password authentication:
 - Sign in with email/password works  
 - No social authentication options visible
 - Clean, focused authentication UI
+
+---
+
+# Enhanced Search Functionality - Special Character Handling
+
+## Overview
+Implemented comprehensive text normalization and search enhancement to handle special characters, accents, and symbols in rapper searches across all components.
+
+## Implementation Details
+
+### Text Normalization Utility (`src/utils/textNormalization.ts`)
+Created comprehensive text processing functions:
+- **Accent normalization**: Converts é→e, ñ→n, ç→c, etc. using Unicode mapping
+- **Symbol replacement**: $→S, €→E, £→L for currency symbols
+- **Punctuation handling**: Removes commas, preserves hyphens in names
+- **Search variations**: Generates multiple patterns for each search term
+- **Relevance sorting**: Smart algorithm for ranking search results
+
+### Character Handling Rules
+1. **Accented Characters**: André 3000 → Andre 3000, Aminé → Amine
+2. **Currency Symbols**: A$AP Rocky → ASAP Rocky, Joey Bada$$ → Joey BadaSS
+3. **Punctuation**: Tyler, The Creator → Tyler The Creator (comma removed)
+4. **Hyphens**: Jay-Z → preserved (meaningful separators kept)
+5. **Case Insensitive**: All searches converted to lowercase
+
+### Search Pattern Generation
+For each search term, creates multiple variations:
+- Original term (highest priority for exact matches)
+- Normalized accents version
+- Normalized symbols version  
+- No punctuation version
+- Compact version (no spaces)
+- Combined normalized variations
+
+### Updated Search Hooks
+Enhanced three core search functions:
+
+1. **`useRapperSearch.ts`**: Top 5 component rapper selection
+2. **`useRapperAutocomplete.ts`**: Admin and form autocomplete fields
+3. **`useAllRappers.ts`**: All Rappers page search functionality
+
+### Performance Optimizations
+- Maintained existing debouncing (300ms for autocomplete, 2s for All Rappers)
+- Limited search variations to prevent query overflow
+- Prioritized exact matches over fuzzy matches
+- Preserved result caching and stale-time settings
+
+### Search Result Ranking
+Smart relevance algorithm:
+1. Exact matches (original text) - highest priority
+2. Exact matches (normalized text)
+3. Starts with matches (original)
+4. Starts with matches (normalized)
+5. Contains matches (original)
+6. Contains matches (normalized)
+7. Alphabetical sorting - fallback
+
+### Examples
+| User Input | Matches | Reason |
+|------------|---------|---------|
+| "andre 3000" | André 3000 | Accent normalization |
+| "asap rocky" | A$AP Rocky | Symbol replacement |
+| "tyler creator" | Tyler, The Creator | Punctuation handling |
+| "joey badass" | Joey Bada$$ | Symbol + spacing |
+| "amine" | Aminé | Accent normalization |
+
+### Backward Compatibility
+- Preserves all existing search functionality
+- Maintains current performance characteristics  
+- Exact matches still have highest priority
+- No breaking changes to search behavior
+
+### Future Enhancements
+Consider adding:
+- Phonetic matching (Soundex/Metaphone)
+- Abbreviation handling (J. Cole → J Cole)
+- Alternative spellings database
+- Machine learning relevance scoring
+- Search analytics and optimization
+
+### Testing Considerations
+Test cases should include:
+- International characters (é, ñ, ç, etc.)
+- Currency symbols ($, €, £)
+- Punctuation variations
+- Mixed case inputs
+- Empty and edge case inputs
+- Performance with large result sets
+
+This enhancement significantly improves user experience by making rapper searches more intuitive and forgiving of typing variations.
