@@ -74,15 +74,15 @@ const RapperDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-background))] relative">
         <HeaderNavigation isScrolled={false} />
-        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-background))]/80 via-[hsl(var(--theme-backgroundLight))]/80 to-[hsl(var(--theme-background))]/80 z-0"></div>
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
           <div className="animate-pulse">
-            <div className="h-8 bg-rap-carbon-light rounded w-32 mb-6"></div>
-            <div className="h-96 bg-rap-carbon-light rounded mb-6"></div>
-            <div className="h-6 bg-rap-carbon-light rounded w-3/4 mb-4"></div>
-            <div className="h-4 bg-rap-carbon-light rounded w-1/2"></div>
+            <div className="h-8 bg-[hsl(var(--theme-backgroundLight))] rounded w-32 mb-6"></div>
+            <div className="h-96 bg-[hsl(var(--theme-backgroundLight))] rounded mb-6"></div>
+            <div className="h-6 bg-[hsl(var(--theme-backgroundLight))] rounded w-3/4 mb-4"></div>
+            <div className="h-4 bg-[hsl(var(--theme-backgroundLight))] rounded w-1/2"></div>
           </div>
         </div>
       </div>
@@ -91,20 +91,20 @@ const RapperDetail = () => {
 
   if (!rapper) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-background))] relative">
         <HeaderNavigation isScrolled={false} />
-        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-background))]/80 via-[hsl(var(--theme-backgroundLight))]/80 to-[hsl(var(--theme-background))]/80 z-0"></div>
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
           <Link to="/all-rappers">
-            <ThemedButton variant="outline" className="mb-6 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 font-kaushan">
+            <ThemedButton variant="outline" className="mb-6 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 font-[var(--theme-font-body)]">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To All Rappers
             </ThemedButton>
           </Link>
           <ThemedCard className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
             <ThemedCardContent className="p-8 text-center">
-              <h2 className="text-2xl font-mogra text-[var(--theme-text)] mb-4">Pharaoh Not Found</h2>
-              <p className="text-[var(--theme-textMuted)] font-kaushan">This pharaoh has vanished from the dynasty.</p>
+              <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)] mb-4">Pharaoh Not Found</h2>
+              <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">This pharaoh has vanished from the dynasty.</p>
             </ThemedCardContent>
           </ThemedCard>
         </div>
@@ -141,13 +141,13 @@ const RapperDetail = () => {
         }}
       />
       
-      <main className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+      <main className="min-h-screen bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-background))] relative">
         <HeaderNavigation isScrolled={false} />
         
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-8">
           {/* Back Button - Now properly preserves navigation state */}
           <Link to="/all-rappers" className="inline-block mb-6">
-            <ThemedButton variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 hover:border-[var(--theme-primary)] font-kaushan shadow-lg shadow-[var(--theme-primary)]/20">
+            <ThemedButton variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 hover:border-[var(--theme-primary)] font-[var(--theme-font-body)] shadow-lg shadow-[var(--theme-primary)]/20">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To All Rappers
             </ThemedButton>

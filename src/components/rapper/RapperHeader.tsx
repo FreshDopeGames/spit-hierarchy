@@ -83,24 +83,24 @@ const RapperHeader = ({
 
               {/* Stats */}
               <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 bg-gradient-to-r from-rap-burgundy/30 to-rap-forest/30 px-4 py-2 rounded-lg border border-rap-silver/20">
-                  <Crown className="w-5 h-5 text-rap-gold" />
-                  <span className="text-rap-platinum font-semibold font-merienda">
+                <div className="flex items-center gap-2 bg-gradient-to-r from-[hsl(var(--theme-secondary))]/30 to-[hsl(var(--theme-accent))]/30 px-4 py-2 rounded-lg border border-[hsl(var(--theme-border))]/20">
+                  <Crown className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
+                  <span className="text-[hsl(var(--theme-text))] font-semibold font-[var(--theme-font-body)]">
                     {rapper.top5_count || 0} Top 5{(rapper.top5_count || 0) !== 1 ? 's' : ''}
                   </span>
                 </div>
-                <Badge variant="secondary" className="bg-rap-forest/20 text-rap-platinum border-rap-forest/30 px-4 py-2 font-kaushan">
+                <Badge variant="secondary" className="bg-[hsl(var(--theme-accent))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-accent))]/30 px-4 py-2 font-[var(--theme-font-body)]">
                   {rapper.total_votes || 0} votes
                 </Badge>
                 {zodiacSign && (
-                  <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 px-4 py-2 font-kaushan">
+                  <Badge variant="secondary" className="bg-[hsl(var(--theme-secondary))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-secondary))]/30 px-4 py-2 font-[var(--theme-font-body)]">
                     {zodiacSign}
                   </Badge>
                 )}
               </div>
 
               {/* Location, Birth Info & Zodiac */}
-              <div className="flex flex-wrap gap-4 text-rap-smoke font-kaushan">
+              <div className="flex flex-wrap gap-4 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                 {rapper.origin && (
                   <div className="flex items-center gap-2">
                     <MapPin className="w-4 h-4" />
@@ -118,13 +118,13 @@ const RapperHeader = ({
               {/* Tags */}
               {tags.length > 0 && (
                 <div>
-                  <h4 className="text-sm font-medium text-rap-smoke mb-2">Tags</h4>
+                  <h4 className="text-sm font-medium text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] mb-2">Tags</h4>
                   <div className="flex flex-wrap gap-2">
                     {tags.map((tag) => (
                       <Badge
                         key={tag.id}
                         variant="secondary"
-                        className="font-kaushan"
+                        className="font-[var(--theme-font-body)]"
                         style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
                       >
                         {tag.name}
@@ -140,7 +140,7 @@ const RapperHeader = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan"
+                    className="border-[hsl(var(--theme-secondary))]/30 text-[hsl(var(--theme-secondary))] hover:bg-[hsl(var(--theme-secondary))]/20 font-[var(--theme-font-body)]"
                     asChild
                   >
                     <a 
@@ -157,7 +157,7 @@ const RapperHeader = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan"
+                    className="border-[hsl(var(--theme-secondary))]/30 text-[hsl(var(--theme-secondary))] hover:bg-[hsl(var(--theme-secondary))]/20 font-[var(--theme-font-body)]"
                     asChild
                   >
                     <a 
@@ -174,7 +174,7 @@ const RapperHeader = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-rap-burgundy/30 text-rap-burgundy hover:bg-rap-burgundy/20 font-kaushan"
+                    className="border-[hsl(var(--theme-secondary))]/30 text-[hsl(var(--theme-secondary))] hover:bg-[hsl(var(--theme-secondary))]/20 font-[var(--theme-font-body)]"
                     asChild
                   >
                     <a 

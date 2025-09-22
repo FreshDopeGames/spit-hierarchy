@@ -48,7 +48,7 @@ const CareerStatsCard = ({
       <CardContent className="p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">
-            <h3 className="text-xl font-[var(--theme-fontPrimary)] text-[var(--theme-text)]">Career Overview</h3>
+            <h3 className="text-xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">Career Overview</h3>
             {!stats.hasMusicBrainzId && <Badge variant="secondary" className="text-xs">
                 Limited Data
               </Badge>}
@@ -59,17 +59,17 @@ const CareerStatsCard = ({
                 <div className="flex items-center justify-center">
                   <item.icon className={`w-6 h-6 ${item.color}`} />
                 </div>
-                <div className={`text-2xl font-bold font-[var(--theme-fontPrimary)] ${item.color}`}>
+                <div className={`text-2xl font-bold font-[var(--theme-font-heading)] ${item.color}`}>
                   {item.value}
                 </div>
-                <div className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">
+                <div className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                   {item.label}
                 </div>
               </div>)}
           </div>
 
           {stats.careerStartYear && <div className="mt-4 p-3 bg-[var(--theme-backgroundLight)]/30 rounded-lg">
-              <div className="flex items-center gap-2 text-sm text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] justify-center ">
+              <div className="flex items-center gap-2 text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)] justify-center ">
                 <Calendar className="w-4 h-4" />
                 <span>
                   Active: {stats.careerStartYear}
@@ -80,7 +80,7 @@ const CareerStatsCard = ({
             </div>}
 
           {stats.labelAffiliations.length > 0 && <div className="mt-4 space-y-2">
-              <div className="flex items-center gap-2 text-sm text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">
+              <div className="flex items-center gap-2 text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
                 <Building2 className="w-4 h-4" />
                 <span>Record Labels:</span>
               </div>

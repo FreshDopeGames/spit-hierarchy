@@ -130,28 +130,28 @@ const RapperDiscography = ({
                 spotify: directLinks.spotify || searchLinks.spotify,
                 appleMusic: directLinks.apple_music || searchLinks.appleMusic
               };
-              return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+              return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors">
                     <div className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden" style={{
                   backgroundColor: placeholder.style.bgColor,
                   background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
                 }}>
-                      <Disc3 className="w-6 h-6 text-rap-gold" />
+                      <Disc3 className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
                       <div className="absolute inset-0 opacity-10" style={{
                     backgroundImage: `radial-gradient(circle at 30% 70%, ${placeholder.style.textColor} 1px, transparent 1px)`,
                     backgroundSize: '8px 8px'
                   }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
+                      <h4 className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate">
                         {item.album?.title}
                       </h4>
-                      <div className="flex items-center gap-3 text-sm text-rap-smoke font-kaushan">
+                      <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {formatDate(item.album?.release_date)}
                         </div>
                         {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
-                        {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
+                        {item.album?.label && <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
                         <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(externalLinks.spotify, '_blank')}>
@@ -164,7 +164,7 @@ const RapperDiscography = ({
                         </Button>
                       </div>
                     </div>
-                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
+                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-[hsl(var(--theme-secondary))]/50 text-[hsl(var(--theme-secondary))]">
                         {item.role}
                       </Badge>}
                   </div>;
@@ -174,7 +174,7 @@ const RapperDiscography = ({
 
           <TabsContent value="mixtapes" className="mt-6 sm:mt-4">
             <div className="space-y-4 sm:space-y-3">
-                {mixtapes.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-rap-smoke font-kaushan">
+                {mixtapes.length === 0 ? <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                   No mixtapes found in discography
                 </div> : mixtapes.map(item => {
               const releaseYear = item.album?.release_date ? new Date(item.album.release_date).getFullYear() : undefined;
@@ -188,28 +188,28 @@ const RapperDiscography = ({
               // For mixtapes, only show links if we have direct links from MusicBrainz
               const hasDirectSpotify = directLinks.spotify;
               const hasDirectApple = directLinks.apple_music;
-              return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-rap-carbon/20 rounded-lg hover:bg-rap-carbon/30 transition-colors">
+              return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors">
                     <div className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden" style={{
                   backgroundColor: placeholder.style.bgColor,
                   background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
                 }}>
-                      <Music className="w-6 h-6 text-rap-burgundy" />
+                      <Music className="w-6 h-6 text-[hsl(var(--theme-secondary))]" />
                       <div className="absolute inset-0 opacity-10" style={{
                     backgroundImage: `linear-gradient(45deg, ${placeholder.style.textColor} 25%, transparent 25%, transparent 75%, ${placeholder.style.textColor} 75%)`,
                     backgroundSize: '6px 6px'
                   }} />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-rap-platinum font-kaushan truncate">
+                      <h4 className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate">
                         {item.album?.title}
                       </h4>
-                      <div className="flex items-center gap-3 text-sm text-rap-smoke font-kaushan">
+                      <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
                           {formatDate(item.album?.release_date)}
                         </div>
                         {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
-                        {item.album?.label && <span className="text-rap-gold">{item.album.label.name}</span>}
+                        {item.album?.label && <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
                         {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(directLinks.spotify, '_blank')}>
@@ -226,7 +226,7 @@ const RapperDiscography = ({
                         </Button>
                       </div>
                     </div>
-                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-rap-burgundy/50 text-rap-burgundy">
+                    {item.role !== 'primary' && <Badge variant="outline" className="text-xs border-[hsl(var(--theme-secondary))]/50 text-[hsl(var(--theme-secondary))]">
                         {item.role}
                       </Badge>}
                   </div>;
@@ -236,14 +236,14 @@ const RapperDiscography = ({
 
         </Tabs>
         
-        <div className="flex items-center justify-center gap-2 pt-6 border-t border-rap-carbon/20 mt-6 my-[25px] py-[23px]">
+        <div className="flex items-center justify-center gap-2 pt-6 border-t border-[hsl(var(--theme-border))]/20 mt-6 my-[25px] py-[23px]">
           {isAdmin && data?.cached && <Badge variant="secondary" className="text-xs">
               Cached
             </Badge>}
-          {isLoading && <Badge variant="outline" className="text-xs border-rap-gold/50 text-rap-gold">
+          {isLoading && <Badge variant="outline" className="text-xs border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))]">
               Loading...
             </Badge>}
-          {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-rap-gold/50 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon hover:border-rap-gold transition-all duration-200 gap-2">
+          {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-background))] hover:border-[hsl(var(--theme-primary))] transition-all duration-200 gap-2">
             <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
             <span className="text-sm font-medium">
               {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
