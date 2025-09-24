@@ -288,39 +288,67 @@ serve(async (req) => {
         continue;
       }
 
-      // Strict filtering: Only include releases with primary-type "Album" and no conflicting secondary types
-      // Allow only pure albums or albums with harmless technical secondary types
-      const allowedSecondaryTypes = [
-        'Stereo', 'Mono', 'Remaster', 'Deluxe edition'
+      // Enhanced filtering: Exclude problematic secondary types instead of restrictive allowlist
+      const excludedSecondaryTypes = [
+        'Compilation', 'Live', 'Remix', 'Soundtrack', 'Spokenword', 
+        'Interview', 'Demo', 'Audiobook', 'DJ-mix'
       ];
       
-      // Only include if primary type is Album AND no secondary types OR only allowed secondary types
-      const isPureAlbum = primaryType === 'Album' && (
-        secondary.length === 0 || 
-        secondary.every(type => allowedSecondaryTypes.includes(type))
+      // Allow technical/format types that don't change content
+      const technicalTypes = [
+        'Studio', 'Stereo', 'Mono', 'Remaster', 'Deluxe edition', 
+        'Enhanced', 'Digipak', 'Limited edition', 'Special edition'
+      ];
+      
+      // Proper mixtape detection: Only official mixtape categories from MusicBrainz
+      const isMixtape = primaryType === 'Album' && secondary.length > 0 && (
+        secondary.includes('Mixtape/Street') ||
+        (secondary.includes('DJ-mix') && secondary.includes('Mixtape/Street'))
       );
       
-      if (!isPureAlbum) {
-        console.log(`Skipping album "${rg.title}" - primary-type: ${primaryType}, secondary-types: [${secondary.join(', ')}]`);
+      // Album filtering: Include Album primary type, exclude problematic secondary types
+      const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
+      const isPureAlbum = primaryType === 'Album' && !hasExcludedType && !isMixtape;
+      
+      // Skip if not album or mixtape
+      if (!isPureAlbum && !isMixtape) {
+        console.log(`Skipping release "${rg.title}" - primary-type: ${primaryType}, secondary-types: [${secondary.join(', ')}]`);
         continue;
       }
       
-      // Additional title-based filtering for common non-studio releases
+      // Enhanced title-based filtering for compilations and posthumous releases
       const titleLower = rg.title.toLowerCase();
       const excludedTitlePatterns = [
-        'greatest hits', 'best of', 'anthology', 'collection',
-        'live at', 'live from', 'unplugged', 'acoustic',
-        'radio edit', 'clean version', 'instrumental',
-        'karaoke', 'tribute', 'cover', 'remix album'
+        'greatest hits', 'best of', 'anthology', 'collection', 'hits', 'compilation', 'essential', 'ultimate',
+        'live at', 'live from', 'unplugged', 'acoustic', 'concert', 'tour',
+        'radio edit', 'clean version', 'instrumental', 'karaoke', 'tribute', 'cover', 'remix album',
+        'unreleased', 'rare', 'vault', 'lost', 'bonus', 'outtakes', 'b-sides', 'alternate',
+        'reloaded', 'revisited', 'redux', 'reborn', 'resurrection', 'loyalty', 'faithful'
       ];
       const hasSuspiciousTitle = excludedTitlePatterns.some(pattern => titleLower.includes(pattern));
       
       if (hasSuspiciousTitle) {
-        console.log(`Skipping album "${rg.title}" - suspicious title pattern`);
+        console.log(`Skipping release "${rg.title}" - suspicious title pattern`);
         continue;
       }
 
-      const isMixtape = secondary.some((t) => t.toLowerCase().includes('mixtape'));
+      // Posthumous release filtering for deceased artists
+      const releaseYear = rg['first-release-date'] ? parseInt(rg['first-release-date'].substring(0, 4)) : null;
+      if (careerEndYear && releaseYear && releaseYear > careerEndYear + 2) {
+        // For releases more than 2 years after death, apply stricter filtering
+        const posthumousPatterns = [
+          'featuring', 'ft.', 'feat.', 'with', 'vs.', 'meets', 'presents',
+          'volume', 'vol.', 'part', 'pt.', 'chapter', 'book', 'tape',
+          'memorial', 'tribute', 'remembering', 'in memory', 'legacy'
+        ];
+        const hasPosthumousPattern = posthumousPatterns.some(pattern => titleLower.includes(pattern));
+        
+        if (hasPosthumousPattern) {
+          console.log(`Skipping posthumous release "${rg.title}" (${releaseYear}) - posthumous pattern detected`);
+          continue;
+        }
+      }
+
       const releaseType = isMixtape ? 'mixtape' : 'album';
 
       const { data: existingAlbum } = await supabaseService
