@@ -173,8 +173,8 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl mx-auto bg-[var(--theme-surface)] border-[var(--theme-border)]/30 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-2 pb-6 sticky top-0 bg-[var(--theme-surface)] z-10">
+      <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[var(--theme-border)]/30 max-h-[90vh] overflow-y-auto">
+        <DialogHeader className="space-y-2 pb-6 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] z-20">
           <DialogTitle className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-2xl text-center">
             Rate {rapper.name}
           </DialogTitle>
@@ -228,7 +228,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           })}
         </div>
 
-        <div className="sticky bottom-0 bg-[var(--theme-surface)] pt-6 mt-6 border-t border-[var(--theme-border)]/30">
+        <div className="sticky bottom-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] pt-6 mt-6 border-t border-[var(--theme-border)]/30">
           <div className="flex items-center justify-between mb-4">
             <div className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
               Complete rating: {ratedCount}/{totalCount} skills
@@ -247,7 +247,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           <ThemedButton
             onClick={handleSubmit}
             disabled={submitMutation.isPending}
-            variant="secondary"
+            variant="gradient"
             className="w-full"
           >
             {submitMutation.isPending ? "Submitting..." : `Submit All Ratings (${totalCount} skills)`}

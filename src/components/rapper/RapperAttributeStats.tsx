@@ -86,7 +86,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
   const overallScaled = Math.round((calculatedOverall / 10) * 100);
 
   return (
-    <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+    <Card className="bg-black border-[var(--theme-border)]">
       <CardHeader>
         <CardTitle className="text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Skill Ratings</CardTitle>
       </CardHeader>
@@ -123,7 +123,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
             <div className="flex justify-end">
               <button
                 onClick={onVoteClick}
-                className="px-4 py-2 rounded-md bg-[var(--theme-secondary)] hover:bg-[var(--theme-secondary)]/80 text-[var(--theme-background)] font-[var(--theme-fontSecondary)]"
+                className="px-4 py-2 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-semibold transition-opacity duration-200 font-[var(--theme-fontSecondary)]"
               >
                 Rate Rapper
               </button>

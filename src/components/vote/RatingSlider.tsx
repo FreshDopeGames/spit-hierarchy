@@ -18,7 +18,7 @@ const RatingSlider = ({ rating, setRating }: RatingSliderProps) => {
       </Label>
       <div className="px-2">
         <div className="relative flex w-full touch-none select-none items-center">
-          <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-[var(--theme-surface)]">
+          <div className="relative h-2 w-full grow overflow-hidden rounded-full bg-gray-700">
             <div 
               className="absolute h-full bg-[var(--theme-primary)] rounded-full" 
               style={{ width: `${(rating[0] / 10) * 100}%` }}
