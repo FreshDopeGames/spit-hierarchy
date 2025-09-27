@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { X, Star, Trophy, Users } from "lucide-react";
+import { ThemedInput } from "@/components/ui/themed-input";
+import { X, Star, Trophy, Users, User, Check, AlertCircle } from "lucide-react";
 import TopFiveSlot from "@/components/profile/TopFiveSlot";
 import RapperSearchOverlay from "@/components/profile/RapperSearchOverlay";
 import { useUserTopRappers } from "@/hooks/useUserTopRappers";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -17,6 +20,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
+  const [username, setUsername] = useState("");
+  const [isCheckingUsername, setIsCheckingUsername] = useState(false);
+  const [usernameStatus, setUsernameStatus] = useState<'idle' | 'available' | 'taken' | 'invalid'>('idle');
+  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
 
   const handleSlotClick = (position: number) => {
     setSelectedPosition(position);
@@ -34,6 +41,65 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
   const handleCloseSearch = () => {
     setIsSearchOpen(false);
     setSelectedPosition(null);
+  };
+
+  // Username validation
+  useEffect(() => {
+    const checkUsername = async () => {
+      if (!username.trim() || username.length < 3) {
+        setUsernameStatus('idle');
+        return;
+      }
+
+      // Basic validation
+      const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+      if (!usernameRegex.test(username) || username.length > 30) {
+        setUsernameStatus('invalid');
+        return;
+      }
+
+      setIsCheckingUsername(true);
+      try {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id')
+          .eq('username', username.trim())
+          .maybeSingle();
+
+        if (error) throw error;
+        
+        setUsernameStatus(data ? 'taken' : 'available');
+      } catch (error) {
+        console.error('Error checking username:', error);
+        setUsernameStatus('invalid');
+      } finally {
+        setIsCheckingUsername(false);
+      }
+    };
+
+    const timeoutId = setTimeout(checkUsername, 500);
+    return () => clearTimeout(timeoutId);
+  }, [username]);
+
+  const handleUsernameNext = async () => {
+    if (usernameStatus !== 'available') return;
+    
+    setIsUpdatingProfile(true);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ username: username.trim() })
+        .eq('id', (await supabase.auth.getUser()).data.user?.id);
+
+      if (error) throw error;
+      
+      setCurrentStep(3); // Move to Top 5 step
+    } catch (error) {
+      console.error('Error updating username:', error);
+      toast.error('Failed to save username. Please try again.');
+    } finally {
+      setIsUpdatingProfile(false);
+    }
   };
 
   const handleComplete = () => {
@@ -201,6 +267,136 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     );
   }
 
+  // Step 2: Username Creation
+  if (currentStep === 2) {
+    const getUsernameStatusIcon = () => {
+      if (isCheckingUsername) return <div className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full" />;
+      if (usernameStatus === 'available') return <Check className="w-5 h-5 text-green-500" />;
+      if (usernameStatus === 'taken' || usernameStatus === 'invalid') return <AlertCircle className="w-5 h-5 text-red-500" />;
+      return null;
+    };
+
+    const getUsernameStatusMessage = () => {
+      if (usernameStatus === 'available') return "Username is available!";
+      if (usernameStatus === 'taken') return "Username is already taken";
+      if (usernameStatus === 'invalid') return "Username must be 3-30 characters, letters, numbers, _ and - only";
+      return "Choose a unique username that represents you";
+    };
+
+    const getUsernameStatusColor = () => {
+      if (usernameStatus === 'available') return 'hsl(var(--theme-success, 120 60% 50%))';
+      if (usernameStatus === 'taken' || usernameStatus === 'invalid') return 'hsl(var(--theme-error, 0 60% 50%))';
+      return 'hsl(var(--theme-textMuted))';
+    };
+
+    return (
+      <Dialog open={isOpen} onOpenChange={() => {}}>
+        <DialogContent 
+          className="max-w-[95vw] sm:max-w-2xl p-0 gap-0 overflow-hidden"
+          style={{
+            backgroundColor: 'hsl(var(--theme-surface))',
+            border: '2px solid hsl(var(--theme-primary))',
+            borderRadius: '12px'
+          }}
+        >
+          <div className="relative">
+            <button
+              onClick={handleSkip}
+              className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-black/20"
+              style={{ color: 'hsl(var(--theme-textMuted))' }}
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div 
+              className="p-4 sm:p-6 md:p-8 text-center"
+              style={{
+                background: 'linear-gradient(135deg, hsl(var(--theme-surface)) 0%, hsl(var(--theme-surfaceSecondary)) 100%)'
+              }}
+            >
+              <div className="mb-6">
+                <div 
+                  className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+                  style={{ backgroundColor: 'hsl(var(--theme-primary))' }}
+                >
+                  <User className="w-10 h-10" style={{ color: 'hsl(var(--theme-textLight))' }} />
+                </div>
+                <h2 
+                  className="text-2xl sm:text-3xl font-bold mb-4"
+                  style={{ 
+                    color: 'hsl(var(--theme-text))',
+                    fontFamily: 'var(--theme-font-heading)'
+                  }}
+                >
+                  Hi, my name is...
+                </h2>
+              </div>
+
+              <div className="mb-6 max-w-md mx-auto">
+                <div className="relative mb-3">
+                  <ThemedInput
+                    type="text"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    placeholder="Enter your username"
+                    className="text-center text-xl sm:text-2xl font-bold h-16 px-6"
+                    style={{
+                      fontFamily: 'var(--theme-font-heading)',
+                      fontSize: '1.5rem',
+                      fontWeight: '700',
+                    }}
+                    maxLength={30}
+                  />
+                  <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                    {getUsernameStatusIcon()}
+                  </div>
+                </div>
+                <p 
+                  className="text-sm mb-2"
+                  style={{ color: getUsernameStatusColor() }}
+                >
+                  {getUsernameStatusMessage()}
+                </p>
+                <p 
+                  className="text-xs"
+                  style={{ color: 'hsl(var(--theme-textMuted))' }}
+                >
+                  This will be your public display name on Spit Hierarchy
+                </p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+                <Button
+                  onClick={handleUsernameNext}
+                  disabled={usernameStatus !== 'available' || isUpdatingProfile}
+                  style={{
+                    backgroundColor: usernameStatus === 'available' ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-surfaceSecondary))',
+                    color: usernameStatus === 'available' ? 'hsl(var(--theme-textLight))' : 'hsl(var(--theme-textMuted))'
+                  }}
+                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:opacity-90 disabled:hover:opacity-100"
+                >
+                  {isUpdatingProfile ? "Saving..." : "Continue"}
+                </Button>
+                <Button
+                  onClick={() => setCurrentStep(1)}
+                  variant="outline"
+                  style={{
+                    borderColor: 'hsl(var(--theme-border))',
+                    color: 'hsl(var(--theme-textMuted))'
+                  }}
+                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:bg-black/5"
+                >
+                  Back
+                </Button>
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    );
+  }
+
+  // Step 3: Top 5 Selection
   return (
     <>
       <Dialog open={isOpen} onOpenChange={() => {}}>
@@ -300,7 +496,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                   Complete Setup
                 </Button>
                 <Button
-                  onClick={handleSkip}
+                  onClick={() => setCurrentStep(2)}
                   variant="outline"
                   style={{
                     borderColor: 'hsl(var(--theme-border))',
@@ -308,7 +504,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                   }}
                   className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:bg-black/5"
                 >
-                  Skip for Now
+                  Back
                 </Button>
               </div>
             </div>
