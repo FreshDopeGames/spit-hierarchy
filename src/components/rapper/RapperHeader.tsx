@@ -140,7 +140,7 @@ const RapperHeader = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-[hsl(var(--theme-secondary))]/30 text-[hsl(var(--theme-secondary))] hover:bg-[hsl(var(--theme-secondary))]/20 font-[var(--theme-font-body)]"
+                    className="bg-[var(--theme-gradient-primary)] border-2 border-[hsl(var(--theme-background))] text-[hsl(var(--theme-background))] hover:opacity-90 font-[var(--theme-font-body)] font-semibold shadow-lg"
                     asChild
                   >
                     <a 
@@ -157,7 +157,7 @@ const RapperHeader = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-[hsl(var(--theme-secondary))]/30 text-[hsl(var(--theme-secondary))] hover:bg-[hsl(var(--theme-secondary))]/20 font-[var(--theme-font-body)]"
+                    className="bg-[var(--theme-gradient-primary)] border-2 border-[hsl(var(--theme-background))] text-[hsl(var(--theme-background))] hover:opacity-90 font-[var(--theme-font-body)] font-semibold shadow-lg"
                     asChild
                   >
                     <a 
@@ -174,7 +174,7 @@ const RapperHeader = ({
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="border-[hsl(var(--theme-secondary))]/30 text-[hsl(var(--theme-secondary))] hover:bg-[hsl(var(--theme-secondary))]/20 font-[var(--theme-font-body)]"
+                    className="bg-[var(--theme-gradient-primary)] border-2 border-[hsl(var(--theme-background))] text-[hsl(var(--theme-background))] hover:opacity-90 font-[var(--theme-font-body)] font-semibold shadow-lg"
                     asChild
                   >
                     <a 

@@ -21,6 +21,7 @@ interface MusicBrainzArtist {
     'target-type'?: string;
     type?: string;
     label?: { id: string; name: string };
+    url?: { resource: string };
     begin?: string;
     end?: string;
   }>;
@@ -96,7 +97,7 @@ serve(async (req) => {
     // Load rapper row first (so we can short-circuit with cache before rate-limiting)
     const { data: rapper, error: rapperErr } = await supabaseService
       .from('rappers')
-      .select('id, name, musicbrainz_id, discography_last_updated')
+      .select('id, name, musicbrainz_id, discography_last_updated, instagram_handle, twitter_handle')
       .eq('id', rapperId)
       .single();
 
@@ -207,19 +208,55 @@ serve(async (req) => {
       return json({ success: false, error: 'Artist not found on MusicBrainz', discography: [] }, 404);
     }
 
-// Fetch artist details (labels and lifespan via relations)
-    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels&fmt=json`);
+// Fetch artist details (labels, lifespan, and URLs via relations)
+    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels+url-rels&fmt=json`);
 
     const careerStartYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
     const careerEndYear = artistData['life-span']?.end ? parseInt(artistData['life-span'].end.substring(0, 4)) : null;
 
+    // Extract social media handles from URL relationships
+    const urlRels = (artistData.relations || []).filter((r) => r.type === 'social network' && r.url);
+    let instagramHandle: string | null = null;
+    let twitterHandle: string | null = null;
+
+    for (const rel of urlRels) {
+      const url = rel.url?.resource || '';
+      
+      // Extract Instagram handle
+      if (url.includes('instagram.com/') && !instagramHandle) {
+        const match = url.match(/instagram\.com\/([^\/\?]+)/);
+        if (match && match[1]) {
+          instagramHandle = match[1].replace('@', '');
+        }
+      }
+      
+      // Extract Twitter handle (both twitter.com and x.com)
+      if ((url.includes('twitter.com/') || url.includes('x.com/')) && !twitterHandle) {
+        const match = url.match(/(?:twitter|x)\.com\/([^\/\?]+)/);
+        if (match && match[1]) {
+          twitterHandle = match[1].replace('@', '');
+        }
+      }
+    }
+
+    // Only update social handles if they're currently empty (preserve manual entries)
+    const updateData: any = {
+      career_start_year: careerStartYear,
+      career_end_year: careerEndYear,
+      discography_last_updated: new Date().toISOString(),
+    };
+
+    if (instagramHandle && !rapper.instagram_handle) {
+      updateData.instagram_handle = instagramHandle;
+    }
+    
+    if (twitterHandle && !rapper.twitter_handle) {
+      updateData.twitter_handle = twitterHandle;
+    }
+
     await supabaseService
       .from('rappers')
-      .update({
-        career_start_year: careerStartYear,
-        career_end_year: careerEndYear,
-        discography_last_updated: new Date().toISOString(),
-      })
+      .update(updateData)
       .eq('id', rapperId);
 
     // Upsert labels from artist relations
