@@ -78,7 +78,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
         const existingVote = existingVotes?.find(vote => vote.category_id === category.id);
         newCategoryRatings.set(category.id, {
           categoryId: category.id,
-          rating: existingVote?.rating || 5,
+          rating: existingVote?.rating || 1,
           existingVoteId: existingVote?.id,
           hasVoted: !!existingVote,
         });
@@ -168,7 +168,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     return null;
   }
 
-  const ratedCount = Array.from(categoryRatings.values()).filter(r => r.hasVoted || r.rating !== 5).length;
+  const ratedCount = Array.from(categoryRatings.values()).filter(r => r.hasVoted || r.rating !== 1).length;
   const totalCount = categories.length;
 
   return (
@@ -184,10 +184,10 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           </div>
         </DialogHeader>
 
-        <div className="space-y-3 overflow-y-auto px-6 py-4 -mx-6 max-h-[50vh]" style={{ paddingTop: '100px', paddingBottom: '120px' }}>
+        <div className="space-y-3 overflow-y-auto px-6 py-2 -mx-6 max-h-[50vh]">
           {categories.map((category) => {
             const categoryRating = categoryRatings.get(category.id);
-            const isRated = categoryRating?.hasVoted || (categoryRating?.rating !== 5);
+            const isRated = categoryRating?.hasVoted || (categoryRating?.rating !== 1);
             
             return (
               <ThemedCard key={category.id} className={`bg-[var(--theme-backgroundLight)] border-l-4 ${
@@ -213,13 +213,13 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                     <div className="flex items-center gap-1 text-[var(--theme-primary)] flex-shrink-0">
                       <Star className="w-4 h-4 fill-current" />
                       <span className="font-bold text-base font-[var(--theme-font-heading)]">
-                        {categoryRating?.rating || 5}/10
+                        {categoryRating?.rating || 1}/10
                       </span>
                     </div>
                   </div>
 
                   <RatingSlider
-                    rating={[categoryRating?.rating || 5]}
+                    rating={[categoryRating?.rating || 1]}
                     setRating={(rating) => updateCategoryRating(category.id, rating[0])}
                   />
                 </ThemedCardContent>
