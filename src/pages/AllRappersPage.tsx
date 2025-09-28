@@ -50,9 +50,9 @@ const AllRappersPage = () => {
 
   if (isLoading && currentPage === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
-        <HeaderNavigation isScrolled={false} />
-        <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
+      <HeaderNavigation isScrolled={false} />
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden">
           <BlogPageHeader title="All Rappers" />
           <div className="pt-10">
             <AllRappersLoadingSkeleton />
@@ -66,9 +66,9 @@ const AllRappersPage = () => {
   const hasMore = rappersData?.hasMore || false;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
       <HeaderNavigation isScrolled={false} />
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28">
+      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden">
         <BlogPageHeader title="All Rappers" />
         
         <p className="text-center text-rap-smoke text-xl font-kaushan mb-8">

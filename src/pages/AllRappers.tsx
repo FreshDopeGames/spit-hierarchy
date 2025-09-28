@@ -166,9 +166,9 @@ const AllRappers = () => {
   };
 
   if (isLoading && currentPage === 0) {
-    return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col">
+    return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col overflow-x-hidden">
         <HeaderNavigation isScrolled={false} />
-        <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
+        <main className="flex-1 max-w-7xl mx-auto p-6 pt-28 overflow-x-hidden">
           <BlogPageHeader title="All Rappers" />
           <div className="pt-10">
             <AllRappersLoadingSkeleton />
@@ -182,9 +182,9 @@ const AllRappers = () => {
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
 
-  return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col">
+  return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col overflow-x-hidden">
       <HeaderNavigation isScrolled={false} />
-      <main className="flex-1 max-w-7xl mx-auto p-6 pt-28">
+      <main className="flex-1 max-w-7xl mx-auto p-6 pt-28 overflow-x-hidden">
         <BlogPageHeader title="All Rappers" />
         {/* Enhanced stats display */}
         <div className="mb-8">
