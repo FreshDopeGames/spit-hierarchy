@@ -48,7 +48,7 @@ const RapperCard = ({
   
   return (
     <ThemedCard 
-      className="bg-gradient-to-br from-[#0D0D0D] to-[#1A1A1A] border-4 border-[hsl(var(--theme-primary))]/40 hover:border-[hsl(var(--theme-primary))]/70 transition-all duration-300 md:hover:transform md:hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group"
+      className="bg-gradient-to-br from-[#0D0D0D] to-[#1A1A1A] border-4 border-[hsl(var(--theme-primary))]/40 hover:border-[hsl(var(--theme-primary))]/70 transition-all duration-300 md:hover:transform md:hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group max-w-full"
       onClick={handleCardClick}
     >
       {/* Theme accent bar */}
@@ -61,9 +61,9 @@ const RapperCard = ({
         </div>
       )}
       
-      <ThemedCardContent className={compact ? "p-4" : "p-6"}>
+      <ThemedCardContent className={compact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
         {/* Rapper image or placeholder - 1:1 aspect ratio */}
-        <div className={`w-full aspect-square bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-backgroundLight)] to-[var(--theme-background)] rounded-lg ${compact ? "mb-3" : "mb-4"} flex items-center justify-center relative group-hover:from-[var(--theme-accent)]/20 group-hover:via-[var(--theme-secondary)]/20 group-hover:to-[var(--theme-background)] transition-all duration-300 overflow-hidden`}>
+        <div className={`w-full aspect-square bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-backgroundLight)] to-[var(--theme-background)] rounded-lg ${compact ? "mb-2 sm:mb-3" : "mb-3 sm:mb-4"} flex items-center justify-center relative group-hover:from-[var(--theme-accent)]/20 group-hover:via-[var(--theme-secondary)]/20 group-hover:to-[var(--theme-background)] transition-all duration-300 overflow-hidden`}>
           <img 
             src={imageToDisplay}
             alt={rapper.name || "Rapper"}
@@ -80,25 +80,25 @@ const RapperCard = ({
         </div>
 
         {/* Rapper Info */}
-        <div className={compact ? "space-y-2" : "space-y-3"}>
-          <div className="flex items-start justify-between">
-            <h3 className={`font-[var(--theme-fontPrimary)] ${compact ? "text-base" : "text-lg"} leading-tight transition-colors font-normal text-[var(--theme-primary)]`}>{rapper.name}</h3>
-            {rapper.verified && <Verified className="w-5 h-5 text-[var(--theme-secondary)] flex-shrink-0" />}
+        <div className={compact ? "space-y-1 sm:space-y-2" : "space-y-2 sm:space-y-3"}>
+          <div className="flex items-start justify-between min-w-0">
+            <h3 className={`font-[var(--theme-fontPrimary)] ${compact ? "text-sm sm:text-base" : "text-base sm:text-lg"} leading-tight transition-colors font-normal text-[var(--theme-primary)] truncate pr-2`}>{rapper.name}</h3>
+            {rapper.verified && <Verified className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--theme-secondary)] flex-shrink-0" />}
           </div>
 
           
 
           {!compact && (
-            <div className="flex flex-wrap gap-2 text-xs">
+            <div className="flex flex-wrap gap-1 sm:gap-2 text-xs">
               {rapper.origin && (
-                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-2 py-1 rounded-full font-[var(--theme-fontSecondary)]">
-                  <MapPin className="w-3 h-3" />
-                  <span>{rapper.origin}</span>
+                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-[var(--theme-fontSecondary)] text-xs max-w-full">
+                  <MapPin className="w-3 h-3 flex-shrink-0" />
+                  <span className="truncate">{rapper.origin}</span>
                 </div>
               )}
               {birthdate && (
-                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-2 py-1 rounded-full font-[var(--theme-fontSecondary)]">
-                  <Calendar className="w-3 h-3" />
+                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-[var(--theme-fontSecondary)] text-xs">
+                  <Calendar className="w-3 h-3 flex-shrink-0" />
                   <span>{birthdate}</span>
                 </div>
               )}
@@ -107,22 +107,22 @@ const RapperCard = ({
 
           {/* Three Equal-Height Stat Indicators */}
           {!compact && (
-            <div className="grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-1 sm:gap-2">
               {/* Overall Rating */}
-              <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary)]/80 px-2 py-2 rounded-lg border border-[var(--theme-border)] text-center">
-                <div className="text-[var(--theme-textLight)] font-bold text-lg font-[var(--theme-fontPrimary)] leading-none">
+              <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary)]/80 px-1 sm:px-2 py-1.5 sm:py-2 rounded-lg border border-[var(--theme-border)] text-center">
+                <div className="text-[var(--theme-textLight)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
                   {overallRating}
                 </div>
-                <div className="text-[var(--theme-textLight)]/70 text-xs font-[var(--theme-fontSecondary)] mt-1">
+                <div className="text-[var(--theme-textLight)]/70 text-xs font-[var(--theme-fontSecondary)] mt-0.5 sm:mt-1">
                   Overall
                 </div>
               </div>
 
               {/* Top 5 Count */}
-              <div className="bg-gradient-to-r from-[var(--theme-accent)]/30 to-[var(--theme-secondary)]/30 px-2 py-2 rounded-lg border border-[var(--theme-border)] text-center">
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <Crown className="w-4 h-4 text-[var(--theme-primary)]" />
-                  <span className="text-[var(--theme-text)] font-bold text-lg font-[var(--theme-fontPrimary)] leading-none">
+              <div className="bg-gradient-to-r from-[var(--theme-accent)]/30 to-[var(--theme-secondary)]/30 px-1 sm:px-2 py-1.5 sm:py-2 rounded-lg border border-[var(--theme-border)] text-center">
+                <div className="flex items-center justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+                  <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-[var(--theme-primary)]" />
+                  <span className="text-[var(--theme-text)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
                     {stats?.top5_count || 0}
                   </span>
                 </div>
@@ -132,10 +132,10 @@ const RapperCard = ({
               </div>
 
               {/* Ranking Votes */}
-              <div className="bg-gradient-to-r from-[var(--theme-secondary)]/30 to-[var(--theme-accent)]/30 px-2 py-2 rounded-lg border border-[var(--theme-border)] text-center">
-                <div className="flex items-center justify-center gap-1 mb-1">
-                  <Vote className="w-4 h-4 text-[var(--theme-secondary)]" />
-                  <span className="text-[var(--theme-text)] font-bold text-lg font-[var(--theme-fontPrimary)] leading-none">
+              <div className="bg-gradient-to-r from-[var(--theme-secondary)]/30 to-[var(--theme-accent)]/30 px-1 sm:px-2 py-1.5 sm:py-2 rounded-lg border border-[var(--theme-border)] text-center">
+                <div className="flex items-center justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
+                  <Vote className="w-3 h-3 sm:w-4 sm:h-4 text-[var(--theme-secondary)]" />
+                  <span className="text-[var(--theme-text)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
                     {stats?.ranking_votes || 0}
                   </span>
                 </div>

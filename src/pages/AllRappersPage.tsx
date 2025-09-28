@@ -71,7 +71,7 @@ const AllRappersPage = () => {
       <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden">
         <BlogPageHeader title="All Rappers" />
         
-        <p className="text-center text-rap-smoke text-xl font-kaushan mb-8">
+        <p className="text-center text-rap-smoke text-lg sm:text-xl font-kaushan mb-6 sm:mb-8 px-2">
           {total} legendary rappers • Showing {allRappers.length}
         </p>
         
