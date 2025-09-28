@@ -58,14 +58,14 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
 
   if (isLoading) {
     return (
-    <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+    <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
       <CardHeader>
         <CardTitle className="text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Skill Ratings</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="animate-pulse space-y-4">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="h-8 bg-[var(--theme-backgroundLight)] rounded" />
+            <div key={i} className="h-8 bg-gray-800 rounded" />
           ))}
         </div>
       </CardContent>
@@ -86,7 +86,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
   const overallScaled = Math.round((calculatedOverall / 10) * 100);
 
   return (
-    <Card className="bg-black border-[var(--theme-border)]">
+    <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
       <CardHeader>
         <CardTitle className="text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Skill Ratings</CardTitle>
       </CardHeader>

@@ -13,14 +13,14 @@ const CareerStatsCard = ({
     isLoading
   } = useRapperCareerStats(rapperId);
   if (isLoading) {
-    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)] animate-pulse">
+    return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] animate-pulse">
         <CardContent className="p-6">
           <div className="space-y-4">
-            <div className="h-6 bg-[var(--theme-backgroundLight)] rounded w-1/3"></div>
+            <div className="h-6 bg-gray-800 rounded w-1/3"></div>
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
               {[...Array(3)].map((_, i) => <div key={i} className="text-center space-y-2">
-                  <div className="h-8 bg-[var(--theme-backgroundLight)] rounded w-full"></div>
-                  <div className="h-4 bg-[var(--theme-backgroundLight)] rounded w-3/4 mx-auto"></div>
+                  <div className="h-8 bg-gray-800 rounded w-full"></div>
+                  <div className="h-4 bg-gray-800 rounded w-3/4 mx-auto"></div>
                 </div>)}
             </div>
           </div>
@@ -44,7 +44,7 @@ const CareerStatsCard = ({
     value: stats.careerSpan > 0 ? `${stats.careerSpan} yrs` : "N/A",
     color: "text-[var(--theme-text)]"
   }];
-  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)] shadow-lg shadow-[var(--theme-primary)]/10">
+  return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/10">
       <CardContent className="p-6">
         <div className="space-y-4">
           <div className="flex items-center justify-between">

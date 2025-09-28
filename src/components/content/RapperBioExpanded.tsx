@@ -23,7 +23,7 @@ const RapperBioExpanded = ({
   if (!rapper.bio && !careerHighlights) return null;
   if (!rapper.bio) return null;
   return <div className="space-y-8">
-      <Card className="bg-black border-rap-burgundy/40 px-0 my-[30px]">
+      <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] px-0 my-[30px]">
         <CardHeader>
           <CardTitle className="text-2xl font-bold text-rap-platinum font-mogra">About {rapper.name}</CardTitle>
         </CardHeader>

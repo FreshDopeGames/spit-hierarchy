@@ -10,7 +10,7 @@ interface RapperStatsProps {
 
 const RapperStats = ({ rapper }: RapperStatsProps) => {
   return (
-    <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+    <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
       <CardContent className="p-8">
         <h2 className="text-2xl font-bold text-[var(--theme-text)] mb-4 font-[var(--theme-fontPrimary)]">Community Stats</h2>
         <div className="grid md:grid-cols-2 gap-6">

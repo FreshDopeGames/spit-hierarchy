@@ -28,17 +28,17 @@ const RapperDiscography = ({
     refreshMutation.mutate(rapperId);
   };
   if (isLoading) {
-    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+    return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
         <CardHeader>
-          <div className="h-6 bg-[var(--theme-backgroundLight)] rounded w-1/3 animate-pulse"></div>
+          <div className="h-6 bg-gray-800 rounded w-1/3 animate-pulse"></div>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => <div key={i} className="flex gap-4 animate-pulse">
-                <div className="w-16 h-16 bg-[var(--theme-backgroundLight)] rounded"></div>
+                <div className="w-16 h-16 bg-gray-800 rounded"></div>
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-[var(--theme-backgroundLight)] rounded w-3/4"></div>
-                  <div className="h-3 bg-[var(--theme-backgroundLight)] rounded w-1/2"></div>
+                  <div className="h-4 bg-gray-800 rounded w-3/4"></div>
+                  <div className="h-3 bg-gray-800 rounded w-1/2"></div>
                 </div>
               </div>)}
           </div>
@@ -48,7 +48,7 @@ const RapperDiscography = ({
   if (error) {
     const isNotFound = error?.message?.includes('404') || error?.message?.includes('not found');
     const isRateLimit = error?.message?.includes('Rate limit') || error?.message?.includes('429');
-    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-secondary)]/30">
+    return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
         <CardContent className="p-6 text-center">
           <div className="text-[var(--theme-secondary)] mb-4">
             {isNotFound ? "No discography data found on MusicBrainz" : isRateLimit ? "Rate limit reached" : "Failed to load discography data"}
@@ -88,7 +88,7 @@ const RapperDiscography = ({
     const seconds = Math.floor(ms % 60000 / 1000);
     return `${minutes}:${seconds.toString().padStart(2, '0')}`;
   };
-  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-border)] shadow-lg shadow-[var(--theme-primary)]/10 min-h-[600px] sm:min-h-[500px]">
+  return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/10 min-h-[600px] sm:min-h-[500px]">
       <CardHeader className="pb-6 sm:pb-8">
         <div className="flex items-center justify-between">
           <div>

@@ -101,7 +101,7 @@ const RapperDetail = () => {
               Back To All Rappers
             </ThemedButton>
           </Link>
-          <ThemedCard className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
+          <ThemedCard className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/20">
             <ThemedCardContent className="p-8 text-center">
               <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)] mb-4">Pharaoh Not Found</h2>
               <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">This pharaoh has vanished from the dynasty.</p>
