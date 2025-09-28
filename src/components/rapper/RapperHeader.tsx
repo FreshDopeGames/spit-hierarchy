@@ -35,7 +35,7 @@ const RapperHeader = ({
 
   return (
     <div className="space-y-6">
-      <Card className="bg-[var(--theme-surface)] border-[var(--theme-secondary)]/40 relative overflow-hidden mb-8">
+      <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] relative overflow-hidden mb-8">
         {/* Theme accent bar */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-[var(--theme-secondary)] via-[var(--theme-accent)] to-[var(--theme-primary)]"></div>
         
