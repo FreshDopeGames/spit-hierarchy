@@ -30,7 +30,7 @@ const Footer = () => {
 
           {/* Quick Links */}
           <div>
-            <h3 className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-lg mb-4">Explore</h3>
+            <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
@@ -77,7 +77,7 @@ const Footer = () => {
 
           {/* Community */}
           <div>
-            <h3 className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-lg mb-4">Community</h3>
+            <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Community</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
@@ -112,7 +112,7 @@ const Footer = () => {
 
           {/* Legal */}
           <div>
-            <h3 className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
+            <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
                 <Link 
