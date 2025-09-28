@@ -173,18 +173,18 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[var(--theme-border)]/30 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-2 pb-6 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] z-20 -mx-6 px-6 w-[calc(100%+3rem)]">
-          <DialogTitle className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-2xl text-center">
+      <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[var(--theme-border)]/30 max-h-[90vh] overflow-hidden [&>button]:z-30">
+        <DialogHeader className="space-y-2 pb-4 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] backdrop-blur-sm z-20 -mx-6 px-6 pt-6 shadow-lg border-b border-[var(--theme-border)]/20">
+          <DialogTitle className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-xl text-center">
             Rate {rapper.name}
           </DialogTitle>
-          <div className="flex items-center justify-center gap-2 text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
-            <CircleDot className="w-4 h-4" />
+          <div className="flex items-center justify-center gap-2 text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+            <CircleDot className="w-3 h-3" />
             <span>{ratedCount} of {totalCount} skills rated</span>
           </div>
         </DialogHeader>
 
-        <div className="space-y-4">
+        <div className="space-y-3 overflow-y-auto px-6 py-4 -mx-6 max-h-[50vh]" style={{ paddingTop: '100px', paddingBottom: '120px' }}>
           {categories.map((category) => {
             const categoryRating = categoryRatings.get(category.id);
             const isRated = categoryRating?.hasVoted || (categoryRating?.rating !== 5);
@@ -195,24 +195,24 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                   ? 'border-l-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-primary))]/5' 
                   : 'border-l-[hsl(var(--theme-border))]'
               } transition-all duration-200`}>
-                <ThemedCardContent className="p-4">
-                  <div className="flex items-start justify-between mb-3">
-                    <div className="flex-1">
+                <ThemedCardContent className="p-3">
+                  <div className="flex items-start justify-between mb-2">
+                    <div className="flex-1 pr-2">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="font-semibold text-[var(--theme-text)] font-[var(--theme-font-heading)] text-lg">
+                        <h3 className="font-semibold text-[var(--theme-text)] font-[var(--theme-font-heading)] text-base leading-tight">
                           {category.name}
                         </h3>
                         {isRated && (
-                          <CheckCircle className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
+                          <CheckCircle className="w-4 h-4 text-[hsl(var(--theme-primary))] flex-shrink-0" />
                         )}
                       </div>
-                      <p className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+                      <p className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)] leading-tight">
                         {category.description}
                       </p>
                     </div>
-                    <div className="flex items-center gap-2 text-[var(--theme-primary)] ml-4">
-                      <Star className="w-5 h-5 fill-current" />
-                      <span className="font-bold text-lg font-[var(--theme-font-heading)]">
+                    <div className="flex items-center gap-1 text-[var(--theme-primary)] flex-shrink-0">
+                      <Star className="w-4 h-4 fill-current" />
+                      <span className="font-bold text-base font-[var(--theme-font-heading)]">
                         {categoryRating?.rating || 5}/10
                       </span>
                     </div>
@@ -228,18 +228,18 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           })}
         </div>
 
-        <div className="sticky bottom-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] pt-6 mt-6 border-t border-[var(--theme-border)]/30 -mx-6 px-6 w-[calc(100%+3rem)]">
-          <div className="flex items-center justify-between mb-4">
-            <div className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
-              Complete rating: {ratedCount}/{totalCount} skills
+        <div className="sticky bottom-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] backdrop-blur-sm z-20 pt-4 pb-6 border-t border-[var(--theme-border)]/30 -mx-6 px-6 shadow-2xl">
+          <div className="flex items-center justify-between mb-3">
+            <div className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+              Progress: {ratedCount}/{totalCount}
             </div>
-            <div className="flex-1 mx-4 bg-[var(--theme-backgroundLight)] rounded-full h-2 overflow-hidden">
+            <div className="flex-1 mx-3 bg-[var(--theme-backgroundLight)] rounded-full h-1.5 overflow-hidden">
               <div 
                 className="h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-secondary))] transition-all duration-300"
                 style={{ width: `${(ratedCount / totalCount) * 100}%` }}
               />
             </div>
-            <div className="text-sm font-semibold text-[var(--theme-text)] font-[var(--theme-font-body)]">
+            <div className="text-xs font-semibold text-[var(--theme-text)] font-[var(--theme-font-body)]">
               {Math.round((ratedCount / totalCount) * 100)}%
             </div>
           </div>
@@ -248,9 +248,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             onClick={handleSubmit}
             disabled={submitMutation.isPending}
             variant="gradient"
-            className="w-full"
+            className="w-full py-2"
           >
-            {submitMutation.isPending ? "Submitting..." : `Submit All Ratings (${totalCount} skills)`}
+            {submitMutation.isPending ? "Submitting..." : `Submit All Ratings`}
           </ThemedButton>
         </div>
       </DialogContent>
