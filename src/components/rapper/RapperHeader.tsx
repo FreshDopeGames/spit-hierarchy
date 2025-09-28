@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, MapPin, Calendar, Music, Instagram, Twitter } from "lucide-react";
@@ -137,10 +137,10 @@ const RapperHeader = ({
               {/* Social Links */}
               <div className="flex flex-wrap gap-3">
                 {rapper.instagram_handle && (
-                  <Button 
-                    variant="outline" 
+                  <ThemedButton 
+                    variant="gradient" 
                     size="sm" 
-                    className="bg-[var(--theme-gradient-primary)] border-2 border-[hsl(var(--theme-background))] text-[hsl(var(--theme-background))] hover:opacity-90 font-[var(--theme-font-body)] font-semibold shadow-lg"
+                    className="hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
                     asChild
                   >
                     <a 
@@ -151,13 +151,13 @@ const RapperHeader = ({
                       <Instagram className="w-4 h-4 mr-2" />
                       Instagram
                     </a>
-                  </Button>
+                  </ThemedButton>
                 )}
                 {rapper.twitter_handle && (
-                  <Button 
-                    variant="outline" 
+                  <ThemedButton 
+                    variant="gradient" 
                     size="sm" 
-                    className="bg-[var(--theme-gradient-primary)] border-2 border-[hsl(var(--theme-background))] text-[hsl(var(--theme-background))] hover:opacity-90 font-[var(--theme-font-body)] font-semibold shadow-lg"
+                    className="hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
                     asChild
                   >
                     <a 
@@ -168,13 +168,13 @@ const RapperHeader = ({
                       <Twitter className="w-4 h-4 mr-2" />
                       Twitter
                     </a>
-                  </Button>
+                  </ThemedButton>
                 )}
                 {rapper.spotify_id && (
-                  <Button 
-                    variant="outline" 
+                  <ThemedButton 
+                    variant="gradient" 
                     size="sm" 
-                    className="bg-[var(--theme-gradient-primary)] border-2 border-[hsl(var(--theme-background))] text-[hsl(var(--theme-background))] hover:opacity-90 font-[var(--theme-font-body)] font-semibold shadow-lg"
+                    className="hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
                     asChild
                   >
                     <a 
@@ -185,7 +185,7 @@ const RapperHeader = ({
                       <Music className="w-4 h-4 mr-2" />
                       Spotify
                     </a>
-                  </Button>
+                  </ThemedButton>
                 )}
               </div>
 
