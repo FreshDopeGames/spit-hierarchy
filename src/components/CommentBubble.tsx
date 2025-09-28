@@ -72,7 +72,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
         <div className="fixed bottom-6 right-6 z-50">
           <ThemedButton
             onClick={() => setIsExpanded(true)}
-            className={`rounded-full h-14 px-4 shadow-lg shadow-[var(--theme-primary)]/30 transition-transform duration-300 ${
+            className={`rounded-full h-14 px-4 shadow-lg shadow-[hsl(var(--theme-primary))]/30 transition-transform duration-300 ${
               shouldAnimate ? 'animate-slow-bounce' : ''
             }`}
             variant="default"
@@ -86,7 +86,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
       {/* Expanded Comment Modal */}
       {isExpanded && (
         <div className="fixed inset-x-0 bottom-0 z-50 bg-black/80 backdrop-blur-sm">
-          <ThemedCard className="rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[var(--theme-primary)]/20">
+          <ThemedCard className="rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[hsl(var(--theme-primary))]/20">
             <ThemedCardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <ThemedCardTitle>
                 Comments on this {getContentTypeLabel()} ({totalComments})
