@@ -174,7 +174,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[var(--theme-border)]/30 max-h-[90vh] overflow-y-auto">
-        <DialogHeader className="space-y-2 pb-6 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] z-20">
+        <DialogHeader className="space-y-2 pb-6 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] z-20 -mx-6 px-6 w-[calc(100%+3rem)]">
           <DialogTitle className="text-[var(--theme-text)] font-[var(--theme-font-heading)] text-2xl text-center">
             Rate {rapper.name}
           </DialogTitle>
@@ -192,7 +192,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             return (
               <ThemedCard key={category.id} className={`bg-[var(--theme-backgroundLight)] border-l-4 ${
                 isRated 
-                  ? 'border-l-[hsl(var(--theme-success))] bg-[hsl(var(--theme-success))]/5' 
+                  ? 'border-l-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-primary))]/5' 
                   : 'border-l-[hsl(var(--theme-border))]'
               } transition-all duration-200`}>
                 <ThemedCardContent className="p-4">
@@ -203,7 +203,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                           {category.name}
                         </h3>
                         {isRated && (
-                          <CheckCircle className="w-5 h-5 text-[hsl(var(--theme-success))]" />
+                          <CheckCircle className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
                         )}
                       </div>
                       <p className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
@@ -228,7 +228,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
           })}
         </div>
 
-        <div className="sticky bottom-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] pt-6 mt-6 border-t border-[var(--theme-border)]/30">
+        <div className="sticky bottom-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] pt-6 mt-6 border-t border-[var(--theme-border)]/30 -mx-6 px-6 w-[calc(100%+3rem)]">
           <div className="flex items-center justify-between mb-4">
             <div className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
               Complete rating: {ratedCount}/{totalCount} skills

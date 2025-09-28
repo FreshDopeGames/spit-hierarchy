@@ -98,8 +98,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
             <span className="text-lg font-bold text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Overall Rating</span>
           </div>
           <div className="space-y-3">
-            <div className="flex justify-between items-center">
-              <span className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Calculated from all skills</span>
+            <div className="flex justify-end items-center">
               <div className="text-right">
                 <div className="flex items-center gap-2">
                   <span className="text-[var(--theme-text)] font-bold text-2xl font-[var(--theme-fontPrimary)]">{overallScaled}/100</span>
@@ -110,7 +109,6 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                     </div>
                   )}
                 </div>
-                <span className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-fontSecondary)]">(Average of {attributesWithVotes.length} skills)</span>
               </div>
             </div>
             <Progress value={overallPercentage} className="h-4 bg-[var(--theme-backgroundLight)]" />

@@ -85,13 +85,9 @@ const CareerStatsCard = ({
                 <span>Record Labels:</span>
               </div>
               <div className="flex flex-wrap gap-2">
-                {stats.labelAffiliations.slice(0, 3).map((affiliation, index) => <Badge key={index} variant="outline" className="text-xs border-[var(--theme-primary)]/50 text-[var(--theme-primary)]">
+                {stats.labelAffiliations.map((affiliation, index) => <Badge key={index} variant="outline" className="text-xs border-[var(--theme-primary)]/50 text-[var(--theme-primary)]">
                     {affiliation.label?.name}
-                    {affiliation.is_current && <span className="ml-1 text-green-400">●</span>}
                   </Badge>)}
-                {stats.labelAffiliations.length > 3 && <Badge variant="outline" className="text-xs border-[var(--theme-textMuted)]/50 text-[var(--theme-textMuted)]">
-                    +{stats.labelAffiliations.length - 3} more
-                  </Badge>}
               </div>
             </div>}
         </div>

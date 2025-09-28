@@ -25,7 +25,7 @@ const RatingSlider = ({ rating, setRating }: RatingSliderProps) => {
             />
           </div>
           <div 
-            className="block h-5 w-5 rounded-full border-2 border-[var(--theme-primary)] bg-[var(--theme-background)] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 absolute"
+            className="block h-5 w-5 rounded-full border-2 border-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-primary))] ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--theme-primary)] focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 absolute"
             style={{ left: `calc(${(rating[0] / 10) * 100}% - 10px)` }}
           />
           <input
