@@ -43,17 +43,17 @@ const VotingHistorySection = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="rankings" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 mb-4">
+          <TabsList className="grid w-full grid-cols-2 bg-black border border-rap-gold/30 mb-4 p-1 rounded-lg">
             <TabsTrigger
               value="rankings"
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-text)] text-xs sm:text-sm"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-black data-[state=active]:shadow-md text-rap-gold/60 hover:text-rap-gold hover:bg-rap-gold/20 transition-all text-xs sm:text-sm font-medium rounded-md"
             >
               <List className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Ranking Votes
             </TabsTrigger>
             <TabsTrigger
               value="ratings"
-              className="data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-[var(--theme-text)] text-xs sm:text-sm"
+              className="data-[state=active]:bg-rap-gold data-[state=active]:text-black data-[state=active]:shadow-md text-rap-gold/60 hover:text-rap-gold hover:bg-rap-gold/20 transition-all text-xs sm:text-sm font-medium rounded-md"
             >
               <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Attribute Ratings
