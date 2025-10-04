@@ -1,14 +1,5 @@
 
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { SecureAuthProvider } from "@/hooks/useSecureAuth";
-import { SecurityProvider } from "@/hooks/useSecurityContext";
-import { EnhancedThemeProvider } from "@/hooks/useEnhancedTheme";
-import { AchievementProvider } from "@/components/achievements/AchievementProvider";
-import ErrorBoundary from "@/components/ErrorBoundary";
-import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 import AuthGuard from "@/components/AuthGuard";
 import AppInitializer from "@/components/AppInitializer";
 import EmailConfirmationHandler from "@/components/auth/EmailConfirmationHandler";
@@ -35,39 +26,6 @@ import Admin from "./pages/Admin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 5 * 60 * 1000, // 5 minutes
-      gcTime: 10 * 60 * 1000, // 10 minutes
-      retry: (failureCount, error: any) => {
-        // Don't retry on authentication errors
-        if (error?.message?.includes('auth') || error?.status === 401) {
-          return false;
-        }
-        // Don't retry on rate limit errors
-        if (error?.message?.includes('rate limit') || error?.status === 429) {
-          return false;
-        }
-        return failureCount < 3;
-      },
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
-    },
-    mutations: {
-      retry: (failureCount, error: any) => {
-        // Don't retry mutations on authentication or validation errors
-        if (error?.message?.includes('auth') || 
-            error?.message?.includes('Invalid') ||
-            error?.status === 401 || 
-            error?.status === 400) {
-          return false;
-        }
-        return failureCount < 2;
-      },
-    },
-  },
-});
 
 function App() {
   return (

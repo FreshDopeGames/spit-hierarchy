@@ -6,7 +6,7 @@ import AchievementTable from "@/components/achievements/AchievementTable";
 import { Award, Trophy, LayoutGrid, Table } from "lucide-react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ThemedTabs as Tabs, ThemedTabsContent as TabsContent, ThemedTabsList as TabsList, ThemedTabsTrigger as TabsTrigger } from "@/components/ui/themed-tabs";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 const ProfileAchievements = () => {
   const {
     achievements,
@@ -69,19 +69,19 @@ const ProfileAchievements = () => {
         </div>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="overview" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 mb-4">
-            <TabsTrigger value="overview" className="text-xs sm:text-sm">
+        <ThemedTabs defaultValue="overview" className="w-full">
+          <ThemedTabsList className="grid w-full grid-cols-2 mb-4">
+            <ThemedTabsTrigger value="overview" className="text-xs sm:text-sm">
               <LayoutGrid className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Recent
-            </TabsTrigger>
-            <TabsTrigger value="table" className="text-xs sm:text-sm">
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger value="table" className="text-xs sm:text-sm">
               <Table className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               All Progress
-            </TabsTrigger>
-          </TabsList>
+            </ThemedTabsTrigger>
+          </ThemedTabsList>
 
-          <TabsContent value="overview">
+          <ThemedTabsContent value="overview">
             {recentAchievements.length > 0 ? <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-4">
                 {recentAchievements.map(achievement => <AchievementCard key={achievement.id} achievement={transformAchievement(achievement)} showProgress={false} />)}
               </div> : <div className="text-center py-6 sm:py-8">
@@ -91,9 +91,9 @@ const ProfileAchievements = () => {
                   Start voting and engaging to earn your first achievements!
                 </p>
               </div>}
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="table">
+          <ThemedTabsContent value="table">
             <div className="space-y-4">
               <div className="text-sm text-[hsl(var(--theme-secondary))]">
                 Track your progress on all {achievements.length} available achievements
@@ -107,8 +107,8 @@ const ProfileAchievements = () => {
                 </Link>
               </div>
             </div>
-          </TabsContent>
-        </Tabs>
+          </ThemedTabsContent>
+        </ThemedTabs>
       </CardContent>
     </Card>;
 };
