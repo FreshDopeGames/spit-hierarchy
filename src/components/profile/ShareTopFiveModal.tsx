@@ -27,7 +27,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
   slots,
   username
 }) => {
-  const [format, setFormat] = useState<'square' | 'landscape'>('square');
+  const [format, setFormat] = useState<'square' | 'landscape' | 'portrait'>('portrait');
   const [isGenerating, setIsGenerating] = useState(false);
   const shareableRef = useRef<HTMLDivElement>(null);
 
@@ -98,12 +98,20 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
             {/* Format Selection */}
             <div className="flex flex-col sm:flex-row justify-center gap-2">
               <Badge 
+                variant={format === 'portrait' ? 'default' : 'outline'}
+                className="cursor-pointer text-xs px-3 py-2 text-center"
+                onClick={() => setFormat('portrait')}
+              >
+                <span className="block sm:inline">Portrait</span>
+                <span className="hidden sm:inline"> - Instagram Story</span>
+              </Badge>
+              <Badge 
                 variant={format === 'square' ? 'default' : 'outline'}
                 className="cursor-pointer text-xs px-3 py-2 text-center"
                 onClick={() => setFormat('square')}
               >
                 <span className="block sm:inline">Square</span>
-                <span className="hidden sm:inline"> - Instagram</span>
+                <span className="hidden sm:inline"> - Instagram Post</span>
               </Badge>
               <Badge 
                 variant={format === 'landscape' ? 'default' : 'outline'}
@@ -118,10 +126,15 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
             {/* Preview */}
             <div className="flex justify-center overflow-hidden">
               <div 
-                className="transform scale-[0.25] sm:scale-[0.35] md:scale-[0.45] lg:scale-[0.5] origin-top border border-border rounded-lg overflow-hidden"
+                className="transform origin-top border border-border rounded-lg overflow-hidden"
                 style={{ 
-                  width: format === 'square' ? '1080px' : '1200px',
-                  height: format === 'square' ? '1080px' : '630px'
+                  width: format === 'portrait' ? '1080px' : format === 'square' ? '1080px' : '1200px',
+                  height: format === 'portrait' ? '1920px' : format === 'square' ? '1080px' : '630px',
+                  transform: format === 'portrait' 
+                    ? 'scale(0.15)' 
+                    : format === 'square' 
+                      ? 'scale(0.35)' 
+                      : 'scale(0.3)'
                 }}
               >
                 <div ref={shareableRef}>
