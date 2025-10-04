@@ -1,6 +1,6 @@
-
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Tables } from "@/integrations/supabase/types";
+import { formatNumber } from "@/utils/numberFormatter";
 
 type Rapper = Tables<"rappers">;
 
@@ -16,7 +16,7 @@ const RapperStats = ({ rapper }: RapperStatsProps) => {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-[var(--theme-primary)] mb-2 font-[var(--theme-fontPrimary)]">
-              {rapper.total_votes || 0}
+              {formatNumber(rapper.total_votes || 0)}
             </div>
             <div className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Total Votes</div>
           </div>
