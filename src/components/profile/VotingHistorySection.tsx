@@ -131,9 +131,12 @@ const VotingHistorySection = () => {
                           {vote.rappers.name}
                         </h4>
                         <p className="text-[var(--theme-secondary)] text-xs sm:text-sm mt-1 flex items-center gap-1">
-                          Overall Rating: 
+                          Your Rating: 
                           <span className="text-[var(--theme-primary)] font-semibold">
-                            {vote.rappers.average_rating.toFixed(1)}/10
+                            {vote.user_avg_rating.toFixed(1)}/10
+                          </span>
+                          <span className="text-[var(--theme-text)]/50 text-xs">
+                            ({vote.vote_count} {vote.vote_count === 1 ? 'vote' : 'votes'})
                           </span>
                         </p>
                         <p className="text-[var(--theme-text)]/50 text-xs mt-1">
