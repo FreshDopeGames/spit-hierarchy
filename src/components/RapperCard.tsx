@@ -6,6 +6,7 @@ import { Tables } from "@/integrations/supabase/types";
 import { formatBirthdate } from "@/utils/zodiacUtils";
 import { useNavigationState } from "@/hooks/useNavigationState";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
+import { formatNumber } from "@/utils/numberFormatter";
 
 type Rapper = Tables<"rappers">;
 
@@ -123,7 +124,7 @@ const RapperCard = ({
                 <div className="flex items-center justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
                   <Crown className="w-3 h-3 sm:w-4 sm:h-4 text-[var(--theme-primary)]" />
                   <span className="text-[var(--theme-text)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
-                    {stats?.top5_count || 0}
+                    {formatNumber(stats?.top5_count || 0)}
                   </span>
                 </div>
                 <div className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-fontSecondary)]">
@@ -136,7 +137,7 @@ const RapperCard = ({
                 <div className="flex items-center justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
                   <Vote className="w-3 h-3 sm:w-4 sm:h-4 text-[var(--theme-secondary)]" />
                   <span className="text-[var(--theme-text)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
-                    {stats?.ranking_votes || 0}
+                    {formatNumber(stats?.ranking_votes || 0)}
                   </span>
                 </div>
                 <div className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-fontSecondary)]">
