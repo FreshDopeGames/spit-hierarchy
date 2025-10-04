@@ -29,7 +29,7 @@ const RankingsSectionHeader = () => {
       return data as SectionHeader;
     }
   });
-  const title = headerData?.title || "SPIT HIERARCHY: The Original Rap GOAT Rankings";
+  const title = headerData?.title || "Spit Hierarchy: GOAT Rapper Rankings";
   const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
   const backgroundImage = headerData?.background_image_url;
   return <div className="relative mb-12 sm:mb-6 lg:mb-6 overflow-hidden rounded-2xl">
@@ -50,7 +50,7 @@ const RankingsSectionHeader = () => {
         <div className="max-w-4xl mx-auto">
           {/* Icon and Title */}
           <div className="flex items-center justify-center gap-4 mb-6 sm:gap-2 sm:mb-3 lg:mb-2">
-            <Crown className="w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" style={{
+            <Crown className="hidden sm:block w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" style={{
             color: theme.colors.primary
           }} />
             <h1 style={{
@@ -58,7 +58,7 @@ const RankingsSectionHeader = () => {
           }} className="text-4xl sm:text-3xl lg:text-4xl font-ceviche animate-text-glow tracking-wider font-normal text-primary">
               {title}
             </h1>
-            <TrendingUp className="w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" style={{
+            <TrendingUp className="hidden sm:block w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5 animate-pulse" style={{
             color: theme.colors.primary
           }} />
           </div>
