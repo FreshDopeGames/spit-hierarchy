@@ -12,6 +12,7 @@ import MyTopFiveSection from "@/components/profile/MyTopFiveSection";
 import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileAchievements from "@/components/profile/ProfileAchievements";
 import VoteNotesSection from "@/components/profile/VoteNotesSection";
+import VotingHistorySection from "@/components/profile/VotingHistorySection";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 
@@ -232,6 +233,12 @@ const UserProfile = () => {
 
               <ProfileStats memberStats={memberStats} />
 
+              {/* Voting History */}
+              <div className="mb-6 sm:mb-8">
+                <VotingHistorySection />
+              </div>
+
+              {/* Achievements */}
               <div className="mb-6 sm:mb-8">
                 <ProfileAchievements />
               </div>
