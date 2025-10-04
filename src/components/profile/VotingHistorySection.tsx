@@ -1,7 +1,7 @@
 import React from "react";
 import { useVotingHistory } from "@/hooks/useVotingHistory";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 import { History, List, Star, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
@@ -42,25 +42,25 @@ const VotingHistorySection = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="rankings" className="w-full">
-          <TabsList className="grid w-full grid-cols-2 bg-black border border-rap-gold/30 mb-4 p-1 rounded-lg">
-            <TabsTrigger
+        <ThemedTabs defaultValue="rankings" className="w-full">
+          <ThemedTabsList className="grid w-full grid-cols-2 mb-4">
+            <ThemedTabsTrigger
               value="rankings"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-black data-[state=active]:shadow-md text-rap-gold/60 hover:text-rap-gold hover:bg-rap-gold/20 transition-all text-xs sm:text-sm font-medium rounded-md"
+              className="text-xs sm:text-sm"
             >
               <List className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Ranking Votes
-            </TabsTrigger>
-            <TabsTrigger
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger
               value="ratings"
-              className="data-[state=active]:bg-rap-gold data-[state=active]:text-black data-[state=active]:shadow-md text-rap-gold/60 hover:text-rap-gold hover:bg-rap-gold/20 transition-all text-xs sm:text-sm font-medium rounded-md"
+              className="text-xs sm:text-sm"
             >
               <Star className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Attribute Ratings
-            </TabsTrigger>
-          </TabsList>
+            </ThemedTabsTrigger>
+          </ThemedTabsList>
 
-          <TabsContent value="rankings">
+          <ThemedTabsContent value="rankings">
             {rankingVotes.length > 0 ? (
               <div className="space-y-2">
                 {rankingVotes.map((vote) => (
@@ -105,9 +105,9 @@ const VotingHistorySection = () => {
                 </p>
               </div>
             )}
-          </TabsContent>
+          </ThemedTabsContent>
 
-          <TabsContent value="ratings">
+          <ThemedTabsContent value="ratings">
             {attributeVotes.length > 0 ? (
               <div className="space-y-2">
                 {attributeVotes.map((vote) => (
@@ -155,8 +155,8 @@ const VotingHistorySection = () => {
                 </p>
               </div>
             )}
-          </TabsContent>
-        </Tabs>
+          </ThemedTabsContent>
+        </ThemedTabs>
       </CardContent>
     </Card>
   );
