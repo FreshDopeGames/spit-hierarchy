@@ -1383,6 +1383,55 @@ export type Database = {
           },
         ]
       }
+      rapper_page_views: {
+        Row: {
+          created_at: string
+          id: string
+          rapper_id: string
+          session_id: string | null
+          user_id: string | null
+          viewed_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rapper_id: string
+          session_id?: string | null
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rapper_id?: string
+          session_id?: string | null
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_page_views_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_page_views_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_page_views_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_singles: {
         Row: {
           created_at: string
@@ -1515,6 +1564,7 @@ export type Database = {
       }
       rappers: {
         Row: {
+          activity_score: number
           average_rating: number | null
           bio: string | null
           birth_day: number | null
@@ -1543,6 +1593,7 @@ export type Database = {
           verified: boolean | null
         }
         Insert: {
+          activity_score?: number
           average_rating?: number | null
           bio?: string | null
           birth_day?: number | null
@@ -1571,6 +1622,7 @@ export type Database = {
           verified?: boolean | null
         }
         Update: {
+          activity_score?: number
           average_rating?: number | null
           bio?: string | null
           birth_day?: number | null
