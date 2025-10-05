@@ -2514,6 +2514,10 @@ export type Database = {
         Args: { total_points: number }
         Returns: Database["public"]["Enums"]["member_status"]
       }
+      calculate_rapper_activity_score: {
+        Args: { rapper_uuid: string }
+        Returns: number
+      }
       calculate_rapper_attribute_votes: {
         Args: { rapper_uuid: string }
         Returns: number
@@ -2559,6 +2563,10 @@ export type Database = {
           window_seconds?: number
         }
         Returns: boolean
+      }
+      cleanup_old_page_views: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
       create_weekly_ranking_snapshot: {
         Args: Record<PropertyKey, never>
@@ -2850,6 +2858,10 @@ export type Database = {
       unaccent_init: {
         Args: { "": unknown }
         Returns: unknown
+      }
+      update_all_rapper_activity_scores: {
+        Args: Record<PropertyKey, never>
+        Returns: undefined
       }
     }
     Enums: {

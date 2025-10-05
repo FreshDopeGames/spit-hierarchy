@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
 import { useRefreshDiscography } from "@/hooks/useRapperDiscography";
+import { usePageViewTracking } from "@/hooks/usePageViewTracking";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ArrowLeft } from "lucide-react";
@@ -32,6 +33,13 @@ const RapperDetail = () => {
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [selectedCategory] = useState("");
   const refreshDiscography = useRefreshDiscography();
+
+  // Track page view for activity scoring
+  usePageViewTracking({ 
+    contentType: 'rapper', 
+    contentId: id,
+    debounceMs: 3000 
+  });
 
   const { data: rapper, isLoading } = useQuery({
     queryKey: ["rapper", id],

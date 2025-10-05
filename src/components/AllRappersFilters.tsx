@@ -1,9 +1,11 @@
 
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Loader2, Mic } from "lucide-react";
+import { Search, Loader2, Mic, Lock } from "lucide-react";
 
 interface AllRappersFiltersProps {
   searchInput: string;
@@ -34,6 +36,15 @@ const AllRappersFilters = ({
   onOrderChange,
   onRatedFilterChange
 }: AllRappersFiltersProps) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleRatedFilterClick = () => {
+    if (!user) {
+      navigate('/auth');
+    }
+  };
+
   return (
     <div className="bg-[hsl(var(--theme-surface))] border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 sm:p-4 lg:p-6 mb-8 backdrop-blur-sm shadow-lg overflow-hidden min-w-0 max-w-full">
       <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
@@ -60,10 +71,23 @@ const AllRappersFilters = ({
             </div>}
         </div>
 
-        {/* Rated Filter */}
-        <div className="min-w-0 max-w-full">
-          <Select value={ratedFilter} onValueChange={onRatedFilterChange}>
-            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
+        {/* Rated Filter - Shows CTA for logged-out users */}
+        <div className="min-w-0 max-w-full relative">
+          {!user && (
+            <div 
+              onClick={handleRatedFilterClick}
+              className="absolute inset-0 z-10 cursor-pointer flex items-center justify-center bg-[hsl(var(--theme-surface))]/95 border-2 border-[hsl(var(--theme-primary))]/50 rounded-md backdrop-blur-sm hover:border-[hsl(var(--theme-primary))] transition-colors"
+            >
+              <Lock className="w-4 h-4 text-[hsl(var(--theme-primary))] mr-2" />
+              <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-fontSecondary)] text-sm font-semibold">Sign Up to Filter</span>
+            </div>
+          )}
+          <Select 
+            value={ratedFilter} 
+            onValueChange={onRatedFilterChange}
+            disabled={!user}
+          >
+            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full disabled:opacity-50">
               <SelectValue placeholder="Filter" />
             </SelectTrigger>
             <SelectContent className="bg-[hsl(var(--theme-card))] border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] backdrop-blur-sm z-50">
