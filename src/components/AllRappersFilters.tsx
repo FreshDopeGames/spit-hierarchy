@@ -12,10 +12,12 @@ interface AllRappersFiltersProps {
   locationFilter: string;
   sortBy: string;
   sortOrder: string;
+  ratedFilter: string;
   onSearchInput: (value: string) => void;
   onLocationInput: (value: string) => void;
   onSortChange: (value: string) => void;
   onOrderChange: (value: string) => void;
+  onRatedFilterChange: (value: string) => void;
 }
 
 const AllRappersFilters = ({
@@ -25,20 +27,22 @@ const AllRappersFilters = ({
   locationFilter,
   sortBy,
   sortOrder,
+  ratedFilter,
   onSearchInput,
   onLocationInput,
   onSortChange,
-  onOrderChange
+  onOrderChange,
+  onRatedFilterChange
 }: AllRappersFiltersProps) => {
   return (
-    <div className="bg-[hsl(var(--theme-surface))] border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 sm:p-4 lg:p-6 mb-8 backdrop-blur-sm shadow-lg overflow-hidden">
-      <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-        <Mic className="text-[hsl(var(--theme-textMuted))] w-5 h-5 sm:w-6 sm:h-6" />
-        <h3 className="text-[hsl(var(--theme-textMuted))] font-[var(--theme-fontPrimary)] text-lg sm:text-xl animate-text-glow">Search The Greatest</h3>
-        <div className="flex-1 h-px bg-gradient-to-r from-[hsl(var(--theme-secondary))] via-[hsl(var(--theme-accent))] to-transparent"></div>
+    <div className="bg-[hsl(var(--theme-surface))] border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 sm:p-4 lg:p-6 mb-8 backdrop-blur-sm shadow-lg overflow-hidden min-w-0 max-w-full">
+      <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
+        <Mic className="text-[hsl(var(--theme-textMuted))] w-5 h-5 sm:w-6 sm:h-6 flex-shrink-0" />
+        <h3 className="text-[hsl(var(--theme-textMuted))] font-[var(--theme-fontPrimary)] text-lg sm:text-xl animate-text-glow truncate">Search The Greatest</h3>
+        <div className="flex-1 h-px bg-gradient-to-r from-[hsl(var(--theme-secondary))] via-[hsl(var(--theme-accent))] to-transparent min-w-0"></div>
       </div>
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-2 sm:gap-3 lg:gap-4 min-w-0 overflow-hidden">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2 sm:gap-3 lg:gap-4 min-w-0 overflow-hidden max-w-full">
         {/* Search */}
         <div className="relative min-w-0">
           <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--theme-textMuted))] w-4 h-4" />
@@ -56,13 +60,28 @@ const AllRappersFilters = ({
             </div>}
         </div>
 
+        {/* Rated Filter */}
+        <div className="min-w-0 max-w-full">
+          <Select value={ratedFilter} onValueChange={onRatedFilterChange}>
+            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
+              <SelectValue placeholder="Filter" />
+            </SelectTrigger>
+            <SelectContent className="bg-[hsl(var(--theme-card))] border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] backdrop-blur-sm z-50">
+              <SelectItem value="all" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">All Rappers</SelectItem>
+              <SelectItem value="rated" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rated by Me</SelectItem>
+              <SelectItem value="not_rated" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Not Rated by Me</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
         {/* Sort By */}
-        <div className="min-w-0">
+        <div className="min-w-0 max-w-full">
           <Select value={sortBy} onValueChange={onSortChange}>
-            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm">
+            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent className="bg-[hsl(var(--theme-card))] border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] backdrop-blur-sm z-50">
+              <SelectItem value="activity" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Activity</SelectItem>
               <SelectItem value="name" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Name</SelectItem>
               <SelectItem value="rating" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rating</SelectItem>
               <SelectItem value="votes" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Vote Count</SelectItem>
@@ -72,9 +91,9 @@ const AllRappersFilters = ({
         </div>
 
         {/* Sort Order */}
-        <div className="min-w-0">
+        <div className="min-w-0 max-w-full">
           <Select value={sortOrder} onValueChange={onOrderChange}>
-            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm">
+            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
               <SelectValue placeholder="Order" />
             </SelectTrigger>
             <SelectContent className="bg-[hsl(var(--theme-card))] border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] backdrop-blur-sm z-50">

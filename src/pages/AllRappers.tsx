@@ -11,12 +11,13 @@ import BackToTopButton from "@/components/BackToTopButton";
 import Footer from "@/components/Footer";
 
 const AllRappers = () => {
-  const [sortBy, setSortBy] = useState("name");
-  const [sortOrder, setSortOrder] = useState("asc");
-  const [searchInput, setSearchInput] = useState(""); // Input value for immediate UI updates
-  const [searchTerm, setSearchTerm] = useState(""); // Debounced value for API calls
-  const [locationInput, setLocationInput] = useState(""); // Input value for location
-  const [locationFilter, setLocationFilter] = useState(""); // Debounced value for location
+  const [sortBy, setSortBy] = useState("activity");
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [searchInput, setSearchInput] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [locationInput, setLocationInput] = useState("");
+  const [locationFilter, setLocationFilter] = useState("");
+  const [ratedFilter, setRatedFilter] = useState("all");
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 20;
@@ -61,7 +62,7 @@ const AllRappers = () => {
     isLoading,
     isFetching
   } = useQuery({
-    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, currentPage],
+    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage],
     queryFn: async () => {
       const startRange = currentPage * itemsPerPage;
       const endRange = (currentPage + 1) * itemsPerPage - 1;
@@ -82,8 +83,41 @@ const AllRappers = () => {
         query = query.ilike("origin", `%${locationFilter}%`);
       }
 
+      // Apply rated/not rated filter
+      if (ratedFilter !== "all") {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (user) {
+          const { data: votedRappers } = await supabase
+            .from("votes")
+            .select("rapper_id")
+            .eq("user_id", user.id);
+          
+          const votedRapperIds = votedRappers?.map(v => v.rapper_id) || [];
+          
+          if (ratedFilter === "rated") {
+            if (votedRapperIds.length > 0) {
+              query = query.in("id", votedRapperIds);
+            } else {
+              return { rappers: [], total: 0, hasMore: false };
+            }
+          } else if (ratedFilter === "not_rated") {
+            if (votedRapperIds.length > 0) {
+              query = query.not("id", "in", `(${votedRapperIds.join(",")})`);
+            }
+          }
+        } else if (ratedFilter !== "all") {
+          return { rappers: [], total: 0, hasMore: false };
+        }
+      }
+
       // Apply sorting
-      if (sortBy === "name") {
+      if (sortBy === "activity") {
+        query = query.order("activity_score", {
+          ascending: sortOrder === "asc",
+          nullsFirst: false
+        });
+      } else if (sortBy === "name") {
         query = query.order("name", {
           ascending: sortOrder === "asc"
         });
@@ -103,7 +137,7 @@ const AllRappers = () => {
         });
       }
 
-      // Apply pagination - fetch the specific range
+      // Apply pagination
       const {
         data,
         error,
@@ -160,6 +194,13 @@ const AllRappers = () => {
     setLocationInput(value);
   };
 
+  const handleRatedFilterChange = (value: string) => {
+    console.log(`Rated filter changing to: ${value}`);
+    setRatedFilter(value);
+    setCurrentPage(0);
+    setAllRappers([]);
+  };
+
   const handleLoadMore = () => {
     console.log(`Loading more: current page ${currentPage} -> ${currentPage + 1}`);
     setCurrentPage(prev => prev + 1);
@@ -195,7 +236,7 @@ const AllRappers = () => {
           {total} legendary rappers • Showing {allRappers.length}
         </p>
         {/* Filters and Search */}
-        <AllRappersFilters searchInput={searchInput} searchTerm={searchTerm} locationInput={locationInput} locationFilter={locationFilter} sortBy={sortBy} sortOrder={sortOrder} onSearchInput={handleSearchInput} onLocationInput={handleLocationInput} onSortChange={handleSortChange} onOrderChange={handleOrderChange} />
+        <AllRappersFilters searchInput={searchInput} searchTerm={searchTerm} locationInput={locationInput} locationFilter={locationFilter} sortBy={sortBy} sortOrder={sortOrder} ratedFilter={ratedFilter} onSearchInput={handleSearchInput} onLocationInput={handleLocationInput} onSortChange={handleSortChange} onOrderChange={handleOrderChange} onRatedFilterChange={handleRatedFilterChange} />
         {/* Rappers Grid with Ads */}
         {allRappers.length === 0 && !isLoading ? <AllRappersEmptyState /> : <AllRappersGrid rappers={allRappers} total={total} hasMore={hasMore} isFetching={isFetching} itemsPerPage={itemsPerPage} onLoadMore={handleLoadMore} currentPage={currentPage} />}
       </main>

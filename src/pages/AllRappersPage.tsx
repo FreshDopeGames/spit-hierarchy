@@ -22,6 +22,7 @@ const AllRappersPage = () => {
     searchTerm,
     locationInput,
     locationFilter,
+    ratedFilter,
     allRappers,
     rappersData,
     isLoading,
@@ -31,6 +32,7 @@ const AllRappersPage = () => {
     handleOrderChange,
     handleSearchInput,
     handleLocationInput,
+    handleRatedFilterChange,
     handleLoadMore,
     currentPage,
   } = useAllRappers({ 
@@ -52,7 +54,7 @@ const AllRappersPage = () => {
     return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
       <HeaderNavigation isScrolled={false} />
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden">
+      <main className="flex-1 max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden min-w-0">
           <BlogPageHeader title="All Rappers" />
           <div className="pt-10">
             <AllRappersLoadingSkeleton />
@@ -68,10 +70,10 @@ const AllRappersPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
       <HeaderNavigation isScrolled={false} />
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden">
+      <main className="flex-1 max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden min-w-0">
         <BlogPageHeader title="All Rappers" />
         
-        <p className="text-center text-rap-smoke text-lg sm:text-xl font-kaushan mb-6 sm:mb-8 px-2">
+        <p className="text-center text-rap-smoke text-lg sm:text-xl font-kaushan mb-6 sm:mb-8 px-2 break-words">
           {total} legendary rappers • Showing {allRappers.length}
         </p>
         
@@ -82,10 +84,12 @@ const AllRappersPage = () => {
           locationFilter={locationFilter}
           sortBy={sortBy}
           sortOrder={sortOrder}
+          ratedFilter={ratedFilter}
           onSearchInput={handleSearchInput}
           onLocationInput={handleLocationInput}
           onSortChange={handleSortChange}
           onOrderChange={handleOrderChange}
+          onRatedFilterChange={handleRatedFilterChange}
         />
         
         {allRappers.length === 0 && !isLoading ? (
