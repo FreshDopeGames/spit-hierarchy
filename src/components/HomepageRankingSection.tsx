@@ -86,7 +86,7 @@ const HomepageRankingSection = () => {
   });
   if (isLoading) {
     return <section className="mb-16">
-        <div className="mb-8 text-center">
+        <div className="mb-6 text-center">
           <h2 className="font-ceviche text-primary text-4xl sm:text-6xl mb-2">
             Featured Rankings
           </h2>
@@ -104,7 +104,7 @@ const HomepageRankingSection = () => {
     return null;
   }
   return <section className="mb-16">
-      <div className="mb-8 text-center">
+      <div className="mb-6 text-center">
         <h2 className="font-ceviche text-primary text-4xl sm:text-6xl mb-2">
           Featured Rankings
         </h2>

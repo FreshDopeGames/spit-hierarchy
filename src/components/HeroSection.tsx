@@ -9,7 +9,7 @@ const HeroSection = () => {
   const {
     theme
   } = useEnhancedTheme();
-  return <div className="text-center mb-8 sm:mb-12 px-2 sm:px-0">
+  return <div className="text-center mb-6 sm:mb-8 px-2 sm:px-0">
       <h2 className="font-ceviche text-primary mb-4 tracking-wider text-4xl sm:text-6xl leading-tight break-words max-w-full">
         FEATURED SLICK TALK
       </h2>

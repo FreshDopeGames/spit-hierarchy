@@ -32,7 +32,7 @@ const RankingsSectionHeader = () => {
   const title = headerData?.title || "Spit Hierarchy: GOAT Rapper Rankings";
   const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
   const backgroundImage = headerData?.background_image_url;
-  return <div className="relative mb-12 sm:mb-6 lg:mb-6 overflow-hidden rounded-2xl">
+  return <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl">
       {/* Background Image Container */}
       <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon to-rap-burgundy/30" style={{
       backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
