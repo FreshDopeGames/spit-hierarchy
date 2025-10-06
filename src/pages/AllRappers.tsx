@@ -209,7 +209,7 @@ const AllRappers = () => {
   if (isLoading && currentPage === 0) {
     return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col overflow-x-hidden">
         <HeaderNavigation isScrolled={false} />
-        <main className="flex-1 max-w-7xl mx-auto p-6 pt-28 overflow-x-hidden">
+        <main className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 pt-28 overflow-x-hidden">
           <BlogPageHeader title="All Rappers" />
           <div className="pt-10">
             <AllRappersLoadingSkeleton />
@@ -225,7 +225,7 @@ const AllRappers = () => {
 
   return <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] flex flex-col overflow-x-hidden">
       <HeaderNavigation isScrolled={false} />
-      <main className="flex-1 max-w-7xl mx-auto p-6 pt-28 overflow-x-hidden">
+      <main className="flex-1 max-w-7xl mx-auto px-3 sm:px-4 md:px-6 py-6 pt-28 overflow-x-hidden">
         <BlogPageHeader title="All Rappers" />
         {/* Enhanced stats display */}
         <div className="mb-8">
