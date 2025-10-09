@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 export interface RapperStats {
   top5_count: number;
   ranking_votes: number;
+  actual_votes: number;
 }
 
 export const useRapperStats = (rapperIds: string[]) => {
@@ -41,12 +42,27 @@ export const useRapperStats = (rapperIds: string[]) => {
         return acc;
       }, {});
 
+      // Fetch actual vote counts from rappers table
+      const { data: rapperData, error: rapperError } = await supabase
+        .from("rappers")
+        .select("id, total_votes")
+        .in("id", rapperIds);
+
+      if (rapperError) throw rapperError;
+
+      // Map actual votes per rapper
+      const actualVotes = rapperData.reduce((acc: Record<string, number>, item) => {
+        acc[item.id] = item.total_votes || 0;
+        return acc;
+      }, {});
+
       // Combine the data
       const statsMap: Record<string, RapperStats> = {};
       rapperIds.forEach(id => {
         statsMap[id] = {
           top5_count: top5Counts[id] || 0,
           ranking_votes: rankingVotes[id] || 0,
+          actual_votes: actualVotes[id] || 0,
         };
       });
 

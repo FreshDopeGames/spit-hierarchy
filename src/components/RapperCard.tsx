@@ -13,7 +13,7 @@ type Rapper = Tables<"rappers">;
 interface RapperCardProps {
   rapper: Rapper;
   imageUrl?: string | null;
-  stats?: { top5_count: number; ranking_votes: number };
+  stats?: { top5_count: number; ranking_votes: number; actual_votes?: number };
   currentPage?: number;
   position?: number;
   compact?: boolean;
@@ -137,7 +137,7 @@ const RapperCard = ({
                 <div className="flex items-center justify-center gap-0.5 sm:gap-1 mb-0.5 sm:mb-1">
                   <Vote className="w-3 h-3 sm:w-4 sm:h-4 text-[var(--theme-secondary)]" />
                   <span className="text-[var(--theme-text)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
-                    {formatNumber(stats?.ranking_votes || 0)}
+                    {formatNumber(stats?.actual_votes || rapper.total_votes || 0)}
                   </span>
                 </div>
                 <div className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-fontSecondary)]">
