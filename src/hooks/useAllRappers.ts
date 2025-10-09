@@ -100,6 +100,7 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
             if (votedRapperIds.length > 0) {
               query = query.not("id", "in", `(${votedRapperIds.join(",")})`);
             }
+            // If no votes yet, all rappers are "not rated" so don't apply filter
           }
         } else if (ratedFilter !== "all") {
           // User not logged in but trying to filter by rated status
@@ -107,17 +108,25 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         }
       }
 
-      // Apply sorting
+      // Apply sorting with secondary sort for consistent ordering
       if (sortBy === "activity") {
-        query = query.order("activity_score", { ascending: sortOrder === "asc", nullsFirst: false });
+        query = query
+          .order("activity_score", { ascending: sortOrder === "asc", nullsFirst: false })
+          .order("name", { ascending: true });
       } else if (sortBy === "name") {
         query = query.order("name", { ascending: sortOrder === "asc" });
       } else if (sortBy === "rating") {
-        query = query.order("average_rating", { ascending: sortOrder === "asc", nullsFirst: false });
+        query = query
+          .order("average_rating", { ascending: sortOrder === "asc", nullsFirst: false })
+          .order("name", { ascending: true });
       } else if (sortBy === "votes") {
-        query = query.order("total_votes", { ascending: sortOrder === "asc", nullsFirst: false });
+        query = query
+          .order("total_votes", { ascending: sortOrder === "asc", nullsFirst: false })
+          .order("name", { ascending: true });
       } else if (sortBy === "origin") {
-        query = query.order("origin", { ascending: sortOrder === "asc", nullsFirst: false });
+        query = query
+          .order("origin", { ascending: sortOrder === "asc", nullsFirst: false })
+          .order("name", { ascending: true });
       }
 
       // Apply pagination
@@ -133,7 +142,6 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
       };
     },
     staleTime: 30000,
-    refetchInterval: 60000,
   });
 
   // Real-time subscription for rapper updates
