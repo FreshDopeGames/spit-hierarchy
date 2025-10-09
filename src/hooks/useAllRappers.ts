@@ -115,7 +115,7 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
       } else if (sortBy === "rating") {
         query = query.order("average_rating", { ascending: sortOrder === "asc", nullsFirst: false });
       } else if (sortBy === "votes") {
-        query = query.order("total_votes", { ascending: sortOrder === "asc" });
+        query = query.order("total_votes", { ascending: sortOrder === "asc", nullsFirst: false });
       } else if (sortBy === "origin") {
         query = query.order("origin", { ascending: sortOrder === "asc", nullsFirst: false });
       }

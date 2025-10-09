@@ -128,7 +128,8 @@ const AllRappers = () => {
         });
       } else if (sortBy === "votes") {
         query = query.order("total_votes", {
-          ascending: sortOrder === "asc"
+          ascending: sortOrder === "asc",
+          nullsFirst: false
         });
       } else if (sortBy === "origin") {
         query = query.order("origin", {
