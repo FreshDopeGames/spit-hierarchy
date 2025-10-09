@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import UserProfile from "./pages/UserProfile";
 import Analytics from "./pages/Analytics";
-import AllRappers from "./pages/AllRappers";
+import AllRappersPage from "./pages/AllRappersPage";
 import RapperDetail from "./pages/RapperDetail";
 import Rankings from "./pages/Rankings";
 import OfficialRankingDetail from "./pages/OfficialRankingDetail";
@@ -41,8 +41,8 @@ function App() {
           <Route path="/terms" element={<TermsOfUse />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
-          <Route path="/rappers" element={<AllRappers />} />
-          <Route path="/all-rappers" element={<AllRappers />} />
+          <Route path="/rappers" element={<AllRappersPage />} />
+          <Route path="/all-rappers" element={<AllRappersPage />} />
           <Route path="/rapper/:id" element={<RapperDetail />} />
           <Route path="/rankings" element={<Rankings />} />
           <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
