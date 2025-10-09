@@ -57,7 +57,7 @@ const AllRappersFilters = ({
         {/* Search */}
         <div className="relative min-w-0">
           <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--theme-textMuted))] w-4 h-4" />
-          <ThemedInput placeholder="Search..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-8 sm:pl-10 pr-8 bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
+          <ThemedInput placeholder="Search..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-8 sm:pl-10 pr-8 bg-black border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
           {searchInput !== searchTerm && <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-[hsl(var(--theme-textMuted))] animate-spin" />
             </div>}
@@ -65,7 +65,7 @@ const AllRappersFilters = ({
 
         {/* Location Filter (Debounced now) */}
         <div className="relative min-w-0">
-          <ThemedInput placeholder="City (ex., &quot;Bronx&quot;) or State (ex., &quot;NY&quot;)" value={locationInput} onChange={e => onLocationInput(e.target.value)} className="pr-8 bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
+          <ThemedInput placeholder="City (ex., &quot;Bronx&quot;) or State (ex., &quot;NY&quot;)" value={locationInput} onChange={e => onLocationInput(e.target.value)} className="pr-8 bg-black border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
           {locationInput !== locationFilter && <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-[hsl(var(--theme-textMuted))] animate-spin" />
             </div>}
@@ -90,10 +90,10 @@ const AllRappersFilters = ({
             <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full disabled:opacity-50">
               <SelectValue placeholder="Filter" />
             </SelectTrigger>
-            <SelectContent className="bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
-              <SelectItem value="all" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">All Rappers</SelectItem>
-              <SelectItem value="rated" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rated by Me</SelectItem>
-              <SelectItem value="not_rated" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Not Rated by Me</SelectItem>
+            <SelectContent className="bg-white bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
+              <SelectItem value="all" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">All Rappers</SelectItem>
+              <SelectItem value="rated" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rated by Me</SelectItem>
+              <SelectItem value="not_rated" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Not Rated by Me</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -104,12 +104,12 @@ const AllRappersFilters = ({
             <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
               <SelectValue placeholder="Sort by" />
             </SelectTrigger>
-            <SelectContent className="bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
-              <SelectItem value="activity" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Activity</SelectItem>
-              <SelectItem value="name" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Name</SelectItem>
-              <SelectItem value="rating" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rating</SelectItem>
-              <SelectItem value="votes" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Vote Count</SelectItem>
-              <SelectItem value="origin" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Location</SelectItem>
+            <SelectContent className="bg-white bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
+              <SelectItem value="activity" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Activity</SelectItem>
+              <SelectItem value="name" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Name</SelectItem>
+              <SelectItem value="rating" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rating</SelectItem>
+              <SelectItem value="votes" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Vote Count</SelectItem>
+              <SelectItem value="origin" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Location</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -120,9 +120,9 @@ const AllRappersFilters = ({
             <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
               <SelectValue placeholder="Order" />
             </SelectTrigger>
-            <SelectContent className="bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
-              <SelectItem value="asc" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Ascending</SelectItem>
-              <SelectItem value="desc" className="focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Descending</SelectItem>
+            <SelectContent className="bg-white bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
+              <SelectItem value="asc" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Ascending</SelectItem>
+              <SelectItem value="desc" className="bg-white text-gray-900 focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Descending</SelectItem>
             </SelectContent>
           </Select>
         </div>
