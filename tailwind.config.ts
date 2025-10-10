@@ -185,7 +185,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
-				'spin-slow': 'spin-slow 2.5s linear infinite',
+				'spin-slow': 'spin-slow 4s linear infinite',
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
