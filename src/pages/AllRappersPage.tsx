@@ -6,6 +6,7 @@ import AllRappersGrid from "@/components/AllRappersGrid";
 import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
 import AllRappersInlineLoader from "@/components/AllRappersInlineLoader";
+import Footer from "@/components/Footer";
 import { useAllRappers } from "@/hooks/useAllRappers";
 import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
@@ -98,6 +99,7 @@ const AllRappersPage = () => {
           </>
         )}
       </main>
+      <Footer />
     </div>
   );
 };

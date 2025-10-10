@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useRef, useEffect } from "react";
 import RapperCard from "@/components/RapperCard";
 import LoadMoreButton from "@/components/LoadMoreButton";
 import { useRapperImages } from "@/hooks/useImageStyle";
@@ -32,6 +32,25 @@ const AllRappersGrid = ({
   const { data: imageMap = {} } = useRapperImages(rapperIds);
   const { data: statsMap = {} } = useRapperStats(rapperIds);
 
+  // Infinite scroll: auto-load when sentinel element comes into view
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!sentinelRef.current || !hasMore || isFetching) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          onLoadMore();
+        }
+      },
+      { rootMargin: '400px' } // Trigger 400px before reaching sentinel
+    );
+
+    observer.observe(sentinelRef.current);
+    return () => observer.disconnect();
+  }, [hasMore, isFetching, onLoadMore]);
+
   return (
     <div className="min-w-0 max-w-full">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8 min-w-0 max-w-full overflow-visible">
@@ -46,7 +65,10 @@ const AllRappersGrid = ({
         ))}
       </div>
 
-      {/* Load More Button */}
+      {/* Invisible sentinel for infinite scroll */}
+      {hasMore && <div ref={sentinelRef} className="h-px" />}
+
+      {/* Load More Button - fallback for manual loading */}
       <LoadMoreButton
         hasMore={hasMore}
         isFetching={isFetching}
