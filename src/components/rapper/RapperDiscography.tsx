@@ -131,16 +131,12 @@ const RapperDiscography = ({
                 appleMusic: directLinks.apple_music || searchLinks.appleMusic
               };
               return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors">
-                    <div className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden" style={{
-                  backgroundColor: placeholder.style.bgColor,
-                  background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
-                }}>
-                      <Disc3 className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
-                      <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: `radial-gradient(circle at 30% 70%, ${placeholder.style.textColor} 1px, transparent 1px)`,
-                    backgroundSize: '8px 8px'
-                  }} />
-                    </div>
+                <AlbumCoverImage
+                  coverUrl={item.album?.cover_art_url}
+                  title={item.album?.title || 'Album'}
+                  releaseType="album"
+                  placeholderColors={placeholder.style}
+                />
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate">
                         {item.album?.title}
