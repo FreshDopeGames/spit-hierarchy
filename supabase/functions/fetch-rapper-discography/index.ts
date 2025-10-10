@@ -133,58 +133,95 @@ serve(async (req) => {
         ip_address: clientIP,
         user_agent: userAgent,
         request_data: body,
-      response_data: { albums: payload.discography.length },
+        response_data: { albums: payload.discography.length },
         execution_time_ms: Date.now() - startTime,
       });
       return json({ success: true, cached: true, ...payload });
     }
 
-    // 2) De-dupe calls within 10 minutes: if a successful attempt was logged recently, return current DB
-    if (!forceRefresh) {
-      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-      const { data: recentLogs } = await supabaseService
-        .from('musicbrainz_audit_logs')
-        .select('id, status, created_at')
-        .eq('rapper_id', rapperId)
-        .gte('created_at', tenMinutesAgo)
-        .in('status', ['SUCCESS', 'SUCCESS_CACHED']);
-      if ((recentLogs?.length || 0) > 0) {
-        const payload = await readDiscographyPayload(supabaseService, rapperId);
-        await logAuditEvent(supabaseService, {
-          rapper_id: rapperId,
-          action: 'FETCH_DISCOGRAPHY',
-          status: 'SUCCESS_DEDUP',
-          user_id: userId,
-          ip_address: clientIP,
-          user_agent: userAgent,
-          request_data: body,
-          response_data: { albums: payload.discography.length },
-          execution_time_ms: Date.now() - startTime,
-        });
-        return json({ success: true, cached: true, ...payload });
-      }
-    }
-
-    // 3) Only now check rate limit (so affordable cache hits don't consume it)
-    const { data: rateOk } = await supabaseService.rpc('check_musicbrainz_rate_limit', {
-      p_user_id: userId,
-      p_ip_address: clientIP,
-      p_max_requests: 10,
-      p_window_minutes: 60,
-    });
-    if (!rateOk) {
+    // 2) De-dupe calls within 10 minutes - UNCONDITIONAL (runs even with forceRefresh)
+    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+    const { data: recentLogs } = await supabaseService
+      .from('musicbrainz_audit_logs')
+      .select('id, status, created_at')
+      .eq('rapper_id', rapperId)
+      .gte('created_at', tenMinutesAgo)
+      .in('status', ['SUCCESS', 'SUCCESS_CACHED']);
+    if ((recentLogs?.length || 0) > 0) {
+      const payload = await readDiscographyPayload(supabaseService, rapperId);
       await logAuditEvent(supabaseService, {
         rapper_id: rapperId,
         action: 'FETCH_DISCOGRAPHY',
-        status: 'RATE_LIMITED',
+        status: 'SUCCESS_DEDUP',
         user_id: userId,
         ip_address: clientIP,
         user_agent: userAgent,
         request_data: body,
-        error_message: 'Rate limit exceeded',
+        response_data: { albums: payload.discography.length },
         execution_time_ms: Date.now() - startTime,
       });
-      return json({ success: false, error: 'Rate limit exceeded. Please try again later.' }, 429);
+      return json({ success: true, cached: true, ...payload });
+    }
+
+    // 3) Check if user is admin - admins bypass rate limit
+    let isAdmin = false;
+    if (authHeader) {
+      const token = authHeader.replace('Bearer ', '');
+      const supabaseUser = createClient(supabaseUrl, supabaseAnonKey, {
+        global: { headers: { Authorization: `Bearer ${token}` } },
+        auth: { autoRefreshToken: false, persistSession: false },
+      });
+      const { data: adminCheck } = await supabaseUser.rpc('is_admin').catch(() => ({ data: false }));
+      isAdmin = adminCheck === true;
+    }
+
+    // 4) Check rate limit (admins skip this)
+    if (!isAdmin) {
+      const { data: rateOk } = await supabaseService.rpc('check_musicbrainz_rate_limit', {
+        p_user_id: userId,
+        p_ip_address: clientIP,
+        p_max_requests: 10,
+        p_window_minutes: 60,
+      });
+      
+      if (!rateOk) {
+        // Try to return cached data gracefully
+        const payload = await readDiscographyPayload(supabaseService, rapperId);
+        if (payload.discography.length > 0) {
+          await logAuditEvent(supabaseService, {
+            rapper_id: rapperId,
+            action: 'FETCH_DISCOGRAPHY',
+            status: 'RATE_LIMITED_CACHED',
+            user_id: userId,
+            ip_address: clientIP,
+            user_agent: userAgent,
+            request_data: body,
+            response_data: { albums: payload.discography.length },
+            execution_time_ms: Date.now() - startTime,
+          });
+          return json({ 
+            success: true, 
+            cached: true, 
+            rate_limited: true,
+            message: 'Rate limit exceeded — returning cached results',
+            ...payload 
+          });
+        }
+        
+        // No cached data available, return 429
+        await logAuditEvent(supabaseService, {
+          rapper_id: rapperId,
+          action: 'FETCH_DISCOGRAPHY',
+          status: 'RATE_LIMITED',
+          user_id: userId,
+          ip_address: clientIP,
+          user_agent: userAgent,
+          request_data: body,
+          error_message: 'Rate limit exceeded, no cache available',
+          execution_time_ms: Date.now() - startTime,
+        });
+        return json({ success: false, error: 'Rate limit exceeded. Please try again later.' }, 429);
+      }
     }
 
     // Resolve MusicBrainz artist id (robust alias-aware search)
@@ -478,7 +515,7 @@ serve(async (req) => {
     await logAuditEvent(supabaseService, {
       rapper_id: rapperId,
       action: 'FETCH_DISCOGRAPHY',
-      status: 'SUCCESS',
+      status: isAdmin ? 'SUCCESS_ADMIN_BYPASS' : 'SUCCESS',
       user_id: userId,
       ip_address: clientIP,
       user_agent: userAgent,

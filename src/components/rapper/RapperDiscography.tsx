@@ -237,14 +237,17 @@ const RapperDiscography = ({
         </Tabs>
         
         <div className="flex items-center justify-center gap-2 pt-6 border-t border-[hsl(var(--theme-border))]/20 mt-6 my-[25px] py-[23px]">
-          {isAdmin && data?.cached && <Badge variant="secondary" className="text-xs">
+          {isAdmin && data?.cached && !data?.rate_limited && <Badge variant="secondary" className="text-xs">
               Cached
+            </Badge>}
+          {isAdmin && data?.rate_limited && <Badge variant="outline" className="text-xs border-yellow-500/50 text-yellow-500">
+              Cached (rate limited)
             </Badge>}
           {isLoading && <Badge variant="outline" className="text-xs border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))]">
               Loading...
             </Badge>}
           {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-background))] hover:border-[hsl(var(--theme-primary))] transition-all duration-200 gap-2">
-            <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
+             <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
             <span className="text-sm font-medium">
               {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
             </span>

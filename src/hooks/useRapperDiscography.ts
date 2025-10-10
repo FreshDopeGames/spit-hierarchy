@@ -25,6 +25,8 @@ export interface DiscographyAlbum {
 export interface DiscographyData {
   success: boolean;
   cached: boolean;
+  rate_limited?: boolean;
+  message?: string;
   discography: DiscographyAlbum[];
 }
 
@@ -96,6 +98,10 @@ export const useRefreshDiscography = () => {
       );
 
       if (error) {
+        const is429 = error.message?.includes('429') || error.message?.includes('Rate limit');
+        if (is429) {
+          throw new Error('RATE_LIMIT_429');
+        }
         throw new Error(error.message || "Failed to refresh discography");
       }
 
@@ -108,11 +114,20 @@ export const useRefreshDiscography = () => {
       setTimeout(() => {
         queryClient.refetchQueries({ queryKey: ["rapper-career-stats", rapperId] });
       }, 400);
-      toast.success("Discography refreshed successfully");
+      
+      if (data.rate_limited) {
+        toast.info('Using cached results — try again later');
+      } else {
+        toast.success("Discography refreshed successfully");
+      }
     },
-    onError: (error) => {
+    onError: (error: Error) => {
       console.error("Error refreshing discography:", error);
-      toast.error("Failed to refresh discography");
+      if (error.message === 'RATE_LIMIT_429') {
+        toast.error('Rate limit reached. Please try again later.');
+      } else {
+        toast.error("Failed to refresh discography");
+      }
     },
   });
 };
