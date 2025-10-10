@@ -141,6 +141,10 @@ export default {
 						height: '0'
 					}
 				},
+				'spin-slow': {
+					'0%': { transform: 'rotate(0deg)' },
+					'100%': { transform: 'rotate(360deg)' }
+				},
 				'vinyl-spin': {
 					'0%': { transform: 'rotate(0deg)' },
 					'100%': { transform: 'rotate(360deg)' }
@@ -181,6 +185,7 @@ export default {
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
+				'spin-slow': 'spin-slow 2.5s linear infinite',
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',

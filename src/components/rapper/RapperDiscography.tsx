@@ -57,7 +57,7 @@ const RapperDiscography = ({
             {isNotFound ? "This artist may not be in the MusicBrainz database yet." : isRateLimit ? "Too many requests. Please try again in a few minutes." : "There was an error connecting to the music database."}
           </p>
           <Button onClick={handleRefresh} variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10" disabled={refreshMutation.isPending}>
-            <RefreshCw className={`w-4 h-4 mr-2 ${refreshMutation.isPending ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-4 h-4 mr-2 ${refreshMutation.isPending ? 'animate-spin-slow' : ''}`} />
             {isNotFound ? 'Search Again' : 'Retry'}
           </Button>
         </CardContent>
@@ -247,7 +247,7 @@ const RapperDiscography = ({
               Loading...
             </Badge>}
           {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-background))] hover:border-[hsl(var(--theme-primary))] transition-all duration-200 gap-2">
-             <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin' : ''}`} />
+             <RefreshCw className={`w-4 h-4 transition-transform duration-200 ${refreshMutation.isPending || isLoading ? 'animate-spin-slow' : ''}`} />
             <span className="text-sm font-medium">
               {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
             </span>
