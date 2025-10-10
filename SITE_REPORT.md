@@ -66,6 +66,14 @@ The platform features a sophisticated theme system with 200+ CSS variables:
 - **Spacing:** Consistent 8px base unit system
 - **Border Radius:** Unified corner radius system across components
 
+### Search & Discovery UX
+- **Persistent Filter Controls:** Filters remain visible during all loading states, preventing jarring UI changes
+- **Optimized Loading Feedback:** 4-card skeleton loader matching grid layout for faster perceived load times
+- **Inline Progress Indicators:** Non-intrusive loading pills during search operations
+- **Enhanced Accessibility:** Proper focus state visibility without clipping on all interactive controls
+- **Smooth State Transitions:** No layout shifts between loading and loaded states
+- **Navigation State Preservation:** Automatic scroll position restoration after detail page visits
+
 ---
 
 ## Core Functionality

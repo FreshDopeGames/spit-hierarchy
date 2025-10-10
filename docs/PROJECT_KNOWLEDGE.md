@@ -20,6 +20,13 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Tag System**: Categorization with custom tags
 - **Verification System**: Verified rapper badges
 - **Image Gallery**: Multiple images per rapper with style variants
+- **Enhanced All Rappers Page**:
+  - Persistent filter controls during all loading states (no UI hiding)
+  - Optimized skeleton loading (4 cards matching grid layout)
+  - Non-intrusive inline loading indicators for search/filter operations
+  - Improved accessibility with proper focus state visibility
+  - Smooth state transitions without layout shifts
+  - Scroll position restoration after detail page navigation
 
 ### 3. Voting & Ranking System
 - **Daily Voting**: One vote per rapper per day with rating (1-10)

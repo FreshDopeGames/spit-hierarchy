@@ -162,3 +162,157 @@ Test cases should include:
 **Database Dependencies**: Requires PostgreSQL `unaccent` extension (✅ enabled in production)
 
 This enhancement significantly improves user experience by making rapper searches more intuitive and forgiving of typing variations.
+
+---
+
+# All Rappers Page UX Improvements
+
+## Overview
+Enhanced the All Rappers page search and filtering experience with persistent controls, optimized loading states, and improved visual feedback.
+
+## Implementation Details
+
+### Persistent Filters During Loading
+**Improvement over**: Previous version hid filters during data fetching, causing jarring UI changes
+
+**Current Behavior**:
+- Filters remain visible at all times during all loading states
+- Users can adjust search/filter parameters even during data fetching
+- No disappearing/reappearing of filter controls
+- Smoother, more predictable user experience
+
+**Benefits**:
+- Users maintain context while waiting for results
+- Can queue multiple filter changes without waiting
+- Reduces cognitive load - UI stays consistent
+- Professional feel with no layout shifts
+
+### Optimized Initial Loading State
+**Improvement over**: Previous implementation showed 12 skeleton cards (later reduced to 3)
+
+**Current Implementation**: 4 skeleton cards
+- Matches desktop grid layout (xl:grid-cols-4)
+- Better visual balance across all breakpoints:
+  - Mobile (1 column): 4 stacked cards appropriate length
+  - Tablet (2-3 columns): Natural grid appearance
+  - Desktop (4 columns): Perfect single row fill
+- Faster perceived loading time with focused skeleton
+- More intentional design vs arbitrary number
+
+**Files Modified**: `src/components/AllRappersLoadingSkeleton.tsx`
+
+### Inline Loading Indicator
+**New Feature**: Non-intrusive loading feedback during search/filter operations
+
+**Implementation**: `src/components/AllRappersInlineLoader.tsx`
+- Elegant loading pill at top of results section
+- Displays "Searching rappers..." with animated spinner
+- Themed styling matches design system
+- Appears during search/filter operations without blocking content
+- Uses semantic theme tokens for consistency
+
+**Benefits**:
+- Clear feedback that action is being processed
+- Doesn't disrupt existing content layout
+- Non-blocking - users can still see current results
+- Professional UX pattern for async operations
+
+### Overflow Visibility Fix
+**Bug Fix**: Focus rings and dropdown highlights were being clipped
+
+**Root Cause**: `overflow-hidden` class on filter container
+- Prevented proper visibility of focus states
+- Cut off dropdown menu highlights
+- Reduced accessibility of interactive elements
+
+**Solution**: Removed `overflow-hidden` from filter container
+- Focus rings now fully visible
+- Dropdown highlights properly displayed
+- Improved accessibility compliance
+- Better visual feedback for keyboard navigation
+
+**Files Modified**: `src/components/AllRappersFilters.tsx`
+
+### Conditional Rendering Logic
+**Enhanced State Management**: `src/pages/AllRappersPage.tsx`
+
+**Loading States**:
+1. **Initial Load** (`isLoading && !rappers`):
+   - Shows 4-card skeleton loader
+   - Filters remain visible
+   
+2. **Search/Filter Operations** (`isFetching && rappers`):
+   - Shows inline loading indicator
+   - Keeps current results visible
+   - Filters remain interactive
+   
+3. **Empty State** (`!isLoading && rappers?.length === 0`):
+   - Shows "No rappers found" message
+   - Filters remain visible for adjustment
+   
+4. **Success State** (`rappers?.length > 0`):
+   - Shows full rapper grid
+   - All interactions enabled
+
+**Navigation State Preservation**:
+- `useNavigationState` hook maintains page and scroll position
+- Restores scroll position after detail page navigation
+- Preserves pagination state across route changes
+
+## User Experience Impact
+
+### Before
+- Filters disappeared during loading (jarring)
+- 12 skeleton cards (excessive, arbitrary number)
+- No feedback during search operations
+- Focus states clipped (accessibility issue)
+- Layout shifts during state changes
+
+### After
+- Filters always visible (consistent UI)
+- 4 skeleton cards (intentional, matches layout)
+- Clear inline loading feedback
+- Full focus state visibility (accessible)
+- Smooth transitions, no layout shifts
+
+## Technical Details
+
+### Component Files Created/Modified
+- `src/components/AllRappersLoadingSkeleton.tsx` - Reduced from 3 to 4 cards
+- `src/components/AllRappersInlineLoader.tsx` - New component
+- `src/pages/AllRappersPage.tsx` - Enhanced conditional rendering
+- `src/components/AllRappersFilters.tsx` - Removed overflow-hidden
+
+### Design System Integration
+All components use semantic theme tokens:
+- `--theme-surface` for backgrounds
+- `--theme-border` for borders
+- `--theme-primary` for accents
+- `--theme-text-primary` for text
+
+### Performance Considerations
+- Skeleton reduced from 12 to 4 cards improves initial render
+- Inline loader is lightweight (~200 bytes)
+- No additional network requests
+- Maintains existing debounce patterns (300ms autocomplete, 2s search)
+
+## Testing Considerations
+Test scenarios should cover:
+- Initial page load with empty state
+- Search input with debounce behavior
+- Filter changes during active search
+- Keyboard navigation with focus states visible
+- Mobile, tablet, and desktop layouts
+- Rapid filter changes (no UI breaking)
+- Navigation to/from detail pages (scroll restoration)
+
+## Future Enhancements
+Consider adding:
+- Filter preset saving (save common searches)
+- Recent searches history
+- Advanced filter panel toggle
+- Filter count badges
+- Clear all filters button
+- Filter URL state sync (shareable filter URLs)
+
+---
