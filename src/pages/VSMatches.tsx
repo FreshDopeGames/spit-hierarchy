@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useVSMatches } from "@/hooks/useVSMatches";
 import HeaderNavigation from "@/components/HeaderNavigation";
+import Footer from "@/components/Footer";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -163,6 +164,8 @@ const VSMatches = () => {
           )}
         </main>
       </div>
+      
+      <Footer />
     </>
   );
 };
