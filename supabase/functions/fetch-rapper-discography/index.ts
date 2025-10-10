@@ -306,23 +306,45 @@ serve(async (req) => {
     }
 
 // Fetch albums and EPs separately with release details to get status field
-    const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&inc=releases&fmt=json&limit=100&offset=0`);
-    await delay(150);
-    const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&inc=releases&fmt=json&limit=100&offset=0`);
+    let rgAlbums: any;
+    let rgEps: any;
+    
+    try {
+      rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&inc=releases&fmt=json&limit=100&offset=0`);
+      await delay(150);
+      rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&inc=releases&fmt=json&limit=100&offset=0`);
+    } catch (mbError: any) {
+      console.error('MusicBrainz API error:', mbError);
+      await logAuditEvent(supabaseService, {
+        rapper_id: rapperId,
+        action: 'FETCH_DISCOGRAPHY',
+        status: 'FAILED',
+        user_id: userId,
+        ip_address: clientIP,
+        user_agent: userAgent,
+        request_data: body,
+        error_message: `MusicBrainz API error: ${mbError.message}`,
+        execution_time_ms: Date.now() - startTime,
+      });
+      return json({ success: false, error: `MusicBrainz API error: ${mbError.message}`, discography: [] }, 500);
+    }
     // Combine and sort by release date (oldest first)
     const releaseGroups: MusicBrainzReleaseGroup[] = [
-      ...(rgAlbums['release-groups'] || []),
-      ...(rgEps['release-groups'] || []),
+      ...(rgAlbums?.['release-groups'] || []),
+      ...(rgEps?.['release-groups'] || []),
     ].sort((a, b) => {
       const dateA = a['first-release-date'] || '9999';
       const dateB = b['first-release-date'] || '9999';
       return dateA.localeCompare(dateB);
     });
 
+    console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name}`);
+
     // Process all release groups (removed .slice(0, 50) limit)
     for (const rg of releaseGroups) {
-      const primaryType = rg['primary-type'];
-      const secondary = rg['secondary-types'] || [];
+      try {
+        const primaryType = rg['primary-type'];
+        const secondary = rg['secondary-types'] || [];
       
       // Skip singles
       const isSingle = primaryType === 'Single' || secondary.includes('Single');
@@ -335,13 +357,18 @@ serve(async (req) => {
       }
 
       // Check for official release status - only include release-groups with at least one Official release
+      // If releases array is missing or empty, we'll include it (fail-open to avoid false negatives)
       const releases = rg.releases || [];
-      const hasOfficialRelease = releases.some(release => release.status === 'Official');
-      
-      if (!hasOfficialRelease) {
-        const statusList = releases.map(r => r.status || 'Unknown').join(', ');
-        console.log(`Skipping "${rg.title}" - no official release (statuses: ${statusList})`);
-        continue;
+      if (releases.length > 0) {
+        const hasOfficialRelease = releases.some(release => 
+          release && release.status === 'Official'
+        );
+        
+        if (!hasOfficialRelease) {
+          const statusList = releases.map(r => r?.status || 'Unknown').join(', ');
+          console.log(`Skipping "${rg.title}" - no official release (statuses: ${statusList})`);
+          continue;
+        }
       }
 
       // Only exclude clearly non-studio releases
@@ -436,6 +463,10 @@ serve(async (req) => {
           .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
       }
       await delay(150);
+      } catch (albumError: any) {
+        console.error(`Error processing album "${rg?.title}":`, albumError);
+        // Continue processing other albums even if one fails
+      }
     }
 
 
