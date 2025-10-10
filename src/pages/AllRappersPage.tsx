@@ -5,6 +5,7 @@ import AllRappersFilters from "@/components/AllRappersFilters";
 import AllRappersGrid from "@/components/AllRappersGrid";
 import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
+import AllRappersInlineLoader from "@/components/AllRappersInlineLoader";
 import { useAllRappers } from "@/hooks/useAllRappers";
 import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
@@ -50,20 +51,6 @@ const AllRappersPage = () => {
     restoreScrollPosition();
   }, [restoreScrollPosition]);
 
-  if (isLoading && currentPage === 0) {
-    return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
-      <HeaderNavigation isScrolled={false} />
-      <main className="flex-1 max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-6 pt-28 overflow-x-hidden min-w-0">
-          <BlogPageHeader title="All Rappers" />
-          <div className="pt-10">
-            <AllRappersLoadingSkeleton />
-          </div>
-        </main>
-      </div>
-    );
-  }
-
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
 
@@ -92,18 +79,23 @@ const AllRappersPage = () => {
           onRatedFilterChange={handleRatedFilterChange}
         />
         
-        {allRappers.length === 0 && !isLoading ? (
+        {isLoading && currentPage === 0 ? (
+          <AllRappersLoadingSkeleton />
+        ) : allRappers.length === 0 ? (
           <AllRappersEmptyState />
         ) : (
-          <AllRappersGrid
-            rappers={allRappers}
-            total={total}
-            hasMore={hasMore}
-            isFetching={isFetching}
-            itemsPerPage={itemsPerPage}
-            onLoadMore={handleLoadMore}
-            currentPage={currentPage}
-          />
+          <>
+            {isFetching && <AllRappersInlineLoader />}
+            <AllRappersGrid
+              rappers={allRappers}
+              total={total}
+              hasMore={hasMore}
+              isFetching={isFetching}
+              itemsPerPage={itemsPerPage}
+              onLoadMore={handleLoadMore}
+              currentPage={currentPage}
+            />
+          </>
         )}
       </main>
     </div>

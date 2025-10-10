@@ -5,7 +5,7 @@ import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 const AllRappersLoadingSkeleton = () => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {Array.from({ length: 12 }).map((_, i) => (
+      {Array.from({ length: 3 }).map((_, i) => (
         <ThemedCard key={i} className="animate-pulse relative overflow-hidden">
           {/* Theme accent bar */}
           <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
