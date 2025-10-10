@@ -13,11 +13,11 @@ import Footer from "@/components/Footer";
 
 const Analytics = () => {
   const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'platform');
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'rapper-stats');
 
   useEffect(() => {
     const tab = searchParams.get('tab');
-    if (tab && ['platform', 'members', 'achievements', 'rapper-stats', 'stats'].includes(tab)) {
+    if (tab && ['rapper-stats', 'platform', 'members', 'achievements', 'stats'].includes(tab)) {
       setActiveTab(tab);
     }
   }, [searchParams]);
@@ -38,20 +38,20 @@ const Analytics = () => {
         <ThemedTabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
           <ThemedTabsList className="grid w-full grid-cols-5 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
             <ThemedTabsTrigger 
-              value="platform" 
-              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
-              aria-label="Platform Analytics"
-            >
-              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
-              <span className="hidden xs:inline">Platform</span>
-            </ThemedTabsTrigger>
-            <ThemedTabsTrigger 
               value="rapper-stats" 
               className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
               aria-label="Rapper Statistics"
             >
               <Music className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
               <span className="hidden xs:inline">Rappers</span>
+            </ThemedTabsTrigger>
+            <ThemedTabsTrigger 
+              value="platform" 
+              className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
+              aria-label="Platform Analytics"
+            >
+              <BarChart3 className="w-5 h-5 sm:w-6 sm:h-6" strokeWidth={2.5} />
+              <span className="hidden xs:inline">Platform</span>
             </ThemedTabsTrigger>
             <ThemedTabsTrigger 
               value="members" 
