@@ -112,7 +112,7 @@ const CommunityCypher = () => {
                 <ThemedTextarea value={newComment} onChange={e => setNewComment(e.target.value)} placeholder="Drop your hottest bars here... Let the community know what you're made of! 🔥" className="w-full bg-transparent text-[var(--theme-text)] placeholder-[var(--theme-primary)]/60 border-none resize-none focus:outline-none font-[var(--theme-fontBody)] min-h-32" maxLength={maxCharacters} />
                 
                 <div className="flex justify-between items-center mt-3">
-                  <ThemedButton onClick={handleCommentSubmit} disabled={!newComment.trim() || isCreatingComment || isOverLimit} className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryLight)] font-mogra disabled:opacity-50">
+                  <ThemedButton onClick={handleCommentSubmit} disabled={!newComment.trim() || isCreatingComment || isOverLimit} className="bg-[hsl(var(--theme-primary))] text-[hsl(var(--theme-textLight))] hover:bg-[hsl(var(--theme-primaryLight))] font-mogra disabled:opacity-50">
                     {isCreatingComment ? "Dropping..." : "Drop Bars"}
                   </ThemedButton>
                   
