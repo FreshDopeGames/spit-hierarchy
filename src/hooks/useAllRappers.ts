@@ -28,7 +28,7 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
     return [...existingRappers, ...uniqueNewRappers];
   };
 
-  // Debounce search input with 2 second delay
+  // Debounce search input with 300ms delay for instant feedback
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchTerm !== searchInput) {
@@ -37,12 +37,12 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         setCurrentPage(0);
         setAllRappers([]);
       }
-    }, 2000);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [searchInput, searchTerm]);
 
-  // Debounce location input with 2 second delay (like search)
+  // Debounce location input with 300ms delay (like search)
   useEffect(() => {
     const timer = setTimeout(() => {
       if (locationFilter !== locationInput) {
@@ -51,7 +51,7 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         setCurrentPage(0);
         setAllRappers([]);
       }
-    }, 2000);
+    }, 300);
 
     return () => clearTimeout(timer);
   }, [locationInput, locationFilter]);
