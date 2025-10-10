@@ -35,6 +35,7 @@ interface MusicBrainzReleaseGroup {
   'first-release-date'?: string;
   releases?: Array<{
     id: string;
+    status?: string;  // 'Official', 'Bootleg', 'Promotion', 'Pseudo-Release'
     'track-count'?: number;
     'label-info'?: Array<{ label?: { id: string; name: string } }>
   }>;
@@ -304,10 +305,10 @@ serve(async (req) => {
       }
     }
 
-// Fetch albums and EPs separately (fixed - removed invalid inc=releases parameter)
-    const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&fmt=json&limit=100&offset=0`);
+// Fetch albums and EPs separately with release details to get status field
+    const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&inc=releases&fmt=json&limit=100&offset=0`);
     await delay(150);
-    const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&fmt=json&limit=100&offset=0`);
+    const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&inc=releases&fmt=json&limit=100&offset=0`);
     // Combine and sort by release date (oldest first)
     const releaseGroups: MusicBrainzReleaseGroup[] = [
       ...(rgAlbums['release-groups'] || []),
@@ -330,6 +331,16 @@ serve(async (req) => {
       // Require release date
       if (!rg['first-release-date']) {
         console.log(`Skipping "${rg.title}" - no release date`);
+        continue;
+      }
+
+      // Check for official release status - only include release-groups with at least one Official release
+      const releases = rg.releases || [];
+      const hasOfficialRelease = releases.some(release => release.status === 'Official');
+      
+      if (!hasOfficialRelease) {
+        const statusList = releases.map(r => r.status || 'Unknown').join(', ');
+        console.log(`Skipping "${rg.title}" - no official release (statuses: ${statusList})`);
         continue;
       }
 
