@@ -7,6 +7,7 @@ interface UserProfile {
   username: string | null;
   avatar_url: string | null;
   created_at: string;
+  username_last_changed_at?: string | null;
 }
 
 export const useUserProfile = () => {

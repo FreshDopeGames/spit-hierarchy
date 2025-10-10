@@ -941,6 +941,7 @@ export type Database = {
           social_links: Json | null
           updated_at: string | null
           username: string
+          username_last_changed_at: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -956,6 +957,7 @@ export type Database = {
           social_links?: Json | null
           updated_at?: string | null
           username: string
+          username_last_changed_at?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -971,6 +973,7 @@ export type Database = {
           social_links?: Json | null
           updated_at?: string | null
           username?: string
+          username_last_changed_at?: string | null
         }
         Relationships: []
       }
@@ -2534,6 +2537,10 @@ export type Database = {
         Args: { rapper_uuid: string }
         Returns: number
       }
+      can_change_username: {
+        Args: { user_id_param: string }
+        Returns: boolean
+      }
       can_manage_blog: {
         Args: { _user_id: string }
         Returns: boolean
@@ -2637,6 +2644,7 @@ export type Database = {
           social_links: Json
           updated_at: string
           username: string
+          username_last_changed_at: string
         }[]
       }
       get_position_delta: {
@@ -2862,6 +2870,10 @@ export type Database = {
       update_all_rapper_activity_scores: {
         Args: Record<PropertyKey, never>
         Returns: undefined
+      }
+      update_own_username: {
+        Args: { new_username: string }
+        Returns: Json
       }
     }
     Enums: {

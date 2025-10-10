@@ -1,9 +1,12 @@
 import React, { useState } from "react";
-import { Calendar, MapPin, Crown, Star } from "lucide-react";
+import { Calendar, MapPin, Crown, Star, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import AvatarUpload from "../AvatarUpload";
 import { Progress } from "@/components/ui/progress";
 import { useMemberStatus } from "@/hooks/useMemberStatus";
+import { UsernameEditDialog } from "./UsernameEditDialog";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 interface ProfileHeaderProps {
   user: any;
   profile: any;
@@ -15,6 +18,7 @@ const ProfileHeader = ({
   memberStats
 }: ProfileHeaderProps) => {
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const {
     currentStatus,
     totalPoints,
@@ -37,9 +41,28 @@ const ProfileHeader = ({
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-10">
             {/* User Info Section */}
             <div className="flex-1 lg:flex-shrink">
-              <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] mb-2 text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words text-yellow-600">
-                {profile?.username || profile?.full_name || user.email}
-              </h2>
+              <div className="flex items-center justify-center lg:justify-start gap-2 mb-2">
+                <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words text-yellow-600">
+                  {profile?.username || profile?.full_name || user.email}
+                </h2>
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <ThemedButton
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => setIsEditDialogOpen(true)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Pencil className="h-4 w-4" />
+                      </ThemedButton>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>Edit username</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              </div>
               
               {profile?.bio && <p className="text-[var(--theme-text)] mb-4 font-[var(--theme-fontSecondary)] text-sm sm:text-base">
                   {profile.bio}
@@ -113,6 +136,13 @@ const ProfileHeader = ({
           </div>
         </div>
       </div>
+
+      <UsernameEditDialog
+        open={isEditDialogOpen}
+        onOpenChange={setIsEditDialogOpen}
+        currentUsername={profile?.username || profile?.full_name || user.email || ""}
+        userId={user.id}
+      />
     </div>;
 };
 export default ProfileHeader;
