@@ -99,23 +99,30 @@ The platform features a sophisticated theme system with 200+ CSS variables:
 - Discography integration via MusicBrainz API
 
 **Advanced Features:**
-- Tag-based filtering and categorization
-- Popularity statistics and percentile rankings
-- Vote analytics and trend tracking
-- Avatar upload and management system
+- Tag-based filtering and categorization with custom tag colors
+- Popularity statistics and percentile rankings (top 1%, 5%, 10%, etc.)
+- Vote analytics and trend tracking with momentum scoring
+- "Hot" rapper detection based on 7-day vote velocity (85th percentile)
+- Page view tracking with activity score calculation (unique visitors)
+- Avatar upload and management system with multi-style support (photo_real, cartoon, anime, etc.)
+- MusicBrainz discography integration with automatic album fetching and rate limiting
 
 ### 3. Voting & Engagement
 **Voting Mechanics:**
 - Category-based voting (Flow, Lyricism, Impact, etc.)
-- Member status-based vote weighting
-- Daily vote tracking and streak mechanics
-- Rate limiting and abuse prevention
+- Member status-based vote weighting (1x Bronze → 5x Diamond)
+- Daily vote tracking and streak mechanics with consecutive day counting
+- Rate limiting and abuse prevention with IP tracking
+- Vote notes with optional commentary on votes
 
 **Community Features:**
-- Comment system with threaded replies
-- Like/upvote functionality across content types
-- Achievement system with badge rewards
-- Member status progression (Bronze → Diamond)
+- VS Matches system with head-to-head rapper voting
+- Community Cypher for rap bars and verses (up to 2000 characters)
+- Comment system with threaded replies and nested discussions
+- Like/upvote functionality across content types (comments, cypher posts)
+- Achievement system with badge rewards and automatic awarding
+- Member status progression with point-based tier advancement
+- Poll system with homepage and blog-embedded polls
 
 ### 4. Content Management
 **Blog System:**
@@ -136,38 +143,47 @@ The platform features a sophisticated theme system with 200+ CSS variables:
 ## Site Structure & Navigation
 
 ### Public Pages
-1. **Homepage (/)** - Hero section, featured rankings, trending content
-2. **All Rappers (/all-rappers)** - Comprehensive rapper directory with filtering
-3. **Rankings (/rankings)** - Official and user ranking listings
-4. **Blog (/blog)** - Content hub with articles and community posts
-5. **About (/about)** - Platform information and feature explanations
+1. **Homepage (/)** - Hero section, featured rankings, trending content, homepage polls
+2. **All Rappers (/all-rappers)** - Comprehensive rapper directory with advanced filtering and search
+3. **Rankings (/rankings)** - Official and user ranking listings with vote-based positioning
+4. **VS Matches (/vs)** - Head-to-head rapper battle voting page
+5. **Community Cypher (/community-cypher)** - Community rap verse posting space
+6. **Blog (/blog)** - Content hub with articles and community posts
+7. **About (/about)** - Platform information and feature explanations
 
 ### Protected Pages
-1. **User Profile (/profile)** - Personal dashboard and statistics
-2. **Admin Panel (/admin)** - Comprehensive management interface
-3. **Analytics (/analytics)** - Data insights and performance metrics
+1. **User Profile (/profile)** - Personal dashboard, statistics, and Top 5 management
+2. **Admin Panel (/admin)** - Comprehensive management interface (9 tabs)
+3. **Analytics (/analytics)** - Data insights, performance metrics, and trend analysis
 
 ### Dynamic Routes
-- **Rapper Details:** `/rapper/[slug]` with comprehensive profiles
-- **Ranking Details:** `/ranking/[id]` for detailed ranking views
-- **Blog Posts:** `/blog/[slug]` with full article content
-- **User Profiles:** `/user/[username]` for public profile viewing
+- **Rapper Details:** `/rapper/[slug]` with comprehensive profiles, discography, and voting
+- **Official Ranking Details:** `/ranking/[slug]` for detailed ranking views with voting
+- **User Ranking Details:** `/user-ranking/[id]` for community-created rankings
+- **Blog Posts:** `/blog/[slug]` with full article content and embedded polls
+- **VS Match Details:** `/vs/[slug]` with head-to-head voting and comments
+- **Public User Profiles (by ID):** `/user/profile/[id]` for public profile viewing
+- **Public User Profiles (by Username):** `/user/[username]` for username-based routing
 
 ---
 
 ## User Experience & Authentication
 
 ### Authentication Flow
-- **Multi-provider Support:** Email, Google, and social login options
-- **Secure Session Management:** JWT-based authentication with automatic refresh
-- **Profile Creation:** Automatic profile generation with customizable fields
-- **Role-based Access:** Admin, moderator, and standard user permissions
+- **Email Authentication**: Primary authentication method via Supabase Auth
+- **Social Authentication**: Currently disabled (infrastructure preserved - see Developer Notes)
+- **Secure Session Management**: JWT-based authentication with automatic refresh
+- **Profile Creation**: Automatic profile generation with customizable fields
+- **Role-based Access**: Admin, moderator, blog editor, and standard user permissions
 
 ### Onboarding Experience
-- **Welcome Modal:** First-time user guidance and feature introduction
-- **Progressive Disclosure:** Gradual feature introduction based on engagement
-- **Achievement System:** Gamified progression with unlock mechanics
-- **Member Status:** Clear progression path from Bronze to Diamond status
+- **Welcome Modal**: 3-step guided onboarding (Welcome → Username → Top 5)
+- **First-time User Guidance**: Feature introduction and platform benefits overview
+- **Username Creation**: Real-time validation with availability checking
+- **Top 5 Selection**: Personalized rapper selection with searchable overlay
+- **Progressive Disclosure**: Gradual feature introduction based on engagement
+- **Achievement System**: Gamified progression with unlock mechanics and notifications
+- **Member Status**: Clear progression path from Bronze to Diamond status with vote weight multipliers
 
 ### Responsive Design
 - **Mobile Optimization:** Touch-friendly interface with gesture support
@@ -181,21 +197,25 @@ The platform features a sophisticated theme system with 200+ CSS variables:
 
 ### Administrative Dashboard
 **Content Management:**
-- Rapper profile creation and editing with bulk operations
-- Ranking management with position reordering capabilities
+- Rapper profile creation and editing with bulk operations and image management
+- Ranking management with position reordering and automatic population
 - Blog post creation with rich text editing and media embedding
+- VS Matches creation and management with voting analytics
+- Poll creation with multiple question types and placement targeting
 - Tag and category management across all content types
 
 **User Management:**
-- Role assignment and permission management
+- Role assignment and permission management (admin, moderator, blog editor)
 - Member statistics and engagement tracking
-- Moderation tools for content and user behavior
-- Achievement management and custom badge creation
+- Moderation tools for content and user behavior (content flagging review)
+- Achievement management with custom badge creation and point configuration
 
 **System Management:**
-- Theme customization with real-time preview
+- Theme customization with 200+ CSS variables and real-time preview
+- Image management with multi-style uploads and completion tracking
 - SEO management for all public pages
-- Analytics dashboard with performance metrics
+- Analytics dashboard with performance metrics and trend analysis
+- Data management tools (voting data reset, bulk operations, maintenance)
 - Database maintenance and optimization tools
 
 ### Content Workflows
@@ -249,20 +269,24 @@ The platform features a sophisticated theme system with 200+ CSS variables:
 **Authentication Security:**
 - Row Level Security (RLS) policies protecting all data access
 - JWT token validation with automatic refresh mechanisms
-- Rate limiting on API endpoints to prevent abuse
-- Audit logging for all administrative actions
+- Rate limiting on API endpoints and MusicBrainz integration
+- Audit logging for all administrative actions and sensitive operations
+- Security definer functions for safe public profile access
 
 **Data Protection:**
 - Input validation and sanitization across all forms
 - SQL injection prevention through parameterized queries
-- XSS protection via content sanitization
+- XSS protection via content sanitization and CSP headers
 - CSRF protection on state-changing operations
+- Content moderation and flagging system with moderator workflow
 
 **Privacy Compliance:**
 - User data anonymization in public-facing features
-- Secure profile access with permission validation
+- Secure profile access with permission validation and access logging
+- Profile view tracking with unauthorized attempt detection
 - Content moderation and flagging systems
 - Data retention policies and user deletion capabilities
+- Minimal data exposure principle for public profiles
 
 ### Performance Optimization
 **Frontend Optimization:**

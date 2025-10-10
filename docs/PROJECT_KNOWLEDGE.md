@@ -7,11 +7,13 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 
 ### 1. Authentication & User Management
 - **User Registration/Login**: Email-based authentication with Supabase Auth
-- **Social Authentication**: Support for social login providers
+- **Social Authentication**: Currently disabled (infrastructure preserved for future restoration - see DEVELOPER_NOTES.md)
 - **User Profiles**: Custom profiles with avatars, bios, usernames
-- **Member Status System**: Bronze → Silver → Gold → Platinum → Diamond progression
-- **Achievement System**: Point-based achievements for user engagement
-- **Secure Profile Viewing**: Authenticated users can view other members' public profiles
+- **Member Status System**: Bronze → Silver → Gold → Platinum → Diamond progression based on achievement points
+- **Achievement System**: Point-based achievements with automatic awarding via database triggers
+- **Secure Profile Viewing**: Authenticated users can view other members' public profiles with access logging
+- **New User Onboarding**: 3-step guided onboarding flow (Welcome → Username → Top 5 Selection)
+- **Profile Access Tracking**: Security logging for profile views and access patterns
 
 ### 2. Rapper Management
 - **Rapper Profiles**: Comprehensive rapper data (name, bio, birth info, career details)
@@ -38,11 +40,14 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Position Tracking**: Weekly snapshots for trend analysis
 
 ### 4. Community Features
-- **Comments**: Threaded comments on rappers and content
-- **Comment Likes**: Engagement system for community content
-- **User Top 5**: Personal top rapper lists
-- **Profile Sharing**: Shareable profile links
-- **Public Profiles**: Secure viewing of other users' stats and rankings
+- **Comments**: Threaded comments on rappers and content with nested replies
+- **Comment Likes**: Engagement system for community content with like counts
+- **User Top 5**: Personal top rapper lists with searchable rapper selection
+- **Profile Sharing**: Shareable profile links via username-based URLs
+- **Public Profiles**: Secure viewing of other users' stats and rankings with minimal data exposure
+- **VS Matches**: Head-to-head rapper battle voting system with real-time results
+- **Community Cypher**: Long-form community space for rap bars and verses (up to 2000 characters)
+- **Content Moderation**: User-initiated content flagging with moderator review workflow
 
 ### 5. Content Management
 - **Blog System**: Full-featured blog with categories, tags, rich content
@@ -78,11 +83,16 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Component Library Migration**: All components converted to themed equivalents (ThemedButton, ThemedCard, etc.)
 
 ### 9. Advanced Features
-- **Poll System**: Community polls with multiple choice options
-- **Daily Vote Tracking**: Rate limiting and vote history
-- **Member Status Progression**: Automatic tier advancement
-- **Security Features**: Rate limiting, content validation, secure file uploads
-- **Performance Optimization**: Caching, lazy loading, optimized queries
+- **Poll System**: Homepage and blog-embedded polls with multiple/single choice, write-in options, expiration, and session-based voting
+- **Daily Vote Tracking**: Rate limiting, vote history, and streak mechanics
+- **Member Status Progression**: Automatic tier advancement with vote weight multipliers (1x Bronze → 5x Diamond)
+- **Hot/Trending Rappers**: Algorithm-based trending detection using 7-day vote velocity (85th percentile threshold)
+- **Rapper Activity Tracking**: Page view tracking with unique visitor counting and activity score calculation
+- **MusicBrainz Integration**: Automated discography fetching with rate limiting, audit logging, and placeholder generation
+- **Multi-Style Image Management**: Style-variant uploads (photo_real, cartoon, anime, artistic, pixel_art) with default selection
+- **Security Features**: Rate limiting, content validation, secure file uploads, content flagging, audit logging
+- **Performance Optimization**: Caching, lazy loading, optimized queries, materialized views
+- **Enhanced Search**: PostgreSQL unaccent extension with accent/symbol normalization and relevance scoring
 
 ## Technical Architecture
 
@@ -161,23 +171,41 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 ## User Flows
 
 ### New User Journey
-1. Registration/Login
-2. Profile setup
-3. Discover rappers and rankings
-4. Start voting and engaging
-5. Unlock achievements and advance member status
+1. Registration/Login (email-based authentication)
+2. Onboarding flow (Welcome → Username → Top 5 Selection)
+3. Profile setup and customization
+4. Discover rappers and rankings
+5. Start voting and engaging
+6. Unlock achievements and advance member status
 
 ### Daily Engagement
-1. Browse featured content
-2. Cast daily votes on rappers
-3. Participate in community discussions
-4. Create and share personal rankings
+1. Browse featured content and trending rappers
+2. Cast daily votes on rappers in official rankings
+3. Participate in community discussions and comment threads
+4. Vote in VS Matches (head-to-head battles)
+5. Drop rap bars in Community Cypher
+6. Create and share personal rankings
+
+### VS Matches Engagement
+1. Browse active VS matches
+2. Vote for favorite rapper in matchup
+3. View real-time vote distribution
+4. Comment on VS match debates
+5. Share favorite battles
+
+### Community Cypher Participation
+1. Read community rap bars and verses
+2. Post original rap content (up to 2000 characters)
+3. Like and upvote favorite posts
+4. Reply to verses with threaded comments
+5. Sort by top voted or latest content
 
 ### Content Creation
-1. Create custom rankings
-2. Write and share blog posts (editors)
-3. Comment and engage with community
-4. Build and share Top 5 lists
+1. Create custom user rankings with reasons
+2. Write and share blog posts (blog editors only)
+3. Comment and engage with community across content types
+4. Build and share Top 5 lists with searchable rapper selection
+5. Post rap verses in Community Cypher
 
 ## Performance Optimizations
 - Optimized database queries with proper indexing
