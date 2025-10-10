@@ -186,6 +186,7 @@ export default {
 				'accordion-down': 'accordion-down 0.2s ease-out',
 				'accordion-up': 'accordion-up 0.2s ease-out',
 				'spin-slow': 'spin-slow 4s linear infinite',
+				'spin-relaxed': 'spin-slow 8s linear infinite',
 				'vinyl-spin': 'vinyl-spin 3s linear infinite',
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
