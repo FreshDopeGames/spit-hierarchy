@@ -156,7 +156,7 @@ const RapperDetail = () => {
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-8">
           {/* Back Button - Now properly preserves navigation state */}
           <Link to="/all-rappers" className="inline-block mb-6">
-            <ThemedButton variant="outline" className="border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 hover:border-[var(--theme-primary)] font-[var(--theme-font-body)] shadow-lg shadow-[var(--theme-primary)]/20">
+            <ThemedButton variant="default" className="font-[var(--theme-font-body)]">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back To All Rappers
             </ThemedButton>
