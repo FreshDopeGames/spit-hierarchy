@@ -40,7 +40,7 @@ const VSMatches = () => {
       
       <HeaderNavigation isScrolled={false} />
       
-      <div className="max-w-7xl mx-auto pt-20 px-4 pb-8">
+      <div className="max-w-7xl mx-auto pt-20 px-4 pb-12">
         {/* Page Header */}
         <div className="text-center mb-8">
           <h1 className="text-6xl md:text-8xl font-ceviche text-rap-gold mb-4 lg:text-6xl text-primary ">

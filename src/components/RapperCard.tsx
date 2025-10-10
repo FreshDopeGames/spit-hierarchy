@@ -90,19 +90,23 @@ const RapperCard = ({
           
 
           {!compact && (
-            <div className="flex flex-wrap gap-1 sm:gap-2 text-xs">
-              {rapper.origin && (
-                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-[var(--theme-fontSecondary)] text-xs max-w-full">
-                  <MapPin className="w-3 h-3 flex-shrink-0" />
-                  <span className="truncate">{rapper.origin}</span>
-                </div>
-              )}
-              {birthdate && (
-                <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-[var(--theme-fontSecondary)] text-xs">
-                  <Calendar className="w-3 h-3 flex-shrink-0" />
-                  <span>{birthdate}</span>
-                </div>
-              )}
+            <div className="space-y-1 sm:space-y-2 text-xs">
+              <div className="flex items-center">
+                {rapper.origin && (
+                  <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-[var(--theme-fontSecondary)] text-xs max-w-full">
+                    <MapPin className="w-3 h-3 flex-shrink-0" />
+                    <span className="truncate">{rapper.origin}</span>
+                  </div>
+                )}
+              </div>
+              <div className="flex items-center">
+                {birthdate && (
+                  <div className="flex items-center gap-1 text-[var(--theme-text)] bg-[var(--theme-surface)]/60 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-[var(--theme-fontSecondary)] text-xs">
+                    <Calendar className="w-3 h-3 flex-shrink-0" />
+                    <span>{birthdate}</span>
+                  </div>
+                )}
+              </div>
             </div>
           )}
 
