@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
-import { Progress } from "@/components/ui/progress";
+import { ThemedProgress as Progress } from "@/components/ui/themed-progress";
 import { Trophy, TrendingUp } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { useRapperPercentile } from "@/hooks/useRapperPercentile";
@@ -111,7 +111,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                 </div>
               </div>
             </div>
-            <Progress value={overallPercentage} className="h-4 bg-[var(--theme-backgroundLight)]" />
+            <Progress value={overallPercentage} className="h-4" />
           </div>
         </div>
 
@@ -140,7 +140,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                     <span className="text-[var(--theme-textMuted)] text-sm ml-2 font-[var(--theme-fontSecondary)]">({category.totalVotes} votes)</span>
                   </div>
                 </div>
-                <Progress value={percentage} className="h-3 bg-[var(--theme-backgroundLight)]" />
+                <Progress value={percentage} className="h-3" />
               </div>
             );
           })}
