@@ -1568,6 +1568,7 @@ export type Database = {
       rappers: {
         Row: {
           activity_score: number
+          aliases: string[] | null
           average_rating: number | null
           bio: string | null
           birth_day: number | null
@@ -1597,6 +1598,7 @@ export type Database = {
         }
         Insert: {
           activity_score?: number
+          aliases?: string[] | null
           average_rating?: number | null
           bio?: string | null
           birth_day?: number | null
@@ -1626,6 +1628,7 @@ export type Database = {
         }
         Update: {
           activity_score?: number
+          aliases?: string[] | null
           average_rating?: number | null
           bio?: string | null
           birth_day?: number | null
@@ -2828,6 +2831,10 @@ export type Database = {
       log_profile_access_secure: {
         Args: { access_type?: string; accessed_id: string }
         Returns: undefined
+      }
+      matches_alias: {
+        Args: { aliases: string[]; search_term: string }
+        Returns: boolean
       }
       populate_all_rankings_with_missing_rappers: {
         Args: Record<PropertyKey, never>

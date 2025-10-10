@@ -17,6 +17,7 @@ import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import CareerStatsCard from "@/components/rapper/CareerStatsCard";
 import RapperDiscography from "@/components/rapper/RapperDiscography";
+import { RapperAliases } from "@/components/rapper/RapperAliases";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
@@ -163,6 +164,13 @@ const RapperDetail = () => {
 
           {/* Rapper Header */}
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
+
+          {/* Aliases */}
+          {rapper.aliases && rapper.aliases.length > 0 && (
+            <div className="mb-6">
+              <RapperAliases aliases={rapper.aliases} />
+            </div>
+          )}
 
           {/* Enhanced Bio Section with more content */}
           <RapperBioExpanded rapper={rapper} />

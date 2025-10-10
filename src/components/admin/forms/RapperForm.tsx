@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
 import { RapperFormData } from "../types/RapperFormTypes";
 import RapperTagSelector from "../RapperTagSelector";
+import { AliasesInput } from "../AliasesInput";
 
 type Rapper = Tables<"rappers">;
 
@@ -39,6 +40,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     spotify_id: "",
     instagram_handle: "",
     twitter_handle: "",
+    aliases: [],
     tags: [],
   });
 
@@ -78,6 +80,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         spotify_id: rapper.spotify_id || "",
         instagram_handle: rapper.instagram_handle || "",
         twitter_handle: rapper.twitter_handle || "",
+        aliases: rapper.aliases || [],
         tags: [],
       });
     } else {
@@ -97,6 +100,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         spotify_id: "",
         instagram_handle: "",
         twitter_handle: "",
+        aliases: [],
         tags: [],
       });
     }
@@ -166,6 +170,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         spotify_id: formData.spotify_id.trim() || null,
         instagram_handle: formData.instagram_handle.trim() || null,
         twitter_handle: formData.twitter_handle.trim() || null,
+        aliases: formData.aliases,
         slug,
       };
 
@@ -413,6 +418,14 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         <RapperTagSelector
           selectedTags={formData.tags}
           onTagsChange={(tags) => handleInputChange("tags", tags)}
+        />
+      </div>
+
+      <div>
+        <Label className="text-[var(--theme-primary)]">Aliases</Label>
+        <AliasesInput
+          aliases={formData.aliases}
+          onChange={(aliases) => handleInputChange("aliases", aliases)}
         />
       </div>
 

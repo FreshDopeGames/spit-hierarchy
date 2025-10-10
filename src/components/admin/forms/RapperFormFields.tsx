@@ -4,6 +4,7 @@ import { ThemedInput } from "@/components/ui/themed-input";
 import { ThemedTextarea } from "@/components/ui/themed-textarea";
 import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { RapperFormData } from "../types/RapperFormTypes";
+import { AliasesInput } from "../AliasesInput";
 
 interface RapperFormFieldsProps {
   formData: RapperFormData;
@@ -11,12 +12,14 @@ interface RapperFormFieldsProps {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => void;
   onSelectChange: (field: keyof RapperFormData) => (value: string) => void;
+  onAliasesChange: (aliases: string[]) => void;
 }
 
 export const RapperFormFields = ({ 
   formData, 
   onInputChange, 
-  onSelectChange
+  onSelectChange,
+  onAliasesChange
 }: RapperFormFieldsProps) => {
   const months = [
     { value: "1", label: "January" },
@@ -167,6 +170,14 @@ export const RapperFormFields = ({
           onChange={onInputChange("origins_description")}
           placeholder="Enter custom origins description (optional)"
           rows={3}
+        />
+      </div>
+
+      <div className="space-y-2">
+        <ThemedLabel>Aliases</ThemedLabel>
+        <AliasesInput
+          aliases={formData.aliases}
+          onChange={onAliasesChange}
         />
       </div>
     </>

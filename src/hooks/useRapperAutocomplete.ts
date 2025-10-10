@@ -29,7 +29,7 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
 
       let query = supabase
         .from("rappers")
-        .select("id, name, real_name, slug")
+        .select("id, name, real_name, slug, aliases")
         .limit(50); // Reasonable limit for autocomplete
 
       // Exclude specified IDs
@@ -39,9 +39,10 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
 
       // Use enhanced search with normalization for both name and real_name
       const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
-      query = query.or(searchOrQuery);
-
-      const { data, error } = await query;
+      
+      // Also search in aliases array
+      const { data, error } = await query
+        .or(`${searchOrQuery},aliases.cs.{${debouncedSearchTerm}}`);
 
       if (error) throw error;
       

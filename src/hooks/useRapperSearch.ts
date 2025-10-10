@@ -28,17 +28,19 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         // Create base query
         let query = supabase
           .from("rappers")
-          .select("id, name, image_url");
+          .select("id, name, image_url, aliases");
 
         // Filter out already selected rappers
         if (excludeIds.length > 0) {
           query = query.not("id", "in", `(${excludeIds.join(",")})`);
         }
 
-        // Use enhanced search with normalization
-        const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name']);
+        // Use enhanced search with normalization for name and real_name
+        const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
+        
+        // Also search in aliases array using PostgreSQL array contains operator
         const { data: results, error } = await query
-          .or(searchOrQuery)
+          .or(`${searchOrQuery},aliases.cs.{${debouncedSearchTerm}}`)
           .limit(20);
 
         if (error) {
