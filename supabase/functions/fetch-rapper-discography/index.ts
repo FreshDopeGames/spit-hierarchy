@@ -60,6 +60,7 @@ serve(async (req) => {
     || null;
   const userAgent = req.headers.get('user-agent') || 'unknown';
   let userId: string | null = null;
+  let requestedRapperId: string | null = null; // Hoist to avoid NULL violations in audit logs
 
   try {
     // Clients
@@ -71,6 +72,7 @@ serve(async (req) => {
     // Parse request
     const body = await req.json().catch(() => ({}));
     const { rapperId, forceRefresh = false } = body as { rapperId?: string; forceRefresh?: boolean };
+    requestedRapperId = rapperId || null; // Capture for audit logging
 
     // Auth (optional)
     const authHeader = req.headers.get('authorization');
@@ -305,18 +307,18 @@ serve(async (req) => {
       }
     }
 
-// Fetch albums and EPs separately with release details to get status field
+// Fetch albums and EPs separately (without inc=releases to avoid API errors)
     let rgAlbums: any;
     let rgEps: any;
     
     try {
-      rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&inc=releases&fmt=json&limit=100&offset=0`);
+      rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&fmt=json&limit=100&offset=0`);
       await delay(150);
-      rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&inc=releases&fmt=json&limit=100&offset=0`);
+      rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&fmt=json&limit=100&offset=0`);
     } catch (mbError: any) {
       console.error('MusicBrainz API error:', mbError);
       await logAuditEvent(supabaseService, {
-        rapper_id: rapperId,
+        rapper_id: requestedRapperId,
         action: 'FETCH_DISCOGRAPHY',
         status: 'FAILED',
         user_id: userId,
@@ -356,16 +358,25 @@ serve(async (req) => {
         continue;
       }
 
+      // Fetch detailed release-group info to check official status and get streaming links
+      let rgDetails: any;
+      try {
+        rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels&fmt=json`);
+        await delay(120);
+      } catch (detailError: any) {
+        console.error(`Error fetching details for "${rg.title}":`, detailError);
+        continue; // Skip this album if we can't fetch details
+      }
+
       // Check for official release status - only include release-groups with at least one Official release
-      // If releases array is missing or empty, we'll include it (fail-open to avoid false negatives)
-      const releases = rg.releases || [];
+      const releases = rgDetails?.releases || [];
       if (releases.length > 0) {
-        const hasOfficialRelease = releases.some(release => 
+        const hasOfficialRelease = releases.some((release: any) => 
           release && release.status === 'Official'
         );
         
         if (!hasOfficialRelease) {
-          const statusList = releases.map(r => r?.status || 'Unknown').join(', ');
+          const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
           console.log(`Skipping "${rg.title}" - no official release (statuses: ${statusList})`);
           continue;
         }
@@ -408,28 +419,20 @@ serve(async (req) => {
         .single();
       let albumId = existingAlbum?.id as string | undefined;
       if (!albumId) {
-        // Fetch release-group details to extract direct streaming links (Spotify/Apple/Deezer/YT Music)
-        let streamingLinks: Record<string, string> = {};
-        try {
-          const rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=url-rels&fmt=json`);
-          await delay(120);
-          const rels: Array<any> = rgDetails?.relations || [];
+        // Extract streaming links from the release-group details we already fetched
+        const rels: Array<any> = rgDetails?.relations || [];
+        const findByHost = (host: string) => rels.find((r: any) => r?.url?.resource?.includes(host))?.url?.resource;
+        const spotify = findByHost('open.spotify.com');
+        const apple = findByHost('music.apple.com');
+        const deezer = findByHost('deezer.com');
+        const ytmusic = findByHost('music.youtube.com') || findByHost('youtube.com');
 
-          const findByHost = (host: string) => rels.find((r: any) => r?.url?.resource?.includes(host))?.url?.resource;
-          const spotify = findByHost('open.spotify.com');
-          const apple = findByHost('music.apple.com');
-          const deezer = findByHost('deezer.com');
-          const ytmusic = findByHost('music.youtube.com') || findByHost('youtube.com');
-
-          streamingLinks = {
-            ...(spotify ? { spotify } : {}),
-            ...(apple ? { apple_music: apple } : {}),
-            ...(deezer ? { deezer } : {}),
-            ...(ytmusic ? { youtube_music: ytmusic } : {}),
-          };
-        } catch (_) {
-          // best-effort only
-        }
+        const streamingLinks = {
+          ...(spotify ? { spotify } : {}),
+          ...(apple ? { apple_music: apple } : {}),
+          ...(deezer ? { deezer } : {}),
+          ...(ytmusic ? { youtube_music: ytmusic } : {}),
+        };
 
         // Generate external references (no direct cover art stored)
         const externalLinks = {
@@ -489,13 +492,13 @@ serve(async (req) => {
     try {
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
       await logAuditEvent(supabaseService, {
-        rapper_id: null,
+        rapper_id: requestedRapperId, // Use hoisted variable to avoid NOT NULL violations
         action: 'FETCH_DISCOGRAPHY',
         status: 'ERROR',
         user_id: userId,
         ip_address: clientIP,
         user_agent: userAgent,
-        request_data: null,
+        request_data: { rapperId: requestedRapperId },
         error_message: error?.message || 'Unknown error',
         execution_time_ms: Date.now() - startTime,
       });
