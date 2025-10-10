@@ -13,7 +13,7 @@ import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
 
 const AllRappersPage = () => {
-  const { restoreScrollPosition, getCurrentPage, setCurrentPage } = useNavigationState();
+  const { getCurrentPage, setCurrentPage, navigateToRapper } = useNavigationState();
   
   // Initialize with URL page parameter
   const initialPage = getCurrentPage();
@@ -47,11 +47,6 @@ const AllRappersPage = () => {
   useEffect(() => {
     setCurrentPage(currentPage);
   }, [currentPage, setCurrentPage]);
-
-  // Restore scroll position on component mount (when returning from detail page)
-  useEffect(() => {
-    restoreScrollPosition();
-  }, [restoreScrollPosition]);
 
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
