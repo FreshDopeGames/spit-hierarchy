@@ -35,13 +35,6 @@ const RapperDetail = () => {
   const [selectedCategory] = useState("");
   const refreshDiscography = useRefreshDiscography();
 
-  // Track page view for activity scoring
-  usePageViewTracking({ 
-    contentType: 'rapper', 
-    contentId: id,
-    debounceMs: 1000 // Reduced from 3000ms for faster tracking
-  });
-
   const { data: rapper, isLoading } = useQuery({
     queryKey: ["rapper", id],
     queryFn: async () => {
@@ -72,6 +65,13 @@ const RapperDetail = () => {
       return { ...rapperData, top5_count: countData || 0 };
     },
     enabled: !!id
+  });
+
+  // Track page view for activity scoring (using rapper UUID, not slug)
+  usePageViewTracking({ 
+    contentType: 'rapper', 
+    contentId: rapper?.id, // Use UUID from loaded rapper data, not slug from URL
+    debounceMs: 1000
   });
 
   // Ensure MusicBrainz fetch runs for artists without cached discography
