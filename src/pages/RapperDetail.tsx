@@ -39,7 +39,7 @@ const RapperDetail = () => {
   usePageViewTracking({ 
     contentType: 'rapper', 
     contentId: id,
-    debounceMs: 3000 
+    debounceMs: 1000 // Reduced from 3000ms for faster tracking
   });
 
   const { data: rapper, isLoading } = useQuery({

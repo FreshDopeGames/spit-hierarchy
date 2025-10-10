@@ -11,12 +11,12 @@ interface UsePageViewTrackingOptions {
 /**
  * Hook to track page views for content items
  * Automatically records view after debounce period if user stays on page
- * Prevents duplicate tracking within 5 minutes for same content
+ * Prevents duplicate tracking within 1 minute for same content
  */
 export const usePageViewTracking = ({ 
   contentType, 
   contentId,
-  debounceMs = 3000 
+  debounceMs = 1000 // Reduced from 3000ms for faster tracking
 }: UsePageViewTrackingOptions) => {
   const { user } = useAuth();
   const hasTrackedRef = useRef(false);
@@ -24,12 +24,21 @@ export const usePageViewTracking = ({
 
   useEffect(() => {
     // Don't track if no content ID or already tracked
-    if (!contentId || hasTrackedRef.current) return;
+    if (!contentId || hasTrackedRef.current) {
+      console.log('[PageView] Skipped - no contentId or already tracked', { contentId, hasTracked: hasTrackedRef.current });
+      return;
+    }
 
     // Only track rapper pages for now (can be extended to other content types)
-    if (contentType !== 'rapper') return;
+    if (contentType !== 'rapper') {
+      console.log('[PageView] Skipped - not a rapper page', { contentType });
+      return;
+    }
+
+    console.log('[PageView] Setting up tracking for rapper:', contentId);
 
     const trackView = async () => {
+      console.log('[PageView] Attempting to track view...');
       try {
         // Get or create session ID for anonymous users
         let sessionId = sessionStorage.getItem('page_view_session');
@@ -38,19 +47,21 @@ export const usePageViewTracking = ({
           sessionStorage.setItem('page_view_session', sessionId);
         }
 
-        // Check if we've recently tracked this view (within 5 minutes)
+        // Check if we've recently tracked this view (within 1 minute)
         const recentViewKey = `recent_view_${contentType}_${contentId}`;
         const lastViewTime = sessionStorage.getItem(recentViewKey);
         
         if (lastViewTime) {
           const timeSinceLastView = Date.now() - parseInt(lastViewTime);
-          const fiveMinutes = 5 * 60 * 1000;
+          const oneMinute = 1 * 60 * 1000; // Reduced from 5 minutes
           
-          if (timeSinceLastView < fiveMinutes) {
-            console.log('Skipping duplicate view tracking (within 5 minutes)');
+          if (timeSinceLastView < oneMinute) {
+            console.log('[PageView] Skipping duplicate - tracked', Math.round(timeSinceLastView / 1000), 'seconds ago');
             return;
           }
         }
+
+        console.log('[PageView] Inserting page view record...');
 
         // Record the page view
         const { error } = await supabase
@@ -63,19 +74,20 @@ export const usePageViewTracking = ({
           });
 
         if (error) {
-          console.error('Error tracking page view:', error);
+          console.error('[PageView] ❌ Error tracking page view:', error);
         } else {
           // Mark this view as tracked and store timestamp
           hasTrackedRef.current = true;
           sessionStorage.setItem(recentViewKey, Date.now().toString());
-          console.log('Page view tracked successfully');
+          console.log('[PageView] ✅ Successfully tracked view for rapper:', contentId);
         }
       } catch (error) {
-        console.error('Error in page view tracking:', error);
+        console.error('[PageView] ❌ Exception in page view tracking:', error);
       }
     };
 
     // Debounce the tracking - only track if user stays on page
+    console.log('[PageView] ⏱️  Waiting', debounceMs, 'ms before tracking...');
     timeoutRef.current = setTimeout(trackView, debounceMs);
 
     // Cleanup timeout on unmount or content change
