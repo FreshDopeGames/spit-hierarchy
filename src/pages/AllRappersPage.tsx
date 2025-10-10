@@ -7,6 +7,7 @@ import AllRappersLoadingSkeleton from "@/components/AllRappersLoadingSkeleton";
 import AllRappersEmptyState from "@/components/AllRappersEmptyState";
 import AllRappersInlineLoader from "@/components/AllRappersInlineLoader";
 import Footer from "@/components/Footer";
+import BackToTopButton from "@/components/BackToTopButton";
 import { useAllRappers } from "@/hooks/useAllRappers";
 import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
@@ -100,6 +101,7 @@ const AllRappersPage = () => {
         )}
       </main>
       <Footer />
+      <BackToTopButton />
     </div>
   );
 };
