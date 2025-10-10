@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info } from 'lucide-react';
+import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap } from 'lucide-react';
 
 const Footer = () => {
   // Get Community Cypher icon with priority: PenTool > Pen > MessageSquare
@@ -54,7 +54,17 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/blog" 
+                  to="/vs-matches" 
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  <Zap className="w-4 h-4 mr-2" />
+                  VS Matches
+                </Link>
+              </li>
+              <li>
+                <Link 
+                  to="/blog"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
