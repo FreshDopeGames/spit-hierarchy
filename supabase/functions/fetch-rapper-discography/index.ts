@@ -402,21 +402,25 @@ serve(async (req) => {
         await delay(120);
       } catch (detailError: any) {
         console.error(`Error fetching details for "${rg.title}":`, detailError);
-        continue; // Skip this album if we can't fetch details
+        // Don't skip - continue with base data, we'll just have fewer details
+        console.log(`Continuing with base data for "${rg.title}"`);
       }
 
-      // Check for official release status - only include release-groups with at least one Official release
+      // Only exclude explicitly non-official releases (Bootlegs, Pseudo-Releases)
+      // If we have no release data or status is missing, allow the album through
       const releases = rgDetails?.releases || [];
       if (releases.length > 0) {
-        const hasOfficialRelease = releases.some((release: any) => 
-          release && release.status === 'Official'
+        const hasKnownNonOfficialRelease = releases.some((release: any) => 
+          release && (release.status === 'Bootleg' || release.status === 'Pseudo-Release')
         );
         
-        if (!hasOfficialRelease) {
+        if (hasKnownNonOfficialRelease) {
           const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
-          console.log(`Skipping "${rg.title}" - no official release (statuses: ${statusList})`);
+          console.log(`Skipping "${rg.title}" - contains bootleg/pseudo releases (statuses: ${statusList})`);
           continue;
         }
+      } else {
+        console.log(`No release status data for "${rg.title}" - including album`);
       }
 
       // Only exclude clearly non-studio releases
