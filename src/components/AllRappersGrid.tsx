@@ -2,8 +2,7 @@
 import React, { useRef, useEffect } from "react";
 import RapperCard from "@/components/RapperCard";
 import LoadMoreButton from "@/components/LoadMoreButton";
-import { useRapperImages } from "@/hooks/useImageStyle";
-import { useRapperStats } from "@/hooks/useRapperStats";
+import { useIncrementalRapperData } from "@/hooks/useIncrementalRapperData";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -27,10 +26,9 @@ const AllRappersGrid = ({
   onLoadMore,
   currentPage
 }: AllRappersGridProps) => {
-  // Batch load all rapper images for better performance
+  // Incrementally load rapper data (only fetches NEW rappers)
   const rapperIds = rappers.map(rapper => rapper.id);
-  const { data: imageMap = {} } = useRapperImages(rapperIds);
-  const { data: statsMap = {} } = useRapperStats(rapperIds);
+  const { imageMap, statsMap } = useIncrementalRapperData(rapperIds);
 
   // Infinite scroll: auto-load when sentinel element comes into view
   const sentinelRef = useRef<HTMLDivElement>(null);
