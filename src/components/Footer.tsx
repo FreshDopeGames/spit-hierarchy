@@ -54,7 +54,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link 
-                  to="/vs-matches" 
+                  to="/vs" 
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
