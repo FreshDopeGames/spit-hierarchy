@@ -308,82 +308,57 @@ serve(async (req) => {
     const rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&fmt=json&limit=100&offset=0`);
     await delay(150);
     const rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&fmt=json&limit=100&offset=0`);
+    // Combine and sort by release date (oldest first)
     const releaseGroups: MusicBrainzReleaseGroup[] = [
       ...(rgAlbums['release-groups'] || []),
       ...(rgEps['release-groups'] || []),
-    ];
+    ].sort((a, b) => {
+      const dateA = a['first-release-date'] || '9999';
+      const dateB = b['first-release-date'] || '9999';
+      return dateA.localeCompare(dateB);
+    });
 
-    for (const rg of releaseGroups.slice(0, 50)) {
+    // Process all release groups (removed .slice(0, 50) limit)
+    for (const rg of releaseGroups) {
       const primaryType = rg['primary-type'];
       const secondary = rg['secondary-types'] || [];
+      
+      // Skip singles
       const isSingle = primaryType === 'Single' || secondary.includes('Single');
       if (isSingle) continue;
 
-      // Skip albums without release dates - they break career length calculations
+      // Require release date
       if (!rg['first-release-date']) {
-        console.log(`Skipping album "${rg.title}" - no release date`);
+        console.log(`Skipping "${rg.title}" - no release date`);
         continue;
       }
 
-      // Enhanced filtering: Exclude problematic secondary types instead of restrictive allowlist
+      // Only exclude clearly non-studio releases
       const excludedSecondaryTypes = [
-        'Compilation', 'Live', 'Remix', 'Soundtrack', 'Spokenword', 
-        'Interview', 'Demo', 'Audiobook', 'DJ-mix'
+        'Compilation',  // Greatest hits, collections
+        'Live',         // Concert recordings
+        'Remix',        // Remix albums
+        'Soundtrack',   // Movie/game soundtracks
+        'DJ-mix',       // DJ mixtapes
+        'Spokenword',   // Audiobooks, poetry
+        'Interview'     // Interview albums
       ];
       
-      // Allow technical/format types that don't change content
-      const technicalTypes = [
-        'Studio', 'Stereo', 'Mono', 'Remaster', 'Deluxe edition', 
-        'Enhanced', 'Digipak', 'Limited edition', 'Special edition'
-      ];
-      
-      // Proper mixtape detection: Only official mixtape categories from MusicBrainz
-      const isMixtape = primaryType === 'Album' && secondary.length > 0 && (
-        secondary.includes('Mixtape/Street') ||
-        (secondary.includes('DJ-mix') && secondary.includes('Mixtape/Street'))
-      );
-      
-      // Album filtering: Include Album primary type, exclude problematic secondary types
       const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
-      const isPureAlbum = primaryType === 'Album' && !hasExcludedType && !isMixtape;
-      
-      // Skip if not album or mixtape
-      if (!isPureAlbum && !isMixtape) {
-        console.log(`Skipping release "${rg.title}" - primary-type: ${primaryType}, secondary-types: [${secondary.join(', ')}]`);
-        continue;
-      }
-      
-      // Enhanced title-based filtering for compilations and posthumous releases
-      const titleLower = rg.title.toLowerCase();
-      const excludedTitlePatterns = [
-        'greatest hits', 'best of', 'anthology', 'collection', 'hits', 'compilation', 'essential', 'ultimate',
-        'live at', 'live from', 'unplugged', 'acoustic', 'concert', 'tour',
-        'radio edit', 'clean version', 'instrumental', 'karaoke', 'tribute', 'cover', 'remix album',
-        'unreleased', 'rare', 'vault', 'lost', 'bonus', 'outtakes', 'b-sides', 'alternate',
-        'reloaded', 'revisited', 'redux', 'reborn', 'resurrection', 'loyalty', 'faithful'
-      ];
-      const hasSuspiciousTitle = excludedTitlePatterns.some(pattern => titleLower.includes(pattern));
-      
-      if (hasSuspiciousTitle) {
-        console.log(`Skipping release "${rg.title}" - suspicious title pattern`);
+      if (hasExcludedType) {
+        console.log(`Skipping "${rg.title}" - excluded type: [${secondary.join(', ')}]`);
         continue;
       }
 
-      // Posthumous release filtering for deceased artists
-      const releaseYear = rg['first-release-date'] ? parseInt(rg['first-release-date'].substring(0, 4)) : null;
-      if (careerEndYear && releaseYear && releaseYear > careerEndYear + 2) {
-        // For releases more than 2 years after death, apply stricter filtering
-        const posthumousPatterns = [
-          'featuring', 'ft.', 'feat.', 'with', 'vs.', 'meets', 'presents',
-          'volume', 'vol.', 'part', 'pt.', 'chapter', 'book', 'tape',
-          'memorial', 'tribute', 'remembering', 'in memory', 'legacy'
-        ];
-        const hasPosthumousPattern = posthumousPatterns.some(pattern => titleLower.includes(pattern));
-        
-        if (hasPosthumousPattern) {
-          console.log(`Skipping posthumous release "${rg.title}" (${releaseYear}) - posthumous pattern detected`);
-          continue;
-        }
+      // Detect mixtapes (MusicBrainz official category)
+      const isMixtape = primaryType === 'Album' && secondary.includes('Mixtape/Street');
+      
+      // Include if it's an Album or EP (and not excluded above)
+      const isValidRelease = (primaryType === 'Album' || primaryType === 'EP') && !hasExcludedType;
+      
+      if (!isValidRelease) {
+        console.log(`Skipping "${rg.title}" - primary-type: ${primaryType}`);
+        continue;
       }
 
       const releaseType = isMixtape ? 'mixtape' : 'album';
