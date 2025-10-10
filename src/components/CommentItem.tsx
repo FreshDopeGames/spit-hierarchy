@@ -95,9 +95,9 @@ const CommentItem = ({
               username={comment.profiles?.username || "Anonymous User"}
               size="sm"
             />
-            <div className="flex items-center gap-2">
-              <span className="text-[var(--theme-primary)] font-[var(--theme-font-heading)]">{comment.profiles?.username || "Anonymous User"}</span>
-              <span className="text-[var(--theme-textMuted)] text-sm font-[var(--theme-font-body)]">
+            <div className="flex flex-col gap-0.5">
+              <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">{comment.profiles?.username || "Anonymous User"}</span>
+              <span className="text-[hsl(var(--theme-textMuted))] text-xs font-[var(--theme-font-body)]">
                 {formatTimeAgo(comment.created_at)}
               </span>
             </div>
