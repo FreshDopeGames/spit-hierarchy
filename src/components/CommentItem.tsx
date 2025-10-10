@@ -6,6 +6,7 @@ import { formatDistanceToNow } from "date-fns";
 import SmallAvatar from "./avatar/SmallAvatar";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { UsernameLink } from "./profile/UsernameLink";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -96,7 +97,11 @@ const CommentItem = ({
               size="sm"
             />
             <div className="flex flex-col gap-0.5">
-              <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">{comment.profiles?.username || "Anonymous User"}</span>
+              <UsernameLink
+                userId={comment.user_id}
+                username={comment.profiles?.username || "Anonymous User"}
+                className="font-[var(--theme-font-heading)]"
+              />
               <span className="text-[hsl(var(--theme-textMuted))] text-xs font-[var(--theme-font-body)]">
                 {formatTimeAgo(comment.created_at)}
               </span>
