@@ -33,8 +33,8 @@ const AllRappersGrid = ({
   const { data: statsMap = {} } = useRapperStats(rapperIds);
 
   return (
-    <div className="min-w-0 max-w-full overflow-x-hidden">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8 min-w-0 max-w-full">
+    <div className="min-w-0 max-w-full">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6 mb-8 min-w-0 max-w-full overflow-visible">
         {rappers.map((rapper) => (
           <RapperCard 
             key={rapper.id}
