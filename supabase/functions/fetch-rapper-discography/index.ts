@@ -478,6 +478,8 @@ serve(async (req) => {
           ...streamingLinks,
         };
         
+        const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
+        
         const { data: newAlbum } = await supabaseService
           .from('albums')
           .insert({
@@ -486,7 +488,8 @@ serve(async (req) => {
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
             track_count: null, // Not available without inc=releases
-            has_cover_art: false, // Safe default - no direct copyright infringement
+            cover_art_url: coverArtUrl,
+            has_cover_art: true,
             external_cover_links: externalLinks,
             cover_art_colors: null // Will be populated by future user-generated content
           })

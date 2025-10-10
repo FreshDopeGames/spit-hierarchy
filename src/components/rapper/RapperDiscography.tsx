@@ -8,6 +8,8 @@ import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDi
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { format } from "date-fns";
 import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
+import { AlbumCoverImage } from "@/components/ui/AlbumCoverImage";
+
 interface RapperDiscographyProps {
   rapperId: string;
   rapperName?: string;
@@ -185,16 +187,12 @@ const RapperDiscography = ({
               const hasDirectSpotify = directLinks.spotify;
               const hasDirectApple = directLinks.apple_music;
               return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors">
-                    <div className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden" style={{
-                  backgroundColor: placeholder.style.bgColor,
-                  background: `linear-gradient(135deg, ${placeholder.style.bgColor}, ${placeholder.style.primary})`
-                }}>
-                      <Music className="w-6 h-6 text-[hsl(var(--theme-secondary))]" />
-                      <div className="absolute inset-0 opacity-10" style={{
-                    backgroundImage: `linear-gradient(45deg, ${placeholder.style.textColor} 25%, transparent 25%, transparent 75%, ${placeholder.style.textColor} 75%)`,
-                    backgroundSize: '6px 6px'
-                  }} />
-                    </div>
+                    <AlbumCoverImage
+                      coverUrl={item.album?.cover_art_url}
+                      title={item.album?.title || 'Mixtape'}
+                      releaseType="mixtape"
+                      placeholderColors={placeholder.style}
+                    />
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate">
                         {item.album?.title}
