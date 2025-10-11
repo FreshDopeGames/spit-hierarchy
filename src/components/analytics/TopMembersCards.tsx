@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
+import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import SmallAvatar from "@/components/avatar/SmallAvatar";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { MessageCircle, Vote, Trophy } from "lucide-react";
@@ -195,32 +195,32 @@ const TopMembersCards = () => {
     metricKey: string;
     metricLabel: string;
   }) => (
-    <Card className="bg-carbon-fiber/90 border-rap-gold/30 shadow-lg shadow-rap-gold/20">
-      <CardHeader className="pb-3">
-        <CardTitle className="flex items-center gap-2 text-rap-gold font-kaushan text-lg">
-          <Icon className="w-5 h-5" />
+    <ThemedCard>
+      <ThemedCardHeader className="pb-4">
+        <ThemedCardTitle className="flex items-center gap-2 text-[hsl(var(--theme-primary))] font-mogra text-xl">
+          <Icon className="w-6 h-6" />
           {title}
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
+        </ThemedCardTitle>
+      </ThemedCardHeader>
+      <ThemedCardContent>
         {isLoading ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="flex items-center space-x-3">
-                <span className="text-rap-gold/60 font-bold text-sm w-4">{i}</span>
-                <AvatarSkeleton size="sm" />
+              <div key={i} className="flex items-center space-x-4">
+                <span className="text-[hsl(var(--theme-primary))]/60 font-bold text-base w-6">{i}</span>
+                <AvatarSkeleton size="md" />
                 <div className="flex-1">
-                  <TextSkeleton width="w-24" height="h-4" className="mb-1" />
-                  <TextSkeleton width="w-16" height="h-3" />
+                  <TextSkeleton width="w-32" height="h-5" className="mb-2" />
+                  <TextSkeleton width="w-20" height="h-4" />
                 </div>
               </div>
             ))}
           </div>
         ) : data && data.length > 0 ? (
-          <div className="space-y-3">
+          <div className="space-y-4">
             {data.map((member: any, index: number) => (
-              <div key={member.id || member.user_id} className="flex items-center space-x-3">
-                <span className="text-rap-gold font-bold text-sm w-4">
+              <div key={member.id || member.user_id} className="flex items-center space-x-4">
+                <span className="text-[hsl(var(--theme-primary))] font-bold text-base w-6">
                   {index + 1}
                 </span>
                 {member.profiles?.username ? (
@@ -228,7 +228,7 @@ const TopMembersCards = () => {
                     <SmallAvatar
                       avatarUrl={member.profiles?.avatar_url}
                       username={member.profiles?.username || 'Unknown'}
-                      size="sm"
+                      size="md"
                       className="hover:opacity-80 transition-opacity cursor-pointer"
                     />
                   </Link>
@@ -236,23 +236,23 @@ const TopMembersCards = () => {
                   <SmallAvatar
                     avatarUrl={member.profiles?.avatar_url}
                     username={member.profiles?.username || 'Unknown'}
-                    size="sm"
+                    size="md"
                   />
                 )}
                 <div className="flex-1 min-w-0">
                   {member.profiles?.username ? (
                     <Link 
                       to={`/user/${member.profiles.username}`}
-                      className="text-rap-platinum font-medium text-sm truncate hover:text-rap-gold transition-colors cursor-pointer block"
+                      className="text-[hsl(var(--theme-text))] font-semibold text-base truncate hover:text-[hsl(var(--theme-primary))] transition-colors cursor-pointer block"
                     >
                       {member.profiles.username}
                     </Link>
                   ) : (
-                    <p className="text-rap-platinum font-medium text-sm truncate">
+                    <p className="text-[hsl(var(--theme-text))]/60 font-semibold text-base truncate">
                       Unknown User
                     </p>
                   )}
-                  <p className="text-rap-gold/70 text-xs">
+                  <p className="text-[hsl(var(--theme-text))]/70 text-sm font-medium">
                     {member[metricKey] || member.vote_count} {metricLabel}
                   </p>
                 </div>
@@ -260,12 +260,12 @@ const TopMembersCards = () => {
             ))}
           </div>
         ) : (
-          <p className="text-rap-platinum/60 text-sm text-center py-4">
+          <p className="text-[hsl(var(--theme-text))]/60 text-base text-center py-8">
             No data available
           </p>
         )}
-      </CardContent>
-    </Card>
+      </ThemedCardContent>
+    </ThemedCard>
   );
 
   return (
