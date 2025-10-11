@@ -75,7 +75,7 @@ const ProfileHeader = ({
                   {profile.bio}
                 </p>}
               
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm text-[var(--theme-textMuted)] justify-center lg:justify-start">
+              <div className="flex flex-col gap-2 text-xs sm:text-sm text-[var(--theme-textMuted)] justify-center lg:justify-start items-center lg:items-start">
                 {profile?.location && <div className="flex items-center justify-center lg:justify-start gap-1">
                     <MapPin className="w-3 h-3 sm:w-4 sm:h-4" />
                     <span>{profile.location}</span>
