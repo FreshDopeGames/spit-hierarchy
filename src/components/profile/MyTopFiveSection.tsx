@@ -87,14 +87,35 @@ const MyTopFiveSection = () => {
 
         {/* Tablet Layout */}
         <div className="hidden sm:block lg:hidden">
-          <div className="grid grid-cols-2 gap-4 mb-4">
-            {slots.slice(0, 2).map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onClick={() => handleSlotClick(slot.position)} />)}
+          {/* Top row - Position #1 full width */}
+          <div className="grid grid-cols-1 gap-4 mb-4">
+            <TopFiveSlot 
+              position={slots[0].position} 
+              rapper={slots[0].rapper} 
+              onClick={() => handleSlotClick(slots[0].position)} 
+            />
           </div>
+          {/* Middle row - Positions #2 and #3 */}
           <div className="grid grid-cols-2 gap-4 mb-4">
-            {slots.slice(2, 4).map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onClick={() => handleSlotClick(slot.position)} />)}
+            {slots.slice(1, 3).map(slot => (
+              <TopFiveSlot 
+                key={slot.position} 
+                position={slot.position} 
+                rapper={slot.rapper} 
+                onClick={() => handleSlotClick(slot.position)} 
+              />
+            ))}
           </div>
-          <div className="grid grid-cols-1 gap-4">
-            <TopFiveSlot position={slots[4].position} rapper={slots[4].rapper} onClick={() => handleSlotClick(slots[4].position)} />
+          {/* Bottom row - Positions #4 and #5 */}
+          <div className="grid grid-cols-2 gap-4">
+            {slots.slice(3, 5).map(slot => (
+              <TopFiveSlot 
+                key={slot.position} 
+                position={slot.position} 
+                rapper={slot.rapper} 
+                onClick={() => handleSlotClick(slot.position)} 
+              />
+            ))}
           </div>
         </div>
 
