@@ -6,6 +6,12 @@ export interface MemberStats {
   total_comments: number;
   ranking_lists_created: number;
   top_five_created: number;
+  // Public profile stats
+  rappers_ranked?: number;
+  rappers_rated?: number;
+  bars_upvotes?: number;
+  vs_match_votes?: number;
+  total_achievements?: number;
 }
 
 export interface PublicProfile {

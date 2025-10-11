@@ -11,6 +11,12 @@ interface MemberStats {
   total_comments?: number;
   ranking_lists_created?: number;
   top_five_created?: number;
+  // Public profile stats
+  rappers_ranked?: number;
+  rappers_rated?: number;
+  bars_upvotes?: number;
+  vs_match_votes?: number;
+  total_achievements?: number;
 }
 
 interface ProfileData {
@@ -100,9 +106,9 @@ const UnifiedProfileHeader = ({
             />
           </div>
           <div className="text-center md:text-left flex-1">
-          <h1 className="text-3xl md:text-4xl font-bold font-[var(--theme-fontSecondary)] text-yellow-600 mb-2">
-            {profile.username}
-          </h1>
+        <h1 className="text-3xl md:text-4xl font-bold font-mogra text-yellow-600 mb-2">
+          {profile.username}
+        </h1>
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-4">
               <Badge className={`font-[var(--theme-font-body)] border ${getStatusColor(profile.member_stats?.status)}`}>
                 <Trophy className="w-3 h-3 mr-1" />
@@ -152,32 +158,69 @@ const UnifiedProfileHeader = ({
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-[var(--theme-textMuted)]/20 pt-6">
-          <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
-              {profile.member_stats?.total_votes || 0}
+        {!isOwnProfile && profile.member_stats?.rappers_ranked !== undefined ? (
+          // Public profile stats
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 border-t border-[var(--theme-textMuted)]/20 pt-6">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.rappers_ranked || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Rappers Ranked</div>
             </div>
-            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Total Votes Cast</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
-              {rankingsCount}
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.rappers_rated || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Rappers Rated</div>
             </div>
-            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Public Rankings</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
-              {profile.member_stats?.consecutive_voting_days || 0}
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.bars_upvotes || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Bars</div>
             </div>
-            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Day Voting Streak</div>
-          </div>
-          <div className="text-center">
-            <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
-              {profile.member_stats?.total_comments || 0}
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.vs_match_votes || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">VS Match Votes</div>
             </div>
-            <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Comments Posted</div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.total_achievements || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Total Achievements</div>
+            </div>
           </div>
-        </div>
+        ) : (
+          // Self-profile stats
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-[var(--theme-textMuted)]/20 pt-6">
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.total_votes || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Total Votes Cast</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {rankingsCount}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Public Rankings</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.consecutive_voting_days || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Day Voting Streak</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.total_comments || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Comments Posted</div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

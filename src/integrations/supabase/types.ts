@@ -2716,6 +2716,16 @@ export type Database = {
           username: string
         }[]
       }
+      get_public_profile_stats: {
+        Args: { profile_user_id: string }
+        Returns: {
+          bars_upvotes: number
+          rappers_ranked: number
+          rappers_rated: number
+          total_achievements: number
+          vs_match_votes: number
+        }[]
+      }
       get_public_profiles_batch: {
         Args: { profile_user_ids: string[] }
         Returns: {

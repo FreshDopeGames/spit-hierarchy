@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import PublicProfileHeader from "@/components/profile/PublicProfileHeader";
-import PublicProfileRankings from "@/components/profile/PublicProfileRankings";
+import PublicTopFiveSection from "@/components/profile/PublicTopFiveSection";
 import PublicProfileLoading from "@/components/profile/PublicProfileLoading";
 import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
 import Footer from "@/components/Footer";
@@ -56,13 +56,25 @@ const PublicUserProfileByUsername = () => {
         return;
       }
 
+      // Fetch public profile stats
+      const { data: statsData, error: statsError } = await supabase
+        .rpc('get_public_profile_stats', { profile_user_id: userId })
+        .single();
+
+      if (statsError) {
+        console.error("Error fetching profile stats:", statsError);
+      }
+
       // Transform the data to match the PublicProfile interface
       const profileWithStats: PublicProfile = {
         id: profileData[0].id,
         username: profileData[0].username,
         avatar_url: profileData[0].avatar_url,
         created_at: profileData[0].created_at,
-        member_stats: profileData[0].member_stats as any // Cast to handle Json type
+        member_stats: {
+          ...(profileData[0].member_stats as any),
+          ...(statsData || {})
+        }
       };
 
       setProfile(profileWithStats);
@@ -111,7 +123,7 @@ const PublicUserProfileByUsername = () => {
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
         <PublicProfileHeader profile={profile} rankingsCount={rankings.length} />
-        <PublicProfileRankings profile={profile} rankings={rankings} />
+        <PublicTopFiveSection userId={profile.id} username={profile.username} />
       </div>
 
       <Footer />
