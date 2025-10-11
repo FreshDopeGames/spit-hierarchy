@@ -29,9 +29,9 @@ const CategoryPerformanceCard = () => {
       </Card>;
   }
   if (!categoryAnalytics || categoryAnalytics.length === 0) return null;
-  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)] border-2 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
+  return <Card className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-2 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <CardHeader>
-        <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-3xl font-extrabold">
+        <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 text-3xl font-extrabold">
           <TrendingUp className="w-5 h-5" />
           Category Performance
         </CardTitle>

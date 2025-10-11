@@ -26,9 +26,9 @@ const TopVotedRappersCard = () => {
       </Card>;
   }
   if (!topRappers || topRappers.length === 0) return null;
-  return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20 border-2 border-[var(--theme-primary)] bg-black">
+  return <Card className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-2 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <CardHeader>
-        <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 font-extrabold text-3xl">
+        <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 font-extrabold text-3xl">
           <Users className="w-5 h-5" />
           Most Voted Rappers
         </CardTitle>
