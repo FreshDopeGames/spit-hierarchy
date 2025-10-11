@@ -1,8 +1,7 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap } from 'lucide-react';
-import { APP_VERSION } from '@/config/version';
+import React from "react";
+import { Link } from "react-router-dom";
+import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap } from "lucide-react";
+import { APP_VERSION } from "@/config/version";
 
 const Footer = () => {
   // Get Community Cypher icon with priority: PenTool > Pen > MessageSquare
@@ -15,10 +14,10 @@ const Footer = () => {
           {/* Brand Section */}
           <div className="md:col-span-1">
             <div className="flex items-center mb-4">
-              <img 
-                src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
-                alt="Logo" 
-                className="h-8 w-auto mr-3" 
+              <img
+                src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png"
+                alt="Logo"
+                className="h-8 w-auto mr-3"
               />
               <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-display)] text-xl tracking-wider">
                 Spit Hierarchy
@@ -34,8 +33,8 @@ const Footer = () => {
             <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Explore</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
-                  to="/rankings" 
+                <Link
+                  to="/rankings"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -44,8 +43,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/all-rappers" 
+                <Link
+                  to="/all-rappers"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -54,8 +53,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/vs" 
+                <Link
+                  to="/vs"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -64,7 +63,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
+                <Link
                   to="/blog"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
@@ -74,8 +73,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/about" 
+                <Link
+                  to="/about"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -91,8 +90,8 @@ const Footer = () => {
             <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Community</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
-                  to="/community-cypher" 
+                <Link
+                  to="/community-cypher"
                   className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -101,8 +100,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/auth" 
+                <Link
+                  to="/auth"
                   className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -110,8 +109,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/analytics" 
+                <Link
+                  to="/analytics"
                   className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -126,8 +125,8 @@ const Footer = () => {
             <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link 
-                  to="/privacy" 
+                <Link
+                  to="/privacy"
                   className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -135,8 +134,8 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link 
-                  to="/terms" 
+                <Link
+                  to="/terms"
                   className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
@@ -149,7 +148,7 @@ const Footer = () => {
 
         <div className="border-t border-[hsl(var(--theme-primary))] mt-8 pt-8 text-center">
           <p className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] text-sm">
-            © 2025 Fresh Dope Biz LLC • v{APP_VERSION} • All rights reserved. Keep the culture alive.
+            v{APP_VERSION} • © 2025 Fresh Dope Biz LLC • All rights reserved. • Keep the culture alive.
           </p>
         </div>
       </div>
