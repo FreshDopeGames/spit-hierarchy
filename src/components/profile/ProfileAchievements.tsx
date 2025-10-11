@@ -50,12 +50,12 @@ const ProfileAchievements = () => {
   });
   return <Card className="bg-black border border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
       <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
+        <div className="relative">
+          <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center justify-center gap-2 text-lg sm:text-xl mb-4">
             <Trophy className="sm:w-5 sm:h-5 " />
             Achievements
           </CardTitle>
-          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:absolute sm:right-0 sm:top-1/2 sm:-translate-y-1/2 gap-3 sm:gap-4">
             <div className="text-center sm:text-right">
               <div className="text-[hsl(var(--theme-secondary))] text-xs sm:text-sm">Total Points</div>
               <div className="text-[hsl(var(--theme-primary))] font-bold text-lg sm:text-xl">{getTotalPoints()}</div>
