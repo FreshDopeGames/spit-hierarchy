@@ -1,4 +1,3 @@
-
 import React from "react";
 
 interface ProfileStatsProps {
@@ -8,14 +7,14 @@ interface ProfileStatsProps {
 const formatMemberSince = (dateString: string): string => {
   if (!dateString) return "Unknown";
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric' }).format(date);
+  return new Intl.DateTimeFormat("en-US", { month: "short", year: "numeric" }).format(date);
 };
 
 const ProfileStats = ({ memberStats }: ProfileStatsProps) => {
   if (!memberStats) return null;
 
   return (
-    <div className="bg-[hsl(var(--theme-background))] border border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[hsl(var(--theme-primary))]/20">
+    <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
       <h3 className="text-lg sm:text-xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-4 text-center">
         Stats
       </h3>
