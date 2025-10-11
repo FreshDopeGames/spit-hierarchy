@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap } from 'lucide-react';
+import { APP_VERSION } from '@/config/version';
 
 const Footer = () => {
   // Get Community Cypher icon with priority: PenTool > Pen > MessageSquare
@@ -148,7 +149,7 @@ const Footer = () => {
 
         <div className="border-t border-[hsl(var(--theme-primary))] mt-8 pt-8 text-center">
           <p className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] text-sm">
-            © 2025 Fresh Dope Biz LLC. All rights reserved. Keep the culture alive.
+            © 2025 Fresh Dope Biz LLC • v{APP_VERSION} • All rights reserved. Keep the culture alive.
           </p>
         </div>
       </div>
