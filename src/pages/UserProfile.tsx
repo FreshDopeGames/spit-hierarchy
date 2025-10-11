@@ -74,6 +74,19 @@ const UserProfile = () => {
     enabled: !!user
   });
 
+  const { data: publicStats, isLoading: publicStatsLoading } = useQuery({
+    queryKey: ["public-profile-stats", user?.id],
+    queryFn: async () => {
+      if (!user) return null;
+      const { data, error } = await supabase
+        .rpc('get_public_profile_stats', { profile_user_id: user.id })
+        .single();
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!user
+  });
+
   // Show loading screen while auth is initializing
   if (authLoading) {
     return (
@@ -143,7 +156,7 @@ const UserProfile = () => {
   }
 
   // Combined loading state for profile data
-  const isDataLoading = profileLoading || memberStatsLoading || voteNotesLoading;
+  const isDataLoading = profileLoading || memberStatsLoading || voteNotesLoading || publicStatsLoading;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
@@ -231,7 +244,7 @@ const UserProfile = () => {
                 </div>
               )}
 
-              <ProfileStats memberStats={memberStats} />
+              <ProfileStats memberStats={memberStats} publicStats={publicStats} />
 
               {/* Voting History */}
               <div className="mb-6 sm:mb-8">
