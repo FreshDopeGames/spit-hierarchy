@@ -68,7 +68,7 @@ const GlobalStatsCards = () => {
   }];
   return <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
       {statCards.map((stat, index) => <Card key={index} className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20">
-          <CardContent className="p-4 bg-[inheri] bg-background">
+          <CardContent className="p-4">
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg`}>
                 <stat.icon className="w-5 h-5 text-[var(--theme-background)]" />
