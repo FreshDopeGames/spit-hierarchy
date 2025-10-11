@@ -8,6 +8,7 @@ import { ThemedSeparator } from "@/components/ui/themed-separator";
 import { ThemedAvatar, ThemedAvatarImage, ThemedAvatarFallback } from "@/components/ui/themed-avatar";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
 
 const NavigationSidebar = ({
   trigger,
@@ -30,6 +31,7 @@ const NavigationSidebar = ({
   const {
     userProfile
   } = useUserProfile();
+  const { isAdmin } = useSecurityContext();
   const isOpen = open !== undefined ? open : internalOpen;
   const handleOpenChange = onOpenChange || setInternalOpen;
 
@@ -162,12 +164,14 @@ const NavigationSidebar = ({
                   </ThemedButton>
                 </Link>
 
-                <Link to="/admin" onClick={() => handleNavClick('/admin')}>
-                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
-                    <Settings className="w-4 h-4 mr-3" />
-                    Admin
-                  </ThemedButton>
-                </Link>
+                {isAdmin && (
+                  <Link to="/admin" onClick={() => handleNavClick('/admin')}>
+                    <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                      <Settings className="w-4 h-4 mr-3" />
+                      Admin
+                    </ThemedButton>
+                  </Link>
+                )}
 
                 <ThemedButton onClick={() => {
                 // signOut();
