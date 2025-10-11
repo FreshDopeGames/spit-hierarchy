@@ -35,7 +35,7 @@ const MyTopFiveSection = () => {
   // Create array of 5 positions with current data
   const slots = Array.from({ length: 5 }, (_, index) => {
     const position = index + 1;
-    const existingRapper = topRappers.find(item => item.position === position);
+    const existingRapper = topRappers.find((item) => item.position === position);
     return {
       position,
       rapper: existingRapper?.rappers || null,
@@ -61,7 +61,7 @@ const MyTopFiveSection = () => {
     <>
       <div className="bg-black border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg sm:text-xl font-bold text-rap-gold font-merienda text-center flex-1">
+          <h3 className="text-lg sm:text-xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-4 text-center">
             My Top 5
           </h3>
           <Button
@@ -74,7 +74,7 @@ const MyTopFiveSection = () => {
             Share
           </Button>
         </div>
-        
+
         {/* Desktop Layout */}
         <div className="hidden lg:block">
           {/* Top 2 rappers */}
