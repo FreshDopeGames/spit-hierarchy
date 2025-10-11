@@ -34,7 +34,7 @@ const VotingHistorySection = () => {
   }
   return <Card className="bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <CardHeader>
-        <CardTitle className="text-[hsl(var(--theme-primary))] font-[(varhsl(--theme-font-heading))] flex items-center gap-2 text-lg sm:text-xl text-yellow-600">
+        <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center justify-center gap-2 text-lg sm:text-xl">
           <History className="w-4 h-4 sm:w-5 sm:h-5" />
           Voting History
         </CardTitle>
