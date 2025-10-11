@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Calendar, MapPin, Crown, Star, Pencil } from "lucide-react";
 import { format } from "date-fns";
 import AvatarUpload from "../AvatarUpload";
@@ -19,6 +19,13 @@ const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+
+  // Sync avatarUrl with profile data when it loads
+  useEffect(() => {
+    if (profile?.avatar_url) {
+      setAvatarUrl(profile.avatar_url);
+    }
+  }, [profile?.avatar_url]);
   const {
     currentStatus,
     totalPoints,
