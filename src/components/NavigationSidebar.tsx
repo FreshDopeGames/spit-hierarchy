@@ -141,20 +141,6 @@ const NavigationSidebar = ({
               </ThemedButton>
             </Link>
 
-            <Link to="/privacy" onClick={() => handleNavClick('/privacy')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
-                <Shield className="w-4 h-4 mr-3" />
-                Privacy Policy
-              </ThemedButton>
-            </Link>
-
-            <Link to="/terms" onClick={() => handleNavClick('/terms')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
-                <FileText className="w-4 h-4 mr-3" />
-                Terms of Service
-              </ThemedButton>
-            </Link>
-
             {/* Analytics and Admin for logged in users */}
             {user && <>
                 <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
@@ -173,6 +159,20 @@ const NavigationSidebar = ({
                   </Link>
                 )}
 
+                <Link to="/privacy" onClick={() => handleNavClick('/privacy')}>
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                    <Shield className="w-4 h-4 mr-3" />
+                    Privacy Policy
+                  </ThemedButton>
+                </Link>
+
+                <Link to="/terms" onClick={() => handleNavClick('/terms')}>
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                    <FileText className="w-4 h-4 mr-3" />
+                    Terms of Service
+                  </ThemedButton>
+                </Link>
+
                 <ThemedButton onClick={() => {
                 // signOut();
                 handleNavClick('/');
@@ -187,6 +187,23 @@ const NavigationSidebar = ({
             {/* Sign in button for non-authenticated users */}
             {!user && <>
                 <ThemedSeparator className="my-6" />
+                
+                <Link to="/privacy" onClick={() => handleNavClick('/privacy')}>
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                    <Shield className="w-4 h-4 mr-3" />
+                    Privacy Policy
+                  </ThemedButton>
+                </Link>
+
+                <Link to="/terms" onClick={() => handleNavClick('/terms')}>
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                    <FileText className="w-4 h-4 mr-3" />
+                    Terms of Service
+                  </ThemedButton>
+                </Link>
+
+                <ThemedSeparator className="my-6" />
+                
                 <Link to="/auth" onClick={() => handleNavClick('/auth')}>
                   <ThemedButton className="w-full font-[var(--theme-font-body)] shadow-lg text-[var(--theme-textInverted)] font-extrabold text-xl bg-[var(--theme-primary)] hover:bg-[var(--theme-primaryDark)]" size="lg">
                     Sign In
