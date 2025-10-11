@@ -67,7 +67,7 @@ const GlobalStatsCards = () => {
     color: "from-[var(--theme-secondary)] to-[var(--theme-primaryLight)]"
   }];
   return <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-      {statCards.map((stat, index) => <Card key={index} className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-2 shadow-lg shadow-[var(--theme-primary)]/20">
+      {statCards.map((stat, index) => <Card key={index} className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20">
           <CardContent className="p-4 bg-[inheri] bg-background">
             <div className="flex items-center space-x-3">
               <div className={`w-10 h-10 rounded-lg bg-gradient-to-r ${stat.color} flex items-center justify-center shadow-lg`}>
