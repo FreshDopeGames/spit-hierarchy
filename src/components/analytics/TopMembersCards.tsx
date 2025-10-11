@@ -195,7 +195,7 @@ const TopMembersCards = () => {
     metricKey: string;
     metricLabel: string;
   }) => (
-    <ThemedCard>
+    <ThemedCard className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20">
       <ThemedCardHeader className="pb-4">
         <ThemedCardTitle className="flex items-center gap-2 text-[hsl(var(--theme-primary))] font-mogra text-xl">
           <Icon className="w-6 h-6" />
