@@ -37,7 +37,7 @@ const TopMembersCards = () => {
       
       // Fetch profiles for these users using the secure batch function
       const { data: profiles, error: profilesError } = await supabase
-        .rpc('get_public_profiles_batch', { profile_user_ids: userIds });
+        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
       
       if (profilesError) {
         console.error('Error fetching profiles:', profilesError);
@@ -88,7 +88,7 @@ const TopMembersCards = () => {
       
       // Fetch profiles for these users using the secure batch function
       const { data: profiles, error: profilesError } = await supabase
-        .rpc('get_public_profiles_batch', { profile_user_ids: userIds });
+        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
       
       if (profilesError) {
         console.error('Error fetching profiles for voters:', profilesError);
@@ -159,7 +159,7 @@ const TopMembersCards = () => {
       
       // Fetch profiles for these users using the secure batch function
       const { data: profiles, error: profilesError } = await supabase
-        .rpc('get_public_profiles_batch', { profile_user_ids: userIds });
+        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
       
       if (profilesError) {
         console.error('Error fetching profiles for judges:', profilesError);
@@ -195,7 +195,7 @@ const TopMembersCards = () => {
     metricKey: string;
     metricLabel: string;
   }) => (
-    <ThemedCard className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20">
+    <ThemedCard className="bg-black border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20">
       <ThemedCardHeader className="pb-4">
         <ThemedCardTitle className="flex items-center gap-2 text-[hsl(var(--theme-primary))] font-mogra text-xl">
           <Icon className="w-6 h-6" />
@@ -271,15 +271,6 @@ const TopMembersCards = () => {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
       <MemberCard
-        title="Top Commenters"
-        icon={MessageCircle}
-        data={topCommenters || []}
-        isLoading={loadingCommenters}
-        metricKey="total_comments"
-        metricLabel="comments"
-      />
-      
-      <MemberCard
         title="Top Voters"
         icon={Vote}
         data={topVoters || []}
@@ -287,7 +278,7 @@ const TopMembersCards = () => {
         metricKey="total_votes"
         metricLabel="votes"
       />
-      
+
       <MemberCard
         title="Top Skill Judges"
         icon={Trophy}
@@ -295,6 +286,15 @@ const TopMembersCards = () => {
         isLoading={loadingJudges}
         metricKey="vote_count"
         metricLabel="skill votes"
+      />
+
+      <MemberCard
+        title="Top Commenters"
+        icon={MessageCircle}
+        data={topCommenters || []}
+        isLoading={loadingCommenters}
+        metricKey="total_comments"
+        metricLabel="comments"
       />
     </div>
   );

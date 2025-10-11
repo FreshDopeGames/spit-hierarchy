@@ -2674,6 +2674,14 @@ export type Database = {
           username: string
         }[]
       }
+      get_profiles_for_analytics: {
+        Args: { profile_user_ids: string[] }
+        Returns: {
+          avatar_url: string
+          id: string
+          username: string
+        }[]
+      }
       get_public_category_stats: {
         Args: Record<PropertyKey, never>
         Returns: {
