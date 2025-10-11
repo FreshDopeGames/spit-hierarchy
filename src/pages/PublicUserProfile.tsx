@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import PublicProfileHeader from "@/components/profile/PublicProfileHeader";
+import PublicTopFiveSection from "@/components/profile/PublicTopFiveSection";
 import PublicProfileRankings from "@/components/profile/PublicProfileRankings";
 import PublicProfileLoading from "@/components/profile/PublicProfileLoading";
 import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
@@ -33,6 +34,7 @@ const PublicUserProfile = () => {
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
         <PublicProfileHeader profile={profile} rankingsCount={rankings.length} />
+        <PublicTopFiveSection userId={profile.id} username={profile.username} />
         <PublicProfileRankings profile={profile} rankings={rankings} />
       </div>
 

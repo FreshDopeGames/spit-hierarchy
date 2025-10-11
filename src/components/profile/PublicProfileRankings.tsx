@@ -29,8 +29,8 @@ const PublicProfileRankings = ({ profile, rankings }: PublicProfileRankingsProps
         <h2 className="text-2xl font-bold text-[var(--theme-text)] mb-6 font-[var(--theme-font-heading)]">
           {profile.username}'s Rankings
         </h2>
-        <Card className="bg-[var(--theme-surface)] border-[var(--theme-textMuted)]/30">
-          <CardContent className="p-8 text-center">
+      <Card className="bg-black border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20">
+        <CardContent className="p-8 text-center">
             <Trophy className="w-16 h-16 text-[var(--theme-textMuted)] mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-[var(--theme-text)] mb-2 font-[var(--theme-font-heading)]">
               No Public Rankings Yet
@@ -53,7 +53,7 @@ const PublicProfileRankings = ({ profile, rankings }: PublicProfileRankingsProps
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {rankings.map(ranking => (
           <Link key={ranking.id} to={`/rankings/community-rankings/${ranking.slug}`} className="block">
-            <Card className="bg-[var(--theme-surface)] border-[var(--theme-textMuted)]/30 hover:border-[var(--theme-primary)]/50 transition-all duration-300 hover:shadow-lg hover:shadow-[var(--theme-primary)]/20 group">
+            <Card className="bg-black border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20 hover:border-[hsl(var(--theme-primaryLight))] transition-all duration-300 group">
               <CardContent className="p-6">
                 {/* Header */}
                 <div className="flex items-start justify-between mb-4">

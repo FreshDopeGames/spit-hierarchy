@@ -90,7 +90,7 @@ const UnifiedProfileHeader = ({
   const progress = calculateProgress();
 
   return (
-    <Card className="bg-[var(--theme-surface)] border-[var(--theme-secondary)]/40 mb-8">
+    <Card className="bg-black border-[hsl(var(--theme-primary))] border-4 shadow-lg shadow-[var(--theme-primary)]/20 mb-8">
       <CardContent className="p-8">
         <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-6">
           <div className="flex-shrink-0">
@@ -100,9 +100,9 @@ const UnifiedProfileHeader = ({
             />
           </div>
           <div className="text-center md:text-left flex-1">
-            <h1 className="text-3xl md:text-4xl font-bold text-[var(--theme-text)] font-[var(--theme-font-heading)] mb-2">
-              {profile.username}
-            </h1>
+          <h1 className="text-3xl md:text-4xl font-bold font-[var(--theme-fontSecondary)] text-yellow-600 mb-2">
+            {profile.username}
+          </h1>
             <div className="flex flex-col sm:flex-row items-center justify-center md:justify-start gap-4 mb-4">
               <Badge className={`font-[var(--theme-font-body)] border ${getStatusColor(profile.member_stats?.status)}`}>
                 <Trophy className="w-3 h-3 mr-1" />
