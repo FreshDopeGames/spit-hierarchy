@@ -3,22 +3,26 @@ import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { createSearchOrQuery } from "@/utils/textNormalization";
+import { useNavigationState } from "./useNavigationState";
 
 export interface UseAllRappersOptions {
   itemsPerPage?: number;
-  initialPage?: number;
 }
 
-export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRappersOptions = {}) => {
-  const [sortBy, setSortBy] = useState("activity");
-  const [sortOrder, setSortOrder] = useState("desc");
-  const [searchInput, setSearchInput] = useState("");
-  const [searchTerm, setSearchTerm] = useState("");
-  const [locationInput, setLocationInput] = useState("");
-  const [locationFilter, setLocationFilter] = useState("");
-  const [ratedFilter, setRatedFilter] = useState("all");
+export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) => {
+  const { getAllFilters, setAllFilters } = useNavigationState();
+  const urlFilters = getAllFilters();
+  
+  // Initialize all state from URL parameters
+  const [sortBy, setSortBy] = useState(urlFilters.sort || "activity");
+  const [sortOrder, setSortOrder] = useState(urlFilters.order || "desc");
+  const [searchInput, setSearchInput] = useState(urlFilters.search || "");
+  const [searchTerm, setSearchTerm] = useState(urlFilters.search || "");
+  const [locationInput, setLocationInput] = useState(urlFilters.location || "");
+  const [locationFilter, setLocationFilter] = useState(urlFilters.location || "");
+  const [ratedFilter, setRatedFilter] = useState(urlFilters.rated || "all");
   const [allRappers, setAllRappers] = useState<any[]>([]);
-  const [currentPage, setCurrentPage] = useState(initialPage);
+  const [currentPage, setCurrentPage] = useState(urlFilters.page || 0);
 
   // Helper function to merge rappers without duplicates
   const mergeRappersWithoutDuplicates = (existingRappers: any[], newRappers: any[]) => {
@@ -36,11 +40,12 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         setSearchTerm(searchInput);
         setCurrentPage(0);
         setAllRappers([]);
+        setAllFilters({ search: searchInput, page: 0 });
       }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchInput, searchTerm]);
+  }, [searchInput, searchTerm, setAllFilters]);
 
   // Debounce location input with 300ms delay (like search)
   useEffect(() => {
@@ -50,11 +55,12 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         setLocationFilter(locationInput);
         setCurrentPage(0);
         setAllRappers([]);
+        setAllFilters({ location: locationInput, page: 0 });
       }
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [locationInput, locationFilter]);
+  }, [locationInput, locationFilter, setAllFilters]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage],
@@ -206,6 +212,7 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
     setSortBy(value);
     setCurrentPage(0);
     setAllRappers([]);
+    setAllFilters({ sort: value, page: 0 });
   };
 
   const handleOrderChange = (value: string) => {
@@ -213,14 +220,17 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
     setSortOrder(value);
     setCurrentPage(0);
     setAllRappers([]);
+    setAllFilters({ order: value, page: 0 });
   };
 
   const handleSearchInput = (value: string) => {
     setSearchInput(value);
+    // Search term will be updated by debounce effect
   };
 
   const handleLocationInput = (value: string) => {
     setLocationInput(value);
+    // Location filter will be updated by debounce effect
   };
 
   const handleRatedFilterChange = (value: string) => {
@@ -228,11 +238,14 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
     setRatedFilter(value);
     setCurrentPage(0);
     setAllRappers([]);
+    setAllFilters({ rated: value, page: 0 });
   };
 
   const handleLoadMore = () => {
     console.log(`[Hook] Loading more: current page ${currentPage} -> ${currentPage + 1}`);
-    setCurrentPage((prev) => prev + 1);
+    const newPage = currentPage + 1;
+    setCurrentPage(newPage);
+    setAllFilters({ page: newPage });
   };
 
   return {

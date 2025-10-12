@@ -44,7 +44,14 @@ const RapperCard = ({
   
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    navigateToRapper(rapper.slug || rapper.id, currentPage);
+    // Save current scroll position before navigating
+    const scrollPos = window.scrollY;
+    const currentParams = new URLSearchParams(window.location.search);
+    currentParams.set('scrollPos', scrollPos.toString());
+    window.history.replaceState(null, '', `?${currentParams.toString()}`);
+    
+    // Navigate to rapper detail
+    navigateToRapper(rapper.slug || rapper.id);
   };
   
   return (

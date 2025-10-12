@@ -13,10 +13,7 @@ import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
 
 const AllRappersPage = () => {
-  const { getCurrentPage, setCurrentPage, navigateToRapper } = useNavigationState();
-  
-  // Initialize with URL page parameter
-  const initialPage = getCurrentPage();
+  const { getScrollPosition, setScrollPosition } = useNavigationState();
   
   const {
     sortBy,
@@ -40,13 +37,47 @@ const AllRappersPage = () => {
     currentPage,
   } = useAllRappers({ 
     itemsPerPage: 20,
-    initialPage 
   });
 
-  // Sync URL with current page state
+  // Capture scroll position periodically
   useEffect(() => {
-    setCurrentPage(currentPage);
-  }, [currentPage, setCurrentPage]);
+    let timeoutId: number;
+    
+    const handleScroll = () => {
+      // Clear existing timeout
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+      
+      // Set new timeout to save scroll position after user stops scrolling
+      timeoutId = window.setTimeout(() => {
+        const scrollPos = window.scrollY;
+        setScrollPosition(scrollPos);
+      }, 500);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+    };
+  }, [setScrollPosition]);
+
+  // Restore scroll position after data loads
+  useEffect(() => {
+    if (allRappers.length > 0 && !isLoading) {
+      const savedScrollPos = getScrollPosition();
+      if (savedScrollPos > 0) {
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: savedScrollPos, behavior: 'instant' });
+          // Clear scroll position after restoration to avoid conflicts
+          setTimeout(() => setScrollPosition(0), 100);
+        });
+      }
+    }
+  }, [allRappers.length, isLoading, getScrollPosition, setScrollPosition]);
 
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
