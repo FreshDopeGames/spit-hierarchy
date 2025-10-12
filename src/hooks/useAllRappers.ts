@@ -64,6 +64,52 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
       
       console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}`);
       
+      // Use efficient RPCs for rated/not_rated filters
+      if (ratedFilter === "rated" || ratedFilter === "not_rated") {
+        const { data: { user } } = await supabase.auth.getUser();
+        
+        if (!user) {
+          console.log("[Hook] User not logged in, returning empty result for rated filter");
+          return { rappers: [], total: 0, hasMore: false };
+        }
+
+        const rpcName = ratedFilter === "rated" ? "get_rated_rappers" : "get_unrated_rappers";
+        const sortByMap: Record<string, string> = {
+          activity: "activity_score",
+          name: "name",
+          rating: "average_rating",
+          votes: "total_votes",
+          origin: "origin"
+        };
+
+        console.log(`[Hook] Calling RPC: ${rpcName} with ${sortByMap[sortBy]} ${sortOrder}`);
+
+        const { data, error } = await supabase.rpc(rpcName, {
+          p_user_id: user.id,
+          p_search: searchTerm || null,
+          p_origin: locationFilter || null,
+          p_sort_by: sortByMap[sortBy],
+          p_sort_order: sortOrder,
+          p_limit: itemsPerPage,
+          p_offset: startRange
+        });
+
+        if (error) {
+          console.error(`[Hook] RPC ${rpcName} error:`, error);
+          throw error;
+        }
+
+        const total = data?.[0]?.total_count || 0;
+        console.log(`[Hook] RPC returned ${data?.length || 0} rappers, total: ${total}`);
+
+        return {
+          rappers: data || [],
+          total: Number(total),
+          hasMore: (Number(total) || 0) > (currentPage + 1) * itemsPerPage,
+        };
+      }
+
+      // Standard query for "all" rappers
       let query = supabase.from("rappers").select("*", { count: "exact" });
 
       // Apply enhanced search filter with normalization
@@ -75,46 +121,6 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
       // Apply location filter
       if (locationFilter) {
         query = query.ilike("origin", `%${locationFilter}%`);
-      }
-
-      // Apply rated/not rated filter
-      if (ratedFilter !== "all") {
-        const { data: { user } } = await supabase.auth.getUser();
-        
-        if (user) {
-          const { data: votedRappers, error: votesError } = await supabase
-            .from("votes")
-            .select("rapper_id")
-            .eq("user_id", user.id);
-
-          if (votesError) {
-            console.error("[Hook] Error fetching user votes:", votesError);
-            return { rappers: [], total: 0, hasMore: false };
-          }
-          
-          const votedRapperIds = votedRappers?.map(v => v.rapper_id) || [];
-          console.log(`[Hook] User has voted on ${votedRapperIds.length} rappers`);
-          
-          if (ratedFilter === "rated") {
-            if (votedRapperIds.length > 0) {
-              console.log(`[Hook] Filtering to show only ${votedRapperIds.length} rated rappers`);
-              query = query.in("id", votedRapperIds);
-            } else {
-              console.log("[Hook] User has no votes, returning empty result for 'rated' filter");
-              return { rappers: [], total: 0, hasMore: false };
-            }
-          } else if (ratedFilter === "not_rated") {
-            if (votedRapperIds.length > 0) {
-              console.log(`[Hook] Excluding ${votedRapperIds.length} voted rappers`);
-              query = query.filter('id', 'not.in', `(${votedRapperIds.join(',')})`);
-            } else {
-              console.log("[Hook] User has no votes, showing all rappers as 'not rated'");
-            }
-          }
-        } else if (ratedFilter !== "all") {
-          console.log("[Hook] User not logged in, returning empty result for rated filter");
-          return { rappers: [], total: 0, hasMore: false };
-        }
       }
 
       // Apply sorting with secondary sort for consistent ordering
@@ -140,7 +146,10 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
 
       // Apply pagination
       const { data, error, count } = await query.range(startRange, endRange);
-      if (error) throw error;
+      if (error) {
+        console.error("[Hook] Query error:", error);
+        throw error;
+      }
       
       console.log(`[Hook] Received ${data?.length || 0} rappers for page ${currentPage}, total count: ${count}`);
       

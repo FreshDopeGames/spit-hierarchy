@@ -2778,6 +2778,40 @@ export type Database = {
           votes_last_7_days: number
         }[]
       }
+      get_rated_rappers: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_origin?: string
+          p_search?: string
+          p_sort_by?: string
+          p_sort_order?: string
+          p_user_id: string
+        }
+        Returns: {
+          activity_score: number
+          aliases: string[]
+          average_rating: number
+          bio: string
+          birth_day: number
+          birth_month: number
+          birth_year: number
+          career_end_year: number
+          career_start_year: number
+          death_day: number
+          death_month: number
+          death_year: number
+          id: string
+          image_url: string
+          name: string
+          origin: string
+          real_name: string
+          slug: string
+          total_count: number
+          total_votes: number
+          verified: boolean
+        }[]
+      }
       get_total_member_count: {
         Args: Record<PropertyKey, never>
         Returns: number
@@ -2791,6 +2825,40 @@ export type Database = {
           recent_average_rating: number
           recent_votes: number
           total_votes: number
+        }[]
+      }
+      get_unrated_rappers: {
+        Args: {
+          p_limit?: number
+          p_offset?: number
+          p_origin?: string
+          p_search?: string
+          p_sort_by?: string
+          p_sort_order?: string
+          p_user_id: string
+        }
+        Returns: {
+          activity_score: number
+          aliases: string[]
+          average_rating: number
+          bio: string
+          birth_day: number
+          birth_month: number
+          birth_year: number
+          career_end_year: number
+          career_start_year: number
+          death_day: number
+          death_month: number
+          death_year: number
+          id: string
+          image_url: string
+          name: string
+          origin: string
+          real_name: string
+          slug: string
+          total_count: number
+          total_votes: number
+          verified: boolean
         }[]
       }
       get_user_ranking_preview_items: {
