@@ -29,63 +29,69 @@ export const useNavigationState = () => {
     };
   }, [searchParams]);
 
-  // Set all filters in URL
+  // Set all filters in URL (merges with existing params)
   const setAllFilters = useCallback((filters: AllFilters) => {
     const newSearchParams = new URLSearchParams(searchParams);
     
-    // Update or remove each filter
-    if (filters.page !== undefined) {
-      if (filters.page === 0) {
+    // Get current values from URL as defaults
+    const currentFilters = getAllFilters();
+    
+    // Merge passed filters with current filters
+    const mergedFilters = { ...currentFilters, ...filters };
+    
+    // Update or remove each filter based on merged values
+    if (mergedFilters.page !== undefined) {
+      if (mergedFilters.page === 0) {
         newSearchParams.delete('page');
       } else {
-        newSearchParams.set('page', filters.page.toString());
+        newSearchParams.set('page', mergedFilters.page.toString());
       }
     }
     
-    if (filters.search !== undefined) {
-      if (filters.search === '') {
+    if (mergedFilters.search !== undefined) {
+      if (mergedFilters.search === '') {
         newSearchParams.delete('search');
       } else {
-        newSearchParams.set('search', filters.search);
+        newSearchParams.set('search', mergedFilters.search);
       }
     }
     
-    if (filters.location !== undefined) {
-      if (filters.location === '') {
+    if (mergedFilters.location !== undefined) {
+      if (mergedFilters.location === '') {
         newSearchParams.delete('location');
       } else {
-        newSearchParams.set('location', filters.location);
+        newSearchParams.set('location', mergedFilters.location);
       }
     }
     
-    if (filters.sort !== undefined && filters.sort !== 'activity') {
-      newSearchParams.set('sort', filters.sort);
-    } else if (filters.sort === 'activity') {
+    if (mergedFilters.sort !== undefined && mergedFilters.sort !== 'activity') {
+      newSearchParams.set('sort', mergedFilters.sort);
+    } else if (mergedFilters.sort === 'activity') {
       newSearchParams.delete('sort');
     }
     
-    if (filters.order !== undefined && filters.order !== 'desc') {
-      newSearchParams.set('order', filters.order);
-    } else if (filters.order === 'desc') {
+    if (mergedFilters.order !== undefined && mergedFilters.order !== 'desc') {
+      newSearchParams.set('order', mergedFilters.order);
+    } else if (mergedFilters.order === 'desc') {
       newSearchParams.delete('order');
     }
     
-    if (filters.rated !== undefined && filters.rated !== 'all') {
-      newSearchParams.set('rated', filters.rated);
-    } else if (filters.rated === 'all') {
+    if (mergedFilters.rated !== undefined && mergedFilters.rated !== 'all') {
+      newSearchParams.set('rated', mergedFilters.rated);
+    } else if (mergedFilters.rated === 'all') {
       newSearchParams.delete('rated');
     }
     
-    if (filters.scrollPos !== undefined) {
-      if (filters.scrollPos === 0) {
+    if (mergedFilters.scrollPos !== undefined) {
+      if (mergedFilters.scrollPos === 0) {
         newSearchParams.delete('scrollPos');
       } else {
-        newSearchParams.set('scrollPos', filters.scrollPos.toString());
+        newSearchParams.set('scrollPos', mergedFilters.scrollPos.toString());
       }
     }
     
     setSearchParams(newSearchParams, { replace: true });
-  }, [searchParams, setSearchParams]);
+  }, [searchParams, setSearchParams, getAllFilters]);
 
   // Get scroll position from URL
   const getScrollPosition = useCallback(() => {

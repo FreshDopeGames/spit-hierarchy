@@ -72,12 +72,10 @@ const AllRappersPage = () => {
       if (savedScrollPos > 0) {
         requestAnimationFrame(() => {
           window.scrollTo({ top: savedScrollPos, behavior: 'instant' });
-          // Clear scroll position after restoration to avoid conflicts
-          setTimeout(() => setScrollPosition(0), 100);
         });
       }
     }
-  }, [allRappers.length, isLoading, getScrollPosition, setScrollPosition]);
+  }, [allRappers.length, isLoading, getScrollPosition]);
 
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
