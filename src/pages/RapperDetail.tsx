@@ -165,13 +165,6 @@ const RapperDetail = () => {
           {/* Rapper Header */}
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
-          {/* Aliases */}
-          {rapper.aliases && rapper.aliases.length > 0 && (
-            <div className="mb-6">
-              <RapperAliases aliases={rapper.aliases} />
-            </div>
-          )}
-
           {/* Enhanced Bio Section with more content */}
           <RapperBioExpanded rapper={rapper} />
 
