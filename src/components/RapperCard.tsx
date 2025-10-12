@@ -44,8 +44,8 @@ const RapperCard = ({
   
   const handleCardClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    // Save current scroll position before navigating
-    const scrollPos = window.scrollY;
+    // Save current scroll position before navigating (rounded to integer)
+    const scrollPos = Math.round(window.scrollY);
     const currentParams = new URLSearchParams(window.location.search);
     currentParams.set('scrollPos', scrollPos.toString());
     window.history.replaceState(null, '', `?${currentParams.toString()}`);
@@ -77,12 +77,16 @@ const RapperCard = ({
             alt={rapper.name || "Rapper"}
             className="w-full h-full object-cover"
             loading="lazy"
+            onLoad={(e) => {
+              (e.target as HTMLImageElement).setAttribute('data-loaded', 'true');
+            }}
             onError={(e) => {
               // Fallback to optimized placeholder if image fails to load
               const target = e.target as HTMLImageElement;
               if (!target.src.includes(placeholderImage)) {
                 target.src = placeholderImage;
               }
+              target.setAttribute('data-loaded', 'true'); // Mark as loaded even on error
             }}
           />
         </div>

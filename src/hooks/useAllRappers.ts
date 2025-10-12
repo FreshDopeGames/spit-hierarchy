@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { createSearchOrQuery } from "@/utils/textNormalization";
@@ -24,6 +24,10 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(urlFilters.page || 0);
   const [isInitialMount, setIsInitialMount] = useState(true);
+  
+  // Phase 3: Micro-batch mode for rapid initial loading
+  const [isMicroBatchMode, setIsMicroBatchMode] = useState(true);
+  const effectiveItemsPerPage = isMicroBatchMode ? 5 : itemsPerPage;
 
   // Helper function to merge rappers without duplicates
   const mergeRappersWithoutDuplicates = (existingRappers: any[], newRappers: any[]) => {
@@ -63,12 +67,23 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     return () => clearTimeout(timer);
   }, [locationInput, locationFilter, setAllFilters]);
 
+  // Disable micro-batch mode after loading 60 rappers (3 full pages)
+  useEffect(() => {
+    if (allRappers.length >= 60 && isMicroBatchMode) {
+      console.log('[Hook] Switching to normal batch mode after 60 rappers');
+      setIsMicroBatchMode(false);
+    }
+  }, [allRappers.length, isMicroBatchMode]);
+
   const { data: rappersData, isLoading, isFetching } = useQuery({
-    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage],
+    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage, isMicroBatchMode],
     queryFn: async () => {
       // Tier 2: Smart windowing for deep pagination (only load last 2 pages + current for page >= 5)
       const isDeepPagination = currentPage >= 5 && isInitialMount;
       const effectiveStartPage = isDeepPagination ? Math.max(0, currentPage - 2) : 0;
+      
+      // Phase 3: Use micro-batch size for rapid loading (first 3 pages)
+      const batchSize = isMicroBatchMode ? effectiveItemsPerPage : itemsPerPage;
       
       // On initial mount with a non-zero page, load from effectiveStartPage to currentPage
       const startRange = isInitialMount && currentPage > 0 
@@ -77,11 +92,12 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
       const endRange = (currentPage + 1) * itemsPerPage - 1;
       
       // Tier 1: Calculate correct limit for initial mount (load multiple pages)
+      // In micro-batch mode, we load smaller chunks rapidly
       const fetchLimit = isInitialMount && currentPage > 0
         ? (currentPage - effectiveStartPage + 1) * itemsPerPage
-        : itemsPerPage;
+        : batchSize;
       
-      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}, limit ${fetchLimit}${isInitialMount && currentPage > 0 ? ` (initial load, ${isDeepPagination ? 'windowed' : 'full'} fetch from page ${effectiveStartPage})` : ''}`);
+      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}, limit ${fetchLimit}, batchSize ${batchSize}${isMicroBatchMode ? ' (micro-batch mode)' : ''}${isInitialMount && currentPage > 0 ? ` (initial load, ${isDeepPagination ? 'windowed' : 'full'} fetch from page ${effectiveStartPage})` : ''}`);
       
       // Use efficient RPCs for rated/not_rated filters
       if (ratedFilter === "rated" || ratedFilter === "not_rated") {
@@ -274,10 +290,12 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     ratedFilter,
     allRappers,
     currentPage,
-    itemsPerPage,
+    itemsPerPage: effectiveItemsPerPage, // Return effective size
     rappersData,
     isLoading,
     isFetching,
+    total: rappersData?.total || 0,
+    hasMore: rappersData?.hasMore || false,
     handleSortChange,
     handleOrderChange,
     handleSearchInput,
