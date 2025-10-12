@@ -27,7 +27,7 @@ interface VoteModalProps {
 
 interface CategoryRating {
   categoryId: string;
-  rating: number;
+  rating: number | null;
   existingVoteId?: string;
   hasVoted: boolean;
 }
@@ -78,7 +78,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
         const existingVote = existingVotes?.find(vote => vote.category_id === category.id);
         newCategoryRatings.set(category.id, {
           categoryId: category.id,
-          rating: existingVote?.rating || 1,
+          rating: existingVote?.rating ?? null,
           existingVoteId: existingVote?.id,
           hasVoted: !!existingVote,
         });
@@ -103,14 +103,21 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     mutationFn: async () => {
       if (!user) throw new Error("User not authenticated");
 
-      // Process each category rating
-      for (const [, categoryRating] of categoryRatings) {
+      // Only process categories that have been explicitly rated
+      const ratingsToSubmit = Array.from(categoryRatings.values())
+        .filter(rating => rating.rating !== null);
+
+      if (ratingsToSubmit.length === 0) {
+        throw new Error("No ratings to submit");
+      }
+
+      for (const categoryRating of ratingsToSubmit) {
         if (categoryRating.existingVoteId) {
           // Update existing vote
           const { error } = await supabase
             .from("votes")
             .update({ 
-              rating: categoryRating.rating,
+              rating: categoryRating.rating!,
               updated_at: new Date().toISOString()
             })
             .eq("id", categoryRating.existingVoteId);
@@ -124,7 +131,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
               user_id: user.id,
               rapper_id: rapper.id,
               category_id: categoryRating.categoryId,
-              rating: categoryRating.rating,
+              rating: categoryRating.rating!,
             });
           
           if (error) throw error;
@@ -132,9 +139,10 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
       }
     },
     onSuccess: () => {
-      const totalVotes = categoryRatings.size;
-      const newVotes = Array.from(categoryRatings.values()).filter(r => !r.hasVoted).length;
-      const updatedVotes = totalVotes - newVotes;
+      const ratingsSubmitted = Array.from(categoryRatings.values())
+        .filter(r => r.rating !== null);
+      const newVotes = ratingsSubmitted.filter(r => !r.hasVoted).length;
+      const updatedVotes = ratingsSubmitted.length - newVotes;
       
       if (newVotes > 0 && updatedVotes > 0) {
         toast.success(`Submitted ${newVotes} new ratings and updated ${updatedVotes} existing ratings!`);
@@ -168,7 +176,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
     return null;
   }
 
-  const ratedCount = Array.from(categoryRatings.values()).filter(r => r.hasVoted || r.rating !== 1).length;
+  const ratedCount = Array.from(categoryRatings.values()).filter(r => r.rating !== null).length;
   const totalCount = categories.length;
 
   return (
@@ -187,7 +195,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
         <div className="space-y-3 overflow-y-auto px-6 py-2 -mx-6 max-h-[50vh]">
           {categories.map((category) => {
             const categoryRating = categoryRatings.get(category.id);
-            const isRated = categoryRating?.hasVoted || (categoryRating?.rating !== 1);
+            const isRated = categoryRating?.rating !== null;
             
             return (
               <ThemedCard key={category.id} className={`bg-[var(--theme-backgroundLight)] border-l-4 ${
@@ -213,7 +221,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                     <div className="flex items-center gap-1 text-[var(--theme-primary)] flex-shrink-0">
                       <Star className="w-4 h-4 fill-current" />
                       <span className="font-bold text-base font-[var(--theme-font-heading)]">
-                        {categoryRating?.rating || 1}/10
+                        {categoryRating?.rating ?? '—'}/10
                       </span>
                     </div>
                   </div>
@@ -229,8 +237,8 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                           className={`
                             aspect-square rounded-md font-bold text-sm transition-all duration-200
                             ${isSelected 
-                              ? 'bg-[hsl(var(--theme-primary))] text-black scale-110 shadow-lg' 
-                              : 'bg-[hsl(var(--theme-primary))] text-black grayscale opacity-50 hover:opacity-70 hover:scale-105'
+                              ? 'bg-[hsl(var(--theme-primary))] text-black scale-110 shadow-lg opacity-100' 
+                              : 'bg-[hsl(var(--theme-primary))] text-black opacity-70 hover:opacity-90 hover:scale-105'
                             }
                           `}
                         >
@@ -263,10 +271,10 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
           <button
             onClick={handleSubmit}
-            disabled={submitMutation.isPending}
-            className="w-full py-2 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold transition-opacity duration-200 disabled:pointer-events-none disabled:opacity-50"
+            disabled={submitMutation.isPending || ratedCount === 0}
+            className={`w-full py-2 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold transition-all duration-200 disabled:pointer-events-none ${ratedCount === 0 ? 'grayscale opacity-50' : 'opacity-100'}`}
           >
-            {submitMutation.isPending ? "Submitting..." : `Submit All Ratings`}
+            {submitMutation.isPending ? "Submitting..." : `Submit ${ratedCount > 0 ? `${ratedCount} Rating${ratedCount !== 1 ? 's' : ''}` : 'Ratings'}`}
           </button>
         </div>
       </DialogContent>
