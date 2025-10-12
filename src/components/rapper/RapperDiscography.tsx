@@ -152,11 +152,11 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(externalLinks.spotify, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start" onClick={() => window.open(externalLinks.spotify, '_blank')}>
                           <PlayCircle className="w-3 h-3 mr-1" />
                           Spotify
                         </Button>
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Apple Music
                         </Button>
