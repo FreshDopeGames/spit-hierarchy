@@ -82,28 +82,37 @@ export const useAllRappers = ({ itemsPerPage = 20, initialPage = 0 }: UseAllRapp
         const { data: { user } } = await supabase.auth.getUser();
         
         if (user) {
-          const { data: votedRappers } = await supabase
+          const { data: votedRappers, error: votesError } = await supabase
             .from("votes")
             .select("rapper_id")
             .eq("user_id", user.id);
+
+          if (votesError) {
+            console.error("[Hook] Error fetching user votes:", votesError);
+            return { rappers: [], total: 0, hasMore: false };
+          }
           
           const votedRapperIds = votedRappers?.map(v => v.rapper_id) || [];
+          console.log(`[Hook] User has voted on ${votedRapperIds.length} rappers`);
           
           if (ratedFilter === "rated") {
             if (votedRapperIds.length > 0) {
+              console.log(`[Hook] Filtering to show only ${votedRapperIds.length} rated rappers`);
               query = query.in("id", votedRapperIds);
             } else {
-              // No voted rappers, return empty result
+              console.log("[Hook] User has no votes, returning empty result for 'rated' filter");
               return { rappers: [], total: 0, hasMore: false };
             }
           } else if (ratedFilter === "not_rated") {
             if (votedRapperIds.length > 0) {
-              query = query.not("id", "in", `(${votedRapperIds.join(",")})`);
+              console.log(`[Hook] Excluding ${votedRapperIds.length} voted rappers`);
+              query = query.filter('id', 'not.in', `(${votedRapperIds.join(',')})`);
+            } else {
+              console.log("[Hook] User has no votes, showing all rappers as 'not rated'");
             }
-            // If no votes yet, all rappers are "not rated" so don't apply filter
           }
         } else if (ratedFilter !== "all") {
-          // User not logged in but trying to filter by rated status
+          console.log("[Hook] User not logged in, returning empty result for rated filter");
           return { rappers: [], total: 0, hasMore: false };
         }
       }
