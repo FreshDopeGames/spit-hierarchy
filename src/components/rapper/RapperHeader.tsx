@@ -125,6 +125,13 @@ const RapperHeader = ({
                 )}
               </div>
 
+              {/* Also Known As */}
+              {rapper.aliases && rapper.aliases.length > 0 && (
+                <div className="text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
+                  <span>Also Known As: {rapper.aliases.join(", ")}</span>
+                </div>
+              )}
+
               {/* Tags */}
               {tags.length > 0 && (
                 <div>
