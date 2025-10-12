@@ -174,12 +174,12 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[var(--theme-border)]/30 max-h-[90vh] overflow-hidden [&>button]:z-30">
-        <DialogHeader className="space-y-2 pb-4 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] backdrop-blur-sm z-20 -mx-6 px-6 pt-3 shadow-lg border-b border-[var(--theme-border)]/20">
+        <DialogHeader className="space-y-2 pb-4 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] backdrop-blur-sm z-20 -mx-6 px-6 pt-1.5 shadow-lg border-b border-[var(--theme-border)]/20">
           <DialogTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-3xl md:text-4xl text-center font-bold">
             RATE {rapper.name.toUpperCase()}
           </DialogTitle>
-          <div className="flex items-center justify-center gap-2 text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
-            <CircleDot className="w-3 h-3" />
+          <div className="flex items-center justify-center gap-2 text-base text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+            <CircleDot className="w-4 h-4" />
             <span>{ratedCount} of {totalCount} skills rated</span>
           </div>
         </DialogHeader>
