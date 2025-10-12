@@ -261,14 +261,13 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             </div>
           </div>
 
-          <ThemedButton
+          <button
             onClick={handleSubmit}
             disabled={submitMutation.isPending}
-            variant="gradient"
-            className="w-full py-2 text-black font-bold"
+            className="w-full py-2 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold transition-opacity duration-200 disabled:pointer-events-none disabled:opacity-50"
           >
             {submitMutation.isPending ? "Submitting..." : `Submit All Ratings`}
-          </ThemedButton>
+          </button>
         </div>
       </DialogContent>
     </Dialog>
