@@ -104,12 +104,14 @@ const RapperDetail = () => {
         <HeaderNavigation isScrolled={false} />
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-background))]/80 via-[hsl(var(--theme-backgroundLight))]/80 to-[hsl(var(--theme-background))]/80 z-0"></div>
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
-          <Link to="/all-rappers">
-            <ThemedButton variant="outline" className="mb-6 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 font-[var(--theme-font-body)]">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back To All Rappers
-            </ThemedButton>
-          </Link>
+          <ThemedButton 
+            variant="outline" 
+            className="mb-6 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 font-[var(--theme-font-body)]"
+            onClick={() => window.history.back()}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back To All Rappers
+          </ThemedButton>
           <ThemedCard className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/20">
             <ThemedCardContent className="p-8 text-center">
               <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)] mb-4">Pharaoh Not Found</h2>
@@ -155,12 +157,14 @@ const RapperDetail = () => {
         
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-8">
           {/* Back Button - Now properly preserves navigation state */}
-          <Link to="/all-rappers" className="inline-block mb-6">
-            <ThemedButton variant="default" className="font-[var(--theme-font-body)] text-black hover:text-black">
-              <ArrowLeft className="w-4 h-4 mr-2" />
-              Back To All Rappers
-            </ThemedButton>
-          </Link>
+          <ThemedButton 
+            variant="default" 
+            className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
+            onClick={() => window.history.back()}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back To All Rappers
+          </ThemedButton>
 
           {/* Rapper Header */}
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
