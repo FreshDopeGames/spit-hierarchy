@@ -13,7 +13,7 @@ import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Star, CheckCircle, CircleDot } from "lucide-react";
 import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
-import RatingSlider from "./vote/RatingSlider";
+
 
 type Rapper = Tables<"rappers">;
 type VotingCategory = Tables<"voting_categories">;
@@ -218,10 +218,27 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                     </div>
                   </div>
 
-                  <RatingSlider
-                    rating={[categoryRating?.rating || 1]}
-                    setRating={(rating) => updateCategoryRating(category.id, rating[0])}
-                  />
+                  <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 mt-2">
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
+                      const isSelected = categoryRating?.rating === num;
+                      return (
+                        <button
+                          key={num}
+                          type="button"
+                          onClick={() => updateCategoryRating(category.id, num)}
+                          className={`
+                            aspect-square rounded-md font-bold text-sm transition-all duration-200
+                            ${isSelected 
+                              ? 'bg-[hsl(var(--theme-primary))] text-black scale-110 shadow-lg' 
+                              : 'bg-[hsl(var(--theme-primary))] text-black grayscale opacity-50 hover:opacity-70 hover:scale-105'
+                            }
+                          `}
+                        >
+                          {num}
+                        </button>
+                      );
+                    })}
+                  </div>
                 </ThemedCardContent>
               </ThemedCard>
             );
@@ -248,7 +265,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
             onClick={handleSubmit}
             disabled={submitMutation.isPending}
             variant="gradient"
-            className="w-full py-2"
+            className="w-full py-2 text-black font-bold"
           >
             {submitMutation.isPending ? "Submitting..." : `Submit All Ratings`}
           </ThemedButton>
