@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
-import { Crown, MapPin, Calendar, Music, Instagram, Twitter } from "lucide-react";
+import { Crown, MapPin, Calendar, Music, Instagram, Twitter, Star } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
@@ -81,22 +81,34 @@ const RapperHeader = ({
                 </div>
               </div>
 
-              {/* Stats */}
-              <div className="flex flex-wrap gap-4">
-                <div className="flex items-center gap-2 bg-gradient-to-r from-[hsl(var(--theme-secondary))]/30 to-[hsl(var(--theme-accent))]/30 px-4 py-2 rounded-lg border border-[hsl(var(--theme-border))]/20">
-                  <Crown className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
-                  <span className="text-[hsl(var(--theme-text))] font-semibold font-[var(--theme-font-body)]">
-                    {rapper.top5_count || 0} Top 5{(rapper.top5_count || 0) !== 1 ? 's' : ''}
-                  </span>
-                </div>
-                <Badge variant="secondary" className="bg-[hsl(var(--theme-accent))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-accent))]/30 px-4 py-2 font-[var(--theme-font-body)]">
-                  {rapper.total_votes || 0} votes
-                </Badge>
-                {zodiacSign && (
-                  <Badge variant="secondary" className="bg-[hsl(var(--theme-secondary))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-secondary))]/30 px-4 py-2 font-[var(--theme-font-body)]">
-                    {zodiacSign}
+              {/* Quick Rate Button & Stats */}
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <ThemedButton 
+                  onClick={onVoteClick}
+                  variant="gradient"
+                  size="lg"
+                  className="w-full sm:w-auto font-bold text-base animate-pulse hover:animate-none"
+                >
+                  <Star className="w-5 h-5 mr-2" />
+                  Rate Skills
+                </ThemedButton>
+                
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex items-center gap-2 bg-gradient-to-r from-[hsl(var(--theme-secondary))]/30 to-[hsl(var(--theme-accent))]/30 px-4 py-2 rounded-lg border border-[hsl(var(--theme-border))]/20">
+                    <Crown className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
+                    <span className="text-[hsl(var(--theme-text))] font-semibold font-[var(--theme-font-body)]">
+                      {rapper.top5_count || 0} Top 5{(rapper.top5_count || 0) !== 1 ? 's' : ''}
+                    </span>
+                  </div>
+                  <Badge variant="secondary" className="bg-[hsl(var(--theme-accent))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-accent))]/30 px-4 py-2 font-[var(--theme-font-body)]">
+                    {rapper.total_votes || 0} votes
                   </Badge>
-                )}
+                  {zodiacSign && (
+                    <Badge variant="secondary" className="bg-[hsl(var(--theme-secondary))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-secondary))]/30 px-4 py-2 font-[var(--theme-font-body)]">
+                      {zodiacSign}
+                    </Badge>
+                  )}
+                </div>
               </div>
 
               {/* Location, Birth Info & Zodiac */}

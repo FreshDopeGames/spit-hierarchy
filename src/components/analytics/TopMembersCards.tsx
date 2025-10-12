@@ -6,14 +6,51 @@ import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { MessageCircle, Vote, Trophy } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const TopMembersCards = () => {
+interface TopMembersCardsProps {
+  timeRange?: 'all' | 'week';
+}
+
+const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
   // Top Commenters Query
   const { data: topCommenters, isLoading: loadingCommenters } = useQuery({
-    queryKey: ['top-commenters'],
+    queryKey: ['top-commenters', timeRange],
     queryFn: async () => {
-      console.log('Fetching top commenters...');
+      console.log('Fetching top commenters for timeRange:', timeRange);
       
-      // First get member stats for users with comments
+      if (timeRange === 'week') {
+        // For weekly, count from comments table directly
+        const { data: comments, error: commentsError } = await supabase
+          .from('comments')
+          .select('user_id')
+          .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+        
+        if (commentsError) throw commentsError;
+        if (!comments || comments.length === 0) return [];
+        
+        // Group by user and count
+        const userCommentCounts = comments.reduce((acc: any, comment: any) => {
+          const userId = comment.user_id;
+          if (!acc[userId]) acc[userId] = { id: userId, total_comments: 0 };
+          acc[userId].total_comments++;
+          return acc;
+        }, {});
+        
+        const memberStats = Object.values(userCommentCounts)
+          .sort((a: any, b: any) => b.total_comments - a.total_comments)
+          .slice(0, 5);
+        
+        const userIds = memberStats.map((stat: any) => stat.id);
+        const { data: profiles } = await supabase
+          .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
+        
+        return memberStats.map((stat: any) => ({
+          id: stat.id,
+          total_comments: stat.total_comments,
+          profiles: profiles?.find(p => p.id === stat.id) || null
+        }));
+      }
+      
+      // All-time stats from member_stats
       const { data: memberStats, error: statsError } = await supabase
         .from('member_stats')
         .select('id, total_comments')
@@ -60,11 +97,44 @@ const TopMembersCards = () => {
 
   // Top Voters Query
   const { data: topVoters, isLoading: loadingVoters } = useQuery({
-    queryKey: ['top-voters'],
+    queryKey: ['top-voters', timeRange],
     queryFn: async () => {
-      console.log('Fetching top voters...');
+      console.log('Fetching top voters for timeRange:', timeRange);
       
-      // First get member stats for users with votes
+      if (timeRange === 'week') {
+        // For weekly, count from ranking_votes table directly
+        const { data: votes, error: votesError } = await supabase
+          .from('ranking_votes')
+          .select('user_id, vote_weight')
+          .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+        
+        if (votesError) throw votesError;
+        if (!votes || votes.length === 0) return [];
+        
+        // Group by user and sum vote weights
+        const userVoteCounts = votes.reduce((acc: any, vote: any) => {
+          const userId = vote.user_id;
+          if (!acc[userId]) acc[userId] = { id: userId, total_votes: 0 };
+          acc[userId].total_votes += vote.vote_weight || 1;
+          return acc;
+        }, {});
+        
+        const memberStats = Object.values(userVoteCounts)
+          .sort((a: any, b: any) => b.total_votes - a.total_votes)
+          .slice(0, 5);
+        
+        const userIds = memberStats.map((stat: any) => stat.id);
+        const { data: profiles } = await supabase
+          .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
+        
+        return memberStats.map((stat: any) => ({
+          id: stat.id,
+          total_votes: stat.total_votes,
+          profiles: profiles?.find(p => p.id === stat.id) || null
+        }));
+      }
+      
+      // All-time stats from member_stats
       const { data: memberStats, error: statsError } = await supabase
         .from('member_stats')
         .select('id, total_votes')
@@ -111,14 +181,18 @@ const TopMembersCards = () => {
 
   // Top Skill Judges Query (most attribute votes)
   const { data: topJudges, isLoading: loadingJudges } = useQuery({
-    queryKey: ['top-skill-judges'],
+    queryKey: ['top-skill-judges', timeRange],
     queryFn: async () => {
-      console.log('Fetching top skill judges...');
+      console.log('Fetching top skill judges for timeRange:', timeRange);
       
-      // Get all votes and count by user
-      const { data: votes, error: votesError } = await supabase
-        .from('votes')
-        .select('user_id');
+      // Build query with optional date filter
+      let query = supabase.from('votes').select('user_id');
+      
+      if (timeRange === 'week') {
+        query = query.gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+      }
+      
+      const { data: votes, error: votesError } = await query;
       
       if (votesError) {
         console.error('Error fetching votes:', votesError);

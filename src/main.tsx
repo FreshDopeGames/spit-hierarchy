@@ -11,6 +11,7 @@ import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
+import ActivityToastProvider from "@/components/ActivityToastProvider";
 import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
@@ -48,6 +49,7 @@ createRoot(document.getElementById("root")!).render(
                 <AchievementProvider>
                   <ErrorBoundary>
                     <OnboardingProvider>
+                      <ActivityToastProvider />
                       <App />
                       <Toaster />
                     </OnboardingProvider>
