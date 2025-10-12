@@ -455,7 +455,7 @@ serve(async (req) => {
 
       const { data: existingAlbum } = await supabaseService
         .from('albums')
-        .select('id')
+        .select('id, has_cover_art')
         .eq('musicbrainz_id', rg.id)
         .single();
       let albumId = existingAlbum?.id as string | undefined;
@@ -482,7 +482,10 @@ serve(async (req) => {
           ...streamingLinks,
         };
         
+        // Verify cover art exists before storing URL
         const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
+        const hasCoverArt = await checkCoverArtExists(coverArtUrl);
+        await delay(100); // Small delay after cover art check to avoid rate limiting
         
         const { data: newAlbum } = await supabaseService
           .from('albums')
@@ -492,14 +495,29 @@ serve(async (req) => {
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
             track_count: null, // Not available without inc=releases
-            cover_art_url: coverArtUrl,
-            has_cover_art: true,
+            cover_art_url: hasCoverArt ? coverArtUrl : null,
+            has_cover_art: hasCoverArt,
             external_cover_links: externalLinks,
             cover_art_colors: null // Will be populated by future user-generated content
           })
           .select('id')
           .single();
         albumId = newAlbum?.id;
+      } else if (!existingAlbum?.has_cover_art) {
+        // Update existing albums that don't have cover art yet
+        const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
+        const hasCoverArt = await checkCoverArtExists(coverArtUrl);
+        await delay(100);
+        
+        if (hasCoverArt) {
+          await supabaseService
+            .from('albums')
+            .update({
+              cover_art_url: coverArtUrl,
+              has_cover_art: true
+            })
+            .eq('id', albumId);
+        }
       }
 
       // Label info not available without inc=releases - skip label processing
@@ -593,6 +611,20 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
     .eq('rapper_id', rapperId);
 
   return { discography: discography || [] };
+}
+
+// Check if a cover art URL exists and returns a valid image
+async function checkCoverArtExists(url: string): Promise<boolean> {
+  try {
+    const response = await fetch(url, { 
+      method: 'HEAD',
+      headers: { 'User-Agent': 'FreshDopeGames/1.0' }
+    });
+    return response.status === 200;
+  } catch (error) {
+    console.error(`Cover art check failed for ${url}:`, error);
+    return false;
+  }
 }
 
 function normalizeName(name: string) {
