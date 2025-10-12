@@ -78,9 +78,8 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage, isMicroBatchMode],
     queryFn: async () => {
-      // Tier 2: Smart windowing for deep pagination (only load last 2 pages + current for page >= 5)
-      const isDeepPagination = currentPage >= 5 && isInitialMount;
-      const effectiveStartPage = isDeepPagination ? Math.max(0, currentPage - 2) : 0;
+      // Always load from page 0 to allow scrolling to earlier pages
+      const effectiveStartPage = 0;
       
       // Phase 3: Use micro-batch size for rapid loading (first 3 pages)
       const batchSize = isMicroBatchMode ? effectiveItemsPerPage : itemsPerPage;
@@ -97,7 +96,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
         ? (currentPage - effectiveStartPage + 1) * itemsPerPage
         : batchSize;
       
-      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}, limit ${fetchLimit}, batchSize ${batchSize}${isMicroBatchMode ? ' (micro-batch mode)' : ''}${isInitialMount && currentPage > 0 ? ` (initial load, ${isDeepPagination ? 'windowed' : 'full'} fetch from page ${effectiveStartPage})` : ''}`);
+      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}, limit ${fetchLimit}, batchSize ${batchSize}${isMicroBatchMode ? ' (micro-batch mode)' : ''}${isInitialMount && currentPage > 0 ? ` (initial load from page ${effectiveStartPage})` : ''}`);
       
       // Use efficient RPCs for rated/not_rated filters
       if (ratedFilter === "rated" || ratedFilter === "not_rated") {
