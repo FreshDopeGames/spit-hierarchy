@@ -83,15 +83,15 @@ const RapperHeader = ({
 
               {/* Quick Rate Button & Stats */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                <ThemedButton 
-                  onClick={onVoteClick}
-                  variant="gradient"
-                  size="lg"
-                  className="w-full sm:w-auto font-bold text-base animate-pulse hover:animate-none"
-                >
-                  <Star className="w-5 h-5 mr-2" />
-                  Rate Skills
-                </ThemedButton>
+              <ThemedButton 
+                onClick={onVoteClick}
+                variant="gradient"
+                size="lg"
+                className="w-full sm:w-auto font-bold text-base animate-pulse hover:animate-none text-black"
+              >
+                <Star className="w-5 h-5 mr-2" />
+                Rate Skills
+              </ThemedButton>
                 
                 <div className="flex flex-wrap gap-4">
                   <div className="flex items-center gap-2 bg-gradient-to-r from-[hsl(var(--theme-secondary))]/30 to-[hsl(var(--theme-accent))]/30 px-4 py-2 rounded-lg border border-[hsl(var(--theme-border))]/20">
