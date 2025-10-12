@@ -68,6 +68,15 @@ const RapperHeader = ({
                   }}
                 />
               </div>
+              
+              {/* Rate Skills Button - Desktop/Tablet (under avatar) */}
+              <button
+                onClick={onVoteClick}
+                className="hidden md:flex w-full h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-base animate-pulse hover:animate-none transition-opacity items-center justify-center gap-2 mt-4"
+              >
+                <Star className="w-5 h-5 mr-2" />
+                Rate Skills
+              </button>
             </div>
 
             {/* Rapper Info */}
@@ -83,9 +92,10 @@ const RapperHeader = ({
 
               {/* Quick Rate Button & Stats */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              {/* Rate Skills Button - Mobile only */}
               <button
                 onClick={onVoteClick}
-                className="w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-base animate-pulse hover:animate-none transition-opacity inline-flex items-center justify-center gap-2"
+                className="md:hidden w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-base animate-pulse hover:animate-none transition-opacity inline-flex items-center justify-center gap-2"
               >
                 <Star className="w-5 h-5 mr-2" />
                 Rate Skills
@@ -157,7 +167,7 @@ const RapperHeader = ({
                   <ThemedButton 
                     variant="gradient" 
                     size="sm" 
-                    className="hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
+                    className="text-black hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
                     asChild
                   >
                     <a 
@@ -174,7 +184,7 @@ const RapperHeader = ({
                   <ThemedButton 
                     variant="gradient" 
                     size="sm" 
-                    className="hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
+                    className="text-black hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
                     asChild
                   >
                     <a 
@@ -191,7 +201,7 @@ const RapperHeader = ({
                   <ThemedButton 
                     variant="gradient" 
                     size="sm" 
-                    className="hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
+                    className="text-black hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
                     asChild
                   >
                     <a 
