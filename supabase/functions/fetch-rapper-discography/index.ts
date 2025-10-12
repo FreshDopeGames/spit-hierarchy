@@ -171,8 +171,8 @@ serve(async (req) => {
         global: { headers: { Authorization: `Bearer ${token}` } },
         auth: { autoRefreshToken: false, persistSession: false },
       });
-      const { data: adminCheck } = await supabaseUser.rpc('is_admin').catch(() => ({ data: false }));
-      isAdmin = adminCheck === true;
+      const { data: adminCheck, error: adminError } = await supabaseUser.rpc('is_admin');
+      isAdmin = !adminError && adminCheck === true;
     }
 
     // 4) Check rate limit (admins skip this)
