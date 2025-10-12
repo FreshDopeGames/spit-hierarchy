@@ -173,7 +173,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[var(--theme-border)]/30 max-h-[90vh] overflow-hidden [&>button]:z-30">
+      <DialogContent className="max-w-2xl mx-auto bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] border-[3px] border-[var(--theme-border)]/30 rounded-xl max-h-[90vh] overflow-hidden [&>button]:z-30">
         <DialogHeader className="space-y-2 pb-4 sticky top-0 bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-surface))] backdrop-blur-sm z-20 -mx-6 px-6 pt-1.5 shadow-lg border-b border-[var(--theme-border)]/20">
           <DialogTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-3xl md:text-4xl text-center font-bold">
             RATE {rapper.name.toUpperCase()}
