@@ -229,6 +229,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                   <div className="grid grid-cols-5 sm:grid-cols-10 gap-1.5 mt-2">
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => {
                       const isSelected = categoryRating?.rating === num;
+                      const hasNoSelection = categoryRating?.rating === null;
                       return (
                         <button
                           key={num}
@@ -238,7 +239,9 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
                             aspect-square rounded-md font-bold text-sm transition-all duration-200
                             ${isSelected 
                               ? 'bg-[hsl(var(--theme-primary))] text-black scale-110 shadow-lg opacity-100' 
-                              : 'bg-[hsl(var(--theme-primary))] text-black opacity-70 hover:opacity-90 hover:scale-105'
+                              : hasNoSelection
+                                ? 'bg-[hsl(var(--theme-primary))] text-black opacity-70 hover:opacity-90 hover:scale-105'
+                                : 'bg-[hsl(var(--theme-primary))] text-black opacity-70 hover:opacity-90 hover:scale-105 grayscale'
                             }
                           `}
                         >
