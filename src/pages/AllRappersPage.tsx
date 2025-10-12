@@ -52,7 +52,9 @@ const AllRappersPage = () => {
       // Set new timeout to save scroll position after user stops scrolling
       timeoutId = window.setTimeout(() => {
         const scrollPos = window.scrollY;
-        setScrollPosition(scrollPos);
+        const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+        const cappedScrollPos = Math.min(scrollPos, maxScroll - 100); // -100px safety margin
+        setScrollPosition(cappedScrollPos);
       }, 500);
     };
     
@@ -74,9 +76,11 @@ const AllRappersPage = () => {
     if (allRappers.length >= expectedMinimumRappers && !isLoading) {
       const savedScrollPos = getScrollPosition();
       if (savedScrollPos > 0) {
-        console.log(`[Page] Restoring scroll to ${savedScrollPos}px (have ${allRappers.length} rappers, need ${expectedMinimumRappers})`);
         requestAnimationFrame(() => {
-          window.scrollTo({ top: savedScrollPos, behavior: 'instant' });
+          const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+          const safeScrollPos = Math.min(savedScrollPos, maxScroll);
+          console.log(`[Page] Restoring scroll to ${safeScrollPos}px (requested ${savedScrollPos}px, max ${maxScroll}px, have ${allRappers.length} rappers)`);
+          window.scrollTo({ top: safeScrollPos, behavior: 'instant' });
         });
       }
     }
