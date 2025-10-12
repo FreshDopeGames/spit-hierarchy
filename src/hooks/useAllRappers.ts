@@ -23,6 +23,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const [ratedFilter, setRatedFilter] = useState(urlFilters.rated || "all");
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(urlFilters.page || 0);
+  const [isInitialMount, setIsInitialMount] = useState(true);
 
   // Helper function to merge rappers without duplicates
   const mergeRappersWithoutDuplicates = (existingRappers: any[], newRappers: any[]) => {
@@ -65,10 +66,11 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage],
     queryFn: async () => {
-      const startRange = currentPage * itemsPerPage;
+      // On initial mount with a non-zero page, load ALL pages from 0 to currentPage
+      const startRange = isInitialMount && currentPage > 0 ? 0 : currentPage * itemsPerPage;
       const endRange = (currentPage + 1) * itemsPerPage - 1;
       
-      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}`);
+      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}${isInitialMount && currentPage > 0 ? ' (initial load, fetching all pages)' : ''}`);
       
       // Use efficient RPCs for rated/not_rated filters
       if (ratedFilter === "rated" || ratedFilter === "not_rated") {
@@ -196,9 +198,12 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
 
   useEffect(() => {
     if (rappersData?.rappers) {
-      if (currentPage === 0) {
-        console.log(`[Hook] Setting initial rappers: ${rappersData.rappers.length} items`);
+      if (currentPage === 0 || isInitialMount) {
+        console.log(`[Hook] Setting initial rappers: ${rappersData.rappers.length} items (isInitialMount: ${isInitialMount})`);
         setAllRappers(rappersData.rappers);
+        if (isInitialMount) {
+          setIsInitialMount(false);
+        }
       } else {
         console.log(`[Hook] Appending page ${currentPage} rappers`);
         setAllRappers((prev) => mergeRappersWithoutDuplicates(prev, rappersData.rappers));

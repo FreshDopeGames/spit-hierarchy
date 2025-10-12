@@ -13,7 +13,7 @@ import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
 
 const AllRappersPage = () => {
-  const { getScrollPosition, setScrollPosition } = useNavigationState();
+  const { getScrollPosition, setScrollPosition, getAllFilters } = useNavigationState();
   
   const {
     sortBy,
@@ -67,15 +67,20 @@ const AllRappersPage = () => {
 
   // Restore scroll position after data loads
   useEffect(() => {
-    if (allRappers.length > 0 && !isLoading) {
+    const savedPage = getAllFilters().page || 0;
+    const expectedMinimumRappers = (savedPage + 1) * itemsPerPage;
+    
+    // Only restore scroll when we have enough rappers loaded for the saved page
+    if (allRappers.length >= expectedMinimumRappers && !isLoading) {
       const savedScrollPos = getScrollPosition();
       if (savedScrollPos > 0) {
+        console.log(`[Page] Restoring scroll to ${savedScrollPos}px (have ${allRappers.length} rappers, need ${expectedMinimumRappers})`);
         requestAnimationFrame(() => {
           window.scrollTo({ top: savedScrollPos, behavior: 'instant' });
         });
       }
     }
-  }, [allRappers.length, isLoading, getScrollPosition]);
+  }, [allRappers.length, isLoading, getScrollPosition, getAllFilters, itemsPerPage]);
 
   const total = rappersData?.total || 0;
   const hasMore = rappersData?.hasMore || false;
