@@ -66,11 +66,22 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const { data: rappersData, isLoading, isFetching } = useQuery({
     queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage],
     queryFn: async () => {
-      // On initial mount with a non-zero page, load ALL pages from 0 to currentPage
-      const startRange = isInitialMount && currentPage > 0 ? 0 : currentPage * itemsPerPage;
+      // Tier 2: Smart windowing for deep pagination (only load last 2 pages + current for page >= 5)
+      const isDeepPagination = currentPage >= 5 && isInitialMount;
+      const effectiveStartPage = isDeepPagination ? Math.max(0, currentPage - 2) : 0;
+      
+      // On initial mount with a non-zero page, load from effectiveStartPage to currentPage
+      const startRange = isInitialMount && currentPage > 0 
+        ? effectiveStartPage * itemsPerPage 
+        : currentPage * itemsPerPage;
       const endRange = (currentPage + 1) * itemsPerPage - 1;
       
-      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}${isInitialMount && currentPage > 0 ? ' (initial load, fetching all pages)' : ''}`);
+      // Tier 1: Calculate correct limit for initial mount (load multiple pages)
+      const fetchLimit = isInitialMount && currentPage > 0
+        ? (currentPage - effectiveStartPage + 1) * itemsPerPage
+        : itemsPerPage;
+      
+      console.log(`[Hook] Fetching page ${currentPage}: range ${startRange}-${endRange}, limit ${fetchLimit}${isInitialMount && currentPage > 0 ? ` (initial load, ${isDeepPagination ? 'windowed' : 'full'} fetch from page ${effectiveStartPage})` : ''}`);
       
       // Use efficient RPCs for rated/not_rated filters
       if (ratedFilter === "rated" || ratedFilter === "not_rated") {
@@ -90,7 +101,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
           origin: "origin"
         };
 
-        console.log(`[Hook] Calling RPC: ${rpcName} with ${sortByMap[sortBy]} ${sortOrder}`);
+        console.log(`[Hook] Calling RPC: ${rpcName} with ${sortByMap[sortBy]} ${sortOrder}, limit: ${fetchLimit}, offset: ${startRange}`);
 
         const { data, error } = await supabase.rpc(rpcName, {
           p_user_id: user.id,
@@ -98,7 +109,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
           p_origin: locationFilter || null,
           p_sort_by: sortByMap[sortBy],
           p_sort_order: sortOrder,
-          p_limit: itemsPerPage,
+          p_limit: fetchLimit,
           p_offset: startRange
         });
 
