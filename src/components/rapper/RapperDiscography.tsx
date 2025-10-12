@@ -152,11 +152,11 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(externalLinks.spotify, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(externalLinks.spotify, '_blank')}>
                           <PlayCircle className="w-3 h-3 mr-1" />
                           Spotify
                         </Button>
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(externalLinks.appleMusic, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Apple Music
                         </Button>
@@ -206,15 +206,15 @@ const RapperDiscography = ({
                         {item.album?.label && <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>}
                       </div>
                       <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                        {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(directLinks.spotify, '_blank')}>
+                         {hasDirectSpotify && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(directLinks.spotify, '_blank')}>
                             <PlayCircle className="w-3 h-3 mr-1" />
                             Spotify
                           </Button>}
-                        {hasDirectApple && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(directLinks.apple_music, '_blank')}>
+                        {hasDirectApple && <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(directLinks.apple_music, '_blank')}>
                             <ExternalLink className="w-3 h-3 mr-1" />
                             Apple Music
                           </Button>}
-                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-muted-foreground hover:text-foreground justify-start" onClick={() => window.open(searchLinks.genius, '_blank')}>
+                        <Button variant="ghost" size="sm" className="h-6 px-2 text-xs text-black hover:text-black justify-start" onClick={() => window.open(searchLinks.genius, '_blank')}>
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Genius
                         </Button>
@@ -240,7 +240,7 @@ const RapperDiscography = ({
           {isLoading && <Badge variant="outline" className="text-xs border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))]">
               Loading...
             </Badge>}
-          {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-background))] hover:border-[hsl(var(--theme-primary))] transition-all duration-200 gap-2">
+          {isAdmin && <Button variant="outline" size="sm" onClick={handleRefresh} disabled={refreshMutation.isPending || isLoading} className="border-[hsl(var(--theme-primary))]/50 text-black hover:bg-[hsl(var(--theme-primary))] hover:text-black hover:border-[hsl(var(--theme-primary))] transition-all duration-200 gap-2">
              <RefreshCw className={`w-4 h-4 ${refreshMutation.isPending || isLoading ? 'animate-spin-relaxed' : 'transition-transform duration-200'}`} />
             <span className="text-sm font-medium">
               {refreshMutation.isPending || isLoading ? 'Refreshing...' : 'Refresh'}
