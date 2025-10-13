@@ -12,6 +12,7 @@ const themedCardVariants = cva(
         gradient: "border-[hsl(var(--theme-border))] bg-[hsl(var(--theme-element-card-bg))] text-[hsl(var(--theme-text))]",
         primary: "border-[hsl(var(--theme-primary))] bg-gradient-to-br from-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] text-[hsl(var(--theme-textLight))]",
         accent: "border-[hsl(var(--theme-accent))] bg-gradient-to-br from-[hsl(var(--theme-accentLight))] to-[hsl(var(--theme-accent))] text-[hsl(var(--theme-textLight))]",
+        dark: "border-[hsl(var(--theme-border))] bg-black text-[hsl(var(--theme-text))]",
       },
     },
     defaultVariants: {

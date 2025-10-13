@@ -4,7 +4,7 @@ import { Music } from "lucide-react";
 
 const AboutWhatWeDo = () => {
   return (
-    <ThemedCard>
+    <ThemedCard variant="dark">
       <ThemedCardHeader>
         <ThemedCardTitle className="flex items-center text-5xl font-normal">
           <Music className="w-6 h-6 mr-3 text-[var(--theme-primary)]" />

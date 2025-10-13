@@ -3,7 +3,7 @@ import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from
 
 const AboutHowItWorks = () => {
   return (
-    <ThemedCard>
+    <ThemedCard variant="dark">
       <ThemedCardHeader>
         <ThemedCardTitle className="text-5xl font-normal">
           How It Works
