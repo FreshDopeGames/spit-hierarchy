@@ -6,6 +6,7 @@ import { History, List, Star } from "lucide-react";
 import { Link } from "react-router-dom";
 import { formatDistanceToNow } from "date-fns";
 import RapperAvatar from "@/components/RapperAvatar";
+import { cn } from "@/lib/utils";
 import {
   Pagination,
   PaginationContent,
@@ -132,7 +133,7 @@ const PaginatedVotingHistory = () => {
                             {vote.rappers.name}
                           </h4>
                           {vote.official_rankings && (
-                            <p className="text-[hsl(var(--theme-secondary))] text-xs sm:text-sm mt-1">
+                            <p className="text-[hsl(var(--theme-accent))] text-xs sm:text-sm mt-1">
                               Voted on: {vote.official_rankings.title}
                             </p>
                           )}
@@ -148,45 +149,59 @@ const PaginatedVotingHistory = () => {
                 </div>
 
                 {historyData.totalPages > 1 && (
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                          className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                        />
-                      </PaginationItem>
+                  <div className="w-full overflow-x-auto px-2">
+                    <Pagination className="justify-center">
+                      <PaginationContent className="flex-wrap justify-center gap-1 max-w-full">
+                        <PaginationItem>
+                          <PaginationPrevious
+                            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                            className={cn(
+                              "text-xs sm:text-sm px-2 sm:px-3",
+                              currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                            )}
+                          />
+                        </PaginationItem>
 
-                      {renderPaginationNumbers()?.map((item, index) => {
-                        if (typeof item === 'string' && item.startsWith('ellipsis')) {
+                        {renderPaginationNumbers()?.map((item, index) => {
+                          if (typeof item === 'string' && item.startsWith('ellipsis')) {
+                            return (
+                              <PaginationItem key={item} className="hidden sm:block">
+                                <PaginationEllipsis />
+                              </PaginationItem>
+                            );
+                          }
+                          const pageNum = item as number;
                           return (
-                            <PaginationItem key={item}>
-                              <PaginationEllipsis />
+                            <PaginationItem key={pageNum} className="hidden sm:block">
+                              <PaginationLink
+                                onClick={() => setCurrentPage(pageNum)}
+                                isActive={currentPage === pageNum}
+                                className="cursor-pointer text-xs sm:text-sm"
+                              >
+                                {pageNum}
+                              </PaginationLink>
                             </PaginationItem>
                           );
-                        }
-                        const pageNum = item as number;
-                        return (
-                          <PaginationItem key={pageNum}>
-                            <PaginationLink
-                              onClick={() => setCurrentPage(pageNum)}
-                              isActive={currentPage === pageNum}
-                              className="cursor-pointer"
-                            >
-                              {pageNum}
-                            </PaginationLink>
-                          </PaginationItem>
-                        );
-                      })}
+                        })}
 
-                      <PaginationItem>
-                        <PaginationNext
-                          onClick={() => setCurrentPage(Math.min(historyData.totalPages, currentPage + 1))}
-                          className={currentPage === historyData.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
+                        <PaginationItem className="sm:hidden">
+                          <span className="text-xs text-[hsl(var(--theme-text))] px-3 py-2">
+                            Page {currentPage} of {historyData.totalPages}
+                          </span>
+                        </PaginationItem>
+
+                        <PaginationItem>
+                          <PaginationNext
+                            onClick={() => setCurrentPage(Math.min(historyData.totalPages, currentPage + 1))}
+                            className={cn(
+                              "text-xs sm:text-sm px-2 sm:px-3",
+                              currentPage === historyData.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                            )}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
                 )}
 
                 <div className="text-center mt-4 text-xs text-[hsl(var(--theme-text))]/60">
@@ -230,7 +245,7 @@ const PaginatedVotingHistory = () => {
                           <h4 className="text-[hsl(var(--theme-text))] font-medium text-sm sm:text-base truncate">
                             {vote.rappers.name}
                           </h4>
-                          <p className="text-[hsl(var(--theme-secondary))] text-xs sm:text-sm mt-1 flex items-center gap-1">
+                          <p className="text-[hsl(var(--theme-accent))] text-xs sm:text-sm mt-1 flex items-center gap-1">
                             Your Rating:
                             <span className="text-[hsl(var(--theme-primary))] font-semibold">
                               {(vote.user_avg_rating ?? 0).toFixed(1)}/10
@@ -251,45 +266,59 @@ const PaginatedVotingHistory = () => {
                 </div>
 
                 {historyData.totalPages > 1 && (
-                  <Pagination>
-                    <PaginationContent>
-                      <PaginationItem>
-                        <PaginationPrevious
-                          onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                          className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                        />
-                      </PaginationItem>
+                  <div className="w-full overflow-x-auto px-2">
+                    <Pagination className="justify-center">
+                      <PaginationContent className="flex-wrap justify-center gap-1 max-w-full">
+                        <PaginationItem>
+                          <PaginationPrevious
+                            onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
+                            className={cn(
+                              "text-xs sm:text-sm px-2 sm:px-3",
+                              currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                            )}
+                          />
+                        </PaginationItem>
 
-                      {renderPaginationNumbers()?.map((item, index) => {
-                        if (typeof item === 'string' && item.startsWith('ellipsis')) {
+                        {renderPaginationNumbers()?.map((item, index) => {
+                          if (typeof item === 'string' && item.startsWith('ellipsis')) {
+                            return (
+                              <PaginationItem key={item} className="hidden sm:block">
+                                <PaginationEllipsis />
+                              </PaginationItem>
+                            );
+                          }
+                          const pageNum = item as number;
                           return (
-                            <PaginationItem key={item}>
-                              <PaginationEllipsis />
+                            <PaginationItem key={pageNum} className="hidden sm:block">
+                              <PaginationLink
+                                onClick={() => setCurrentPage(pageNum)}
+                                isActive={currentPage === pageNum}
+                                className="cursor-pointer text-xs sm:text-sm"
+                              >
+                                {pageNum}
+                              </PaginationLink>
                             </PaginationItem>
                           );
-                        }
-                        const pageNum = item as number;
-                        return (
-                          <PaginationItem key={pageNum}>
-                            <PaginationLink
-                              onClick={() => setCurrentPage(pageNum)}
-                              isActive={currentPage === pageNum}
-                              className="cursor-pointer"
-                            >
-                              {pageNum}
-                            </PaginationLink>
-                          </PaginationItem>
-                        );
-                      })}
+                        })}
 
-                      <PaginationItem>
-                        <PaginationNext
-                          onClick={() => setCurrentPage(Math.min(historyData.totalPages, currentPage + 1))}
-                          className={currentPage === historyData.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
-                        />
-                      </PaginationItem>
-                    </PaginationContent>
-                  </Pagination>
+                        <PaginationItem className="sm:hidden">
+                          <span className="text-xs text-[hsl(var(--theme-text))] px-3 py-2">
+                            Page {currentPage} of {historyData.totalPages}
+                          </span>
+                        </PaginationItem>
+
+                        <PaginationItem>
+                          <PaginationNext
+                            onClick={() => setCurrentPage(Math.min(historyData.totalPages, currentPage + 1))}
+                            className={cn(
+                              "text-xs sm:text-sm px-2 sm:px-3",
+                              currentPage === historyData.totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'
+                            )}
+                          />
+                        </PaginationItem>
+                      </PaginationContent>
+                    </Pagination>
+                  </div>
                 )}
 
                 <div className="text-center mt-4 text-xs text-[hsl(var(--theme-text))]/60">
