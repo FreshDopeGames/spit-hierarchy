@@ -26,7 +26,7 @@ const UserVotingDashboard = () => {
 
       {/* User Stats Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 sm:gap-6">
-        <Card className="bg-[var(--theme-surface)]/90 border border-[var(--theme-primary)]/30">
+        <Card className="bg-[var(--theme-surface)]/90 border-4 border-[var(--theme-primary)]/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Total Votes</CardTitle>
             <Vote className="h-4 w-4 text-[var(--theme-primary)]" />
@@ -38,7 +38,7 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-[var(--theme-surface)]/90 border border-[var(--theme-primary)]/30">
+        <Card className="bg-[var(--theme-surface)]/90 border-4 border-[var(--theme-primary)]/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Rankings Created</CardTitle>
             <Trophy className="h-4 w-4 text-[var(--theme-primary)]" />
@@ -50,7 +50,7 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-[var(--theme-surface)]/90 border border-[var(--theme-primary)]/30">
+        <Card className="bg-[var(--theme-surface)]/90 border-4 border-[var(--theme-primary)]/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Consecutive Days</CardTitle>
             <Calendar className="h-4 w-4 text-[var(--theme-primary)]" />
@@ -62,7 +62,7 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-[var(--theme-surface)]/90 border border-[var(--theme-primary)]/30">
+        <Card className="bg-[var(--theme-surface)]/90 border-4 border-[var(--theme-primary)]/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Total Comments</CardTitle>
             <MessageCircle className="h-4 w-4 text-[var(--theme-primary)]" />
@@ -74,7 +74,7 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card className="bg-[var(--theme-surface)]/90 border border-[var(--theme-primary)]/30">
+        <Card className="bg-[var(--theme-surface)]/90 border-4 border-[var(--theme-primary)]/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Upvotes Received</CardTitle>
             <TrendingUp className="h-4 w-4 text-[var(--theme-primary)]" />
