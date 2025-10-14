@@ -12,6 +12,7 @@ interface RankingItemCardProps {
   userLoggedIn: boolean;
   hotThreshold: number;
   rankingId?: string;
+  userRankingId?: string;
   rapperImageUrl?: string;
 }
 
@@ -21,6 +22,7 @@ const RankingItemCard = ({
   userLoggedIn,
   hotThreshold,
   rankingId,
+  userRankingId,
   rapperImageUrl
 }: RankingItemCardProps) => {
   const isMobile = useIsMobile();
@@ -99,6 +101,7 @@ const RankingItemCard = ({
           userLoggedIn={userLoggedIn}
           isTopFive={isTopFive}
           rankingId={rankingId}
+          userRankingId={userRankingId}
           rapperId={item.rapper?.id}
           rapperName={item.rapper?.name}
           isPending={isPending}

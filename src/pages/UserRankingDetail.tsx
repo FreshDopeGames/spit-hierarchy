@@ -322,7 +322,7 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
           onLoadMore={handleLoadMore}
           hasMore={hasMore}
           loading={false}
-          rankingId={ranking.id}
+          userRankingId={ranking.id}
         />
       </div>
 

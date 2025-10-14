@@ -13,7 +13,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
 
   console.log(`🚀 useDailyVoteStatus initialized for ranking: ${rankingId}, user: ${user?.id}`);
 
-  // Fetch today's votes from database - check both tables for today's votes
+  // Fetch today's votes from database - check both ranking_votes and user_ranking_votes tables
   const { data: dailyVotes = [], isLoading } = useQuery({
     queryKey: ['daily-votes', user?.id, getTodayKey(), rankingId],
     queryFn: async () => {

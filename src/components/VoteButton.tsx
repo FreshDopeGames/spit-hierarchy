@@ -2,6 +2,7 @@
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThumbsUp, Star, Check, Clock, Plus } from "lucide-react";
 import { useRankingVotes } from "@/hooks/useRankingVotes";
+import { useUserRankingVotes } from "@/hooks/useUserRankingVotes";
 import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -12,6 +13,7 @@ interface VoteButtonProps {
   disabled?: boolean;
   className?: string;
   rankingId?: string;
+  userRankingId?: string;
   rapperId?: string;
   showWeightedVoting?: boolean;
   isPending?: boolean;
@@ -23,25 +25,29 @@ const VoteButton = ({
   disabled = false, 
   className = "",
   rankingId,
+  userRankingId,
   rapperId,
   showWeightedVoting = false,
   isPending = false,
   isTopFive = false
 }: VoteButtonProps) => {
   const { user } = useAuth();
-  const { submitRankingVote, getVoteMultiplier, currentStatus } = useRankingVotes();
-  const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(rankingId);
+  const { submitRankingVote, getVoteMultiplier: getOfficialMultiplier, currentStatus } = useRankingVotes();
+  const { submitUserRankingVote, getVoteMultiplier: getUserMultiplier } = useUserRankingVotes();
+  
+  const trackingRankingId = rankingId || userRankingId;
+  const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(trackingRankingId);
   const isMobile = useIsMobile();
 
-  // Only check if this specific rapper has been voted for today
   const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
-  const isDisabled = disabled || submitRankingVote.isPending || !user || hasVoted;
-  const voteMultiplier = getVoteMultiplier();
+  const isPendingVote = submitRankingVote.isPending || submitUserRankingVote.isPending;
+  const isDisabled = disabled || isPendingVote || !user || hasVoted;
+  const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
   // Enhanced debug logging removed for production
 
   const handleClick = async () => {
-    if (isDisabled || !rapperId || !rankingId) {
+    if (isDisabled || !rapperId) {
       if (!user) {
         toast.error("Please sign in to vote for rappers.");
       } else if (hasVoted) {
@@ -51,28 +57,34 @@ const VoteButton = ({
     }
 
     if (showWeightedVoting && user) {
-      // Security check - validate inputs
-      if (!rankingId.match(/^[a-f0-9-]{36}$/i) || !rapperId.match(/^[a-f0-9-]{36}$/i)) {
+      // Security check
+      if (!rapperId.match(/^[a-f0-9-]{36}$/i)) {
         toast.error("Invalid voting parameters");
         return;
       }
 
       try {
-        // Vote submission started
-        
-        // Add to daily tracking for optimistic updates - only for this specific rapper
         addVoteToTracking(rapperId);
         
-        // Submit the vote with enhanced error handling
-        await submitRankingVote.mutateAsync({ rankingId, rapperId });
-        
-        // Vote submission completed
+        if (userRankingId) {
+          // User ranking vote
+          if (!userRankingId.match(/^[a-f0-9-]{36}$/i)) {
+            toast.error("Invalid voting parameters");
+            return;
+          }
+          await submitUserRankingVote.mutateAsync({ userRankingId, rapperId });
+        } else if (rankingId) {
+          // Official ranking vote
+          if (!rankingId.match(/^[a-f0-9-]{36}$/i)) {
+            toast.error("Invalid voting parameters");
+            return;
+          }
+          await submitRankingVote.mutateAsync({ rankingId, rapperId });
+        }
       } catch (error) {
-        console.error(`❌ Vote submission error for rapper ${rapperId}:`, error);
-        // Error toast is handled by the mutation
+        console.error(`Vote submission error for rapper ${rapperId}:`, error);
       }
     } else {
-      // Fallback for non-weighted voting
       onVote();
     }
   };

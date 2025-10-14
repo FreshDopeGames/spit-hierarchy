@@ -16,6 +16,7 @@ interface OfficialRankingItemsProps {
   hasMore: boolean;
   loading: boolean;
   rankingId?: string;
+  userRankingId?: string;
 }
 
 const OfficialRankingItems = ({
@@ -27,7 +28,8 @@ const OfficialRankingItems = ({
   onLoadMore,
   hasMore,
   loading,
-  rankingId
+  rankingId,
+  userRankingId
 }: OfficialRankingItemsProps) => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
@@ -97,6 +99,7 @@ const OfficialRankingItems = ({
           userLoggedIn={userLoggedIn}
           hotThreshold={hotThreshold}
           rankingId={rankingId}
+          userRankingId={userRankingId}
           rapperImageUrl={rapperImages[item.rapper?.id]}
         />
       ))}

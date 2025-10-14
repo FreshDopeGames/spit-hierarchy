@@ -8,6 +8,7 @@ interface RankingItemVoteSectionProps {
   userLoggedIn: boolean;
   isTopFive: boolean;
   rankingId?: string;
+  userRankingId?: string;
   rapperId?: string;
   rapperName?: string;
   isPending: boolean;
@@ -18,6 +19,7 @@ const RankingItemVoteSection = ({
   userLoggedIn,
   isTopFive,
   rankingId,
+  userRankingId,
   rapperId,
   rapperName,
   isPending
@@ -59,6 +61,7 @@ const RankingItemVoteSection = ({
         disabled={!userLoggedIn}
         className={`${getVoteButtonSizing()} ${getVoteButtonWidth()} transition-all duration-200`}
         rankingId={rankingId}
+        userRankingId={userRankingId}
         rapperId={rapperId}
         showWeightedVoting={true}
         isPending={isPending}
