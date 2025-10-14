@@ -163,11 +163,16 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           
           {/* Title */}
           <h3 
-            className="text-base sm:text-2xl md:text-3xl mb-1 sm:mb-2 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))]"
+            className={`mb-1 sm:mb-2 line-clamp-2 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))] ${
+              ranking.title.length <= 20 
+                ? 'text-lg sm:text-3xl md:text-4xl' 
+                : ranking.title.length <= 40 
+                  ? 'text-base sm:text-2xl md:text-3xl' 
+                  : 'text-sm sm:text-xl md:text-2xl'
+            }`}
             style={{
               fontFamily: 'var(--theme-font-heading)',
               color: 'var(--theme-element-ranking_card_title-color, #FFFFFF)',
-              fontSize: 'var(--theme-element-ranking_card_title-font-size, 1.875rem)',
               fontWeight: 'var(--theme-element-ranking_card_title-font-weight, 700)',
               lineHeight: 'var(--theme-element-ranking_card_title-line-height, 1.2)',
               textShadow: 'var(--theme-element-ranking_card_title-shadow, 2px 2px 8px rgba(0, 0, 0, 0.8))'
