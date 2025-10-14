@@ -38,9 +38,9 @@ const RapperMosaic = ({ rappers, size = 'small', className = '' }: RapperMosaicP
   const config = sizeConfig[size];
   
   return (
-    <div className={`${config.height} grid grid-rows-2 gap-0 rounded-md overflow-hidden ${className}`}>
+    <div className={`flex flex-col gap-0 rounded-md overflow-hidden ${className}`}>
       {/* Top Row - 2 Images */}
-      <div className="grid grid-cols-2">
+      <div className={`grid grid-cols-2 ${config.height}`}>
         {topRowRappers.map((rapper) => (
           <div key={rapper.id} className={`relative overflow-hidden ${config.border} border-[var(--theme-background)]`}>
             <img 
@@ -68,7 +68,7 @@ const RapperMosaic = ({ rappers, size = 'small', className = '' }: RapperMosaicP
       </div>
       
       {/* Bottom Row - 3 Images */}
-      <div className="grid grid-cols-3">
+      <div className={`grid grid-cols-3 ${config.height}`}>
         {bottomRowRappers.map((rapper) => (
           <div key={rapper.id} className={`relative overflow-hidden ${config.border} border-[var(--theme-background)]`}>
             <img 
