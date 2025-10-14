@@ -45,7 +45,7 @@ const RankingCard = ({
         }}
       >
         {/* Rapper Mosaic Background - Top portion of card */}
-        <div className="absolute inset-0 h-[43%] grid grid-rows-2 gap-0 group-hover:scale-105 transition-transform duration-500">
+        <div className="absolute top-0 left-0 right-0 flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2">
             {topRowRappers.map((rapper) => (
