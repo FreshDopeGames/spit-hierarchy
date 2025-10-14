@@ -127,6 +127,7 @@ const PaginatedVotingHistory = () => {
                           }}
                           imageUrl={vote.rappers.image_url}
                           size="sm"
+                          variant="square"
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-[hsl(var(--theme-text))] font-medium text-sm sm:text-base truncate">
@@ -240,6 +241,7 @@ const PaginatedVotingHistory = () => {
                           }}
                           imageUrl={vote.rappers.image_url}
                           size="sm"
+                          variant="square"
                         />
                         <div className="flex-1 min-w-0">
                           <h4 className="text-[hsl(var(--theme-text))] font-medium text-sm sm:text-base truncate">

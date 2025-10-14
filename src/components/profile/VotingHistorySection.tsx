@@ -60,7 +60,7 @@ const VotingHistorySection = () => {
                   id: vote.rappers.id,
                   name: vote.rappers.name,
                   slug: vote.rappers.slug
-                }} imageUrl={vote.rappers.image_url} size="sm" />
+                }} imageUrl={vote.rappers.image_url} size="sm" variant="square" />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-[var(--theme-text)] font-medium text-sm sm:text-base truncate">
                           {vote.rappers.name}
@@ -95,7 +95,7 @@ const VotingHistorySection = () => {
                   id: vote.rappers.id,
                   name: vote.rappers.name,
                   slug: vote.rappers.slug
-                }} imageUrl={vote.rappers.image_url} size="sm" />
+                }} imageUrl={vote.rappers.image_url} size="sm" variant="square" />
                       <div className="flex-1 min-w-0">
                         <h4 className="text-[var(--theme-text)] font-medium text-sm sm:text-base truncate">
                           {vote.rappers.name}
