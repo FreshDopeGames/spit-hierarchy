@@ -71,16 +71,15 @@ const RankingCard = ({
             {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
               <div 
                 key={`top-placeholder-${index}`} 
-                className="relative aspect-[4/3] overflow-hidden"
+                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                 style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
-                  backgroundColor: 'hsl(var(--theme-surfaceSecondary))'
+                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
                 <EnhancedImage 
                   src={getOptimizedPlaceholder('thumb')}
                   alt="Placeholder"
-                  className="opacity-70"
+                  className="opacity-30"
                   size="thumb"
                 />
               </div>
@@ -112,16 +111,15 @@ const RankingCard = ({
             {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
               <div 
                 key={`bottom-placeholder-${index}`} 
-                className="relative aspect-[4/3] overflow-hidden"
+                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                 style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
-                  backgroundColor: 'hsl(var(--theme-surfaceSecondary))'
+                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`
                 }}
               >
                 <EnhancedImage 
                   src={getOptimizedPlaceholder('thumb')}
                   alt="Placeholder"
-                  className="opacity-70"
+                  className="opacity-30"
                   size="thumb"
                 />
               </div>
