@@ -131,9 +131,11 @@ const PaginatedVotingHistory = () => {
                           <h4 className="text-[hsl(var(--theme-text))] font-medium text-sm sm:text-base truncate">
                             {vote.rappers.name}
                           </h4>
-                          <p className="text-[hsl(var(--theme-secondary))] text-xs sm:text-sm mt-1">
-                            Voted on: {vote.official_rankings.title}
-                          </p>
+                          {vote.official_rankings && (
+                            <p className="text-[hsl(var(--theme-secondary))] text-xs sm:text-sm mt-1">
+                              Voted on: {vote.official_rankings.title}
+                            </p>
+                          )}
                           <p className="text-[hsl(var(--theme-text))]/50 text-xs mt-1">
                             {formatDistanceToNow(new Date(vote.created_at), {
                               addSuffix: true,
