@@ -126,7 +126,7 @@ const VSMatches = () => {
                       <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
                         <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
                           <RapperAvatar rapper={match.rapper_1} size="sm" variant="square" />
-                          <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1">
+                          <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1 min-h-[2.5rem] flex items-center justify-center">
                             {match.rapper_1.name}
                           </span>
                         </div>
@@ -140,7 +140,7 @@ const VSMatches = () => {
                         
                         <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
                           <RapperAvatar rapper={match.rapper_2} size="sm" variant="square" />
-                          <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1">
+                          <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1 min-h-[2.5rem] flex items-center justify-center">
                             {match.rapper_2.name}
                           </span>
                         </div>
