@@ -80,7 +80,7 @@ const PaginatedVotingHistory = () => {
   }
 
   return (
-    <Card className="bg-[hsl(var(--theme-background))] border border-[hsl(var(--theme-primary))]/30 rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20">
+    <Card className="bg-[hsl(var(--theme-background))] border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20">
       <CardHeader>
         <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center justify-center gap-2 text-lg sm:text-xl">
           <History className="w-4 h-4 sm:w-5 sm:h-5" />
