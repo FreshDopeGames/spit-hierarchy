@@ -231,7 +231,7 @@ const PaginatedVotingHistory = () => {
                           <p className="text-[hsl(var(--theme-secondary))] text-xs sm:text-sm mt-1 flex items-center gap-1">
                             Your Rating:
                             <span className="text-[hsl(var(--theme-primary))] font-semibold">
-                              {vote.user_avg_rating.toFixed(1)}/10
+                              {(vote.user_avg_rating ?? 0).toFixed(1)}/10
                             </span>
                             <span className="text-[hsl(var(--theme-text))]/50 text-xs">
                               ({vote.vote_count} {vote.vote_count === 1 ? 'vote' : 'votes'})

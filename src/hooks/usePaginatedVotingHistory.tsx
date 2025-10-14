@@ -118,13 +118,15 @@ export const usePaginatedVotingHistory = (
 
       // Calculate averages and format results
       const allResults: PaginatedAttributeVoteHistory[] = Array.from(rapperVotes.entries()).map(([rapper_id, data]) => {
-        const userAvgRating = data.votes.reduce((sum, v) => sum + v.rating, 0) / data.votes.length;
+        const userAvgRating = data.votes.length > 0 
+          ? data.votes.reduce((sum, v) => sum + (v.rating || 0), 0) / data.votes.length
+          : 0;
         return {
           rapper_id,
           created_at: data.latestDate,
-          user_avg_rating: Math.round(userAvgRating * 10) / 10,
+          user_avg_rating: isNaN(userAvgRating) ? 0 : Math.round(userAvgRating * 10) / 10,
           vote_count: data.votes.length,
-          rappers: data.votes[0].rappers
+          rappers: data.votes[0]?.rappers || { id: '', name: 'Unknown', slug: '', image_url: null }
         };
       });
 
