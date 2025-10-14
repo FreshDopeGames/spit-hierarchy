@@ -12,6 +12,7 @@ import { Link } from "react-router-dom";
 import SEOHead from "@/components/seo/SEOHead";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import RapperAvatar from "@/components/RapperAvatar";
+import { formatNumber } from "@/utils/numberFormatter";
 
 const VSMatches = () => {
   const {
@@ -131,13 +132,13 @@ const VSMatches = () => {
                           <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1 min-h-[2.5rem] flex items-center justify-center">
                             {match.rapper_1.name}
                           </span>
+                          <span className="text-xs text-[hsl(var(--theme-textInverted))]/80">
+                            {formatNumber(match.rapper_1_votes)} votes
+                          </span>
                         </div>
                         
                         <div className="flex flex-col items-center px-1 sm:px-2 flex-shrink-0">
-                          <Swords className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--theme-background)] mb-1 sm:mb-2" />
-                          <Badge variant="outline" className="text-xs text-[hsl(var(--theme-textInverted))] border-[hsl(var(--theme-background))] px-1.5 py-0.5">
-                            {match.total_votes}
-                          </Badge>
+                          <Swords className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--theme-background)]" />
                         </div>
                         
                         <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
@@ -146,6 +147,9 @@ const VSMatches = () => {
                           </div>
                           <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1 min-h-[2.5rem] flex items-center justify-center">
                             {match.rapper_2.name}
+                          </span>
+                          <span className="text-xs text-[hsl(var(--theme-textInverted))]/80">
+                            {formatNumber(match.rapper_2_votes)} votes
                           </span>
                         </div>
                       </div>
