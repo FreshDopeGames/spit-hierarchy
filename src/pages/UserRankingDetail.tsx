@@ -254,9 +254,10 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
               </p>
             )}
             
-            <div className="flex items-center justify-between text-rap-smoke border-t border-rap-smoke/20 pt-6">
-              <div className="flex items-center gap-6">
-                <span className="font-kaushan">
+            <div className="border-t border-rap-smoke/20 pt-6">
+              {/* Author and Date Row */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-6 mb-4 sm:mb-0">
+                <span className="font-kaushan text-sm sm:text-base">
                   by {user ? (
                     <Link 
                       to={`/user/${ranking.profiles?.username || "unknown"}`}
@@ -269,19 +270,20 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
                   )}
                   {isOwner && <span className="text-rap-smoke ml-2">(You)</span>}
                 </span>
-                <span className="font-kaushan">
+                <span className="font-kaushan text-sm sm:text-base text-rap-smoke/80">
                   {new Date(ranking.created_at).toLocaleDateString()}
                 </span>
               </div>
               
-              <div className="flex items-center gap-4">
-                <div className="flex items-center gap-1">
-                  <Eye className="w-4 h-4" />
-                  <span className="font-kaushan">{Math.floor(Math.random() * 1000) + 100}</span>
+              {/* Stats Row */}
+              <div className="flex items-center gap-4 sm:gap-6 pt-3 sm:pt-4 border-t border-rap-smoke/10 sm:border-t-0">
+                <div className="flex items-center gap-1.5">
+                  <Eye className="w-4 h-4 text-rap-smoke/70" />
+                  <span className="font-kaushan text-sm">{Math.floor(Math.random() * 1000) + 100}</span>
                 </div>
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <Star className="w-4 h-4 text-rap-gold" />
-                  <span className="font-kaushan">{Math.floor(Math.random() * 200) + 50}</span>
+                  <span className="font-kaushan text-sm">{Math.floor(Math.random() * 200) + 50}</span>
                 </div>
               </div>
             </div>
