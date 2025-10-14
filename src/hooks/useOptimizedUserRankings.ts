@@ -68,7 +68,7 @@ export const useOptimizedUserRankings = ({
       const userIds = [...new Set(data.map(r => r.user_id))];
       
       const { data: profiles, error: profilesError } = await supabase
-        .rpc('get_profiles_batch', { profile_user_ids: userIds });
+        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
 
       if (profilesError) {
         console.error("Error fetching profiles:", profilesError);
