@@ -163,7 +163,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           
           {/* Title */}
           <h3 
-            className="text-xl sm:text-2xl md:text-3xl mb-2 sm:mb-3 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))]"
+            className="text-lg sm:text-2xl md:text-3xl mb-2 sm:mb-3 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))]"
             style={{
               fontFamily: 'var(--theme-font-heading)',
               color: 'var(--theme-element-ranking_card_title-color, #FFFFFF)',
