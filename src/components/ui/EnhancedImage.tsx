@@ -27,16 +27,16 @@ const EnhancedImage: React.FC<EnhancedImageProps> = ({
   const imageClasses = cn(
     // Base image styling
     "w-full h-full object-cover object-top",
-    // Image rendering optimizations
-    "[image-rendering:high-quality]",
+    // Better image rendering - smooth at all sizes
+    "[image-rendering:auto]",
     "[image-rendering:-webkit-optimize-contrast]", 
-    "[image-rendering:crisp-edges]",
-    "smooth-rendering",
+    "antialiased",
     // Hardware acceleration
     "transform-gpu",
     "will-change-transform",
-    // Anti-aliasing
+    // Anti-aliasing and smoothing
     "[filter:blur(0)]",
+    "[backface-visibility:hidden]",
     "translate-z-0",
     className
   );
