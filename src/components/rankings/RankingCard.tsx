@@ -129,14 +129,14 @@ const RankingCard = ({
         
         {/* Gradient Overlay - Bottom area for text */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[48%] sm:h-[50%] md:h-[52%]"
+          className="absolute bottom-0 left-0 right-0 h-[52%] sm:h-[50%] md:h-[52%]"
           style={{
             background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
           }}
         />
         
         {/* Content - Positioned in bottom area */}
-        <div className="absolute bottom-0 left-0 right-0 h-[44%] sm:h-[45%] md:h-[50%] flex flex-col justify-end p-3 sm:p-6 pb-3 sm:pb-4">
+        <div className="absolute bottom-0 left-0 right-0 h-[50%] sm:h-[45%] md:h-[50%] flex flex-col justify-end p-3 sm:p-6 pb-3 sm:pb-4">
           {/* Category Badge */}
           <div className="mb-0.5 sm:mb-1">
             <span 
