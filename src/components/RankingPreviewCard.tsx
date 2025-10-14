@@ -134,16 +134,16 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
         
         {/* Gradient Overlay - Bottom area for text */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[45%] sm:h-[50%] md:h-[52%]"
+          className="absolute bottom-0 left-0 right-0 h-[48%] sm:h-[50%] md:h-[52%]"
           style={{
             background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
           }}
         />
         
         {/* Content - Positioned in bottom area */}
-        <div className="absolute bottom-0 left-0 right-0 h-[40%] sm:h-[45%] md:h-[50%] flex flex-col justify-end p-4 sm:p-6 pb-3 sm:pb-4">
+        <div className="absolute bottom-0 left-0 right-0 h-[44%] sm:h-[45%] md:h-[50%] flex flex-col justify-end p-3 sm:p-6 pb-3 sm:pb-4">
           {/* Category Badge */}
-          <div className="mb-1 mt-1 sm:mt-0">
+          <div className="mb-0.5 sm:mb-1">
             <span 
               className="inline-flex items-center backdrop-blur-sm"
               style={{
@@ -163,7 +163,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           
           {/* Title */}
           <h3 
-            className="text-base sm:text-2xl md:text-3xl mb-1.5 sm:mb-2 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))]"
+            className="text-base sm:text-2xl md:text-3xl mb-1 sm:mb-2 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))]"
             style={{
               fontFamily: 'var(--theme-font-heading)',
               color: 'var(--theme-element-ranking_card_title-color, #FFFFFF)',
@@ -179,7 +179,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
           {/* Description */}
           {ranking.description && (
             <p 
-              className="text-sm sm:text-base mb-3 sm:mb-4 line-clamp-2"
+              className="text-xs sm:text-base mb-2 sm:mb-3 line-clamp-2"
               style={{
                 color: 'var(--theme-element-ranking_card_description-color, #BFBFBF)',
                 fontSize: 'var(--theme-element-ranking_card_description-font-size, 0.875rem)',
