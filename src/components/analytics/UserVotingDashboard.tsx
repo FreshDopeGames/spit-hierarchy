@@ -1,6 +1,7 @@
 import { useMemberStatus } from "@/hooks/useMemberStatus";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { TrendingUp, Vote, Trophy, Calendar, MessageCircle } from "lucide-react";
+import PaginatedVotingHistory from "./PaginatedVotingHistory";
 const UserVotingDashboard = () => {
   const {
     memberStats,
@@ -85,6 +86,9 @@ const UserVotingDashboard = () => {
           </CardContent>
         </Card>
       </div>
+
+      {/* Paginated Voting History */}
+      <PaginatedVotingHistory />
     </div>;
 };
 export default UserVotingDashboard;
