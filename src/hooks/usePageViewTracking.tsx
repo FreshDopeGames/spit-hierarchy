@@ -29,9 +29,9 @@ export const usePageViewTracking = ({
       return;
     }
 
-    // Only track rapper pages for now (can be extended to other content types)
-    if (contentType !== 'rapper') {
-      console.log('[PageView] Skipped - not a rapper page', { contentType });
+    // Only track rapper and ranking pages for now
+    if (contentType !== 'rapper' && contentType !== 'ranking') {
+      console.log('[PageView] Skipped - unsupported content type', { contentType });
       return;
     }
 
@@ -63,15 +63,23 @@ export const usePageViewTracking = ({
 
         console.log('[PageView] Inserting page view record...');
 
-        // Record the page view
-        const { error } = await supabase
-          .from('rapper_page_views')
-          .insert({
-            rapper_id: contentId,
-            user_id: user?.id || null,
-            session_id: user?.id ? null : sessionId, // Only use session_id for anonymous users
-            viewed_at: new Date().toISOString()
-          });
+        // Determine which table to use based on content type
+        const tableName = contentType === 'rapper' ? 'rapper_page_views' : 'user_ranking_views';
+
+        // Record the page view with proper typing
+        const { error } = contentType === 'rapper' 
+          ? await supabase.from('rapper_page_views').insert({
+              rapper_id: contentId,
+              user_id: user?.id || null,
+              session_id: user?.id ? null : sessionId,
+              viewed_at: new Date().toISOString()
+            })
+          : await supabase.from('user_ranking_views').insert({
+              ranking_id: contentId,
+              user_id: user?.id || null,
+              session_id: user?.id ? null : sessionId,
+              viewed_at: new Date().toISOString()
+            });
 
         if (error) {
           console.error('[PageView] ❌ Error tracking page view:', error);

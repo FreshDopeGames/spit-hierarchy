@@ -15,6 +15,8 @@ export interface UserRanking {
   likes: number;
   comments: number;
   views: number;
+  views_count?: number;
+  totalVotes?: number;
   isPublic: boolean;
   isOfficial: boolean;
   tags: string[];

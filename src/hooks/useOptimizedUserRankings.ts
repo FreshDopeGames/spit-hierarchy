@@ -41,7 +41,8 @@ export const useOptimizedUserRankings = ({
           created_at,
           updated_at,
           is_public,
-          user_id
+          user_id,
+          views_count
         `)
         .order("created_at", { ascending: false })
         .range(offset, offset + limit - 1);

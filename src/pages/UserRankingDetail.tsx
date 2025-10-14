@@ -4,6 +4,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { ArrowLeft, Crown, Star, Trophy, Eye, Users, Lock, AlertCircle } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
+import { usePageViewTracking } from "@/hooks/usePageViewTracking";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import { Card, CardContent } from "@/components/ui/card";
@@ -50,8 +51,17 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
   const [ranking, setRanking] = useState<UserRankingData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [viewCount, setViewCount] = useState<number>(0);
+  const [voteCount, setVoteCount] = useState<number>(0);
   const [displayCount, setDisplayCount] = useState(20);
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Track page view
+  usePageViewTracking({
+    contentType: 'ranking',
+    contentId: ranking?.id,
+    debounceMs: 1000
+  });
 
   useEffect(() => {
     const handleScroll = () => {
@@ -83,6 +93,7 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
           created_at,
           is_public,
           user_id,
+          views_count,
           profiles!inner(username),
           user_ranking_items!inner(
             id,
@@ -125,6 +136,15 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
       }
 
       setRanking(data);
+      
+      // Fetch view count (cached in the table)
+      const viewsCount = (data as any).views_count || 0;
+      setViewCount(viewsCount);
+      
+      // Fetch total votes using RPC
+      const { data: totalVotes } = await supabase
+        .rpc('get_user_ranking_vote_count', { ranking_uuid: data.id });
+      setVoteCount(totalVotes || 0);
     } catch (error) {
       console.error("Error:", error);
       setError("An unexpected error occurred. Please try again later.");
@@ -279,11 +299,13 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
               <div className="flex items-center gap-4 sm:gap-6 pt-3 sm:pt-4 border-t border-rap-smoke/10 sm:border-t-0">
                 <div className="flex items-center gap-1.5">
                   <Eye className="w-4 h-4 text-rap-smoke/70" />
-                  <span className="font-kaushan text-sm">{Math.floor(Math.random() * 1000) + 100}</span>
+                  <span className="font-kaushan text-sm">{viewCount.toLocaleString()}</span>
+                  <span className="text-xs text-rap-smoke/60">views</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <Star className="w-4 h-4 text-rap-gold" />
-                  <span className="font-kaushan text-sm">{Math.floor(Math.random() * 200) + 50}</span>
+                  <Trophy className="w-4 h-4 text-rap-gold" />
+                  <span className="font-kaushan text-sm">{voteCount.toLocaleString()}</span>
+                  <span className="text-xs text-rap-smoke/60">votes</span>
                 </div>
               </div>
             </div>

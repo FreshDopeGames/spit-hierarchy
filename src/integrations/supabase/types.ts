@@ -1917,6 +1917,41 @@ export type Database = {
           },
         ]
       }
+      user_ranking_views: {
+        Row: {
+          created_at: string
+          id: string
+          ranking_id: string
+          session_id: string | null
+          user_id: string | null
+          viewed_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ranking_id: string
+          session_id?: string | null
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ranking_id?: string
+          session_id?: string | null
+          user_id?: string | null
+          viewed_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_ranking_views_ranking_id_fkey"
+            columns: ["ranking_id"]
+            isOneToOne: false
+            referencedRelation: "user_rankings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_rankings: {
         Row: {
           category: string
@@ -1930,6 +1965,7 @@ export type Database = {
           title: string
           updated_at: string
           user_id: string
+          views_count: number | null
         }
         Insert: {
           category: string
@@ -1943,6 +1979,7 @@ export type Database = {
           title: string
           updated_at?: string
           user_id: string
+          views_count?: number | null
         }
         Update: {
           category?: string
@@ -1956,6 +1993,7 @@ export type Database = {
           title?: string
           updated_at?: string
           user_id?: string
+          views_count?: number | null
         }
         Relationships: [
           {
@@ -2538,6 +2576,10 @@ export type Database = {
       }
       calculate_rapper_total_votes: {
         Args: { rapper_uuid: string }
+        Returns: number
+      }
+      calculate_user_ranking_view_count: {
+        Args: { ranking_uuid: string }
         Returns: number
       }
       can_change_username: {
