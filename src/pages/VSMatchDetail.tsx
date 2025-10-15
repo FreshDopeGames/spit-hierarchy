@@ -138,7 +138,9 @@ const VSMatchDetail = () => {
     return (
       <>
         <HeaderNavigation isScrolled={isScrolled} />
-        <div className="min-h-screen pt-20" style={{ background: 'var(--theme-gradient-primary-gradient)' }}>
+        <div className="min-h-screen pt-20" style={{ 
+          background: 'linear-gradient(135deg, #e59517 0%, #c1740c 100%)'
+        }}>
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-4xl mx-auto">
               <Skeleton className="h-8 w-3/4 bg-black/20 mb-4" />
