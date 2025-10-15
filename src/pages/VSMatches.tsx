@@ -156,7 +156,7 @@ const VSMatches = () => {
 
                       {/* Vote distribution - centered with advantage bar */}
                       {match.total_votes > 0 && (
-                        <div className="relative w-full h-2 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden">
+                        <div className="relative w-full h-2 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden border-2 border-black">
                           {/* Gold center divider */}
                           <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-yellow-500 z-10 -translate-x-1/2" />
                           
