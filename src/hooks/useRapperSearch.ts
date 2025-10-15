@@ -38,9 +38,9 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         // Use enhanced search with normalization for name and real_name
         const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
         
-        // Also search in aliases array using PostgreSQL array contains operator
+        // Also search in aliases array using partial text matching
         const { data: results, error } = await query
-          .or(`${searchOrQuery},aliases.cs.{${debouncedSearchTerm}}`)
+          .or(`${searchOrQuery},aliases::text.ilike.%${debouncedSearchTerm}%`)
           .limit(20);
 
         if (error) {

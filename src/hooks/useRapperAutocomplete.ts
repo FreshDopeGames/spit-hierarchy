@@ -40,9 +40,9 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
       // Use enhanced search with normalization for both name and real_name
       const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
       
-      // Also search in aliases array
+      // Also search in aliases array using partial text matching
       const { data, error } = await query
-        .or(`${searchOrQuery},aliases.cs.{${debouncedSearchTerm}}`);
+        .or(`${searchOrQuery},aliases::text.ilike.%${debouncedSearchTerm}%`);
 
       if (error) throw error;
       

@@ -126,8 +126,9 @@ export const createSearchOrQuery = (searchTerm: string, columns: string[] = ['na
 
 /**
  * Sorts search results by relevance based on search term
+ * Prioritizes: exact matches > starts with > contains > alias matches
  */
-export const sortBySearchRelevance = <T extends { name: string }>(
+export const sortBySearchRelevance = <T extends { name: string; aliases?: string[] }>(
   results: T[], 
   searchTerm: string
 ): T[] => {
@@ -165,6 +166,18 @@ export const sortBySearchRelevance = <T extends { name: string }>(
     // Contains matches (normalized)
     if (aNormalized.includes(normalizedSearch) && !bNormalized.includes(normalizedSearch)) return -1;
     if (bNormalized.includes(normalizedSearch) && !aNormalized.includes(normalizedSearch)) return 1;
+    
+    // Check alias matches for additional ranking
+    const aHasAliasMatch = a.aliases?.some(alias => 
+      alias.toLowerCase().includes(originalLower)
+    );
+    const bHasAliasMatch = b.aliases?.some(alias => 
+      alias.toLowerCase().includes(originalLower)
+    );
+    
+    // If only one matches via alias (not name), deprioritize it slightly
+    if (!aHasAliasMatch && bHasAliasMatch) return -1;
+    if (aHasAliasMatch && !bHasAliasMatch) return 1;
     
     // Alphabetical fallback
     return aName.localeCompare(bName);
