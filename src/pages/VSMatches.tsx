@@ -154,12 +154,26 @@ const VSMatches = () => {
                         </div>
                       </div>
 
-                      {/* Vote distribution */}
-                      {match.total_votes > 0 && <div className="w-full bg-[hsl(var(--theme-background))]/50 rounded-full h-2 mb-3">
-                          <div className="bg-[hsl(var(--theme-background))] h-2 rounded-full transition-all duration-300" style={{
-                    width: `${match.rapper_1_votes / match.total_votes * 100}%`
-                  }} />
-                        </div>}
+                      {/* Vote distribution - centered with advantage bar */}
+                      {match.total_votes > 0 && (
+                        <div className="relative w-full h-2 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden">
+                          {/* Gold center divider */}
+                          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-yellow-500 z-10 -translate-x-1/2" />
+                          
+                          {/* Advantage bar - extends from center based on who's winning */}
+                          <div 
+                            className="absolute top-0 h-2 bg-green-600 rounded-full transition-all duration-300"
+                            style={{
+                              left: match.rapper_1_votes >= match.rapper_2_votes 
+                                ? '50%' 
+                                : `${(match.rapper_2_votes / match.total_votes) * 50}%`,
+                              right: match.rapper_1_votes >= match.rapper_2_votes
+                                ? `${(match.rapper_2_votes / match.total_votes) * 50}%`
+                                : '50%'
+                            }}
+                          />
+                        </div>
+                      )}
 
                       <div className="text-xs text-[hsl(var(--theme-textInverted))]/70 text-center">
                         {new Date(match.created_at).toLocaleDateString()}
