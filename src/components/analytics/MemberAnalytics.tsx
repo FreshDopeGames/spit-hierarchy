@@ -14,16 +14,18 @@ const MemberAnalytics = () => {
         
         <div className="flex gap-2">
           <ThemedButton
-            variant={timeRange === 'all' ? 'gradient' : 'outline'}
+            variant="outline"
             size="sm"
             onClick={() => setTimeRange('all')}
+            className={timeRange === 'all' ? 'bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90' : ''}
           >
             All Time
           </ThemedButton>
           <ThemedButton
-            variant={timeRange === 'week' ? 'gradient' : 'outline'}
+            variant="outline"
             size="sm"
             onClick={() => setTimeRange('week')}
+            className={timeRange === 'week' ? 'bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90' : ''}
           >
             This Week
           </ThemedButton>
