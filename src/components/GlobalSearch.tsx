@@ -80,14 +80,12 @@ const GlobalSearch = () => {
       {/* Search Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40"
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm"
           onClick={handleClickOutside}
         >
-          {/* Backdrop */}
-          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" />
 
           {/* Search Container */}
-          <div className="fixed left-0 right-0 top-20 z-50 px-4 py-2">
+          <div className="fixed left-0 right-0 top-20 z-[51] px-4 py-2">
             <div
               ref={searchContainerRef}
               className="max-w-2xl mx-auto bg-[hsl(var(--theme-surface))] rounded-lg shadow-2xl border-2 border-[hsl(var(--theme-primary))] overflow-hidden"
