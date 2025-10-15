@@ -166,7 +166,7 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
       }
     },
     enabled: !!rapperId,
-    staleTime: 1 * 60 * 1000, // Reduced to 1 minute for more frequent updates
+    staleTime: 30 * 60 * 1000, // 30 minutes - rapper images rarely change
     refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
       // Don't retry on network errors, but retry on other errors up to 2 times
@@ -251,7 +251,7 @@ export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' |
       }
     },
     enabled: rapperIds.length > 0,
-    staleTime: 1 * 60 * 1000, // Reduced to 1 minute for more frequent updates
+    staleTime: 30 * 60 * 1000, // 30 minutes - rapper images rarely change
     refetchOnWindowFocus: false,
     retry: 2
   });
