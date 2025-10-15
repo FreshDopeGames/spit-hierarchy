@@ -165,11 +165,11 @@ const VSMatches = () => {
                             className="absolute top-0 h-2 bg-green-600 rounded-full transition-all duration-300"
                             style={{
                               left: match.rapper_1_votes >= match.rapper_2_votes 
-                                ? '50%' 
-                                : `${(match.rapper_2_votes / match.total_votes) * 50}%`,
-                              right: match.rapper_1_votes >= match.rapper_2_votes
                                 ? `${(match.rapper_2_votes / match.total_votes) * 50}%`
-                                : '50%'
+                                : '50%',
+                              right: match.rapper_1_votes >= match.rapper_2_votes
+                                ? '50%'
+                                : `${(match.rapper_1_votes / match.total_votes) * 50}%`
                             }}
                           />
                         </div>
