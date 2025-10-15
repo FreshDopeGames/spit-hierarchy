@@ -215,7 +215,7 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       }
       
       const queryEndTime = Date.now();
-      console.log(`✅ Found ${votes.length} total skill votes for ${timeRange} (query took ${queryEndTime - queryStartTime}ms)`);
+      console.log(`✅ Found ${votes.length} total skill ratings for ${timeRange} (query took ${queryEndTime - queryStartTime}ms)`);
       
       // Group by user and count votes
       const userVoteCounts = votes.reduce((acc: any, vote: any) => {
@@ -380,7 +380,7 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
         data={topJudges || []}
         isLoading={loadingJudges}
         metricKey="vote_count"
-        metricLabel="skill votes"
+        metricLabel="skill ratings"
       />
 
       <MemberCard
