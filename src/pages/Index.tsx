@@ -127,9 +127,7 @@ const Index = () => {
             {/* All Rankings Button */}
             <div className="mb-12 text-center">
               <Link to="/rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
-                <Button style={{
-                background: 'var(--theme-gradient-primary)'
-              }} className="w-full sm:w-auto hover:opacity-90 font-mogra px-8 py-4 border-0 text-black text-xl">
+                <Button className="w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-xl border-0">
                   All Rapper Rankings
                 </Button>
               </Link>

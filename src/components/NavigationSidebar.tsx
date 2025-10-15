@@ -99,49 +99,49 @@ const NavigationSidebar = ({
             <div className="space-y-2">
             
             <Link to="/" onClick={() => handleNavClick('/')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <Home className="w-4 h-4 mr-3" />
                 Home
               </ThemedButton>
             </Link>
 
             <Link to="/rankings" onClick={() => handleNavClick('/rankings')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <Trophy className="w-4 h-4 mr-3" />
                 Rankings
               </ThemedButton>
             </Link>
 
             <Link to="/all-rappers" onClick={() => handleNavClick('/all-rappers')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <Music className="w-4 h-4 mr-3" />
                 All Rappers
               </ThemedButton>
             </Link>
 
             <Link to="/vs" onClick={() => handleNavClick('/vs')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <Swords className="w-4 h-4 mr-3" />
                 VS Matches
               </ThemedButton>
             </Link>
 
             <Link to="/blog" onClick={() => handleNavClick('/blog')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <BookOpen className="w-4 h-4 mr-3" />
                 Slick Talk
               </ThemedButton>
             </Link>
 
             <Link to="/community-cypher" onClick={() => handleNavClick('/community-cypher')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <PenTool className="w-4 h-4 mr-3" />
                 Community Cypher
               </ThemedButton>
             </Link>
 
             <Link to="/about" onClick={() => handleNavClick('/about')}>
-              <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                 <Info className="w-4 h-4 mr-3" />
                 About
               </ThemedButton>
@@ -156,7 +156,7 @@ const NavigationSidebar = ({
             >
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
+                className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <Instagram className="w-4 h-4 mr-3" />
                 Instagram
@@ -170,7 +170,7 @@ const NavigationSidebar = ({
             >
               <ThemedButton 
                 variant="ghost" 
-                className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
+                className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
               >
                 <DiscordIcon className="w-4 h-4 mr-3" />
                 Discord
@@ -180,7 +180,7 @@ const NavigationSidebar = ({
             {/* Analytics and Admin for logged in users */}
             {user && <>
                 <Link to="/analytics" onClick={() => handleNavClick('/analytics')}>
-                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                     <BarChart3 className="w-4 h-4 mr-3" />
                     Analytics
                   </ThemedButton>
@@ -188,7 +188,7 @@ const NavigationSidebar = ({
 
                 {isAdmin && (
                   <Link to="/admin" onClick={() => handleNavClick('/admin')}>
-                    <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                    <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                       <Settings className="w-4 h-4 mr-3" />
                       Admin
                     </ThemedButton>
@@ -196,14 +196,14 @@ const NavigationSidebar = ({
                 )}
 
                 <Link to="/privacy" onClick={() => handleNavClick('/privacy')}>
-                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                     <Shield className="w-4 h-4 mr-3" />
                     Privacy Policy
                   </ThemedButton>
                 </Link>
 
                 <Link to="/terms" onClick={() => handleNavClick('/terms')}>
-                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                     <FileText className="w-4 h-4 mr-3" />
                     Terms of Service
                   </ThemedButton>
@@ -212,7 +212,7 @@ const NavigationSidebar = ({
                 <ThemedButton onClick={() => {
                 // signOut();
                 handleNavClick('/');
-              }} variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+              }} variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                   <LogOut className="w-4 h-4 mr-3" />
                   Sign Out
                 </ThemedButton>
@@ -225,14 +225,14 @@ const NavigationSidebar = ({
                 <ThemedSeparator className="my-6" />
                 
                 <Link to="/privacy" onClick={() => handleNavClick('/privacy')}>
-                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                     <Shield className="w-4 h-4 mr-3" />
                     Privacy Policy
                   </ThemedButton>
                 </Link>
 
                 <Link to="/terms" onClick={() => handleNavClick('/terms')}>
-                  <ThemedButton variant="ghost" className="w-full justify-start text-[var(--theme-text)] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
+                  <ThemedButton variant="ghost" className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors">
                     <FileText className="w-4 h-4 mr-3" />
                     Terms of Service
                   </ThemedButton>

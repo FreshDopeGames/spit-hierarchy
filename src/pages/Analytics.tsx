@@ -8,7 +8,7 @@ import UserAchievements from "@/components/analytics/UserAchievements";
 import VotingAnalytics from "@/components/analytics/VotingAnalytics";
 import MemberAnalytics from "@/components/analytics/MemberAnalytics";
 import RapperStatsAnalytics from "@/components/analytics/RapperStatsAnalytics";
-import InternalPageHeader from "@/components/InternalPageHeader";
+import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 
 const Analytics = () => {
@@ -29,14 +29,11 @@ const Analytics = () => {
 
   return (
     <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))]">
-      <InternalPageHeader 
-        title="Analytics Dashboard"
-        subtitle="Track your progress and explore platform insights"
-      />
+      <HeaderNavigation isScrolled={false} />
       
-      <div className="container mx-auto px-4 py-8 md:py-12">
+      <div className="container mx-auto px-4 py-8 md:py-12 pt-24">
         <ThemedTabs value={activeTab} onValueChange={handleTabChange} className="space-y-8">
-          <ThemedTabsList className="grid w-full grid-cols-5 mt-12 md:mt-16 lg:mt-20 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
+          <ThemedTabsList className="grid w-full grid-cols-5 mt-4 md:mt-8 lg:mt-12 relative z-10 min-h-[70px] sm:min-h-[60px] py-2">
             <ThemedTabsTrigger 
               value="rapper-stats" 
               className="flex flex-col sm:flex-row items-center gap-1 sm:gap-2 text-xs sm:text-sm"
