@@ -293,25 +293,32 @@ const VSMatchDetail = () => {
             {/* Vote Distribution Bar */}
             {vsMatch!.total_votes > 0 && (
               <div className="mb-12">
-                <div className="bg-[var(--theme-backgroundLight)] rounded-lg p-6 border-2 border-[var(--theme-primary)]/30">
-                  <h3 className="text-[var(--theme-textInverted)] text-gray-900 text-lg font-bold mb-4 text-center font-mogra">
+                <div className="bg-black rounded-lg p-6 border-4 border-[hsl(var(--theme-primary))]">
+                  <h3 className="text-white text-lg font-bold mb-4 text-center font-mogra">
                     Vote Distribution
                   </h3>
-                  <div className="relative w-full bg-[var(--theme-background)]/50 rounded-full h-8">
+                  
+                  {/* Distribution meter - 2x height with black border */}
+                  <div className="relative w-full bg-[hsl(var(--theme-background))]/30 rounded-full h-4 border-2 border-black mb-3 overflow-hidden">
+                    {/* Gold center divider */}
+                    <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-yellow-500 z-10 -translate-x-1/2" />
+                    
+                    {/* Green advantage bar extending from center */}
                     <div 
-                      className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)] h-8 rounded-full transition-all duration-500 flex items-center justify-end pr-3"
-                      style={{ 
-                        width: `${(vsMatch!.rapper_1_votes / vsMatch!.total_votes) * 100}%` 
+                      className="absolute top-0 h-4 bg-green-600 rounded-full transition-all duration-500"
+                      style={{
+                        left: vsMatch!.rapper_1_votes >= vsMatch!.rapper_2_votes 
+                          ? `${(vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 50}%`
+                          : '50%',
+                        right: vsMatch!.rapper_1_votes >= vsMatch!.rapper_2_votes
+                          ? '50%'
+                          : `${(vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 50}%`
                       }}
-                    >
-                      {vsMatch!.rapper_1_votes > 0 && (
-                        <span className="text-sm font-bold text-[var(--theme-background)]">
-                          {Math.round((vsMatch!.rapper_1_votes / vsMatch!.total_votes) * 100)}%
-                        </span>
-                      )}
-                    </div>
+                    />
                   </div>
-                  <div className="flex justify-between text-sm text-[var(--theme-textInverted)] text-gray-900 mt-3 font-medium">
+                  
+                  {/* Rapper names and vote counts */}
+                  <div className="flex justify-between text-sm text-white mt-3 font-medium">
                     <span>{vsMatch!.rapper_1.name}: {vsMatch!.rapper_1_votes}</span>
                     <span>{vsMatch!.rapper_2.name}: {vsMatch!.rapper_2_votes}</span>
                   </div>
