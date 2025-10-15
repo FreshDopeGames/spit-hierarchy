@@ -191,9 +191,9 @@ const VSMatchDetail = () => {
             </div>
 
             {/* VS Matchup */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
+            <div className="flex flex-col lg:flex-row gap-4 lg:gap-8 mb-12 items-center">
               {/* Rapper 1 */}
-              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ 
+              <Card className="w-full lg:flex-1 lg:min-w-0 border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{
                 background: 'var(--theme-gradient-dark-gradient)',
                 // Fallback in case CSS variable isn't loaded
                 backgroundImage: 'linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%)'
@@ -237,8 +237,15 @@ const VSMatchDetail = () => {
                 </CardContent>
               </Card>
 
+              {/* VS Sword Icon */}
+              <div className="flex justify-center items-center lg:flex-shrink-0">
+                <div className="bg-[var(--theme-backgroundLight)] rounded-full p-4 border-4 border-[var(--theme-primary)] shadow-lg">
+                  <Swords className="w-8 h-8 text-[var(--theme-primary)] rotate-90 lg:rotate-0 transition-transform" />
+                </div>
+              </div>
+
               {/* Rapper 2 */}
-              <Card className="border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{ 
+              <Card className="w-full lg:flex-1 lg:min-w-0 border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{
                 background: 'var(--theme-gradient-dark-gradient)',
                 // Fallback in case CSS variable isn't loaded
                 backgroundImage: 'linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%)'
@@ -281,13 +288,6 @@ const VSMatchDetail = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
-
-            {/* VS Indicator (Mobile) */}
-            <div className="flex justify-center mb-12 lg:hidden">
-              <div className="bg-[var(--theme-backgroundLight)] rounded-full p-4 border-4 border-[var(--theme-primary)] shadow-lg">
-                <Swords className="w-8 h-8 text-[var(--theme-primary)]" />
-              </div>
             </div>
 
             {/* Vote Distribution Bar */}
