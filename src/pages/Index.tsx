@@ -151,6 +151,9 @@ const Index = () => {
             {/* Hero Section */}
             <HeroSection />
 
+            {/* Ad between sections */}
+            <ContentAdUnit size="medium" />
+
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
 
