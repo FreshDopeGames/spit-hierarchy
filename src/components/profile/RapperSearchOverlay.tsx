@@ -1,9 +1,12 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import { Music, Search } from "lucide-react";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { Music, Search, Plus } from "lucide-react";
 import { useRapperSearch } from "@/hooks/useRapperSearch";
+import { useCanSuggestRappers } from "@/hooks/useCanSuggestRappers";
+import RapperSuggestionModal from "../RapperSuggestionModal";
 
 interface RapperSearchOverlayProps {
   isOpen: boolean;
@@ -21,6 +24,8 @@ const RapperSearchOverlay = ({
   position,
 }: RapperSearchOverlayProps) => {
   const { searchTerm, setSearchTerm, searchResults, isSearching, hasMinLength } = useRapperSearch(excludeIds);
+  const { canSuggest } = useCanSuggestRappers();
+  const [suggestionModalOpen, setSuggestionModalOpen] = useState(false);
 
   const handleRapperClick = (rapperId: string) => {
     onSelectRapper(rapperId);
@@ -92,13 +97,23 @@ const RapperSearchOverlay = ({
 
             {hasMinLength && !isSearching && searchResults.length === 0 && (
               <div 
-                className="text-center text-sm py-4"
+                className="text-center py-4 space-y-3"
                 style={{ 
                   color: 'hsl(var(--theme-textMuted))',
                   fontFamily: 'var(--theme-font-body)'
                 }}
               >
-                No rappers found
+                <p className="text-sm">No rappers found</p>
+                {canSuggest && (
+                  <ThemedButton
+                    variant="outline"
+                    size="sm"
+                    onClick={() => setSuggestionModalOpen(true)}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Suggest to Admins
+                  </ThemedButton>
+                )}
               </div>
             )}
 
@@ -147,6 +162,12 @@ const RapperSearchOverlay = ({
           </div>
         </div>
       </DialogContent>
+
+      <RapperSuggestionModal
+        open={suggestionModalOpen}
+        onOpenChange={setSuggestionModalOpen}
+        defaultRapperName={searchTerm}
+      />
     </Dialog>
   );
 };

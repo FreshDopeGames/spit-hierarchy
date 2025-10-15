@@ -1499,6 +1499,45 @@ export type Database = {
           },
         ]
       }
+      rapper_suggestions: {
+        Row: {
+          additional_info: string | null
+          admin_notes: string | null
+          created_at: string
+          id: string
+          rapper_name: string
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          additional_info?: string | null
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          rapper_name: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          additional_info?: string | null
+          admin_notes?: string | null
+          created_at?: string
+          id?: string
+          rapper_name?: string
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rapper_tag_assignments: {
         Row: {
           created_at: string

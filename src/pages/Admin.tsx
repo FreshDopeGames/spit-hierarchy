@@ -14,6 +14,7 @@ import SectionHeaderManagement from "@/components/admin/SectionHeaderManagement"
 import AdminDataManagement from "@/components/admin/AdminDataManagement";
 import AdminAchievementManagement from "@/components/admin/AdminAchievementManagement";
 import AdminVSMatchManagement from "@/components/admin/AdminVSMatchManagement";
+import AdminRapperSuggestions from "@/components/admin/AdminRapperSuggestions";
 const Admin = () => {
   const {
     user,
@@ -43,6 +44,9 @@ const Admin = () => {
   }, {
     value: "achievements",
     label: "Achievements"
+  }, {
+    value: "suggestions",
+    label: "Suggestions"
   }, {
     value: "headers",
     label: "Headers"
@@ -75,6 +79,8 @@ const Admin = () => {
         return <AdminVSMatchManagement />;
       case "achievements":
         return <AdminAchievementManagement />;
+      case "suggestions":
+        return <AdminRapperSuggestions />;
       case "headers":
         return <SectionHeaderManagement />;
       case "theme":
@@ -109,7 +115,7 @@ const Admin = () => {
 
         {/* Desktop Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <ThemedTabsList className="hidden lg:grid w-full grid-cols-9 gap-1 h-auto p-2">
+          <ThemedTabsList className="hidden lg:grid w-full grid-cols-10 gap-1 h-auto p-2">
             {tabOptions.map(option => <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                 {option.label}
               </ThemedTabsTrigger>)}
