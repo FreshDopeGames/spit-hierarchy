@@ -9,18 +9,9 @@ import { Link } from "react-router-dom";
 
 interface TopMembersCardsProps {
   timeRange?: 'all' | 'week';
-  onRefresh?: () => void;
 }
 
-const TopMembersCards = ({ timeRange = 'all', onRefresh }: TopMembersCardsProps) => {
-  // Expose refetch functions to parent via callback
-  const handleRefresh = () => {
-    console.log('🔄 Manual refresh triggered for all member stats');
-    refetchCommenters();
-    refetchVoters();
-    refetchJudges();
-    onRefresh?.();
-  };
+const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
   // Top Commenters Query
   const { data: topCommenters, isLoading: loadingCommenters, refetch: refetchCommenters } = useQuery({
     queryKey: ['top-commenters', timeRange],
@@ -371,13 +362,6 @@ const TopMembersCards = ({ timeRange = 'all', onRefresh }: TopMembersCardsProps)
       </ThemedCardContent>
     </ThemedCard>
   );
-
-  // Make handleRefresh available if needed by parent component
-  React.useEffect(() => {
-    if (onRefresh) {
-      (window as any).__memberStatsRefresh = handleRefresh;
-    }
-  }, [onRefresh]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
