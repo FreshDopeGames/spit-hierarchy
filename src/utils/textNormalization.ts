@@ -117,7 +117,9 @@ export const createSearchOrQuery = (searchTerm: string, columns: string[] = ['na
   variations.forEach(variation => {
     columns.forEach(column => {
       // Use ILIKE for case-insensitive matching (works without PostgreSQL extensions)
-      patterns.push(`${column}.ilike.%${variation}%`);
+      // IMPORTANT: When using PostgREST filter strings (e.g., within .or()),
+      // wildcards must use asterisks (*) instead of SQL percent (%)
+      patterns.push(`${column}.ilike.*${variation}*`);
     });
   });
 

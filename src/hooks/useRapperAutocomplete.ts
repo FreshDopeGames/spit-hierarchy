@@ -42,12 +42,13 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
       
       // Also search in aliases array using partial text matching
       const { data, error } = await query
-        .or(`${searchOrQuery},aliases::text.ilike.%${debouncedSearchTerm}%`);
+        .or(`${searchOrQuery},aliases::text.ilike.*${debouncedSearchTerm}*`);
 
       if (error) throw error;
       
       // Sort results by relevance instead of just alphabetical
       const sortedResults = sortBySearchRelevance(data || [], debouncedSearchTerm);
+      console.log('[Autocomplete]', debouncedSearchTerm, 'results:', (data || []).length);
       return sortedResults;
     },
     enabled: debouncedSearchTerm.length >= 2,
