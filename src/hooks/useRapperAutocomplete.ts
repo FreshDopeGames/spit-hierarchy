@@ -59,6 +59,6 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
     setSearchTerm,
     searchResults,
     isSearching: isLoading,
-    hasMinLength: debouncedSearchTerm.length >= 2,
+    hasMinLength: searchTerm.length >= 2,
   };
 };
