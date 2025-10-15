@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { ThemedButton } from "@/components/ui/themed-button";
-import { Music, Search, Plus } from "lucide-react";
+import { Music, Search } from "lucide-react";
 import { useRapperSearch } from "@/hooks/useRapperSearch";
 import { useCanSuggestRappers } from "@/hooks/useCanSuggestRappers";
 import RapperSuggestionModal from "../RapperSuggestionModal";
@@ -104,16 +104,17 @@ const RapperSearchOverlay = ({
                 }}
               >
                 <p className="text-sm">No rappers found</p>
-                {canSuggest && (
-                  <ThemedButton
-                    variant="outline"
-                    size="sm"
-                    onClick={() => setSuggestionModalOpen(true)}
-                  >
-                    <Plus className="h-4 w-4 mr-2" />
-                    Suggest to Admins
-                  </ThemedButton>
-                )}
+                  {canSuggest && (
+                    <ThemedButton
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setSuggestionModalOpen(true)}
+                    >
+                      <span className="text-lg font-bold" style={{ color: 'hsl(var(--theme-primary))' }}>
+                        ⚠️ Suggest to Admins
+                      </span>
+                    </ThemedButton>
+                  )}
               </div>
             )}
 

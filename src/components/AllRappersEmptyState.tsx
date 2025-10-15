@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
-import { Music, Plus } from "lucide-react";
+import { Music } from "lucide-react";
 import { useCanSuggestRappers } from "@/hooks/useCanSuggestRappers";
 import RapperSuggestionModal from "./RapperSuggestionModal";
 
@@ -25,8 +25,9 @@ const AllRappersEmptyState = () => {
               onClick={() => setSuggestionModalOpen(true)}
               className="mt-2"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              Suggest a Rapper to Admins
+              <span className="text-lg font-bold" style={{ color: 'hsl(var(--theme-primary))' }}>
+                ⚠️ Suggest a Rapper to Admins
+              </span>
             </ThemedButton>
           )}
         </ThemedCardContent>
