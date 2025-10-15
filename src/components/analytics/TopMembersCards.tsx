@@ -1,3 +1,4 @@
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
@@ -8,11 +9,20 @@ import { Link } from "react-router-dom";
 
 interface TopMembersCardsProps {
   timeRange?: 'all' | 'week';
+  onRefresh?: () => void;
 }
 
-const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
+const TopMembersCards = ({ timeRange = 'all', onRefresh }: TopMembersCardsProps) => {
+  // Expose refetch functions to parent via callback
+  const handleRefresh = () => {
+    console.log('🔄 Manual refresh triggered for all member stats');
+    refetchCommenters();
+    refetchVoters();
+    refetchJudges();
+    onRefresh?.();
+  };
   // Top Commenters Query
-  const { data: topCommenters, isLoading: loadingCommenters } = useQuery({
+  const { data: topCommenters, isLoading: loadingCommenters, refetch: refetchCommenters } = useQuery({
     queryKey: ['top-commenters', timeRange],
     queryFn: async () => {
       console.log('Fetching top commenters for timeRange:', timeRange);
@@ -92,11 +102,15 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       
       console.log('Merged commenters data:', merged);
       return merged;
-    }
+    },
+    staleTime: 30000,
+    gcTime: 60000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   // Top Voters Query
-  const { data: topVoters, isLoading: loadingVoters } = useQuery({
+  const { data: topVoters, isLoading: loadingVoters, refetch: refetchVoters } = useQuery({
     queryKey: ['top-voters', timeRange],
     queryFn: async () => {
       console.log('Fetching top voters for timeRange:', timeRange);
@@ -176,14 +190,19 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       
       console.log('Merged voters data:', merged);
       return merged;
-    }
+    },
+    staleTime: 30000,
+    gcTime: 60000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   // Top Skill Judges Query (most attribute votes)
-  const { data: topJudges, isLoading: loadingJudges } = useQuery({
+  const { data: topJudges, isLoading: loadingJudges, refetch: refetchJudges } = useQuery({
     queryKey: ['top-skill-judges', timeRange],
     queryFn: async () => {
-      console.log('Fetching top skill judges for timeRange:', timeRange);
+      const queryStartTime = Date.now();
+      console.log('🔍 Fetching top skill judges for timeRange:', timeRange, 'at', new Date().toISOString());
       
       // Build query with optional date filter
       let query = supabase.from('votes').select('user_id');
@@ -200,11 +219,12 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       }
       
       if (!votes || votes.length === 0) {
-        console.log('No votes found');
+        console.log('⚠️ No votes found for timeRange:', timeRange);
         return [];
       }
       
-      console.log(`Found ${votes.length} total votes`);
+      const queryEndTime = Date.now();
+      console.log(`✅ Found ${votes.length} total skill votes for ${timeRange} (query took ${queryEndTime - queryStartTime}ms)`);
       
       // Group by user and count votes
       const userVoteCounts = votes.reduce((acc: any, vote: any) => {
@@ -221,7 +241,10 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
         .sort((a: any, b: any) => b.vote_count - a.vote_count)
         .slice(0, 5);
       
-      console.log('Top skill judges (sorted):', sortedUsers);
+      console.log(`📊 Top skill judges (${timeRange}):`, sortedUsers.map((u: any) => ({
+        user_id: u.user_id,
+        vote_count: u.vote_count
+      })));
       
       if (sortedUsers.length === 0) {
         return [];
@@ -249,9 +272,16 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
         profiles: profiles?.find(p => p.id === user.user_id) || null
       }));
       
-      console.log('Merged judges data:', merged);
+      console.log(`✨ Merged judges data (${timeRange}):`, merged.map((m: any) => ({
+        username: m.profiles?.username || 'Unknown',
+        vote_count: m.vote_count
+      })));
       return merged;
-    }
+    },
+    staleTime: 30000, // Cache for 30 seconds only
+    gcTime: 60000, // Keep in cache for 1 minute
+    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnWindowFocus: true, // Refetch when window regains focus
   });
 
   const MemberCard = ({ 
@@ -341,6 +371,13 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       </ThemedCardContent>
     </ThemedCard>
   );
+
+  // Make handleRefresh available if needed by parent component
+  React.useEffect(() => {
+    if (onRefresh) {
+      (window as any).__memberStatsRefresh = handleRefresh;
+    }
+  }, [onRefresh]);
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
