@@ -124,8 +124,8 @@ const VSMatches = () => {
                     </CardHeader>
                     <CardContent>
                       {/* Head-to-head display */}
-                      <div className="flex items-center justify-center gap-3 sm:gap-6 mb-4">
-                        <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-4">
+                        <div className="flex flex-col items-center space-y-1.5 w-full sm:flex-1 sm:min-w-0">
                           <div className="scale-[0.85] sm:scale-90">
                             <RapperAvatar rapper={match.rapper_1} size="md" variant="square" />
                           </div>
@@ -138,10 +138,10 @@ const VSMatches = () => {
                         </div>
                         
                         <div className="flex flex-col items-center px-1 sm:px-2 flex-shrink-0">
-                          <Swords className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--theme-background)]" />
+                          <Swords className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--theme-background)] rotate-90 sm:rotate-0" />
                         </div>
                         
-                        <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
+                        <div className="flex flex-col items-center space-y-1.5 w-full sm:flex-1 sm:min-w-0">
                           <div className="scale-[0.85] sm:scale-90">
                             <RapperAvatar rapper={match.rapper_2} size="md" variant="square" />
                           </div>
