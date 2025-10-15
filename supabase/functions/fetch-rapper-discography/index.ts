@@ -406,24 +406,29 @@ serve(async (req) => {
         console.log(`Continuing with base data for "${rg.title}"`);
       }
 
-      // Only exclude explicitly non-official releases (Bootlegs, Pseudo-Releases)
-      // If we have no release data or status is missing, allow the album through
+      // Only include officially released albums - be strict about status
       const releases = rgDetails?.releases || [];
       if (releases.length > 0) {
-        const hasKnownNonOfficialRelease = releases.some((release: any) => 
-          release && (release.status === 'Bootleg' || release.status === 'Pseudo-Release')
+        // Check if there's at least one Official release
+        const hasOfficialRelease = releases.some((release: any) => 
+          release && release.status === 'Official'
         );
         
-        if (hasKnownNonOfficialRelease) {
+        // Skip if no official releases found
+        if (!hasOfficialRelease) {
           const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
-          console.log(`Skipping "${rg.title}" - contains bootleg/pseudo releases (statuses: ${statusList})`);
+          console.log(`Skipping "${rg.title}" - no official releases (statuses: ${statusList})`);
           continue;
         }
+        
+        console.log(`Including "${rg.title}" - has official release`);
       } else {
-        console.log(`No release status data for "${rg.title}" - including album`);
+        // If no release data available, be conservative and skip
+        console.log(`Skipping "${rg.title}" - no release status data available`);
+        continue;
       }
 
-      // Only exclude clearly non-studio releases
+      // Exclude non-studio releases and unofficial types
       const excludedSecondaryTypes = [
         'Compilation',  // Greatest hits, collections
         'Live',         // Concert recordings
@@ -431,7 +436,9 @@ serve(async (req) => {
         'Soundtrack',   // Movie/game soundtracks
         'DJ-mix',       // DJ mixtapes
         'Spokenword',   // Audiobooks, poetry
-        'Interview'     // Interview albums
+        'Interview',    // Interview albums
+        'Demo',         // Demo recordings
+        'Audio drama'   // Audio dramas/plays
       ];
       
       const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
@@ -443,11 +450,13 @@ serve(async (req) => {
       // Detect mixtapes (MusicBrainz official category)
       const isMixtape = primaryType === 'Album' && secondary.includes('Mixtape/Street');
       
-      // Include if it's an Album or EP (and not excluded above)
-      const isValidRelease = (primaryType === 'Album' || primaryType === 'EP') && !hasExcludedType;
+      // Only include Albums (not EPs) that aren't excluded
+      // EPs are excluded to maintain accurate album counts
+      const isValidRelease = primaryType === 'Album' && !hasExcludedType;
       
       if (!isValidRelease) {
-        console.log(`Skipping "${rg.title}" - primary-type: ${primaryType}`);
+        const reason = primaryType === 'EP' ? 'EP excluded from albums' : `primary-type: ${primaryType}`;
+        console.log(`Skipping "${rg.title}" - ${reason}`);
         continue;
       }
 
