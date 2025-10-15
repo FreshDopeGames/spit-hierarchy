@@ -153,6 +153,9 @@ const BlogCarousel = () => {
   if (isLoading || featuredPosts.length === 0) return null;
 
   return <section className="mb-16">
+      <h2 className="font-ceviche text-primary mb-6 sm:mb-8 tracking-wider text-4xl sm:text-6xl text-center leading-tight">
+        FEATURED SLICK TALK
+      </h2>
       {/* Embla carousel container */}
       <div className="flex justify-center">
         <div 

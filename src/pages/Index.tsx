@@ -3,7 +3,6 @@ import { useOptimizedQuery } from "@/hooks/useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdaptivePolling } from "@/hooks/useAdaptivePolling";
 import HeaderNavigation from "@/components/HeaderNavigation";
-import HeroSection from "@/components/HeroSection";
 import BlogCarousel from "@/components/BlogCarousel";
 import HomepagePoll from "@/components/polls/HomepagePoll";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
@@ -147,9 +146,6 @@ const Index = () => {
                 </Button>
               </Link>
             </div>
-
-            {/* Hero Section */}
-            <HeroSection />
 
             {/* Ad between sections */}
             <ContentAdUnit size="medium" />
