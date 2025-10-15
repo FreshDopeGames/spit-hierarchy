@@ -29,7 +29,7 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
 
       let query = supabase
         .from("rappers")
-        .select("id, name, real_name, slug, aliases")
+        .select("id, name, real_name, slug, aliases, image_url")
         .limit(50); // Reasonable limit for autocomplete
 
       // Exclude specified IDs

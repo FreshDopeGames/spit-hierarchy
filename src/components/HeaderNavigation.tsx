@@ -6,6 +6,7 @@ import { useSecurityContext } from '@/hooks/useSecurityContext';
 import { useUserProfile } from '@/hooks/useUserProfile';
 import UserProfileDropdown from './UserProfileDropdown';
 import NavigationSidebar from './NavigationSidebar';
+import GlobalSearch from './GlobalSearch';
 import { AvatarSkeleton, TextSkeleton } from '@/components/ui/skeleton';
 
 interface HeaderNavigationProps {
@@ -38,8 +39,12 @@ const HeaderNavigation = ({
             />
           </Link>
 
-          {/* Right: User Menu */}
-          <div className="flex items-center">
+          {/* Right: Search Icon + User Menu */}
+          <div className="flex items-center gap-4">
+            {/* Global Search */}
+            <GlobalSearch />
+            
+            {/* User Menu */}
             {isLoading ? (
               <AvatarSkeleton size={isScrolled ? 'sm' : 'md'} />
             ) : user ? (
