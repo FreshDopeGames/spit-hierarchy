@@ -124,31 +124,31 @@ const VSMatches = () => {
                     </CardHeader>
                     <CardContent>
                       {/* Head-to-head display */}
-                      <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 mb-4">
-                        <div className="flex flex-col items-center space-y-1.5 w-full sm:flex-1 sm:min-w-0">
-                          <div className="scale-[0.85] sm:scale-90">
+                      <div className="flex flex-row items-center justify-center gap-2 sm:gap-4 md:gap-6 mb-4">
+                        <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
+                          <div className="scale-75 sm:scale-85 md:scale-90">
                             <RapperAvatar rapper={match.rapper_1} size="md" variant="square" />
                           </div>
-                          <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1 min-h-[2.5rem] flex items-center justify-center">
+                          <span className="text-[0.65rem] sm:text-xs md:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-0.5 sm:px-1 min-h-[2rem] sm:min-h-[2.5rem] flex items-center justify-center">
                             {match.rapper_1.name}
                           </span>
-                          <span className="text-xs text-[hsl(var(--theme-textInverted))]/80">
+                          <span className="text-[0.65rem] sm:text-xs text-[hsl(var(--theme-textInverted))]/80">
                             {formatNumber(match.rapper_1_votes)} votes
                           </span>
                         </div>
                         
                         <div className="flex flex-col items-center px-1 sm:px-2 flex-shrink-0">
-                          <Swords className="w-6 h-6 sm:w-8 sm:h-8 text-[var(--theme-background)] rotate-90 sm:rotate-0" />
+                          <Swords className="w-5 h-5 sm:w-6 sm:h-6 md:w-8 md:h-8 text-[var(--theme-background)]" />
                         </div>
                         
-                        <div className="flex flex-col items-center space-y-1.5 w-full sm:flex-1 sm:min-w-0">
-                          <div className="scale-[0.85] sm:scale-90">
+                        <div className="flex flex-col items-center space-y-1.5 flex-1 min-w-0">
+                          <div className="scale-75 sm:scale-85 md:scale-90">
                             <RapperAvatar rapper={match.rapper_2} size="md" variant="square" />
                           </div>
-                          <span className="text-xs sm:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-1 min-h-[2.5rem] flex items-center justify-center">
+                          <span className="text-[0.65rem] sm:text-xs md:text-sm font-semibold text-[hsl(var(--theme-textInverted))] text-center leading-tight px-0.5 sm:px-1 min-h-[2rem] sm:min-h-[2.5rem] flex items-center justify-center">
                             {match.rapper_2.name}
                           </span>
-                          <span className="text-xs text-[hsl(var(--theme-textInverted))]/80">
+                          <span className="text-[0.65rem] sm:text-xs text-[hsl(var(--theme-textInverted))]/80">
                             {formatNumber(match.rapper_2_votes)} votes
                           </span>
                         </div>
