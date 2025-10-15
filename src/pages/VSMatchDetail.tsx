@@ -114,7 +114,7 @@ const VSMatchDetail = () => {
           : ''
         } font-bold transition-all duration-200 font-mogra text-lg`}
         style={!hasVoted ? { 
-          background: 'linear-gradient(135deg, hsl(var(--theme-primary)) 0%, hsl(var(--theme-primaryLight)) 100%)',
+          background: 'linear-gradient(to right, hsl(var(--theme-primary)) 0%, hsl(var(--theme-primaryLight)) 50%, hsl(var(--theme-primary)) 100%)',
           color: 'hsl(var(--theme-background))'
         } : {}}
         size={isMobile ? "sm" : "default"}
@@ -295,7 +295,10 @@ const VSMatchDetail = () => {
             {/* Vote Distribution Bar */}
             {vsMatch!.total_votes > 0 && (
               <div className="mb-12">
-                <div className="bg-black rounded-lg p-6 border-4 border-[hsl(var(--theme-primary))]">
+                <div className="rounded-lg p-6 border-4 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30" style={{
+                  background: 'var(--theme-gradient-dark-gradient)',
+                  backgroundImage: 'linear-gradient(135deg, #0D0D0D 0%, #1A1A1A 100%)'
+                }}>
                   <h3 className="text-white text-lg font-bold mb-4 text-center font-mogra">
                     Vote Distribution
                   </h3>
