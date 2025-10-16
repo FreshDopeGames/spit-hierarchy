@@ -26,7 +26,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
   return (
     <Link to={rankingLink} className="block group" onClick={() => window.scrollTo(0, 0)}>
       <div
-        className="relative h-[380px] sm:h-[610px] md:h-[430px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
+        className="flex flex-col h-[330px] sm:h-[610px] md:h-[430px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: "var(--theme-element-ranking_card-border-radius, 12px)",
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
@@ -41,8 +41,9 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
           e.currentTarget.style.boxShadow = "var(--theme-element-ranking_card-shadow, 0 4px 6px rgba(0, 0, 0, 0.2))";
         }}
       >
-        {/* Rapper Mosaic Background - Top portion of card */}
-        <div className="absolute top-0 left-0 right-0 flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500">
+        {/* Mosaic Section - Fixed height */}
+        <div className="relative flex-none h-[180px] sm:h-[360px] md:h-[240px] overflow-hidden">
+          <div className="flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500 h-full">
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2">
             {topRowRappers.map((rapper) => (
@@ -122,21 +123,27 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               </div>
             ))}
           </div>
+          
+          {/* Subtle gradient at bottom of mosaic for smooth transition */}
+          <div
+            className="absolute bottom-0 left-0 right-0 h-8"
+            style={{
+              background: "linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent)",
+            }}
+          />
+        </div>
         </div>
 
-        {/* Gradient Overlay - Bottom area for text */}
-        <div
-          className="absolute bottom-0 left-0 right-0 h-[52%] sm:h-[50%] md:h-[52%]"
+        {/* Metadata Section - Fills remaining space */}
+        <div className="flex-1 flex flex-col justify-between p-3 sm:p-6 pb-3 sm:pb-4"
           style={{
-            background:
-              "var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))",
+            backgroundColor: "var(--theme-element-ranking_card-bg, #1A1A1A)",
           }}
-        />
-
-        {/* Content - Positioned in bottom area */}
-        <div className="absolute bottom-0 left-0 right-0 h-[50%] sm:h-[45%] md:h-[50%] flex flex-col justify-end p-3 sm:p-6 pb-3 sm:pb-4">
-          {/* Category Badge */}
-          <div className="mb-0.5 sm:mb-1">
+        >
+          {/* Top content group */}
+          <div className="flex flex-col">
+            {/* Category Badge */}
+            <div className="mb-0.5 sm:mb-1">
             <span
               className="inline-flex items-center backdrop-blur-sm"
               style={{
@@ -190,24 +197,25 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
             </p>
           )}
 
-          {/* Author for Community Rankings */}
-          {!ranking.isOfficial && ranking.author && (
-            <div
-              className="flex items-center gap-1 text-xs sm:text-sm mb-2"
-              style={{
-                color: "var(--theme-element-ranking_card_stats-color, #BFBFBF)",
-                fontSize: "var(--theme-element-ranking_card_stats-font-size, 0.75rem)",
-                fontWeight: "var(--theme-element-ranking_card_stats-font-weight, 400)",
-                lineHeight: "var(--theme-element-ranking_card_stats-line-height, 1.25)",
-              }}
-            >
-              <User className="w-4 h-4" />
-              <span>by {ranking.author}</span>
-            </div>
-          )}
+            {/* Author for Community Rankings */}
+            {!ranking.isOfficial && ranking.author && (
+              <div
+                className="flex items-center gap-1 text-xs sm:text-sm"
+                style={{
+                  color: "var(--theme-element-ranking_card_stats-color, #BFBFBF)",
+                  fontSize: "var(--theme-element-ranking_card_stats-font-size, 0.75rem)",
+                  fontWeight: "var(--theme-element-ranking_card_stats-font-weight, 400)",
+                  lineHeight: "var(--theme-element-ranking_card_stats-line-height, 1.25)",
+                }}
+              >
+                <User className="w-4 h-4" />
+                <span>by {ranking.author}</span>
+              </div>
+            )}
+          </div>
 
-          {/* Stats Row */}
-          <div className="flex items-center justify-between">
+          {/* Stats Row - Pinned to bottom */}
+          <div className="flex items-center justify-between mt-2">
             <div
               className="flex items-center gap-1 text-xs sm:text-sm"
               style={{
@@ -237,14 +245,6 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
             </div>
           </div>
         </div>
-
-        {/* Hover State Overlay */}
-        <div
-          className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-          style={{
-            background: "var(--theme-element-ranking_card-hover-overlay, rgba(212, 175, 55, 0.05))",
-          }}
-        />
       </div>
     </Link>
   );
