@@ -10,8 +10,11 @@ interface RankingCardProps {
 }
 
 const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
-  // Get the top 5 rappers for the mosaic
-  const topFiveRappers = ranking.rappers?.slice(0, 5) || [];
+  // Get the top 5 rappers for the mosaic, sorted by rank to match detail page
+  const topFiveRappers = (ranking.rappers || [])
+    .slice()
+    .sort((a, b) => (a.rank || 0) - (b.rank || 0))
+    .slice(0, 5);
 
   // Split into top row (2 images) and bottom row (3 images)
   const topRowRappers = topFiveRappers.slice(0, 2);
