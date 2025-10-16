@@ -40,7 +40,7 @@ export const useRapperSearch = (excludeIds: string[] = []) => {
         
         // Also search in aliases array using partial text matching
         const { data: results, error } = await query
-          .or(`${searchOrQuery},aliases::text.ilike.*${debouncedSearchTerm}*`)
+          .or(searchOrQuery)
           .limit(20);
 
         if (error) {

@@ -40,16 +40,22 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
       // Use enhanced search with normalization for both name and real_name
       const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
       
-      // Also search in aliases array using partial text matching
-      const { data, error } = await query
-        .or(`${searchOrQuery},aliases::text.ilike.*${debouncedSearchTerm}*`);
+      try {
+        const { data, error } = await query.or(searchOrQuery);
 
-      if (error) throw error;
-      
-      // Sort results by relevance instead of just alphabetical
-      const sortedResults = sortBySearchRelevance(data || [], debouncedSearchTerm);
-      console.log('[Autocomplete]', debouncedSearchTerm, 'results:', (data || []).length);
-      return sortedResults;
+        if (error) {
+          console.error("[Autocomplete] search error:", error);
+          return [];
+        }
+
+        // Sort results by relevance instead of just alphabetical
+        const sortedResults = sortBySearchRelevance(data || [], debouncedSearchTerm);
+        console.log('[Autocomplete]', debouncedSearchTerm, 'results:', (data || []).length);
+        return sortedResults;
+      } catch (err) {
+        console.error("[Autocomplete] unexpected error:", err);
+        return [];
+      }
     },
     enabled: debouncedSearchTerm.length >= 2,
     staleTime: 5 * 60 * 1000, // 5 minutes
