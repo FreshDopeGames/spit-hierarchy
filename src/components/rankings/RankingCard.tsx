@@ -26,7 +26,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
   return (
     <Link to={rankingLink} className="block group" onClick={() => window.scrollTo(0, 0)}>
       <div
-        className="flex flex-col h-[380px] sm:h-[480px] md:h-[610px] transition-all duration-300 group-hover:scale-[1.02]"
+        className="flex flex-col h-[380px] sm:h-[610px] md:h-[520px] transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: "var(--theme-element-ranking_card-border-radius, 12px)",
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
@@ -45,11 +45,11 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
         <div className="relative flex-none h-[170px] sm:h-[320px] md:h-[260px] overflow-hidden">
           <div className="flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500 h-full">
             {/* Top Row - 2 Images */}
-            <div className="grid grid-cols-2">
+            <div className="grid grid-cols-2 h-1/2">
               {topRowRappers.map((rapper) => (
                 <div
                   key={rapper.id}
-                  className="relative aspect-[4/3] overflow-hidden"
+                  className="relative h-full overflow-hidden"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -69,7 +69,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
                 <div
                   key={`top-placeholder-${index}`}
-                  className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                  className="relative h-full overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -85,11 +85,11 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
             </div>
 
             {/* Bottom Row - 3 Images */}
-            <div className="grid grid-cols-3">
+            <div className="grid grid-cols-3 h-1/2">
               {bottomRowRappers.map((rapper) => (
                 <div
                   key={rapper.id}
-                  className="relative aspect-[4/3] overflow-hidden"
+                  className="relative h-full overflow-hidden"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -109,7 +109,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
                 <div
                   key={`bottom-placeholder-${index}`}
-                  className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                  className="relative h-full overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -136,13 +136,13 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
 
         {/* Metadata Section - Fills remaining space */}
         <div
-          className="flex-1 flex flex-col justify-between p-3 sm:p-6 pb-3 sm:pb-4"
+          className="flex-1 min-h-0 flex flex-col justify-between p-3 sm:p-6 pb-3 sm:pb-4"
           style={{
             background: "linear-gradient(to bottom, #404040 0%, #000000 100%)",
           }}
         >
           {/* Top content group */}
-          <div className="flex flex-col">
+          <div className="flex flex-col min-h-0">
             {/* Category Badge */}
             <div className="mb-0.5 sm:mb-1">
               <span
