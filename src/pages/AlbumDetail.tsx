@@ -5,6 +5,9 @@ import { AlbumHeader } from "@/components/album/AlbumHeader";
 import { AlbumTrackList } from "@/components/album/AlbumTrackList";
 import { Skeleton } from "@/components/ui/skeleton";
 import SEOHead from "@/components/seo/SEOHead";
+import HeaderNavigation from "@/components/HeaderNavigation";
+import Footer from "@/components/Footer";
+import BackToTopButton from "@/components/BackToTopButton";
 
 const AlbumDetail = () => {
   const { rapperSlug, albumSlug } = useParams<{
@@ -21,34 +24,46 @@ const AlbumDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        <div className="flex flex-col md:flex-row gap-8">
-          <Skeleton className="w-64 h-64 md:w-80 md:h-80 rounded-lg" />
-          <div className="flex-1 space-y-4">
-            <Skeleton className="h-12 w-3/4" />
-            <Skeleton className="h-6 w-1/2" />
-            <Skeleton className="h-8 w-32" />
+      <>
+        <HeaderNavigation isScrolled={false} />
+        <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))]">
+          <div className="container mx-auto px-4 pt-28 pb-16 space-y-12">
+            <div className="flex flex-col items-center space-y-8">
+              <Skeleton className="w-80 h-80 md:w-96 md:h-96 rounded-lg" />
+              <div className="flex flex-col items-center space-y-4">
+                <Skeleton className="h-12 w-96" />
+                <Skeleton className="h-6 w-48" />
+                <Skeleton className="h-8 w-32" />
+              </div>
+            </div>
+            <div className="space-y-2 max-w-4xl mx-auto">
+              {Array.from({ length: 10 }).map((_, i) => (
+                <Skeleton key={i} className="h-12 w-full" />
+              ))}
+            </div>
           </div>
         </div>
-        <div className="space-y-2">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <Skeleton key={i} className="h-12 w-full" />
-          ))}
-        </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
   if (error || !album) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <h1 className="text-2xl font-bold mb-4">Album Not Found</h1>
-          <p className="text-muted-foreground">
-            The album you're looking for doesn't exist or has been removed.
-          </p>
+      <>
+        <HeaderNavigation isScrolled={false} />
+        <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))]">
+          <div className="container mx-auto px-4 pt-28 pb-16">
+            <div className="text-center py-12">
+              <h1 className="text-2xl font-bold mb-4">Album Not Found</h1>
+              <p className="text-muted-foreground">
+                The album you're looking for doesn't exist or has been removed.
+              </p>
+            </div>
+          </div>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
@@ -88,26 +103,38 @@ const AlbumDetail = () => {
         }}
       />
 
-      <div className="container mx-auto px-4 py-8 space-y-8">
-        <AlbumHeader
-          albumTitle={album.album_title}
-          rapperName={album.rapper_name}
-          rapperSlug={album.rapper_slug}
-          coverArtUrl={album.cover_art_url}
-          releaseDate={album.release_date}
-          releaseType={album.release_type}
-          trackCount={album.track_count}
-        />
-
-        <div>
-          <h2 className="text-2xl font-bold mb-4">Tracks</h2>
-          <AlbumTrackList
-            tracks={album.tracks}
-            onVote={toggleVote}
-            isVoting={isSubmitting}
+      <HeaderNavigation isScrolled={false} />
+      
+      <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))] relative">
+        <div className="container mx-auto px-4 pt-28 pb-16 space-y-12">
+          {/* Centered Album Header */}
+          <AlbumHeader
+            albumTitle={album.album_title}
+            rapperName={album.rapper_name}
+            rapperSlug={album.rapper_slug}
+            coverArtUrl={album.cover_art_url}
+            releaseDate={album.release_date}
+            releaseType={album.release_type}
+            trackCount={album.track_count}
           />
+
+          {/* Track Listing Section */}
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--theme-font-heading)" }}>
+              Tracks
+            </h2>
+            <AlbumTrackList
+              tracks={album.tracks}
+              onVote={toggleVote}
+              isVoting={isSubmitting}
+            />
+          </div>
         </div>
+        
+        <BackToTopButton />
       </div>
+
+      <Footer />
     </>
   );
 };
