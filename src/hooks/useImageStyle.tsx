@@ -178,7 +178,7 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
 // Enhanced batch hook for loading multiple rapper images efficiently
 export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original') => {
   return useQuery({
-    queryKey: ["rapper-images-batch", rapperIds, "comic_book", size],
+    queryKey: ["rapper-images-batch", [...rapperIds].sort(), "comic_book", size],
     queryFn: async () => {
       if (rapperIds.length === 0) return {};
 
@@ -253,6 +253,7 @@ export const useRapperImages = (rapperIds: string[], size?: 'thumb' | 'medium' |
     enabled: rapperIds.length > 0,
     staleTime: 30 * 60 * 1000, // 30 minutes - rapper images rarely change
     refetchOnWindowFocus: false,
-    retry: 2
+    retry: 2,
+    placeholderData: (previousData) => previousData // Prevent blinking during refetches
   });
 };
