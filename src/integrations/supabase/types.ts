@@ -504,7 +504,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          ranking_id: string
+          ranking_id: string | null
           rapper_id: string
           user_id: string
           user_ranking_id: string | null
@@ -513,7 +513,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          ranking_id: string
+          ranking_id?: string | null
           rapper_id: string
           user_id: string
           user_ranking_id?: string | null
@@ -522,7 +522,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          ranking_id?: string
+          ranking_id?: string | null
           rapper_id?: string
           user_id?: string
           user_ranking_id?: string | null

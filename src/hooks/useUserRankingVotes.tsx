@@ -64,6 +64,10 @@ export const useUserRankingVotes = () => {
 
       if (voteError) {
         console.error('User ranking vote error:', voteError);
+        const isDuplicate = (voteError as any)?.code === '23505' || String((voteError as any)?.message || '').includes('unique_user_ranking_daily_vote');
+        if (isDuplicate) {
+          throw new Error('You already voted for this rapper today.');
+        }
         throw new Error('Failed to submit vote. Please try again.');
       }
 
@@ -125,7 +129,7 @@ export const useUserRankingVotes = () => {
         });
       }
     },
-  onError: (error, variables, context) => {
+    onError: (error, variables, context) => {
       console.error('User ranking vote failed:', error);
       
       toast.error(error instanceof Error ? error.message : "Failed to submit vote", {
@@ -135,6 +139,17 @@ export const useUserRankingVotes = () => {
       // Rollback optimistic update on error
       if (context?.previousData && context?.queryKey) {
         queryClient.setQueryData(context.queryKey, context.previousData);
+      }
+
+      // Ensure caches reflect server truth
+      if (user && variables) {
+        const today = new Date().toISOString().split('T')[0];
+        queryClient.invalidateQueries({ 
+          queryKey: ['daily-votes', user.id, today, variables.userRankingId]
+        });
+        queryClient.invalidateQueries({ 
+          queryKey: ['user-ranking-detail', variables.userRankingId]
+        });
       }
     }
   });
