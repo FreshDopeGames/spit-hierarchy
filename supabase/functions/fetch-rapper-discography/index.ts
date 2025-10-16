@@ -402,31 +402,32 @@ serve(async (req) => {
         await delay(120);
       } catch (detailError: any) {
         console.error(`Error fetching details for "${rg.title}":`, detailError);
-        // Don't skip - continue with base data, we'll just have fewer details
-        console.log(`Continuing with base data for "${rg.title}"`);
+        // Skip if we can't verify official status - be conservative
+        console.log(`Skipping "${rg.title}" - cannot verify official status (API error)`);
+        continue;
       }
 
       // Only include officially released albums - be strict about status
       const releases = rgDetails?.releases || [];
-      if (releases.length > 0) {
-        // Check if there's at least one Official release
-        const hasOfficialRelease = releases.some((release: any) => 
-          release && release.status === 'Official'
-        );
-        
-        // Skip if no official releases found
-        if (!hasOfficialRelease) {
-          const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
-          console.log(`Skipping "${rg.title}" - no official releases (statuses: ${statusList})`);
-          continue;
-        }
-        
-        console.log(`Including "${rg.title}" - has official release`);
-      } else {
+      if (releases.length === 0) {
         // If no release data available, be conservative and skip
         console.log(`Skipping "${rg.title}" - no release status data available`);
         continue;
       }
+      
+      // Check if there's at least one Official release
+      const hasOfficialRelease = releases.some((release: any) => 
+        release && release.status === 'Official'
+      );
+      
+      // Skip if no official releases found
+      if (!hasOfficialRelease) {
+        const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
+        console.log(`Skipping "${rg.title}" - no official releases (statuses: ${statusList})`);
+        continue;
+      }
+      
+      console.log(`Including "${rg.title}" - has official release`);
 
       // Exclude non-studio releases and unofficial types
       const excludedSecondaryTypes = [
