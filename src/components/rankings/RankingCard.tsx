@@ -26,7 +26,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
   return (
     <Link to={rankingLink} className="block group" onClick={() => window.scrollTo(0, 0)}>
       <div
-        className="flex flex-col min-h-[500px] sm:min-h-[650px] md:min-h-[580px] transition-all duration-300 group-hover:scale-[1.02]"
+        className="flex flex-col min-h-[420px] sm:min-h-[650px] md:min-h-[500px] transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: "var(--theme-element-ranking_card-border-radius, 12px)",
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
