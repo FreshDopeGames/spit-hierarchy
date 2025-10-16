@@ -43,13 +43,13 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
       >
         {/* Mosaic Section - Fixed height */}
         <div className="relative flex-none h-[240px] sm:h-[420px] md:h-[340px] overflow-hidden">
-          <div className="flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500 h-full">
+          <div className="flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500">
             {/* Top Row - 2 Images */}
             <div className="grid grid-cols-2 flex-1">
               {topRowRappers.map((rapper) => (
                 <div
                   key={rapper.id}
-                  className="relative h-full overflow-hidden"
+                  className="relative aspect-[4/3] w-full overflow-hidden"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -69,7 +69,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
                 <div
                   key={`top-placeholder-${index}`}
-                  className="relative h-full overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                  className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -89,7 +89,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               {bottomRowRappers.map((rapper) => (
                 <div
                   key={rapper.id}
-                  className="relative h-full overflow-hidden"
+                  className="relative aspect-[4/3] w-full overflow-hidden"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
@@ -109,7 +109,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
                 <div
                   key={`bottom-placeholder-${index}`}
-                  className="relative h-full overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                  className="relative aspect-[4/3] w-full overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
                   style={{
                     border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
