@@ -14,8 +14,8 @@ const RankingItemPositionCap = ({ position, isTopFive, voteCount, visualRank }: 
   const isMobile = useIsMobile();
   const { theme } = useEnhancedTheme();
 
-  const getPositionGradient = (position: number) => {
-    if (position <= 5) {
+  const getPositionGradient = (isTopFive: boolean) => {
+    if (isTopFive) {
       return "bg-gradient-to-br from-[hsl(var(--theme-primaryDark))] via-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryLight))]";
     }
     return "bg-gradient-to-br from-gray-600 via-gray-500 to-gray-400";
@@ -51,7 +51,7 @@ const RankingItemPositionCap = ({ position, isTopFive, voteCount, visualRank }: 
   const displayText = voteCount === 0 ? "–" : (visualRank?.toString() || position.toString());
 
   return (
-    <div className={`${getPositionGradient(position)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0 ${getPositioning()}`}>
+    <div className={`${getPositionGradient(isTopFive)} ${getRoundedCorners()} ${getSizing()} flex items-center justify-center flex-shrink-0 ${getPositioning()}`}>
       <span className={`${isTopFive ? 'text-3xl' : 'text-lg'} font-bold text-rap-carbon font-mogra relative z-10`}>
         {displayText}
       </span>

@@ -134,7 +134,13 @@ export const useRankingData = (rankingId: string) => {
       // Calculate visual ranks for items with tied vote counts
       const itemsWithVisualRanks = calculateVisualRanks(itemsWithVotesAndDeltas);
 
-      return itemsWithVisualRanks;
+      // Add display_index based on the current sort order (by position)
+      const itemsWithDisplayIndex = itemsWithVisualRanks.map((item, index) => ({
+        ...item,
+        display_index: index + 1 // 1-based display order for premium styling
+      }));
+
+      return itemsWithDisplayIndex;
     },
     refetchInterval,
     refetchIntervalInBackground,
