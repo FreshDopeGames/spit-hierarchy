@@ -64,8 +64,6 @@ const VoteButton = ({
       }
 
       try {
-        addVoteToTracking(rapperId);
-        
         if (userRankingId) {
           // User ranking vote
           if (!userRankingId.match(/^[a-f0-9-]{36}$/i)) {
