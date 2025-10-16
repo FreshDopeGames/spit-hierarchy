@@ -3148,6 +3148,23 @@ export type Database = {
           username: string
         }[]
       }
+      search_rappers: {
+        Args: {
+          exclude_ids?: string[]
+          max_results?: number
+          search_term: string
+        }
+        Returns: {
+          aliases: string[]
+          id: string
+          image_url: string
+          match_source: string
+          name: string
+          real_name: string
+          score: number
+          slug: string
+        }[]
+      }
       unaccent: {
         Args: { "": string }
         Returns: string

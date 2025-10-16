@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { createSearchOrQuery, sortBySearchRelevance } from "@/utils/textNormalization";
 
 interface UseRapperAutocompleteOptions {
   excludeIds?: string[];
@@ -27,31 +26,20 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
         return [];
       }
 
-      let query = supabase
-        .from("rappers")
-        .select("id, name, real_name, slug, aliases, image_url")
-        .limit(50); // Reasonable limit for autocomplete
-
-      // Exclude specified IDs
-      if (options.excludeIds && options.excludeIds.length > 0) {
-        query = query.not("id", "in", `(${options.excludeIds.join(",")})`);
-      }
-
-      // Use enhanced search with normalization for both name and real_name
-      const searchOrQuery = createSearchOrQuery(debouncedSearchTerm, ['name', 'real_name']);
-      
       try {
-        const { data, error } = await query.or(searchOrQuery);
+        const { data, error } = await supabase.rpc('search_rappers', {
+          search_term: debouncedSearchTerm,
+          exclude_ids: options.excludeIds || [],
+          max_results: 50
+        });
 
         if (error) {
           console.error("[Autocomplete] search error:", error);
           return [];
         }
 
-        // Sort results by relevance instead of just alphabetical
-        const sortedResults = sortBySearchRelevance(data || [], debouncedSearchTerm);
         console.log('[Autocomplete]', debouncedSearchTerm, 'results:', (data || []).length);
-        return sortedResults;
+        return data || [];
       } catch (err) {
         console.error("[Autocomplete] unexpected error:", err);
         return [];
