@@ -95,6 +95,47 @@ export type Database = {
         }
         Relationships: []
       }
+      album_tracks: {
+        Row: {
+          album_id: string
+          created_at: string
+          duration_ms: number | null
+          id: string
+          musicbrainz_id: string | null
+          title: string
+          track_number: number
+          updated_at: string
+        }
+        Insert: {
+          album_id: string
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          musicbrainz_id?: string | null
+          title: string
+          track_number: number
+          updated_at?: string
+        }
+        Update: {
+          album_id?: string
+          created_at?: string
+          duration_ms?: number | null
+          id?: string
+          musicbrainz_id?: string | null
+          title?: string
+          track_number?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_tracks_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       albums: {
         Row: {
           cover_art_colors: Json | null
@@ -107,6 +148,7 @@ export type Database = {
           musicbrainz_id: string | null
           release_date: string | null
           release_type: string
+          slug: string | null
           title: string
           track_count: number | null
           updated_at: string
@@ -122,6 +164,7 @@ export type Database = {
           musicbrainz_id?: string | null
           release_date?: string | null
           release_type?: string
+          slug?: string | null
           title: string
           track_count?: number | null
           updated_at?: string
@@ -137,6 +180,7 @@ export type Database = {
           musicbrainz_id?: string | null
           release_date?: string | null
           release_type?: string
+          slug?: string | null
           title?: string
           track_count?: number | null
           updated_at?: string
@@ -1824,6 +1868,35 @@ export type Database = {
           },
         ]
       }
+      track_votes: {
+        Row: {
+          created_at: string
+          id: string
+          track_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          track_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          track_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_votes_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "album_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_achievements: {
         Row: {
           achievement_id: string
@@ -2648,6 +2721,21 @@ export type Database = {
         }
         Relationships: []
       }
+      track_vote_counts: {
+        Row: {
+          track_id: string | null
+          vote_count: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_votes_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "album_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_achievement_progress: {
         Row: {
           achievement_id: string | null
@@ -2795,6 +2883,23 @@ export type Database = {
         Returns: {
           id: string
           username: string
+        }[]
+      }
+      generate_album_slug: {
+        Args: { album_id: string; album_title: string }
+        Returns: string
+      }
+      get_album_with_tracks: {
+        Args: { album_uuid: string }
+        Returns: {
+          album_id: string
+          album_slug: string
+          album_title: string
+          cover_art_url: string
+          release_date: string
+          release_type: string
+          track_count: number
+          tracks: Json
         }[]
       }
       get_category_voting_analytics: {
@@ -3164,6 +3269,10 @@ export type Database = {
           score: number
           slug: string
         }[]
+      }
+      toggle_track_vote: {
+        Args: { track_uuid: string; user_uuid?: string }
+        Returns: Json
       }
       unaccent: {
         Args: { "": string }

@@ -182,7 +182,11 @@ const RapperDetail = () => {
 
           {/* Discography Section - MusicBrainz integration */}
           <div className="mb-8">
-            <RapperDiscography rapperId={rapper.id} rapperName={rapper.name} />
+            <RapperDiscography 
+              rapperId={rapper.id} 
+              rapperName={rapper.name}
+              rapperSlug={rapper.slug}
+            />
           </div>
 
           {/* Attribute Stats - Sports-style performance stats */}

@@ -10,6 +10,7 @@ import UserProfile from "./pages/UserProfile";
 import Analytics from "./pages/Analytics";
 import AllRappersPage from "./pages/AllRappersPage";
 import RapperDetail from "./pages/RapperDetail";
+import AlbumDetail from "./pages/AlbumDetail";
 import Rankings from "./pages/Rankings";
 import OfficialRankingDetail from "./pages/OfficialRankingDetail";
 import UserRankingDetail from "./pages/UserRankingDetail";
@@ -44,6 +45,7 @@ function App() {
           <Route path="/rappers" element={<AllRappersPage />} />
           <Route path="/all-rappers" element={<AllRappersPage />} />
           <Route path="/rapper/:id" element={<RapperDetail />} />
+          <Route path="/rapper/:rapperSlug/:albumSlug" element={<AlbumDetail />} />
           <Route path="/rankings" element={<Rankings />} />
           <Route path="/rankings/official/:slug" element={<OfficialRankingDetail />} />
           <Route path="/rankings/community-rankings/:slug" element={<UserRankingRedirect />} />

@@ -9,14 +9,17 @@ import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { format } from "date-fns";
 import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
 import { AlbumCoverImage } from "@/components/ui/AlbumCoverImage";
+import { Link } from "react-router-dom";
 
 interface RapperDiscographyProps {
   rapperId: string;
   rapperName?: string;
+  rapperSlug?: string;
 }
 const RapperDiscography = ({
   rapperId,
-  rapperName = "Unknown Artist"
+  rapperName = "Unknown Artist",
+  rapperSlug = ""
 }: RapperDiscographyProps) => {
   const {
     data,
@@ -133,16 +136,19 @@ const RapperDiscography = ({
                 appleMusic: directLinks.apple_music || searchLinks.appleMusic
               };
               return <div key={item.id} className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors">
-                <AlbumCoverImage
-                  coverUrl={item.album?.cover_art_url}
-                  title={item.album?.title || 'Album'}
-                  releaseType="album"
-                  placeholderColors={placeholder.style}
-                />
+                    <AlbumCoverImage
+                      coverUrl={item.album?.cover_art_url}
+                      title={item.album?.title || 'Album'}
+                      releaseType="album"
+                      placeholderColors={placeholder.style}
+                    />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate">
+                      <Link
+                        to={`/rapper/${rapperSlug}/${item.album?.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                        className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
+                      >
                         {item.album?.title}
-                      </h4>
+                      </Link>
                       <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
@@ -194,9 +200,12 @@ const RapperDiscography = ({
                       placeholderColors={placeholder.style}
                     />
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate">
+                      <Link
+                        to={`/rapper/${rapperSlug}/${item.album?.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                        className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
+                      >
                         {item.album?.title}
-                      </h4>
+                      </Link>
                       <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
