@@ -30,7 +30,7 @@ const RankingCard = ({
       onClick={() => window.scrollTo(0, 0)}
     >
       <div 
-        className="relative h-[420px] sm:h-[470px] md:h-[520px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02] flex flex-col"
+        className="relative h-[420px] sm:h-[510px] md:h-[540px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02] flex flex-col"
         style={{
           borderRadius: 'var(--theme-element-ranking_card-border-radius, 12px)',
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
