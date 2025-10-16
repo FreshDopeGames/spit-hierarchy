@@ -135,6 +135,20 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
         return;
       }
 
+      // Fetch vote counts from materialized view
+      const { data: voteCounts } = await supabase
+        .from('user_ranking_vote_counts')
+        .select('rapper_id, total_vote_weight')
+        .eq('user_ranking_id', data.id);
+      
+      // Create a map for quick vote count lookups
+      const voteCountMap = new Map(
+        (voteCounts || []).map(vc => [vc.rapper_id, vc.total_vote_weight])
+      );
+      
+      // Store vote count map on the data object for use in transformation
+      (data as any).voteCountMap = voteCountMap;
+      
       setRanking(data);
       
       // Fetch view count (cached in the table)
@@ -205,6 +219,9 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
   const sortedItems = ranking.user_ranking_items.sort((a, b) => a.position - b.position);
   const isOwner = user && user.id === ranking.user_id;
 
+  // Get vote count map from ranking data
+  const voteCountMap = (ranking as any).voteCountMap || new Map();
+
   // Transform user ranking items to match RankingItemWithDelta interface
   const rankingItems: RankingItemWithDelta[] = sortedItems.map((item) => ({
     id: item.id,
@@ -221,7 +238,7 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
       slug: item.rapper.slug
     },
     position_delta: 0,
-    ranking_votes: 0,
+    ranking_votes: voteCountMap.get(item.rapper.id) || 0,
     dynamic_position: item.position,
     visual_rank: item.position
   }));
