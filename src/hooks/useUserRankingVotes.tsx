@@ -84,12 +84,41 @@ export const useUserRankingVotes = () => {
 
       return voteData;
     },
-    onMutate: async ({ userRankingId, rapperId }) => {
+  onMutate: async ({ userRankingId, rapperId }) => {
       toast.loading("Submitting your vote...", {
         id: 'user-ranking-vote-submission'
       });
       
-      return { userRankingId, rapperId };
+      // Optimistically update the daily vote tracking cache
+      const today = new Date().toISOString().split('T')[0];
+      const queryKey = ['daily-votes', user!.id, today, userRankingId];
+      
+      // Get the previous data for potential rollback
+      const previousData = queryClient.getQueryData(queryKey);
+      
+      // Optimistically add this vote to the cache
+      queryClient.setQueryData(queryKey, (old: any[] = []) => {
+        // Check if vote already exists
+        const voteExists = old.some((vote: any) => 
+          vote.rapper_id === rapperId && 
+          vote.user_ranking_id === userRankingId
+        );
+        
+        if (voteExists) return old;
+        
+        return [
+          ...old,
+          {
+            user_id: user!.id,
+            rapper_id: rapperId,
+            user_ranking_id: userRankingId,
+            ranking_id: null,
+            vote_date: today
+          }
+        ];
+      });
+      
+      return { userRankingId, rapperId, previousData, queryKey };
     },
     onSuccess: (data, variables) => {
       toast.success("Vote submitted successfully!", {
@@ -110,12 +139,17 @@ export const useUserRankingVotes = () => {
         });
       }
     },
-    onError: (error, variables) => {
+  onError: (error, variables, context) => {
       console.error('User ranking vote failed:', error);
       
       toast.error(error instanceof Error ? error.message : "Failed to submit vote", {
         id: 'user-ranking-vote-submission'
       });
+      
+      // Rollback optimistic update on error
+      if (context?.previousData && context?.queryKey) {
+        queryClient.setQueryData(context.queryKey, context.previousData);
+      }
     }
   });
 
