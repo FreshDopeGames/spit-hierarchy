@@ -26,7 +26,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
   return (
     <Link to={rankingLink} className="block group" onClick={() => window.scrollTo(0, 0)}>
       <div
-        className="flex flex-col h-[380px] sm:h-[610px] md:h-[480px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
+        className="flex flex-col h-[380px] sm:h-[480px] md:h-[610px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: "var(--theme-element-ranking_card-border-radius, 12px)",
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
@@ -44,98 +44,99 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
         {/* Mosaic Section - Fixed height */}
         <div className="relative flex-none h-[170px] sm:h-[320px] md:h-[260px] overflow-hidden">
           <div className="flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500 h-full">
-          {/* Top Row - 2 Images */}
-          <div className="grid grid-cols-2">
-            {topRowRappers.map((rapper) => (
-              <div
-                key={rapper.id}
-                className="relative aspect-[4/3] overflow-hidden"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
-                }}
-              >
-                <EnhancedImage
-                  src={rapper.image_url || getOptimizedPlaceholder("thumb")}
-                  alt={rapper.name}
-                  size="thumb"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder("thumb");
+            {/* Top Row - 2 Images */}
+            <div className="grid grid-cols-2">
+              {topRowRappers.map((rapper) => (
+                <div
+                  key={rapper.id}
+                  className="relative aspect-[4/3] overflow-hidden"
+                  style={{
+                    border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
-                />
-              </div>
-            ))}
-            {/* Fill empty spots if less than 2 rappers */}
-            {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
-              <div
-                key={`top-placeholder-${index}`}
-                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
-                }}
-              >
-                <EnhancedImage
-                  src={getOptimizedPlaceholder("thumb")}
-                  alt="Placeholder"
-                  className="opacity-30"
-                  size="thumb"
-                />
-              </div>
-            ))}
-          </div>
+                >
+                  <EnhancedImage
+                    src={rapper.image_url || getOptimizedPlaceholder("thumb")}
+                    alt={rapper.name}
+                    size="thumb"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = getOptimizedPlaceholder("thumb");
+                    }}
+                  />
+                </div>
+              ))}
+              {/* Fill empty spots if less than 2 rappers */}
+              {Array.from({ length: 2 - topRowRappers.length }).map((_, index) => (
+                <div
+                  key={`top-placeholder-${index}`}
+                  className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                  style={{
+                    border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
+                  }}
+                >
+                  <EnhancedImage
+                    src={getOptimizedPlaceholder("thumb")}
+                    alt="Placeholder"
+                    className="opacity-30"
+                    size="thumb"
+                  />
+                </div>
+              ))}
+            </div>
 
-          {/* Bottom Row - 3 Images */}
-          <div className="grid grid-cols-3">
-            {bottomRowRappers.map((rapper) => (
-              <div
-                key={rapper.id}
-                className="relative aspect-[4/3] overflow-hidden"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
-                }}
-              >
-                <EnhancedImage
-                  src={rapper.image_url || getOptimizedPlaceholder("thumb")}
-                  alt={rapper.name}
-                  size="thumb"
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.src = getOptimizedPlaceholder("thumb");
+            {/* Bottom Row - 3 Images */}
+            <div className="grid grid-cols-3">
+              {bottomRowRappers.map((rapper) => (
+                <div
+                  key={rapper.id}
+                  className="relative aspect-[4/3] overflow-hidden"
+                  style={{
+                    border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
                   }}
-                />
-              </div>
-            ))}
-            {/* Fill empty spots if less than 3 rappers in bottom row */}
-            {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
-              <div
-                key={`bottom-placeholder-${index}`}
-                className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
-                style={{
-                  border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
-                }}
-              >
-                <EnhancedImage
-                  src={getOptimizedPlaceholder("thumb")}
-                  alt="Placeholder"
-                  className="opacity-30"
-                  size="thumb"
-                />
-              </div>
-            ))}
+                >
+                  <EnhancedImage
+                    src={rapper.image_url || getOptimizedPlaceholder("thumb")}
+                    alt={rapper.name}
+                    size="thumb"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.src = getOptimizedPlaceholder("thumb");
+                    }}
+                  />
+                </div>
+              ))}
+              {/* Fill empty spots if less than 3 rappers in bottom row */}
+              {Array.from({ length: 3 - bottomRowRappers.length }).map((_, index) => (
+                <div
+                  key={`bottom-placeholder-${index}`}
+                  className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted/20 to-muted/40"
+                  style={{
+                    border: `var(--theme-element-ranking_card_avatar_border-border-width, 3px) var(--theme-element-ranking_card_avatar_border-border-style, solid) var(--theme-element-ranking_card_avatar_border-border-color, #000000)`,
+                  }}
+                >
+                  <EnhancedImage
+                    src={getOptimizedPlaceholder("thumb")}
+                    alt="Placeholder"
+                    className="opacity-30"
+                    size="thumb"
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Subtle gradient at bottom of mosaic for smooth transition */}
+            <div
+              className="absolute bottom-0 left-0 right-0 h-8"
+              style={{
+                background: "linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent)",
+              }}
+            />
           </div>
-          
-          {/* Subtle gradient at bottom of mosaic for smooth transition */}
-          <div
-            className="absolute bottom-0 left-0 right-0 h-8"
-            style={{
-              background: "linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent)",
-            }}
-          />
-        </div>
         </div>
 
         {/* Metadata Section - Fills remaining space */}
-        <div className="flex-1 flex flex-col justify-between p-3 sm:p-6 pb-3 sm:pb-4"
+        <div
+          className="flex-1 flex flex-col justify-between p-3 sm:p-6 pb-3 sm:pb-4"
           style={{
             background: "linear-gradient(to bottom, #404040 0%, #000000 100%)",
           }}
@@ -144,58 +145,58 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
           <div className="flex flex-col">
             {/* Category Badge */}
             <div className="mb-0.5 sm:mb-1">
-            <span
-              className="inline-flex items-center backdrop-blur-sm"
+              <span
+                className="inline-flex items-center backdrop-blur-sm"
+                style={{
+                  backgroundColor: "var(--theme-element-ranking_card_category_badge-bg, rgba(212, 175, 55, 0.2))",
+                  color: "var(--theme-element-ranking_card_category_badge-color, #D4AF37)",
+                  border: `var(--theme-element-ranking_card_category_badge-border-width, 1px) var(--theme-element-ranking_card_category_badge-border-style, solid) var(--theme-element-ranking_card_category_badge-border-color, rgba(212, 175, 55, 0.3))`,
+                  borderRadius: "var(--theme-element-ranking_card_category_badge-border-radius, 999px)",
+                  padding: "var(--theme-element-ranking_card_category_badge-padding, 0.5rem 0.75rem)",
+                  fontSize: "var(--theme-element-ranking_card_category_badge-font-size, 0.75rem)",
+                  fontWeight: "var(--theme-element-ranking_card_category_badge-font-weight, 600)",
+                  lineHeight: "var(--theme-element-ranking_card_category_badge-line-height, 1)",
+                }}
+              >
+                {ranking.isOfficial ? ranking.category : "Community"}
+              </span>
+            </div>
+
+            {/* Title */}
+            <h3
+              className={`mb-1 sm:mb-2 line-clamp-2 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))] ${
+                ranking.title.length <= 20
+                  ? "text-lg sm:text-3xl md:text-4xl"
+                  : ranking.title.length <= 40
+                    ? "text-base sm:text-2xl md:text-3xl"
+                    : "text-sm sm:text-xl md:text-2xl"
+              }`}
               style={{
-                backgroundColor: "var(--theme-element-ranking_card_category_badge-bg, rgba(212, 175, 55, 0.2))",
-                color: "var(--theme-element-ranking_card_category_badge-color, #D4AF37)",
-                border: `var(--theme-element-ranking_card_category_badge-border-width, 1px) var(--theme-element-ranking_card_category_badge-border-style, solid) var(--theme-element-ranking_card_category_badge-border-color, rgba(212, 175, 55, 0.3))`,
-                borderRadius: "var(--theme-element-ranking_card_category_badge-border-radius, 999px)",
-                padding: "var(--theme-element-ranking_card_category_badge-padding, 0.5rem 0.75rem)",
-                fontSize: "var(--theme-element-ranking_card_category_badge-font-size, 0.75rem)",
-                fontWeight: "var(--theme-element-ranking_card_category_badge-font-weight, 600)",
-                lineHeight: "var(--theme-element-ranking_card_category_badge-line-height, 1)",
+                fontFamily: "var(--theme-font-heading)",
+                color: "var(--theme-element-ranking_card_title-color, #FFFFFF)",
+                fontWeight: "var(--theme-element-ranking_card_title-font-weight, 700)",
+                lineHeight: "var(--theme-element-ranking_card_title-line-height, 1.2)",
+                textShadow: "var(--theme-element-ranking_card_title-shadow, 2px 2px 8px rgba(0, 0, 0, 0.8))",
               }}
             >
-              {ranking.isOfficial ? ranking.category : "Community"}
-            </span>
-          </div>
+              {ranking.title}
+            </h3>
 
-          {/* Title */}
-          <h3
-            className={`mb-1 sm:mb-2 line-clamp-2 leading-tight transition-colors duration-300 group-hover:[color:var(--theme-element-ranking_card_title-hover-color,var(--theme-primary))] ${
-              ranking.title.length <= 20
-                ? "text-lg sm:text-3xl md:text-4xl"
-                : ranking.title.length <= 40
-                  ? "text-base sm:text-2xl md:text-3xl"
-                  : "text-sm sm:text-xl md:text-2xl"
-            }`}
-            style={{
-              fontFamily: "var(--theme-font-heading)",
-              color: "var(--theme-element-ranking_card_title-color, #FFFFFF)",
-              fontWeight: "var(--theme-element-ranking_card_title-font-weight, 700)",
-              lineHeight: "var(--theme-element-ranking_card_title-line-height, 1.2)",
-              textShadow: "var(--theme-element-ranking_card_title-shadow, 2px 2px 8px rgba(0, 0, 0, 0.8))",
-            }}
-          >
-            {ranking.title}
-          </h3>
-
-          {/* Description */}
-          {ranking.description && (
-            <p
-              className="text-xs sm:text-base mb-2 sm:mb-3 line-clamp-2"
-              style={{
-                color: "var(--theme-element-ranking_card_description-color, #BFBFBF)",
-                fontSize: "var(--theme-element-ranking_card_description-font-size, 0.875rem)",
-                fontWeight: "var(--theme-element-ranking_card_description-font-weight, 400)",
-                lineHeight: "var(--theme-element-ranking_card_description-line-height, 1.5)",
-                textShadow: "var(--theme-element-ranking_card_description-shadow, 1px 1px 4px rgba(0, 0, 0, 0.8))",
-              }}
-            >
-              {ranking.description}
-            </p>
-          )}
+            {/* Description */}
+            {ranking.description && (
+              <p
+                className="text-xs sm:text-base mb-2 sm:mb-3 line-clamp-2"
+                style={{
+                  color: "var(--theme-element-ranking_card_description-color, #BFBFBF)",
+                  fontSize: "var(--theme-element-ranking_card_description-font-size, 0.875rem)",
+                  fontWeight: "var(--theme-element-ranking_card_description-font-weight, 400)",
+                  lineHeight: "var(--theme-element-ranking_card_description-line-height, 1.5)",
+                  textShadow: "var(--theme-element-ranking_card_description-shadow, 1px 1px 4px rgba(0, 0, 0, 0.8))",
+                }}
+              >
+                {ranking.description}
+              </p>
+            )}
 
             {/* Author for Community Rankings */}
             {!ranking.isOfficial && ranking.author && (
