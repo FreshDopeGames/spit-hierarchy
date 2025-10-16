@@ -29,7 +29,7 @@ const RankingItemCard = ({
   const isHot = item.ranking_votes >= hotThreshold;
   const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
   const isPending = (item as any).isPending || false;
-  const isTopFive = item.dynamic_position <= 5;
+  const isTopFive = (item as any).display_index <= 5;
 
   const getCardStyling = () => {
     if (isTopFive) {

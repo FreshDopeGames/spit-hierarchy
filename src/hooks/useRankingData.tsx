@@ -22,6 +22,7 @@ export interface RankingItemWithDelta {
   ranking_votes: number;
   dynamic_position: number;
   visual_rank: number | null; // New field for visual ranking
+  display_index?: number; // Display order for premium styling (1-5)
 }
 
 // Function to calculate visual ranks based on vote counts

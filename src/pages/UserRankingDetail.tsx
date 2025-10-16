@@ -223,7 +223,7 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
   const voteCountMap = (ranking as any).voteCountMap || new Map();
 
   // Transform user ranking items to match RankingItemWithDelta interface
-  const rankingItems: RankingItemWithDelta[] = sortedItems.map((item) => ({
+  const rankingItems: RankingItemWithDelta[] = sortedItems.map((item, index) => ({
     id: item.id,
     position: item.position,
     reason: item.reason,
@@ -240,7 +240,8 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
     position_delta: 0,
     ranking_votes: voteCountMap.get(item.rapper.id) || 0,
     dynamic_position: item.position,
-    visual_rank: item.position
+    visual_rank: item.position,
+    display_index: index + 1 // Track display order for premium styling
   }));
 
   const handleLoadMore = () => {
