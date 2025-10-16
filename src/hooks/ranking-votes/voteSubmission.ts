@@ -47,6 +47,7 @@ export const submitVote = async (
     .upsert({
       user_id: user.id,
       ranking_id: cleanRankingId,
+      user_ranking_id: null,
       rapper_id: cleanRapperId,
       vote_date: new Date().toISOString().split('T')[0]
     }, {

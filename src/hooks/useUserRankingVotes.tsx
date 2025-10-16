@@ -67,16 +67,16 @@ export const useUserRankingVotes = () => {
         throw new Error('Failed to submit vote. Please try again.');
       }
 
-      // Track daily vote (we need to provide ranking_id as empty string or handle constraint)
+      // Track daily vote for user ranking
       const { error: dailyError } = await supabase
         .from('daily_vote_tracking')
         .insert({
           user_id: user.id,
-          ranking_id: '', // Dummy value to satisfy type requirement
+          ranking_id: null,
           user_ranking_id: userRankingId,
           rapper_id: rapperId,
           vote_date: new Date().toISOString().split('T')[0]
-        } as any); // Cast to bypass TypeScript check since we have unique constraints
+        });
 
       if (dailyError) {
         console.error('Daily tracking error:', dailyError);
@@ -98,11 +98,15 @@ export const useUserRankingVotes = () => {
       
       // Invalidate relevant queries
       if (user) {
+        const today = new Date().toISOString().split('T')[0];
         queryClient.invalidateQueries({ 
           queryKey: ['user-ranking-detail', variables.userRankingId]
         });
         queryClient.invalidateQueries({ 
           queryKey: ['user-rankings']
+        });
+        queryClient.invalidateQueries({
+          queryKey: ['daily-votes', user.id, today, variables.userRankingId]
         });
       }
     },
