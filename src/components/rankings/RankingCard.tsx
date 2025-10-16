@@ -26,7 +26,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
   return (
     <Link to={rankingLink} className="block group" onClick={() => window.scrollTo(0, 0)}>
       <div
-        className="flex flex-col h-[380px] sm:h-[610px] md:h-[520px] transition-all duration-300 group-hover:scale-[1.02]"
+        className="flex flex-col h-[450px] sm:h-[700px] md:h-[580px] transition-all duration-300 group-hover:scale-[1.02]"
         style={{
           borderRadius: "var(--theme-element-ranking_card-border-radius, 12px)",
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
@@ -42,10 +42,10 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
         }}
       >
         {/* Mosaic Section - Fixed height */}
-        <div className="relative flex-none h-[170px] sm:h-[320px] md:h-[260px] overflow-hidden">
+        <div className="relative flex-none h-[240px] sm:h-[420px] md:h-[340px] overflow-hidden">
           <div className="flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500 h-full">
             {/* Top Row - 2 Images */}
-            <div className="grid grid-cols-2 h-1/2">
+            <div className="grid grid-cols-2 flex-1">
               {topRowRappers.map((rapper) => (
                 <div
                   key={rapper.id}
@@ -85,7 +85,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
             </div>
 
             {/* Bottom Row - 3 Images */}
-            <div className="grid grid-cols-3 h-1/2">
+            <div className="grid grid-cols-3 flex-1">
               {bottomRowRappers.map((rapper) => (
                 <div
                   key={rapper.id}
