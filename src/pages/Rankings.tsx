@@ -36,7 +36,7 @@ const Rankings = () => {
         {/* Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8">
-            <ThemedTabsList className="grid w-full sm:w-auto grid-cols-2 bg-black/50 border border-[hsl(var(--theme-primary))]/20 p-2">
+            <ThemedTabsList className="grid w-full sm:w-auto grid-cols-2 bg-black/50 border border-[hsl(var(--theme-primary))]/20 min-h-[60px] py-2 px-1">
               <ThemedTabsTrigger 
                 value="official" 
                 className="data-[state=active]:bg-[hsl(var(--theme-primary))] data-[state=active]:text-[hsl(var(--theme-textInverted))] data-[state=active]:shadow-md data-[state=active]:border-[hsl(var(--theme-primary))] font-mogra transition-all duration-200"
