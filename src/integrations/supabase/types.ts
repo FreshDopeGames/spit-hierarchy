@@ -3181,6 +3181,10 @@ export type Database = {
         Args: { new_username: string }
         Returns: Json
       }
+      update_user_ranking_positions: {
+        Args: { ranking_uuid: string }
+        Returns: undefined
+      }
     }
     Enums: {
       achievement_rarity: "common" | "rare" | "epic" | "legendary"
