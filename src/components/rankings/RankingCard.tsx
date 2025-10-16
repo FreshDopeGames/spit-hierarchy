@@ -30,7 +30,7 @@ const RankingCard = ({
       onClick={() => window.scrollTo(0, 0)}
     >
       <div 
-        className="relative h-[380px] sm:h-[430px] md:h-[480px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02]"
+        className="relative h-[420px] sm:h-[470px] md:h-[520px] overflow-hidden transition-all duration-300 group-hover:scale-[1.02] flex flex-col"
         style={{
           borderRadius: 'var(--theme-element-ranking_card-border-radius, 12px)',
           border: `var(--theme-element-ranking_card-border-width, 4px) var(--theme-element-ranking_card-border-style, solid) hsl(var(--theme-primary))`,
@@ -45,7 +45,7 @@ const RankingCard = ({
         }}
       >
         {/* Rapper Mosaic Background - Top portion of card */}
-        <div className="absolute top-0 left-0 right-0 flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500">
+        <div className="flex-shrink-0 flex flex-col gap-0 group-hover:scale-105 transition-transform duration-500">
           {/* Top Row - 2 Images */}
           <div className="grid grid-cols-2">
             {topRowRappers.map((rapper) => (
@@ -129,16 +129,16 @@ const RankingCard = ({
         
         {/* Gradient Overlay - Bottom area for text */}
         <div 
-          className="absolute bottom-0 left-0 right-0 h-[52%] sm:h-[50%] md:h-[52%]"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.8), transparent))'
+            background: 'var(--theme-element-ranking_card-overlay, linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.85) 40%, rgba(0, 0, 0, 0.4) 70%, transparent 100%))'
           }}
         />
         
         {/* Content - Positioned in bottom area */}
-        <div className="absolute bottom-0 left-0 right-0 h-[50%] sm:h-[45%] md:h-[50%] flex flex-col justify-end p-3 sm:p-6 pb-3 sm:pb-4">
+        <div className="relative flex-1 flex flex-col justify-between p-3 sm:p-6 pt-4 sm:pt-6 pb-3 sm:pb-4 z-10">
           {/* Category Badge */}
-          <div className="mb-0.5 sm:mb-1">
+          <div className="mb-2 sm:mb-2.5">
             <span 
               className="inline-flex items-center backdrop-blur-sm"
               style={{
@@ -179,7 +179,7 @@ const RankingCard = ({
           {/* Description */}
           {ranking.description && (
             <p 
-              className="text-xs sm:text-base mb-2 sm:mb-3 line-clamp-2"
+              className="text-xs sm:text-sm mb-2 sm:mb-2.5 line-clamp-2"
               style={{
                 color: 'var(--theme-element-ranking_card_description-color, #BFBFBF)',
                 fontSize: 'var(--theme-element-ranking_card_description-font-size, 0.875rem)',
@@ -192,50 +192,53 @@ const RankingCard = ({
             </p>
           )}
           
-          {/* Author for Community Rankings */}
-          {!ranking.isOfficial && ranking.author && (
-            <div 
-              className="flex items-center gap-1 text-xs sm:text-sm mb-2"
-              style={{
-                color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
-                fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
-                fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
-                lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
-              }}
-            >
-              <User className="w-4 h-4" />
-              <span>by {ranking.author}</span>
-            </div>
-          )}
-          
-          {/* Stats Row */}
-          <div className="flex items-center justify-between">
-            <div 
-              className="flex items-center gap-1 text-xs sm:text-sm"
-              style={{
-                color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
-                fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
-                fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
-                lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
-              }}
-            >
-              <TrendingUp className="w-4 h-4" />
-              <span>{(ranking.totalVotes || 0).toLocaleString()} Votes</span>
-            </div>
+          {/* Bottom Metadata Container */}
+          <div className="mt-auto space-y-2">
+            {/* Author for Community Rankings */}
+            {!ranking.isOfficial && ranking.author && (
+              <div 
+                className="flex items-center gap-1 text-xs sm:text-sm"
+                style={{
+                  color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
+                  fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
+                  fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
+                  lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
+                }}
+              >
+                <User className="w-4 h-4" />
+                <span>by {ranking.author}</span>
+              </div>
+            )}
             
-            {/* View Ranking CTA */}
-            <div 
-              className="flex items-center gap-1 text-xs sm:text-sm transition-colors duration-300 group-hover:opacity-80"
-              style={{
-                color: 'hsl(var(--theme-primary))',
-                fontFamily: 'var(--theme-font-body)',
-                fontSize: 'var(--theme-element-ranking_card_cta-font-size, 0.75rem)',
-                fontWeight: 'var(--theme-element-ranking_card_cta-font-weight, 500)',
-                lineHeight: 'var(--theme-element-ranking_card_cta-line-height, 1.25)'
-              }}
-            >
-              <Award className="w-4 h-4" />
-              <span>View Ranking</span>
+            {/* Stats Row */}
+            <div className="flex items-center justify-between">
+              <div 
+                className="flex items-center gap-1 text-xs sm:text-sm"
+                style={{
+                  color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
+                  fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
+                  fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
+                  lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
+                }}
+              >
+                <TrendingUp className="w-4 h-4" />
+                <span>{(ranking.totalVotes || 0).toLocaleString()} Votes</span>
+              </div>
+              
+              {/* View Ranking CTA */}
+              <div 
+                className="flex items-center gap-1 text-xs sm:text-sm transition-colors duration-300 group-hover:opacity-80"
+                style={{
+                  color: 'hsl(var(--theme-primary))',
+                  fontFamily: 'var(--theme-font-body)',
+                  fontSize: 'var(--theme-element-ranking_card_cta-font-size, 0.75rem)',
+                  fontWeight: 'var(--theme-element-ranking_card_cta-font-weight, 500)',
+                  lineHeight: 'var(--theme-element-ranking_card_cta-line-height, 1.25)'
+                }}
+              >
+                <Award className="w-4 h-4" />
+                <span>View Ranking</span>
+              </div>
             </div>
           </div>
         </div>
