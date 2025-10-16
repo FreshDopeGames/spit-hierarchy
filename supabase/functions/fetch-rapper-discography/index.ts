@@ -535,6 +535,61 @@ serve(async (req) => {
         await supabaseService
           .from('rapper_albums')
           .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
+
+        // Fetch track listings if not already populated
+        const { data: existingTracks } = await supabaseService
+          .from('album_tracks')
+          .select('id')
+          .eq('album_id', albumId)
+          .limit(1);
+
+        if (!existingTracks || existingTracks.length === 0) {
+          try {
+            // Get the first official release ID from the release-group
+            const officialRelease = releases.find((r: any) => r && r.status === 'Official');
+            
+            if (officialRelease?.id) {
+              console.log(`Fetching tracks for "${rg.title}" (release: ${officialRelease.id})`);
+              
+              // Fetch release with recordings (track listings)
+              const releaseData = await mbJson<any>(
+                `https://musicbrainz.org/ws/2/release/${officialRelease.id}?inc=recordings&fmt=json`
+              );
+              await delay(150);
+
+              // Extract tracks from all media (discs)
+              const allTracks: Array<{ position: number; title: string }> = [];
+              for (const media of releaseData.media || []) {
+                for (const track of media.tracks || []) {
+                  allTracks.push({
+                    position: track.position,
+                    title: track.title,
+                  });
+                }
+              }
+
+              // Insert tracks into database
+              if (allTracks.length > 0) {
+                const trackInserts = allTracks.map(track => ({
+                  album_id: albumId,
+                  track_number: track.position,
+                  title: track.title,
+                  duration_ms: null,
+                  musicbrainz_id: null,
+                }));
+
+                await supabaseService
+                  .from('album_tracks')
+                  .insert(trackInserts);
+                
+                console.log(`Inserted ${allTracks.length} tracks for "${rg.title}"`);
+              }
+            }
+          } catch (trackError: any) {
+            console.error(`Error fetching tracks for "${rg.title}":`, trackError);
+            // Continue processing - tracks are optional
+          }
+        }
       }
       await delay(150);
       } catch (albumError: any) {
