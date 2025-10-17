@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useAlbumDetail } from "@/hooks/useAlbumDetail";
 import { useTrackVoting } from "@/hooks/useTrackVoting";
 import { AlbumHeader } from "@/components/album/AlbumHeader";
@@ -12,6 +12,7 @@ import { ThemedButton } from "@/components/ui/themed-button";
 import { ArrowLeft } from "lucide-react";
 
 const AlbumDetail = () => {
+  const navigate = useNavigate();
   const { rapperSlug, albumSlug } = useParams<{
     rapperSlug: string;
     albumSlug: string;
@@ -104,7 +105,7 @@ const AlbumDetail = () => {
           <ThemedButton
             variant="default"
             className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
-            onClick={() => window.history.back()}
+            onClick={() => navigate(`/rapper/${album.rapper_slug}`)}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back to {album.rapper_name}
