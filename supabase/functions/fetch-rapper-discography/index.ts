@@ -448,6 +448,39 @@ serve(async (req) => {
         continue;
       }
 
+      // Generate URL-safe slug from title
+      const generateSlug = (title: string): string => {
+        return title
+          .toLowerCase()
+          .trim()
+          .replace(/[^\w\s-]/g, '') // Remove special characters
+          .replace(/[\s_-]+/g, '-') // Replace spaces/underscores with hyphens
+          .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+      };
+
+      // Ensure unique slug
+      const ensureUniqueSlug = async (baseSlug: string, existingId?: string): Promise<string> => {
+        let slug = baseSlug;
+        let counter = 1;
+        
+        while (true) {
+          const { data } = await supabaseService
+            .from('albums')
+            .select('id')
+            .eq('slug', slug)
+            .maybeSingle();
+          
+          // If no match or it's the same album we're updating, slug is unique
+          if (!data || data.id === existingId) {
+            return slug;
+          }
+          
+          // Otherwise, append counter and try again
+          slug = `${baseSlug}-${counter}`;
+          counter++;
+        }
+      };
+
       // Detect mixtapes (MusicBrainz official category)
       const isMixtape = primaryType === 'Album' && secondary.includes('Mixtape/Street');
       
@@ -497,10 +530,15 @@ serve(async (req) => {
         const hasCoverArt = await checkCoverArtExists(coverArtUrl);
         await delay(100); // Small delay after cover art check to avoid rate limiting
         
+        // Generate unique slug for the album
+        const baseSlug = generateSlug(rg.title);
+        const uniqueSlug = await ensureUniqueSlug(baseSlug);
+        
         const { data: newAlbum } = await supabaseService
           .from('albums')
           .insert({
             title: rg.title,
+            slug: uniqueSlug,
             musicbrainz_id: rg.id,
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
@@ -513,20 +551,40 @@ serve(async (req) => {
           .select('id')
           .single();
         albumId = newAlbum?.id;
-      } else if (!existingAlbum?.has_cover_art) {
-        // Update existing albums that don't have cover art yet
-        const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
-        const hasCoverArt = await checkCoverArtExists(coverArtUrl);
-        await delay(100);
+      } else {
+        // Update existing albums that need slugs or cover art
+        const updates: any = {};
         
-        if (hasCoverArt) {
+        // Generate slug if missing
+        const { data: currentAlbum } = await supabaseService
+          .from('albums')
+          .select('slug, title')
+          .eq('id', existingAlbum.id)
+          .single();
+        
+        if (!currentAlbum?.slug) {
+          const baseSlug = generateSlug(currentAlbum?.title || rg.title);
+          updates.slug = await ensureUniqueSlug(baseSlug, existingAlbum.id);
+        }
+        
+        // Update cover art if missing
+        if (!existingAlbum?.has_cover_art) {
+          const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
+          const hasCoverArt = await checkCoverArtExists(coverArtUrl);
+          await delay(100);
+          
+          if (hasCoverArt) {
+            updates.cover_art_url = coverArtUrl;
+            updates.has_cover_art = true;
+          }
+        }
+        
+        // Apply updates if needed
+        if (Object.keys(updates).length > 0) {
           await supabaseService
             .from('albums')
-            .update({
-              cover_art_url: coverArtUrl,
-              has_cover_art: true
-            })
-            .eq('id', albumId);
+            .update(updates)
+            .eq('id', existingAlbum.id);
         }
       }
 
