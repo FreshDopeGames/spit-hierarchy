@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -30,10 +30,17 @@ type Rapper = Tables<"rappers"> & {
 
 const RapperDetail = () => {
   const { id } = useParams<{ id: string; }>();
+  const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { user } = useAuth();
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [selectedCategory] = useState("");
   const refreshDiscography = useRefreshDiscography();
+
+  const handleBackToAllRappers = () => {
+    const scrollPos = searchParams.get('scrollPos');
+    navigate(scrollPos ? `/all-rappers?scrollPos=${scrollPos}` : '/all-rappers');
+  };
 
   const { data: rapper, isLoading } = useQuery({
     queryKey: ["rapper", id],
@@ -107,7 +114,7 @@ const RapperDetail = () => {
           <ThemedButton 
             variant="outline" 
             className="mb-6 border-[var(--theme-primary)]/50 text-[var(--theme-primary)] hover:bg-[var(--theme-primary)]/10 font-[var(--theme-font-body)]"
-            onClick={() => window.history.back()}
+            onClick={handleBackToAllRappers}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back To All Rappers
@@ -160,7 +167,7 @@ const RapperDetail = () => {
           <ThemedButton 
             variant="default" 
             className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
-            onClick={() => window.history.back()}
+            onClick={handleBackToAllRappers}
           >
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back To All Rappers
