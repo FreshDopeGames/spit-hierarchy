@@ -67,7 +67,6 @@ export const AlbumHeader = ({
             </span>
           )}
         </div>
-      </div>
     </div>
   );
 };
