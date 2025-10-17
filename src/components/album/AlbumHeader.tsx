@@ -42,7 +42,6 @@ export const AlbumHeader = ({
       </div>
 
       {/* Details - Centered */}
-      <div className="space-y-4">
         <div>
           <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "var(--theme-font-heading)" }}>
             {albumTitle}
