@@ -8,6 +8,8 @@ import SEOHead from "@/components/seo/SEOHead";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { ArrowLeft } from "lucide-react";
 
 const AlbumDetail = () => {
   const { rapperSlug, albumSlug } = useParams<{
@@ -107,6 +109,16 @@ const AlbumDetail = () => {
       
       <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))] relative">
         <div className="container mx-auto px-4 pt-28 pb-16 space-y-12">
+          {/* Back Button */}
+          <ThemedButton 
+            variant="default" 
+            className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
+            onClick={() => window.history.back()}
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Back to {album.rapper_name}
+          </ThemedButton>
+
           {/* Centered Album Header */}
           <AlbumHeader
             albumTitle={album.album_title}
