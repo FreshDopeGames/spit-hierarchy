@@ -58,9 +58,7 @@ const AlbumDetail = () => {
           <div className="container mx-auto px-4 pt-28 pb-16">
             <div className="text-center py-12">
               <h1 className="text-2xl font-bold mb-4">Album Not Found</h1>
-              <p className="text-muted-foreground">
-                The album you're looking for doesn't exist or has been removed.
-              </p>
+              <p className="text-muted-foreground">The album you're looking for doesn't exist or has been removed.</p>
             </div>
           </div>
         </div>
@@ -79,14 +77,7 @@ const AlbumDetail = () => {
       <SEOHead
         title={seoTitle}
         description={seoDescription}
-        keywords={[
-          album.rapper_name,
-          album.album_title,
-          "hip hop",
-          "rap album",
-          "track voting",
-          album.release_type,
-        ]}
+        keywords={[album.rapper_name, album.album_title, "hip hop", "rap album", "track voting", album.release_type]}
         ogImage={album.cover_art_url || undefined}
         ogImageAlt={`${album.album_title} album cover`}
         canonicalUrl={`${window.location.origin}/rapper/${rapperSlug}/${albumSlug}`}
@@ -106,12 +97,12 @@ const AlbumDetail = () => {
       />
 
       <HeaderNavigation isScrolled={false} />
-      
+
       <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))] relative">
-        <div className="container mx-auto px-4 pt-28 pb-16 space-y-12">
+        <div className="container mx-auto px-4 pt-28 pb-16 space-y-4">
           {/* Back Button */}
-          <ThemedButton 
-            variant="default" 
+          <ThemedButton
+            variant="default"
             className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
             onClick={() => window.history.back()}
           >
@@ -135,14 +126,10 @@ const AlbumDetail = () => {
             <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--theme-font-heading)" }}>
               Tracks
             </h2>
-            <AlbumTrackList
-              tracks={album.tracks}
-              onVote={toggleVote}
-              isVoting={isSubmitting}
-            />
+            <AlbumTrackList tracks={album.tracks} onVote={toggleVote} isVoting={isSubmitting} />
           </div>
         </div>
-        
+
         <BackToTopButton />
       </div>
 
