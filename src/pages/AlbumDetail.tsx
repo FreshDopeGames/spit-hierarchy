@@ -30,7 +30,7 @@ const AlbumDetail = () => {
       <>
         <HeaderNavigation isScrolled={false} />
         <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))]">
-          <div className="container mx-auto px-4 pt-28 pb-16 space-y-12">
+          <div className="container mx-auto px-4 pt-20 pb-16 space-y-12">
             <div className="flex flex-col items-center space-y-8">
               <Skeleton className="w-80 h-80 md:w-96 md:h-96 rounded-lg" />
               <div className="flex flex-col items-center space-y-4">
@@ -56,7 +56,7 @@ const AlbumDetail = () => {
       <>
         <HeaderNavigation isScrolled={false} />
         <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))]">
-          <div className="container mx-auto px-4 pt-28 pb-16">
+          <div className="container mx-auto px-4 pt-20 pb-16">
             <div className="text-center py-12">
               <h1 className="text-2xl font-bold mb-4">Album Not Found</h1>
               <p className="text-muted-foreground">The album you're looking for doesn't exist or has been removed.</p>
@@ -100,16 +100,18 @@ const AlbumDetail = () => {
       <HeaderNavigation isScrolled={false} />
 
       <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))] relative">
-        <div className="container mx-auto px-4 pt-28 pb-16 space-y-4">
-          {/* Back Button */}
-          <ThemedButton
-            variant="default"
-            className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
-            onClick={() => navigate(`/rapper/${album.rapper_slug}`)}
-          >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to {album.rapper_name}
-          </ThemedButton>
+        <div className="container mx-auto px-4 pt-20 pb-16 space-y-4">
+          {/* Back Button - Left Aligned */}
+          <div className="max-w-4xl mx-auto">
+            <ThemedButton
+              variant="default"
+              className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
+              onClick={() => navigate(`/rapper/${album.rapper_slug}`)}
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to {album.rapper_name}
+            </ThemedButton>
+          </div>
 
           {/* Centered Album Header */}
           <AlbumHeader
