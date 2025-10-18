@@ -44,7 +44,7 @@ export const AlbumTrackList = ({ tracks, onVote, isVoting }: AlbumTrackListProps
         >
           <div className="flex-shrink-0 w-4 text-center text-sm text-muted-foreground">{track.track_number}</div>
           <div className="flex-1 min-w-0">
-            <p className="font-medium truncate">{track.title}</p>
+            <p className="font-medium">{track.title}</p>
           </div>
           {track.duration_ms && (
             <div className="flex-shrink-0 text-sm text-muted-foreground hidden sm:block">
