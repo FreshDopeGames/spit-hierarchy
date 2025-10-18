@@ -2,8 +2,10 @@ import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { ChevronRight } from "lucide-react";
 import { getSmartAlbumPlaceholder } from "@/utils/albumPlaceholderUtils";
+import RapperAvatar from "@/components/RapperAvatar";
 
 interface AlbumHeaderProps {
+  rapperId: string;
   albumTitle: string;
   rapperName: string;
   rapperSlug: string;
@@ -14,6 +16,7 @@ interface AlbumHeaderProps {
 }
 
 export const AlbumHeader = ({
+  rapperId,
   albumTitle,
   rapperName,
   rapperSlug,
@@ -42,10 +45,24 @@ export const AlbumHeader = ({
       </div>
 
       {/* Details - Centered */}
-      <div>
+      <div className="space-y-4">
         <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "var(--theme-font-heading)" }}>
           {albumTitle}
         </h1>
+        
+        {/* Rapper Avatar - Half size of album cover */}
+        <div className="flex justify-center">
+          <RapperAvatar
+            rapper={{
+              id: rapperId,
+              name: rapperName,
+              slug: rapperSlug
+            }}
+            size="lg"
+            variant="circular"
+          />
+        </div>
+        
         <Link
           to={`/rapper/${rapperSlug}`}
           className="text-xl md:text-2xl text-muted-foreground hover:text-[hsl(var(--theme-primary))] transition-colors"

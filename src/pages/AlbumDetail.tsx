@@ -115,6 +115,7 @@ const AlbumDetail = () => {
 
           {/* Centered Album Header */}
           <AlbumHeader
+            rapperId={album.rapper_id}
             albumTitle={album.album_title}
             rapperName={album.rapper_name}
             rapperSlug={album.rapper_slug}
