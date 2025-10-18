@@ -61,13 +61,13 @@ const RapperAvatar = ({ rapper, size = "md", imageUrl: providedImageUrl, variant
   // Define border color classes
   const borderColorClass = borderColor === "black" 
     ? "border-black" 
-    : "border-[var(--theme-border)] group-hover:border-[var(--theme-primary)]";
+    : "border-border group-hover:border-[var(--theme-primary)]";
   
   // Debug info removed for production
   
   return (
     <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-      <div className={`${sizeClasses[size]} ${variant === 'square' ? 'rounded-lg' : 'rounded-full'} overflow-hidden bg-gradient-to-br from-[var(--theme-surface)] to-[var(--theme-primary)]/20 flex items-center justify-center border-2 ${borderColorClass} transition-colors`}>
+      <div className={`${sizeClasses[size]} ${variant === 'square' ? 'rounded-lg' : 'rounded-full'} overflow-hidden bg-gradient-to-br from-[var(--theme-surface)] to-[var(--theme-primary)]/20 flex items-center justify-center border-4 ${borderColorClass} transition-colors`}>
         <EnhancedImage 
           src={imageToDisplay}
           alt={rapper.name} 

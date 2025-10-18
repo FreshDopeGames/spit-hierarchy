@@ -59,7 +59,7 @@ export const AlbumHeader = ({
               slug: rapperSlug
             }}
             size="lg"
-            variant="circular"
+            variant="square"
           />
         </div>
         
