@@ -42,7 +42,7 @@ export const AlbumTrackList = ({ tracks, onVote, isVoting }: AlbumTrackListProps
             index % 2 === 0 ? "bg-muted/30" : "bg-transparent",
           )}
         >
-          <div className="flex-shrink-0 w-8 text-left text-sm text-muted-foreground">{track.track_number}</div>
+          <div className="flex-shrink-0 w-8 text-center text-sm text-muted-foreground">{track.track_number}</div>
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{track.title}</p>
           </div>
