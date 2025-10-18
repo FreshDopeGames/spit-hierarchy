@@ -23,11 +23,7 @@ const formatDuration = (durationMs: number | null) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-export const AlbumTrackList = ({
-  tracks,
-  onVote,
-  isVoting,
-}: AlbumTrackListProps) => {
+export const AlbumTrackList = ({ tracks, onVote, isVoting }: AlbumTrackListProps) => {
   if (tracks.length === 0) {
     return (
       <div className="text-center py-12">
@@ -43,12 +39,10 @@ export const AlbumTrackList = ({
           key={track.id}
           className={cn(
             "flex items-center gap-4 px-4 py-3 transition-colors hover:bg-muted/50",
-            index % 2 === 0 ? "bg-muted/30" : "bg-transparent"
+            index % 2 === 0 ? "bg-muted/30" : "bg-transparent",
           )}
         >
-          <div className="flex-shrink-0 w-8 text-right text-sm text-muted-foreground">
-            {track.track_number}
-          </div>
+          <div className="flex-shrink-0 w-8 text-left text-sm text-muted-foreground">{track.track_number}</div>
           <div className="flex-1 min-w-0">
             <p className="font-medium truncate">{track.title}</p>
           </div>
