@@ -71,14 +71,24 @@ const RapperCard = ({
       
       <ThemedCardContent className={compact ? "p-3 sm:p-4" : "p-4 sm:p-6"}>
         {/* Rapper image or placeholder - 1:1 aspect ratio */}
-        <div className={`w-full aspect-square bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-backgroundLight)] to-[var(--theme-background)] rounded-lg ${compact ? "mb-2 sm:mb-3" : "mb-3 sm:mb-4"} flex items-center justify-center relative group-hover:from-[var(--theme-accent)]/20 group-hover:via-[var(--theme-secondary)]/20 group-hover:to-[var(--theme-background)] transition-all duration-300 overflow-hidden`}>
+        <div 
+          className={`w-full aspect-square rounded-lg ${compact ? "mb-2 sm:mb-3" : "mb-3 sm:mb-4"} relative overflow-hidden`}
+          style={{ aspectRatio: '1/1', minHeight: 0 }}
+        >
+          {/* Skeleton placeholder - always visible until image loads */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--theme-surface)] via-[var(--theme-backgroundLight)] to-[var(--theme-background)] group-hover:from-[var(--theme-accent)]/20 group-hover:via-[var(--theme-secondary)]/20 group-hover:to-[var(--theme-background)] transition-all duration-300 animate-pulse" />
+          
+          {/* Image - fades in smoothly on load */}
           <img 
             src={imageToDisplay}
             alt={rapper.name || "Rapper"}
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 opacity-0"
             loading="lazy"
             onLoad={(e) => {
-              (e.target as HTMLImageElement).setAttribute('data-loaded', 'true');
+              const target = e.target as HTMLImageElement;
+              target.classList.remove('opacity-0');
+              target.classList.add('opacity-100');
+              target.setAttribute('data-loaded', 'true');
             }}
             onError={(e) => {
               // Fallback to optimized placeholder if image fails to load
@@ -86,7 +96,9 @@ const RapperCard = ({
               if (!target.src.includes(placeholderImage)) {
                 target.src = placeholderImage;
               }
-              target.setAttribute('data-loaded', 'true'); // Mark as loaded even on error
+              target.classList.remove('opacity-0');
+              target.classList.add('opacity-100');
+              target.setAttribute('data-loaded', 'true');
             }}
           />
         </div>
