@@ -44,7 +44,7 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
         achievement.is_earned ? "opacity-100" : "opacity-60"
       } transition-all hover:scale-105`}
     >
-      <CardContent className="p-4 bg-black">
+      <CardContent className="p-4">
         <div className="flex items-start space-x-3">
           <div
             className={`w-12 h-12 rounded-xl ${rarityColors[achievement.rarity]} flex items-center justify-center shadow-lg`}
