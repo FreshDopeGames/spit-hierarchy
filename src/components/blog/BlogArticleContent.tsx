@@ -50,8 +50,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
   }, [content]);
 
   return (
-    <ThemedCard className="mb-8">
-      <ThemedCardContent className="p-8 bg-black overflow-hidden border-4">
+    <ThemedCard variant="dark" className="mb-8">
+      <ThemedCardContent className="p-8">
         <div className="font-merienda">
           <p
             className="text-rap-platinum leading-relaxed text-base
