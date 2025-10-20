@@ -1,4 +1,3 @@
-
 import BlogArticleHeader from "@/components/blog/BlogArticleHeader";
 import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
@@ -62,22 +61,22 @@ const BlogDetailContent = ({
   totalComments,
   user,
   onShare,
-  onCommentsClick
+  onCommentsClick,
 }: BlogDetailContentProps) => {
   const { likesCount, isLiked, toggleLike, isLoading } = useBlogPostLikes(blogPost.id);
 
   return (
-    <main className="max-w-4xl mx-auto p-6 pt-24">
+    <main className="bg-black max-w-4xl mx-auto p-6 pt-24">
       <BlogArticleHeader blogPost={transformedBlogPost} />
 
       {/* Full-width main content */}
       <div className="space-y-8">
         <BlogArticleContent content={blogPost.content} />
-        
+
         {/* Strategic ad placement in content */}
         <ContentAdUnit size="medium" />
-        
-        <BlogEngagementActions 
+
+        <BlogEngagementActions
           likes={likesCount}
           isLiked={isLiked}
           commentCount={totalComments}
@@ -94,10 +93,7 @@ const BlogDetailContent = ({
         <ContentAdUnit size="large" />
 
         {/* Sidebar content moved below */}
-        <BlogSidebar 
-          relatedPosts={transformedRelatedPosts}
-          showSignUp={!user}
-        />
+        <BlogSidebar relatedPosts={transformedRelatedPosts} showSignUp={!user} />
       </div>
     </main>
   );
