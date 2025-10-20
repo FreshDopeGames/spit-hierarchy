@@ -40,7 +40,7 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
 
   return (
     <Card
-      className={`bg-theme-surface border-2 ${rarityBorders[achievement.rarity]} ${
+      className={`bg-black border-4 ${rarityBorders[achievement.rarity]} ${
         achievement.is_earned ? "opacity-100" : "opacity-60"
       } transition-all hover:scale-105`}
     >
