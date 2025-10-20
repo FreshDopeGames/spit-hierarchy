@@ -86,8 +86,8 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
 
       {/* Expanded Comment Modal */}
       {isExpanded && (
-        <div className="fixed inset-x-0 bottom-0 z-50 bg-black/80 backdrop-blur-sm">
-          <ThemedCard className="rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[hsl(var(--theme-primary))]/20">
+        <div className="fixed inset-x-0 bottom-0 z-50 bg-black">
+          <ThemedCard className="bg-black border-[var(--theme-border)]/30 rounded-t-2xl rounded-b-none border-b-0 max-h-[70vh] shadow-lg shadow-[hsl(var(--theme-primary))]/20">
             <ThemedCardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
               <ThemedCardTitle>
                 Comments on this {getContentTypeLabel()} ({totalComments})

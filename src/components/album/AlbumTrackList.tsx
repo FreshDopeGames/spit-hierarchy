@@ -12,6 +12,7 @@ interface AlbumTrack {
 
 interface AlbumTrackListProps {
   tracks: AlbumTrack[];
+  rapperName: string;
   onVote: (trackId: string) => Promise<any>;
   isVoting: boolean;
 }
@@ -23,7 +24,18 @@ const formatDuration = (durationMs: number | null) => {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 };
 
-export const AlbumTrackList = ({ tracks, onVote, isVoting }: AlbumTrackListProps) => {
+const generateGeniusUrl = (rapperName: string, trackTitle: string) => {
+  const slug = `${rapperName} ${trackTitle}`
+    .toLowerCase()
+    .replace(/[^a-z0-9\s-]/g, '')
+    .replace(/\s+/g, '-')
+    .replace(/-+/g, '-')
+    .replace(/^-|-$/g, '');
+  
+  return `https://genius.com/${slug}-lyrics`;
+};
+
+export const AlbumTrackList = ({ tracks, rapperName, onVote, isVoting }: AlbumTrackListProps) => {
   if (tracks.length === 0) {
     return (
       <div className="text-center py-12">
@@ -44,7 +56,14 @@ export const AlbumTrackList = ({ tracks, onVote, isVoting }: AlbumTrackListProps
         >
           <div className="flex-shrink-0 w-4 text-center text-sm text-muted-foreground">{track.track_number}</div>
           <div className="flex-1 min-w-0">
-            <p className="font-medium">{track.title}</p>
+            <a
+              href={generateGeniusUrl(rapperName, track.title)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium hover:text-[var(--theme-primary)] transition-colors hover:underline"
+            >
+              {track.title}
+            </a>
           </div>
           {track.duration_ms && (
             <div className="flex-shrink-0 text-sm text-muted-foreground hidden sm:block">

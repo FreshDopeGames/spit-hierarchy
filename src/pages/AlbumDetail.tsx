@@ -135,7 +135,12 @@ const AlbumDetail = () => {
             <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--theme-font-heading)" }}>
               Tracks
             </h2>
-            <AlbumTrackList tracks={album.tracks} onVote={toggleVote} isVoting={isSubmitting} />
+            <AlbumTrackList 
+              tracks={album.tracks}
+              rapperName={album.rapper_name}
+              onVote={toggleVote} 
+              isVoting={isSubmitting} 
+            />
           </div>
         </div>
 
