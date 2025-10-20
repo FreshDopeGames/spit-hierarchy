@@ -1,4 +1,4 @@
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useAlbumDetail } from "@/hooks/useAlbumDetail";
 import { useTrackVoting } from "@/hooks/useTrackVoting";
 import { AlbumHeader } from "@/components/album/AlbumHeader";
@@ -14,6 +14,7 @@ import CommentBubble from "@/components/CommentBubble";
 
 const AlbumDetail = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { rapperSlug, albumSlug } = useParams<{
     rapperSlug: string;
     albumSlug: string;
@@ -107,7 +108,10 @@ const AlbumDetail = () => {
             <ThemedButton
               variant="default"
               className="font-[var(--theme-font-body)] text-black hover:text-black mb-6"
-              onClick={() => navigate(`/rapper/${album.rapper_slug}`)}
+              onClick={() => {
+                const scrollPos = searchParams.get('scrollPos');
+                navigate(scrollPos ? `/rapper/${album.rapper_slug}?scrollPos=${scrollPos}` : `/rapper/${album.rapper_slug}`);
+              }}
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to {album.rapper_name}
@@ -136,7 +140,7 @@ const AlbumDetail = () => {
         </div>
 
         <CommentBubble contentType="album" contentId={album.album_id} />
-        <BackToTopButton />
+        <BackToTopButton hasCommentBubble={true} />
       </div>
 
       <Footer />

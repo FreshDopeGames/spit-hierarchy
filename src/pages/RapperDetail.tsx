@@ -193,6 +193,7 @@ const RapperDetail = () => {
               rapperId={rapper.id} 
               rapperName={rapper.name}
               rapperSlug={rapper.slug}
+              scrollPos={searchParams.get('scrollPos') || undefined}
             />
           </div>
 
