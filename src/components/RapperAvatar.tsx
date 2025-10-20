@@ -44,8 +44,8 @@ const RapperAvatar = ({
   const sizeClasses = {
     sm: "w-24 h-24 sm:w-28 sm:h-28",
     md: "w-32 h-32 sm:w-36 sm:h-36",
-    lg: "w-40 h-40 sm:w-44 sm:h-44",
-    xl: "w-48 h-48 sm:w-52 sm:h-52",
+    lg: "w-40 h-40 sm:w-48 sm:h-48",
+    xl: "w-48 h-48 sm:w-56 sm:h-56",
     "2xl": "w-64 h-64 sm:w-80 sm:h-80",
   };
 
