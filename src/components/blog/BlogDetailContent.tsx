@@ -70,7 +70,7 @@ const BlogDetailContent = ({
       <BlogArticleHeader blogPost={transformedBlogPost} />
 
       {/* Full-width main content */}
-      <div className="space-y-8 bg-black">
+      <div className="space-y-8">
         <BlogArticleContent content={blogPost.content} />
 
         {/* Strategic ad placement in content */}
