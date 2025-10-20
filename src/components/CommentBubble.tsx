@@ -10,7 +10,7 @@ import CommentItem from "./CommentItem";
 import ResponsiveInstructions from "./ResponsiveInstructions";
 
 interface CommentBubbleProps {
-  contentType: "rapper" | "blog" | "ranking" | "vs_match";
+  contentType: "rapper" | "blog" | "ranking" | "vs_match" | "album";
   contentId: string;
 }
 
@@ -51,6 +51,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
       case "blog": return "article";
       case "ranking": return "ranking";
       case "vs_match": return "VS match";
+      case "album": return "album";
       default: return "content";
     }
   };

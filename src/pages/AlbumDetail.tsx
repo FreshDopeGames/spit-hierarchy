@@ -10,6 +10,7 @@ import Footer from "@/components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ArrowLeft } from "lucide-react";
+import CommentBubble from "@/components/CommentBubble";
 
 const AlbumDetail = () => {
   const navigate = useNavigate();
@@ -134,6 +135,7 @@ const AlbumDetail = () => {
           </div>
         </div>
 
+        <CommentBubble contentType="album" contentId={album.album_id} />
         <BackToTopButton />
       </div>
 
