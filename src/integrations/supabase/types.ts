@@ -200,7 +200,7 @@ export type Database = {
           action: string
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           new_values: Json | null
           old_values: Json | null
           record_id: string | null
@@ -212,7 +212,7 @@ export type Database = {
           action: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           record_id?: string | null
@@ -224,7 +224,7 @@ export type Database = {
           action?: string
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           record_id?: string | null
@@ -634,7 +634,7 @@ export type Database = {
           error_message: string | null
           execution_time_ms: number | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           rapper_id: string
           request_data: Json | null
           response_data: Json | null
@@ -648,7 +648,7 @@ export type Database = {
           error_message?: string | null
           execution_time_ms?: number | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           rapper_id: string
           request_data?: Json | null
           response_data?: Json | null
@@ -662,7 +662,7 @@ export type Database = {
           error_message?: string | null
           execution_time_ms?: number | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           rapper_id?: string
           request_data?: Json | null
           response_data?: Json | null
@@ -676,7 +676,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           request_count: number | null
           updated_at: string
           user_id: string | null
@@ -685,7 +685,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           request_count?: number | null
           updated_at?: string
           user_id?: string | null
@@ -694,7 +694,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           request_count?: number | null
           updated_at?: string
           user_id?: string | null
@@ -2464,8 +2464,8 @@ export type Database = {
           created_by: string
           description: string | null
           id: string
-          rapper_1_id: string
-          rapper_2_id: string
+          rapper_1_id: string | null
+          rapper_2_id: string | null
           slug: string
           status: string
           title: string
@@ -2476,8 +2476,8 @@ export type Database = {
           created_by: string
           description?: string | null
           id?: string
-          rapper_1_id: string
-          rapper_2_id: string
+          rapper_1_id?: string | null
+          rapper_2_id?: string | null
           slug: string
           status?: string
           title: string
@@ -2488,8 +2488,8 @@ export type Database = {
           created_by?: string
           description?: string | null
           id?: string
-          rapper_1_id?: string
-          rapper_2_id?: string
+          rapper_1_id?: string | null
+          rapper_2_id?: string | null
           slug?: string
           status?: string
           title?: string
@@ -2824,18 +2824,9 @@ export type Database = {
         Args: { ranking_uuid: string }
         Returns: number
       }
-      can_change_username: {
-        Args: { user_id_param: string }
-        Returns: boolean
-      }
-      can_manage_blog: {
-        Args: { _user_id: string }
-        Returns: boolean
-      }
-      can_manage_blog_content: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      can_change_username: { Args: { user_id_param: string }; Returns: boolean }
+      can_manage_blog: { Args: { _user_id: string }; Returns: boolean }
+      can_manage_blog_content: { Args: never; Returns: boolean }
       check_and_award_achievements: {
         Args: { target_user_id: string }
         Returns: undefined
@@ -2858,18 +2849,9 @@ export type Database = {
         }
         Returns: boolean
       }
-      cleanup_old_page_views: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      create_weekly_ranking_snapshot: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      daily_ranking_maintenance: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      cleanup_old_page_views: { Args: never; Returns: undefined }
+      create_weekly_ranking_snapshot: { Args: never; Returns: undefined }
+      daily_ranking_maintenance: { Args: never; Returns: undefined }
       fetch_musicbrainz_discography: {
         Args: {
           p_force_refresh?: boolean
@@ -2903,7 +2885,7 @@ export type Database = {
         }[]
       }
       get_category_voting_analytics: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           average_rating: number
           description: string
@@ -2919,7 +2901,7 @@ export type Database = {
         Returns: number
       }
       get_own_complete_profile: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           avatar_url: string
           bio: string
@@ -2935,7 +2917,7 @@ export type Database = {
         }[]
       }
       get_own_profile: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           avatar_url: string
           bio: string
@@ -2984,7 +2966,7 @@ export type Database = {
         }[]
       }
       get_public_category_stats: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           average_rating: number
           category_id: string
@@ -3044,7 +3026,7 @@ export type Database = {
         }[]
       }
       get_public_rapper_voting_stats: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           average_rating: number
           id: string
@@ -3055,12 +3037,9 @@ export type Database = {
           votes_last_7_days: number
         }[]
       }
-      get_rapper_top5_count: {
-        Args: { rapper_uuid: string }
-        Returns: number
-      }
+      get_rapper_top5_count: { Args: { rapper_uuid: string }; Returns: number }
       get_rapper_top5_counts: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           id: string
           name: string
@@ -3068,7 +3047,7 @@ export type Database = {
         }[]
       }
       get_rapper_voting_analytics: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           average_rating: number
           id: string
@@ -3113,10 +3092,7 @@ export type Database = {
           verified: boolean
         }[]
       }
-      get_total_member_count: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
+      get_total_member_count: { Args: never; Returns: number }
       get_trending_rappers: {
         Args: { days_back?: number }
         Returns: {
@@ -3180,7 +3156,7 @@ export type Database = {
         Returns: number
       }
       get_user_voting_stats: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           average_rating_given: number
           categories_used: number
@@ -3195,22 +3171,10 @@ export type Database = {
         Args: { status: Database["public"]["Enums"]["member_status"] }
         Returns: number
       }
-      has_role: {
-        Args: { _role: string; _user_id: string }
-        Returns: boolean
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_admin_user: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_moderator_or_admin: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
+      has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
+      is_admin: { Args: never; Returns: boolean }
+      is_admin_user: { Args: never; Returns: boolean }
+      is_moderator_or_admin: { Args: never; Returns: boolean }
       log_profile_access: {
         Args: { access_type?: string; accessed_id: string }
         Returns: undefined
@@ -3224,7 +3188,7 @@ export type Database = {
         Returns: boolean
       }
       populate_all_rankings_with_missing_rappers: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: undefined
       }
       populate_ranking_with_all_rappers: {
@@ -3239,10 +3203,7 @@ export type Database = {
         Args: { target_ranking_id?: string }
         Returns: undefined
       }
-      reset_all_voting_data: {
-        Args: Record<PropertyKey, never>
-        Returns: Json
-      }
+      reset_all_voting_data: { Args: never; Returns: Json }
       search_profiles_admin: {
         Args: { search_term?: string }
         Returns: {
@@ -3274,22 +3235,9 @@ export type Database = {
         Args: { track_uuid: string; user_uuid?: string }
         Returns: Json
       }
-      unaccent: {
-        Args: { "": string }
-        Returns: string
-      }
-      unaccent_init: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      update_all_rapper_activity_scores: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      update_own_username: {
-        Args: { new_username: string }
-        Returns: Json
-      }
+      unaccent: { Args: { "": string }; Returns: string }
+      update_all_rapper_activity_scores: { Args: never; Returns: undefined }
+      update_own_username: { Args: { new_username: string }; Returns: Json }
       update_user_ranking_positions: {
         Args: { ranking_uuid: string }
         Returns: undefined

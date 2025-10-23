@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useCreateVSMatch, useUpdateVSMatch, useDeleteVSMatch } from "./useVSMatches";
-import { VSMatch, CreateVSMatchData, UpdateVSMatchData } from "@/types/vsMatches";
+import { AdminVSMatch, CreateVSMatchData, UpdateVSMatchData } from "@/types/vsMatches";
 
 export const useAdminVSMatches = () => {
   const createMutation = useCreateVSMatch();
@@ -26,7 +26,7 @@ export const useAdminVSMatches = () => {
         .order("created_at", { ascending: false });
 
       if (error) throw error;
-      return data as VSMatch[];
+      return data as AdminVSMatch[];
     },
     staleTime: 5 * 60 * 1000 // 5 minutes
   });

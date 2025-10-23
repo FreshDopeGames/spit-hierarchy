@@ -27,9 +27,14 @@ export const useRapperAutocomplete = (options: UseRapperAutocompleteOptions = {}
       }
 
       try {
+        // Filter to only valid UUIDs
+        const validExcludeIds = (options.excludeIds || []).filter(id => 
+          /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(id)
+        );
+
         const { data, error } = await supabase.rpc('search_rappers', {
           search_term: debouncedSearchTerm,
-          exclude_ids: options.excludeIds || [],
+          exclude_ids: validExcludeIds,
           max_results: 50
         });
 

@@ -6,13 +6,13 @@ import { Swords, Edit, Trash2, Plus, Eye } from "lucide-react";
 import AdminTabHeader from "./AdminTabHeader";
 import AdminVSMatchDialog from "./AdminVSMatchDialog";
 import { useAdminVSMatches } from "@/hooks/useAdminVSMatches";
-import { VSMatch } from "@/types/vsMatches";
+import { AdminVSMatch } from "@/types/vsMatches";
 import { toast } from "sonner";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Link } from "react-router-dom";
 
 const AdminVSMatchManagement = () => {
-  const [selectedMatch, setSelectedMatch] = useState<VSMatch | null>(null);
+  const [selectedMatch, setSelectedMatch] = useState<AdminVSMatch | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   
   const {
@@ -32,7 +32,7 @@ const AdminVSMatchManagement = () => {
     setDialogOpen(true);
   };
 
-  const handleEdit = (vsMatch: VSMatch) => {
+  const handleEdit = (vsMatch: AdminVSMatch) => {
     setSelectedMatch(vsMatch);
     setDialogOpen(true);
   };
@@ -190,12 +190,12 @@ const AdminVSMatchManagement = () => {
                 <div className="flex items-center justify-center text-[var(--theme-text)]">
                   <div className="text-center">
                     <div className="text-sm text-[var(--theme-text)] opacity-70 mb-1">Rapper 1</div>
-                    <div className="font-medium">{match.rapper_1.name}</div>
+                    <div className="font-medium">{match.rapper_1?.name ?? "TBD"}</div>
                   </div>
                   <div className="mx-8 text-2xl text-[var(--theme-primary)]">VS</div>
                   <div className="text-center">
                     <div className="text-sm text-[var(--theme-text)] opacity-70 mb-1">Rapper 2</div>
-                    <div className="font-medium">{match.rapper_2.name}</div>
+                    <div className="font-medium">{match.rapper_2?.name ?? "TBD"}</div>
                   </div>
                 </div>
                 <div className="mt-4 text-xs text-[var(--theme-text)] opacity-50 text-center">

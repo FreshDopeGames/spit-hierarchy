@@ -31,10 +31,15 @@ export interface VSMatchWithVoteCounts extends VSMatch {
 export interface CreateVSMatchData {
   title: string;
   description?: string;
-  rapper_1_id: string;
-  rapper_2_id: string;
+  rapper_1_id?: string;
+  rapper_2_id?: string;
   status?: 'draft' | 'published' | 'archived';
 }
+
+export type AdminVSMatch = Tables<"vs_matches"> & {
+  rapper_1: VSMatchRapper | null;
+  rapper_2: VSMatchRapper | null;
+};
 
 export interface UpdateVSMatchData extends Partial<CreateVSMatchData> {
   id: string;

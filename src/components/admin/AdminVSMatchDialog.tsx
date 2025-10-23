@@ -52,17 +52,24 @@ const AdminVSMatchDialog = ({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!title.trim() || !rapper1Id || !rapper2Id || rapper1Id === rapper2Id) {
+    if (!title.trim()) {
       return;
     }
 
-    const data = {
+    // Only require rappers for published matches
+    if (status === 'published' && (!rapper1Id || !rapper2Id || rapper1Id === rapper2Id)) {
+      return;
+    }
+
+    const data: any = {
       title: title.trim(),
       description: description.trim() || undefined,
-      rapper_1_id: rapper1Id,
-      rapper_2_id: rapper2Id,
       status
     };
+
+    // Only include rapper IDs if they exist
+    if (rapper1Id) data.rapper_1_id = rapper1Id;
+    if (rapper2Id) data.rapper_2_id = rapper2Id;
 
     if (vsMatch) {
       await onSubmit({ ...data, id: vsMatch.id } as UpdateVSMatchData);
@@ -112,18 +119,18 @@ const AdminVSMatchDialog = ({
               label="Rapper 1"
               value={rapper1Id}
               onChange={setRapper1Id}
-              excludeIds={[rapper2Id]}
+              excludeIds={rapper2Id ? [rapper2Id] : []}
               placeholder="Select first rapper"
-              required
+              required={status === 'published'}
             />
 
             <RapperSelector
               label="Rapper 2"
               value={rapper2Id}
               onChange={setRapper2Id}
-              excludeIds={[rapper1Id]}
+              excludeIds={rapper1Id ? [rapper1Id] : []}
               placeholder="Select second rapper"
-              required
+              required={status === 'published'}
             />
           </div>
 
@@ -152,7 +159,7 @@ const AdminVSMatchDialog = ({
             </Button>
             <Button
               type="submit"
-              disabled={isSubmitting || !title.trim() || !rapper1Id || !rapper2Id || rapper1Id === rapper2Id}
+              disabled={isSubmitting || !title.trim() || (status === 'published' && (!rapper1Id || !rapper2Id || rapper1Id === rapper2Id))}
               className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primary)]/90"
             >
               {isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

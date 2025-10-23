@@ -58,14 +58,14 @@ const RapperSelector = ({
     prevValueRef.current = value;
   }, [value, searchResults]);
 
-  // Show dropdown when typing and has results
+  // Show dropdown when typing and has enough characters
   useEffect(() => {
-    if (hasMinLength && searchResults.length > 0 && !selectedRapper) {
+    if (hasMinLength && !selectedRapper) {
       setShowDropdown(true);
     } else {
       setShowDropdown(false);
     }
-  }, [hasMinLength, searchResults.length, selectedRapper]);
+  }, [hasMinLength, selectedRapper]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -105,7 +105,7 @@ const RapperSelector = ({
   };
 
   const handleInputFocus = () => {
-    if (hasMinLength && searchResults.length > 0 && !selectedRapper) {
+    if (hasMinLength && !selectedRapper) {
       setShowDropdown(true);
     }
   };
