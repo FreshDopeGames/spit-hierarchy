@@ -74,14 +74,15 @@ const AdminVSMatchDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto bg-[var(--theme-surface)] border border-[var(--theme-border)]">
+      <DialogContent className="max-w-2xl max-h-[90vh] overflow-visible bg-[var(--theme-surface)] border border-[var(--theme-border)]">
         <DialogHeader>
           <DialogTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] text-xl">
             {vsMatch ? "Edit VS Match" : "Create VS Match"}
           </DialogTitle>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="max-h-[calc(90vh-120px)] overflow-y-auto pr-2">
+          <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="title" className="text-[var(--theme-text)]">Title</Label>
             <ThemedInput
@@ -159,6 +160,7 @@ const AdminVSMatchDialog = ({
             </Button>
           </div>
         </form>
+        </div>
       </DialogContent>
     </Dialog>
   );

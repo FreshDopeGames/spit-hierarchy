@@ -148,7 +148,7 @@ const RapperSelector = ({
 
         {/* Autocomplete Dropdown */}
         {showDropdown && (
-          <div className="absolute top-full left-0 right-0 mt-1 !bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-50">
+          <div className="absolute top-full left-0 right-0 mt-1 !bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto z-[9999]">
             {isSearching ? (
               <div className="flex items-center gap-2 p-3 text-gray-600">
                 <Loader2 className="h-4 w-4 animate-spin" />
