@@ -33,7 +33,7 @@ const RapperCard = ({
   // Convert average_rating from 1-10 scale to 0-100 scale to match detail page
   const overallRating = rapper.average_rating 
     ? Math.round((Number(rapper.average_rating) / 10) * 100) 
-    : 0;
+    : null;
 
   // Use optimized placeholder based on compact mode
   const placeholderSize = compact ? 'medium' : 'large';
@@ -139,7 +139,7 @@ const RapperCard = ({
               {/* Overall Rating */}
               <div className="bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primary)]/80 px-1 sm:px-2 py-1.5 sm:py-2 rounded-lg border border-[var(--theme-border)] text-center">
                 <div className="text-[var(--theme-textLight)] font-bold text-sm sm:text-lg font-[var(--theme-fontPrimary)] leading-none">
-                  {overallRating}
+                  {overallRating ?? "—"}
                 </div>
                 <div className="text-[var(--theme-textLight)]/70 text-xs font-[var(--theme-fontSecondary)] mt-0.5 sm:mt-1">
                   Overall
