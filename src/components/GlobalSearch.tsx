@@ -2,10 +2,14 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Search, Music, Loader2, X } from 'lucide-react';
 import { useRapperAutocomplete } from '@/hooks/useRapperAutocomplete';
+import { useCanSuggestRappers } from '@/hooks/useCanSuggestRappers';
 import { ThemedInput } from '@/components/ui/themed-input';
+import { ThemedButton } from '@/components/ui/themed-button';
+import RapperSuggestionModal from '@/components/RapperSuggestionModal';
 
 const GlobalSearch = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [suggestionModalOpen, setSuggestionModalOpen] = useState(false);
   const navigate = useNavigate();
   const searchContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -17,6 +21,8 @@ const GlobalSearch = () => {
     isSearching,
     hasMinLength,
   } = useRapperAutocomplete();
+
+  const { canSuggest } = useCanSuggestRappers();
 
   // Auto-focus input when overlay opens
   useEffect(() => {
@@ -160,6 +166,18 @@ const GlobalSearch = () => {
                     <Music className="w-12 h-12 mx-auto mb-2 opacity-50" />
                     <p className="text-sm">No rappers found</p>
                     <p className="text-xs mt-1">Try a different search term</p>
+                    
+                    {canSuggest && (
+                      <ThemedButton
+                        variant="outline"
+                        onClick={() => setSuggestionModalOpen(true)}
+                        className="mt-4"
+                      >
+                        <span className="text-lg font-bold" style={{ color: 'hsl(var(--theme-primary))' }}>
+                          ⚠️ Suggest a Rapper to Admins
+                        </span>
+                      </ThemedButton>
+                    )}
                   </div>
                 )}
 
@@ -264,6 +282,12 @@ const GlobalSearch = () => {
           </div>
         </div>
       )}
+
+      <RapperSuggestionModal
+        open={suggestionModalOpen}
+        onOpenChange={setSuggestionModalOpen}
+        defaultRapperName={searchTerm}
+      />
     </>
   );
 };
