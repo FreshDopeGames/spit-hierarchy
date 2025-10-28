@@ -224,8 +224,60 @@ serve(async (req) => {
       }
     }
 
-    // Resolve MusicBrainz artist id (robust alias-aware search)
+    // Resolve and validate MusicBrainz artist ID
     let musicbrainzId = rapper.musicbrainz_id as string | null;
+    
+    // Validate stored MusicBrainz ID if present
+    if (musicbrainzId) {
+      try {
+        console.log(`Validating stored MusicBrainz ID: ${musicbrainzId} for ${rapper.name}`);
+        const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases&fmt=json`);
+        await delay(120);
+        
+        const storedArtistName = normalizeName(artistData.name);
+        const rapperName = normalizeName(rapper.name);
+        
+        // Check if stored ID actually matches this rapper (including aliases)
+        const aliases = (artistData.aliases || []).map(a => normalizeName(a.name));
+        const isValidMatch = storedArtistName === rapperName || aliases.includes(rapperName);
+        
+        if (!isValidMatch) {
+          console.warn(`⚠ MusicBrainz ID mismatch! Stored ID "${musicbrainzId}" points to "${artistData.name}" but rapper is "${rapper.name}"`);
+          
+          // Try to find the correct ID
+          const correctMbId = await resolveArtistId(rapper.name);
+          
+          if (correctMbId && correctMbId !== musicbrainzId) {
+            console.log(`✓ Correcting MusicBrainz ID from ${musicbrainzId} to ${correctMbId}`);
+            
+            await supabaseService
+              .from('rappers')
+              .update({ musicbrainz_id: correctMbId })
+              .eq('id', rapperId);
+            
+            musicbrainzId = correctMbId;
+            
+            await logAuditEvent(supabaseService, {
+              rapper_id: rapperId,
+              action: 'ID_MISMATCH_CORRECTED',
+              status: 'SUCCESS',
+              user_id: userId,
+              ip_address: clientIP,
+              user_agent: userAgent,
+              request_data: { oldMbId: rapper.musicbrainz_id, newMbId: correctMbId, oldArtistName: artistData.name, rapperName: rapper.name },
+              execution_time_ms: Date.now() - startTime,
+            });
+          }
+        } else {
+          console.log(`✓ MusicBrainz ID validation passed for ${rapper.name}`);
+        }
+      } catch (validationError: any) {
+        console.error('Error validating MusicBrainz ID:', validationError);
+        // Continue with stored ID - might still work
+      }
+    }
+    
+    // Resolve if still no ID
     if (!musicbrainzId) {
       musicbrainzId = await resolveArtistId(rapper.name);
       if (musicbrainzId) {
@@ -399,6 +451,9 @@ serve(async (req) => {
 
     console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name}`);
 
+    // Track valid album IDs for reconciliation
+    const validAlbumIds = new Set<string>();
+
     // Process all release groups (removed .slice(0, 50) limit)
     for (const rg of releaseGroups) {
       try {
@@ -415,13 +470,22 @@ serve(async (req) => {
         continue;
       }
 
-      // Fetch detailed release-group info to check official status and get streaming links
+      // Fetch detailed release-group info including artist-credit to verify authenticity
       let rgDetails: any;
       let releaseCheckPassed = false;
       
       try {
-        rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels&fmt=json`);
+        rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels+artist-credits&fmt=json`);
         await delay(120);
+        
+        // Verify artist-credit includes this rapper (prevents tribute albums and misattributions)
+        const artistCredits = rgDetails['artist-credit'] || [];
+        const creditIds = artistCredits.map((c: any) => c.artist?.id).filter(Boolean);
+        
+        if (!creditIds.includes(musicbrainzId)) {
+          console.log(`⚠ Skipping "${rg.title}" - artist-credit does not include rapper (RG: ${rg.id})`);
+          continue;
+        }
         
         // More lenient release status check
         const releases = rgDetails?.releases || [];
@@ -464,6 +528,12 @@ serve(async (req) => {
         continue;
       }
 
+      // Additional title guard for tribute patterns (belt-and-suspenders)
+      if (/tribute\s+to/i.test(rg.title)) {
+        console.log(`⚠ Skipping "${rg.title}" - title contains tribute pattern`);
+        continue;
+      }
+
       // Exclude non-studio releases and unofficial types
       const excludedSecondaryTypes = [
         'Compilation',  // Greatest hits, collections
@@ -474,7 +544,10 @@ serve(async (req) => {
         'Spokenword',   // Audiobooks, poetry
         'Interview',    // Interview albums
         'Demo',         // Demo recordings
-        'Audio drama'   // Audio dramas/plays
+        'Audio drama',  // Audio dramas/plays
+        'Tribute',      // Tribute albums
+        'Karaoke',      // Karaoke versions
+        'Anthology'     // Anthology collections
       ];
       
       const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
@@ -626,6 +699,9 @@ serve(async (req) => {
       // Label info not available without inc=releases - skip label processing
 
       if (albumId) {
+        // Track this as a valid album ID
+        validAlbumIds.add(albumId);
+        
         await supabaseService
           .from('rapper_albums')
           .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
@@ -692,6 +768,47 @@ serve(async (req) => {
       }
     }
 
+    // Reconciliation: Remove links to albums that are no longer valid
+    console.log(`Starting reconciliation - valid album count: ${validAlbumIds.size}`);
+    
+    const { data: currentLinks } = await supabaseService
+      .from('rapper_albums')
+      .select('album_id')
+      .eq('rapper_id', rapperId)
+      .eq('role', 'primary');
+
+    if (currentLinks && currentLinks.length > 0) {
+      const invalidAlbumIds = currentLinks
+        .map(link => link.album_id)
+        .filter(id => !validAlbumIds.has(id));
+
+      if (invalidAlbumIds.length > 0) {
+        console.log(`Removing ${invalidAlbumIds.length} invalid album links`);
+        
+        const { error: deleteError } = await supabaseService
+          .from('rapper_albums')
+          .delete()
+          .eq('rapper_id', rapperId)
+          .in('album_id', invalidAlbumIds);
+
+        if (deleteError) {
+          console.error('Error removing invalid links:', deleteError);
+        } else {
+          await logAuditEvent(supabaseService, {
+            rapper_id: rapperId,
+            action: 'RECONCILIATION_CLEANUP',
+            status: 'SUCCESS',
+            user_id: userId,
+            ip_address: clientIP,
+            user_agent: userAgent,
+            response_data: { removedCount: invalidAlbumIds.length, removedAlbumIds: invalidAlbumIds },
+            execution_time_ms: Date.now() - startTime,
+          });
+        }
+      } else {
+        console.log('No invalid album links found - all links are valid');
+      }
+    }
 
     // Final payload
     const payload = await readDiscographyPayload(supabaseService, rapperId);

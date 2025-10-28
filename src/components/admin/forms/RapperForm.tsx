@@ -42,6 +42,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     twitter_handle: "",
     aliases: [],
     tags: [],
+    musicbrainz_id: "",
   });
 
   // Fetch existing tags for this rapper
@@ -82,6 +83,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         twitter_handle: rapper.twitter_handle || "",
         aliases: rapper.aliases || [],
         tags: [],
+        musicbrainz_id: rapper.musicbrainz_id || "",
       });
     } else {
       setFormData({
@@ -102,6 +104,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         twitter_handle: "",
         aliases: [],
         tags: [],
+        musicbrainz_id: "",
       });
     }
   }, [rapper]);
@@ -171,6 +174,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         instagram_handle: formData.instagram_handle.trim() || null,
         twitter_handle: formData.twitter_handle.trim() || null,
         aliases: formData.aliases,
+        musicbrainz_id: formData.musicbrainz_id.trim() || null,
         slug,
       };
 
@@ -363,6 +367,21 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
             max="31"
           />
         </div>
+      </div>
+
+      <div>
+        <Label htmlFor="musicbrainz_id" className="text-[var(--theme-primary)]">MusicBrainz ID (Optional)</Label>
+        <Input
+          id="musicbrainz_id"
+          type="text"
+          value={formData.musicbrainz_id}
+          onChange={(e) => handleInputChange("musicbrainz_id", e.target.value)}
+          className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
+          placeholder="e.g., 381086ea-f511-4aba-bdf9-71c753dc5077"
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          Override the auto-detected MusicBrainz artist ID for discography fetching
+        </p>
       </div>
 
       <div>

@@ -17,4 +17,5 @@ export interface RapperFormData {
   twitter_handle: string;
   aliases: string[];
   tags: string[];
+  musicbrainz_id: string;
 }
