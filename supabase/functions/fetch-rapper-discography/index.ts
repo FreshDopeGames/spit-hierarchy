@@ -100,7 +100,7 @@ serve(async (req) => {
     // Load rapper row first (so we can short-circuit with cache before rate-limiting)
     const { data: rapper, error: rapperErr } = await supabaseService
       .from('rappers')
-      .select('id, name, musicbrainz_id, discography_last_updated, instagram_handle, twitter_handle')
+      .select('id, name, musicbrainz_id, discography_last_updated, instagram_handle, twitter_handle, aliases')
       .eq('id', rapperId)
       .single();
 
@@ -236,16 +236,20 @@ serve(async (req) => {
         
         const storedArtistName = normalizeName(artistData.name);
         const rapperName = normalizeName(rapper.name);
+        const rapperAliases = (rapper.aliases || []) as string[];
         
-        // Check if stored ID actually matches this rapper (including aliases)
-        const aliases = (artistData.aliases || []).map(a => normalizeName(a.name));
-        const isValidMatch = storedArtistName === rapperName || aliases.includes(rapperName);
+        // Check if stored ID actually matches this rapper (including both MusicBrainz aliases and rapper aliases)
+        const mbAliases = (artistData.aliases || []).map(a => normalizeName(a.name));
+        const allRapperNames = [rapperName, ...rapperAliases.map(a => normalizeName(a))];
+        const isValidMatch = allRapperNames.some(name => 
+          name === storedArtistName || mbAliases.includes(name)
+        );
         
         if (!isValidMatch) {
-          console.warn(`⚠ MusicBrainz ID mismatch! Stored ID "${musicbrainzId}" points to "${artistData.name}" but rapper is "${rapper.name}"`);
+          console.warn(`⚠ MusicBrainz ID mismatch! Stored ID "${musicbrainzId}" points to "${artistData.name}" but rapper is "${rapper.name}" with aliases [${rapperAliases.join(', ')}]`);
           
-          // Try to find the correct ID
-          const correctMbId = await resolveArtistId(rapper.name);
+          // Try to find the correct ID including rapper aliases
+          const correctMbId = await resolveArtistId(rapper.name, rapperAliases);
           
           if (correctMbId && correctMbId !== musicbrainzId) {
             console.log(`✓ Correcting MusicBrainz ID from ${musicbrainzId} to ${correctMbId}`);
@@ -279,7 +283,8 @@ serve(async (req) => {
     
     // Resolve if still no ID
     if (!musicbrainzId) {
-      musicbrainzId = await resolveArtistId(rapper.name);
+      const rapperAliases = (rapper.aliases || []) as string[];
+      musicbrainzId = await resolveArtistId(rapper.name, rapperAliases);
       if (musicbrainzId) {
         await supabaseService.from('rappers').update({ musicbrainz_id: musicbrainzId }).eq('id', rapperId);
       }
@@ -472,6 +477,7 @@ serve(async (req) => {
 
       // Fetch detailed release-group info including artist-credit to verify authenticity
       let rgDetails: any;
+      let releases: any[] = []; // Declare here so it's accessible later for track fetching
       let releaseCheckPassed = false;
       
       try {
@@ -488,7 +494,7 @@ serve(async (req) => {
         }
         
         // More lenient release status check
-        const releases = rgDetails?.releases || [];
+        releases = rgDetails?.releases || []; // Assign to outer scope variable
         
         if (releases.length > 0) {
           // Accept if ANY release is marked as Official
@@ -756,9 +762,38 @@ serve(async (req) => {
               }
             }
           } catch (trackError: any) {
-            console.error(`Error fetching tracks for "${rg.title}":`, trackError);
+            console.error(`Error fetching tracks for "${rg.title}": ${trackError.message}`, trackError);
+            await logAuditEvent(supabaseService, {
+              rapper_id: rapperId,
+              action: 'FETCH_TRACKS',
+              status: 'FAILED',
+              error_message: `Track fetch failed for "${rg.title}": ${trackError.message}`,
+            });
             // Continue processing - tracks are optional
           }
+        }
+        
+        // After track insertion, verify album has tracks - filter out if empty
+        const { data: trackCheck } = await supabaseService
+          .from('album_tracks')
+          .select('id')
+          .eq('album_id', albumId)
+          .limit(1);
+
+        if (!trackCheck || trackCheck.length === 0) {
+          console.log(`⚠ Filtering out "${rg.title}" - no tracks available in MusicBrainz`);
+          
+          // Remove this album link since it has no tracks
+          await supabaseService
+            .from('rapper_albums')
+            .delete()
+            .eq('rapper_id', rapperId)
+            .eq('album_id', albumId);
+          
+          // Remove from validAlbumIds so reconciliation doesn't keep it
+          validAlbumIds.delete(albumId);
+          
+          continue; // Skip to next album
         }
       }
       await delay(150);
@@ -783,7 +818,7 @@ serve(async (req) => {
         .filter(id => !validAlbumIds.has(id));
 
       if (invalidAlbumIds.length > 0) {
-        console.log(`Removing ${invalidAlbumIds.length} invalid album links`);
+        console.log(`🗑️ Reconciliation: Removing ${invalidAlbumIds.length} invalid album links (outdated or 0 tracks)`);
         
         const { error: deleteError } = await supabaseService
           .from('rapper_albums')
@@ -912,32 +947,58 @@ function normalizeName(name: string) {
     .trim();
 }
 
-async function resolveArtistId(artistName: string): Promise<string | null> {
-  // Exact + alias-aware search (encode full query)
-  const search = encodeURIComponent(`artist:"${artistName}"`);
-  const url = `https://musicbrainz.org/ws/2/artist?query=${search}&fmt=json&limit=10&inc=aliases`;
-  const data = await mbJson<any>(url);
-  const artists: MusicBrainzArtist[] = data.artists || [];
+async function resolveArtistId(rapperName: string, aliases: string[] = []): Promise<string | null> {
+  const searchTerms = [rapperName, ...aliases];
+  
+  for (const searchTerm of searchTerms) {
+    console.log(`Searching MusicBrainz for artist: "${searchTerm}"`);
+    
+    // Exact + alias-aware search (encode full query)
+    const search = encodeURIComponent(`artist:"${searchTerm}"`);
+    const url = `https://musicbrainz.org/ws/2/artist?query=${search}&fmt=json&limit=10&inc=aliases`;
+    
+    try {
+      const data = await mbJson<any>(url);
+      await delay(100);
+      
+      const artists: MusicBrainzArtist[] = data.artists || [];
+      const target = normalizeName(searchTerm);
 
-  const target = normalizeName(artistName);
+      // 1) Exact normalized name match
+      const exact = artists.find(a => normalizeName(a.name) === target);
+      if (exact) {
+        console.log(`✓ Found exact match for "${searchTerm}": ${exact.name} (ID: ${exact.id})`);
+        return exact.id;
+      }
 
-  // 1) Exact normalized name match
-  const exact = artists.find(a => normalizeName(a.name) === target);
-  if (exact) return exact.id;
+      // 2) Match any MusicBrainz alias exactly (normalized)
+      for (const a of artists) {
+        for (const al of a.aliases || []) {
+          if (normalizeName(al.name) === target) {
+            console.log(`✓ Found alias match for "${searchTerm}": ${al.name} → ${a.name} (ID: ${a.id})`);
+            return a.id;
+          }
+        }
+      }
 
-  // 2) Match any alias exactly (normalized)
-  for (const a of artists) {
-    for (const al of a.aliases || []) {
-      if (normalizeName(al.name) === target) return a.id;
+      // 3) Fallback: highest score for this search term
+      let best: MusicBrainzArtist | undefined = undefined;
+      for (const a of artists) {
+        if (!best || (a.score || 0) > (best.score || 0)) best = a;
+      }
+      
+      if (best && (best.score || 0) >= 80) {
+        console.log(`✓ Found high-score match for "${searchTerm}": ${best.name} (ID: ${best.id}, score: ${best.score})`);
+        return best.id;
+      }
+    } catch (error: any) {
+      console.error(`Error searching for "${searchTerm}":`, error.message);
+      // Continue to next search term
     }
   }
-
-  // 3) Fallback: highest score
-  let best: MusicBrainzArtist | undefined = undefined;
-  for (const a of artists) {
-    if (!best || (a.score || 0) > (best.score || 0)) best = a;
-  }
-  return best?.id || null;
+  
+  console.log(`✗ No match found for any of: ${searchTerms.join(', ')}`);
+  return null;
 }
 
 async function mbJson<T>(url: string): Promise<T> {
