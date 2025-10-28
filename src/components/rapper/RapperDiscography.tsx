@@ -489,7 +489,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
               size="sm"
               onClick={handleRefresh}
               disabled={refreshMutation.isPending || isLoading}
-              className="border-[hsl(var(--theme-primary))]/50 text-black hover:bg-[hsl(var(--theme-primary))] hover:text-black hover:border-[hsl(var(--theme-primary))] transition-all duration-200 gap-2"
+              className="bg-[hsl(var(--theme-primary))] text-white border-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/80 hover:text-white transition-all duration-200 gap-2"
             >
               <RefreshCw
                 className={`w-4 h-4 ${refreshMutation.isPending || isLoading ? "animate-spin-relaxed" : "transition-transform duration-200"}`}
