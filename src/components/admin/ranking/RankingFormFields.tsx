@@ -6,6 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { UseFormReturn } from "react-hook-form";
 import { RankingFormData } from "./rankingFormSchema";
 import RankingTagSelector from "../RankingTagSelector";
+import RankingFilterCriteria from "./RankingFilterCriteria";
 import { sanitizeAdminContent, sanitizeAdminInput } from "@/utils/securityUtils";
 
 interface RankingFormFieldsProps {
@@ -130,6 +131,19 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
           onTagsChange={onTagsChange}
         />
       </FormItem>
+      
+      <FormField
+        control={form.control}
+        name="filter_criteria"
+        render={({ field }) => (
+          <FormItem>
+            <RankingFilterCriteria
+              value={field.value || { locations: [], decades: [], artist_types: [], tag_ids: [] }}
+              onChange={field.onChange}
+            />
+          </FormItem>
+        )}
+      />
     </>
   );
 };

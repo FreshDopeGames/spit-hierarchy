@@ -35,7 +35,8 @@ export const useRankingSubmission = ({
           description: values.description || "",
           category: values.category,
           slug: values.slug,
-          display_order: values.display_order || 0
+          display_order: values.display_order || 0,
+          filter_criteria: values.filter_criteria || {}
         };
         const { error } = await supabase
           .from("official_rankings")
@@ -43,6 +44,19 @@ export const useRankingSubmission = ({
           .eq("id", ranking.id);
 
         if (error) throw error;
+
+        // Re-populate ranking with new filters if criteria changed
+        if (values.filter_criteria) {
+          const { error: populateError } = await supabase.rpc("populate_ranking_with_rappers", {
+            ranking_uuid: ranking.id,
+            filter_criteria: values.filter_criteria
+          });
+
+          if (populateError) {
+            console.error("Error re-populating ranking:", populateError);
+            toast.error("Ranking updated but failed to apply filters.");
+          }
+        }
 
         // Update tag assignments
         await updateTagAssignments(ranking.id, selectedTags);
@@ -55,7 +69,8 @@ export const useRankingSubmission = ({
           description: values.description || "",
           category: values.category,
           slug: values.slug,
-          display_order: values.display_order || 0
+          display_order: values.display_order || 0,
+          filter_criteria: values.filter_criteria || {}
         };
         const { data: newRanking, error } = await supabase
           .from("official_rankings")
@@ -70,10 +85,11 @@ export const useRankingSubmission = ({
           await updateTagAssignments(newRanking.id, selectedTags);
         }
 
-        // Automatically populate the new ranking with all rappers
+        // Populate the new ranking with filtered rappers
         if (newRanking) {
-          const { error: populateError } = await supabase.rpc("populate_ranking_with_all_rappers", {
-            ranking_uuid: newRanking.id
+          const { error: populateError } = await supabase.rpc("populate_ranking_with_rappers", {
+            ranking_uuid: newRanking.id,
+            filter_criteria: values.filter_criteria || {}
           });
 
           if (populateError) {
@@ -82,7 +98,7 @@ export const useRankingSubmission = ({
           }
         }
 
-        toast.success("Ranking created successfully and populated with all rappers");
+        toast.success("Ranking created successfully with filters applied");
       }
 
       setOpen(false);

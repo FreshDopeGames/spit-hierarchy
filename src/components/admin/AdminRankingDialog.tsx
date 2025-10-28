@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
-import { rankingFormSchema, RankingFormData } from "./ranking/rankingFormSchema";
+import { rankingFormSchema, RankingFormData, FilterCriteria } from "./ranking/rankingFormSchema";
 import RankingFormFields from "./ranking/RankingFormFields";
 import RankingDialogTrigger from "./ranking/RankingDialogTrigger";
 import { useRankingSubmission } from "./ranking/useRankingSubmission";
@@ -46,7 +46,13 @@ const AdminRankingDialog = ({
       category: ranking?.category || "",
       slug: ranking?.slug || "",
       display_order: ranking?.display_order || 0,
-      tags: []
+      tags: [],
+      filter_criteria: (ranking?.filter_criteria as FilterCriteria) || {
+        locations: [],
+        decades: [],
+        artist_types: [],
+        tag_ids: []
+      }
     }
   });
 
@@ -87,7 +93,13 @@ const AdminRankingDialog = ({
         category: ranking.category,
         slug: ranking.slug,
         display_order: ranking.display_order || 0,
-        tags: []
+        tags: [],
+        filter_criteria: (ranking.filter_criteria as FilterCriteria) || {
+          locations: [],
+          decades: [],
+          artist_types: [],
+          tag_ids: []
+        }
       });
     }
   }, [open, ranking, form]);

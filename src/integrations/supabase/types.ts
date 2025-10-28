@@ -765,6 +765,7 @@ export type Database = {
           created_at: string | null
           description: string | null
           display_order: number | null
+          filter_criteria: Json | null
           id: string
           is_featured: boolean | null
           last_activity_at: string | null
@@ -778,6 +779,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           display_order?: number | null
+          filter_criteria?: Json | null
           id?: string
           is_featured?: boolean | null
           last_activity_at?: string | null
@@ -791,6 +793,7 @@ export type Database = {
           created_at?: string | null
           description?: string | null
           display_order?: number | null
+          filter_criteria?: Json | null
           id?: string
           is_featured?: boolean | null
           last_activity_at?: string | null
@@ -3194,6 +3197,10 @@ export type Database = {
       populate_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
         Returns: undefined
+      }
+      populate_ranking_with_rappers: {
+        Args: { filter_criteria?: Json; ranking_uuid: string }
+        Returns: number
       }
       populate_user_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
