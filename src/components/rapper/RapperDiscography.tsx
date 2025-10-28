@@ -7,6 +7,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+  PaginationEllipsis,
+} from "@/components/ui/pagination";
 import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink, PlayCircle } from "lucide-react";
 import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDiscography";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
@@ -26,8 +35,18 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
   const refreshMutation = useRefreshDiscography();
   const { isAdmin } = useSecurityContext();
   const [activeTab, setActiveTab] = useState("albums");
+  const [albumsPage, setAlbumsPage] = useState(1);
+  const [mixtapesPage, setMixtapesPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
+
   const handleRefresh = () => {
     refreshMutation.mutate(rapperId);
+  };
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    if (value === "albums") setAlbumsPage(1);
+    if (value === "mixtapes") setMixtapesPage(1);
   };
   if (isLoading) {
     return (
@@ -115,6 +134,18 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
     const seconds = Math.floor((ms % 60000) / 1000);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   };
+
+  // Pagination calculations
+  const albumsStartIdx = (albumsPage - 1) * ITEMS_PER_PAGE;
+  const albumsEndIdx = albumsStartIdx + ITEMS_PER_PAGE;
+  const paginatedAlbums = albums.slice(albumsStartIdx, albumsEndIdx);
+  const totalAlbumsPages = Math.ceil(albums.length / ITEMS_PER_PAGE);
+
+  const mixtapesStartIdx = (mixtapesPage - 1) * ITEMS_PER_PAGE;
+  const mixtapesEndIdx = mixtapesStartIdx + ITEMS_PER_PAGE;
+  const paginatedMixtapes = mixtapes.slice(mixtapesStartIdx, mixtapesEndIdx);
+  const totalMixtapesPages = Math.ceil(mixtapes.length / ITEMS_PER_PAGE);
+
   return (
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/10 min-h-[600px] sm:min-h-[500px]">
       <CardHeader className="pb-6 sm:pb-8">
@@ -129,7 +160,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
       </CardHeader>
 
       <CardContent className="p-6 sm:p-8 py-[10px]">
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
+        <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
             <TabsTrigger
               value="albums"
@@ -154,7 +185,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   No albums found in discography
                 </div>
               ) : (
-                albums.map((item) => {
+                paginatedAlbums.map((item) => {
                   const releaseYear = item.album?.release_date
                     ? new Date(item.album.release_date).getFullYear()
                     : undefined;
@@ -231,6 +262,57 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                 })
               )}
             </div>
+
+            {/* Albums Pagination */}
+            {totalAlbumsPages > 1 && (
+              <Pagination className="mt-6">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setAlbumsPage(p => Math.max(1, p - 1))}
+                      className={albumsPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalAlbumsPages }, (_, i) => i + 1).map((page) => {
+                    // Show first page, last page, current page, and pages around current
+                    const showPage = page === 1 || page === totalAlbumsPages || 
+                                    (page >= albumsPage - 1 && page <= albumsPage + 1);
+                    const showEllipsisBefore = page === albumsPage - 2 && albumsPage > 3;
+                    const showEllipsisAfter = page === albumsPage + 2 && albumsPage < totalAlbumsPages - 2;
+
+                    if (showEllipsisBefore || showEllipsisAfter) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+
+                    if (!showPage) return null;
+
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setAlbumsPage(page)}
+                          isActive={albumsPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setAlbumsPage(p => Math.min(totalAlbumsPages, p + 1))}
+                      className={albumsPage === totalAlbumsPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </TabsContent>
 
           <TabsContent value="mixtapes" className="mt-6 sm:mt-4">
@@ -240,7 +322,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   No mixtapes found in discography
                 </div>
               ) : (
-                mixtapes.map((item) => {
+                paginatedMixtapes.map((item) => {
                   const releaseYear = item.album?.release_date
                     ? new Date(item.album.release_date).getFullYear()
                     : undefined;
@@ -329,6 +411,56 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                 })
               )}
             </div>
+
+            {/* Mixtapes Pagination */}
+            {totalMixtapesPages > 1 && (
+              <Pagination className="mt-6">
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => setMixtapesPage(p => Math.max(1, p - 1))}
+                      className={mixtapesPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: totalMixtapesPages }, (_, i) => i + 1).map((page) => {
+                    const showPage = page === 1 || page === totalMixtapesPages || 
+                                    (page >= mixtapesPage - 1 && page <= mixtapesPage + 1);
+                    const showEllipsisBefore = page === mixtapesPage - 2 && mixtapesPage > 3;
+                    const showEllipsisAfter = page === mixtapesPage + 2 && mixtapesPage < totalMixtapesPages - 2;
+
+                    if (showEllipsisBefore || showEllipsisAfter) {
+                      return (
+                        <PaginationItem key={page}>
+                          <PaginationEllipsis />
+                        </PaginationItem>
+                      );
+                    }
+
+                    if (!showPage) return null;
+
+                    return (
+                      <PaginationItem key={page}>
+                        <PaginationLink
+                          onClick={() => setMixtapesPage(page)}
+                          isActive={mixtapesPage === page}
+                          className="cursor-pointer"
+                        >
+                          {page}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => setMixtapesPage(p => Math.min(totalMixtapesPages, p + 1))}
+                      className={mixtapesPage === totalMixtapesPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            )}
           </TabsContent>
         </Tabs>
 

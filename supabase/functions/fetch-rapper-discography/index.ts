@@ -344,14 +344,34 @@ serve(async (req) => {
       }
     }
 
-// Fetch albums and EPs separately (without inc=releases to avoid API errors)
-    let rgAlbums: any;
-    let rgEps: any;
+// Fetch all albums and EPs with pagination (no 100-item limit)
+    const fetchAllReleaseGroups = async (type: 'album' | 'ep') => {
+      let offset = 0;
+      const limit = 100;
+      let allReleases: any[] = [];
+      
+      while (true) {
+        const response = await mbJson<any>(
+          `https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=${type}&fmt=json&limit=${limit}&offset=${offset}`
+        );
+        const releases = response['release-groups'] || [];
+        allReleases.push(...releases);
+        
+        if (releases.length < limit) break; // No more pages
+        offset += limit;
+        await delay(150); // Rate limit between pages
+      }
+      
+      return allReleases;
+    };
+
+    let rgAlbums: any[] = [];
+    let rgEps: any[] = [];
     
     try {
-      rgAlbums = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=album&fmt=json&limit=100&offset=0`);
+      rgAlbums = await fetchAllReleaseGroups('album');
       await delay(150);
-      rgEps = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=ep&fmt=json&limit=100&offset=0`);
+      rgEps = await fetchAllReleaseGroups('ep');
     } catch (mbError: any) {
       console.error('MusicBrainz API error:', mbError);
       await logAuditEvent(supabaseService, {
@@ -369,8 +389,8 @@ serve(async (req) => {
     }
     // Combine and sort by release date (oldest first)
     const releaseGroups: MusicBrainzReleaseGroup[] = [
-      ...(rgAlbums?.['release-groups'] || []),
-      ...(rgEps?.['release-groups'] || []),
+      ...(rgAlbums || []),
+      ...(rgEps || []),
     ].sort((a, b) => {
       const dateA = a['first-release-date'] || '9999';
       const dateB = b['first-release-date'] || '9999';
@@ -397,37 +417,52 @@ serve(async (req) => {
 
       // Fetch detailed release-group info to check official status and get streaming links
       let rgDetails: any;
+      let releaseCheckPassed = false;
+      
       try {
         rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels&fmt=json`);
         await delay(120);
+        
+        // More lenient release status check
+        const releases = rgDetails?.releases || [];
+        
+        if (releases.length > 0) {
+          // Accept if ANY release is marked as Official
+          const hasOfficialRelease = releases.some((release: any) => 
+            release && release.status === 'Official'
+          );
+          
+          // Also accept if status is undefined but release exists (MusicBrainz data gaps)
+          const hasUndefinedStatus = releases.some((release: any) => 
+            release && !release.status
+          );
+          
+          if (hasOfficialRelease) {
+            console.log(`✓ Including "${rg.title}" - has official release`);
+            releaseCheckPassed = true;
+          } else if (hasUndefinedStatus) {
+            console.log(`✓ Including "${rg.title}" - status verification inconclusive, allowing through`);
+            releaseCheckPassed = true;
+          } else {
+            const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
+            console.log(`⚠ Skipping "${rg.title}" - no official releases (statuses: ${statusList})`);
+          }
+        } else {
+          // If no release data but has a release date, be lenient and include it
+          console.log(`⚠ Including "${rg.title}" - no release data available but has release date`);
+          releaseCheckPassed = true;
+        }
       } catch (detailError: any) {
         console.error(`Error fetching details for "${rg.title}":`, detailError);
-        // Skip if we can't verify official status - be conservative
-        console.log(`Skipping "${rg.title}" - cannot verify official status (API error)`);
-        continue;
+        // If API fails but we have basic data (title + date), include it with a warning
+        console.log(`⚠ Including "${rg.title}" despite API error - has basic metadata`);
+        releaseCheckPassed = true;
+        rgDetails = null; // Prevent streaming link extraction
       }
 
-      // Only include officially released albums - be strict about status
-      const releases = rgDetails?.releases || [];
-      if (releases.length === 0) {
-        // If no release data available, be conservative and skip
-        console.log(`Skipping "${rg.title}" - no release status data available`);
+      if (!releaseCheckPassed) {
         continue;
       }
-      
-      // Check if there's at least one Official release
-      const hasOfficialRelease = releases.some((release: any) => 
-        release && release.status === 'Official'
-      );
-      
-      // Skip if no official releases found
-      if (!hasOfficialRelease) {
-        const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
-        console.log(`Skipping "${rg.title}" - no official releases (statuses: ${statusList})`);
-        continue;
-      }
-      
-      console.log(`Including "${rg.title}" - has official release`);
 
       // Exclude non-studio releases and unofficial types
       const excludedSecondaryTypes = [

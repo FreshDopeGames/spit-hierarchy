@@ -187,16 +187,6 @@ const RapperDetail = () => {
           {/* Ad placement between content sections */}
           <ContentAdUnit size="medium" />
 
-          {/* Discography Section - MusicBrainz integration */}
-          <div className="mb-8">
-            <RapperDiscography 
-              rapperId={rapper.id} 
-              rapperName={rapper.name}
-              rapperSlug={rapper.slug}
-              scrollPos={searchParams.get('scrollPos') || undefined}
-            />
-          </div>
-
           {/* Attribute Stats - Sports-style performance stats */}
           <div className="mb-8">
             <RapperAttributeStats rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
@@ -205,6 +195,16 @@ const RapperDetail = () => {
           {/* Community Stats */}
           <div className="mb-8">
             <RapperStats rapper={rapper} />
+          </div>
+
+          {/* Discography Section - MusicBrainz integration - Moved to bottom */}
+          <div className="mb-8">
+            <RapperDiscography 
+              rapperId={rapper.id} 
+              rapperName={rapper.name}
+              rapperSlug={rapper.slug}
+              scrollPos={searchParams.get('scrollPos') || undefined}
+            />
           </div>
         </div>
       </main>
