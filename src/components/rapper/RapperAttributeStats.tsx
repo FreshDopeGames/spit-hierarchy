@@ -195,7 +195,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                   Technique
                 </h4>
                 <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px] w-full mx-auto">
-                  <RadarChart data={technique} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+                  <RadarChart data={technique} margin={{ top: 40, right: 35, bottom: 25, left: 35 }}>
                     <PolarGrid 
                       stroke="hsl(var(--theme-primary))" 
                       strokeOpacity={0.5}
@@ -220,13 +220,13 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                               <text
                                 key={i}
                                 x={0}
-                                y={i * 12}
-                                dy={i === 0 ? -4 : 8}
+                                y={i * 6}
+                                dy={i === 0 ? -20 : -4}
                                 textAnchor={textAnchor}
                                 fill="hsl(var(--theme-text))"
-                                fontSize={10}
+                                fontSize={15}
                                 fontFamily="var(--theme-fontSecondary)"
-                                fontWeight={500}
+                                fontWeight={700}
                               >
                                 {line}
                               </text>
@@ -282,7 +282,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                   Artistry
                 </h4>
                 <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px] w-full mx-auto">
-                  <RadarChart data={artistry} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
+                  <RadarChart data={artistry} margin={{ top: 40, right: 35, bottom: 25, left: 35 }}>
                     <PolarGrid 
                       stroke="hsl(var(--theme-accent))" 
                       strokeOpacity={0.5}
@@ -307,13 +307,13 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                               <text
                                 key={i}
                                 x={0}
-                                y={i * 12}
-                                dy={i === 0 ? -4 : 8}
+                                y={i * 6}
+                                dy={i === 0 ? -20 : -4}
                                 textAnchor={textAnchor}
                                 fill="hsl(var(--theme-text))"
-                                fontSize={10}
+                                fontSize={15}
                                 fontFamily="var(--theme-fontSecondary)"
-                                fontWeight={500}
+                                fontWeight={700}
                               >
                                 {line}
                               </text>
