@@ -45,6 +45,20 @@ export const formatBirthdate = (year: number | null, month: number | null, day: 
   return `${monthName} ${day}${yearText}`;
 };
 
+export const formatDeathdate = (year: number | null, month: number | null, day: number | null): string => {
+  if (!month || !day) return '';
+  
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+  
+  const monthName = monthNames[month - 1];
+  const yearText = year ? `, ${year}` : '';
+  
+  return `${monthName} ${day}${yearText}`;
+};
+
 // Helper function to get zodiac element
 export const getZodiacElement = (month: number | null, day: number | null): string => {
   const sign = getZodiacName(month, day);

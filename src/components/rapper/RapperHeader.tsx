@@ -4,7 +4,7 @@ import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Crown, MapPin, Calendar, Music, Instagram, Twitter, Star } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
-import { getZodiacSign, formatBirthdate } from "@/utils/zodiacUtils";
+import { getZodiacSign, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { useRapperTags } from "@/hooks/useRapperTags";
 import { getContrastTextColor } from "@/lib/utils";
@@ -24,6 +24,7 @@ const RapperHeader = ({
 }: RapperHeaderProps) => {
   const zodiacSign = getZodiacSign(rapper.birth_month, rapper.birth_day);
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
+  const deathdate = formatDeathdate(rapper.death_year, rapper.death_month, rapper.death_day);
   const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge for profile detail
   const { data: tags = [] } = useRapperTags(rapper.id);
 
@@ -120,17 +121,27 @@ const RapperHeader = ({
               </div>
 
               {/* Location, Birth Info & Zodiac */}
-              <div className="flex flex-wrap gap-4 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
-                {rapper.origin && (
-                  <div className="flex items-center gap-2">
-                    <MapPin className="w-4 h-4" />
-                    <span>{rapper.origin}</span>
-                  </div>
-                )}
-                {birthdate && (
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4" />
-                    <span>{birthdate}</span>
+              <div className="space-y-2">
+                <div className="flex flex-wrap gap-4 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
+                  {rapper.origin && (
+                    <div className="flex items-center gap-2">
+                      <MapPin className="w-4 h-4" />
+                      <span>{rapper.origin}</span>
+                    </div>
+                  )}
+                  {birthdate && (
+                    <div className="flex items-center gap-2">
+                      <Calendar className="w-4 h-4" />
+                      <span>{birthdate}</span>
+                    </div>
+                  )}
+                </div>
+                
+                {/* Death Date - only shown if deceased */}
+                {deathdate && (
+                  <div className="flex items-center gap-2 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
+                    <span className="text-base">🕊️</span>
+                    <span>{deathdate}</span>
                   </div>
                 )}
               </div>
