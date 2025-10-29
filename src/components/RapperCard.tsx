@@ -50,13 +50,20 @@ const RapperCard = ({
     currentParams.set('scrollPos', scrollPos.toString());
     window.history.replaceState(null, '', `?${currentParams.toString()}`);
     
+    // ALSO save to navigation history for context-aware back navigation
+    import('@/utils/navigationHistory').then(({ saveNavigationEntry }) => {
+      saveNavigationEntry('/all-rappers', scrollPos);
+    });
+    
     // Navigate to rapper detail
     navigateToRapper(rapper.slug || rapper.id);
   };
   
   return (
     <ThemedCard 
+      data-rapper-card="true"
       className="bg-gradient-to-br from-[#0D0D0D] to-[#1A1A1A] border-4 border-[hsl(var(--theme-primary))]/40 hover:border-[hsl(var(--theme-primary))]/70 transition-all duration-300 md:hover:transform md:hover:scale-105 focus:transform focus:scale-100 active:transform active:scale-100 cursor-pointer relative overflow-hidden group max-w-full min-w-0"
+      style={{ contentVisibility: 'auto', containIntrinsicSize: '0 400px' }}
       onClick={handleCardClick}
     >
       {/* Theme accent bar */}

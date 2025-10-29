@@ -3,6 +3,7 @@ import React, { useRef, useEffect, useState, useMemo } from "react";
 import RapperCard from "@/components/RapperCard";
 import LoadMoreButton from "@/components/LoadMoreButton";
 import { useIncrementalRapperData } from "@/hooks/useIncrementalRapperData";
+import { useScrollAnchor } from "@/hooks/useScrollAnchor";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -29,6 +30,9 @@ const AllRappersGrid = ({
   // Incrementally load rapper data (only fetches NEW rappers)
   const rapperIds = rappers.map(rapper => rapper.id);
   const { imageMap, statsMap } = useIncrementalRapperData(rapperIds);
+  
+  // Scroll anchoring to prevent jumps during lazy loading
+  const { setAnchor, restoreAnchor } = useScrollAnchor();
 
   // Phase 1: Scroll velocity tracking for adaptive loading
   const [scrollVelocity, setScrollVelocity] = useState(0);
@@ -80,6 +84,9 @@ const AllRappersGrid = ({
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) {
+          // SET ANCHOR before loading more content
+          setAnchor();
+          
           // Check if images are still loading during fast scroll
           const pendingImages = document.querySelectorAll('img[loading="lazy"]:not([data-loaded])');
           const imageLoadProgress = getImageLoadProgress();
@@ -87,13 +94,22 @@ const AllRappersGrid = ({
           if (pendingImages.length > 5 && scrollVelocity > 1) {
             // Fast scroll with many pending images: delay trigger
             console.log('[Grid] Delaying load - too many pending images during fast scroll');
-            setTimeout(() => onLoadMore(), 300);
+            setTimeout(() => {
+              onLoadMore();
+              // RESTORE ANCHOR after a delay to allow DOM to settle
+              setTimeout(() => restoreAnchor(), 100);
+            }, 300);
           } else if (imageLoadProgress < 0.8 && scrollVelocity > 0.5) {
             // Less than 80% images loaded during moderate scroll: brief delay
             console.log('[Grid] Delaying load - waiting for images to load');
-            setTimeout(() => onLoadMore(), 150);
+            setTimeout(() => {
+              onLoadMore();
+              setTimeout(() => restoreAnchor(), 100);
+            }, 150);
           } else {
             onLoadMore();
+            // For immediate loads, wait a bit longer for images to render
+            setTimeout(() => restoreAnchor(), 200);
           }
         }
       },
@@ -102,7 +118,7 @@ const AllRappersGrid = ({
 
     observer.observe(sentinelRef.current);
     return () => observer.disconnect();
-  }, [hasMore, isFetching, onLoadMore, dynamicRootMargin, scrollVelocity]);
+  }, [hasMore, isFetching, onLoadMore, dynamicRootMargin, scrollVelocity, setAnchor, restoreAnchor]);
 
   return (
     <div className="min-w-0 max-w-full">

@@ -38,8 +38,26 @@ const RapperDetail = () => {
   const refreshDiscography = useRefreshDiscography();
 
   const handleBackToAllRappers = () => {
-    const scrollPos = searchParams.get('scrollPos');
-    navigate(scrollPos ? `/all-rappers?scrollPos=${scrollPos}` : '/all-rappers');
+    // First, check if there's a scrollPos in current URL (direct navigation)
+    const scrollPosFromUrl = searchParams.get('scrollPos');
+    
+    // If no scroll position in URL, check navigation history
+    if (!scrollPosFromUrl) {
+      import('@/utils/navigationHistory').then(({ getLastAllRappersEntry }) => {
+        const lastAllRappersVisit = getLastAllRappersEntry();
+        
+        if (lastAllRappersVisit && lastAllRappersVisit.scrollPos > 0) {
+          // User came from /all-rappers, restore their scroll position
+          navigate(`/all-rappers?scrollPos=${lastAllRappersVisit.scrollPos}`);
+        } else {
+          // User came from elsewhere, go to top
+          navigate('/all-rappers');
+        }
+      });
+    } else {
+      // URL has scrollPos, use it
+      navigate(`/all-rappers?scrollPos=${scrollPosFromUrl}`);
+    }
   };
 
   const { data: rapper, isLoading } = useQuery({
