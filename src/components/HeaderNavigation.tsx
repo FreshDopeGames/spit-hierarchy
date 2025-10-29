@@ -33,7 +33,7 @@ const HeaderNavigation = ({
           {/* Center: Logo Only */}
           <Link to="/" className="flex items-center group">
             <img 
-              src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
+              src="/lovable-uploads/logo-header.png" 
               alt="Logo" 
               className="h-10 sm:h-12 w-auto" 
             />

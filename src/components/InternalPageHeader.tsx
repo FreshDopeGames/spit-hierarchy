@@ -42,7 +42,7 @@ const InternalPageHeader = ({
         <div className="flex items-center justify-center flex-1">
           <Link to="/" className="flex items-center justify-center">
             <img 
-              src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png" 
+              src="/lovable-uploads/logo-header.png" 
               alt="Spit Hierarchy Logo" 
               className="h-8 sm:h-12 object-contain" 
             />

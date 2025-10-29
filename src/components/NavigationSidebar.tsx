@@ -94,7 +94,7 @@ const NavigationSidebar = ({
           <SheetHeader className="px-6 py-1 text-center">
             <div className="flex justify-center">
               <img
-                src="/lovable-uploads/eea1a328-61f1-40e8-bdac-06d4e50baefe.png"
+                src="/lovable-uploads/logo-header.png"
                 alt="Spit Hierarchy Logo"
                 className="h-14 w-auto"
               />
