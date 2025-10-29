@@ -28,7 +28,7 @@ const RapperBioExpanded = ({
           <CardTitle className="text-2xl font-bold text-rap-platinum font-mogra">About {rapper.name}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
-          <p className="leading-relaxed font-kaushan text-rap-platinum text-lg">
+          <p className="leading-relaxed font-merienda text-rap-platinum text-lg">
             {rapper.bio}
           </p>
           
