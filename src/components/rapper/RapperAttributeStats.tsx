@@ -186,44 +186,74 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
         {/* Technique & Artistry Radar Charts */}
         {attributeCategories.length > 0 ? (
           <div className="space-y-6">
-            <h3 className="text-sm font-semibold text-[var(--theme-textMuted)] uppercase tracking-wider text-center font-[var(--theme-fontSecondary)]">
-              Individual Skills
-            </h3>
-            
             {/* Responsive Grid: Side-by-side on Desktop, Stacked on Mobile/Tablet */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
               
               {/* Technique Radar */}
               <div className="space-y-2 animate-fade-in">
                 <h4 className="text-sm font-bold text-[var(--theme-primary)] text-center uppercase font-[var(--theme-fontSecondary)]">
                   Technique
                 </h4>
-                <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px]">
-                  <RadarChart data={technique}>
+                <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px] w-full mx-auto">
+                  <RadarChart data={technique} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
                     <PolarGrid 
                       stroke="hsl(var(--theme-primary))" 
-                      strokeOpacity={0.3}
+                      strokeOpacity={0.5}
+                      strokeWidth={1}
                     />
                     <PolarAngleAxis 
-                      dataKey="skill" 
-                      tick={{ 
-                        fill: 'var(--theme-text)', 
-                        fontSize: 11,
-                        fontFamily: 'var(--theme-fontSecondary)'
+                      dataKey="skill"
+                      tick={({ payload, x, y, textAnchor }) => {
+                        const words = payload.value.split(' ');
+                        const lines: string[] = [];
+                        
+                        if (words.length > 1) {
+                          lines.push(words[0]);
+                          lines.push(words.slice(1).join(' '));
+                        } else {
+                          lines.push(payload.value);
+                        }
+                        
+                        return (
+                          <g transform={`translate(${x},${y})`}>
+                            {lines.map((line: string, i: number) => (
+                              <text
+                                key={i}
+                                x={0}
+                                y={i * 12}
+                                dy={i === 0 ? -4 : 8}
+                                textAnchor={textAnchor}
+                                fill="hsl(var(--theme-text))"
+                                fontSize={10}
+                                fontFamily="var(--theme-fontSecondary)"
+                                fontWeight={500}
+                              >
+                                {line}
+                              </text>
+                            ))}
+                          </g>
+                        );
                       }}
                     />
                     <PolarRadiusAxis 
                       angle={90} 
                       domain={[0, 100]}
-                      tick={{ fill: 'var(--theme-textMuted)', fontSize: 10 }}
+                      tick={{ 
+                        fill: 'hsl(var(--theme-text))', 
+                        fontSize: 10,
+                        opacity: 0.7
+                      }}
+                      stroke="hsl(var(--theme-primary))"
+                      strokeOpacity={0.4}
                     />
                     <Radar
                       name="Rating"
                       dataKey="rating"
                       stroke="hsl(var(--theme-primary))"
                       fill="hsl(var(--theme-primary))"
-                      fillOpacity={0.4}
+                      fillOpacity={0.5}
                       strokeWidth={2}
+                      dot={{ fill: 'hsl(var(--theme-primary))', strokeWidth: 2, r: 4 }}
                     />
                     <ChartTooltip
                       content={({ active, payload }) => {
@@ -251,32 +281,66 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                 <h4 className="text-sm font-bold text-[var(--theme-accent)] text-center uppercase font-[var(--theme-fontSecondary)]">
                   Artistry
                 </h4>
-                <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px]">
-                  <RadarChart data={artistry}>
+                <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px] w-full mx-auto">
+                  <RadarChart data={artistry} margin={{ top: 20, right: 30, bottom: 20, left: 30 }}>
                     <PolarGrid 
                       stroke="hsl(var(--theme-accent))" 
-                      strokeOpacity={0.3}
+                      strokeOpacity={0.5}
+                      strokeWidth={1}
                     />
                     <PolarAngleAxis 
                       dataKey="skill"
-                      tick={{ 
-                        fill: 'var(--theme-text)', 
-                        fontSize: 11,
-                        fontFamily: 'var(--theme-fontSecondary)'
+                      tick={({ payload, x, y, textAnchor }) => {
+                        const words = payload.value.split(' ');
+                        const lines: string[] = [];
+                        
+                        if (words.length > 1) {
+                          lines.push(words[0]);
+                          lines.push(words.slice(1).join(' '));
+                        } else {
+                          lines.push(payload.value);
+                        }
+                        
+                        return (
+                          <g transform={`translate(${x},${y})`}>
+                            {lines.map((line: string, i: number) => (
+                              <text
+                                key={i}
+                                x={0}
+                                y={i * 12}
+                                dy={i === 0 ? -4 : 8}
+                                textAnchor={textAnchor}
+                                fill="hsl(var(--theme-text))"
+                                fontSize={10}
+                                fontFamily="var(--theme-fontSecondary)"
+                                fontWeight={500}
+                              >
+                                {line}
+                              </text>
+                            ))}
+                          </g>
+                        );
                       }}
                     />
                     <PolarRadiusAxis 
                       angle={90} 
                       domain={[0, 100]}
-                      tick={{ fill: 'var(--theme-textMuted)', fontSize: 10 }}
+                      tick={{ 
+                        fill: 'hsl(var(--theme-text))', 
+                        fontSize: 10,
+                        opacity: 0.7
+                      }}
+                      stroke="hsl(var(--theme-accent))"
+                      strokeOpacity={0.4}
                     />
                     <Radar
                       name="Rating"
                       dataKey="rating"
                       stroke="hsl(var(--theme-accent))"
                       fill="hsl(var(--theme-accent))"
-                      fillOpacity={0.4}
+                      fillOpacity={0.5}
                       strokeWidth={2}
+                      dot={{ fill: 'hsl(var(--theme-accent))', strokeWidth: 2, r: 4 }}
                     />
                     <ChartTooltip
                       content={({ active, payload }) => {
