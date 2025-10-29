@@ -78,8 +78,8 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
             }`}
             variant="default"
           >
-            <MessageCircle className="w-5 h-5 mr-2" />
-            <span className="font-semibold">{isLoading ? "..." : totalComments}</span>
+            <MessageCircle className="w-5 h-5 mr-2 text-black" />
+            <span className="font-semibold text-black">{isLoading ? "..." : totalComments}</span>
           </ThemedButton>
         </div>
       )}
