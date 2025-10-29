@@ -37,10 +37,10 @@ const AlbumStatsCard = () => {
       <CardContent>
         <div className="grid grid-cols-2 gap-4">
           <div className="text-center">
-            <div className="text-2xl font-bold text-rap-platinum font-mogra">
+            <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-rap-platinum font-mogra">
               {albumStats?.averageAlbums ? albumStats.averageAlbums.toFixed(1) : "N/A"}
             </div>
-            <div className="text-rap-smoke font-kaushan text-xs">
+            <div className="text-rap-smoke font-kaushan text-xs md:text-sm">
               Avg Albums
             </div>
             <div className="text-rap-smoke/70 font-kaushan text-xs">
@@ -48,10 +48,10 @@ const AlbumStatsCard = () => {
             </div>
           </div>
           <div className="text-center">
-            <div className="text-2xl font-bold text-rap-burgundy font-mogra">
+            <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-rap-burgundy font-mogra">
               {albumStats?.averageMixtapes ? albumStats.averageMixtapes.toFixed(1) : "N/A"}
             </div>
-            <div className="text-rap-smoke font-kaushan text-xs">
+            <div className="text-rap-smoke font-kaushan text-xs md:text-sm">
               Avg Mixtapes
             </div>
             <div className="text-rap-smoke/70 font-kaushan text-xs">
