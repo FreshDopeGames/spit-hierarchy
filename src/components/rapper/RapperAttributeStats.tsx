@@ -141,7 +141,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
       <CardHeader>
         <CardTitle className="text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">Skill Ratings</CardTitle>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 px-2 sm:px-6 overflow-visible">
         {/* Overall Rating with Circular Progress */}
         <div className="bg-gradient-to-r from-[var(--theme-secondary)]/30 to-[var(--theme-accent)]/30 via-[var(--theme-primary)]/30 border border-[var(--theme-primary)]/30 rounded-lg p-6">
           <div className="flex items-center justify-center gap-2 mb-4">
@@ -191,7 +191,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
               
               {/* Technique Radar */}
               <div className="space-y-2 animate-fade-in">
-                <h4 className="text-sm font-bold text-[var(--theme-primary)] text-center uppercase font-[var(--theme-fontSecondary)]">
+                <h4 className="text-[28px] font-bold text-[var(--theme-primary)] text-center uppercase font-[var(--theme-fontSecondary)] tracking-wider">
                   Technique
                 </h4>
                 <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px] w-full mx-auto">
@@ -278,7 +278,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
               
               {/* Artistry Radar */}
               <div className="space-y-2 animate-fade-in">
-                <h4 className="text-sm font-bold text-[var(--theme-accent)] text-center uppercase font-[var(--theme-fontSecondary)]">
+                <h4 className="text-[28px] font-bold text-[var(--theme-accent)] text-center uppercase font-[var(--theme-fontSecondary)] tracking-wider">
                   Artistry
                 </h4>
                 <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[280px] lg:h-[320px] w-full mx-auto">
