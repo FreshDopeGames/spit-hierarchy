@@ -79,8 +79,7 @@ const HomepageRankingSection = () => {
       }));
       return rankingsWithItems;
     },
-    staleTime: 2 * 60 * 1000,
-    // 2 minutes
+    staleTime: 5 * 60 * 1000, // 5 minutes (optimized cache)
     refetchInterval,
     refetchOnWindowFocus: false
   });
@@ -114,7 +113,7 @@ const HomepageRankingSection = () => {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-        {rankingsData.map(ranking => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} />)}
+        {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} priority={index === 0} />)}
       </div>
     </section>;
 };

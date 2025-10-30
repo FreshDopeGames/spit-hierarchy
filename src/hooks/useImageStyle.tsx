@@ -166,7 +166,7 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
       }
     },
     enabled: !!rapperId,
-    staleTime: 30 * 60 * 1000, // 30 minutes - rapper images rarely change
+    staleTime: 5 * 60 * 1000, // 5 minutes - optimized for LCP performance
     refetchOnWindowFocus: false,
     retry: (failureCount, error) => {
       // Don't retry on network errors, but retry on other errors up to 2 times

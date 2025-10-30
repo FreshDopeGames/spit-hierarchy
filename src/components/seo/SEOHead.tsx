@@ -28,6 +28,9 @@ const SEOHead = ({
       <meta name="description" content={description} />
       <meta name="keywords" content={allKeywords.join(', ')} />
       
+      {/* Critical Image Preload for LCP */}
+      <link rel="preload" as="image" href="https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/placeholder-thumb.jpg" fetchPriority="high" />
+      
       {/* Open Graph */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />

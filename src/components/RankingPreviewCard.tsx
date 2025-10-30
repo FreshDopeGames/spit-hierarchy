@@ -18,9 +18,10 @@ interface RankingPreviewCardProps {
   ranking: OfficialRanking;
   items: RankingItem[];
   totalVotes?: number;
+  priority?: boolean;
 }
 
-const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCardProps) => {
+const RankingPreviewCard = ({ ranking, items, totalVotes = 0, priority = false }: RankingPreviewCardProps) => {
   // Get the top 5 rappers for the mosaic
   const topFiveRappers = items.slice(0, 5);
   
@@ -65,6 +66,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
                   src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={item.rapper.name}
                   size="thumb"
+                  priority={priority && index === 0}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = getOptimizedPlaceholder('thumb');
@@ -105,6 +107,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0 }: RankingPreviewCa
                   src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={item.rapper.name}
                   size="thumb"
+                  priority={priority && index === 0}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = getOptimizedPlaceholder('thumb');
