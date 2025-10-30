@@ -71,10 +71,7 @@ export const useRankingData = (rankingId: string) => {
   const query = useQuery({
     queryKey: ["ranking-data-with-deltas", rankingId],
     queryFn: async () => {
-      // First, recalculate positions to ensure they're up to date
-      await supabase.rpc('recalculate_ranking_positions', { target_ranking_id: rankingId });
-
-      // Get all ranking items with rapper data - positions are now maintained by the database
+      // Get all ranking items with rapper data - positions are calculated from votes
       const { data: items, error } = await supabase
         .from("ranking_items")
         .select(`

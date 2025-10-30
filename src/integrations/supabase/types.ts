@@ -2857,7 +2857,7 @@ export type Database = {
         Returns: number
       }
       cleanup_old_page_views: { Args: never; Returns: undefined }
-      create_weekly_ranking_snapshot: { Args: never; Returns: undefined }
+      create_daily_ranking_snapshot: { Args: never; Returns: undefined }
       daily_ranking_maintenance: { Args: never; Returns: undefined }
       fetch_musicbrainz_discography: {
         Args: {
