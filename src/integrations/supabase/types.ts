@@ -2852,6 +2852,10 @@ export type Database = {
         }
         Returns: boolean
       }
+      clean_official_ranking_items: {
+        Args: { filter_criteria: Json; ranking_uuid: string }
+        Returns: number
+      }
       cleanup_old_page_views: { Args: never; Returns: undefined }
       create_weekly_ranking_snapshot: { Args: never; Returns: undefined }
       daily_ranking_maintenance: { Args: never; Returns: undefined }
