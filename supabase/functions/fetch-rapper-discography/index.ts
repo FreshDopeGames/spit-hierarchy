@@ -308,7 +308,8 @@ serve(async (req) => {
 // Fetch artist details (labels, lifespan, and URLs via relations)
     const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels+url-rels&fmt=json`);
 
-    const careerStartYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
+    // Store birth_year (for solo) or formation year (for groups) from life-span.begin
+    const birthYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
     const careerEndYear = artistData['life-span']?.end ? parseInt(artistData['life-span'].end.substring(0, 4)) : null;
 
     // Extract social media handles from URL relationships
@@ -336,13 +337,18 @@ serve(async (req) => {
       }
     }
 
-    // Only update social handles if they're currently empty (preserve manual entries)
+    // Prepare update data - DON'T set career_start_year from life-span (it's birth/formation year)
     const updateData: any = {
-      career_start_year: careerStartYear,
       career_end_year: careerEndYear,
       discography_last_updated: new Date().toISOString(),
     };
 
+    // Only update birth_year if currently null (preserve manual entries)
+    if (birthYear && !rapper.birth_year) {
+      updateData.birth_year = birthYear;
+    }
+
+    // Only update social handles if they're currently empty (preserve manual entries)
     if (instagramHandle && !rapper.instagram_handle) {
       updateData.instagram_handle = instagramHandle;
     }
@@ -350,11 +356,6 @@ serve(async (req) => {
     if (twitterHandle && !rapper.twitter_handle) {
       updateData.twitter_handle = twitterHandle;
     }
-
-    await supabaseService
-      .from('rappers')
-      .update(updateData)
-      .eq('id', rapperId);
 
     // Upsert labels from artist relations
     const labelRels = (artistData.relations || []).filter((r) => r['target-type'] === 'label' && r.label?.id && r.label?.name);
@@ -842,6 +843,37 @@ serve(async (req) => {
         }
       } else {
         console.log('No invalid album links found - all links are valid');
+      }
+    }
+
+    // Calculate and update career_start_year from earliest album release (Phase 3)
+    if (validAlbumIds.size > 0) {
+      try {
+        const { data: earliestAlbum } = await supabaseService
+          .from('albums')
+          .select('release_date')
+          .in('id', Array.from(validAlbumIds))
+          .not('release_date', 'is', null)
+          .order('release_date', { ascending: true })
+          .limit(1)
+          .single();
+
+        if (earliestAlbum?.release_date) {
+          const careerStartFromDisc = new Date(earliestAlbum.release_date).getFullYear();
+          
+          // Only update if currently null or different (preserve manual entries if they match)
+          if (!rapper.career_start_year || rapper.career_start_year !== careerStartFromDisc) {
+            await supabaseService
+              .from('rappers')
+              .update({ career_start_year: careerStartFromDisc })
+              .eq('id', rapperId);
+            
+            console.log(`✓ Updated career_start_year to ${careerStartFromDisc} from discography`);
+          }
+        }
+      } catch (careerError: any) {
+        console.error('Error calculating career_start_year:', careerError);
+        // Non-critical error - continue
       }
     }
 

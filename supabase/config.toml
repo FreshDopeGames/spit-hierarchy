@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.bulk-populate-musicbrainz-ids]
 verify_jwt = false
+
+[functions.backfill-birth-years]
+verify_jwt = true

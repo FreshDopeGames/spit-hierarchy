@@ -3259,6 +3259,7 @@ export type Database = {
       }
       unaccent: { Args: { "": string }; Returns: string }
       update_all_rapper_activity_scores: { Args: never; Returns: undefined }
+      update_career_start_from_discography: { Args: never; Returns: number }
       update_own_username: { Args: { new_username: string }; Returns: Json }
       update_user_ranking_positions: {
         Args: { ranking_uuid: string }
