@@ -55,7 +55,14 @@ const DiscographyBulkFetch = () => {
 
       const totalToProcess = totalNeedingFetch || 0;
 
-      while (isRunning) {
+      while (true) {
+        // Check if user stopped the process
+        if (!isRunning) {
+          console.log("Process stopped by user");
+          toast.info("Bulk fetch process stopped");
+          break;
+        }
+
         console.log(`Processing batch starting at index ${startIndex}`);
         setCurrentBatch(Math.floor(startIndex / batchSize) + 1);
 
