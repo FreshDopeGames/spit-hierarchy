@@ -282,7 +282,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                   Artistry
                 </h4>
                 <ChartContainer config={radarChartConfig} className="h-[250px] md:h-[340px] lg:h-[360px] w-full mx-auto">
-                  <RadarChart data={artistry} margin={{ top: 40, right: 50, bottom: 25, left: 50 }}>
+                  <RadarChart data={artistry} margin={{ top: 40, right: 50, bottom: 25, left: 60 }}>
                     <PolarGrid 
                       stroke="hsl(var(--theme-accent))" 
                       strokeOpacity={0.5}
