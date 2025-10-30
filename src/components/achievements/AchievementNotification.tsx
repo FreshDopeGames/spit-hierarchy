@@ -66,7 +66,7 @@ const AchievementNotification = ({
     <div className={`fixed top-4 right-4 z-50 transition-all duration-300 ${
       isVisible ? 'translate-x-0 opacity-100' : 'translate-x-full opacity-0'
     }`}>
-      <Card className="bg-[var(--theme-surface)]/95 border-2 border-[var(--theme-primary)] shadow-2xl shadow-[var(--theme-primary)]/30 min-w-80">
+      <Card className="bg-[hsl(var(--theme-surface))] border-2 border-[hsl(var(--theme-primary))] shadow-2xl shadow-[hsl(var(--theme-primary))]/30 min-w-80">
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-2">
             <h3 className="font-bold text-[var(--theme-primary)]">🎉 Achievement Unlocked!</h3>
