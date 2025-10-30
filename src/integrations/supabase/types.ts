@@ -3198,10 +3198,21 @@ export type Database = {
         Args: { ranking_uuid: string }
         Returns: undefined
       }
-      populate_ranking_with_rappers: {
-        Args: { filter_criteria?: Json; ranking_uuid: string }
-        Returns: number
-      }
+      populate_ranking_with_rappers:
+        | {
+            Args: {
+              artist_type_filter?: string[]
+              decade_filter?: string[]
+              location_filter?: string[]
+              ranking_uuid: string
+              tag_filter?: string[]
+            }
+            Returns: undefined
+          }
+        | {
+            Args: { filter_criteria?: Json; ranking_uuid: string }
+            Returns: number
+          }
       populate_user_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
         Returns: undefined
