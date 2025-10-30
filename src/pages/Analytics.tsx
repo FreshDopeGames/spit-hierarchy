@@ -8,10 +8,18 @@ import UserAchievements from "@/components/analytics/UserAchievements";
 import VotingAnalytics from "@/components/analytics/VotingAnalytics";
 import MemberAnalytics from "@/components/analytics/MemberAnalytics";
 import RapperStatsAnalytics from "@/components/analytics/RapperStatsAnalytics";
+import GuestAnalyticsView from "@/components/analytics/GuestAnalyticsView";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
+import { useAuth } from "@/hooks/useAuth";
 
 const Analytics = () => {
+  const { user } = useAuth();
+
+  // Show guest view for unauthenticated users
+  if (!user) {
+    return <GuestAnalyticsView />;
+  }
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'rapper-stats');
 

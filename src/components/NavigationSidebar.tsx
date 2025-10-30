@@ -189,6 +189,16 @@ const NavigationSidebar = ({
                 </ThemedButton>
               </Link>
 
+              <Link to="/analytics" onClick={() => handleNavClick("/analytics")}>
+                <ThemedButton
+                  variant="ghost"
+                  className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
+                >
+                  <BarChart3 className="w-4 h-4 mr-3" />
+                  Analytics
+                </ThemedButton>
+              </Link>
+
               <ThemedSeparator className="my-4" />
 
               <a href="https://instagram.com/spithierarchy" target="_blank" rel="noopener noreferrer">
@@ -211,19 +221,9 @@ const NavigationSidebar = ({
                 </ThemedButton>
               </a>
 
-              {/* Analytics and Admin for logged in users */}
+              {/* Admin and account management for logged in users */}
               {user && (
                 <>
-                  <Link to="/analytics" onClick={() => handleNavClick("/analytics")}>
-                    <ThemedButton
-                      variant="ghost"
-                      className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
-                    >
-                      <BarChart3 className="w-4 h-4 mr-3" />
-                      Analytics
-                    </ThemedButton>
-                  </Link>
-
                   {isAdmin && (
                     <Link to="/admin" onClick={() => handleNavClick("/admin")}>
                       <ThemedButton

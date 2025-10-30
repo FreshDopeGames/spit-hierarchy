@@ -63,14 +63,7 @@ function App() {
               </AuthGuard>
             } 
           />
-          <Route 
-            path="/analytics" 
-            element={
-              <AuthGuard requireAuth>
-                <Analytics />
-              </AuthGuard>
-            } 
-          />
+          <Route path="/analytics" element={<Analytics />} />
           
           {/* Admin Routes */}
           <Route 
