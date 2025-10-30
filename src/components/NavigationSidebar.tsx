@@ -44,7 +44,7 @@ const NavigationSidebar = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const location = useLocation();
   const { theme } = useEnhancedTheme();
-  const { user } = useAuth();
+  const { user, signOut } = useAuth();
   const { userProfile } = useUserProfile();
   const { isAdmin } = useSecurityContext();
   const isOpen = open !== undefined ? open : internalOpen;
@@ -258,7 +258,7 @@ const NavigationSidebar = ({
 
                   <ThemedButton
                     onClick={() => {
-                      // signOut();
+                      signOut();
                       handleNavClick("/");
                     }}
                     variant="ghost"
