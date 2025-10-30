@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardDescription as CardDescription, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { Progress } from "@/components/ui/progress";
@@ -27,8 +27,11 @@ const DiscographyBulkFetch = () => {
   const [totalProcessed, setTotalProcessed] = useState(0);
   const [overallProgress, setOverallProgress] = useState(0);
 
+  const isRunningRef = useRef(false);
+
   const startBulkFetch = async () => {
     setIsRunning(true);
+    isRunningRef.current = true;
     setResults(null);
     setCurrentBatch(0);
     setTotalProcessed(0);
@@ -57,7 +60,7 @@ const DiscographyBulkFetch = () => {
 
       while (true) {
         // Check if user stopped the process
-        if (!isRunning) {
+        if (!isRunningRef.current) {
           console.log("Process stopped by user");
           toast.info("Bulk fetch process stopped");
           break;
@@ -120,11 +123,13 @@ const DiscographyBulkFetch = () => {
         description: error.message || "An unexpected error occurred",
       });
     } finally {
+      isRunningRef.current = false;
       setIsRunning(false);
     }
   };
 
   const stopProcess = () => {
+    isRunningRef.current = false;
     setIsRunning(false);
     toast.info("Process Stopped", {
       description: "Bulk discography fetch has been stopped. Partial results are preserved.",
