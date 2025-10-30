@@ -68,6 +68,7 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **User Role Management**: Admin, moderator, blog editor roles
 - **Content Moderation**: Flagging and moderation workflows
 - **Data Management**: Bulk operations and maintenance tools
+- **Bulk Discography Fetching**: Batch processing system for MusicBrainz data with progress monitoring and error tracking
 - **Audit Logging**: Security and activity tracking
 
 ### 8. Enhanced Theme Management System (PHASES 7-8 COMPLETED)
@@ -89,9 +90,10 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Hot/Trending Rappers**: Algorithm-based trending detection using 7-day vote velocity (85th percentile threshold)
 - **Rapper Activity Tracking**: Page view tracking with unique visitor counting and activity score calculation
 - **MusicBrainz Integration**: Automated discography fetching with rate limiting, audit logging, and placeholder generation
+- **Bulk Discography Management**: Edge function-based batch processing for fetching MusicBrainz data across multiple rappers with timeout management (2 rappers/batch), real-time progress tracking, and comprehensive error reporting
 - **Multi-Style Image Management**: Style-variant uploads (photo_real, cartoon, anime, artistic, pixel_art) with default selection
 - **Security Features**: Rate limiting, content validation, secure file uploads, content flagging, audit logging
-- **Performance Optimization**: Caching, lazy loading, optimized queries, materialized views
+- **Performance Optimization**: Caching, lazy loading, optimized queries, materialized views, LCP-targeted optimizations
 - **Enhanced Search**: PostgreSQL unaccent extension with accent/symbol normalization and relevance scoring
 
 ## Technical Architecture
@@ -208,11 +210,14 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 5. Post rap verses in Community Cypher
 
 ## Performance Optimizations
-- Optimized database queries with proper indexing
-- Image lazy loading and optimization
-- Component-level code splitting
-- Efficient caching strategies with React Query
-- Materialized views for complex analytics
+- **LCP-Targeted Optimizations**: Resource hints (preconnect, dns-prefetch) for Supabase storage, critical image preloading with fetchPriority="high", priority prop system for above-the-fold ranking cards (target: <2.5s LCP)
+- **Cache Strategy**: Optimized React Query staleTime configurations (5-minute cache for rankings and images) balancing freshness with performance
+- **Image Loading Strategy**: Priority flag propagation for first ranking card and first rapper image, ensures browser prioritizes LCP elements
+- **Database Queries**: Optimized queries with proper indexing and materialized views
+- **Image Lazy Loading**: Below-the-fold image lazy loading with optimization
+- **Code Splitting**: Component-level code splitting for faster initial loads
+- **React Query Caching**: Efficient caching strategies with tuned staleTime and refetchOnWindowFocus settings
+- **Materialized Views**: Complex analytics pre-computed for instant access
 
 ## Development Standards
 - TypeScript for type safety
