@@ -39,7 +39,7 @@ const DiscographyBulkFetch = () => {
 
     try {
       let startIndex = 0;
-      const batchSize = 5; // Process 5 rappers at a time due to heavier API load
+      const batchSize = 2; // Process 2 rappers at a time to avoid edge function timeouts
       let allResults: BulkFetchResults = {
         processed: 0,
         successful: 0,
@@ -235,7 +235,8 @@ const DiscographyBulkFetch = () => {
 
         <div className="text-sm text-muted-foreground">
           <p><strong>Note:</strong> This process respects MusicBrainz API rate limits (1.5s between requests).</p>
-          <p>Expected duration: ~5-6 minutes for 151 rappers. Only rappers with MusicBrainz IDs will be processed.</p>
+          <p>Batch size: 2 rappers per batch with 2s delay between batches to prevent timeouts.</p>
+          <p>Expected duration: ~10-15 minutes for 151 rappers. Only rappers with MusicBrainz IDs will be processed.</p>
         </div>
       </CardContent>
     </Card>
