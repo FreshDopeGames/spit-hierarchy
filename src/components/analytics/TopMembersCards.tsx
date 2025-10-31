@@ -188,61 +188,36 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
     refetchOnWindowFocus: true,
   });
 
-  // Top Skill Judges Query (most attribute votes)
+  // Top Skill Judges Query (most attribute votes excluding 'Overall' category)
   const { data: topJudges, isLoading: loadingJudges, refetch: refetchJudges } = useQuery({
     queryKey: ['top-skill-judges', timeRange],
     queryFn: async () => {
       const queryStartTime = Date.now();
       console.log('🔍 Fetching top skill judges for timeRange:', timeRange, 'at', new Date().toISOString());
       
-      // Build query with optional date filter
-      let query = supabase.from('votes').select('user_id');
+      // Call the secure RPC function to get top skill judges
+      const { data: judgesData, error: judgesError } = await supabase.rpc('get_top_skill_judges', {
+        days_back: timeRange === 'week' ? 7 : null,
+        result_limit: 5
+      });
       
-      if (timeRange === 'week') {
-        query = query.gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
-      }
-      
-      const { data: votes, error: votesError } = await query;
-      
-      if (votesError) {
-        console.error('Error fetching votes:', votesError);
-        throw votesError;
-      }
-      
-      if (!votes || votes.length === 0) {
-        console.log('⚠️ No votes found for timeRange:', timeRange);
-        return [];
+      if (judgesError) {
+        console.error('❌ Error fetching skill judges:', judgesError);
+        throw judgesError;
       }
       
       const queryEndTime = Date.now();
-      console.log(`✅ Found ${votes.length} total skill ratings for ${timeRange} (query took ${queryEndTime - queryStartTime}ms)`);
+      console.log(`✅ RPC returned ${judgesData?.length || 0} top skill judges (query took ${queryEndTime - queryStartTime}ms)`);
       
-      // Group by user and count votes
-      const userVoteCounts = votes.reduce((acc: any, vote: any) => {
-        const userId = vote.user_id;
-        if (!acc[userId]) {
-          acc[userId] = { user_id: userId, vote_count: 0 };
-        }
-        acc[userId].vote_count++;
-        return acc;
-      }, {});
-
-      // Convert to array and sort
-      const sortedUsers = Object.values(userVoteCounts)
-        .sort((a: any, b: any) => b.vote_count - a.vote_count)
-        .slice(0, 5);
-      
-      console.log(`📊 Top skill judges (${timeRange}):`, sortedUsers.map((u: any) => ({
-        user_id: u.user_id,
-        vote_count: u.vote_count
-      })));
-      
-      if (sortedUsers.length === 0) {
+      if (!judgesData || judgesData.length === 0) {
+        console.log('⚠️ No skill judges found for timeRange:', timeRange);
         return [];
       }
       
+      console.log(`📊 Top skill judges (${timeRange}):`, judgesData);
+      
       // Get user IDs
-      const userIds = sortedUsers.map((user: any) => user.user_id);
+      const userIds = judgesData.map((judge: any) => judge.user_id);
       console.log('User IDs for judges:', userIds);
       
       // Fetch profiles for these users using the secure batch function
@@ -257,10 +232,10 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       console.log('Profiles found for judges:', profiles);
       
       // Merge the data
-      const merged = sortedUsers.map((user: any) => ({
-        user_id: user.user_id,
-        vote_count: user.vote_count,
-        profiles: profiles?.find(p => p.id === user.user_id) || null
+      const merged = judgesData.map((judge: any) => ({
+        user_id: judge.user_id,
+        vote_count: judge.vote_count,
+        profiles: profiles?.find(p => p.id === judge.user_id) || null
       }));
       
       console.log(`✨ Merged judges data (${timeRange}):`, merged.map((m: any) => ({

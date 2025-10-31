@@ -3099,6 +3099,13 @@ export type Database = {
           verified: boolean
         }[]
       }
+      get_top_skill_judges: {
+        Args: { days_back?: number; result_limit?: number }
+        Returns: {
+          user_id: string
+          vote_count: number
+        }[]
+      }
       get_total_member_count: { Args: never; Returns: number }
       get_trending_rappers: {
         Args: { days_back?: number }
