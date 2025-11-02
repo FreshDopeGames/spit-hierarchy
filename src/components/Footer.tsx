@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap, Instagram } from "lucide-react";
+import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap, Instagram, BarChart3 } from "lucide-react";
 import { APP_VERSION } from "@/config/version";
 
 const DiscordIcon = ({ className }: { className?: string }) => (
@@ -107,20 +107,21 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/analytics"
+                  className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  <BarChart3 className="w-4 h-4 mr-2" />
+                  Analytics
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/auth"
                   className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}
                 >
                   Join Spit Hierarchy
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/analytics"
-                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
-                  onClick={() => window.scrollTo(0, 0)}
-                >
-                  Analytics
                 </Link>
               </li>
             </ul>
