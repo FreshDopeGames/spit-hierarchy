@@ -40,12 +40,12 @@ const UserVotingDashboard = () => {
 
         <Card className="bg-[var(--theme-surface)]/90 border-4 border-[var(--theme-primary)]/30">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Rankings Created</CardTitle>
+            <CardTitle className="text-sm font-medium text-[var(--theme-textMuted)]">Rappers Rated</CardTitle>
             <Trophy className="h-4 w-4 text-[var(--theme-primary)]" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-[var(--theme-primary)]">
-              {memberStats.ranking_lists_created || 0}
+              {memberStats.rappers_voted_count || 0}
             </div>
           </CardContent>
         </Card>
