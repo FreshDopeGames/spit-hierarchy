@@ -27,12 +27,12 @@ const HeaderNavigation = ({
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-[hsl(var(--theme-black))] border-b border-[hsl(var(--theme-primary))] transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
+        <div className="relative flex items-center justify-between h-16">
           {/* Left: Hamburger Menu using NavigationSidebar */}
           <NavigationSidebar />
 
           {/* Center: Logo Only */}
-          <Link to="/" className="flex items-center group">
+          <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center group">
             <img 
               src="/lovable-uploads/logo-header.png" 
               alt="Logo" 
