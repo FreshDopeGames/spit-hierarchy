@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { Achievement } from "@/components/analytics/types/achievementTypes";
 import { groupAchievementsBySeries } from "@/utils/achievementSeriesUtils";
 import AchievementSeriesCard from "@/components/achievements/AchievementSeriesCard";
+import AchievementCategorySection from "@/components/achievements/AchievementCategorySection";
 import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
+import { groupSeriesByCategory } from "@/utils/achievementCategoryConfig";
 import { Flame, Trophy, MessageSquare, ListChecks, Star, Crown } from "lucide-react";
 
 interface AchievementSeriesViewProps {
@@ -62,13 +64,16 @@ const AchievementSeriesView = ({ achievements, showProgress = true }: Achievemen
       );
     }
     
+    const groupedByCategory = groupSeriesByCategory(filteredNames);
+    
     return (
       <div className="space-y-6">
-        {filteredNames.map((seriesName) => (
-          <AchievementSeriesCard
-            key={seriesName}
-            seriesName={seriesName}
-            achievements={seriesGroups[seriesName]}
+        {groupedByCategory.map(({ category, seriesNames }) => (
+          <AchievementCategorySection
+            key={category.name}
+            category={category}
+            seriesNames={seriesNames}
+            seriesGroups={seriesGroups}
             showProgress={showProgress}
           />
         ))}
