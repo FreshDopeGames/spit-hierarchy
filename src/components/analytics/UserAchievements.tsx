@@ -19,7 +19,7 @@ const UserAchievements = () => {
     isLoading
   } = useAchievements();
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
-  const [displayMode, setDisplayMode] = useState<'all' | 'series'>('series');
+  const [displayMode, setDisplayMode] = useState<'all' | 'series'>('all');
   
   if (isLoading) {
     return <div className="space-y-4 sm:space-y-6">

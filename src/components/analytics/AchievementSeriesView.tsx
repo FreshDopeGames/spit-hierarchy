@@ -53,6 +53,31 @@ const AchievementSeriesView = ({ achievements, showProgress = true }: Achievemen
 
   const filteredSeriesNames = getFilteredSeries();
 
+  const renderSeriesContent = (filterType: string) => {
+    const filteredNames = filterType === 'all' ? seriesNames : getFilteredSeries();
+    
+    if (filteredNames.length === 0) {
+      return (
+        <div className="text-center py-12 text-muted-foreground">
+          <p>No achievement series in this category</p>
+        </div>
+      );
+    }
+    
+    return (
+      <div className="space-y-6">
+        {filteredNames.map((seriesName) => (
+          <AchievementSeriesCard
+            key={seriesName}
+            seriesName={seriesName}
+            achievements={seriesGroups[seriesName]}
+            showProgress={showProgress}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="space-y-6">
       {/* Filter Tabs */}
@@ -72,23 +97,20 @@ const AchievementSeriesView = ({ achievements, showProgress = true }: Achievemen
           </ThemedTabsTrigger>
         </ThemedTabsList>
 
-        <ThemedTabsContent value={activeTab} className="mt-6">
-          {filteredSeriesNames.length === 0 ? (
-            <div className="text-center py-12 text-muted-foreground">
-              <p>No achievement series in this category</p>
-            </div>
-          ) : (
-            <div className="space-y-6">
-              {filteredSeriesNames.map((seriesName) => (
-                <AchievementSeriesCard
-                  key={seriesName}
-                  seriesName={seriesName}
-                  achievements={seriesGroups[seriesName]}
-                  showProgress={showProgress}
-                />
-              ))}
-            </div>
-          )}
+        <ThemedTabsContent value="all" className="mt-6">
+          {renderSeriesContent('all')}
+        </ThemedTabsContent>
+
+        <ThemedTabsContent value="completed" className="mt-6">
+          {renderSeriesContent('completed')}
+        </ThemedTabsContent>
+
+        <ThemedTabsContent value="in-progress" className="mt-6">
+          {renderSeriesContent('in-progress')}
+        </ThemedTabsContent>
+
+        <ThemedTabsContent value="locked" className="mt-6">
+          {renderSeriesContent('locked')}
         </ThemedTabsContent>
       </ThemedTabs>
 

@@ -12,18 +12,6 @@ const AchievementViewModeSelector = ({ viewMode, onViewModeChange }: Achievement
   return (
     <div className="flex items-center gap-2">
       <Button
-        variant={viewMode === 'table' ? 'default' : 'outline'}
-        size="sm"
-        onClick={() => onViewModeChange('table')}
-        className={viewMode === 'table' 
-          ? "bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryDark))]" 
-          : "border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-black"
-        }
-      >
-        <TableIcon className="w-4 h-4 mr-1" />
-        Table
-      </Button>
-      <Button
         variant={viewMode === 'cards' ? 'default' : 'outline'}
         size="sm"
         onClick={() => onViewModeChange('cards')}
@@ -34,6 +22,18 @@ const AchievementViewModeSelector = ({ viewMode, onViewModeChange }: Achievement
       >
         <LayoutGrid className="w-4 h-4 mr-1" />
         Cards
+      </Button>
+      <Button
+        variant={viewMode === 'table' ? 'default' : 'outline'}
+        size="sm"
+        onClick={() => onViewModeChange('table')}
+        className={viewMode === 'table' 
+          ? "bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryDark))]" 
+          : "border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-black"
+        }
+      >
+        <TableIcon className="w-4 h-4 mr-1" />
+        Table
       </Button>
     </div>
   );
