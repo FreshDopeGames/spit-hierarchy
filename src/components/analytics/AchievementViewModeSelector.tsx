@@ -16,8 +16,8 @@ const AchievementViewModeSelector = ({ viewMode, onViewModeChange }: Achievement
         size="sm"
         onClick={() => onViewModeChange('table')}
         className={viewMode === 'table' 
-          ? "bg-rap-gold text-rap-carbon hover:bg-rap-gold/80" 
-          : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+          ? "bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryDark))]" 
+          : "border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-black"
         }
       >
         <TableIcon className="w-4 h-4 mr-1" />
@@ -28,8 +28,8 @@ const AchievementViewModeSelector = ({ viewMode, onViewModeChange }: Achievement
         size="sm"
         onClick={() => onViewModeChange('cards')}
         className={viewMode === 'cards' 
-          ? "bg-rap-gold text-rap-carbon hover:bg-rap-gold/80" 
-          : "border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-rap-carbon"
+          ? "bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryDark))]" 
+          : "border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-black"
         }
       >
         <LayoutGrid className="w-4 h-4 mr-1" />
