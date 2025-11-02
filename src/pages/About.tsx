@@ -7,9 +7,13 @@ import AboutWhatWeDo from "@/components/about/AboutWhatWeDo";
 import AboutFeatures from "@/components/about/AboutFeatures";
 import AboutHowItWorks from "@/components/about/AboutHowItWorks";
 import AboutCallToAction from "@/components/about/AboutCallToAction";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 
 const About = () => {
   const [isScrolled, setIsScrolled] = useState(false);
+
+  // Track page visit for achievements
+  usePageVisitTracking('about_visits');
 
   useEffect(() => {
     const handleScroll = () => {

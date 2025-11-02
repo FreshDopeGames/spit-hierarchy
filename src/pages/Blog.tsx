@@ -11,6 +11,7 @@ import BlogEmptyState from "@/components/blog/BlogEmptyState";
 import BlogLoadMoreButton from "@/components/blog/BlogLoadMoreButton";
 import BackToTopButton from "@/components/BackToTopButton";
 import Footer from "@/components/Footer";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 
 interface BlogPost {
   id: string;
@@ -37,6 +38,9 @@ const Blog = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const selectedCategory = searchParams.get('category') || 'all';
   const selectedTag = searchParams.get('tag') || '';
+
+  // Track page visit for achievements
+  usePageVisitTracking('blog_visits');
 
   // Fetch blog categories
   const { data: categories } = useQuery({

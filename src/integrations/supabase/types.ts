@@ -593,7 +593,9 @@ export type Database = {
       }
       member_stats: {
         Row: {
+          about_visits: number | null
           badges: Json | null
+          blog_visits: number | null
           consecutive_voting_days: number | null
           created_at: string | null
           id: string
@@ -611,7 +613,9 @@ export type Database = {
           votes_with_notes_count: number | null
         }
         Insert: {
+          about_visits?: number | null
           badges?: Json | null
+          blog_visits?: number | null
           consecutive_voting_days?: number | null
           created_at?: string | null
           id: string
@@ -629,7 +633,9 @@ export type Database = {
           votes_with_notes_count?: number | null
         }
         Update: {
+          about_visits?: number | null
           badges?: Json | null
+          blog_visits?: number | null
           consecutive_voting_days?: number | null
           created_at?: string | null
           id?: string
@@ -3374,6 +3380,10 @@ export type Database = {
         Returns: number
       }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
+      increment_page_visit_stat: {
+        Args: { stat_field: string }
+        Returns: undefined
+      }
       is_admin: { Args: never; Returns: boolean }
       is_admin_user: { Args: never; Returns: boolean }
       is_moderator_or_admin: { Args: never; Returns: boolean }
