@@ -69,10 +69,10 @@ const UnifiedProfileHeader = ({
 
   const getNextStatusThreshold = (status?: string) => {
     switch (status) {
-      case 'bronze': return { next: 'Silver', threshold: 100 };
-      case 'silver': return { next: 'Gold', threshold: 300 };
-      case 'gold': return { next: 'Platinum', threshold: 600 };
-      case 'platinum': return { next: 'Diamond', threshold: 1000 };
+      case 'bronze': return { next: 'Silver', threshold: 250 };
+      case 'silver': return { next: 'Gold', threshold: 750 };
+      case 'gold': return { next: 'Platinum', threshold: 1500 };
+      case 'platinum': return { next: 'Diamond', threshold: 3000 };
       default: return null;
     }
   };
@@ -124,8 +124,8 @@ const UnifiedProfileHeader = ({
               </div>
             </div>
 
-            {/* Member Progress */}
-            {nextStatus && (
+            {/* Member Progress - Only show on own profile */}
+            {isOwnProfile && nextStatus && (
               <div className="mb-4">
                 <div className="flex items-center justify-between text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)] mb-2">
                   <span>Progress to {nextStatus.next}</span>
