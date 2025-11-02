@@ -25,7 +25,7 @@ const GuestAnalyticsView = () => {
                 </h1>
               </div>
               <p className="text-[hsl(var(--theme-text))] text-lg md:text-xl mb-6 max-w-2xl">
-                Track your hip-hop knowledge, earn achievements, and see how you rank against 1,500+ passionate fans.
+                Track your hip-hop knowledge, earn achievements, and see how you rank against the most passionate fans in the world.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link to="/auth">
