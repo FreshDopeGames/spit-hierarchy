@@ -3,6 +3,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
+import RapperAvatar from "@/components/RapperAvatar";
+import { useRapperImages } from "@/hooks/useImageStyle";
 const TopVotedRappersCard = () => {
   const {
     data: topRappers,
@@ -18,6 +20,9 @@ const TopVotedRappersCard = () => {
       return data?.slice(0, 5) || [];
     }
   });
+
+  const rapperIds = topRappers?.map((r: any) => r.id) || [];
+  const { data: rapperImages } = useRapperImages(rapperIds, 'medium');
   if (isLoading) {
     return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20 animate-pulse border-2 border-[var(--theme-primary)]">
         <CardContent className="p-6">
@@ -40,6 +45,11 @@ const TopVotedRappersCard = () => {
                 <div className="w-8 h-8 bg-[var(--theme-primary)] rounded-full flex items-center justify-center text-black font-bold text-sm font-[var(--theme-font-heading)]">
                   #{index + 1}
                 </div>
+                <RapperAvatar 
+                  rapper={rapper}
+                  size="md"
+                  imageUrl={rapperImages?.[rapper.id]}
+                />
                 <div>
                   <h4 className="text-[var(--theme-text)] font-medium font-[var(--theme-font-body)]">{rapper.name}</h4>
                   <p className="text-[var(--theme-textMuted)] text-base font-[var(--theme-font-body)]">{rapper.unique_voters} unique voters</p>
