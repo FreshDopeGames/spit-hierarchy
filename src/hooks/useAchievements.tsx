@@ -29,9 +29,7 @@ export const useAchievements = () => {
       if (!user) return [];
       
       const { data, error } = await supabase
-        .from('user_achievement_progress')
-        .select('*')
-        .eq('user_id', user.id);
+        .rpc('get_user_achievement_progress', { target_user_id: user.id });
       
       if (error) throw error;
       return data;

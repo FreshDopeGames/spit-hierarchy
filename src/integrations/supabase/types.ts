@@ -80,13 +80,6 @@ export type Database = {
             referencedRelation: "achievements"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "achievements_next_tier_id_fkey"
-            columns: ["next_tier_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["achievement_id"]
-          },
         ]
       }
       ad_placements: {
@@ -2117,13 +2110,6 @@ export type Database = {
             referencedRelation: "achievements"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "user_achievements_achievement_id_fkey"
-            columns: ["achievement_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["achievement_id"]
-          },
         ]
       }
       user_ranking_items: {
@@ -2919,45 +2905,6 @@ export type Database = {
           },
         ]
       }
-      user_achievement_progress: {
-        Row: {
-          achievement_id: string | null
-          badge_color: string | null
-          description: string | null
-          earned_at: string | null
-          icon: string | null
-          is_earned: boolean | null
-          is_hidden: boolean | null
-          name: string | null
-          next_tier_id: string | null
-          points: number | null
-          progress_percentage: number | null
-          progress_value: number | null
-          rarity: Database["public"]["Enums"]["achievement_rarity"] | null
-          series_name: string | null
-          threshold_field: string | null
-          threshold_value: number | null
-          tier_level: number | null
-          type: Database["public"]["Enums"]["achievement_type"] | null
-          user_id: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "achievements_next_tier_id_fkey"
-            columns: ["next_tier_id"]
-            isOneToOne: false
-            referencedRelation: "achievements"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "achievements_next_tier_id_fkey"
-            columns: ["next_tier_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["achievement_id"]
-          },
-        ]
-      }
       user_ranking_vote_counts: {
         Row: {
           avg_vote_weight: number | null
@@ -3367,6 +3314,30 @@ export type Database = {
           total_count: number
           total_votes: number
           verified: boolean
+        }[]
+      }
+      get_user_achievement_progress: {
+        Args: { target_user_id?: string }
+        Returns: {
+          achievement_id: string
+          badge_color: string
+          description: string
+          earned_at: string
+          icon: string
+          is_earned: boolean
+          is_hidden: boolean
+          name: string
+          next_tier_id: string
+          points: number
+          progress_percentage: number
+          progress_value: number
+          rarity: string
+          series_name: string
+          threshold_field: string
+          threshold_value: number
+          tier_level: number
+          type: string
+          user_id: string
         }[]
       }
       get_user_ranking_preview_items: {
