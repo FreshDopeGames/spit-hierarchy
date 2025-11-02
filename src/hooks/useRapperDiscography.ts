@@ -8,6 +8,7 @@ export interface DiscographyAlbum {
   album: {
     id: string;
     title: string;
+    slug: string;
     release_date: string | null;
     release_type: string;
     cover_art_url: string | null;

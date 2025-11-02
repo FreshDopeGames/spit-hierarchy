@@ -214,7 +214,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                       />
                       <div className="flex-1 min-w-0">
                         <Link
-                          to={`/rapper/${rapperSlug}/${item.album?.title?.toLowerCase().replace(/[^a-z0-9]+/g, "-")}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                          to={`/rapper/${rapperSlug}/${item.album?.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
                           className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
                         >
                           {item.album?.title}
@@ -356,7 +356,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                       />
                       <div className="flex-1 min-w-0">
                         <Link
-                          to={`/rapper/${rapperSlug}/${item.album?.title?.toLowerCase().replace(/[^a-z0-9]+/g, "-")}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                          to={`/rapper/${rapperSlug}/${item.album?.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
                           className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
                         >
                           {item.album?.title}

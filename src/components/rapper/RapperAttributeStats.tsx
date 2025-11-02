@@ -32,29 +32,43 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
   const { data: categoryRatings, isLoading } = useQuery({
     queryKey: ["rapper-category-ratings", rapper.id],
     queryFn: async () => {
-      const { data: categories } = await supabase
-        .from("voting_categories")
-        .select("*")
-        .eq("active", true)
-        .order("name");
-      if (!categories) return [];
-
-      const ratingsPromises = categories.map(async (category) => {
-        const { data: votes } = await supabase
+      // Fetch categories and votes in parallel (2 queries instead of 8+)
+      const [categoriesResult, votesResult] = await Promise.all([
+        supabase
+          .from("voting_categories")
+          .select("*")
+          .eq("active", true)
+          .order("name"),
+        supabase
           .from("votes")
-          .select("rating")
+          .select("category_id, rating")
           .eq("rapper_id", rapper.id)
-          .eq("category_id", category.id);
-        const avgRating = votes && votes.length > 0
-          ? votes.reduce((sum, vote) => sum + vote.rating, 0) / votes.length
+      ]);
+
+      const categories = categoriesResult.data || [];
+      const votes = votesResult.data || [];
+
+      // Aggregate votes by category in JavaScript
+      const votesByCategory = votes.reduce((acc, vote) => {
+        if (!acc[vote.category_id]) {
+          acc[vote.category_id] = [];
+        }
+        acc[vote.category_id].push(vote.rating);
+        return acc;
+      }, {} as Record<string, number[]>);
+
+      // Map categories with their aggregated ratings
+      return categories.map((category) => {
+        const categoryVotes = votesByCategory[category.id] || [];
+        const avgRating = categoryVotes.length > 0
+          ? categoryVotes.reduce((sum, rating) => sum + rating, 0) / categoryVotes.length
           : 0;
         return {
           ...category,
           averageRating: avgRating,
-          totalVotes: votes?.length || 0,
+          totalVotes: categoryVotes.length,
         } as any;
       });
-      return Promise.all(ratingsPromises);
     },
     refetchOnWindowFocus: false,
     staleTime: 30000,
