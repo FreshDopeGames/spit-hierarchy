@@ -104,7 +104,9 @@ const AchievementGallery = () => {
     points: achievement.points,
     is_earned: achievement.is_earned,
     progress_percentage: achievement.progress_percentage,
-    earned_at: achievement.earned_at || undefined
+    earned_at: achievement.earned_at || undefined,
+    threshold_value: achievement.threshold_value || 0,
+    progress_value: achievement.progress_value || 0
   });
 
   return (

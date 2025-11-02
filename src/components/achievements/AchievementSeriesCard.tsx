@@ -40,7 +40,7 @@ const AchievementSeriesCard = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {getSeriesIcon()}
-            <CardTitle className="text-2xl font-ceviche text-primary">
+            <CardTitle className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal sm:font-bold font-ceviche text-primary">
               {seriesName}
             </CardTitle>
           </div>
@@ -60,7 +60,11 @@ const AchievementSeriesCard = ({
             />
             <div className="flex justify-between text-xs text-muted-foreground">
               <span>{stats.earnedPoints} / {stats.totalPoints} Points</span>
-              <span>Tier {stats.highestTier}/{sortedAchievements.length}</span>
+              <span>
+                {stats.highestTier > 0 
+                  ? `Tier ${stats.highestTier}/${sortedAchievements.length}` 
+                  : `0/${sortedAchievements.length} unlocked`}
+              </span>
             </div>
           </div>
         )}

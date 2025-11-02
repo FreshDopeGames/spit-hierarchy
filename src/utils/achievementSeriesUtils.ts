@@ -110,15 +110,24 @@ export const getSeriesStats = (
   seriesName: string,
   achievements: Achievement[]
 ): SeriesStats => {
-  const seriesAchievements = achievements.filter(a => a.series_name === seriesName);
+  // Handle special case for standalone achievements
+  const seriesAchievements = (seriesName === 'Special Achievements' || seriesName === 'Standalone')
+    ? achievements.filter(a => !a.series_name || a.series_name === null)
+    : achievements.filter(a => a.series_name === seriesName);
+  
   const earnedAchievements = seriesAchievements.filter(a => a.is_earned);
+  
+  // Safety check to prevent division by zero
+  const completionPercentage = seriesAchievements.length > 0 
+    ? Math.round((earnedAchievements.length / seriesAchievements.length) * 100)
+    : 0;
   
   return {
     totalAchievements: seriesAchievements.length,
     earnedCount: earnedAchievements.length,
     totalPoints: seriesAchievements.reduce((sum, a) => sum + a.points, 0),
     earnedPoints: earnedAchievements.reduce((sum, a) => sum + a.points, 0),
-    completionPercentage: Math.round((earnedAchievements.length / seriesAchievements.length) * 100),
+    completionPercentage,
     highestTier: getHighestTierEarned(seriesName, achievements)
   };
 };
