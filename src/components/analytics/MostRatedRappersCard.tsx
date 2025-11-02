@@ -23,7 +23,6 @@ const MostRatedRappersCard = () => {
             slug
           )
         `)
-        .eq("category_id", "9d4ea6ba-b8d6-4118-911d-7211e8522d16")
         .not("rating", "is", null)
         .gt("rating", 0);
 
