@@ -471,13 +471,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "comment_likes_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["user_id"]
-          },
         ]
       }
       comments: {
@@ -525,13 +518,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "comments_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -786,13 +772,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "notification_preferences_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: true
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["user_id"]
-          },
         ]
       }
       notifications: {
@@ -845,13 +824,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "notifications_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -2084,13 +2056,6 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "system_announcements_created_by_fkey"
-            columns: ["created_by"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["user_id"]
-          },
         ]
       }
       track_votes: {
@@ -2415,13 +2380,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "fk_user_rankings_profiles"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "user_achievement_progress"
-            referencedColumns: ["user_id"]
           },
         ]
       }
@@ -2964,21 +2922,41 @@ export type Database = {
       user_achievement_progress: {
         Row: {
           achievement_id: string | null
+          badge_color: string | null
           description: string | null
           earned_at: string | null
           icon: string | null
           is_earned: boolean | null
+          is_hidden: boolean | null
           name: string | null
+          next_tier_id: string | null
           points: number | null
           progress_percentage: number | null
           progress_value: number | null
           rarity: Database["public"]["Enums"]["achievement_rarity"] | null
+          series_name: string | null
           threshold_field: string | null
           threshold_value: number | null
+          tier_level: number | null
           type: Database["public"]["Enums"]["achievement_type"] | null
           user_id: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "achievements_next_tier_id_fkey"
+            columns: ["next_tier_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievements_next_tier_id_fkey"
+            columns: ["next_tier_id"]
+            isOneToOne: false
+            referencedRelation: "user_achievement_progress"
+            referencedColumns: ["achievement_id"]
+          },
+        ]
       }
       user_ranking_vote_counts: {
         Row: {
