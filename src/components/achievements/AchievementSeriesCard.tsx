@@ -40,7 +40,7 @@ const AchievementSeriesCard = ({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             {getSeriesIcon()}
-            <CardTitle className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal sm:font-bold font-ceviche text-primary">
+            <CardTitle className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-normal sm:font-medium font-ceviche text-primary">
               {seriesName}
             </CardTitle>
           </div>

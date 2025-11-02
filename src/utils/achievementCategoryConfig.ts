@@ -9,50 +9,37 @@ export interface SeriesCategory {
 }
 
 export const SERIES_CATEGORIES: Record<string, SeriesCategory> = {
-  "engagement": {
-    name: "Engagement & Activity",
-    icon: Target,
-    description: "Track your voting patterns and activity",
-    order: 1
-  },
-  "content": {
-    name: "Content Creation",
-    icon: MessageSquare,
-    description: "Achievements for creating content",
-    order: 2
-  },
-  "community": {
-    name: "Community Building",
-    icon: Users,
-    description: "Build connections and help others",
-    order: 3
-  },
-  "discovery": {
-    name: "Discovery & Exploration",
-    icon: Compass,
-    description: "Explore and discover new rappers",
-    order: 4
-  },
   "milestones": {
     name: "Milestones",
     icon: Trophy,
     description: "Major account and platform milestones",
-    order: 5
+    order: 1
+  },
+  "discovery": {
+    name: "Discovery & Exploration",
+    icon: Compass,
+    description: "Explore and discover new rappers and pages",
+    order: 2
+  },
+  "engagement": {
+    name: "Engagement & Activity",
+    icon: Target,
+    description: "Track your voting patterns and activity",
+    order: 3
   }
 };
 
 export const SERIES_TO_CATEGORY_MAP: Record<string, string> = {
+  "Account Milestone": "milestones",
+  "Discovery": "discovery",
+  "Exploration": "discovery",
   "Vote Master": "engagement",
   "Consistency King": "engagement",
   "Upvote Champion": "engagement",
-  "Community Voice": "content",
-  "Ranking Curator": "content",
-  "Rapper Connoisseur": "content",
-  "Top Five": "content",
-  "Community Builder": "community",
-  "Detailed Critic": "community",
-  "Discovery": "discovery",
-  "Account Milestone": "milestones"
+  "Top Five": "engagement",
+  "Community Voice": "engagement",
+  "Rapper Connoisseur": "engagement",
+  "Ranking Curator": "engagement"
 };
 
 export const getCategoryForSeries = (seriesName: string): string => {
