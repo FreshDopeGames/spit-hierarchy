@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import RapperAvatar from "@/components/RapperAvatar";
+import { Music } from "lucide-react";
 
 interface PublicTopFiveSectionProps {
   userId: string;
@@ -13,6 +14,7 @@ interface TopRapperData {
   rappers: {
     id: string;
     name: string;
+    slug: string;
     image_url: string | null;
   } | null;
 }
@@ -29,6 +31,7 @@ const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) =
           rappers (
             id,
             name,
+            slug,
             image_url
           )
         `)
@@ -48,7 +51,7 @@ const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) =
           <div className="h-6 rounded mb-4 w-32 mx-auto bg-[var(--theme-surface)]"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="h-24 rounded bg-[var(--theme-surface)]"></div>
+              <div key={i} className="h-48 rounded bg-[var(--theme-surface)]"></div>
             ))}
           </div>
         </div>
@@ -70,27 +73,29 @@ const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) =
   });
 
   const RapperSlot = ({ position, rapper }: { position: number; rapper: any }) => (
-    <div className="relative bg-[var(--theme-surface)] border-2 border-[hsl(var(--theme-primary))]/30 rounded-lg p-3 hover:border-[hsl(var(--theme-primary))] transition-all">
+    <div className="relative bg-[var(--theme-surface)] border-2 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 hover:border-[hsl(var(--theme-primary))] transition-all">
       <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] rounded-full flex items-center justify-center text-black font-bold text-sm z-10">
         #{position}
       </div>
       
       {rapper ? (
-        <div className="flex flex-col items-center gap-2">
-          <Avatar className="w-16 h-16 border-2 border-[hsl(var(--theme-primary))]/50">
-            <AvatarImage src={rapper.image_url || "/placeholder.svg"} alt={rapper.name} />
-            <AvatarFallback className="bg-[var(--theme-background)] text-[var(--theme-text)]">
-              {rapper.name?.charAt(0) || "?"}
-            </AvatarFallback>
-          </Avatar>
-          <span className="text-xs font-bold text-[var(--theme-text)] text-center line-clamp-2 font-[var(--theme-font-body)]">
+        <div className="flex flex-col items-center gap-3">
+          <RapperAvatar 
+            rapper={{ id: rapper.id, name: rapper.name, slug: rapper.slug }}
+            size="lg"
+            variant="square"
+            imageUrl={rapper.image_url}
+          />
+          <span className="text-sm font-bold text-[var(--theme-text)] text-center line-clamp-2 font-[var(--theme-font-body)]">
             {rapper.name}
           </span>
         </div>
       ) : (
-        <div className="flex flex-col items-center gap-2 opacity-30">
-          <div className="w-16 h-16 rounded-full bg-[var(--theme-background)] border-2 border-dashed border-[var(--theme-textMuted)]" />
-          <span className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+        <div className="flex flex-col items-center gap-3 opacity-30">
+          <div className="w-40 h-40 sm:w-48 sm:h-48 rounded-lg bg-[var(--theme-background)] border-2 border-dashed border-[var(--theme-textMuted)] flex items-center justify-center">
+            <Music className="w-12 h-12 text-[var(--theme-textMuted)]" />
+          </div>
+          <span className="text-sm text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
             Empty Slot
           </span>
         </div>
