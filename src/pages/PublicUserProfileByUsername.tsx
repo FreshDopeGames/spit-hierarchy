@@ -9,6 +9,7 @@ import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { PublicProfile } from "@/types/publicProfile";
+import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
 
 const PublicUserProfileByUsername = () => {
   const { username } = useParams();
@@ -17,6 +18,12 @@ const PublicUserProfileByUsername = () => {
   const [rankings, setRankings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
+
+  // Track profile access for achievements
+  useProfileAccessTracking({
+    accessedProfileId: profile?.id || '',
+    isSelf: user?.id === profile?.id
+  });
 
   useEffect(() => {
     if (username && user) { // Only authenticated users can view profiles

@@ -594,6 +594,7 @@ export type Database = {
       member_stats: {
         Row: {
           about_visits: number | null
+          analytics_visits: number | null
           badges: Json | null
           blog_visits: number | null
           consecutive_voting_days: number | null
@@ -614,6 +615,7 @@ export type Database = {
         }
         Insert: {
           about_visits?: number | null
+          analytics_visits?: number | null
           badges?: Json | null
           blog_visits?: number | null
           consecutive_voting_days?: number | null
@@ -634,6 +636,7 @@ export type Database = {
         }
         Update: {
           about_visits?: number | null
+          analytics_visits?: number | null
           badges?: Json | null
           blog_visits?: number | null
           consecutive_voting_days?: number | null

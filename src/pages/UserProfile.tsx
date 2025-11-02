@@ -15,10 +15,17 @@ import VoteNotesSection from "@/components/profile/VoteNotesSection";
 import VotingHistorySection from "@/components/profile/VotingHistorySection";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
+import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
 
 const UserProfile = () => {
   const { user, loading: authLoading } = useAuth();
   const { openOnboarding } = useOnboarding();
+
+  // Track profile access for achievements (self view)
+  useProfileAccessTracking({
+    accessedProfileId: user?.id || '',
+    isSelf: true
+  });
 
   // Set page title
   useEffect(() => {

@@ -12,9 +12,13 @@ import GuestAnalyticsView from "@/components/analytics/GuestAnalyticsView";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 
 const Analytics = () => {
   const { user } = useAuth();
+
+  // Track analytics page visit for achievements
+  usePageVisitTracking('analytics_visits');
 
   // Show guest view for unauthenticated users
   if (!user) {

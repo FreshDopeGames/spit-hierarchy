@@ -9,10 +9,17 @@ import PublicProfileLoading from "@/components/profile/PublicProfileLoading";
 import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
 import Footer from "@/components/Footer";
 import { usePublicUserData } from "@/hooks/usePublicUserData";
+import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
 
 const PublicUserProfile = () => {
   const { username } = useParams();
   const { profile, rankings, loading, notFound, fetchUserData } = usePublicUserData();
+
+  // Track profile access for achievements
+  useProfileAccessTracking({
+    accessedProfileId: profile?.id || '',
+    isSelf: false
+  });
 
   useEffect(() => {
     if (username) {
