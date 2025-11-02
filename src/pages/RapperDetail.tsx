@@ -18,6 +18,7 @@ import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import CareerStatsCard from "@/components/rapper/CareerStatsCard";
 import RapperDiscography from "@/components/rapper/RapperDiscography";
 import { RapperAliases } from "@/components/rapper/RapperAliases";
+import SimilarRappersCard from "@/components/rapper/SimilarRappersCard";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
@@ -223,6 +224,11 @@ const RapperDetail = () => {
               rapperSlug={rapper.slug}
               scrollPos={searchParams.get('scrollPos') || undefined}
             />
+          </div>
+
+          {/* Similar Rappers Section */}
+          <div className="mb-8">
+            <SimilarRappersCard rapperId={rapper.id} />
           </div>
         </div>
       </main>
