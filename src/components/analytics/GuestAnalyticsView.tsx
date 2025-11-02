@@ -6,6 +6,7 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import GlobalStatsCards from "./GlobalStatsCards";
 import TopMembersCards from "./TopMembersCards";
+import RapperStatsAnalytics from "./RapperStatsAnalytics";
 
 const GuestAnalyticsView = () => {
   return (
@@ -63,6 +64,17 @@ const GuestAnalyticsView = () => {
               Real-time stats from our growing community
             </p>
             <GlobalStatsCards />
+          </div>
+
+          {/* Rapper Stats - Fully Visible */}
+          <div>
+            <h2 className="font-ceviche text-[hsl(var(--theme-primary))] text-3xl md:text-5xl mb-4">
+              Rapper Database Statistics
+            </h2>
+            <p className="text-[hsl(var(--theme-text))]/70 mb-6 text-lg">
+              Deep dive into our comprehensive hip-hop database
+            </p>
+            <RapperStatsAnalytics />
           </div>
 
           {/* Top Members Preview - Limited to Top 5 */}
