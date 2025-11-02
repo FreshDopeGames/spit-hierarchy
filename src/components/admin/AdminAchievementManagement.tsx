@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { ThemedInput as Input } from "@/components/ui/themed-input";
 import { ThemedLabel as Label } from "@/components/ui/themed-label";
-import { Trophy } from "lucide-react";
+import { Trophy, RefreshCw } from "lucide-react";
 import AdminAchievementTable from "./AdminAchievementTable";
 import AdminAchievementDialog from "./AdminAchievementDialog";
 import AdminAchievementDeleteDialog from "./AdminAchievementDeleteDialog";
@@ -24,6 +24,7 @@ const AdminAchievementManagement = () => {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [achievementToDelete, setAchievementToDelete] = useState<Achievement | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [isBackfilling, setIsBackfilling] = useState(false);
 
   const {
     data: achievements,
@@ -120,6 +121,30 @@ const AdminAchievementManagement = () => {
     setDialogOpen(true);
   };
 
+  const handleBackfillAchievements = async () => {
+    setIsBackfilling(true);
+    try {
+      const { data, error } = await supabase.rpc('backfill_all_user_achievements');
+      
+      if (error) throw error;
+      
+      const result = data as { success: boolean; processed_users: number; achievements_awarded: number };
+      
+      toast.success(
+        `Achievement re-evaluation complete! ${result.achievements_awarded} achievements awarded to ${result.processed_users} users.`,
+        { duration: 5000 }
+      );
+      
+      // Refresh the achievements list
+      refetch();
+    } catch (error: any) {
+      console.error('Error backfilling achievements:', error);
+      toast.error(error.message || 'Failed to re-evaluate achievements');
+    } finally {
+      setIsBackfilling(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <AdminTabHeader 
@@ -127,12 +152,22 @@ const AdminAchievementManagement = () => {
         icon={Trophy} 
         description="Create, edit, and manage user achievements and rewards"
       >
-        <button 
-          onClick={handleNewAchievement} 
-          className="bg-theme-primary text-theme-background px-4 py-2 rounded-lg hover:bg-theme-primaryDark transition-colors"
-        >
-          Add New Achievement
-        </button>
+        <div className="flex gap-2">
+          <button 
+            onClick={handleBackfillAchievements}
+            disabled={isBackfilling}
+            className="bg-theme-surface text-theme-primary px-4 py-2 rounded-lg hover:bg-theme-backgroundLight transition-colors border border-theme-border disabled:opacity-50 flex items-center gap-2"
+          >
+            <RefreshCw className={`w-4 h-4 ${isBackfilling ? 'animate-spin' : ''}`} />
+            {isBackfilling ? 'Re-evaluating...' : 'Re-evaluate All Users'}
+          </button>
+          <button 
+            onClick={handleNewAchievement} 
+            className="bg-theme-primary text-theme-background px-4 py-2 rounded-lg hover:bg-theme-primaryDark transition-colors"
+          >
+            Add New Achievement
+          </button>
+        </div>
       </AdminTabHeader>
 
       <Card className="bg-theme-surface border border-theme-border">

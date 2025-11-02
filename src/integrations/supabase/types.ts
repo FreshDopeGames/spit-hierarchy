@@ -3021,6 +3021,7 @@ export type Database = {
       }
     }
     Functions: {
+      backfill_all_user_achievements: { Args: never; Returns: Json }
       broadcast_system_announcement: {
         Args: { announcement_id: string }
         Returns: number
