@@ -49,7 +49,9 @@ const AchievementTabsContent = ({
     points: achievement.points,
     is_earned: achievement.is_earned,
     progress_percentage: achievement.progress_percentage,
-    earned_at: achievement.earned_at || undefined
+    earned_at: achievement.earned_at || undefined,
+    threshold_value: achievement.threshold_value,
+    progress_value: achievement.progress_value,
   });
 
   return (

@@ -13,6 +13,11 @@ export interface Achievement {
   is_earned: boolean;
   earned_at: string | null;
   rarity: string;
+  series_name?: string;
+  tier_level?: number;
+  next_tier_id?: string | null;
+  badge_color?: string;
+  is_hidden?: boolean;
 }
 
 export interface AchievementStats {

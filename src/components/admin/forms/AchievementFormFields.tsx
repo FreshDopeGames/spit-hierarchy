@@ -32,6 +32,11 @@ const THRESHOLD_FIELDS = [
   { value: "consecutive_voting_days", label: "Consecutive Voting Days" },
   { value: "ranking_lists_created", label: "Ranking Lists Created" },
   { value: "total_upvotes", label: "Total Upvotes" },
+  { value: "top_five_created", label: "Top Five Created" },
+  { value: "rappers_voted_count", label: "Unique Rappers Voted" },
+  { value: "votes_with_notes_count", label: "Votes with Notes" },
+  { value: "profile_views_count", label: "Profile Views" },
+  { value: "referrals_count", label: "Referrals" },
 ];
 
 const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
@@ -175,6 +180,65 @@ const AchievementFormFields = ({ form }: AchievementFormFieldsProps) => {
               ))}
             </ThemedSelectContent>
           </ThemedSelect>
+        </div>
+
+        {/* Series Name */}
+        <div>
+          <ThemedLabel htmlFor="series_name">Series Name (Optional)</ThemedLabel>
+          <ThemedInput
+            id="series_name"
+            {...register("series_name", {
+              setValueAs: (value) => value === "" ? null : value
+            })}
+            placeholder="e.g., Vote Master"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Group related achievements together
+          </p>
+        </div>
+
+        {/* Tier Level */}
+        <div>
+          <ThemedLabel htmlFor="tier_level">Tier Level (Optional)</ThemedLabel>
+          <ThemedInput
+            id="tier_level"
+            type="number"
+            {...register("tier_level", { 
+              valueAsNumber: true,
+              setValueAs: (value) => value === "" ? null : Number(value)
+            })}
+            placeholder="1, 2, 3..."
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Position in series (1 = first, 2 = second, etc.)
+          </p>
+        </div>
+
+        {/* Badge Color */}
+        <div>
+          <ThemedLabel htmlFor="badge_color">Badge Color (Optional)</ThemedLabel>
+          <ThemedInput
+            id="badge_color"
+            {...register("badge_color", {
+              setValueAs: (value) => value === "" ? null : value
+            })}
+            placeholder="#10b981"
+          />
+          <p className="text-xs text-muted-foreground mt-1">
+            Hex color code for achievement badge
+          </p>
+        </div>
+
+        {/* Hidden Status */}
+        <div className="flex items-center space-x-2">
+          <Switch
+            id="is_hidden"
+            checked={watch("is_hidden") || false}
+            onCheckedChange={(checked) => setValue("is_hidden", checked)}
+          />
+          <ThemedLabel htmlFor="is_hidden">
+            Hidden (Secret Achievement)
+          </ThemedLabel>
         </div>
 
         {/* Active Status */}

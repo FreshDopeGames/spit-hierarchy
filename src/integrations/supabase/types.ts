@@ -16,48 +16,78 @@ export type Database = {
     Tables: {
       achievements: {
         Row: {
+          badge_color: string | null
           created_at: string
           description: string
           icon: string
           id: string
           is_active: boolean
+          is_hidden: boolean | null
           name: string
+          next_tier_id: string | null
           points: number
           rarity: Database["public"]["Enums"]["achievement_rarity"]
+          series_name: string | null
           threshold_field: string | null
           threshold_value: number | null
+          tier_level: number | null
           type: Database["public"]["Enums"]["achievement_type"]
           updated_at: string
         }
         Insert: {
+          badge_color?: string | null
           created_at?: string
           description: string
           icon: string
           id?: string
           is_active?: boolean
+          is_hidden?: boolean | null
           name: string
+          next_tier_id?: string | null
           points?: number
           rarity?: Database["public"]["Enums"]["achievement_rarity"]
+          series_name?: string | null
           threshold_field?: string | null
           threshold_value?: number | null
+          tier_level?: number | null
           type: Database["public"]["Enums"]["achievement_type"]
           updated_at?: string
         }
         Update: {
+          badge_color?: string | null
           created_at?: string
           description?: string
           icon?: string
           id?: string
           is_active?: boolean
+          is_hidden?: boolean | null
           name?: string
+          next_tier_id?: string | null
           points?: number
           rarity?: Database["public"]["Enums"]["achievement_rarity"]
+          series_name?: string | null
           threshold_field?: string | null
           threshold_value?: number | null
+          tier_level?: number | null
           type?: Database["public"]["Enums"]["achievement_type"]
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "achievements_next_tier_id_fkey"
+            columns: ["next_tier_id"]
+            isOneToOne: false
+            referencedRelation: "achievements"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "achievements_next_tier_id_fkey"
+            columns: ["next_tier_id"]
+            isOneToOne: false
+            referencedRelation: "user_achievement_progress"
+            referencedColumns: ["achievement_id"]
+          },
+        ]
       }
       ad_placements: {
         Row: {
@@ -589,13 +619,17 @@ export type Database = {
           created_at: string | null
           id: string
           last_vote_date: string | null
+          profile_views_count: number | null
           ranking_lists_created: number | null
+          rappers_voted_count: number | null
+          referrals_count: number | null
           status: Database["public"]["Enums"]["member_status"] | null
           top_five_created: number | null
           total_comments: number | null
           total_upvotes: number | null
           total_votes: number | null
           updated_at: string | null
+          votes_with_notes_count: number | null
         }
         Insert: {
           badges?: Json | null
@@ -603,13 +637,17 @@ export type Database = {
           created_at?: string | null
           id: string
           last_vote_date?: string | null
+          profile_views_count?: number | null
           ranking_lists_created?: number | null
+          rappers_voted_count?: number | null
+          referrals_count?: number | null
           status?: Database["public"]["Enums"]["member_status"] | null
           top_five_created?: number | null
           total_comments?: number | null
           total_upvotes?: number | null
           total_votes?: number | null
           updated_at?: string | null
+          votes_with_notes_count?: number | null
         }
         Update: {
           badges?: Json | null
@@ -617,13 +655,17 @@ export type Database = {
           created_at?: string | null
           id?: string
           last_vote_date?: string | null
+          profile_views_count?: number | null
           ranking_lists_created?: number | null
+          rappers_voted_count?: number | null
+          referrals_count?: number | null
           status?: Database["public"]["Enums"]["member_status"] | null
           top_five_created?: number | null
           total_comments?: number | null
           total_upvotes?: number | null
           total_votes?: number | null
           updated_at?: string | null
+          votes_with_notes_count?: number | null
         }
         Relationships: []
       }

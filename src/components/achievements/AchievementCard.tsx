@@ -3,18 +3,7 @@ import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import * as LucideIcons from "lucide-react";
-
-interface Achievement {
-  id: string;
-  name: string;
-  description: string;
-  icon: string;
-  rarity: "common" | "rare" | "epic" | "legendary";
-  points: number;
-  is_earned: boolean;
-  progress_percentage: number;
-  earned_at?: string;
-}
+import { Achievement } from "@/components/analytics/types/achievementTypes";
 
 interface AchievementCardProps {
   achievement: Achievement;

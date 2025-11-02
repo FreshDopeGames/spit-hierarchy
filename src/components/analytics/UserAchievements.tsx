@@ -7,7 +7,10 @@ import AchievementGallery from "@/components/achievements/AchievementGallery";
 import AchievementViewModeSelector from "./AchievementViewModeSelector";
 import AchievementStatsCards from "./AchievementStatsCards";
 import AchievementEmptyState from "./AchievementEmptyState";
+import AchievementSeriesView from "./AchievementSeriesView";
 import { Trophy, Award, Target } from "lucide-react";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
+
 const UserAchievements = () => {
   const {
     achievements,
@@ -16,6 +19,8 @@ const UserAchievements = () => {
     isLoading
   } = useAchievements();
   const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [displayMode, setDisplayMode] = useState<'all' | 'series'>('series');
+  
   if (isLoading) {
     return <div className="space-y-4 sm:space-y-6">
         <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl">
@@ -32,6 +37,7 @@ const UserAchievements = () => {
   }
   const earnedAchievements = getEarnedAchievements();
   const totalPoints = getTotalPoints();
+
   return <div className="space-y-4 sm:space-y-6">
       <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl">Achievements</h3>
 
@@ -42,22 +48,63 @@ const UserAchievements = () => {
       totalPoints: totalPoints
     }} />
 
-      {/* View Mode Selector */}
-      <div className="flex justify-between items-center">
-        <div className="text-rap-silver text-sm">
-          Showing {achievements.length} achievements
+      {/* View Mode Toggle */}
+      <ThemedTabs value={displayMode} onValueChange={(value) => setDisplayMode(value as 'all' | 'series')}>
+        <div className="flex justify-between items-center mb-4">
+          <ThemedTabsList>
+            <ThemedTabsTrigger value="series">By Series</ThemedTabsTrigger>
+            <ThemedTabsTrigger value="all">All Achievements</ThemedTabsTrigger>
+          </ThemedTabsList>
+          
+          {displayMode === 'all' && (
+            <AchievementViewModeSelector 
+              viewMode={viewMode} 
+              onViewModeChange={setViewMode} 
+            />
+          )}
         </div>
-        <AchievementViewModeSelector viewMode={viewMode} onViewModeChange={setViewMode} />
-      </div>
 
-      {/* Achievement Content */}
-      {achievements.length > 0 ? <>
-          {viewMode === 'cards' && <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {achievements.map(achievement => <AchievementCard key={achievement.id} achievement={achievement} showProgress={true} />)}
-            </div>}
+        {/* Series View */}
+        <ThemedTabsContent value="series">
+          {achievements.length > 0 ? (
+            <AchievementSeriesView 
+              achievements={achievements}
+              showProgress={true}
+            />
+          ) : (
+            <AchievementEmptyState type="earned" />
+          )}
+        </ThemedTabsContent>
 
-          {viewMode === 'table' && <AchievementTable achievements={achievements} showProgress={true} />}
-        </> : <AchievementEmptyState type="earned" />}
+        {/* All Achievements View */}
+        <ThemedTabsContent value="all">
+          <div className="text-rap-silver text-sm mb-4">
+            Showing {achievements.length} achievements
+          </div>
+          
+          {achievements.length > 0 ? (
+            <>
+              {viewMode === 'cards' && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+                  {achievements.map(achievement => (
+                    <AchievementCard 
+                      key={achievement.id} 
+                      achievement={achievement} 
+                      showProgress={true} 
+                    />
+                  ))}
+                </div>
+              )}
+
+              {viewMode === 'table' && (
+                <AchievementTable achievements={achievements} showProgress={true} />
+              )}
+            </>
+          ) : (
+            <AchievementEmptyState type="earned" />
+          )}
+        </ThemedTabsContent>
+      </ThemedTabs>
     </div>;
 };
 export default UserAchievements;
