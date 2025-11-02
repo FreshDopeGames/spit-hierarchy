@@ -2,6 +2,7 @@
 import { useParams } from "react-router-dom";
 import CommentBubble from "@/components/CommentBubble";
 import BackToTopButton from "@/components/BackToTopButton";
+import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useComments } from "@/hooks/useComments";
 import InternalPageHeader from "@/components/InternalPageHeader";
@@ -122,6 +123,9 @@ const BlogDetail = () => {
       <div data-comment-bubble>
         <CommentBubble contentType="blog" contentId={blogPost?.id || ""} />
       </div>
+
+      {/* Footer */}
+      <Footer />
     </div>
   );
 };
