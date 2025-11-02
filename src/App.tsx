@@ -27,6 +27,7 @@ import Admin from "./pages/Admin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
+import Notifications from "./pages/Notifications";
 
 function App() {
   return (
@@ -64,6 +65,14 @@ function App() {
             } 
           />
           <Route path="/analytics" element={<Analytics />} />
+          <Route 
+            path="/notifications" 
+            element={
+              <AuthGuard requireAuth>
+                <Notifications />
+              </AuthGuard>
+            } 
+          />
           
           {/* Admin Routes */}
           <Route 

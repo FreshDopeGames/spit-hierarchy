@@ -119,14 +119,32 @@ export const useMemberStatus = () => {
         const notificationKey = `${user.id}-${currentStatus}`;
         
         if (!hasLevelUpNotificationBeenShown(user.id, currentStatus)) {
+          const multiplier = getVoteMultiplier();
+          const statusCapitalized = currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1);
+          
           // Show level up notification using Sonner
-          toast.success(`🎉 Level Up! ${currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1)} Member`, {
-            description: `You've reached ${currentStatus} status! Your votes now count ${getVoteMultiplier()}x.`,
+          toast.success(`🎉 Level Up! ${statusCapitalized} Member`, {
+            description: `You've reached ${currentStatus} status! Your votes now count ${multiplier}x.`,
             duration: 5000,
           });
           
           // Mark this notification as shown
           markLevelUpNotificationShown(user.id, currentStatus);
+          
+          // Create persistent notification in database
+          supabase.rpc('create_notification', {
+            p_user_id: user.id,
+            p_type: 'level_up',
+            p_title: `Level Up! ${statusCapitalized} Member`,
+            p_message: `You've reached ${currentStatus} status! Your votes now count ${multiplier}x.`,
+            p_metadata: { 
+              old_status: previousStatus, 
+              new_status: currentStatus,
+              multiplier: multiplier
+            },
+            p_link_url: '/profile',
+            p_priority: 8
+          });
         }
       }
     }

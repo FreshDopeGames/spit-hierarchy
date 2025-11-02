@@ -15,6 +15,7 @@ import AdminDataManagement from "@/components/admin/AdminDataManagement";
 import AdminAchievementManagement from "@/components/admin/AdminAchievementManagement";
 import AdminVSMatchManagement from "@/components/admin/AdminVSMatchManagement";
 import AdminRapperSuggestions from "@/components/admin/AdminRapperSuggestions";
+import { AnnouncementManagement } from "@/components/admin/AnnouncementManagement";
 const Admin = () => {
   const {
     user,
@@ -56,6 +57,9 @@ const Admin = () => {
   }, {
     value: "data",
     label: "Data"
+  }, {
+    value: "announcements",
+    label: "Announcements"
   }];
   if (isLoading) {
     return <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
@@ -87,6 +91,8 @@ const Admin = () => {
         return <ThemeManagement />;
       case "data":
         return <AdminDataManagement />;
+      case "announcements":
+        return <AnnouncementManagement />;
       default:
         return <AdminRapperManagement />;
     }

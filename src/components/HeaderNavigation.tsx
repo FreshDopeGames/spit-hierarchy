@@ -7,6 +7,7 @@ import { useUserProfile } from '@/hooks/useUserProfile';
 import UserProfileDropdown from './UserProfileDropdown';
 import NavigationSidebar from './NavigationSidebar';
 import GlobalSearch from './GlobalSearch';
+import { NotificationBell } from './NotificationBell';
 import { AvatarSkeleton, TextSkeleton } from '@/components/ui/skeleton';
 
 interface HeaderNavigationProps {
@@ -39,10 +40,13 @@ const HeaderNavigation = ({
             />
           </Link>
 
-          {/* Right: Search Icon + User Menu */}
-          <div className="flex items-center gap-4">
+          {/* Right: Search Icon + Notifications + User Menu */}
+          <div className="flex items-center gap-2 sm:gap-4">
             {/* Global Search */}
             <GlobalSearch />
+            
+            {/* Notification Bell (only for authenticated users) */}
+            {user && <NotificationBell />}
             
             {/* User Menu */}
             {isLoading ? (

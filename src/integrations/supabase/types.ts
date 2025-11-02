@@ -702,6 +702,117 @@ export type Database = {
         }
         Relationships: []
       }
+      notification_preferences: {
+        Row: {
+          achievements_enabled: boolean | null
+          comment_replies_enabled: boolean | null
+          email_notifications_enabled: boolean | null
+          id: string
+          level_ups_enabled: boolean | null
+          system_messages_enabled: boolean | null
+          updated_at: string | null
+          user_id: string | null
+          voting_activity_enabled: boolean | null
+        }
+        Insert: {
+          achievements_enabled?: boolean | null
+          comment_replies_enabled?: boolean | null
+          email_notifications_enabled?: boolean | null
+          id?: string
+          level_ups_enabled?: boolean | null
+          system_messages_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+          voting_activity_enabled?: boolean | null
+        }
+        Update: {
+          achievements_enabled?: boolean | null
+          comment_replies_enabled?: boolean | null
+          email_notifications_enabled?: boolean | null
+          id?: string
+          level_ups_enabled?: boolean | null
+          system_messages_enabled?: boolean | null
+          updated_at?: string | null
+          user_id?: string | null
+          voting_activity_enabled?: boolean | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notification_preferences_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "user_achievement_progress"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
+      notifications: {
+        Row: {
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          is_dismissed: boolean | null
+          is_read: boolean | null
+          link_url: string | null
+          message: string
+          metadata: Json | null
+          priority: number | null
+          title: string
+          type: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_dismissed?: boolean | null
+          is_read?: boolean | null
+          link_url?: string | null
+          message: string
+          metadata?: Json | null
+          priority?: number | null
+          title: string
+          type: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          is_dismissed?: boolean | null
+          is_read?: boolean | null
+          link_url?: string | null
+          message?: string
+          metadata?: Json | null
+          priority?: number | null
+          title?: string
+          type?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "user_achievement_progress"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       official_ranking_items: {
         Row: {
           created_at: string | null
@@ -1871,6 +1982,75 @@ export type Database = {
           },
         ]
       }
+      system_announcements: {
+        Row: {
+          action_text: string | null
+          action_url: string | null
+          created_at: string | null
+          created_by: string | null
+          display_priority: number | null
+          expires_at: string | null
+          icon: string | null
+          id: string
+          is_active: boolean | null
+          message: string
+          starts_at: string | null
+          target_audience: string | null
+          title: string
+          type: string
+          updated_at: string | null
+        }
+        Insert: {
+          action_text?: string | null
+          action_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          display_priority?: number | null
+          expires_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          message: string
+          starts_at?: string | null
+          target_audience?: string | null
+          title: string
+          type: string
+          updated_at?: string | null
+        }
+        Update: {
+          action_text?: string | null
+          action_url?: string | null
+          created_at?: string | null
+          created_by?: string | null
+          display_priority?: number | null
+          expires_at?: string | null
+          icon?: string | null
+          id?: string
+          is_active?: boolean | null
+          message?: string
+          starts_at?: string | null
+          target_audience?: string | null
+          title?: string
+          type?: string
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "system_announcements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "system_announcements_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "user_achievement_progress"
+            referencedColumns: ["user_id"]
+          },
+        ]
+      }
       track_votes: {
         Row: {
           created_at: string
@@ -2799,6 +2979,10 @@ export type Database = {
       }
     }
     Functions: {
+      broadcast_system_announcement: {
+        Args: { announcement_id: string }
+        Returns: number
+      }
       calculate_member_status: {
         Args: { total_points: number }
         Returns: Database["public"]["Enums"]["member_status"]
@@ -2858,6 +3042,18 @@ export type Database = {
       }
       cleanup_old_page_views: { Args: never; Returns: undefined }
       create_daily_ranking_snapshot: { Args: never; Returns: undefined }
+      create_notification: {
+        Args: {
+          p_link_url?: string
+          p_message: string
+          p_metadata?: Json
+          p_priority?: number
+          p_title: string
+          p_type: string
+          p_user_id: string
+        }
+        Returns: string
+      }
       daily_ranking_maintenance: { Args: never; Returns: undefined }
       fetch_musicbrainz_discography: {
         Args: {

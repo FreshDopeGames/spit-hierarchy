@@ -98,6 +98,23 @@ export const useAchievements = () => {
               
               // Mark this notification as shown
               markAchievementNotificationShown(user.id, achievement.id);
+              
+              // Create persistent notification in database
+              await supabase.rpc('create_notification', {
+                p_user_id: user.id,
+                p_type: 'achievement',
+                p_title: `Achievement Unlocked: ${achievement.name}`,
+                p_message: `${achievement.description} (+${achievement.points} points)`,
+                p_metadata: { 
+                  achievement_id: achievement.id, 
+                  rarity: achievement.rarity,
+                  points: achievement.points
+                },
+                p_link_url: '/analytics?tab=achievements',
+                p_priority: achievement.rarity === 'legendary' ? 10 : 
+                           achievement.rarity === 'epic' ? 8 : 
+                           achievement.rarity === 'rare' ? 6 : 5
+              });
             }
             
             setNewAchievements(prev => [...prev, achievement]);
