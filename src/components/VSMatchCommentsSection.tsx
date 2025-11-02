@@ -110,7 +110,7 @@ const VSMatchCommentsSection = ({ vsMatchId, title }: VSMatchCommentsSectionProp
               <ThemedButton
                 onClick={handleCommentSubmit}
                 disabled={!newComment.trim() || isCreatingComment || isOverLimit}
-                className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryLight)] font-mogra disabled:opacity-50"
+                className="bg-[var(--theme-primary)] text-black hover:bg-[var(--theme-primaryLight)] font-mogra disabled:opacity-50"
               >
                 {isCreatingComment ? "Posting..." : "Post Comment"}
               </ThemedButton>
