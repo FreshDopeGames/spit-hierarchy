@@ -23,6 +23,7 @@ import { format } from "date-fns";
 import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
 import { AlbumCoverImage } from "@/components/ui/AlbumCoverImage";
 import { Link } from "react-router-dom";
+import { cn } from "@/lib/utils";
 
 interface RapperDiscographyProps {
   rapperId: string;
@@ -270,7 +271,10 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   <PaginationItem>
                     <PaginationPrevious 
                       onClick={() => setAlbumsPage(p => Math.max(1, p - 1))}
-                      className={albumsPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      className={cn(
+                        albumsPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer',
+                        '[&>span]:hidden sm:[&>span]:inline'
+                      )}
                     />
                   </PaginationItem>
                   
@@ -307,7 +311,10 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   <PaginationItem>
                     <PaginationNext 
                       onClick={() => setAlbumsPage(p => Math.min(totalAlbumsPages, p + 1))}
-                      className={albumsPage === totalAlbumsPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      className={cn(
+                        albumsPage === totalAlbumsPages ? 'pointer-events-none opacity-50' : 'cursor-pointer',
+                        '[&>span]:hidden sm:[&>span]:inline'
+                      )}
                     />
                   </PaginationItem>
                 </PaginationContent>
@@ -419,7 +426,10 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   <PaginationItem>
                     <PaginationPrevious 
                       onClick={() => setMixtapesPage(p => Math.max(1, p - 1))}
-                      className={mixtapesPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      className={cn(
+                        mixtapesPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer',
+                        '[&>span]:hidden sm:[&>span]:inline'
+                      )}
                     />
                   </PaginationItem>
                   
@@ -455,7 +465,10 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   <PaginationItem>
                     <PaginationNext 
                       onClick={() => setMixtapesPage(p => Math.min(totalMixtapesPages, p + 1))}
-                      className={mixtapesPage === totalMixtapesPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                      className={cn(
+                        mixtapesPage === totalMixtapesPages ? 'pointer-events-none opacity-50' : 'cursor-pointer',
+                        '[&>span]:hidden sm:[&>span]:inline'
+                      )}
                     />
                   </PaginationItem>
                 </PaginationContent>
