@@ -24,7 +24,7 @@ const RapperAvatar = ({
   rapper,
   size = "md",
   imageUrl: providedImageUrl,
-  variant = "circular",
+  variant = "square",
   borderColor = "default",
 }: RapperAvatarProps) => {
   // Map avatar sizes to image sizes

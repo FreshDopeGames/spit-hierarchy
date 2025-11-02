@@ -83,7 +83,7 @@ const MostRatedRappersCard = () => {
       <CardContent>
         <div className="space-y-3">
           {topRatedRappers.map((rapper: any, index: number) => (
-            <div key={rapper.id} className="flex items-center justify-between p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg">
+            <div key={rapper.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-[var(--theme-primary)] rounded-full flex items-center justify-center text-black font-bold text-sm font-[var(--theme-font-heading)]">
                   #{index + 1}
@@ -92,13 +92,14 @@ const MostRatedRappersCard = () => {
                   rapper={rapper}
                   size="md"
                   imageUrl={rapperImages?.[rapper.id]}
+                  variant="square"
                 />
                 <div>
                   <h4 className="text-[var(--theme-text)] font-medium font-[var(--theme-font-body)]">{rapper.name}</h4>
                   <p className="text-[var(--theme-textMuted)] text-base font-[var(--theme-font-body)]">{rapper.rating_count} ratings</p>
                 </div>
               </div>
-              <div className="text-center">
+              <div className="text-center sm:text-right w-full sm:w-auto">
                 <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)] text-2xl">{rapper.average_rating}</p>
                 <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Avg Rating</p>
               </div>
