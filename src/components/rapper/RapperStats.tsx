@@ -1,6 +1,7 @@
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Tables } from "@/integrations/supabase/types";
 import { formatNumber } from "@/utils/numberFormatter";
+import { useRapperRatingCount } from "@/hooks/useRapperRatingCount";
 
 type Rapper = Tables<"rappers">;
 
@@ -9,6 +10,8 @@ interface RapperStatsProps {
 }
 
 const RapperStats = ({ rapper }: RapperStatsProps) => {
+  const { data: ratingCount, isLoading } = useRapperRatingCount(rapper.id);
+  
   return (
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
       <CardContent className="p-8">
@@ -16,9 +19,9 @@ const RapperStats = ({ rapper }: RapperStatsProps) => {
         <div className="grid md:grid-cols-2 gap-6">
           <div className="text-center">
             <div className="text-3xl font-bold text-[var(--theme-primary)] mb-2 font-[var(--theme-fontPrimary)]">
-              {formatNumber(rapper.total_votes || 0)}
+              {isLoading ? "—" : formatNumber(ratingCount || 0)}
             </div>
-            <div className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Total Votes</div>
+            <div className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">Member Ratings</div>
           </div>
           <div className="text-center">
             <div className="text-3xl font-bold text-[var(--theme-accent)] mb-2 font-[var(--theme-fontPrimary)]">
