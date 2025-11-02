@@ -17,7 +17,7 @@ const SimilarRappersCard = ({ rapperId }: SimilarRappersCardProps) => {
   }
 
   return (
-    <ThemedCard className="w-full">
+    <ThemedCard variant="dark" className="w-full border-[4px] border-[hsl(var(--theme-primary))]">
       <ThemedCardHeader>
         <ThemedCardTitle className="font-mogra text-2xl">
           Similar Rappers
