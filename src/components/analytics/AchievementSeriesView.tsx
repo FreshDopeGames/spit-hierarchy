@@ -29,8 +29,8 @@ const AchievementSeriesView = ({ achievements, showProgress = true }: Achievemen
     return iconMap[seriesName] || <Star className="w-4 h-4" />;
   };
 
-  const getFilteredSeries = () => {
-    switch (activeTab) {
+  const getFilteredSeries = (filterType: string) => {
+    switch (filterType) {
       case "completed":
         return seriesNames.filter(name => {
           const series = seriesGroups[name];
@@ -51,10 +51,8 @@ const AchievementSeriesView = ({ achievements, showProgress = true }: Achievemen
     }
   };
 
-  const filteredSeriesNames = getFilteredSeries();
-
   const renderSeriesContent = (filterType: string) => {
-    const filteredNames = filterType === 'all' ? seriesNames : getFilteredSeries();
+    const filteredNames = getFilteredSeries(filterType);
     
     if (filteredNames.length === 0) {
       return (

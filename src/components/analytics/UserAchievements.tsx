@@ -52,8 +52,8 @@ const UserAchievements = () => {
       <ThemedTabs value={displayMode} onValueChange={(value) => setDisplayMode(value as 'all' | 'series')}>
         <div className="flex justify-between items-center mb-4">
           <ThemedTabsList>
-            <ThemedTabsTrigger value="series">By Series</ThemedTabsTrigger>
             <ThemedTabsTrigger value="all">All Achievements</ThemedTabsTrigger>
+            <ThemedTabsTrigger value="series">By Series</ThemedTabsTrigger>
           </ThemedTabsList>
           
           {displayMode === 'all' && (
