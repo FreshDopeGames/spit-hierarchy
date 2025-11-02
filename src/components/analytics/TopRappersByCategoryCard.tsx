@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { useTopRappersByCategory } from "@/hooks/useTopRappersByCategory";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
+import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
 const TopRappersByCategoryCard = () => {
   const { data: topRappers, isLoading } = useTopRappersByCategory();
@@ -26,7 +27,21 @@ const TopRappersByCategoryCard = () => {
                 <div className="h-6 bg-rap-smoke/20 rounded w-1/3"></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                   {[...Array(5)].map((_, j) => (
-                    <div key={j} className="h-16 bg-rap-smoke/20 rounded"></div>
+                    <div 
+                      key={j} 
+                      className="block bg-gray-800 border border-rap-gold/20 rounded-lg p-3"
+                    >
+                      <div className="flex items-center gap-3">
+                        <AvatarSkeleton size="lg" className="rounded-lg" />
+                        <div className="flex-1 space-y-2">
+                          <TextSkeleton width="w-24" height="h-4" />
+                          <div className="flex items-center justify-between">
+                            <TextSkeleton width="w-16" height="h-5" />
+                            <TextSkeleton width="w-16" height="h-3" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   ))}
                 </div>
               </div>
