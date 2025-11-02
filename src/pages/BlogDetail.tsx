@@ -13,10 +13,14 @@ import SEOHead from "@/components/seo/SEOHead";
 import { useBlogPostBySlug } from "@/hooks/useBlogPostBySlug";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { transformBlogPost, transformRelatedPosts } from "@/utils/blogPostTransformers";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 
 const BlogDetail = () => {
   const { slug } = useParams();
   const { user } = useAuth();
+
+  // Track blog page visit for achievements
+  usePageVisitTracking('blog_visits');
 
   // Fetch the blog post by slug
   const { data: blogPost, isLoading, error } = useBlogPostBySlug(slug);
