@@ -46,7 +46,7 @@ const CategoryPerformanceCard = () => {
               <div key={category.id} className={`p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg ${isMobile ? 'flex flex-col space-y-3' : 'flex items-center justify-between'}`}>
                 <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
                   <div className={`flex items-center gap-2 ${isMobile ? 'justify-center' : ''}`}>
-                    {IconComponent && <IconComponent className="w-6 h-6 text-[var(--theme-primary)]" />}
+                    {IconComponent && <IconComponent className="w-6 h-6 text-[hsl(var(--theme-primary))]" />}
                     <h4 className={`text-[var(--theme-text)] font-medium font-[var(--theme-font-body)] text-3xl`}>
                       {category.name}
                     </h4>
