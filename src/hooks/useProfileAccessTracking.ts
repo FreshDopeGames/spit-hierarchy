@@ -42,11 +42,12 @@ export const useProfileAccessTracking = ({
 
     const trackProfileAccess = async () => {
       try {
-        // Check if already tracked in this session
         const sessionKey = `${dedupeKeyPrefix}_${isSelf ? 'self' : accessedProfileId}`;
         const hasTrackedInSession = sessionStorage.getItem(sessionKey);
         
-        if (hasTrackedInSession) {
+        // For self-views, always make the call on first component mount to ensure DB record exists
+        // For other profiles, respect sessionStorage to avoid duplicate tracking
+        if (hasTrackedInSession && !isSelf) {
           console.log('[ProfileAccess] ⏸️  Skipped - already tracked in sessionStorage');
           return;
         }
