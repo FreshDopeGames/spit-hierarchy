@@ -13,7 +13,7 @@ const TopRappersByCategoryCard = () => {
 
   if (isLoading) {
     return (
-      <Card className="bg-black border-rap-gold/30">
+      <Card className="bg-black border-4 border-rap-gold/30">
         <CardHeader className="pb-3">
           <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
             <Crown className="w-5 h-5" />
@@ -53,7 +53,7 @@ const TopRappersByCategoryCard = () => {
   }
 
   return (
-    <Card className="bg-black border-rap-gold/30">
+    <Card className="bg-black border-4 border-rap-gold/30">
       <CardHeader className="pb-3">
           <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
             <Crown className="w-5 h-5" />
