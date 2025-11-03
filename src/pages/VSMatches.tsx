@@ -13,8 +13,12 @@ import SEOHead from "@/components/seo/SEOHead";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import RapperAvatar from "@/components/RapperAvatar";
 import { formatNumber } from "@/utils/numberFormatter";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 
 const VSMatches = () => {
+  // Track VS page visit for achievements
+  usePageVisitTracking('vs_visits');
+  
   const {
     data: vsMatches,
     isLoading

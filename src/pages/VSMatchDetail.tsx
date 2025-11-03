@@ -15,9 +15,14 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import NotFound from "@/pages/NotFound";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 
 const VSMatchDetail = () => {
   const { slug } = useParams<{ slug: string }>();
+  
+  // Track VS page visit for achievements
+  usePageVisitTracking('vs_visits');
+  
   const { user } = useSecureAuth();
   const isMobile = useIsMobile();
   const { data: vsMatch, isLoading, error } = useVSMatchBySlug(slug!);

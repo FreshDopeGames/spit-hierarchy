@@ -612,6 +612,7 @@ export type Database = {
           total_votes: number | null
           updated_at: string | null
           votes_with_notes_count: number | null
+          vs_visits: number | null
         }
         Insert: {
           about_visits?: number | null
@@ -633,6 +634,7 @@ export type Database = {
           total_votes?: number | null
           updated_at?: string | null
           votes_with_notes_count?: number | null
+          vs_visits?: number | null
         }
         Update: {
           about_visits?: number | null
@@ -654,6 +656,7 @@ export type Database = {
           total_votes?: number | null
           updated_at?: string | null
           votes_with_notes_count?: number | null
+          vs_visits?: number | null
         }
         Relationships: []
       }
