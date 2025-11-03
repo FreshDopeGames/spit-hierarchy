@@ -35,7 +35,9 @@ export const useProfileAccessTracking = ({
       return;
     }
 
-    if (hasTrackedRef.current) {
+    // For self-views, skip the ref check - we want to track on every mount
+    // For other profiles, use ref to prevent duplicate tracking in same session
+    if (!isSelf && hasTrackedRef.current) {
       console.log('[ProfileAccess] ⏸️  Skipped - already tracked in ref');
       return;
     }
@@ -45,9 +47,8 @@ export const useProfileAccessTracking = ({
         const sessionKey = `${dedupeKeyPrefix}_${isSelf ? 'self' : accessedProfileId}`;
         const hasTrackedInSession = sessionStorage.getItem(sessionKey);
         
-        // For self-views, always make the call on first component mount to ensure DB record exists
         // For other profiles, respect sessionStorage to avoid duplicate tracking
-        if (hasTrackedInSession && !isSelf) {
+        if (!isSelf && hasTrackedInSession) {
           console.log('[ProfileAccess] ⏸️  Skipped - already tracked in sessionStorage');
           return;
         }
