@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { User } from "lucide-react";
 
 interface AvatarDisplayProps {
@@ -25,11 +25,12 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
     }
   };
 
-  const getAvatarUrl = (baseUrl?: string) => {
-    if (!baseUrl) return undefined;
+  // Memoize avatar URL to prevent recalculation on every render
+  const displayUrl = useMemo(() => {
+    if (!avatarUrl) return undefined;
     
     // If it's already a full URL, return as is
-    if (baseUrl.startsWith('http')) return baseUrl;
+    if (avatarUrl.startsWith('http')) return avatarUrl;
     
     // Map sizes to our new higher quality versions
     const sizeMap = {
@@ -41,20 +42,10 @@ const AvatarDisplay = ({ avatarUrl, size }: AvatarDisplayProps) => {
     
     const sizeName = sizeMap[size];
     
-    // Construct the full Supabase storage URL with cache busting
-    const fullUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${baseUrl}/${sizeName}.jpg?v=${Date.now()}`;
-    
-    console.log('High-quality Avatar URL:', {
-      baseUrl,
-      size,
-      sizeName,
-      fullUrl
-    });
-    
-    return fullUrl;
-  };
-
-  const displayUrl = getAvatarUrl(avatarUrl);
+    // Construct the full Supabase storage URL without cache busting
+    // (rely on proper cache headers instead)
+    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${avatarUrl}/${sizeName}.jpg`;
+  }, [avatarUrl, size]);
 
   const handleImageError = () => {
     console.error('Avatar image failed to load:', displayUrl);
