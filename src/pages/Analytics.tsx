@@ -13,6 +13,7 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
+import BackToTopButton from "@/components/BackToTopButton";
 
 const Analytics = () => {
   const { user } = useAuth();
@@ -110,6 +111,7 @@ const Analytics = () => {
         </ThemedTabs>
       </div>
 
+      <BackToTopButton />
       <Footer />
     </div>
   );
