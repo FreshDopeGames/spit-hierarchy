@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import PollDialog from "./PollDialog";
 import AdminTabHeader from "./AdminTabHeader";
 import { toast } from "sonner";
+import { PollResultsDialog } from "./PollResultsDialog";
 
 interface Poll {
   id: string;
@@ -31,6 +32,7 @@ interface Poll {
 const PollManagement = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingPoll, setEditingPoll] = useState<Poll | null>(null);
+  const [selectedPollForResults, setSelectedPollForResults] = useState<string | null>(null);
 
   const { data: polls, isLoading, refetch } = useQuery({
     queryKey: ['admin-polls'],
@@ -176,6 +178,7 @@ const PollManagement = () => {
               <div className="flex flex-col sm:flex-row justify-end gap-2">
                 <Button 
                   size="sm"
+                  onClick={() => setSelectedPollForResults(poll.id)}
                   className="w-full sm:w-auto bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-[var(--theme-background)]"
                 >
                   <Eye className="h-4 w-4 mr-2" />
@@ -214,6 +217,11 @@ const PollManagement = () => {
           setIsDialogOpen(false);
           setEditingPoll(null);
         }}
+      />
+
+      <PollResultsDialog
+        pollId={selectedPollForResults}
+        onClose={() => setSelectedPollForResults(null)}
       />
     </div>
   );
