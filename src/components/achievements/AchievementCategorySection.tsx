@@ -3,14 +3,12 @@ import { Achievement } from "@/components/analytics/types/achievementTypes";
 import { SeriesCategory } from "@/utils/achievementCategoryConfig";
 import AchievementSeriesCard from "./AchievementSeriesCard";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
-
 interface AchievementCategorySectionProps {
   category: SeriesCategory;
   seriesNames: string[];
   seriesGroups: Record<string, Achievement[]>;
   showProgress: boolean;
 }
-
 const AchievementCategorySection = ({
   category,
   seriesNames,
@@ -18,10 +16,8 @@ const AchievementCategorySection = ({
   showProgress
 }: AchievementCategorySectionProps) => {
   const Icon = category.icon;
-
-  return (
-    <div className="space-y-4">
-      <ThemedCard>
+  return <div className="space-y-4">
+      <ThemedCard className="bg-black">
         <ThemedCardHeader>
           <ThemedCardTitle className="flex items-center gap-2">
             <Icon className="w-5 h-5" />
@@ -34,19 +30,10 @@ const AchievementCategorySection = ({
         <ThemedCardContent>
           <p className="text-sm text-muted-foreground mb-4">{category.description}</p>
           <div className="space-y-4">
-            {seriesNames.map((seriesName) => (
-              <AchievementSeriesCard
-                key={seriesName}
-                seriesName={seriesName}
-                achievements={seriesGroups[seriesName]}
-                showProgress={showProgress}
-              />
-            ))}
+            {seriesNames.map(seriesName => <AchievementSeriesCard key={seriesName} seriesName={seriesName} achievements={seriesGroups[seriesName]} showProgress={showProgress} />)}
           </div>
         </ThemedCardContent>
       </ThemedCard>
-    </div>
-  );
+    </div>;
 };
-
 export default AchievementCategorySection;
