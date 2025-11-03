@@ -38,7 +38,7 @@ const ProfileHeader = ({
   };
   const progress = getProgressToNextLevel();
   const voteMultiplier = getVoteMultiplier();
-  return <div className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
+  return <div className="bg-[var(--theme-surface)] border-4 border-[var(--theme-primary)]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <div className="flex flex-col lg:flex-row items-start lg:items-start space-y-6 lg:space-y-0 lg:space-x-8">
         <div className="flex-shrink-0 mx-auto lg:mx-0">
           <AvatarUpload currentAvatarUrl={avatarUrl} onAvatarUpdate={handleAvatarUpdate} userId={user.id} />

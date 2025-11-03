@@ -103,7 +103,7 @@ const UserProfile = () => {
         
         <div className="relative z-10 pt-24 sm:pt-28 max-w-4xl mx-auto p-3 sm:p-6">
           {/* Profile Header Skeleton */}
-          <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+          <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
             <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
               <div className="flex-shrink-0 mx-auto sm:mx-0">
                 <AvatarSkeleton size="lg" className="w-24 h-24 sm:w-32 sm:h-32" />
@@ -118,7 +118,7 @@ const UserProfile = () => {
           
           {/* Additional skeleton elements for other sections */}
           <div className="space-y-6">
-            <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
+            <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
               <TextSkeleton width="w-32" height="h-6" className="mb-4" />
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[1, 2, 3, 4].map((i) => (
@@ -176,7 +176,7 @@ const UserProfile = () => {
           {isDataLoading ? (
             // Show skeleton while profile data loads
             <>
-              <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+              <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
                 <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
                   <div className="flex-shrink-0 mx-auto sm:mx-0">
                     <AvatarSkeleton size="lg" className="w-24 h-24 sm:w-32 sm:h-32" />
@@ -190,7 +190,7 @@ const UserProfile = () => {
               </div>
               
               <div className="space-y-6">
-                <div className="bg-carbon-fiber/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
+                <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
                   <TextSkeleton width="w-32" height="h-6" className="mb-4" />
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                     {[1, 2, 3, 4].map((i) => (
@@ -213,7 +213,7 @@ const UserProfile = () => {
               {/* Show onboarding trigger if user has no top 5 */}
               {memberStats?.top_five_created === 0 && (
                 <div 
-                  className="border rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg text-center"
+                  className="border-4 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg text-center"
                   style={{
                     backgroundColor: 'hsl(var(--theme-surface))',
                     borderColor: 'hsl(var(--theme-border))',

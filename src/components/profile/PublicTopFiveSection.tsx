@@ -73,7 +73,7 @@ const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) =
   });
 
   const RapperSlot = ({ position, rapper }: { position: number; rapper: any }) => (
-    <div className="relative bg-[var(--theme-surface)] border-2 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 hover:border-[hsl(var(--theme-primary))] transition-all">
+    <div className="relative bg-[var(--theme-surface)] border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 hover:border-[hsl(var(--theme-primary))] transition-all">
       <div className="absolute -top-3 -left-3 w-8 h-8 bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] rounded-full flex items-center justify-center text-black font-bold text-sm z-10">
         #{position}
       </div>

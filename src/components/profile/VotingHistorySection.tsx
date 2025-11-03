@@ -13,7 +13,7 @@ const VotingHistorySection = () => {
     isLoading
   } = useVotingHistory();
   if (isLoading) {
-    return <Card className="bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20">
+    return <Card className="bg-[var(--theme-background)] border-4 border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20">
         <CardHeader>
           <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
             <History className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -32,7 +32,7 @@ const VotingHistorySection = () => {
         </CardContent>
       </Card>;
   }
-  return <Card className="bg-[var(--theme-background)] border border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
+  return <Card className="bg-[var(--theme-background)] border-4 border-[var(--theme-primary)]/30 rounded-lg shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <CardHeader>
         <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center justify-center gap-2 text-lg sm:text-xl">
           <History className="w-4 h-4 sm:w-5 sm:h-5" />
