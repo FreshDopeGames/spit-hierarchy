@@ -11,7 +11,10 @@ import CommentItem from "@/components/CommentItem";
 import ResponsiveInstructions from "@/components/ResponsiveInstructions";
 import { useAuth } from "@/hooks/useAuth";
 import { useCypherComments } from "@/hooks/useCypherComments";
+import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 const CommunityCypher = () => {
+  usePageVisitTracking('cypher_visits');
+  
   const {
     user
   } = useAuth();

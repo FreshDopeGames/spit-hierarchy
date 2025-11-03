@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 
-type PageType = 'blog_visits' | 'about_visits' | 'analytics_visits' | 'vs_visits';
+type PageType = 'blog_visits' | 'about_visits' | 'analytics_visits' | 'vs_visits' | 'cypher_visits';
 
 /**
  * Hook to track static page visits for achievement unlocking

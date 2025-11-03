@@ -599,6 +599,7 @@ export type Database = {
           blog_visits: number | null
           consecutive_voting_days: number | null
           created_at: string | null
+          cypher_visits: number | null
           id: string
           last_vote_date: string | null
           profile_views_count: number | null
@@ -621,6 +622,7 @@ export type Database = {
           blog_visits?: number | null
           consecutive_voting_days?: number | null
           created_at?: string | null
+          cypher_visits?: number | null
           id: string
           last_vote_date?: string | null
           profile_views_count?: number | null
@@ -643,6 +645,7 @@ export type Database = {
           blog_visits?: number | null
           consecutive_voting_days?: number | null
           created_at?: string | null
+          cypher_visits?: number | null
           id?: string
           last_vote_date?: string | null
           profile_views_count?: number | null
