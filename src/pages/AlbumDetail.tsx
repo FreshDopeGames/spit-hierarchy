@@ -1,3 +1,4 @@
+import React from "react";
 import { useParams, useNavigate, useSearchParams } from "react-router-dom";
 import { useAlbumDetail } from "@/hooks/useAlbumDetail";
 import { useTrackVoting } from "@/hooks/useTrackVoting";
@@ -20,8 +21,18 @@ const AlbumDetail = () => {
     albumSlug: string;
   }>();
 
-  if (!rapperSlug || !albumSlug) {
-    return <div>Invalid album URL</div>;
+  // Guard against invalid slugs
+  const isInvalidSlug = !albumSlug || albumSlug === 'undefined' || albumSlug === 'null' || albumSlug.trim().length === 0;
+
+  React.useEffect(() => {
+    if (isInvalidSlug && rapperSlug) {
+      const scrollPos = searchParams.get('scrollPos');
+      navigate(scrollPos ? `/rapper/${rapperSlug}?scrollPos=${scrollPos}` : `/rapper/${rapperSlug}`, { replace: true });
+    }
+  }, [isInvalidSlug, rapperSlug, navigate, searchParams]);
+
+  if (!rapperSlug || isInvalidSlug) {
+    return null; // Will redirect via useEffect
   }
 
   const { data: album, isLoading, error } = useAlbumDetail(rapperSlug, albumSlug);

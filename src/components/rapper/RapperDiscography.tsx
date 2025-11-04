@@ -213,12 +213,21 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                         placeholderColors={placeholder.style}
                       />
                       <div className="flex-1 min-w-0">
-                        <Link
-                          to={`/rapper/${rapperSlug}/${item.album?.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
-                          className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
-                        >
-                          {item.album?.title}
-                        </Link>
+                        {item.album?.slug ? (
+                          <Link
+                            to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                            className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
+                          >
+                            {item.album?.title}
+                          </Link>
+                        ) : (
+                          <span 
+                            className="font-semibold text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] truncate block opacity-70 cursor-not-allowed" 
+                            title="Album details coming soon"
+                          >
+                            {item.album?.title}
+                          </span>
+                        )}
                         <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />
@@ -355,12 +364,21 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                         placeholderColors={placeholder.style}
                       />
                       <div className="flex-1 min-w-0">
-                        <Link
-                          to={`/rapper/${rapperSlug}/${item.album?.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
-                          className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
-                        >
-                          {item.album?.title}
-                        </Link>
+                        {item.album?.slug ? (
+                          <Link
+                            to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                            className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
+                          >
+                            {item.album?.title}
+                          </Link>
+                        ) : (
+                          <span 
+                            className="font-semibold text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] truncate block opacity-70 cursor-not-allowed" 
+                            title="Album details coming soon"
+                          >
+                            {item.album?.title}
+                          </span>
+                        )}
                         <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                           <div className="flex items-center gap-1">
                             <Calendar className="w-3 h-3" />

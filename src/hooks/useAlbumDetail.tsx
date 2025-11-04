@@ -79,6 +79,6 @@ export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
-    enabled: !!rapperSlug && !!albumSlug, // Only run if both slugs are provided
+    enabled: !!rapperSlug && !!albumSlug && albumSlug !== 'undefined' && albumSlug !== 'null', // Only run if both slugs are valid
   });
 };
