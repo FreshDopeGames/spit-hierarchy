@@ -171,7 +171,7 @@ export type Database = {
           musicbrainz_id: string | null
           release_date: string | null
           release_type: string
-          slug: string | null
+          slug: string
           title: string
           track_count: number | null
           updated_at: string
@@ -187,7 +187,7 @@ export type Database = {
           musicbrainz_id?: string | null
           release_date?: string | null
           release_type?: string
-          slug?: string | null
+          slug: string
           title: string
           track_count?: number | null
           updated_at?: string
@@ -203,7 +203,7 @@ export type Database = {
           musicbrainz_id?: string | null
           release_date?: string | null
           release_type?: string
-          slug?: string | null
+          slug?: string
           title?: string
           track_count?: number | null
           updated_at?: string
