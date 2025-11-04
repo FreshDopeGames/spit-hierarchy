@@ -141,8 +141,10 @@ export const useAdminSuggestions = (status?: string) => {
       
       if (userIds.length === 0) return [];
 
-      const { data: profiles } = await supabase
-        .rpc("get_profiles_batch", { profile_user_ids: userIds });
+      const { data: profiles, error: profilesError } = await supabase
+        .rpc("get_profiles_for_analytics", { profile_user_ids: userIds });
+      
+      if (profilesError) console.error("Error fetching profiles for suggestions:", profilesError);
 
       const suggestionsWithUsers: RapperSuggestionWithUser[] = data.map(suggestion => ({
         ...suggestion,

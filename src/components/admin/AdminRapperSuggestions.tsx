@@ -128,10 +128,10 @@ const AdminRapperSuggestions = () => {
                           <Avatar className="h-6 w-6">
                             <AvatarImage src={suggestion.avatar_url} />
                             <AvatarFallback>
-                              {suggestion.username?.[0]?.toUpperCase() || "?"}
+                              {(suggestion.username?.[0] || suggestion.user_id?.[0] || "?").toUpperCase()}
                             </AvatarFallback>
                           </Avatar>
-                          <span className="text-sm">{suggestion.username || "Unknown"}</span>
+                          <span className="text-sm">{suggestion.username || suggestion.user_id?.slice(0, 8) || "Unknown"}</span>
                         </div>
                       </TableCell>
                     )}
