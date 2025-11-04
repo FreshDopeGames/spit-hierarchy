@@ -35,11 +35,11 @@ const RapperCard = ({
     ? Math.round((Number(rapper.average_rating) / 10) * 100) 
     : null;
 
-  // Use optimized placeholder based on compact mode
-  const placeholderSize = compact ? 'medium' : 'large';
+  // Use optimized placeholder based on compact mode - thumb for compact, large for full
+  const placeholderSize = compact ? 'thumb' : 'large';
   const placeholderImage = getOptimizedPlaceholder(placeholderSize);
   
-  // Use rapper image if available and not empty, otherwise use optimized placeholder
+  // Trust the passed imageUrl - it's already optimized by the parent component
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
   
   const handleCardClick = (e: React.MouseEvent) => {
@@ -91,6 +91,7 @@ const RapperCard = ({
             alt={rapper.name || "Rapper"}
             className="absolute inset-0 w-full h-full object-cover transition-opacity duration-300 opacity-0"
             loading="lazy"
+            decoding="async"
             onLoad={(e) => {
               const target = e.target as HTMLImageElement;
               target.classList.remove('opacity-0');

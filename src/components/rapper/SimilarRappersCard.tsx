@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import RapperCard from "@/components/RapperCard";
 import RapperGridSkeleton from "@/components/RapperGridSkeleton";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
+import { getRapperImageUrl } from "@/hooks/useImageStyle";
 
 interface SimilarRappersCardProps {
   rapperId: string;
@@ -18,10 +19,10 @@ const SimilarRappersCard = ({
     error
   } = useSimilarRappers(rapperId);
 
-  // Batch fetch all rapper images in a single query
+  // Batch fetch all rapper images in a single query - use 'thumb' size for compact cards
   const rapperIds = similarRappers?.map(r => r.id) || [];
   const { data: rapperImages, isLoading: imagesLoading } = useQuery({
-    queryKey: ["similar-rapper-images", rapperIds],
+    queryKey: ["similar-rapper-images", rapperIds, "thumb"],
     queryFn: async () => {
       if (rapperIds.length === 0) return {};
       
@@ -31,9 +32,15 @@ const SimilarRappersCard = ({
         .in("rapper_id", rapperIds)
         .eq("style", "comic_book");
 
-      // Create a map of rapper_id to image_url
+      // Create a map of rapper_id to optimized thumb-size image URLs
       return (data || []).reduce((acc, img) => {
-        acc[img.rapper_id] = img.image_url;
+        if (img.image_url.startsWith('http')) {
+          // Legacy full URL
+          acc[img.rapper_id] = img.image_url;
+        } else {
+          // Construct optimized thumb URL (128px)
+          acc[img.rapper_id] = getRapperImageUrl(img.image_url, 'thumb');
+        }
         return acc;
       }, {} as Record<string, string>);
     },

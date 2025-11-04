@@ -29,7 +29,7 @@ export const useImageStyle = () => {
 };
 
 // Helper function to construct rapper image URLs with size support and proper error handling
-const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original'): string => {
+export const getRapperImageUrl = (basePath: string, size?: 'thumb' | 'medium' | 'large' | 'xlarge' | 'original'): string => {
   // If basePath is already a full URL, return as is (backward compatibility)
   if (basePath.startsWith('http')) {
     return basePath;
@@ -93,47 +93,10 @@ export const useRapperImage = (rapperId: string, size?: 'thumb' | 'medium' | 'la
           }
           
           // Otherwise, construct the URL with the requested size
+          // Optimistically return the URL - let browser and img onError handle 404s
           const imageUrl = getRapperImageUrl(basePath, size);
-          
-          // Test if the specific size exists by making a HEAD request
-          try {
-            const response = await fetch(imageUrl, { method: 'HEAD' });
-            if (response.ok) {
-              console.log(`Size ${size} exists for rapper ${rapperId}`);
-              return imageUrl;
-            } else {
-              console.warn(`Size ${size} not accessible for rapper ${rapperId}, status:`, response.status);
-            }
-          } catch (fetchError) {
-            console.warn(`Network error testing ${size} for rapper ${rapperId}:`, fetchError);
-          }
-          
-          // For original size, try without fallback first, then try xlarge
-          if (size === 'original') {
-            // Original size request failed, try xlarge as fallback
-            const xlargeUrl = getRapperImageUrl(basePath, 'xlarge');
-            try {
-              const response = await fetch(xlargeUrl, { method: 'HEAD' });
-              if (response.ok) {
-                console.log(`Using xlarge fallback for original request for rapper ${rapperId}`);
-                return xlargeUrl;
-              }
-            } catch (fetchError) {
-              console.warn(`Network error testing xlarge fallback for original request for rapper ${rapperId}:`, fetchError);
-            }
-          } else if (size !== 'xlarge') {
-            // If specific size doesn't exist, try xlarge as fallback
-            const xlargeUrl = getRapperImageUrl(basePath, 'xlarge');
-            try {
-              const response = await fetch(xlargeUrl, { method: 'HEAD' });
-              if (response.ok) {
-                console.log(`Using xlarge fallback for rapper ${rapperId}`);
-                return xlargeUrl;
-              }
-            } catch (fetchError) {
-              console.warn(`Network error testing xlarge fallback for rapper ${rapperId}:`, fetchError);
-            }
-          }
+          console.log(`Optimistically returning ${size} image for rapper ${rapperId}`);
+          return imageUrl;
         }
 
         // Fallback to the legacy image_url field
