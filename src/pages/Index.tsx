@@ -7,7 +7,7 @@ import BlogCarousel from "@/components/BlogCarousel";
 import HomepagePoll from "@/components/polls/HomepagePoll";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import HomepageRankingSection from "@/components/HomepageRankingSection";
-import StatsOverview from "@/components/StatsOverview";
+import StatsOverview from "@/components/StatsOverviewRedesigned";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
 import Footer from "@/components/Footer";
