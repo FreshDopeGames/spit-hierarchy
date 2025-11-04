@@ -109,10 +109,10 @@ export const useUserSuggestions = () => {
 
 export const useAdminSuggestions = (status?: string) => {
   const { user } = useAuth();
-  const { isAdmin } = useSecurityContext();
+  const { isAdmin, isLoading: securityLoading } = useSecurityContext();
 
   return useQuery({
-    queryKey: ["admin-suggestions", status],
+    queryKey: ["admin-suggestions", status, isAdmin],
     queryFn: async () => {
       if (!user?.id) return [];
 
@@ -153,7 +153,7 @@ export const useAdminSuggestions = (status?: string) => {
 
       return suggestionsWithUsers;
     },
-    enabled: !!user?.id,
+    enabled: !!user?.id && !securityLoading,
   });
 };
 
