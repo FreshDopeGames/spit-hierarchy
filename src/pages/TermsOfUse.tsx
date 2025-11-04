@@ -4,6 +4,8 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Separator } from "@/components/ui/separator";
+import SEOHead from "@/components/seo/SEOHead";
+import Footer from "@/components/Footer";
 
 const TermsOfUse = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -19,6 +21,12 @@ const TermsOfUse = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <SEOHead
+        title="Terms of Service - Spit Hierarchy"
+        description="Review the terms and conditions for using Spit Hierarchy. Understand user responsibilities, content guidelines, and community rules."
+        keywords={['terms of service', 'user agreement', 'community guidelines', 'legal terms']}
+        canonicalUrl="/terms"
+      />
       <HeaderNavigation isScrolled={isScrolled} />
       
       <div className="pt-24">
@@ -147,6 +155,8 @@ const TermsOfUse = () => {
           </ThemedCard>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

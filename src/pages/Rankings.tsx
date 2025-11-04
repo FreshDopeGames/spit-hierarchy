@@ -9,6 +9,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/useAuth";
 import { useRankingsData } from "@/hooks/useRankingsData";
+import SEOHead from "@/components/seo/SEOHead";
 const Rankings = () => {
   const [activeTab, setActiveTab] = useState("official");
   const {
@@ -19,6 +20,12 @@ const Rankings = () => {
     loading
   } = useRankingsData();
   return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <SEOHead
+        title="Hip-Hop Rankings - Official & Community Rapper Lists | Spit Hierarchy"
+        description="Browse official editorial rankings and community-created lists featuring the best rappers across all eras. Vote, create your own rankings, and join the conversation."
+        keywords={['rapper rankings', 'hip hop lists', 'top rappers', 'community rankings', 'official rankings', 'rap voting']}
+        canonicalUrl="/rankings"
+      />
       <HeaderNavigation isScrolled={false} />
       
       <div className="max-w-7xl mx-auto pt-20 px-4 pb-12">

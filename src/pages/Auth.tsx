@@ -8,6 +8,7 @@ import AuthHeader from "@/components/auth/AuthHeader";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import AuthForm from "@/components/auth/AuthForm";
 import AuthToggle from "@/components/auth/AuthToggle";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -104,6 +105,11 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))]">
+      <SEOHead
+        title="Sign In - Spit Hierarchy"
+        description="Sign in or create an account to vote on rapper rankings, create custom lists, and join the ultimate hip-hop community."
+        robots="noindex, nofollow"
+      />
       <HeaderNavigation isScrolled={isScrolled} />
 
       <div className="pt-24 flex items-center justify-center p-4 min-h-screen">

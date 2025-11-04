@@ -10,6 +10,7 @@ import BackToTopButton from "@/components/BackToTopButton";
 import { useAllRappers } from "@/hooks/useAllRappers";
 import { useNavigationState } from "@/hooks/useNavigationState";
 import { useEffect } from "react";
+import SEOHead from "@/components/seo/SEOHead";
 
 const AllRappersPage = () => {
   const { getScrollPosition, setScrollPosition, getAllFilters } = useNavigationState();
@@ -92,6 +93,12 @@ const AllRappersPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
+      <SEOHead
+        title="All Rappers Directory - Complete Hip-Hop Artist Database | Spit Hierarchy"
+        description="Explore our comprehensive database of rap artists from all eras and regions. Search, filter by location, discover new talent, and vote on your favorite MCs."
+        keywords={['rapper directory', 'hip hop artists', 'rap database', 'all rappers', 'mc list', 'hip hop encyclopedia']}
+        canonicalUrl="/all-rappers"
+      />
       <HeaderNavigation isScrolled={false} />
       <main className="flex-1 max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-6 pt-20 overflow-x-hidden min-w-0">
         <BlogPageHeader title="All Rappers" />

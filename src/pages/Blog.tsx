@@ -12,6 +12,7 @@ import BlogLoadMoreButton from "@/components/blog/BlogLoadMoreButton";
 import BackToTopButton from "@/components/BackToTopButton";
 import Footer from "@/components/Footer";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
+import SEOHead from "@/components/seo/SEOHead";
 
 interface BlogPost {
   id: string;
@@ -168,6 +169,12 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
+      <SEOHead
+        title="Slick Talk Blog - Hip-Hop News, Rankings & Culture | Spit Hierarchy"
+        description="Explore the latest in hip-hop culture, rapper spotlights, album reviews, and industry insights. Stay updated with Slick Talk, Spit Hierarchy's official blog."
+        keywords={['hip hop blog', 'rap news', 'music reviews', 'rapper interviews', 'album reviews', 'hip hop culture']}
+        canonicalUrl="/blog"
+      />
       <HeaderNavigation isScrolled={false} />
       
       <main className="flex-1 max-w-6xl mx-auto p-6 pt-24">

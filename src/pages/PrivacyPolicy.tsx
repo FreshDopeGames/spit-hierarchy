@@ -4,6 +4,8 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { Separator } from "@/components/ui/separator";
+import SEOHead from "@/components/seo/SEOHead";
+import Footer from "@/components/Footer";
 
 const PrivacyPolicy = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -19,6 +21,12 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <SEOHead
+        title="Privacy Policy - Spit Hierarchy"
+        description="Read our comprehensive privacy policy covering data collection, usage, security, and your rights under GDPR and CCPA. Learn how we protect your information."
+        keywords={['privacy policy', 'data protection', 'GDPR', 'CCPA', 'user privacy', 'data security']}
+        canonicalUrl="/privacy"
+      />
       <HeaderNavigation isScrolled={isScrolled} />
       
       <div className="pt-24">
@@ -221,6 +229,8 @@ const PrivacyPolicy = () => {
           </ThemedCard>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 };

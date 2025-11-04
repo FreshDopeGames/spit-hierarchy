@@ -12,6 +12,7 @@ import ResponsiveInstructions from "@/components/ResponsiveInstructions";
 import { useAuth } from "@/hooks/useAuth";
 import { useCypherComments } from "@/hooks/useCypherComments";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
+import SEOHead from "@/components/seo/SEOHead";
 const CommunityCypher = () => {
   usePageVisitTracking('cypher_visits');
   
@@ -54,6 +55,12 @@ const CommunityCypher = () => {
   const isNearLimit = characterCount > maxCharacters * 0.8;
   const isOverLimit = characterCount > maxCharacters;
   return <div className="min-h-screen bg-gradient-to-br from-primary via-primary-foreground to-rap-gold-dark ">
+      <SEOHead
+        title="Community Cypher - Live Hip-Hop Chat & Discussion | Spit Hierarchy"
+        description="Join the live community cypher to discuss hip-hop, share opinions, debate rankings, and connect with fellow rap enthusiasts in real-time."
+        keywords={['community chat', 'hip hop discussion', 'rap cypher', 'live chat', 'hip hop community']}
+        canonicalUrl="/cypher"
+      />
       <HeaderNavigation isScrolled={false} />
       
       <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">

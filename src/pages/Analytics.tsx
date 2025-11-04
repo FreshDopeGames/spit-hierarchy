@@ -14,6 +14,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 import BackToTopButton from "@/components/BackToTopButton";
+import SEOHead from "@/components/seo/SEOHead";
 
 const Analytics = () => {
   const { user } = useAuth();
@@ -42,6 +43,11 @@ const Analytics = () => {
 
   return (
     <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))]">
+      <SEOHead
+        title="Platform Analytics - Spit Hierarchy"
+        description="View comprehensive analytics and insights about rapper rankings, voting trends, and community activity."
+        robots="noindex, nofollow"
+      />
       <HeaderNavigation isScrolled={false} />
       
       <div className="container mx-auto px-4 py-8 md:py-12 pt-24">

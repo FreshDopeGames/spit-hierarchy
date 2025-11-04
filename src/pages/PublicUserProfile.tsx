@@ -10,6 +10,7 @@ import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
 import Footer from "@/components/Footer";
 import { usePublicUserData } from "@/hooks/usePublicUserData";
 import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
+import SEOHead from "@/components/seo/SEOHead";
 
 const PublicUserProfile = () => {
   const { username } = useParams();
@@ -37,6 +38,13 @@ const PublicUserProfile = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <SEOHead
+        title={`${profile.username}'s Profile - Spit Hierarchy`}
+        description={`View ${profile.username}'s hip-hop rankings, votes, achievements, and contributions to the Spit Hierarchy community.`}
+        keywords={['user profile', 'hip hop fan', 'community member']}
+        canonicalUrl={`/user/${profile.username}`}
+        ogType="profile"
+      />
       <HeaderNavigation isScrolled={false} />
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">

@@ -8,6 +8,8 @@ interface SEOHeadProps {
   ogImageAlt?: string;
   canonicalUrl?: string;
   structuredData?: any;
+  robots?: string;
+  ogType?: string;
 }
 
 const SEOHead = ({
@@ -17,7 +19,9 @@ const SEOHead = ({
   ogImage = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Logo_Rect_02.png",
   ogImageAlt = "Spit Hierarchy - The Ultimate Rap Rankings Logo",
   canonicalUrl,
-  structuredData
+  structuredData,
+  robots,
+  ogType = "website"
 }: SEOHeadProps) => {
   const defaultKeywords = ['rap rankings', 'hip hop', 'rapper voting', 'music rankings', 'hip hop culture'];
   const allKeywords = [...defaultKeywords, ...keywords];
@@ -27,6 +31,7 @@ const SEOHead = ({
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={allKeywords.join(', ')} />
+      {robots && <meta name="robots" content={robots} />}
       
       {/* Critical Image Preload for LCP */}
       <link rel="preload" as="image" href="https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/placeholder-thumb.jpg" fetchPriority="high" />
@@ -36,7 +41,7 @@ const SEOHead = ({
       <meta property="og:description" content={description} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:image:alt" content={ogImageAlt} />
-      <meta property="og:type" content="website" />
+      <meta property="og:type" content={ogType} />
       {canonicalUrl && <meta property="og:url" content={canonicalUrl} />}
       
       {/* Twitter Card */}

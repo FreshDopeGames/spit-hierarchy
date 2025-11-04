@@ -7,6 +7,8 @@ import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { useCookieConsent } from "@/contexts/CookieConsentContext";
 import { CookiePreferencesModal } from "@/components/CookiePreferencesModal";
+import SEOHead from "@/components/seo/SEOHead";
+import Footer from "@/components/Footer";
 
 const CookiePolicy = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -24,6 +26,12 @@ const CookiePolicy = () => {
 
   return (
     <>
+      <SEOHead
+        title="Cookie Policy - Spit Hierarchy"
+        description="Learn about how Spit Hierarchy uses cookies, your preferences, and your rights under GDPR and CCPA. Manage your cookie consent and understand our data practices."
+        keywords={['cookie policy', 'GDPR compliance', 'CCPA privacy', 'cookie consent', 'data privacy']}
+        canonicalUrl="/cookies"
+      />
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
         <HeaderNavigation isScrolled={isScrolled} />
         
@@ -239,9 +247,11 @@ const CookiePolicy = () => {
         </div>
       </div>
 
-      <CookiePreferencesModal
-        isOpen={isPreferencesOpen}
-        onClose={() => setIsPreferencesOpen(false)}
+      <Footer />
+
+      <CookiePreferencesModal 
+        isOpen={isPreferencesOpen} 
+        onClose={() => setIsPreferencesOpen(false)} 
       />
     </>
   );

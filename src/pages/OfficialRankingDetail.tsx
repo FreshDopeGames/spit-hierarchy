@@ -13,6 +13,7 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { useRankingData, useHotThreshold } from "@/hooks/useRankingData";
+import SEOHead from "@/components/seo/SEOHead";
 
 type OfficialRanking = Tables<"official_rankings">;
 
@@ -88,6 +89,12 @@ const OfficialRankingDetail = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <SEOHead
+        title={`${ranking.title} - Official Ranking | Spit Hierarchy`}
+        description={ranking.description || `Vote on the official ${ranking.title} ranking. See how the community ranks the best rappers in this category.`}
+        keywords={['official ranking', 'hip hop voting', 'rapper list', ranking.category]}
+        canonicalUrl={`/rankings/official/${ranking.slug}`}
+      />
       <HeaderNavigation isScrolled={isScrolled} />
       
       <main className="max-w-4xl mx-auto p-6 pt-24">

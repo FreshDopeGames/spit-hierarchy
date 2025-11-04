@@ -12,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import OfficialRankingItems from "@/components/rankings/OfficialRankingItems";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
+import SEOHead from "@/components/seo/SEOHead";
 
 interface UserRankingData {
   id: string;
@@ -252,6 +253,12 @@ const UserRankingDetail = ({ overrideSlug }: UserRankingDetailProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+      <SEOHead
+        title={`${ranking.title} by ${ranking.profiles?.username} - Community Ranking | Spit Hierarchy`}
+        description={ranking.description || `Check out ${ranking.profiles?.username}'s custom ranking. Share your thoughts and create your own ranking.`}
+        keywords={['community ranking', 'user ranking', 'custom rap list']}
+        canonicalUrl={`/rankings/user/${slug}`}
+      />
       <HeaderNavigation isScrolled={isScrolled} />
       
       <div className="max-w-6xl mx-auto pt-20 px-4">
