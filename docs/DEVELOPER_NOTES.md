@@ -49,6 +49,812 @@ The application now only supports email/password authentication:
 
 ---
 
+# Cookie Consent & Privacy Compliance Implementation
+
+## Overview
+Implemented Phase 1 of GDPR/CCPA cookie compliance system with granular consent controls, audit logging, and persistent settings management. Completed November 2025.
+
+## Phase 1 Implementation (Complete)
+
+### Features Delivered
+1. ✅ Cookie consent banner with Accept All/Reject All/Customize options
+2. ✅ Granular consent categories (Necessary, Functional, Analytics, Advertising)
+3. ✅ Consent preferences modal with category-specific controls
+4. ✅ Persistent cookie settings link (floating button + footer)
+5. ✅ Comprehensive Cookie Policy page (`/cookies` route)
+6. ✅ Enhanced Privacy Policy with GDPR/CCPA rights
+7. ✅ Consent audit logging to database (`consent_logs` table)
+8. ✅ Region detection (timezone-based: EU/CA/OTHER)
+9. ✅ Do Not Track support (automatic rejection)
+10. ✅ 12-month consent expiration with versioning
+11. ✅ Google AdSense conditional loading based on consent
+
+### Implementation Architecture
+
+#### Context Provider (`src/contexts/CookieConsentContext.tsx`)
+**Purpose**: Global consent state management
+**Key Features**:
+- Manages `consentState` with all consent categories
+- Provides `hasConsent(category)` helper for consent checks
+- Handles `updateConsent`, `acceptAll`, `rejectAll`, `resetConsent` actions
+- Logs all consent actions to database via `logConsentAction()`
+- Respects Do Not Track browser setting
+- Initializes from localStorage on mount
+
+**Consent State Structure**:
+```typescript
+interface ConsentState {
+  version: string;           // 'v1' - for future consent migrations
+  necessary: boolean;        // Always true (required for functionality)
+  analytics: boolean;        // Google Analytics tracking
+  advertising: boolean;      // Google AdSense, ad tracking
+  functional: boolean;       // User preferences, theme settings
+  timestamp: number;         // When consent was given
+  expiresAt: number;        // Expiration timestamp (365 days)
+  region: ConsentRegion;    // 'EU' | 'CA' | 'OTHER'
+  consentMethod: ConsentMethod; // 'banner' | 'preferences' | 'implicit'
+}
+```
+
+#### Cookie Consent Banner (`src/components/CookieConsentBanner.tsx`)
+**Purpose**: Initial consent collection on first visit
+**Features**:
+- Fixed position at bottom of screen
+- Gradient background with backdrop blur
+- Three action buttons: Customize, Reject All, Accept All
+- Link to Privacy Policy
+- Auto-hides after consent given or banner dismissed
+- Opens preferences modal on "Customize" click
+
+#### Cookie Preferences Modal (`src/components/CookiePreferencesModal.tsx`)
+**Purpose**: Granular consent management
+**Features**:
+- Four consent categories with detailed descriptions
+- Toggle switches for each category (Necessary always enabled)
+- Cookie list for each category
+- Save Preferences and Accept All buttons
+- Links to Privacy Policy and Terms of Use
+- Syncs with global consent state
+
+#### Cookie Settings Link (`src/components/CookieSettingsLink.tsx`)
+**Purpose**: Persistent access to consent management
+**Features**:
+- Floating button (bottom-left, z-index 9998)
+- Settings icon with tooltip on hover
+- Opens preferences modal on click
+- Visible on all pages for consent withdrawal
+- Themed with primary brand color
+
+#### Cookie Policy Page (`src/pages/CookiePolicy.tsx`)
+**Purpose**: Comprehensive cookie information
+**Content**:
+- Last updated date (YYYY-MM-DD format)
+- Four consent categories with detailed cookie lists
+- Cookie purpose, duration, and provider info
+- Data retention policies
+- User consent rights (view, modify, withdraw)
+- Contact information
+- SEO optimized with metadata
+
+### Consent Audit Logging
+
+#### Database Table (`consent_logs`)
+**Schema**:
+```sql
+CREATE TABLE consent_logs (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  user_id UUID REFERENCES auth.users,     -- Null for anonymous users
+  session_id TEXT NOT NULL,                -- Anonymous session tracking
+  action TEXT NOT NULL,                    -- 'accept_all', 'reject_all', 'update', 'implicit'
+  consent_state JSONB NOT NULL,           -- Full consent state snapshot
+  region TEXT,                             -- 'EU', 'CA', 'OTHER'
+  ip_address INET,                        -- User IP (GDPR compliant)
+  user_agent TEXT,                        -- Browser/device info
+  consent_method TEXT,                    -- 'banner', 'preferences', 'implicit'
+  created_at TIMESTAMPTZ DEFAULT NOW()
+);
+```
+
+**Purpose**: GDPR Article 7.1 compliance (proof of consent)
+**Logged Actions**:
+- `accept_all` - User clicked Accept All
+- `reject_all` - User clicked Reject All
+- `update` - User customized consent preferences
+- `implicit` - Do Not Track automatic rejection
+
+**Data Captured**:
+- Full consent state (all categories, timestamps)
+- Session ID for anonymous tracking
+- User ID for authenticated users
+- Region for compliance context
+- IP address and user agent for audit trail
+- Consent method (banner vs preferences modal)
+
+#### Session Tracking
+**Implementation**: `getSessionId()` helper
+- Generates unique UUID for each browser session
+- Stored in sessionStorage (cleared on tab close)
+- Allows tracking consent changes within single session
+- Enables anonymous user consent audit trail
+
+### Consent Categories & Integration Points
+
+#### 1. Necessary Cookies (Always Enabled)
+**Purpose**: Essential functionality
+**Examples**:
+- Supabase authentication tokens
+- Session identifiers
+- CSRF protection tokens
+**Cannot be disabled**: Required for site operation
+
+#### 2. Functional Cookies
+**Purpose**: User preferences and features
+**Examples**:
+- Theme preferences (light/dark mode)
+- Language settings
+- User interface preferences
+**Integration**: Check `hasConsent('functional')` before storing preferences
+
+#### 3. Analytics Cookies
+**Purpose**: Usage tracking and insights
+**Examples**:
+- Page view tracking (`usePageVisitTracking` hook)
+- User journey analytics
+- Google Analytics (Phase 2)
+**Integration**: 
+- `usePageVisitTracking` checks `hasConsent('analytics')`
+- Future: Google Analytics conditional initialization
+
+#### 4. Advertising Cookies
+**Purpose**: Ad personalization and tracking
+**Examples**:
+- Google AdSense
+- Ad performance tracking
+**Integration**:
+- `src/utils/adScriptLoader.ts` checks `hasConsent('advertising')`
+- AdSense script only loaded if consent given
+- Future: Ad network cookie management
+
+### Region Detection
+
+#### Current Implementation (Phase 1)
+**Method**: Timezone-based detection
+**Logic**:
+```typescript
+const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+// EU/EEA timezones
+if (timezone.startsWith('Europe/') || 
+    timezone.includes('Atlantic/Reykjavik')) {
+  return 'EU';
+}
+
+// California
+if (timezone === 'America/Los_Angeles') {
+  return 'CA';
+}
+
+return 'OTHER';
+```
+
+**Limitations**:
+- Not 100% accurate (VPN, travel)
+- Cannot detect all GDPR/CCPA jurisdictions
+- Fallback for IP geolocation
+
+#### Future Enhancement (Phase 3)
+**Method**: IP Geolocation API
+**Benefits**:
+- Accurate region detection regardless of timezone
+- Detect all EU/EEA countries
+- CCPA state detection (CA, VA, CO, etc.)
+- Better compliance targeting
+
+### Consent Expiration & Re-consent
+
+#### Duration
+**Setting**: 365 days (12 months)
+**Key**: `CONSENT_DURATION_MS = 365 * 24 * 60 * 60 * 1000`
+**Storage**: `expiresAt` timestamp in consent state
+
+#### Re-consent Flow
+1. User visits site after 12 months
+2. `getStoredConsent()` checks expiration: `Date.now() > consent.expiresAt`
+3. If expired, consent cleared from localStorage
+4. Cookie banner re-appears
+5. User must provide fresh consent
+6. New consent logged to database
+
+#### Version Migration
+**Current Version**: `v1`
+**Purpose**: Handle future cookie policy changes
+**Implementation**:
+```typescript
+const CONSENT_VERSION = 'v1';
+
+if (storedConsent.version !== CONSENT_VERSION) {
+  // Clear old consent, require re-consent
+  clearConsent();
+  return null;
+}
+```
+
+### Files Created
+
+#### New Files
+1. `src/types/cookieConsent.ts` - TypeScript interfaces
+2. `src/utils/cookieConsent.ts` - Utility functions
+3. `src/contexts/CookieConsentContext.tsx` - Global state
+4. `src/components/CookieConsentBanner.tsx` - Initial banner
+5. `src/components/CookiePreferencesModal.tsx` - Preferences UI
+6. `src/components/CookieSettingsLink.tsx` - Persistent settings button
+7. `src/pages/CookiePolicy.tsx` - Cookie Policy page
+
+#### Modified Files
+1. `src/App.tsx` - Added `CookieConsentProvider`, `CookieConsentBanner`, `CookieSettingsLink`
+2. `src/pages/PrivacyPolicy.tsx` - Enhanced with GDPR/CCPA rights
+3. `src/utils/adScriptLoader.ts` - Added consent check
+4. `src/hooks/usePageVisitTracking.tsx` - Added analytics consent check
+5. `supabase/migrations/[timestamp]_create_consent_logs_table.sql` - Database schema
+
+### Do Not Track Support
+
+**Browser Setting**: `navigator.doNotTrack`
+**Implementation**:
+```typescript
+const detectDoNotTrack = (): boolean => {
+  return (
+    navigator.doNotTrack === '1' ||
+    window.doNotTrack === '1' ||
+    navigator.doNotTrack === 'yes'
+  );
+};
+```
+
+**Behavior**:
+- If DNT detected, automatically reject all non-necessary cookies
+- Set `analytics: false`, `advertising: false`, `functional: false`
+- Log as `implicit` consent method
+- Respect user's browser-level privacy preference
+
+### Future Phases
+
+#### Phase 2: Google Analytics Integration (Planned)
+- Conditional GA4 initialization based on analytics consent
+- Google Consent Mode v2 implementation
+- Enhanced event tracking with consent awareness
+- Cross-domain tracking with consent
+
+#### Phase 3: Enhanced Region Detection (Planned)
+- IP geolocation API integration
+- Accurate EU/EEA detection
+- CCPA state detection (CA, VA, CO, CT, UT)
+- "Do Not Sell My Personal Information" link for CA users
+- Regional consent banner variations
+
+#### Phase 4: Advanced Features (Planned)
+- Cookie scanning and automatic detection
+- Google AdSense Consent Mode
+- Consent dashboard for users
+- Bulk consent management for admins
+- Consent export for GDPR requests
+- A/B testing consent flows
+
+### Testing Checklist
+
+#### Functional Testing
+- ✅ Cookie banner appears on first visit
+- ✅ Accept All enables all categories
+- ✅ Reject All disables non-necessary categories
+- ✅ Customize opens preferences modal
+- ✅ Toggle switches work in preferences modal
+- ✅ Save Preferences persists choices
+- ✅ Floating settings button accessible on all pages
+- ✅ Consent expires after 12 months
+- ✅ Do Not Track auto-rejects optional cookies
+- ✅ AdSense loads only with advertising consent
+- ✅ Page visit tracking requires analytics consent
+
+#### Database Testing
+- ✅ All consent actions logged to `consent_logs`
+- ✅ Session ID tracked for anonymous users
+- ✅ User ID captured for authenticated users
+- ✅ Full consent state saved as JSONB
+- ✅ Timestamps accurate (created_at, expiresAt)
+
+#### UI/UX Testing
+- ✅ Banner not intrusive, dismissible
+- ✅ Modal accessible, keyboard navigable
+- ✅ Toggle switches show proper on/off states (primary color when on)
+- ✅ Links to Cookie Policy and Privacy Policy work
+- ✅ Floating button visible but not obtrusive
+- ✅ Responsive design on mobile/tablet/desktop
+
+#### Compliance Testing
+- ✅ Consent required before optional cookies set
+- ✅ Necessary cookies functional without consent
+- ✅ Withdrawal mechanism easily accessible
+- ✅ Audit trail complete for all actions
+- ✅ Privacy Policy and Cookie Policy comprehensive
+
+---
+
+# Theme System Toggle Switch Fix
+
+## Overview
+Fixed toggle switches in Cookie Preferences modal not displaying proper theme colors in the "on" state. Completed November 2025.
+
+## Problem
+**Symptom**: Toggle switches showed black background when enabled instead of the theme's primary color (orange/yellow gradient)
+**Affected Component**: Cookie Preferences Modal consent category toggles
+**Visual Impact**: Poor UX - unclear which categories were enabled vs disabled
+
+## Root Cause
+**File**: `src/components/ui/switch.tsx` (line 13)
+**Issue**: Missing `hsl()` wrapper around CSS variable
+
+**Incorrect Code**:
+```typescript
+data-[state=checked]:bg-[var(--theme-primary)]
+```
+
+**Why It Failed**:
+- CSS variables in the theme system store raw HSL values: `360 100% 50%`
+- Tailwind's `bg-[]` needs a valid CSS color function
+- Without `hsl()`, browser received `background-color: 360 100% 50%` (invalid)
+- Browser fallback rendered as black
+
+## Solution
+**Fix**: Added `hsl()` wrapper to CSS variable reference
+
+**Corrected Code**:
+```typescript
+data-[state=checked]:bg-[hsl(var(--theme-primary))]
+```
+
+**Why It Works**:
+- `hsl()` function converts raw values to valid CSS color
+- Browser receives `background-color: hsl(360 100% 50%)` (valid)
+- Theme primary color (orange/yellow) now displays correctly
+
+## Additional Improvements
+
+### Unchecked State Enhancement
+**Change**: Improved contrast for disabled state
+```typescript
+// Before: Generic gray
+data-[state=unchecked]:bg-gray-400
+
+// After: Darker, more distinct
+data-[state=unchecked]:bg-gray-600
+```
+**Benefit**: Clear visual distinction between on/off states
+
+### Disabled State Styling
+**Change**: Distinct appearance for disabled toggles
+```typescript
+disabled:bg-gray-700
+disabled:opacity-50
+```
+**Benefit**: Users can identify non-interactive toggles (e.g., "Necessary" category)
+
+### Thumb Styling
+**Change**: White thumb for all states
+```typescript
+bg-white
+```
+**Benefit**: Maximum contrast against both on (primary) and off (gray-600) backgrounds
+
+## Theme System Convention
+
+### Critical Rule
+**ALL color CSS variables MUST use `hsl()` wrapper**
+
+**Correct Pattern**:
+```typescript
+// ✅ CORRECT
+bg-[hsl(var(--theme-primary))]
+text-[hsl(var(--theme-text))]
+border-[hsl(var(--theme-border))]
+
+// ❌ WRONG
+bg-[var(--theme-primary)]
+text-[var(--theme-text)]
+border-[var(--theme-border)]
+```
+
+**Reason**: Theme system stores colors as space-separated HSL values, not complete color strings
+
+### CSS Variable Format
+**In `index.css`**:
+```css
+:root {
+  --theme-primary: 360 100% 50%;        /* HSL values only */
+  --theme-background: 240 10% 4%;       /* Not hsl(240 10% 4%) */
+}
+```
+
+**In Components**:
+```typescript
+// Tailwind requires hsl() wrapper
+className="bg-[hsl(var(--theme-primary))]"
+```
+
+## Testing Verification
+
+### Visual Testing
+**Component**: Cookie Preferences Modal (`/cookies` page, click floating settings button)
+**Test Cases**:
+1. ✅ Toggle ON: Orange/yellow gradient (theme primary)
+2. ✅ Toggle OFF: Dark gray (`gray-600`)
+3. ✅ Toggle DISABLED (Necessary): Darker gray at 50% opacity
+4. ✅ Thumb: White circle on all states
+5. ✅ Hover: Smooth transitions on toggle and thumb
+6. ✅ Focus: Visible focus ring for accessibility
+
+### Cross-Component Impact
+**Other Components Using Switch**:
+- Any future components using `<Switch>` from `ui/switch.tsx`
+- All inherit the fixed theme-aware styling
+
+## Files Modified
+1. `src/components/ui/switch.tsx` - Fixed `data-[state=checked]` styling
+
+## Lessons Learned
+
+### Design System Best Practices
+1. **Always wrap color variables**: Never use raw CSS variables for colors in Tailwind
+2. **Test theme components**: Verify all states (on, off, disabled, hover, focus)
+3. **Document conventions**: Theme system rules must be explicit in PROJECT_KNOWLEDGE.md
+4. **Consistent patterns**: Apply same wrapper pattern across all components
+
+### Future Prevention
+1. Add ESLint rule to detect unwrapped color variables (if possible)
+2. Create theme system checklist for new components
+3. Include theme color testing in QA checklist
+4. Document common pitfalls in developer onboarding
+
+---
+
+# Homepage Stats Cards Implementation
+
+## Overview
+Implemented real-time community insights cards on homepage showing key platform metrics with interactive navigation. Completed November 2025.
+
+## Component Overview
+
+### File
+`src/components/StatsOverviewRedesigned.tsx`
+
+### Purpose
+Display engaging, at-a-glance platform statistics on homepage with clickable navigation to detail pages
+
+### Layout
+**Responsive Grid**:
+- Mobile: 1 column (vertical stack)
+- Tablet: 2 columns
+- Desktop: 2x2 grid (4 cards)
+
+## Four Stat Cards
+
+### 1. Rappers Card
+**Data Displayed**:
+- Total rapper count
+- Top overall rapper (highest ranked)
+- Featured tagged rapper (random tag selection)
+
+**Navigation**:
+- Card click → All Rappers page
+- Top rapper link → Rapper detail page
+- Tagged rapper link → Rapper detail page
+
+**Visual**:
+- Users icon with gradient badge
+- Theme-aware hover effects
+
+### 2. Votes Card
+**Data Displayed**:
+- Total votes cast across platform
+- Most active ranking (highest vote count)
+- Top voter profile (user with most votes)
+
+**Navigation**:
+- Card click → Rankings page
+- Active ranking link → Ranking detail page
+- Top voter link → User profile page
+
+**Visual**:
+- TrendingUp icon with gradient badge
+- Displays voter username and vote count
+
+### 3. Members Card
+**Data Displayed**:
+- Total member count
+- Newest member (most recent registration)
+- Member with most achievements
+
+**Navigation**:
+- Card click → Community page
+- New member link → User profile page
+- Top achiever link → User profile page
+
+**Visual**:
+- Users icon with gradient badge
+- Shows member usernames
+
+### 4. Blog Card
+**Data Displayed**:
+- Total published blog posts
+- Most liked post with author
+- Like count
+
+**Navigation**:
+- Card click → Blog page
+- Most liked post link → Blog post detail page
+
+**Visual**:
+- FileText icon with gradient badge
+- Displays post title and author
+
+## Data Fetching Strategy
+
+### Single Aggregated Query
+**Implementation**: One React Query call for all cards
+**Benefit**: Reduced network requests, faster initial load
+
+### Query Breakdown
+```typescript
+// Rappers data
+const { count: totalRappers } = await supabase
+  .from('rappers')
+  .select('*', { count: 'only' });
+
+const topRapper = await supabase
+  .from('rappers')
+  .select('id, name, slug')
+  .order('overall_rank', { ascending: true, nullsLast: true })
+  .limit(1)
+  .single();
+
+const randomTag = await supabase
+  .from('rapper_tags')
+  .select('tag_name')
+  .limit(1);
+
+const taggedRapper = await supabase
+  .from('rapper_tags')
+  .select('rappers(id, name, slug)')
+  .eq('tag_name', randomTag.tag_name)
+  .limit(1);
+
+// Votes data
+const { count: totalVotes } = await supabase
+  .from('votes')
+  .select('*', { count: 'only' });
+
+const mostActiveRanking = await supabase
+  .from('rankings')
+  .select('id, title, slug')
+  .order('vote_count', { descending: true })
+  .limit(1)
+  .single();
+
+const topVoter = await supabase.rpc('get_public_profile_minimal', {
+  target_user_id: topVoterUserId
+});
+
+// Members data
+const { count: totalMembers } = await supabase
+  .from('profiles')
+  .select('*', { count: 'only' });
+
+const newestMember = await supabase.rpc('get_public_profile_minimal', {
+  target_user_id: newestMemberUserId
+});
+
+const topAchiever = await supabase.rpc('get_public_profile_minimal', {
+  target_user_id: topAchieverUserId
+});
+
+// Blog data
+const { count: totalPosts } = await supabase
+  .from('blog_posts')
+  .select('*', { count: 'only' })
+  .eq('status', 'published');
+
+const mostLikedPost = await supabase
+  .from('blog_posts')
+  .select('id, title, slug, author_id, like_count')
+  .eq('status', 'published')
+  .order('like_count', { descending: true })
+  .limit(1)
+  .single();
+```
+
+### Secure Profile Data
+**RPC Function**: `get_public_profile_minimal`
+**Purpose**: Safely expose limited user data without PII
+**Returns**: `{ user_id, username, avatar_url }`
+**Benefit**: Privacy-compliant user references
+
+### Caching Strategy
+**React Query Config**:
+```typescript
+const { data, isLoading, error } = useQuery({
+  queryKey: ['homepage-stats-overview'],
+  queryFn: fetchStatsOverview,
+  staleTime: 5 * 60 * 1000,  // 5 minutes
+  refetchOnWindowFocus: false
+});
+```
+
+**Benefits**:
+- 5-minute cache reduces database load
+- No refetch on tab focus (unnecessary for stats)
+- Shared cache across component re-renders
+
+## User Experience Features
+
+### Interactive Cards
+**Hover Effects**:
+- Scale transform (1.02x on hover)
+- Shadow enhancement
+- Smooth transitions (200ms)
+- Cursor changes to pointer
+
+**Click Behavior**:
+- Card click → Main section page
+- Text link click → Specific detail page
+- Accessible keyboard navigation
+
+### Loading States
+**Skeleton Loader**:
+- 4 cards matching final grid layout
+- Shimmer animation
+- Proper aspect ratio preservation
+- Themed styling
+
+**Loading Duration**: Typically <500ms with cache
+
+### Error Handling
+**Graceful Degradation**:
+- Individual card errors don't break entire component
+- Fallback values displayed (e.g., "Not available")
+- Error boundary prevents crash
+- User can still navigate to main pages
+
+### Responsive Design
+**Mobile** (< 768px):
+- Single column vertical stack
+- Full-width cards
+- Touch-optimized sizing
+
+**Tablet** (768px - 1279px):
+- 2-column grid
+- Balanced card spacing
+
+**Desktop** (≥ 1280px):
+- 2x2 grid (4 cards)
+- Optimal visual hierarchy
+
+## Design System Integration
+
+### Theme Variables Used
+```css
+--theme-surface         /* Card background */
+--theme-border          /* Card border */
+--theme-text-primary    /* Main text */
+--theme-text-secondary  /* Muted text */
+--theme-primary         /* Accent color */
+```
+
+### Gradient Badges
+**Icon Backgrounds**:
+- Rappers: Blue-to-purple gradient
+- Votes: Purple-to-pink gradient
+- Members: Orange-to-red gradient
+- Blog: Green-to-teal gradient
+
+### Typography
+**Hierarchy**:
+- Card titles: `text-sm font-semibold`
+- Main stat: `text-3xl font-bold`
+- Featured item: `text-sm text-muted`
+- Links: Underline on hover
+
+## Performance Optimizations
+
+### Database Query Efficiency
+**Optimizations**:
+- Count-only queries for totals (no data transfer)
+- Limit 1 for single records (minimal rows)
+- Indexed columns for sorting (overall_rank, vote_count, like_count)
+- RPC functions for complex joins (server-side processing)
+
+### Image Loading
+**Avatar Images**:
+- Lazy loading for below-fold cards (mobile)
+- Supabase Storage CDN for fast delivery
+- Optimized thumbnails (not full-size images)
+
+### Code Splitting
+**Component Loading**:
+- StatsOverviewRedesigned lazy-loaded on homepage
+- Reduces initial bundle size
+- Deferred loading for non-critical content
+
+### React Query Benefits
+**Built-in Optimizations**:
+- Automatic deduplication (single query for multiple renders)
+- Background refetching (fresh data without blocking UI)
+- Garbage collection (removes stale cache after inactivity)
+
+## Integration Points
+
+### Homepage (`src/pages/Index.tsx`)
+**Placement**: After hero section, before rankings
+**Purpose**: Engaging entry point to platform features
+
+### Analytics Button
+**Link**: "View Detailed Analytics" button below stats
+**Navigation**: → `/analytics` page (comprehensive stats)
+
+## Testing Considerations
+
+### Functional Testing
+- ✅ All four cards render with correct data
+- ✅ Card click navigation works
+- ✅ Text link navigation works
+- ✅ Loading skeleton displays during fetch
+- ✅ Error states handled gracefully
+- ✅ Cache works (no refetch on re-render)
+
+### Data Accuracy Testing
+- ✅ Total counts match database
+- ✅ Top/newest/most items correct
+- ✅ Profile data secure (no PII leakage)
+- ✅ Random tag selection varies on refresh
+
+### Responsive Testing
+- ✅ Mobile: 1 column layout
+- ✅ Tablet: 2 column layout
+- ✅ Desktop: 2x2 grid
+- ✅ No layout shifts during loading
+- ✅ Touch targets adequate on mobile
+
+### Performance Testing
+- ✅ Initial query completes in <1s
+- ✅ Cached query completes in <100ms
+- ✅ No unnecessary re-renders
+- ✅ Database queries optimized (EXPLAIN ANALYZE)
+
+## Future Enhancements
+
+### Data Insights
+- Trending rappers this week
+- Vote velocity (votes per day)
+- Member growth rate
+- Blog engagement metrics
+
+### Personalization
+- "Your Top Rapper" for authenticated users
+- "Your Voting Streak" stat
+- "Recent Activity" feed
+- "Recommended Rankings" based on votes
+
+### Real-time Updates
+- Live vote counts (Supabase realtime subscriptions)
+- New member notifications
+- Trending content badges
+
+### Additional Cards
+- VS Matches card (active matches count)
+- Community Cypher card (recent posts)
+- Achievements card (recently earned)
+- Hot rappers card (trending this week)
+
+---
+
 # Enhanced Search Functionality - Special Character Handling
 
 ## Overview

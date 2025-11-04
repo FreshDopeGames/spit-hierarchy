@@ -62,6 +62,7 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Rapper Performance**: Vote counts, ratings, and trending data
 - **Global Stats**: Platform-wide statistics and insights
 - **Achievement Tracking**: Progress monitoring for achievements
+- **Homepage Stats Overview**: Real-time stats cards displaying rappers, votes, members, and blog post counts with featured items (top rapper, most active ranking, newest member, most liked post)
 
 ### 7. Administrative Tools
 - **Admin Dashboard**: Comprehensive management interface
@@ -96,6 +97,30 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Performance Optimization**: Caching, lazy loading, optimized queries, materialized views, LCP-targeted optimizations
 - **Enhanced Search**: PostgreSQL unaccent extension with accent/symbol normalization and relevance scoring
 
+### 10. Privacy & Cookie Compliance (GDPR/CCPA)
+- **Cookie Consent Banner**: Granular consent controls with Accept All, Reject All, and Customize options
+- **Consent Categories**: Necessary (always active), Functional, Analytics, and Advertising cookies
+- **Persistent Cookie Settings**: Floating settings button and footer links for consent withdrawal
+- **Consent Audit Logging**: Complete audit trail with user actions, timestamps, session tracking, and IP addresses
+- **Region Detection**: Timezone-based detection (EU/CA/OTHER) with planned IP geolocation
+- **Do Not Track Support**: Automatic consent rejection for users with DNT enabled
+- **Cookie Policy Page**: Comprehensive `/cookies` route with category breakdowns and data protection info
+- **Enhanced Privacy Policy**: GDPR/CCPA rights documentation, data handling procedures, contact info
+- **12-Month Consent Expiration**: Automatic re-consent required after 365 days
+- **Version Tracking**: Consent versioning system for future policy updates
+- **Ad Integration**: Conditional Google AdSense loading based on advertising consent
+- **Analytics Integration**: Consent-aware analytics tracking (Phase 2: Google Analytics)
+
+### 11. Homepage Stats Overview
+- **Real-time Stats Cards**: 2x2 responsive grid displaying key platform metrics
+- **Rappers Card**: Total count, top overall rapper, randomly featured tagged rapper
+- **Votes Card**: Total votes cast, most active ranking, top voter profile
+- **Members Card**: Total member count, newest member, member with most achievements
+- **Blog Card**: Total published posts, most liked post with author
+- **Interactive Navigation**: Clickable cards linking to detail pages (rapper, ranking, user, blog post)
+- **Efficient Data Fetching**: Single aggregated query with 5-minute cache, minimal data transfer
+- **Loading States**: Skeleton with 4 cards matching final grid layout
+
 ## Technical Architecture
 
 ### Frontend Stack
@@ -107,6 +132,7 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **React Router**: Client-side routing with protected routes
 - **React Query**: Data fetching, caching, and synchronization
 - **React Hook Form**: Form management with validation
+- **Cookie Consent Management**: Context-based consent state with localStorage persistence and database audit logging
 
 ### Backend & Database
 - **Supabase**: Backend-as-a-Service providing:
@@ -142,6 +168,7 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Comments**: Threaded discussion system
 - **Achievements**: Gamification elements
 - **Blog Posts**: Content management entities
+- **Consent Logs**: Audit trail for GDPR compliance (action, consent_state, region, session_id, ip_address, user_agent, user_id)
 
 ### Key Relationships
 - Users → Member Stats (1:1)
@@ -169,6 +196,8 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - Rate limiting on voting and API calls
 - Audit logging for sensitive operations
 - Secure file upload validation
+- Cookie consent enforcement for analytics and advertising with category-based permission checking
+- Consent audit logging for GDPR Article 7.1 compliance (12-month retention with automatic re-consent)
 
 ## User Flows
 
@@ -208,6 +237,15 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 3. Comment and engage with community across content types
 4. Build and share Top 5 lists with searchable rapper selection
 5. Post rap verses in Community Cypher
+
+### Privacy & Cookie Management Journey
+1. Initial visit triggers cookie banner (if no stored consent)
+2. User can Accept All, Reject All, or Customize cookie preferences
+3. Granular controls for Functional, Analytics, and Advertising cookies
+4. Preferences stored with 12-month expiration
+5. Floating cookie settings button enables consent withdrawal anytime
+6. Cookie Policy and Privacy Policy accessible from footer
+7. All consent actions logged to database for GDPR audit compliance
 
 ## Performance Optimizations
 - **LCP-Targeted Optimizations**: Resource hints (preconnect, dns-prefetch) for Supabase storage, critical image preloading with fetchPriority="high", priority prop system for above-the-fold ranking cards (target: <2.5s LCP)
