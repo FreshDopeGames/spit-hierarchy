@@ -279,7 +279,7 @@ const StatsOverviewRedesigned = () => {
             </h3>
           </div>
 
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6">
+          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6 text-center">
             {stats?.rappers.total || 0}
           </div>
 
@@ -291,23 +291,23 @@ const StatsOverviewRedesigned = () => {
                     <img
                       src={stats.rappers.topOverall.image_url}
                       alt={stats.rappers.topOverall.name}
-                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40"
+                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40">
+                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
                       <Music2 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
                     </div>
                   )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors">
+                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
                     {stats.rappers.topOverall.name}
                   </p>
-                  <div className="flex items-center gap-1 mt-1">
+                  <div className="flex items-center gap-1 mt-1 justify-center">
                     <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
                     <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
                       {stats.rappers.topOverall.average_rating.toFixed(1)}
                     </span>
                   </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1">Top Overall</p>
+                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Top Overall</p>
                 </div>
               </Link>
             )}
@@ -319,23 +319,23 @@ const StatsOverviewRedesigned = () => {
                     <img
                       src={stats.rappers.topTagged.image_url}
                       alt={stats.rappers.topTagged.name}
-                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40"
+                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
                   ) : (
-                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40">
+                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
                       <Music2 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
                     </div>
                   )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors">
+                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
                     {stats.rappers.topTagged.name}
                   </p>
-                  <div className="flex items-center gap-1 mt-1">
+                  <div className="flex items-center gap-1 mt-1 justify-center">
                     <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
                     <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
                       {stats.rappers.topTagged.average_rating.toFixed(1)}
                     </span>
                   </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 truncate">
+                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 truncate text-center">
                     Top {stats.rappers.topTagged.tag_name}
                   </p>
                 </div>
@@ -417,7 +417,7 @@ const StatsOverviewRedesigned = () => {
             </h3>
           </div>
 
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6">
+          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6 text-center">
             {(stats?.members.total || 0).toLocaleString()}
           </div>
 
