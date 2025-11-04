@@ -153,29 +153,6 @@ const StatsOverviewRedesigned = () => {
         .limit(1)
         .maybeSingle();
 
-      const { data: mostBars } = await supabase
-        .from("member_stats")
-        .select("id, total_upvotes")
-        .gt("total_upvotes", 0)
-        .order("total_upvotes", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      let mostBarsProfile: MemberData | null = null;
-      if (mostBars) {
-        const { data: barsData } = await supabase
-          .rpc("get_public_profile_minimal", {
-            profile_user_id: mostBars.id,
-          });
-        if (barsData?.[0]) {
-          mostBarsProfile = {
-            id: mostBars.id,
-            username: barsData[0].username,
-            avatar_url: barsData[0].avatar_url,
-            stat_value: mostBars.total_upvotes,
-          };
-        }
-      }
 
       // Query to get user with most achievements
       const { data: achievementCounts } = await supabase
@@ -242,7 +219,6 @@ const StatsOverviewRedesigned = () => {
         members: {
           total: totalMembersCount || 0,
           newest: newestMemberData,
-          mostBars: mostBarsProfile,
           mostAchievements: mostAchievementsProfile,
         },
         blog: {
@@ -456,7 +432,7 @@ const StatsOverviewRedesigned = () => {
             {(stats?.members.total || 0).toLocaleString()}
           </div>
 
-          <div className="grid grid-cols-3 gap-3 mt-auto">
+          <div className="grid grid-cols-2 gap-4 mt-auto">
             {stats?.members.newest && (
               <Link to={`/user/${stats.members.newest.username}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
@@ -477,34 +453,6 @@ const StatsOverviewRedesigned = () => {
                   <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">
                     Joined {getTimeSince(stats.members.newest.created_at)}
                   </p>
-                </div>
-              </Link>
-            )}
-
-            {stats?.members.mostBars && (
-              <Link to={`/user/${stats.members.mostBars.username}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {getAvatarUrl(stats.members.mostBars.avatar_url) ? (
-                    <img
-                      src={getAvatarUrl(stats.members.mostBars.avatar_url)!}
-                      alt={stats.members.mostBars.username}
-                      className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
-                      <Users className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
-                    </div>
-                  )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate text-center group-hover:text-[hsl(var(--theme-primary))] transition-colors">
-                    {stats.members.mostBars.username}
-                  </p>
-                  <div className="flex items-center justify-center gap-1 mt-1">
-                    <Flame className="w-3 h-3 text-[hsl(var(--theme-primary))]" />
-                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {stats.members.mostBars.stat_value}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Most Bars</p>
                 </div>
               </Link>
             )}
