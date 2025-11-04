@@ -25,10 +25,12 @@ import VSMatches from "./pages/VSMatches";
 import VSMatchDetail from "./pages/VSMatchDetail";
 import Admin from "./pages/Admin";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
+import CookiePolicy from "./pages/CookiePolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
+import { CookieSettingsLink } from "@/components/CookieSettingsLink";
 
 function App() {
   return (
@@ -37,11 +39,13 @@ function App() {
         <ScrollToTop />
         <EmailConfirmationHandler />
         <CookieConsentBanner />
+        <CookieSettingsLink />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
           <Route path="/about" element={<About />} />
           <Route path="/privacy" element={<PrivacyPolicy />} />
+          <Route path="/cookies" element={<CookiePolicy />} />
           <Route path="/terms" element={<TermsOfUse />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />

@@ -142,6 +142,15 @@ const Footer = () => {
               </li>
               <li>
                 <Link
+                  to="/cookies"
+                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  Cookie Policy
+                </Link>
+              </li>
+              <li>
+                <Link
                   to="/terms"
                   className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
                   onClick={() => window.scrollTo(0, 0)}

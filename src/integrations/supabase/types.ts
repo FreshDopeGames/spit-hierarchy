@@ -514,6 +514,42 @@ export type Database = {
           },
         ]
       }
+      consent_logs: {
+        Row: {
+          action: string
+          consent_state: Json
+          id: string
+          ip_address: string | null
+          region: string
+          session_id: string
+          timestamp: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          action: string
+          consent_state: Json
+          id?: string
+          ip_address?: string | null
+          region: string
+          session_id: string
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          action?: string
+          consent_state?: Json
+          id?: string
+          ip_address?: string | null
+          region?: string
+          session_id?: string
+          timestamp?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       content_moderation_flags: {
         Row: {
           content_id: string
