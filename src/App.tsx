@@ -28,6 +28,7 @@ import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
+import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
       <BrowserRouter>
         <ScrollToTop />
         <EmailConfirmationHandler />
+        <CookieConsentBanner />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />

@@ -12,6 +12,7 @@ import { AchievementProvider } from "@/components/achievements/AchievementProvid
 import ErrorBoundary from "@/components/ErrorBoundary";
 import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 import ActivityToastProvider from "@/components/ActivityToastProvider";
+import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
@@ -45,17 +46,19 @@ createRoot(document.getElementById("root")!).render(
         <EnhancedThemeProvider>
           <SecureAuthProvider>
             <SecurityProvider>
-              <TooltipProvider>
-                <AchievementProvider>
-                  <ErrorBoundary>
-                    <OnboardingProvider>
-                      <ActivityToastProvider />
-                      <App />
-                      <Toaster />
-                    </OnboardingProvider>
-                  </ErrorBoundary>
-                </AchievementProvider>
-              </TooltipProvider>
+              <CookieConsentProvider>
+                <TooltipProvider>
+                  <AchievementProvider>
+                    <ErrorBoundary>
+                      <OnboardingProvider>
+                        <ActivityToastProvider />
+                        <App />
+                        <Toaster />
+                      </OnboardingProvider>
+                    </ErrorBoundary>
+                  </AchievementProvider>
+                </TooltipProvider>
+              </CookieConsentProvider>
             </SecurityProvider>
           </SecureAuthProvider>
         </EnhancedThemeProvider>
