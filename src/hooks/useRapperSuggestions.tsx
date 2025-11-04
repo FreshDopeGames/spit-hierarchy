@@ -77,6 +77,7 @@ export const useSuggestionSubmit = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user-suggestions"] });
+      queryClient.invalidateQueries({ queryKey: ["admin-suggestions"] });
       toast.success("Suggestion submitted successfully!");
     },
     onError: (error: Error) => {
