@@ -177,6 +177,40 @@ const StatsOverviewRedesigned = () => {
         }
       }
 
+      // Query to get user with most achievements
+      const { data: achievementCounts } = await supabase
+        .from('user_achievements')
+        .select('user_id');
+
+      let mostAchievementsProfile: MemberData | null = null;
+      if (achievementCounts && achievementCounts.length > 0) {
+        // Count achievements per user
+        const counts = achievementCounts.reduce((acc: Record<string, number>, curr) => {
+          acc[curr.user_id] = (acc[curr.user_id] || 0) + 1;
+          return acc;
+        }, {});
+        
+        // Find user with most achievements
+        const [topUserId, topCount] = Object.entries(counts)
+          .sort(([, a], [, b]) => (b as number) - (a as number))[0] || [null, 0];
+        
+        if (topUserId) {
+          const { data: profileData } = await supabase
+            .rpc("get_public_profile_minimal", {
+              profile_user_id: topUserId,
+            });
+          
+          if (profileData?.[0]) {
+            mostAchievementsProfile = {
+              id: topUserId,
+              username: profileData[0].username,
+              avatar_url: profileData[0].avatar_url,
+              stat_value: topCount as number,
+            };
+          }
+        }
+      }
+
       // Blog Section
       const { count: totalBlogPosts } = await supabase
         .from("blog_posts")
@@ -209,6 +243,7 @@ const StatsOverviewRedesigned = () => {
           total: totalMembersCount || 0,
           newest: newestMemberData,
           mostBars: mostBarsProfile,
+          mostAchievements: mostAchievementsProfile,
         },
         blog: {
           total: totalBlogPosts || 0,
@@ -421,7 +456,7 @@ const StatsOverviewRedesigned = () => {
             {(stats?.members.total || 0).toLocaleString()}
           </div>
 
-          <div className="grid grid-cols-2 gap-4 mt-auto">
+          <div className="grid grid-cols-3 gap-3 mt-auto">
             {stats?.members.newest && (
               <Link to={`/user/${stats.members.newest.username}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
@@ -470,6 +505,34 @@ const StatsOverviewRedesigned = () => {
                     </span>
                   </div>
                   <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Most Bars</p>
+                </div>
+              </Link>
+            )}
+
+            {stats?.members.mostAchievements && (
+              <Link to={`/user/${stats.members.mostAchievements.username}`} className="group">
+                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
+                  {getAvatarUrl(stats.members.mostAchievements.avatar_url) ? (
+                    <img
+                      src={getAvatarUrl(stats.members.mostAchievements.avatar_url)!}
+                      alt={stats.members.mostAchievements.username}
+                      className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
+                    />
+                  ) : (
+                    <div className="w-16 h-16 rounded-full bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
+                      <Trophy className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
+                    </div>
+                  )}
+                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate text-center group-hover:text-[hsl(var(--theme-primary))] transition-colors">
+                    {stats.members.mostAchievements.username}
+                  </p>
+                  <div className="flex items-center justify-center gap-1 mt-1">
+                    <Trophy className="w-3 h-3 text-[hsl(var(--theme-primary))]" />
+                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
+                      {stats.members.mostAchievements.stat_value}
+                    </span>
+                  </div>
+                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Most Achievements</p>
                 </div>
               </Link>
             )}
