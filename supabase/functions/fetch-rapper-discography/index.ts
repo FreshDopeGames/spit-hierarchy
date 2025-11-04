@@ -940,6 +940,7 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
       album:albums (
         id,
         title,
+        slug,
         release_date,
         release_type,
         cover_art_url,
