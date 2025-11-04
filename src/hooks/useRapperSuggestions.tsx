@@ -112,7 +112,7 @@ export const useAdminSuggestions = (status?: string) => {
   const { isAdmin, isLoading: securityLoading } = useSecurityContext();
 
   return useQuery({
-    queryKey: ["admin-suggestions", status, isAdmin],
+    queryKey: ["admin-suggestions", status, isAdmin, "v2"],
     queryFn: async () => {
       if (!user?.id) return [];
 
