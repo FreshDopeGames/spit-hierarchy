@@ -3082,6 +3082,15 @@ export type Database = {
           unique_voters: number
         }[]
       }
+      get_member_with_most_achievements: {
+        Args: never
+        Returns: {
+          achievement_count: number
+          avatar_url: string
+          id: string
+          username: string
+        }[]
+      }
       get_official_ranking_vote_count: {
         Args: { ranking_uuid: string }
         Returns: number

@@ -154,38 +154,19 @@ const StatsOverviewRedesigned = () => {
         .maybeSingle();
 
 
-      // Query to get user with most achievements
-      const { data: achievementCounts } = await supabase
-        .from('user_achievements')
-        .select('user_id');
+      // Query to get user with most achievements using secure RPC
+      const { data: topAchiever } = await supabase
+        .rpc('get_member_with_most_achievements')
+        .maybeSingle();
 
       let mostAchievementsProfile: MemberData | null = null;
-      if (achievementCounts && achievementCounts.length > 0) {
-        // Count achievements per user
-        const counts = achievementCounts.reduce((acc: Record<string, number>, curr) => {
-          acc[curr.user_id] = (acc[curr.user_id] || 0) + 1;
-          return acc;
-        }, {});
-        
-        // Find user with most achievements
-        const [topUserId, topCount] = Object.entries(counts)
-          .sort(([, a], [, b]) => (b as number) - (a as number))[0] || [null, 0];
-        
-        if (topUserId) {
-          const { data: profileData } = await supabase
-            .rpc("get_public_profile_minimal", {
-              profile_user_id: topUserId,
-            });
-          
-          if (profileData?.[0]) {
-            mostAchievementsProfile = {
-              id: topUserId,
-              username: profileData[0].username,
-              avatar_url: profileData[0].avatar_url,
-              stat_value: topCount as number,
-            };
-          }
-        }
+      if (topAchiever) {
+        mostAchievementsProfile = {
+          id: topAchiever.id,
+          username: topAchiever.username,
+          avatar_url: topAchiever.avatar_url,
+          stat_value: topAchiever.achievement_count,
+        };
       }
 
       // Blog Section
