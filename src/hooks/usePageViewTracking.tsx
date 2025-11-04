@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useCookieConsent } from '@/contexts/CookieConsentContext';
 
 interface UsePageViewTrackingOptions {
   contentType: 'rapper' | 'blog' | 'ranking' | 'vs_match';
@@ -19,10 +20,17 @@ export const usePageViewTracking = ({
   debounceMs = 1000 // Reduced from 3000ms for faster tracking
 }: UsePageViewTrackingOptions) => {
   const { user } = useAuth();
+  const { hasConsent } = useCookieConsent();
   const hasTrackedRef = useRef(false);
   const timeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
+    // Check for analytics consent
+    if (!hasConsent('analytics')) {
+      console.log('[PageView] Skipped - no analytics consent');
+      return;
+    }
+
     // Don't track if no content ID or already tracked
     if (!contentId || hasTrackedRef.current) {
       console.log('[PageView] Skipped - no contentId or already tracked', { contentId, hasTracked: hasTrackedRef.current });

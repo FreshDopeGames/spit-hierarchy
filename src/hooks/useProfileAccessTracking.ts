@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useCookieConsent } from '@/contexts/CookieConsentContext';
 
 interface UseProfileAccessTrackingOptions {
   accessedProfileId: string;
@@ -18,6 +19,7 @@ export const useProfileAccessTracking = ({
   dedupeKeyPrefix = 'profile_access'
 }: UseProfileAccessTrackingOptions) => {
   const { user } = useAuth();
+  const { hasConsent } = useCookieConsent();
   const hasTrackedRef = useRef(false);
 
   useEffect(() => {
@@ -28,6 +30,12 @@ export const useProfileAccessTracking = ({
       userId: user?.id,
       hasTracked: hasTrackedRef.current 
     });
+
+    // Check for analytics consent
+    if (!hasConsent('analytics')) {
+      console.log('[ProfileAccess] ⏸️  Skipped - no analytics consent');
+      return;
+    }
 
     // Only track for authenticated users
     if (!user) {

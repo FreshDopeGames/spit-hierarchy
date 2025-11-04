@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
+import { useCookieConsent } from '@/contexts/CookieConsentContext';
 
 type PageType = 'blog_visits' | 'about_visits' | 'analytics_visits' | 'vs_visits' | 'cypher_visits';
 
@@ -10,6 +11,7 @@ type PageType = 'blog_visits' | 'about_visits' | 'analytics_visits' | 'vs_visits
  */
 export const usePageVisitTracking = (pageType: PageType) => {
   const { user } = useAuth();
+  const { hasConsent } = useCookieConsent();
   const hasTrackedRef = useRef(false);
 
   useEffect(() => {
@@ -19,6 +21,12 @@ export const usePageVisitTracking = (pageType: PageType) => {
       userId: user?.id,
       hasTracked: hasTrackedRef.current 
     });
+
+    // Check for analytics consent
+    if (!hasConsent('analytics')) {
+      console.log('[PageVisit] ⏸️  Skipped - no analytics consent');
+      return;
+    }
 
     // Only track once per session for authenticated users
     if (!user) {

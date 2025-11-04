@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
+import { useCookieConsent } from '@/contexts/CookieConsentContext';
+import { loadAdSenseScript } from '@/utils/adScriptLoader';
 
 interface AdSenseUnitProps {
   adSlot: string;
@@ -26,8 +28,16 @@ const AdSenseUnit = ({
   const adRef = useRef<HTMLDivElement>(null);
   const [adLoaded, setAdLoaded] = useState(false);
   const [adFailed, setAdFailed] = useState(false);
+  const { hasConsent } = useCookieConsent();
 
   useEffect(() => {
+    // Check if user has consented to advertising cookies
+    if (!hasConsent('advertising')) {
+      console.log('[AdSense] Advertising cookies not consented - not loading ads');
+      setAdFailed(true);
+      onAdLoad?.(false);
+      return;
+    }
     let resizeObserver: ResizeObserver;
     let timeoutId: NodeJS.Timeout;
 
@@ -56,26 +66,34 @@ const AdSenseUnit = ({
       }
     };
 
-    try {
-      if (typeof window !== 'undefined' && window.adsbygoogle) {
-        (window.adsbygoogle = window.adsbygoogle || []).push({});
+    // Load AdSense script first, then initialize ad
+    const initializeAd = async () => {
+      try {
+        // Ensure AdSense script is loaded
+        await loadAdSenseScript();
         
-        // Observe size changes to detect when ad loads
-        if (adRef.current) {
-          resizeObserver = new ResizeObserver(() => {
-            checkAdLoad();
-          });
-          resizeObserver.observe(adRef.current);
-        }
+        if (typeof window !== 'undefined' && window.adsbygoogle) {
+          (window.adsbygoogle = window.adsbygoogle || []).push({});
+          
+          // Observe size changes to detect when ad loads
+          if (adRef.current) {
+            resizeObserver = new ResizeObserver(() => {
+              checkAdLoad();
+            });
+            resizeObserver.observe(adRef.current);
+          }
 
-        // Initial check after a brief delay
-        setTimeout(checkAdLoad, 100);
+          // Initial check after a brief delay
+          setTimeout(checkAdLoad, 100);
+        }
+      } catch (error) {
+        console.error('AdSense error:', error);
+        setAdFailed(true);
+        onAdLoad?.(false);
       }
-    } catch (error) {
-      console.error('AdSense error:', error);
-      setAdFailed(true);
-      onAdLoad?.(false);
-    }
+    };
+
+    initializeAd();
 
     return () => {
       if (resizeObserver) {

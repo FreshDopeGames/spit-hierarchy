@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useOnboardingStatus } from "@/hooks/useOnboardingStatus";
 import OnboardingModal from "./OnboardingModal";
 import { toast } from "sonner";
+import { useCookieConsent } from "@/contexts/CookieConsentContext";
 
 interface OnboardingContextType {
   isOnboardingOpen: boolean;
@@ -33,6 +34,7 @@ interface OnboardingProviderProps {
 export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
   const { user, loading: authLoading } = useAuth();
   const { needsOnboarding, isLoading: onboardingLoading } = useOnboardingStatus();
+  const { hasConsent } = useCookieConsent();
   const [isOnboardingOpen, setIsOnboardingOpen] = useState(false);
   const [hasShownOnboarding, setHasShownOnboarding] = useState(false);
 
@@ -48,8 +50,12 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
       return;
     }
 
-    // Check localStorage to see if user has dismissed onboarding recently
-    const dismissedAt = localStorage.getItem(`onboarding-dismissed-${user.id}`);
+    // Check localStorage to see if user has dismissed onboarding recently (only if functional cookies are allowed)
+    let dismissedAt: string | null = null;
+    if (hasConsent('functional')) {
+      dismissedAt = localStorage.getItem(`onboarding-dismissed-${user.id}`);
+    }
+    
     if (dismissedAt) {
       const dismissTime = new Date(dismissedAt);
       const now = new Date();
@@ -77,8 +83,8 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
   const closeOnboarding = () => {
     setIsOnboardingOpen(false);
     
-    // Store dismissal time in localStorage
-    if (user) {
+    // Store dismissal time in localStorage (only if functional cookies are allowed)
+    if (user && hasConsent('functional')) {
       localStorage.setItem(`onboarding-dismissed-${user.id}`, new Date().toISOString());
     }
   };
@@ -87,8 +93,8 @@ export const OnboardingProvider = ({ children }: OnboardingProviderProps) => {
     setIsOnboardingOpen(false);
     toast.success("Welcome to Spit Hierarchy! Your top 5 has been saved.");
     
-    // Clear dismissal time since they completed it
-    if (user) {
+    // Clear dismissal time since they completed it (only if functional cookies are allowed)
+    if (user && hasConsent('functional')) {
       localStorage.removeItem(`onboarding-dismissed-${user.id}`);
     }
   };
