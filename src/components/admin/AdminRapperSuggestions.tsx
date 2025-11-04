@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useAdminSuggestions, useUpdateSuggestionStatus } from "@/hooks/useRapperSuggestions";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigger, ThemedSelectValue } from "@/components/ui/themed-select";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
@@ -19,6 +20,7 @@ const AdminRapperSuggestions = () => {
   const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
   const [adminNotes, setAdminNotes] = useState("");
   
+  const { isAdmin } = useSecurityContext();
   const { data: suggestions = [], isLoading } = useAdminSuggestions(statusFilter);
   const updateStatus = useUpdateSuggestionStatus();
 
@@ -108,7 +110,7 @@ const AdminRapperSuggestions = () => {
               <TableHeader>
                 <TableRow>
                   <TableHead>Rapper Name</TableHead>
-                  <TableHead>Submitted By</TableHead>
+                  {isAdmin && <TableHead>Submitted By</TableHead>}
                   <TableHead>Status</TableHead>
                   <TableHead>Date</TableHead>
                   <TableHead className="text-right">Actions</TableHead>
@@ -120,17 +122,19 @@ const AdminRapperSuggestions = () => {
                     <TableCell className="font-medium">
                       {suggestion.rapper_name}
                     </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Avatar className="h-6 w-6">
-                          <AvatarImage src={suggestion.avatar_url} />
-                          <AvatarFallback>
-                            {suggestion.username?.[0]?.toUpperCase() || "?"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <span className="text-sm">{suggestion.username || "Unknown"}</span>
-                      </div>
-                    </TableCell>
+                    {isAdmin && (
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Avatar className="h-6 w-6">
+                            <AvatarImage src={suggestion.avatar_url} />
+                            <AvatarFallback>
+                              {suggestion.username?.[0]?.toUpperCase() || "?"}
+                            </AvatarFallback>
+                          </Avatar>
+                          <span className="text-sm">{suggestion.username || "Unknown"}</span>
+                        </div>
+                      </TableCell>
+                    )}
                     <TableCell>{getStatusBadge(suggestion.status)}</TableCell>
                     <TableCell className="text-sm text-[hsl(var(--theme-text-muted))]">
                       {formatDistanceToNow(new Date(suggestion.created_at), {

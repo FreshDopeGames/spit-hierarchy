@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "./useAuth";
+import { useSecurityContext } from "./useSecurityContext";
 import { toast } from "sonner";
 import type { RapperSuggestion, RapperSuggestionWithUser } from "@/types/rapperSuggestion";
 
@@ -107,6 +108,7 @@ export const useUserSuggestions = () => {
 
 export const useAdminSuggestions = (status?: string) => {
   const { user } = useAuth();
+  const { isAdmin } = useSecurityContext();
 
   return useQuery({
     queryKey: ["admin-suggestions", status],
@@ -125,7 +127,15 @@ export const useAdminSuggestions = (status?: string) => {
       const { data, error } = await query;
       if (error) throw error;
 
-      // Fetch user profiles for suggestions
+      // Only fetch user profiles if the current user is an admin
+      if (!isAdmin) {
+        return data.map(suggestion => ({
+          ...suggestion,
+          status: suggestion.status as 'pending' | 'approved' | 'rejected',
+        }));
+      }
+
+      // Fetch user profiles for admins
       const userIds = [...new Set(data.map(s => s.user_id))];
       
       if (userIds.length === 0) return [];
