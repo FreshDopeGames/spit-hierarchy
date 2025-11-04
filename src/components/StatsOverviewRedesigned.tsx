@@ -275,7 +275,7 @@ const StatsOverviewRedesigned = () => {
 
           <div className="grid grid-cols-2 gap-4 mt-auto">
             {stats?.rappers.topOverall && (
-              <Link to={`/rappers/${stats.rappers.topOverall.slug}`} className="group">
+              <Link to={`/rapper/${stats.rappers.topOverall.slug}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   {stats.rappers.topOverall.image_url ? (
                     <img
@@ -303,7 +303,7 @@ const StatsOverviewRedesigned = () => {
             )}
 
             {stats?.rappers.topTagged && (
-              <Link to={`/rappers/${stats.rappers.topTagged.slug}`} className="group">
+              <Link to={`/rapper/${stats.rappers.topTagged.slug}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   {stats.rappers.topTagged.image_url ? (
                     <img
@@ -367,7 +367,7 @@ const StatsOverviewRedesigned = () => {
             )}
 
             {stats?.votes.topVoter && (
-              <Link to={`/profile/${stats.votes.topVoter.username}`} className="block group">
+              <Link to={`/user/${stats.votes.topVoter.username}`} className="block group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   <div className="flex items-center gap-3">
                     {stats.votes.topVoter.avatar_url ? (
@@ -413,7 +413,7 @@ const StatsOverviewRedesigned = () => {
 
           <div className="grid grid-cols-2 gap-4 mt-auto">
             {stats?.members.newest && (
-              <Link to={`/profile/${stats.members.newest.username}`} className="group">
+              <Link to={`/user/${stats.members.newest.username}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   {stats.members.newest.avatar_url ? (
                     <img
@@ -437,7 +437,7 @@ const StatsOverviewRedesigned = () => {
             )}
 
             {stats?.members.mostBars && (
-              <Link to={`/profile/${stats.members.mostBars.username}`} className="group">
+              <Link to={`/user/${stats.members.mostBars.username}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   {stats.members.mostBars.avatar_url ? (
                     <img
