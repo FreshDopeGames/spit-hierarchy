@@ -485,13 +485,29 @@ serve(async (req) => {
         rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels+artist-credits&fmt=json`);
         await delay(120);
         
-        // Verify artist-credit includes this rapper (prevents tribute albums and misattributions)
+        // Verify artist-credit includes this rapper or any of their aliases (prevents tribute albums)
         const artistCredits = rgDetails['artist-credit'] || [];
         const creditIds = artistCredits.map((c: any) => c.artist?.id).filter(Boolean);
+        const creditNames = artistCredits.map((c: any) => c.artist?.name).filter(Boolean);
         
-        if (!creditIds.includes(musicbrainzId)) {
-          console.log(`⚠ Skipping "${rg.title}" - artist-credit does not include rapper (RG: ${rg.id})`);
+        // Check if the primary MusicBrainz ID matches
+        const primaryMatch = creditIds.includes(musicbrainzId);
+        
+        // Check if any rapper alias matches the artist-credit names (for name changes like Makaveli)
+        const rapperAliases = rapper.aliases || [];
+        const aliasMatch = rapperAliases.some((alias: string) => 
+          creditNames.some((creditName: string) => 
+            creditName.toLowerCase() === alias.toLowerCase()
+          )
+        );
+        
+        if (!primaryMatch && !aliasMatch) {
+          console.log(`⚠ Skipping "${rg.title}" - artist-credit does not include rapper or aliases (RG: ${rg.id})`);
           continue;
+        }
+        
+        if (aliasMatch && !primaryMatch) {
+          console.log(`✓ Including "${rg.title}" via alias match`);
         }
         
         // More lenient release status check
@@ -542,8 +558,10 @@ serve(async (req) => {
       }
 
       // Exclude non-studio releases and unofficial types
+      // For posthumous releases, be more lenient with "Compilation" as they often contain unreleased material
+      const isPosthumous = rapper.death_year && parseInt(rg['first-release-date']) > rapper.death_year;
+      
       const excludedSecondaryTypes = [
-        'Compilation',  // Greatest hits, collections
         'Live',         // Concert recordings
         'Remix',        // Remix albums
         'Soundtrack',   // Movie/game soundtracks
@@ -556,6 +574,11 @@ serve(async (req) => {
         'Karaoke',      // Karaoke versions
         'Anthology'     // Anthology collections
       ];
+      
+      // Only exclude Compilation for non-posthumous releases
+      if (!isPosthumous) {
+        excludedSecondaryTypes.push('Compilation');
+      }
       
       const hasExcludedType = secondary.some(type => excludedSecondaryTypes.includes(type));
       if (hasExcludedType) {
