@@ -355,7 +355,7 @@ const StatsOverviewRedesigned = () => {
             </h3>
           </div>
 
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6">
+          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6 text-center">
             {(stats?.votes.total || 0).toLocaleString()}
           </div>
 
@@ -487,8 +487,13 @@ const StatsOverviewRedesigned = () => {
             </h3>
           </div>
 
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6">
-            {stats?.blog.total || 0}
+          <div className="text-center mb-6">
+            <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              {stats?.blog.total || 0}
+            </div>
+            <div className="text-sm text-[hsl(var(--theme-textMuted))] mt-2 font-medium">
+              Blog Posts
+            </div>
           </div>
 
           {stats?.blog.mostLiked && (
