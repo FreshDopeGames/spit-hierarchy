@@ -3093,6 +3093,10 @@ export type Database = {
         Args: { album_id: string; album_title: string }
         Returns: string
       }
+      get_album_by_slugs: {
+        Args: { p_album_slug: string; p_rapper_slug: string }
+        Returns: Json
+      }
       get_album_with_tracks: {
         Args: { album_uuid: string }
         Returns: {

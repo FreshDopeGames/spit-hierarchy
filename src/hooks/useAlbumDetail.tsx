@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { retry } from "@/utils/errorHandler";
 
 interface AlbumTrack {
   id: string;
@@ -24,73 +25,60 @@ interface AlbumDetail {
   rapper_slug?: string;
 }
 
+const QUERY_TIMEOUT = 10000; // 10 seconds
+
 export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
   return useQuery({
     queryKey: ["album-detail", rapperSlug, albumSlug],
     queryFn: async () => {
-      // First, get the rapper by slug
-      const { data: rapper, error: rapperError } = await supabase
-        .from("rappers")
-        .select("id, name, slug")
-        .eq("slug", rapperSlug)
-        .single();
+      // Wrap the query with timeout and retry logic
+      return retry(async () => {
+        const timeoutPromise = new Promise((_, reject) =>
+          setTimeout(() => reject(new Error("Query timeout after 10 seconds")), QUERY_TIMEOUT)
+        );
 
-      if (rapperError || !rapper) {
-        throw new Error("Rapper not found");
-      }
+        const queryPromise = supabase.rpc("get_album_by_slugs", {
+          p_rapper_slug: rapperSlug,
+          p_album_slug: albumSlug,
+        });
 
-      // Get the album by slug and rapper
-      const { data: album, error: albumError } = await supabase
-        .from("albums")
-        .select("id")
-        .eq("slug", albumSlug)
-        .single();
+        const { data, error } = await Promise.race([
+          queryPromise,
+          timeoutPromise,
+        ]) as any;
 
-      if (albumError || !album) {
-        throw new Error("Album not found");
-      }
+        if (error) {
+          throw error;
+        }
 
-      // Check if this album belongs to this rapper
-      const { data: rapperAlbum, error: rapperAlbumError } = await supabase
-        .from("rapper_albums")
-        .select("*")
-        .eq("rapper_id", rapper.id)
-        .eq("album_id", album.id)
-        .single();
+        if (!data) {
+          throw new Error("No data returned from server");
+        }
 
-      if (rapperAlbumError || !rapperAlbum) {
-        throw new Error("Album not found for this rapper");
-      }
+        // Check if the RPC function returned an error
+        if (data.success === false) {
+          throw new Error(data.error || "Failed to load album details");
+        }
 
-      // Get full album details with tracks
-      const { data: albumDetails, error: detailsError } = await supabase
-        .rpc("get_album_with_tracks", { album_uuid: album.id });
+        const album = data.album;
 
-      if (detailsError) {
-        throw detailsError;
-      }
-
-      if (!albumDetails || albumDetails.length === 0) {
-        throw new Error("Album details not found");
-      }
-
-      const result = albumDetails[0];
-
-      return {
-        album_id: result.album_id,
-        album_title: result.album_title,
-        album_slug: result.album_slug,
-        release_date: result.release_date,
-        release_type: result.release_type,
-        cover_art_url: result.cover_art_url,
-        track_count: result.track_count,
-        tracks: (Array.isArray(result.tracks) ? result.tracks : []) as unknown as AlbumTrack[],
-        rapper_id: rapper.id,
-        rapper_name: rapper.name,
-        rapper_slug: rapper.slug,
-      };
+        return {
+          album_id: album.album_id,
+          album_title: album.album_title,
+          album_slug: album.album_slug,
+          release_date: album.release_date,
+          release_type: album.release_type,
+          cover_art_url: album.cover_art_url,
+          track_count: album.track_count,
+          tracks: (Array.isArray(album.tracks) ? album.tracks : []) as unknown as AlbumTrack[],
+          rapper_id: data.rapper_id,
+          rapper_name: data.rapper_name,
+          rapper_slug: data.rapper_slug,
+        };
+      }, 3, 1000); // 3 retries with 1 second initial delay
     },
     staleTime: 1000 * 60 * 5, // 5 minutes
     gcTime: 1000 * 60 * 10, // 10 minutes
+    enabled: !!rapperSlug && !!albumSlug, // Only run if both slugs are provided
   });
 };
