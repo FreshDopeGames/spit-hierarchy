@@ -40,6 +40,16 @@ interface BlogPostData {
 }
 
 const StatsOverviewRedesigned = () => {
+  const getAvatarUrl = (avatarUrl: string | null | undefined) => {
+    if (!avatarUrl) return null;
+    
+    // If it's already a full URL, return as-is
+    if (avatarUrl.startsWith('http')) return avatarUrl;
+    
+    // Otherwise, construct the Supabase Storage URL with thumb size
+    return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${avatarUrl}/thumb.jpg`;
+  };
+
   const { data: stats, isLoading } = useQuery({
     queryKey: ["homepage-stats-redesigned"],
     queryFn: async () => {
@@ -370,9 +380,9 @@ const StatsOverviewRedesigned = () => {
               <Link to={`/user/${stats.votes.topVoter.username}`} className="block group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   <div className="flex items-center gap-3">
-                    {stats.votes.topVoter.avatar_url ? (
+                    {getAvatarUrl(stats.votes.topVoter.avatar_url) ? (
                       <img
-                        src={stats.votes.topVoter.avatar_url}
+                        src={getAvatarUrl(stats.votes.topVoter.avatar_url)!}
                         alt={stats.votes.topVoter.username}
                         className="w-12 h-12 rounded-full object-cover border-2 border-[hsl(var(--theme-primary))]/40"
                       />
@@ -415,9 +425,9 @@ const StatsOverviewRedesigned = () => {
             {stats?.members.newest && (
               <Link to={`/user/${stats.members.newest.username}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {stats.members.newest.avatar_url ? (
+                  {getAvatarUrl(stats.members.newest.avatar_url) ? (
                     <img
-                      src={stats.members.newest.avatar_url}
+                      src={getAvatarUrl(stats.members.newest.avatar_url)!}
                       alt={stats.members.newest.username}
                       className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
@@ -439,9 +449,9 @@ const StatsOverviewRedesigned = () => {
             {stats?.members.mostBars && (
               <Link to={`/user/${stats.members.mostBars.username}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {stats.members.mostBars.avatar_url ? (
+                  {getAvatarUrl(stats.members.mostBars.avatar_url) ? (
                     <img
-                      src={stats.members.mostBars.avatar_url}
+                      src={getAvatarUrl(stats.members.mostBars.avatar_url)!}
                       alt={stats.members.mostBars.username}
                       className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
