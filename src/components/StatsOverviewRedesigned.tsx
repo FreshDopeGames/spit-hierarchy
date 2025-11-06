@@ -58,13 +58,17 @@ const StatsOverviewRedesigned = () => {
         .from("rappers")
         .select("*", { count: "exact", head: true });
 
-      const { data: topRapper } = await supabase
+      const { data: topRappers } = await supabase
         .from("rappers")
         .select("id, name, slug, average_rating, image_url")
         .gt("total_votes", 10)
         .order("average_rating", { ascending: false })
-        .limit(1)
-        .maybeSingle();
+        .limit(5);
+
+      // Randomly select one from top 5
+      const topRapper = topRappers && topRappers.length > 0
+        ? topRappers[Math.floor(Math.random() * topRappers.length)]
+        : null;
 
       // Get random tag
       const { data: allTags } = await supabase
@@ -85,11 +89,14 @@ const StatsOverviewRedesigned = () => {
         const validRappers = taggedRappers
           ?.map(item => item.rappers)
           .filter((r) => r !== null && (r.total_votes ?? 0) > 5)
-          .sort((a, b) => (b?.average_rating ?? 0) - (a?.average_rating ?? 0));
+          .sort((a, b) => (b?.average_rating ?? 0) - (a?.average_rating ?? 0))
+          .slice(0, 5); // Take only top 5
 
         if (validRappers && validRappers.length > 0) {
+          // Randomly select one from top 5
+          const randomIndex = Math.floor(Math.random() * validRappers.length);
           topTaggedRapper = {
-            ...validRappers[0],
+            ...validRappers[randomIndex],
             tag_name: randomTag.name,
             tag_color: randomTag.color,
           };
