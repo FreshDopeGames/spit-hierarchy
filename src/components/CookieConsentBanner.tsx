@@ -11,7 +11,7 @@ export const CookieConsentBanner = () => {
   const [isDismissed, setIsDismissed] = useState(false);
 
   // Don't show if consent already given or manually dismissed
-  if (isConsentGiven || isDismissed) {
+  if (isConsentGiven || isDismissed || isPreferencesOpen) {
     return null;
   }
 
