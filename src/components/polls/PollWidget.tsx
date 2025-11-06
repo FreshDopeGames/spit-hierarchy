@@ -11,13 +11,11 @@ import { usePollVoting } from "@/hooks/usePollVoting";
 import { usePollResults, useUserPollVotes } from "@/hooks/usePollResults";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
 import GuestCallToAction from "@/components/GuestCallToAction";
-
 interface PollOption {
   id: string;
   option_text: string;
   option_order: number;
 }
-
 interface Poll {
   id: string;
   title: string;
@@ -26,33 +24,39 @@ interface Poll {
   allow_write_in?: boolean;
   poll_options: PollOption[];
 }
-
 interface PollWidgetProps {
   poll: Poll;
   showResults?: boolean;
 }
-
-const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
-  const { user } = useSecureAuth();
+const PollWidget = ({
+  poll,
+  showResults = false
+}: PollWidgetProps) => {
+  const {
+    user
+  } = useSecureAuth();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
   const [writeInOption, setWriteInOption] = useState("");
-  
-  const { submitVote, isSubmitting } = usePollVoting();
-  const { data: results } = usePollResults(poll.id);
-  const { data: userVotes } = useUserPollVotes(poll.id);
-
+  const {
+    submitVote,
+    isSubmitting
+  } = usePollVoting();
+  const {
+    data: results
+  } = usePollResults(poll.id);
+  const {
+    data: userVotes
+  } = useUserPollVotes(poll.id);
   const userHasVoted = userVotes && userVotes.length > 0;
   const shouldShowResults = showResults || hasVoted || userHasVoted;
   const hasResults = results && results.results.length > 0 && results.totalVotes > 0;
-
   const handleSingleChoice = (optionId: string) => {
     setSelectedOptions([optionId]);
     if (optionId !== 'write-in') {
       setWriteInOption('');
     }
   };
-
   const handleMultipleChoice = (optionId: string, checked: boolean) => {
     if (checked) {
       setSelectedOptions(prev => [...prev, optionId]);
@@ -63,14 +67,11 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
       }
     }
   };
-
   const handleSubmit = async () => {
     if (selectedOptions.length === 0 && !writeInOption.trim()) return;
-    
     try {
       const finalOptionIds = selectedOptions.filter(id => id !== 'write-in');
       const finalWriteIn = selectedOptions.includes('write-in') ? writeInOption.trim() : undefined;
-      
       await submitVote({
         pollId: poll.id,
         optionIds: finalOptionIds,
@@ -81,25 +82,19 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
       // Error handled in the hook
     }
   };
-
   const sortedOptions = [...poll.poll_options].sort((a, b) => a.option_order - b.option_order);
-
-  return (
-    <ThemedCard variant="primary" className="border-black border-4">
+  return <ThemedCard variant="primary" className="border-black border-4">
       <ThemedCardHeader>
         <ThemedCardTitle className="text-2xl font-bold text-black">{poll.title}</ThemedCardTitle>
-        {poll.description && (
-          <ThemedCardDescription className="font-bold text-black">{poll.description}</ThemedCardDescription>
-        )}
+        {poll.description && <ThemedCardDescription className="font-bold text-black">{poll.description}</ThemedCardDescription>}
       </ThemedCardHeader>
       <ThemedCardContent>
-        {!user ? (
-          // Non-authenticated users
-          hasResults ? (
-            // Show results if available
-            <div className="space-y-4">
-              {results?.results.map((result) => (
-                <div key={result.optionId} className="space-y-2">
+        {!user ?
+      // Non-authenticated users
+      hasResults ?
+      // Show results if available
+      <div className="space-y-4">
+              {results?.results.map(result => <div key={result.optionId} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-bold text-black">{result.optionText}</span>
                     <span className="text-sm font-bold text-black">
@@ -107,152 +102,88 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                     </span>
                   </div>
                   <ThemedProgress value={result.percentage} className="h-2" />
-                </div>
-              ))}
+                </div>)}
               
               <p className="text-sm font-bold text-black text-center mt-4">
                 Total votes: {results?.totalVotes}
               </p>
-            </div>
-          ) : (
-            // No results available - show locked state
-            <div className="text-center py-8 space-y-4">
+            </div> :
+      // No results available - show locked state
+      <div className="text-center py-8 space-y-4">
               <Lock className="h-12 w-12 text-black mx-auto" />
               <h3 className="text-lg font-bold text-black">Members Only</h3>
               <p className="font-bold text-black">
                 Sign up to participate in this poll and see results
               </p>
               <GuestCallToAction />
-            </div>
-          )
-        ) : shouldShowResults ? (
-          // Authenticated users - show results
-          <div className="space-y-4">
-            {results?.results.map((result) => {
-              const isUserChoice = userVotes?.some(vote => vote.optionId === result.optionId);
-              
-              return (
-                <div key={result.optionId} className="space-y-2">
+            </div> : shouldShowResults ?
+      // Authenticated users - show results
+      <div className="space-y-4">
+            {results?.results.map(result => {
+          const isUserChoice = userVotes?.some(vote => vote.optionId === result.optionId);
+          return <div key={result.optionId} className="space-y-2">
                   <div className="flex justify-between items-center">
                     <span className={`text-sm font-bold flex items-center gap-2 text-black ${isUserChoice ? 'text-black' : ''}`}>
                       {result.optionText}
-                      {isUserChoice && (
-                        <span className="text-xs bg-[var(--theme-background)]/20 text-black px-2 py-1 rounded font-bold">
+                      {isUserChoice && <span className="text-xs bg-[var(--theme-background)]/20 text-black px-2 py-1 rounded font-bold">
                           Your choice
-                        </span>
-                      )}
+                        </span>}
                     </span>
                     <span className="text-sm font-bold text-black">
                       {result.voteCount} votes ({result.percentage}%)
                     </span>
                   </div>
                   <ThemedProgress value={result.percentage} className="h-2" />
-                </div>
-              );
-            })}
+                </div>;
+        })}
             
             <p className="text-sm font-bold text-black text-center mt-4">
               Total votes: {results?.totalVotes || 0}
             </p>
-          </div>
-        ) : (
-          // Authenticated users - voting interface
-          <div className="space-y-4">
-            {poll.type === 'single_choice' ? (
-              <RadioGroup value={selectedOptions[0] || ""} onValueChange={handleSingleChoice}>
-                {sortedOptions.map((option) => (
-                  <div key={option.id} className="flex items-center space-x-2">
+          </div> :
+      // Authenticated users - voting interface
+      <div className="space-y-4">
+            {poll.type === 'single_choice' ? <RadioGroup value={selectedOptions[0] || ""} onValueChange={handleSingleChoice}>
+                {sortedOptions.map(option => <div key={option.id} className="flex items-center space-x-2">
                     <RadioGroupItem value={option.id} id={option.id} />
                     <Label htmlFor={option.id} className="flex-1 font-bold text-black text-3xl leading-tight">
                       {option.option_text}
                     </Label>
-                  </div>
-                ))}
-                {poll.allow_write_in && (
-                  <div className="space-y-2">
+                  </div>)}
+                {poll.allow_write_in && <div className="space-y-2">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="write-in" id="write-in" />
                       <Label htmlFor="write-in" className="cursor-pointer font-bold text-black text-3xl leading-tight">
                         Other
                       </Label>
                     </div>
-                    {selectedOptions.includes('write-in') && (
-                      <Input
-                        value={writeInOption}
-                        onChange={(e) => setWriteInOption(e.target.value)}
-                        placeholder="Other"
-                        className="ml-6 mr-12 max-w-[300px]"
-                        maxLength={25}
-                      />
-                    )}
-                  </div>
-                )}
-              </RadioGroup>
-            ) : (
-              <div className="space-y-3">
-                {sortedOptions.map((option) => (
-                  <div key={option.id} className="flex items-center space-x-2">
-                     <Checkbox
-                       id={option.id}
-                       checked={selectedOptions.includes(option.id)}
-                       onCheckedChange={(checked) => 
-                         handleMultipleChoice(option.id, checked as boolean)
-                       }
-                       className="border-black bg-black data-[state=checked]:bg-black data-[state=checked]:text-green-600"
-                     />
+                    {selectedOptions.includes('write-in') && <Input value={writeInOption} onChange={e => setWriteInOption(e.target.value)} placeholder="Other" maxLength={25} className="ml-6 mr-12 max-w-[240px]" />}
+                  </div>}
+              </RadioGroup> : <div className="space-y-3">
+                {sortedOptions.map(option => <div key={option.id} className="flex items-center space-x-2">
+                     <Checkbox id={option.id} checked={selectedOptions.includes(option.id)} onCheckedChange={checked => handleMultipleChoice(option.id, checked as boolean)} className="border-black bg-black data-[state=checked]:bg-black data-[state=checked]:text-green-600" />
                     <Label htmlFor={option.id} className="flex-1 font-bold text-black text-3xl leading-tight">
                       {option.option_text}
                     </Label>
-                  </div>
-                ))}
-                {poll.allow_write_in && (
-                  <div className="space-y-2">
+                  </div>)}
+                {poll.allow_write_in && <div className="space-y-2">
                     <div className="flex items-center space-x-2">
-                       <Checkbox
-                         id="write-in-multiple"
-                         checked={selectedOptions.includes('write-in')}
-                         onCheckedChange={(checked) => 
-                           handleMultipleChoice('write-in', checked as boolean)
-                         }
-                         className="border-black bg-black data-[state=checked]:bg-black data-[state=checked]:text-green-600"
-                       />
+                       <Checkbox id="write-in-multiple" checked={selectedOptions.includes('write-in')} onCheckedChange={checked => handleMultipleChoice('write-in', checked as boolean)} className="border-black bg-black data-[state=checked]:bg-black data-[state=checked]:text-green-600" />
                       <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black text-3xl leading-tight">
                         Other
                       </Label>
                     </div>
-                    {selectedOptions.includes('write-in') && (
-                      <Input
-                        value={writeInOption}
-                        onChange={(e) => setWriteInOption(e.target.value)}
-                        placeholder="Other"
-                        className="ml-6 mr-12 max-w-[300px]"
-                        maxLength={25}
-                      />
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
+                    {selectedOptions.includes('write-in') && <Input value={writeInOption} onChange={e => setWriteInOption(e.target.value)} placeholder="Other" className="ml-6 mr-12 max-w-[300px]" maxLength={25} />}
+                  </div>}
+              </div>}
             
             <div className="flex justify-center mt-6">
-              <ThemedButton 
-                onClick={handleSubmit} 
-                disabled={
-                  (selectedOptions.length === 0) || 
-                  (selectedOptions.includes('write-in') && !writeInOption.trim()) || 
-                  isSubmitting
-                }
-                className="px-12 py-6 text-2xl bg-green-600 hover:bg-green-700 text-white font-bold border-black border-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
-                variant="accent"
-              >
+              <ThemedButton onClick={handleSubmit} disabled={selectedOptions.length === 0 || selectedOptions.includes('write-in') && !writeInOption.trim() || isSubmitting} className="px-12 py-6 text-2xl bg-green-600 hover:bg-green-700 text-white font-bold border-black border-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200" variant="accent">
                 {isSubmitting ? "Submitting..." : "Vote"}
               </ThemedButton>
             </div>
-          </div>
-        )}
+          </div>}
       </ThemedCardContent>
-    </ThemedCard>
-  );
+    </ThemedCard>;
 };
-
 export default PollWidget;
