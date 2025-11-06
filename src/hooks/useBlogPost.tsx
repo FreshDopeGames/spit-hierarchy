@@ -12,6 +12,11 @@ interface BlogPost {
   published_at: string;
   author_id: string;
   category_id: string;
+  status: string;
+  profiles?: {
+    username: string;
+    full_name: string | null;
+  };
   blog_categories?: {
     name: string;
   };
@@ -39,6 +44,8 @@ export const useBlogPost = (id: string | undefined, canViewDrafts: boolean = fal
           published_at,
           author_id,
           category_id,
+          status,
+          profiles!fk_blog_posts_author(username, full_name),
           blog_categories(name),
           blog_post_tags(
             blog_tags(

@@ -407,6 +407,13 @@ export type Database = {
             referencedRelation: "blog_categories"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "fk_blog_posts_author"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       blog_tags: {
@@ -3030,6 +3037,7 @@ export type Database = {
         Args: { ranking_uuid: string }
         Returns: number
       }
+      can_author_blog_posts: { Args: never; Returns: boolean }
       can_change_username: { Args: { user_id_param: string }; Returns: boolean }
       can_manage_blog: { Args: { _user_id: string }; Returns: boolean }
       can_manage_blog_content: { Args: never; Returns: boolean }
@@ -3538,7 +3546,7 @@ export type Database = {
         | "community"
         | "time_based"
         | "special"
-      app_role: "admin" | "moderator" | "blog_editor" | "user"
+      app_role: "admin" | "moderator" | "blog_editor" | "user" | "author"
       image_style:
         | "photo_real"
         | "comic_book"
@@ -3684,7 +3692,7 @@ export const Constants = {
         "time_based",
         "special",
       ],
-      app_role: ["admin", "moderator", "blog_editor", "user"],
+      app_role: ["admin", "moderator", "blog_editor", "user", "author"],
       image_style: [
         "photo_real",
         "comic_book",

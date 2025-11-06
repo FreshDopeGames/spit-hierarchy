@@ -11,6 +11,10 @@ interface BlogPost {
   published_at: string;
   author_id: string;
   category_id: string;
+  profiles?: {
+    username: string;
+    full_name: string | null;
+  };
   blog_categories?: {
     name: string;
   };
@@ -40,10 +44,14 @@ export const formatDate = (dateString: string) => {
 };
 
 export const transformBlogPost = (blogPost: BlogPost) => {
+  const authorName = blogPost.profiles?.username || 
+                     blogPost.profiles?.full_name || 
+                     "Temple Scribe";
+  
   return {
     title: blogPost.title,
     tags: blogPost.blog_post_tags?.map(pt => pt.blog_tags.name) || [],
-    author: "Temple Scribe",
+    author: authorName,
     timeAgo: formatDate(blogPost.published_at),
     readTime: "5 min read",
     featured_image_url: blogPost.featured_image_url,

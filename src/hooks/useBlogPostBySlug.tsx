@@ -13,6 +13,11 @@ interface BlogPost {
   author_id: string;
   category_id: string;
   slug: string;
+  status: string;
+  profiles?: {
+    username: string;
+    full_name: string | null;
+  };
   blog_categories?: {
     name: string;
   };
@@ -41,6 +46,8 @@ export const useBlogPostBySlug = (slug: string | undefined, canViewDrafts: boole
           author_id,
           category_id,
           slug,
+          status,
+          profiles!fk_blog_posts_author(username, full_name),
           blog_categories(name),
           blog_post_tags(
             blog_tags(
