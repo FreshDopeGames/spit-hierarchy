@@ -72,7 +72,7 @@ const BlogFilters = ({
             <SelectTrigger className="w-full md:w-64 bg-[var(--theme-backgroundLight)] border-2 border-[var(--theme-primary)]/50 text-[var(--theme-primary)]">
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
-            <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+            <SelectContent className="bg-black/95 backdrop-blur-sm border-[var(--theme-border)] z-50">
               <SelectItem value="all" className="text-[var(--theme-text)]">All Posts</SelectItem>
               {categories?.map(category => (
                 <SelectItem key={category.id} value={category.id} className="text-[var(--theme-text)]">
@@ -91,7 +91,7 @@ const BlogFilters = ({
               <SelectTrigger className="w-full md:w-64 bg-[var(--theme-backgroundLight)] border-2 border-[var(--theme-accent)]/50 text-[var(--theme-accent)]">
                 <SelectValue placeholder="Select a tag" />
               </SelectTrigger>
-              <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+              <SelectContent className="bg-black/95 backdrop-blur-sm border-[var(--theme-border)] z-50">
                 <SelectItem value="all" className="text-[var(--theme-text)]">All Tags</SelectItem>
                 {tags.map(tag => (
                   <SelectItem key={tag.id} value={tag.slug} className="text-[var(--theme-text)]">
