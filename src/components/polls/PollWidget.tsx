@@ -85,7 +85,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
   const sortedOptions = [...poll.poll_options].sort((a, b) => a.option_order - b.option_order);
 
   return (
-    <ThemedCard variant="primary">
+    <ThemedCard variant="primary" className="border-black border-4">
       <ThemedCardHeader>
         <ThemedCardTitle className="text-2xl font-bold text-black">{poll.title}</ThemedCardTitle>
         {poll.description && (
@@ -181,7 +181,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                         value={writeInOption}
                         onChange={(e) => setWriteInOption(e.target.value)}
                         placeholder="Other"
-                        className="ml-6"
+                        className="ml-6 mr-6"
                         maxLength={100}
                       />
                     )}
@@ -198,7 +198,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                        onCheckedChange={(checked) => 
                          handleMultipleChoice(option.id, checked as boolean)
                        }
-                       className="border-black bg-black"
+                       className="border-black bg-black data-[state=checked]:bg-black data-[state=checked]:text-green-600"
                      />
                     <Label htmlFor={option.id} className="flex-1 font-bold text-black text-3xl leading-tight">
                       {option.option_text}
@@ -214,7 +214,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                          onCheckedChange={(checked) => 
                            handleMultipleChoice('write-in', checked as boolean)
                          }
-                         className="border-black bg-black"
+                         className="border-black bg-black data-[state=checked]:bg-black data-[state=checked]:text-green-600"
                        />
                       <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black text-3xl leading-tight">
                         Other
@@ -225,7 +225,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                         value={writeInOption}
                         onChange={(e) => setWriteInOption(e.target.value)}
                         placeholder="Other"
-                        className="ml-6"
+                        className="ml-6 mr-6"
                         maxLength={100}
                       />
                     )}
