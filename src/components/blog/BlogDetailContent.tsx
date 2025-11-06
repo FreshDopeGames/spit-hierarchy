@@ -42,6 +42,8 @@ interface BlogDetailContentProps {
     title: string;
     tags: string[];
     author: string;
+    authorId: string;
+    authorUsername: string;
     timeAgo: string;
     readTime: string;
     featured_image_url?: string;

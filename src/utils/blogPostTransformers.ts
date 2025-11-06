@@ -52,6 +52,8 @@ export const transformBlogPost = (blogPost: BlogPost) => {
     title: blogPost.title,
     tags: blogPost.blog_post_tags?.map(pt => pt.blog_tags.name) || [],
     author: authorName,
+    authorId: blogPost.author_id,
+    authorUsername: blogPost.profiles?.username || '',
     timeAgo: formatDate(blogPost.published_at),
     readTime: "5 min read",
     featured_image_url: blogPost.featured_image_url,

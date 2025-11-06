@@ -1,13 +1,15 @@
-
 import { Badge } from "@/components/ui/badge";
 import { Clock, Calendar, User } from "lucide-react";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import VideoPlayer from "@/components/ui/VideoPlayer";
+import { UsernameLink } from "@/components/profile/UsernameLink";
 
 interface BlogPost {
   title: string;
   tags: string[];
   author: string;
+  authorId: string;
+  authorUsername: string;
   timeAgo: string;
   readTime: string;
   featured_image_url?: string;
@@ -52,7 +54,11 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
       <div className="flex flex-wrap items-center gap-6 text-rap-smoke mb-6">
         <div className="flex items-center gap-2">
           <User className="w-4 h-4" />
-          <span className="font-merienda">{blogPost.author}</span>
+          <UsernameLink 
+            userId={blogPost.authorId}
+            username={blogPost.author}
+            className="font-merienda"
+          />
         </div>
         <div className="flex items-center gap-2">
           <Calendar className="w-4 h-4" />
