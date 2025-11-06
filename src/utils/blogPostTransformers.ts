@@ -43,6 +43,19 @@ export const formatDate = (dateString: string) => {
   }
 };
 
+const parseFeaturedImage = (imageUrl: string | null | undefined) => {
+  if (!imageUrl) return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop";
+  
+  try {
+    // Try to parse as JSON (multi-size format)
+    const parsed = JSON.parse(imageUrl);
+    return parsed; // Return the object with thumbnail, medium, large, hero
+  } catch {
+    // If parsing fails, it's a plain URL string
+    return imageUrl;
+  }
+};
+
 export const transformBlogPost = (blogPost: BlogPost) => {
   const authorName = blogPost.profiles?.username || 
                      blogPost.profiles?.full_name || 
@@ -66,7 +79,7 @@ export const transformRelatedPosts = (relatedPosts: RelatedPostData[]) => {
     id: post.id,
     title: post.title,
     excerpt: post.excerpt || `${post.title.substring(0, 100)}...`,
-    imageUrl: post.featured_image_url || "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=400&h=250&fit=crop",
+    imageUrl: parseFeaturedImage(post.featured_image_url),
     timeAgo: formatDate(post.published_at),
     slug: post.slug
   })) || [];
