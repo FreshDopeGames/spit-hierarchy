@@ -37,7 +37,7 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
                 <Button
                   size="sm"
                   variant="outline"
-                  onClick={() => window.open(`/blog/${post.id}`, '_blank')}
+                  onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
                   className="border-[var(--theme-border)] text-[var(--theme-text)] hover:border-[var(--theme-primary)] hover:text-[var(--theme-primary)]"
                 >
                   <Eye className="w-4 h-4" />
@@ -85,7 +85,7 @@ const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostLi
               <Button
                 size="sm"
                 variant="outline"
-                onClick={() => window.open(`/blog/${post.id}`, '_blank')}
+                onClick={() => window.open(`/blog/${post.slug}`, '_blank')}
                 className="border-rap-smoke text-rap-smoke hover:border-rap-gold hover:text-rap-gold"
               >
                 <Eye className="w-4 h-4" />

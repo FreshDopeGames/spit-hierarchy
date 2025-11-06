@@ -23,11 +23,11 @@ interface BlogPost {
   }>;
 }
 
-export const useBlogPost = (id: string | undefined) => {
+export const useBlogPost = (id: string | undefined, canViewDrafts: boolean = false) => {
   return useQuery({
-    queryKey: ['blog-post', id],
+    queryKey: ['blog-post', id, canViewDrafts],
     queryFn: async () => {
-      const { data, error } = await supabase
+      let query = supabase
         .from('blog_posts')
         .select(`
           id,
@@ -47,9 +47,14 @@ export const useBlogPost = (id: string | undefined) => {
             )
           )
         `)
-        .eq('id', id)
-        .eq('status', 'published')
-        .maybeSingle();
+        .eq('id', id);
+      
+      // Only filter by published status if user cannot view drafts
+      if (!canViewDrafts) {
+        query = query.eq('status', 'published');
+      }
+      
+      const { data, error } = await query.maybeSingle();
       
       if (error) throw error;
       return data as BlogPost;

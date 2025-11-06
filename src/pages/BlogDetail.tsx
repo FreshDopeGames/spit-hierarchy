@@ -5,6 +5,7 @@ import BackToTopButton from "@/components/BackToTopButton";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { useComments } from "@/hooks/useComments";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
 import InternalPageHeader from "@/components/InternalPageHeader";
 import BlogDetailLoading from "@/components/blog/BlogDetailLoading";
 import BlogDetailError from "@/components/blog/BlogDetailError";
@@ -18,12 +19,13 @@ import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 const BlogDetail = () => {
   const { slug } = useParams();
   const { user } = useAuth();
+  const { canManageBlog, isLoading: isLoadingPermissions } = useSecurityContext();
 
   // Track blog page visit for achievements
   usePageVisitTracking('blog_visits');
 
-  // Fetch the blog post by slug
-  const { data: blogPost, isLoading, error } = useBlogPostBySlug(slug);
+  // Fetch the blog post by slug - allow viewing drafts if user can manage blog
+  const { data: blogPost, isLoading, error } = useBlogPostBySlug(slug, canManageBlog);
 
   // Get comment data - use blog post ID when available
   const { totalComments } = useComments({ 
@@ -59,7 +61,7 @@ const BlogDetail = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isLoadingPermissions) {
     return <BlogDetailLoading />;
   }
 
