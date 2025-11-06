@@ -198,7 +198,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                        onCheckedChange={(checked) => 
                          handleMultipleChoice(option.id, checked as boolean)
                        }
-                       className="border-black"
+                       className="border-black bg-black"
                      />
                     <Label htmlFor={option.id} className="flex-1 font-bold text-black">
                       {option.option_text}
@@ -214,7 +214,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                          onCheckedChange={(checked) => 
                            handleMultipleChoice('write-in', checked as boolean)
                          }
-                         className="border-black"
+                         className="border-black bg-black"
                        />
                       <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black">
                         Other
