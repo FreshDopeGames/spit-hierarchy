@@ -18,7 +18,7 @@ const BlogLoadMoreButton = ({ hasNextPage, isFetchingNextPage, onLoadMore }: Blo
         disabled={isFetchingNextPage} 
         className="bg-rap-carbon-light border-2 border-rap-gold text-rap-gold hover:bg-rap-gold/20 font-mogra shadow-lg"
       >
-        {isFetchingNextPage ? 'Loading More Sacred Scrolls...' : 'Load More Sacred Scrolls'}
+        {isFetchingNextPage ? 'Loading More Slick Talk...' : 'Load More Slick Talk'}
       </Button>
     </div>
   );
