@@ -163,7 +163,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                 {sortedOptions.map((option) => (
                   <div key={option.id} className="flex items-center space-x-2">
                     <RadioGroupItem value={option.id} id={option.id} />
-                    <Label htmlFor={option.id} className="flex-1 font-bold text-black">
+                    <Label htmlFor={option.id} className="flex-1 font-bold text-black text-3xl leading-tight">
                       {option.option_text}
                     </Label>
                   </div>
@@ -172,7 +172,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                   <div className="space-y-2">
                     <div className="flex items-center space-x-2">
                       <RadioGroupItem value="write-in" id="write-in" />
-                      <Label htmlFor="write-in" className="cursor-pointer font-bold text-black">
+                      <Label htmlFor="write-in" className="cursor-pointer font-bold text-black text-3xl leading-tight">
                         Other
                       </Label>
                     </div>
@@ -200,7 +200,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                        }
                        className="border-black bg-black"
                      />
-                    <Label htmlFor={option.id} className="flex-1 font-bold text-black">
+                    <Label htmlFor={option.id} className="flex-1 font-bold text-black text-3xl leading-tight">
                       {option.option_text}
                     </Label>
                   </div>
@@ -216,7 +216,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                          }
                          className="border-black bg-black"
                        />
-                      <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black">
+                      <Label htmlFor="write-in-multiple" className="cursor-pointer font-bold text-black text-3xl leading-tight">
                         Other
                       </Label>
                     </div>
