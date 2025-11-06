@@ -104,15 +104,17 @@ const NavigationSidebar = ({
           {/* User Profile Section */}
           {user && userProfile && (
             <div className="px-6 py-3">
-              <div className="flex items-center gap-3">
-                <ThemedAvatar className="h-10 w-10">
-                  <ThemedAvatarImage src={getAvatarUrl(userProfile.avatar_url)} />
-                  <ThemedAvatarFallback>{userProfile.username?.[0]?.toUpperCase() || "U"}</ThemedAvatarFallback>
-                </ThemedAvatar>
-                <p className="font-[var(--theme-font-body)] font-bold text-[hsl(var(--theme-text))] text-lg">
-                  {userProfile.username || "User"}
-                </p>
-              </div>
+              <Link to="/profile" onClick={() => handleNavClick("/profile")}>
+                <div className="flex items-center gap-3 cursor-pointer hover:bg-[hsl(var(--theme-primary))]/10 rounded-lg p-2 -m-2 transition-colors">
+                  <ThemedAvatar className="h-10 w-10">
+                    <ThemedAvatarImage src={getAvatarUrl(userProfile.avatar_url)} />
+                    <ThemedAvatarFallback>{userProfile.username?.[0]?.toUpperCase() || "U"}</ThemedAvatarFallback>
+                  </ThemedAvatar>
+                  <p className="font-[var(--theme-font-body)] font-bold text-[hsl(var(--theme-text))] text-lg hover:text-[hsl(var(--theme-primary))] transition-colors">
+                    {userProfile.username || "User"}
+                  </p>
+                </div>
+              </Link>
             </div>
           )}
 
