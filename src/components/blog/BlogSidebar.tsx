@@ -25,7 +25,7 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
     <div className="space-y-6">
       {/* Related Posts */}
       {relatedPosts.length > 0 && (
-        <Card className="bg-black border border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
+        <Card className="bg-black border-4 border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
           <CardHeader className="pb-4">
             <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-fontPrimary)] font-normal text-center text-5xl">
               More Writtens
@@ -61,7 +61,7 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
 
       {/* Newsletter Signup */}
       {showSignUp && (
-        <Card className="bg-black border border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
+        <Card className="bg-black border-4 border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
           <CardHeader className="pb-4">
             <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-fontPrimary)] text-lg">
               Join the Temple
@@ -82,7 +82,7 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
       )}
 
       {/* All Rankings Voting Module */}
-      <Card className="bg-black border border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
+      <Card className="bg-black border-4 border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
         <CardContent className="p-6 text-center space-y-4">
           <h3 className="text-[var(--theme-primary)] font-[var(--theme-fontPrimary)] text-5xl">All Rankings</h3>
           <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] text-base pb-2">

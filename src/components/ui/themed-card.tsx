@@ -4,7 +4,7 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const themedCardVariants = cva(
-  "rounded-[var(--theme-radius-lg)] border shadow-[var(--theme-shadow-md)]",
+  "rounded-[var(--theme-radius-lg)] border-4 shadow-[var(--theme-shadow-md)]",
   {
     variants: {
       variant: {
