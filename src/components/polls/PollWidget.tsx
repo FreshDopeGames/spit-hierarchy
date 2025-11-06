@@ -234,18 +234,20 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
               </div>
             )}
             
-            <ThemedButton 
-              onClick={handleSubmit} 
-              disabled={
-                (selectedOptions.length === 0) || 
-                (selectedOptions.includes('write-in') && !writeInOption.trim()) || 
-                isSubmitting
-              }
-              className="w-full bg-green-600 hover:bg-green-700 text-white font-bold border-black border"
-              variant="accent"
-            >
-              {isSubmitting ? "Submitting..." : "Vote"}
-            </ThemedButton>
+            <div className="flex justify-center mt-6">
+              <ThemedButton 
+                onClick={handleSubmit} 
+                disabled={
+                  (selectedOptions.length === 0) || 
+                  (selectedOptions.includes('write-in') && !writeInOption.trim()) || 
+                  isSubmitting
+                }
+                className="px-12 py-6 text-2xl bg-green-600 hover:bg-green-700 text-white font-bold border-black border-4 shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] hover:shadow-[12px_12px_0px_0px_rgba(0,0,0,1)] hover:translate-x-[-2px] hover:translate-y-[-2px] transition-all duration-200"
+                variant="accent"
+              >
+                {isSubmitting ? "Submitting..." : "Vote"}
+              </ThemedButton>
+            </div>
           </div>
         )}
       </ThemedCardContent>
