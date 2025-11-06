@@ -1,12 +1,10 @@
 import { useState } from 'react';
 import { useNotifications } from '@/hooks/useNotifications';
-import { useSystemAnnouncements } from '@/hooks/useSystemAnnouncements';
 import HeaderNavigation from '@/components/HeaderNavigation';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { CheckCheck, Bell, Inbox } from 'lucide-react';
 import { NotificationCard } from '@/components/notifications/NotificationCard';
-import { SystemAnnouncementCard } from '@/components/notifications/SystemAnnouncementCard';
 import SEOHead from '@/components/seo/SEOHead';
 
 export default function Notifications() {
@@ -17,11 +15,12 @@ export default function Notifications() {
     markAllAsRead, 
     deleteNotification 
   } = useNotifications();
-  const { announcements } = useSystemAnnouncements();
-  const [filter, setFilter] = useState<'all' | 'unread'>('all');
+  const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
 
   const filteredNotifications = filter === 'unread'
     ? notifications?.filter(n => !n.is_read)
+    : filter === 'read'
+    ? notifications?.filter(n => n.is_read)
     : notifications;
 
   return (
@@ -56,20 +55,8 @@ export default function Notifications() {
           )}
         </div>
 
-        {/* System Announcements */}
-        {announcements && announcements.length > 0 && (
-          <div className="mb-6 space-y-3">
-            {announcements.map(announcement => (
-              <SystemAnnouncementCard 
-                key={announcement.id} 
-                announcement={announcement} 
-              />
-            ))}
-          </div>
-        )}
-
         {/* Notifications Tabs */}
-        <Tabs value={filter} onValueChange={(v) => setFilter(v as 'all' | 'unread')}>
+        <Tabs value={filter} onValueChange={(v) => setFilter(v as 'all' | 'unread' | 'read')}>
           <TabsList>
             <TabsTrigger value="all">
               <Bell className="w-4 h-4 mr-2" />
@@ -79,6 +66,10 @@ export default function Notifications() {
               <Inbox className="w-4 h-4 mr-2" />
               Unread ({unreadCount})
             </TabsTrigger>
+            <TabsTrigger value="read">
+              <CheckCheck className="w-4 h-4 mr-2" />
+              Read ({(notifications?.length || 0) - unreadCount})
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value={filter} className="mt-6 space-y-3">
@@ -86,11 +77,13 @@ export default function Notifications() {
               <div className="text-center py-12">
                 <Bell className="w-12 h-12 mx-auto text-[hsl(var(--theme-text))]/30 mb-4" />
                 <h3 className="text-xl font-semibold text-[hsl(var(--theme-text))] mb-2">
-                  {filter === 'unread' ? 'All caught up!' : 'No notifications yet'}
+                  {filter === 'unread' ? 'All caught up!' : filter === 'read' ? 'No read notifications' : 'No notifications yet'}
                 </h3>
                 <p className="text-[hsl(var(--theme-text))]/60">
                   {filter === 'unread' 
                     ? "You've read all your notifications"
+                    : filter === 'read'
+                    ? "You haven't read any notifications yet"
                     : "When you get notifications, they'll appear here"}
                 </p>
               </div>
