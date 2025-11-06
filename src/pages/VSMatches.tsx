@@ -117,7 +117,7 @@ const VSMatches = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredAndSortedMatches?.map(match => (
                 <Link key={match.id} to={`/vs/${match.slug}`}>
-                  <Card className="border-4 border-primary bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] group-hover:border-[hsl(var(--theme-background))] transition-all duration-300 hover:shadow-lg group">
+                  <Card className="border-4 border-black bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] group-hover:border-[hsl(var(--theme-background))] transition-all duration-300 hover:shadow-lg group">
                     <CardHeader>
                       <h3 className="text-lg font-bold text-[hsl(var(--theme-textInverted))] group-hover:text-[hsl(var(--theme-background))] transition-colors">
                         {match.title}
