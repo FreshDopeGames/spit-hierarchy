@@ -56,7 +56,7 @@ const BlogPostGrid = ({ posts, onTagClick }: BlogPostGridProps) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
       {posts.map(post => (
-        <Card key={post.id} className="bg-[var(--theme-surface)] border border-[var(--theme-border)] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
+        <Card key={post.id} className="bg-black border-4 border-[hsl(var(--theme-primary))] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
           <Link to={`/blog/${post.slug}`}>
             <div className="overflow-hidden hover:invert transition-all duration-300">
               <ResponsiveImage
