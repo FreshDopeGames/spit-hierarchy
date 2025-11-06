@@ -181,7 +181,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                         value={writeInOption}
                         onChange={(e) => setWriteInOption(e.target.value)}
                         placeholder="Other"
-                        className="ml-6 mr-12"
+                        className="ml-6 mr-12 max-w-[300px]"
                         maxLength={25}
                       />
                     )}
@@ -225,7 +225,7 @@ const PollWidget = ({ poll, showResults = false }: PollWidgetProps) => {
                         value={writeInOption}
                         onChange={(e) => setWriteInOption(e.target.value)}
                         placeholder="Other"
-                        className="ml-6 mr-12"
+                        className="ml-6 mr-12 max-w-[300px]"
                         maxLength={25}
                       />
                     )}
