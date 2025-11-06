@@ -50,9 +50,7 @@ const StatsOverviewRedesigned = () => {
     return `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/avatars/${avatarUrl}/thumb.jpg`;
   };
 
-  const { data: stats, isLoading } = useQuery({
-    queryKey: ["homepage-stats-redesigned"],
-    queryFn: async () => {
+  const fetchStats = async () => {
       // Rappers Section
       const { count: totalRappers } = await supabase
         .from("rappers")
@@ -65,11 +63,6 @@ const StatsOverviewRedesigned = () => {
         .order("average_rating", { ascending: false })
         .limit(5);
 
-      // Randomly select one from top 5
-      const topRapper = topRappers && topRappers.length > 0
-        ? topRappers[Math.floor(Math.random() * topRappers.length)]
-        : null;
-
       // Get random tag
       const { data: allTags } = await supabase
         .from("rapper_tags")
@@ -77,7 +70,7 @@ const StatsOverviewRedesigned = () => {
       
       const randomTag = allTags?.[Math.floor(Math.random() * (allTags?.length || 1))];
 
-      let topTaggedRapper: TaggedRapperData | null = null;
+      let topTaggedRapper: RapperData[] = [];
       if (randomTag) {
         const { data: taggedRappers } = await supabase
           .from("rapper_tag_assignments")
@@ -93,13 +86,7 @@ const StatsOverviewRedesigned = () => {
           .slice(0, 5); // Take only top 5
 
         if (validRappers && validRappers.length > 0) {
-          // Randomly select one from top 5
-          const randomIndex = Math.floor(Math.random() * validRappers.length);
-          topTaggedRapper = {
-            ...validRappers[randomIndex],
-            tag_name: randomTag.name,
-            tag_color: randomTag.color,
-          };
+          topTaggedRapper = validRappers;
         }
       }
 
@@ -191,11 +178,12 @@ const StatsOverviewRedesigned = () => {
         .maybeSingle();
 
       return {
-        rappers: {
-          total: totalRappers || 0,
-          topOverall: topRapper,
-          topTagged: topTaggedRapper,
-        },
+      rappers: {
+        total: totalRappers || 0,
+        topOverallList: topRappers || [],
+        topTaggedList: topTaggedRapper || [],
+        tagInfo: randomTag,
+      },
         votes: {
           total: totalVotes || 0,
           mostActiveRanking: mostActiveRanking ? {
@@ -214,9 +202,26 @@ const StatsOverviewRedesigned = () => {
           mostLiked: mostLikedPost,
         },
       };
-    },
+  };
+
+  const { data: stats, isLoading } = useQuery({
+    queryKey: ["homepage-stats-redesigned"],
+    queryFn: fetchStats,
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
+
+  // Randomly select rappers on each render (not cached)
+  const topOverallRapper = stats?.rappers.topOverallList && stats.rappers.topOverallList.length > 0
+    ? stats.rappers.topOverallList[Math.floor(Math.random() * stats.rappers.topOverallList.length)]
+    : null;
+
+  const topTaggedRapper = stats?.rappers.topTaggedList && stats.rappers.topTaggedList.length > 0
+    ? {
+        ...stats.rappers.topTaggedList[Math.floor(Math.random() * stats.rappers.topTaggedList.length)],
+        tag_name: stats.rappers.tagInfo?.name,
+        tag_color: stats.rappers.tagInfo?.color,
+      }
+    : null;
 
   if (isLoading) {
     return (
@@ -283,13 +288,13 @@ const StatsOverviewRedesigned = () => {
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-auto">
-            {stats?.rappers.topOverall && (
-              <Link to={`/rapper/${stats.rappers.topOverall.slug}`} className="group">
+            {topOverallRapper && (
+              <Link to={`/rapper/${topOverallRapper.slug}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {stats.rappers.topOverall.image_url ? (
+                  {topOverallRapper.image_url ? (
                     <img
-                      src={stats.rappers.topOverall.image_url}
-                      alt={stats.rappers.topOverall.name}
+                      src={topOverallRapper.image_url}
+                      alt={topOverallRapper.name}
                       className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
                   ) : (
@@ -298,12 +303,12 @@ const StatsOverviewRedesigned = () => {
                     </div>
                   )}
                   <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
-                    {stats.rappers.topOverall.name}
+                    {topOverallRapper.name}
                   </p>
                   <div className="flex items-center gap-1 mt-1 justify-center">
                     <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
                     <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {stats.rappers.topOverall.average_rating.toFixed(1)}
+                      {topOverallRapper.average_rating.toFixed(1)}
                     </span>
                   </div>
                   <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Top Overall</p>
@@ -311,13 +316,13 @@ const StatsOverviewRedesigned = () => {
               </Link>
             )}
 
-            {stats?.rappers.topTagged && (
-              <Link to={`/rapper/${stats.rappers.topTagged.slug}`} className="group">
+            {topTaggedRapper && (
+              <Link to={`/rapper/${topTaggedRapper.slug}`} className="group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {stats.rappers.topTagged.image_url ? (
+                  {topTaggedRapper.image_url ? (
                     <img
-                      src={stats.rappers.topTagged.image_url}
-                      alt={stats.rappers.topTagged.name}
+                      src={topTaggedRapper.image_url}
+                      alt={topTaggedRapper.name}
                       className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
                   ) : (
@@ -326,16 +331,16 @@ const StatsOverviewRedesigned = () => {
                     </div>
                   )}
                   <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
-                    {stats.rappers.topTagged.name}
+                    {topTaggedRapper.name}
                   </p>
                   <div className="flex items-center gap-1 mt-1 justify-center">
                     <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
                     <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {stats.rappers.topTagged.average_rating.toFixed(1)}
+                      {topTaggedRapper.average_rating.toFixed(1)}
                     </span>
                   </div>
                   <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 truncate text-center">
-                    Top {stats.rappers.topTagged.tag_name}
+                    Top {topTaggedRapper.tag_name}
                   </p>
                 </div>
               </Link>
