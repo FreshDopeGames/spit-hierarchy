@@ -1,6 +1,7 @@
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
-import { Disc3, Trophy, Star } from "lucide-react";
+import { Disc3 } from "lucide-react";
 import { useAlbumStats } from "@/hooks/useAlbumStats";
+import RapperAvatar from "@/components/RapperAvatar";
 const AlbumStatsCard = () => {
   const {
     data: albumStats,
@@ -89,8 +90,16 @@ const AlbumStatsCard = () => {
               <div className="grid grid-cols-2 gap-3">
                 {/* Top Album Artist */}
                 {albumStats?.topAlbumArtist && <div className="text-center">
-                    <div className="flex items-center justify-center gap-1 text-rap-platinum/70 mb-1">
-                      <Trophy className="w-4 h-4" />
+                    <div className="flex justify-center mb-2">
+                      <RapperAvatar 
+                        rapper={{
+                          id: albumStats.topAlbumArtist.id,
+                          name: albumStats.topAlbumArtist.name,
+                          slug: albumStats.topAlbumArtist.slug
+                        }}
+                        size="md"
+                        variant="circular"
+                      />
                     </div>
                     <div className="text-sm font-bold text-rap-platinum font-mogra truncate px-1">
                       {albumStats.topAlbumArtist.name}
@@ -102,8 +111,16 @@ const AlbumStatsCard = () => {
                 
                 {/* Top Mixtape Artist */}
                 {albumStats?.topMixtapeArtist && <div className="text-center">
-                    <div className="flex items-center justify-center gap-1 text-rap-burgundy/70 mb-1">
-                      <Star className="w-4 h-4" />
+                    <div className="flex justify-center mb-2">
+                      <RapperAvatar 
+                        rapper={{
+                          id: albumStats.topMixtapeArtist.id,
+                          name: albumStats.topMixtapeArtist.name,
+                          slug: albumStats.topMixtapeArtist.slug
+                        }}
+                        size="md"
+                        variant="circular"
+                      />
                     </div>
                     <div className="text-sm font-bold text-rap-burgundy font-mogra truncate px-1">
                       {albumStats.topMixtapeArtist.name}

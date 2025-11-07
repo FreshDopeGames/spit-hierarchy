@@ -2,7 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 
 interface TopArtist {
+  id: string;
   name: string;
+  slug?: string;
   count: number;
 }
 
@@ -27,6 +29,7 @@ export const useAlbumStats = () => {
         .select(`
           id,
           name,
+          slug,
           rapper_albums!inner(
             album:albums!inner(release_type)
           )
@@ -37,7 +40,9 @@ export const useAlbumStats = () => {
       // Process aggregated data
       const stats: { 
         [rapperId: string]: { 
+          id: string;
           name: string;
+          slug?: string;
           albums: number; 
           mixtapes: number;
         } 
@@ -49,7 +54,13 @@ export const useAlbumStats = () => {
       rapperStats?.forEach(rapper => {
         const rapperId = rapper.id;
         if (!stats[rapperId]) {
-          stats[rapperId] = { name: rapper.name, albums: 0, mixtapes: 0 };
+          stats[rapperId] = { 
+            id: rapper.id,
+            name: rapper.name, 
+            slug: rapper.slug,
+            albums: 0, 
+            mixtapes: 0 
+          };
         }
         
         (rapper as any).rapper_albums?.forEach((ra: any) => {
@@ -69,10 +80,20 @@ export const useAlbumStats = () => {
 
       Object.values(stats).forEach(rapper => {
         if (rapper.albums > 0 && (!topAlbumArtist || rapper.albums > topAlbumArtist.count)) {
-          topAlbumArtist = { name: rapper.name, count: rapper.albums };
+          topAlbumArtist = { 
+            id: rapper.id,
+            name: rapper.name, 
+            slug: rapper.slug,
+            count: rapper.albums 
+          };
         }
         if (rapper.mixtapes > 0 && (!topMixtapeArtist || rapper.mixtapes > topMixtapeArtist.count)) {
-          topMixtapeArtist = { name: rapper.name, count: rapper.mixtapes };
+          topMixtapeArtist = { 
+            id: rapper.id,
+            name: rapper.name, 
+            slug: rapper.slug,
+            count: rapper.mixtapes 
+          };
         }
       });
 
