@@ -736,89 +736,9 @@ serve(async (req) => {
           .from('rapper_albums')
           .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
 
-        // Fetch track listings if not already populated
-        const { data: existingTracks } = await supabaseService
-          .from('album_tracks')
-          .select('id')
-          .eq('album_id', albumId)
-          .limit(1);
-
-        if (!existingTracks || existingTracks.length === 0) {
-          try {
-            // Get the first official release ID from the release-group
-            const officialRelease = releases.find((r: any) => r && r.status === 'Official');
-            
-            if (officialRelease?.id) {
-              console.log(`Fetching tracks for "${rg.title}" (release: ${officialRelease.id})`);
-              
-              // Fetch release with recordings (track listings)
-              const releaseData = await mbJson<any>(
-                `https://musicbrainz.org/ws/2/release/${officialRelease.id}?inc=recordings&fmt=json`
-              );
-              await delay(150);
-
-              // Extract tracks from all media (discs)
-              const allTracks: Array<{ position: number; title: string }> = [];
-              for (const media of releaseData.media || []) {
-                for (const track of media.tracks || []) {
-                  allTracks.push({
-                    position: track.position,
-                    title: track.title,
-                  });
-                }
-              }
-
-              // Insert tracks into database
-              if (allTracks.length > 0) {
-                const trackInserts = allTracks.map(track => ({
-                  album_id: albumId,
-                  track_number: track.position,
-                  title: track.title,
-                  duration_ms: null,
-                  musicbrainz_id: null,
-                }));
-
-                await supabaseService
-                  .from('album_tracks')
-                  .insert(trackInserts);
-                
-                console.log(`Inserted ${allTracks.length} tracks for "${rg.title}"`);
-              }
-            }
-          } catch (trackError: any) {
-            console.error(`Error fetching tracks for "${rg.title}": ${trackError.message}`, trackError);
-            await logAuditEvent(supabaseService, {
-              rapper_id: rapperId,
-              action: 'FETCH_TRACKS',
-              status: 'FAILED',
-              error_message: `Track fetch failed for "${rg.title}": ${trackError.message}`,
-            });
-            // Continue processing - tracks are optional
-          }
-        }
-        
-        // After track insertion, verify album has tracks - filter out if empty
-        const { data: trackCheck } = await supabaseService
-          .from('album_tracks')
-          .select('id')
-          .eq('album_id', albumId)
-          .limit(1);
-
-        if (!trackCheck || trackCheck.length === 0) {
-          console.log(`⚠ Filtering out "${rg.title}" - no tracks available in MusicBrainz`);
-          
-          // Remove this album link since it has no tracks
-          await supabaseService
-            .from('rapper_albums')
-            .delete()
-            .eq('rapper_id', rapperId)
-            .eq('album_id', albumId);
-          
-          // Remove from validAlbumIds so reconciliation doesn't keep it
-          validAlbumIds.delete(albumId);
-          
-          continue; // Skip to next album
-        }
+        // NOTE: Track fetching is skipped during discography sync to avoid compute timeouts
+        // Tracks should be fetched on-demand when viewing album details or via a separate background job
+        // This dramatically reduces API calls and processing time for artists with large discographies
       }
       await delay(150);
       } catch (albumError: any) {
