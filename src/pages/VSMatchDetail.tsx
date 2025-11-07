@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useVSMatchBySlug, useVSMatchVote } from "@/hooks/useVSMatches";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Swords, MapPin, Calendar, Star, Check, ThumbsUp, Music, Trophy, Target } from "lucide-react";
+import { Swords, MapPin, Calendar, Star, Check, ThumbsUp, Music, Trophy, Target, ArrowLeft } from "lucide-react";
 import { toast } from "sonner";
 import SEOHead from "@/components/seo/SEOHead";
 import RapperAvatar from "@/components/RapperAvatar";
@@ -177,6 +177,19 @@ const VSMatchDetail = () => {
       }}>
         <div className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto">
+            {/* Back Button */}
+            <div className="mb-6">
+              <Link to="/vs">
+                <ThemedButton
+                  variant="outline"
+                  className="bg-black/40 backdrop-blur-sm border-2 border-black text-black hover:bg-black/60 hover:text-white transition-all duration-200 font-bold"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Back to VS
+                </ThemedButton>
+              </Link>
+            </div>
+
             {/* Header */}
             <div className="text-center mb-8">
               <h1 className="text-black text-3xl md:text-4xl font-bold mb-4 font-mogra drop-shadow-lg">
