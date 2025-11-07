@@ -137,7 +137,7 @@ const CommunityCypher = () => {
                   Sign in to drop your bars and join the cypher.
                 </p>
                 <Link to="/auth">
-                    <ThemedButton className="bg-[var(--theme-primary)] text-[var(--theme-background)] hover:bg-[var(--theme-primaryLight)] font-mogra">
+                    <ThemedButton className="bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold font-mogra text-2xl py-3">
                       Sign In to Battle
                     </ThemedButton>
                 </Link>
