@@ -22,7 +22,7 @@ const SimilarRappersCard = ({
   // Batch fetch all rapper images in a single query - use 'thumb' size for compact cards
   const rapperIds = similarRappers?.map(r => r.id) || [];
   const { data: rapperImages, isLoading: imagesLoading } = useQuery({
-    queryKey: ["similar-rapper-images", rapperIds, "thumb"],
+    queryKey: ["similar-rapper-images", rapperIds, "medium"],
     queryFn: async () => {
       if (rapperIds.length === 0) return {};
       
@@ -32,14 +32,14 @@ const SimilarRappersCard = ({
         .in("rapper_id", rapperIds)
         .eq("style", "comic_book");
 
-      // Create a map of rapper_id to optimized thumb-size image URLs
+      // Create a map of rapper_id to optimized medium-size image URLs
       return (data || []).reduce((acc, img) => {
         if (img.image_url.startsWith('http')) {
           // Legacy full URL
           acc[img.rapper_id] = img.image_url;
         } else {
-          // Construct optimized thumb URL (128px)
-          acc[img.rapper_id] = getRapperImageUrl(img.image_url, 'thumb');
+          // Construct optimized medium URL (256px)
+          acc[img.rapper_id] = getRapperImageUrl(img.image_url, 'medium');
         }
         return acc;
       }, {} as Record<string, string>);
