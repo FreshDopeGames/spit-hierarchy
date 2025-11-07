@@ -7,6 +7,8 @@ interface TopArtist {
 }
 
 interface AlbumStats {
+  totalAlbums: number;
+  totalMixtapes: number;
   averageAlbums: number;
   averageMixtapes: number;
   albumCount: number;
@@ -19,19 +21,21 @@ export const useAlbumStats = () => {
   return useQuery({
     queryKey: ["album-stats"],
     queryFn: async (): Promise<AlbumStats> => {
-      // Get all albums with rapper names
-      const { data: albums, error } = await supabase
-        .from("rapper_albums")
+      // Get aggregated counts per rapper using database-level aggregation
+      const { data: rapperStats, error } = await supabase
+        .from("rappers")
         .select(`
-          rapper_id,
-          rapper:rappers(name),
-          album:albums(release_type)
+          id,
+          name,
+          rapper_albums!inner(
+            album:albums!inner(release_type)
+          )
         `);
 
       if (error) throw error;
 
-      // Group by rapper and count albums/mixtapes
-      const rapperStats: { 
+      // Process aggregated data
+      const stats: { 
         [rapperId: string]: { 
           name: string;
           albums: number; 
@@ -39,26 +43,31 @@ export const useAlbumStats = () => {
         } 
       } = {};
       
-      albums?.forEach(item => {
-        const rapperId = (item as any).rapper_id;
-        const rapperName = (item as any).rapper?.name || 'Unknown';
-        
-        if (!rapperStats[rapperId]) {
-          rapperStats[rapperId] = { name: rapperName, albums: 0, mixtapes: 0 };
+      let totalAlbums = 0;
+      let totalMixtapes = 0;
+      
+      rapperStats?.forEach(rapper => {
+        const rapperId = rapper.id;
+        if (!stats[rapperId]) {
+          stats[rapperId] = { name: rapper.name, albums: 0, mixtapes: 0 };
         }
         
-        if (item.album?.release_type === 'album') {
-          rapperStats[rapperId].albums++;
-        } else if (item.album?.release_type === 'mixtape') {
-          rapperStats[rapperId].mixtapes++;
-        }
+        (rapper as any).rapper_albums?.forEach((ra: any) => {
+          if (ra.album?.release_type === 'album') {
+            stats[rapperId].albums++;
+            totalAlbums++;
+          } else if (ra.album?.release_type === 'mixtape') {
+            stats[rapperId].mixtapes++;
+            totalMixtapes++;
+          }
+        });
       });
 
       // Find top artists
       let topAlbumArtist: TopArtist | null = null;
       let topMixtapeArtist: TopArtist | null = null;
 
-      Object.values(rapperStats).forEach(rapper => {
+      Object.values(stats).forEach(rapper => {
         if (rapper.albums > 0 && (!topAlbumArtist || rapper.albums > topAlbumArtist.count)) {
           topAlbumArtist = { name: rapper.name, count: rapper.albums };
         }
@@ -67,7 +76,7 @@ export const useAlbumStats = () => {
         }
       });
 
-      const rapperList = Object.values(rapperStats);
+      const rapperList = Object.values(stats);
       const rappersWithAlbums = rapperList.filter(r => r.albums > 0);
       const rappersWithMixtapes = rapperList.filter(r => r.mixtapes > 0);
 
@@ -80,6 +89,8 @@ export const useAlbumStats = () => {
         : 0;
 
       return {
+        totalAlbums,
+        totalMixtapes,
         averageAlbums,
         averageMixtapes,
         albumCount: rappersWithAlbums.length,

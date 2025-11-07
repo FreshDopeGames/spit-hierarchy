@@ -33,35 +33,64 @@ const AlbumStatsCard = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-rap-platinum font-mogra">
-                {albumStats?.averageAlbums ? albumStats.averageAlbums.toFixed(1) : "N/A"}
+          {/* Total Counts - Prominent Display */}
+          <div className="bg-gradient-to-r from-rap-gold/10 to-rap-burgundy/10 rounded-lg p-4 border border-rap-gold/20">
+            <div className="text-xs text-rap-smoke/70 font-kaushan mb-2 text-center uppercase tracking-wider">
+              Total in Database
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-rap-platinum font-mogra">
+                  {albumStats?.totalAlbums?.toLocaleString() || "0"}
+                </div>
+                <div className="text-rap-smoke font-kaushan text-xs">Albums</div>
               </div>
-              <div className="text-rap-smoke font-kaushan text-xs md:text-sm">Avg # Albums</div>
-              <div className="text-rap-smoke/70 font-kaushan text-xs">
-                ({albumStats?.albumCount || 0} rappers)
+              <div className="text-center">
+                <div className="text-3xl md:text-4xl font-bold text-rap-burgundy font-mogra">
+                  {albumStats?.totalMixtapes?.toLocaleString() || "0"}
+                </div>
+                <div className="text-rap-smoke font-kaushan text-xs">Mixtapes</div>
               </div>
             </div>
-            <div className="text-center">
-              <div className="text-4xl md:text-5xl lg:text-6xl font-bold text-rap-burgundy font-mogra">
-                {albumStats?.averageMixtapes ? albumStats.averageMixtapes.toFixed(1) : "N/A"}
+          </div>
+
+          {/* Averages Per Rapper */}
+          <div>
+            <div className="text-xs text-rap-smoke/70 font-kaushan mb-2 text-center uppercase tracking-wider">
+              Averages per Rapper
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-rap-platinum/80 font-mogra">
+                  {albumStats?.averageAlbums ? albumStats.averageAlbums.toFixed(1) : "0"}
+                </div>
+                <div className="text-rap-smoke/70 font-kaushan text-xs">
+                  albums ({albumStats?.albumCount || 0} rappers)
+                </div>
               </div>
-              <div className="text-rap-smoke font-kaushan text-xs md:text-sm">Avg # Mixtapes</div>
-              <div className="text-rap-smoke/70 font-kaushan text-xs">
-                ({albumStats?.mixtapeCount || 0} rappers)
+              <div className="text-center">
+                <div className="text-2xl md:text-3xl font-bold text-rap-burgundy/80 font-mogra">
+                  {albumStats?.averageMixtapes ? albumStats.averageMixtapes.toFixed(1) : "0"}
+                </div>
+                <div className="text-rap-smoke/70 font-kaushan text-xs">
+                  mixtapes ({albumStats?.mixtapeCount || 0} rappers)
+                </div>
               </div>
             </div>
           </div>
 
           {/* Top Artists */}
           {(albumStats?.topAlbumArtist || albumStats?.topMixtapeArtist) && <>
-              <div className="border-t border-rap-gold/20 pt-3"></div>
+              <div className="border-t border-rap-gold/20 pt-3">
+                <div className="text-xs text-rap-smoke/70 font-kaushan mb-2 text-center uppercase tracking-wider">
+                  Top Artists
+                </div>
+              </div>
               <div className="grid grid-cols-2 gap-3">
                 {/* Top Album Artist */}
                 {albumStats?.topAlbumArtist && <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-rap-platinum/70 mb-1">
-                      <Trophy className="w-3 h-3" />
+                      <Trophy className="w-4 h-4" />
                     </div>
                     <div className="text-sm font-bold text-rap-platinum font-mogra truncate px-1">
                       {albumStats.topAlbumArtist.name}
@@ -74,7 +103,7 @@ const AlbumStatsCard = () => {
                 {/* Top Mixtape Artist */}
                 {albumStats?.topMixtapeArtist && <div className="text-center">
                     <div className="flex items-center justify-center gap-1 text-rap-burgundy/70 mb-1">
-                      <Star className="w-3 h-3" />
+                      <Star className="w-4 h-4" />
                     </div>
                     <div className="text-sm font-bold text-rap-burgundy font-mogra truncate px-1">
                       {albumStats.topMixtapeArtist.name}
