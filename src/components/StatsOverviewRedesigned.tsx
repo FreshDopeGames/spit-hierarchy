@@ -471,7 +471,7 @@ const StatsOverviewRedesigned = () => {
           <div className="grid grid-cols-2 gap-4 mt-auto">
             {stats?.members.newest && (
               <Link to={`/user/${stats.members.newest.username}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
+                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all h-full flex flex-col">
                   {getAvatarUrl(stats.members.newest.avatar_url) ? (
                     <img
                       src={getAvatarUrl(stats.members.newest.avatar_url)!}
@@ -495,7 +495,7 @@ const StatsOverviewRedesigned = () => {
 
             {stats?.members.mostAchievements && (
               <Link to={`/user/${stats.members.mostAchievements.username}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
+                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all h-full flex flex-col">
                   {getAvatarUrl(stats.members.mostAchievements.avatar_url) ? (
                     <img
                       src={getAvatarUrl(stats.members.mostAchievements.avatar_url)!}
