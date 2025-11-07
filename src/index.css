@@ -431,3 +431,20 @@ input:not([class*="themed"])::placeholder {
   background-color: hsl(var(--theme-hover-bg)) !important;
   color: hsl(var(--theme-hover-color)) !important;
 }
+
+/* Leaflet map customization */
+.map-tiles {
+  filter: hue-rotate(-10deg) saturate(0.8) brightness(0.9);
+}
+
+.leaflet-control-attribution {
+  font-size: 9px !important;
+  opacity: 0.5 !important;
+  background: rgba(0, 0, 0, 0.6) !important;
+  color: rgba(255, 255, 255, 0.6) !important;
+  padding: 2px 4px !important;
+}
+
+.leaflet-control-attribution a {
+  color: rgba(227, 149, 22, 0.7) !important;
+}

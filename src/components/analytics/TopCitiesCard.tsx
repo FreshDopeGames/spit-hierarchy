@@ -41,18 +41,18 @@ const TopCitiesCard = () => {
         <div className="mb-4">
           <CityMap cities={topCities?.slice(0, 5) || []} />
         </div>
-        <div className="space-y-3">
+        <div className="space-y-2">
           {topCities?.slice(0, 5).map((city, index) => (
             <div key={city.location} className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <span className="text-rap-gold font-mogra text-sm w-6">
+                <span className="text-rap-gold font-mogra text-base w-6">
                   #{index + 1}
                 </span>
-                <span className="text-rap-platinum font-kaushan">
+                <span className="text-rap-platinum font-kaushan text-base">
                   {city.location}
                 </span>
               </div>
-              <span className="text-rap-smoke font-mogra">
+              <span className="text-rap-smoke font-mogra text-base">
                 {city.count}
               </span>
             </div>

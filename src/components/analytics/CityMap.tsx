@@ -1,6 +1,7 @@
 import { MapContainer, TileLayer, CircleMarker, Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { CityStats } from "@/hooks/useTopCitiesStats";
+import { useState, useEffect } from "react";
 
 interface CityMapProps {
   cities: CityStats[];
@@ -9,6 +10,19 @@ interface CityMapProps {
 const CityMap = ({ cities }: CityMapProps) => {
   // Filter cities that have coordinates
   const citiesWithCoords = cities.filter(city => city.coordinates);
+
+  // Responsive zoom level
+  const [zoom, setZoom] = useState(4);
+
+  useEffect(() => {
+    const updateZoom = () => {
+      setZoom(window.innerWidth < 768 ? 3 : 4);
+    };
+    
+    updateZoom();
+    window.addEventListener('resize', updateZoom);
+    return () => window.removeEventListener('resize', updateZoom);
+  }, []);
 
   if (citiesWithCoords.length === 0) {
     return (
@@ -36,14 +50,14 @@ const CityMap = ({ cities }: CityMapProps) => {
     <div className="w-full h-[300px] rounded-lg overflow-hidden border-2 border-rap-gold/20">
       <MapContainer
         center={[40, -95]}
-        zoom={4}
-        style={{ height: "100%", width: "100%", background: "#1a1a1a" }}
+        zoom={zoom}
+        style={{ height: "100%", width: "100%", background: "#0a0a0a" }}
         scrollWheelZoom={true}
         className="z-0"
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
           className="map-tiles"
         />
         {citiesWithCoords.map((city, index) => (
