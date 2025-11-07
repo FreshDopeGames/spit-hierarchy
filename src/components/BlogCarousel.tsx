@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import useEmblaCarousel from 'embla-carousel-react';
-
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isProgressActive, setIsProgressActive] = useState(true);
@@ -20,7 +19,6 @@ const BlogCarousel = () => {
     dragFree: false,
     containScroll: 'trimSnaps'
   });
-
   const {
     data: featuredPosts = [],
     isLoading
@@ -48,7 +46,6 @@ const BlogCarousel = () => {
     // 10 minutes - blog posts don't change frequently
     refetchOnWindowFocus: false
   });
-
   const autoRotateToNext = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollNext();
@@ -62,7 +59,6 @@ const BlogCarousel = () => {
       setTimeout(() => setIsProgressActive(true), 50);
     }, 100);
   }, [emblaApi, featuredPosts.length]);
-
   const resetAutoRotate = useCallback(() => {
     if (autoRotateIntervalRef.current) {
       clearInterval(autoRotateIntervalRef.current);
@@ -70,12 +66,10 @@ const BlogCarousel = () => {
     progressKeyRef.current += 1; // Force progress bar restart
     setIsProgressActive(false);
     setTimeout(() => setIsProgressActive(true), 50);
-    
     if (!isPaused && featuredPosts.length > 1) {
       autoRotateIntervalRef.current = setInterval(autoRotateToNext, 8000);
     }
   }, [isPaused, featuredPosts.length, autoRotateToNext]);
-
   const goToPrevious = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev();
@@ -84,7 +78,6 @@ const BlogCarousel = () => {
     }
     resetAutoRotate();
   }, [emblaApi, featuredPosts.length, resetAutoRotate]);
-
   const goToNext = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollNext();
@@ -92,7 +85,6 @@ const BlogCarousel = () => {
       setCurrentIndex(prevIndex => prevIndex === featuredPosts.length - 1 ? 0 : prevIndex + 1);
     }
   }, [emblaApi, featuredPosts.length]);
-
   const scrollTo = useCallback((index: number) => {
     if (emblaApi) {
       emblaApi.scrollTo(index);
@@ -101,12 +93,10 @@ const BlogCarousel = () => {
     }
     resetAutoRotate();
   }, [emblaApi, resetAutoRotate]);
-
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
     setCurrentIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
-
   useEffect(() => {
     if (!emblaApi) return;
     onSelect();
@@ -125,7 +115,6 @@ const BlogCarousel = () => {
       }
     };
   }, [resetAutoRotate]);
-
   const handleMouseEnter = () => {
     setIsPaused(true);
     if (autoRotateIntervalRef.current) {
@@ -133,12 +122,10 @@ const BlogCarousel = () => {
     }
     setIsProgressActive(false);
   };
-
   const handleMouseLeave = () => {
     setIsPaused(false);
     resetAutoRotate();
   };
-
   const getImageData = (post: any) => {
     if (!post.featured_image_url) {
       return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=800&h=400&fit=crop";
@@ -149,20 +136,14 @@ const BlogCarousel = () => {
       return post.featured_image_url;
     }
   };
-
   if (isLoading || featuredPosts.length === 0) return null;
-
   return <section className="mb-16">
       <h2 className="font-ceviche text-primary mb-6 sm:mb-8 tracking-wider text-4xl sm:text-6xl text-center leading-tight">
         FEATURED SLICK TALK
       </h2>
       {/* Embla carousel container */}
       <div className="flex justify-center">
-        <div 
-          className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border-4 border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
+        <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border-4 border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {featuredPosts.map(post => <div key={post.id} className="flex-[0_0_100%] min-w-0">
@@ -193,12 +174,7 @@ const BlogCarousel = () => {
                       
                       {/* Progress Bar */}
                       <div className="absolute bottom-0 left-0 w-full h-1 bg-black/30">
-                        <div 
-                          key={progressKeyRef.current}
-                          className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${
-                            isProgressActive && !isPaused ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'
-                          }`}
-                        />
+                        <div key={progressKeyRef.current} className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${isProgressActive && !isPaused ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'}`} />
                       </div>
                     </div>
                   </Link>
@@ -234,15 +210,11 @@ const BlogCarousel = () => {
       {/* More Articles Button - moved below carousel */}
       <div className="text-center mt-6">
         <Link to="/blog" onClick={() => window.scrollTo(0, 0)}>
-          <Button 
-            size="lg" 
-            className="bg-gradient-to-r from-[hsl(var(--theme-burgundy))] via-[hsl(var(--theme-gold))] to-[hsl(var(--theme-forest))] hover:from-[hsl(var(--theme-burgundy-light))] hover:via-[hsl(var(--theme-gold-light))] hover:to-[hsl(var(--theme-forest-light))] font-mogra text-xl shadow-xl shadow-[hsl(var(--theme-gold))]/40 border border-[hsl(var(--theme-gold))]/30 text-black"
-          >
+          <Button size="lg" className="bg-gradient-to-r from-[hsl(var(--theme-burgundy))] via-[hsl(var(--theme-gold))] to-[hsl(var(--theme-forest))] hover:from-[hsl(var(--theme-burgundy-light))] hover:via-[hsl(var(--theme-gold-light))] hover:to-[hsl(var(--theme-forest-light))] font-mogra text-xl shadow-xl shadow-[hsl(var(--theme-gold))]/40 border border-[hsl(var(--theme-gold))]/30 text-black border-2 ">
             More Slick Talk
           </Button>
         </Link>
       </div>
     </section>;
 };
-
 export default BlogCarousel;
