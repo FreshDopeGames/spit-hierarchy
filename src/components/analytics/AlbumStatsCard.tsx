@@ -44,7 +44,7 @@ const AlbumStatsCard = () => {
                 <div className="text-3xl md:text-4xl font-bold text-rap-platinum font-mogra">
                   {albumStats?.totalAlbums?.toLocaleString() || "0"}
                 </div>
-                <div className="text-rap-smoke font-kaushan text-xs">Albums</div>
+                <div className="text-rap-smoke font-kaushan text-sm">Albums</div>
               </div>
               <div className="text-center">
                 <div className="text-3xl md:text-4xl font-bold text-rap-burgundy font-mogra">
@@ -65,7 +65,7 @@ const AlbumStatsCard = () => {
                 <div className="text-2xl md:text-3xl font-bold text-rap-platinum/80 font-mogra">
                   {albumStats?.averageAlbums ? albumStats.averageAlbums.toFixed(1) : "0"}
                 </div>
-                <div className="text-rap-smoke/70 font-kaushan text-xs">
+                <div className="text-rap-smoke/70 font-kaushan text-sm">
                   albums ({albumStats?.albumCount || 0} rappers)
                 </div>
               </div>
@@ -73,7 +73,7 @@ const AlbumStatsCard = () => {
                 <div className="text-2xl md:text-3xl font-bold text-rap-burgundy/80 font-mogra">
                   {albumStats?.averageMixtapes ? albumStats.averageMixtapes.toFixed(1) : "0"}
                 </div>
-                <div className="text-rap-smoke/70 font-kaushan text-xs">
+                <div className="text-rap-smoke/70 font-kaushan text-sm">
                   mixtapes ({albumStats?.mixtapeCount || 0} rappers)
                 </div>
               </div>
@@ -91,20 +91,16 @@ const AlbumStatsCard = () => {
                 {/* Top Album Artist */}
                 {albumStats?.topAlbumArtist && <div className="text-center">
                     <div className="flex justify-center mb-2">
-                      <RapperAvatar 
-                        rapper={{
-                          id: albumStats.topAlbumArtist.id,
-                          name: albumStats.topAlbumArtist.name,
-                          slug: albumStats.topAlbumArtist.slug
-                        }}
-                        size="md"
-                        variant="square"
-                      />
+                      <RapperAvatar rapper={{
+                  id: albumStats.topAlbumArtist.id,
+                  name: albumStats.topAlbumArtist.name,
+                  slug: albumStats.topAlbumArtist.slug
+                }} size="md" variant="square" />
                     </div>
                     <div className="text-sm font-bold text-rap-platinum font-mogra truncate px-1">
                       {albumStats.topAlbumArtist.name}
                     </div>
-                    <div className="text-xs text-rap-smoke font-kaushan">
+                    <div className="text-sm text-rap-smoke font-kaushan">
                       {albumStats.topAlbumArtist.count} albums
                     </div>
                   </div>}
@@ -112,20 +108,16 @@ const AlbumStatsCard = () => {
                 {/* Top Mixtape Artist */}
                 {albumStats?.topMixtapeArtist && <div className="text-center">
                     <div className="flex justify-center mb-2">
-                      <RapperAvatar 
-                        rapper={{
-                          id: albumStats.topMixtapeArtist.id,
-                          name: albumStats.topMixtapeArtist.name,
-                          slug: albumStats.topMixtapeArtist.slug
-                        }}
-                        size="md"
-                        variant="square"
-                      />
+                      <RapperAvatar rapper={{
+                  id: albumStats.topMixtapeArtist.id,
+                  name: albumStats.topMixtapeArtist.name,
+                  slug: albumStats.topMixtapeArtist.slug
+                }} size="md" variant="square" />
                     </div>
                     <div className="text-sm font-bold text-rap-burgundy font-mogra truncate px-1">
                       {albumStats.topMixtapeArtist.name}
                     </div>
-                    <div className="text-xs text-rap-smoke font-kaushan">
+                    <div className="text-sm text-rap-smoke font-kaushan">
                       {albumStats.topMixtapeArtist.count} mixtapes
                     </div>
                   </div>}
