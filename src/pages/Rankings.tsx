@@ -4,6 +4,7 @@ import { Trophy, Users, Plus } from "lucide-react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import UserRankingsSection from "@/components/rankings/UserRankingsSection";
 import OfficialRankingsSection from "@/components/rankings/OfficialRankingsSection";
+import RankingsLoadingSkeleton from "@/components/rankings/RankingsLoadingSkeleton";
 import CreateRankingDialog from "@/components/rankings/CreateRankingDialog";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -71,11 +72,11 @@ const Rankings = () => {
 
           {/* Tab Content */}
           <ThemedTabsContent value="official" className="mt-0">
-            {loading ? <div className="text-center py-8">
-                <p className="text-rap-platinum font-merienda">
-                  Loading official rankings...
-                </p>
-              </div> : <OfficialRankingsSection rankings={officialRankings} />}
+            {loading ? (
+              <RankingsLoadingSkeleton />
+            ) : (
+              <OfficialRankingsSection rankings={officialRankings} />
+            )}
           </ThemedTabsContent>
 
           <ThemedTabsContent value="community" className="mt-0">
