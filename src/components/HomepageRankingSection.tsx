@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { useAdaptivePolling } from "@/hooks/useAdaptivePolling";
 import RankingPreviewCard from "./RankingPreviewCard";
 import { Tables } from "@/integrations/supabase/types";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
   rapper: Tables<"rappers">;
@@ -97,6 +99,11 @@ const HomepageRankingSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
           {[1, 2, 3].map(i => <div key={i} className="h-[300px] sm:h-[350px] md:h-[400px] rounded-xl bg-[var(--theme-surface)]/20 animate-pulse" />)}
         </div>
+        
+        {/* All Rankings Button - Centered (Loading State) */}
+        <div className="flex justify-center w-full mt-8">
+          <div className="h-11 w-48 rounded-md bg-[var(--theme-surface)]/20 animate-pulse" />
+        </div>
       </section>;
   }
   if (!rankingsData || rankingsData.length === 0) {
@@ -114,6 +121,15 @@ const HomepageRankingSection = () => {
       
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
         {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} priority={index === 0} />)}
+      </div>
+      
+      {/* All Rankings Button - Centered */}
+      <div className="flex justify-center w-full mt-8">
+        <Link to="/rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
+          <Button className="w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-xl border-0">
+            All Rapper Rankings
+          </Button>
+        </Link>
       </div>
     </section>;
 };
