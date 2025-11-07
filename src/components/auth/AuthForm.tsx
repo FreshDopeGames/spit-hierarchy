@@ -232,8 +232,8 @@ const AuthForm = ({
       <ThemedButton 
         type="submit" 
         disabled={loading || validationErrors.length > 0}
-        variant="gradient"
-        className="w-full font-extrabold text-2xl text-black disabled:opacity-50"
+        variant="outline"
+        className="w-full font-extrabold text-2xl text-black disabled:opacity-50 bg-gradient-to-r from-[#e39516] to-[#c0720c] border-none hover:from-[#c0720c] hover:to-[#e39516]"
       >
         {loading ? "Processing..." : isLogin ? "Sign In" : "Join the Hierarchy"}
       </ThemedButton>
