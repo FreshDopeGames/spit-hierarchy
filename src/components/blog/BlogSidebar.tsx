@@ -50,10 +50,10 @@ const BlogSidebar = ({
       {/* Newsletter Signup */}
       {showSignUp && <Card className="bg-black border-4 border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
           <CardHeader className="pb-4">
-            <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-fontPrimary)] text-lg">JOIN THE CONVERSATION</CardTitle>
+            <CardTitle className="font-[var(--theme-fontPrimary)] text-center text-3xl">JOIN THE CONVERSATION</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] mb-4 text-sm">
+            <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] mb-4 text-sm text-center">
               Subscribe to receive the latest sacred scrolls and exclusive insights from the temple.
             </p>
             <Link to="/auth">
@@ -68,10 +68,8 @@ const BlogSidebar = ({
       {/* All Rankings Voting Module */}
       <Card className="bg-black border-4 border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
         <CardContent className="p-6 text-center space-y-4">
-          <h3 className="text-[var(--theme-primary)] font-[var(--theme-fontPrimary)] text-5xl">All Rankings</h3>
-          <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] text-base pb-2">
-            Your Voice Matters
-          </p>
+          <h3 className="font-[var(--theme-fontPrimary)] text-3xl">All Rankings</h3>
+          <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] text-base pb-2">Your voice matters. Cast a vote for your favorite rapper today!</p>
           <Link to="/rankings">
             <Button className="w-full bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-3xl py-4 border-0">
               <Vote className="w-6 h-6 mr-2" />
