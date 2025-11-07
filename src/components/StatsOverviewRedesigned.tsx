@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Music2, Vote, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useMemo, useEffect } from "react";
+import AnalyticsButton from "@/components/AnalyticsButton";
 
 interface RapperData {
   id: string;
@@ -562,6 +563,9 @@ const StatsOverviewRedesigned = () => {
             </Link>
           )}
         </div>
+        
+        {/* Analytics Button - Part of Stats Section */}
+        <AnalyticsButton />
       </div>
     </div>
   );

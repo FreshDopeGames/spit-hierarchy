@@ -8,7 +8,6 @@ import HomepagePoll from "@/components/polls/HomepagePoll";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import HomepageRankingSection from "@/components/HomepageRankingSection";
 import StatsOverview from "@/components/StatsOverviewRedesigned";
-import AnalyticsButton from "@/components/AnalyticsButton";
 import GuestCallToAction from "@/components/GuestCallToAction";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -156,20 +155,17 @@ const Index = () => {
             {/* Strategic Ad Placement */}
             <ContentAdUnit size="large" />
 
+            {/* Stats Overview (includes Analytics Button) */}
+            <StatsOverview />
+
             {/* Community Polls */}
             <HomepagePoll />
 
-            {/* Stats Overview */}
-            <StatsOverview />
-
-            {/* View All Stats Button */}
-            <AnalyticsButton />
+            {/* Ad after polls */}
+            <ContentAdUnit size="medium" />
 
             {/* Guest user call-to-action */}
             <GuestCallToAction />
-
-            {/* Ad between sections */}
-            <ContentAdUnit size="medium" />
           </div>
         </main>
 
