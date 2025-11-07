@@ -565,7 +565,9 @@ const StatsOverviewRedesigned = () => {
         </div>
         
         {/* Analytics Button - Part of Stats Section */}
-        <AnalyticsButton />
+        <div className="flex justify-center w-full">
+          <AnalyticsButton />
+        </div>
       </div>
     </div>
   );
