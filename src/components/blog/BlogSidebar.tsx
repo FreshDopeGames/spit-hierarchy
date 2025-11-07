@@ -89,10 +89,10 @@ const BlogSidebar = ({ relatedPosts, showSignUp = false }: BlogSidebarProps) => 
             Your Voice Matters
           </p>
           <Link to="/rankings">
-            <Button className="bg-[var(--theme-primary)] text-[var(--theme-textLight)] hover:bg-[var(--theme-primary)]/80 font-medium">
-              <Vote className="w-4 h-4 mr-2" />
+            <Button className="w-full bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-3xl py-4 border-0">
+              <Vote className="w-6 h-6 mr-2" />
               Vote
-              <ArrowRight className="w-4 h-4 ml-2" />
+              <ArrowRight className="w-6 h-6 ml-2" />
             </Button>
           </Link>
         </CardContent>
