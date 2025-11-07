@@ -23,7 +23,7 @@ const BlogSidebar = ({
       {/* Related Posts */}
       {relatedPosts.length > 0 && <Card className="bg-black border-4 border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20">
           <CardHeader className="pb-4">
-            <CardTitle className="text-[var(--theme-primary)] font-[var(--theme-fontPrimary)] font-normal text-center text-5xl">
+            <CardTitle className="font-[var(--theme-fontPrimary)] font-normal text-center text-3xl">
               More Writtens
             </CardTitle>
           </CardHeader>
@@ -53,9 +53,7 @@ const BlogSidebar = ({
             <CardTitle className="font-[var(--theme-fontPrimary)] text-center text-3xl">JOIN THE CONVERSATION</CardTitle>
           </CardHeader>
           <CardContent className="pt-0">
-            <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] mb-4 text-sm text-center">
-              Subscribe to receive the latest sacred scrolls and exclusive insights from the temple.
-            </p>
+            <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] mb-4 text-sm text-center">Sign up to comment on the latest Slick Talk, and get exclusive Rap analytics insights from Spit Hierarchy.</p>
             <Link to="/auth">
               <Button className="w-full bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-3xl py-4 border-0">
                 Join Now
