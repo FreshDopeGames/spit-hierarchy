@@ -9,12 +9,12 @@ const GuestCallToAction = () => {
   if (user) return null;
 
   return (
-    <div className="mt-12 text-center bg-[var(--theme-surface)] border border-[var(--theme-primary)]/40 rounded-lg p-8 shadow-2xl shadow-[var(--theme-primary)]/20 relative overflow-hidden">
+    <div className="mt-12 text-center bg-black border border-[var(--theme-primary)]/40 rounded-lg p-8 shadow-2xl shadow-[var(--theme-primary)]/20 relative overflow-hidden">
       <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
-      <h3 className="text-2xl font-[var(--theme-font-display)] text-[var(--theme-primary)] mb-4">
+      <h3 className="text-2xl font-[var(--theme-font-display)] text-white mb-4">
         Ready to Join the Culture?
       </h3>
-      <p className="text-[var(--theme-textMuted)] mb-6 font-[var(--theme-font-body)]">
+      <p className="text-white mb-6 font-[var(--theme-font-body)]">
         Join the legion of rap legends, unlock exclusive flow insights, and etch your name in the history of the culture.
       </p>
       <Link to="/auth">
