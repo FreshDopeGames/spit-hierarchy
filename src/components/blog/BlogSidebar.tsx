@@ -57,9 +57,9 @@ const BlogSidebar = ({
               Subscribe to receive the latest sacred scrolls and exclusive insights from the temple.
             </p>
             <Link to="/auth">
-              <Button className="w-full bg-[var(--theme-primary)] text-[var(--theme-textLight)] hover:bg-[var(--theme-primary)]/80 font-[var(--theme-fontPrimary)] text-sm">
+              <Button className="w-full bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-3xl py-4 border-0">
                 Join Now
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-6 h-6 ml-2" />
               </Button>
             </Link>
           </CardContent>
