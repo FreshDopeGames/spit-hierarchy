@@ -98,7 +98,7 @@ const AlbumStatsCard = () => {
                           slug: albumStats.topAlbumArtist.slug
                         }}
                         size="md"
-                        variant="circular"
+                        variant="square"
                       />
                     </div>
                     <div className="text-sm font-bold text-rap-platinum font-mogra truncate px-1">
@@ -119,7 +119,7 @@ const AlbumStatsCard = () => {
                           slug: albumStats.topMixtapeArtist.slug
                         }}
                         size="md"
-                        variant="circular"
+                        variant="square"
                       />
                     </div>
                     <div className="text-sm font-bold text-rap-burgundy font-mogra truncate px-1">
