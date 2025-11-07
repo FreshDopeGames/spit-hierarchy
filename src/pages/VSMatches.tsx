@@ -14,18 +14,15 @@ import InternalPageHeader from "@/components/InternalPageHeader";
 import RapperAvatar from "@/components/RapperAvatar";
 import { formatNumber } from "@/utils/numberFormatter";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
-
 const VSMatches = () => {
   // Track VS page visit for achievements
   usePageVisitTracking('vs_visits');
-  
   const {
     data: vsMatches,
     isLoading
   } = useVSMatches();
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState("newest");
-
   const filteredAndSortedMatches = vsMatches?.filter(match => match.title.toLowerCase().includes(searchTerm.toLowerCase()) || match.rapper_1.name.toLowerCase().includes(searchTerm.toLowerCase()) || match.rapper_2.name.toLowerCase().includes(searchTerm.toLowerCase()))?.sort((a, b) => {
     switch (sortBy) {
       case "newest":
@@ -38,9 +35,7 @@ const VSMatches = () => {
         return 0;
     }
   });
-
-  return (
-    <>
+  return <>
       <SEOHead title="VS Matches - Rap Battle Matchups" description="Discover head-to-head rapper matchups and vote for your favorites. Compare legends, rising stars, and iconic artists in epic VS battles." canonicalUrl="/vs" />
       
       <HeaderNavigation isScrolled={false} />
@@ -86,8 +81,7 @@ const VSMatches = () => {
           </div>
 
           {/* VS Matches Grid */}
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {isLoading ? <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {Array.from({
             length: 6
           }).map((_, i) => <Card key={i} className="bg-rap-charcoal border-rap-burgundy/30">
@@ -104,19 +98,14 @@ const VSMatches = () => {
                     <Skeleton className="h-4 w-full bg-rap-smoke/20" />
                   </CardContent>
                 </Card>)}
-            </div>
-          ) : filteredAndSortedMatches?.length === 0 ? (
-            <div className="text-center py-12">
+            </div> : filteredAndSortedMatches?.length === 0 ? <div className="text-center py-12">
               <Swords className="w-16 h-16 text-rap-smoke mx-auto mb-4" />
               <h3 className="text-xl font-bold text-rap-platinum mb-2">No VS matches found</h3>
               <p className="text-rap-smoke">
                 {searchTerm ? "Try adjusting your search terms" : "Check back soon for epic matchups!"}
               </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredAndSortedMatches?.map(match => (
-                <Link key={match.id} to={`/vs/${match.slug}`}>
+            </div> : <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredAndSortedMatches?.map(match => <Link key={match.id} to={`/vs/${match.slug}`}>
                   <Card className="border-4 border-black bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryDark))] group-hover:border-[hsl(var(--theme-background))] transition-all duration-300 hover:shadow-lg group">
                     <CardHeader>
                       <h3 className="text-lg font-bold text-[hsl(var(--theme-textInverted))] group-hover:text-[hsl(var(--theme-background))] transition-colors">
@@ -159,41 +148,28 @@ const VSMatches = () => {
                       </div>
 
                       {/* Vote distribution - centered with advantage bar */}
-                      {match.total_votes > 0 && (
-                        <div className="relative w-full h-2 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden border-2 border-black">
+                      {match.total_votes > 0 && <div className="relative w-full h-3 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden border-2 border-black">
                           {/* Gold center divider */}
                           <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-yellow-500 z-10 -translate-x-1/2" />
                           
                           {/* Advantage bar - extends from center based on who's winning */}
-                          <div 
-                            className="absolute top-0 h-2 bg-green-600 rounded-full transition-all duration-300"
-                            style={{
-                              left: match.rapper_1_votes >= match.rapper_2_votes 
-                                ? `${(match.rapper_2_votes / match.total_votes) * 50}%`
-                                : '50%',
-                              right: match.rapper_1_votes >= match.rapper_2_votes
-                                ? '50%'
-                                : `${(match.rapper_1_votes / match.total_votes) * 50}%`
-                            }}
-                          />
-                        </div>
-                      )}
+                          <div className="absolute top-0 h-2 bg-green-600 rounded-full transition-all duration-300" style={{
+                    left: match.rapper_1_votes >= match.rapper_2_votes ? `${match.rapper_2_votes / match.total_votes * 50}%` : '50%',
+                    right: match.rapper_1_votes >= match.rapper_2_votes ? '50%' : `${match.rapper_1_votes / match.total_votes * 50}%`
+                  }} />
+                        </div>}
 
                       <div className="text-xs text-[hsl(var(--theme-textInverted))]/70 text-center">
                         {new Date(match.created_at).toLocaleDateString()}
                       </div>
                     </CardContent>
                   </Card>
-                </Link>
-              ))}
-            </div>
-          )}
+                </Link>)}
+            </div>}
         </main>
       </div>
       
       <Footer />
-    </>
-  );
+    </>;
 };
-
 export default VSMatches;
