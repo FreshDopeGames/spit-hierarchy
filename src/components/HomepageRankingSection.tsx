@@ -81,7 +81,8 @@ const HomepageRankingSection = () => {
       }));
       return rankingsWithItems;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes (optimized cache)
+    staleTime: 5 * 60 * 1000,
+    // 5 minutes (optimized cache)
     refetchInterval,
     refetchOnWindowFocus: false
   });
@@ -126,7 +127,7 @@ const HomepageRankingSection = () => {
       {/* All Rankings Button - Centered */}
       <div className="flex justify-center w-full mt-8">
         <Link to="/rankings" className="w-full sm:w-auto" onClick={() => window.scrollTo(0, 0)}>
-          <Button className="w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-xl border-0">
+          <Button className="w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-xl border-black border-2">
             All Rapper Rankings
           </Button>
         </Link>
