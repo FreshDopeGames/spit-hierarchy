@@ -1,5 +1,6 @@
 
 import { Button } from "@/components/ui/button";
+import { ThemedButton } from "@/components/ui/themed-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { User, Mail, Lock, AlertCircle, Eye, EyeOff } from "lucide-react";
@@ -228,13 +229,14 @@ const AuthForm = ({
         )}
       </div>
       
-      <Button 
+      <ThemedButton 
         type="submit" 
-        disabled={loading || validationErrors.length > 0} 
-        className="w-full font-[var(--theme-font-body)] bg-[var(--theme-primary)] text-[var(--theme-background)] font-extrabold text-2xl disabled:opacity-50"
+        disabled={loading || validationErrors.length > 0}
+        variant="gradient"
+        className="w-full font-extrabold text-2xl text-black disabled:opacity-50"
       >
         {loading ? "Processing..." : isLogin ? "Sign In" : "Join the Hierarchy"}
-      </Button>
+      </ThemedButton>
     </form>
   );
 };
