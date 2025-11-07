@@ -16,6 +16,7 @@ import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
+import "leaflet/dist/leaflet.css";
 
 // Optimized QueryClient configuration with better performance settings
 const queryClient = new QueryClient({

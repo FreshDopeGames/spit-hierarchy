@@ -1,6 +1,7 @@
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { MapPin } from "lucide-react";
 import { useTopCitiesStats } from "@/hooks/useTopCitiesStats";
+import CityMap from "./CityMap";
 
 const TopCitiesCard = () => {
   const { data: topCities, isLoading } = useTopCitiesStats();
@@ -37,6 +38,9 @@ const TopCitiesCard = () => {
         </CardTitle>
       </CardHeader>
       <CardContent>
+        <div className="mb-4">
+          <CityMap cities={topCities?.slice(0, 5) || []} />
+        </div>
         <div className="space-y-3">
           {topCities?.slice(0, 5).map((city, index) => (
             <div key={city.location} className="flex items-center justify-between">

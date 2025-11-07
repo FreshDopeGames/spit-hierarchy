@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
+import { getCityCoordinate, CityCoordinate } from "@/utils/cityCoordinates";
 
-interface CityStats {
+export interface CityStats {
   location: string;
   count: number;
+  coordinates?: CityCoordinate;
 }
 
 export const useTopCitiesStats = () => {
@@ -27,7 +29,11 @@ export const useTopCitiesStats = () => {
 
       // Convert to array and sort by count
       const citiesArray = Object.entries(locationCounts)
-        .map(([location, count]) => ({ location, count }))
+        .map(([location, count]) => ({
+          location,
+          count,
+          coordinates: getCityCoordinate(location),
+        }))
         .sort((a, b) => b.count - a.count);
 
       return citiesArray;
