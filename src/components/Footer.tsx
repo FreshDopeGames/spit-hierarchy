@@ -94,9 +94,7 @@ const Footer = () => {
             <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/privacy" className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]" onClick={() => window.scrollTo(0, 0)}>
-                  Privacy Policy
-                </Link>
+                <Link to="/privacy" className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]" onClick={() => window.scrollTo(0, 0)}>v1.0 • © 2025 Fresh Dope Biz LLC • All rights reserved. • Keep the culture alive. Not a lie.</Link>
               </li>
               <li>
                 <Link to="/cookies" className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]" onClick={() => window.scrollTo(0, 0)}>
