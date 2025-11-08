@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AdSenseUnit from './AdSenseUnit';
+import AdAnnouncement from './AdAnnouncement';
 
 interface SidebarAdUnitProps {
   className?: string;
@@ -28,8 +29,8 @@ const SidebarAdUnit = ({ className = '', sticky = false }: SidebarAdUnitProps) =
       adLoaded ? 'opacity-100' : 'opacity-50'
     } ${className}`}>
       <div className="bg-rap-carbon/40 border border-rap-smoke/20 rounded-lg p-4">
-        <p className="text-rap-smoke text-sm mb-4 font-kaushan text-center">Advertisement</p>
-        <AdSenseUnit 
+        <AdAnnouncement visible={adLoaded} />
+        <AdSenseUnit
           adSlot="1234567893" // Replace with actual sidebar ad slot
           adFormat="vertical"
           responsive={true}

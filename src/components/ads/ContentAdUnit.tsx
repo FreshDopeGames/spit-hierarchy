@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import AdSenseUnit from './AdSenseUnit';
+import AdAnnouncement from './AdAnnouncement';
 
 interface ContentAdUnitProps {
   className?: string;
@@ -35,7 +36,8 @@ const ContentAdUnit = ({ className = '', size = 'medium' }: ContentAdUnitProps) 
       adLoaded ? 'opacity-100' : 'opacity-50'
     } ${className}`}>
       <div className="max-w-full">
-        <AdSenseUnit 
+        <AdAnnouncement visible={adLoaded} />
+        <AdSenseUnit
           adSlot={adSlots[size]}
           adFormat="auto"
           responsive={true}
