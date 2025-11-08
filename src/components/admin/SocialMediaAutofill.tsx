@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { Loader2, Twitter, Instagram } from "lucide-react";
+import { Loader2, Globe, Instagram } from "lucide-react";
 
 interface SocialMediaAutofillProps {
   rapperId: string;
@@ -55,7 +55,7 @@ const SocialMediaAutofill = ({ rapperId, rapperName, musicbrainzId, onUpdate }: 
       ) : (
         <>
           <Instagram className="w-4 h-4" />
-          <Twitter className="w-4 h-4" />
+          <Globe className="w-4 h-4" />
         </>
       )}
       {isLoading ? "Fetching..." : "Auto-fill Social Media"}

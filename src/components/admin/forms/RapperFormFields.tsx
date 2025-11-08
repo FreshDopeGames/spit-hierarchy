@@ -141,12 +141,13 @@ export const RapperFormFields = ({
         </div>
 
         <div className="space-y-2 md:col-span-2">
-          <ThemedLabel htmlFor="twitter_handle">Twitter Handle</ThemedLabel>
+          <ThemedLabel htmlFor="homepage_url">Official Homepage</ThemedLabel>
           <ThemedInput
-            id="twitter_handle"
-            value={formData.twitter_handle}
-            onChange={onInputChange("twitter_handle")}
-            placeholder="Enter Twitter handle"
+            id="homepage_url"
+            type="url"
+            value={formData.homepage_url}
+            onChange={onInputChange("homepage_url")}
+            placeholder="Enter official website URL"
           />
         </div>
       </div>

@@ -100,7 +100,7 @@ serve(async (req) => {
     // Load rapper row first (so we can short-circuit with cache before rate-limiting)
     const { data: rapper, error: rapperErr } = await supabaseService
       .from('rappers')
-      .select('id, name, musicbrainz_id, discography_last_updated, instagram_handle, twitter_handle, aliases')
+      .select('id, name, musicbrainz_id, discography_last_updated, instagram_handle, homepage_url, aliases')
       .eq('id', rapperId)
       .single();
 
@@ -312,28 +312,26 @@ serve(async (req) => {
     const birthYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
     const careerEndYear = artistData['life-span']?.end ? parseInt(artistData['life-span'].end.substring(0, 4)) : null;
 
-    // Extract social media handles from URL relationships
-    const urlRels = (artistData.relations || []).filter((r) => r.type === 'social network' && r.url);
+    // Extract social media handles and homepage from URL relationships
+    const urlRels = (artistData.relations || []).filter((r) => r.url);
     let instagramHandle: string | null = null;
-    let twitterHandle: string | null = null;
+    let homepageUrl: string | null = null;
 
     for (const rel of urlRels) {
       const url = rel.url?.resource || '';
+      const relType = rel.type || '';
       
-      // Extract Instagram handle
-      if (url.includes('instagram.com/') && !instagramHandle) {
+      // Extract Instagram handle (only from social network relations)
+      if (relType === 'social network' && url.includes('instagram.com/') && !instagramHandle) {
         const match = url.match(/instagram\.com\/([^\/\?]+)/);
         if (match && match[1]) {
           instagramHandle = match[1].replace('@', '');
         }
       }
       
-      // Extract Twitter handle (both twitter.com and x.com)
-      if ((url.includes('twitter.com/') || url.includes('x.com/')) && !twitterHandle) {
-        const match = url.match(/(?:twitter|x)\.com\/([^\/\?]+)/);
-        if (match && match[1]) {
-          twitterHandle = match[1].replace('@', '');
-        }
+      // Extract official homepage (type = 'official homepage')
+      if (relType === 'official homepage' && !homepageUrl) {
+        homepageUrl = url;
       }
     }
 
@@ -353,8 +351,9 @@ serve(async (req) => {
       updateData.instagram_handle = instagramHandle;
     }
     
-    if (twitterHandle && !rapper.twitter_handle) {
-      updateData.twitter_handle = twitterHandle;
+    // Only update homepage if currently empty
+    if (homepageUrl && !rapper.homepage_url) {
+      updateData.homepage_url = homepageUrl;
     }
 
     // Upsert labels from artist relations

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
-import { Crown, MapPin, Calendar, Music, Instagram, Twitter, Star } from "lucide-react";
+import { Crown, MapPin, Calendar, Music, Instagram, Globe, Star } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
@@ -191,7 +191,7 @@ const RapperHeader = ({
                     </a>
                   </ThemedButton>
                 )}
-                {rapper.twitter_handle && (
+                {rapper.homepage_url && (
                   <ThemedButton 
                     variant="gradient" 
                     size="sm" 
@@ -199,12 +199,12 @@ const RapperHeader = ({
                     asChild
                   >
                     <a 
-                      href={`https://twitter.com/${rapper.twitter_handle.replace('@', '')}`}
+                      href={rapper.homepage_url}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      <Twitter className="w-4 h-4 mr-2" />
-                      Twitter
+                      <Globe className="w-4 h-4 mr-2" />
+                      Official Site
                     </a>
                   </ThemedButton>
                 )}

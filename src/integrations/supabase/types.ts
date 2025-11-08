@@ -1854,6 +1854,7 @@ export type Database = {
           death_month: number | null
           death_year: number | null
           discography_last_updated: string | null
+          homepage_url: string | null
           id: string
           image_url: string | null
           instagram_handle: string | null
@@ -1865,7 +1866,6 @@ export type Database = {
           slug: string
           spotify_id: string | null
           total_votes: number | null
-          twitter_handle: string | null
           updated_at: string
           verified: boolean | null
         }
@@ -1884,6 +1884,7 @@ export type Database = {
           death_month?: number | null
           death_year?: number | null
           discography_last_updated?: string | null
+          homepage_url?: string | null
           id?: string
           image_url?: string | null
           instagram_handle?: string | null
@@ -1895,7 +1896,6 @@ export type Database = {
           slug: string
           spotify_id?: string | null
           total_votes?: number | null
-          twitter_handle?: string | null
           updated_at?: string
           verified?: boolean | null
         }
@@ -1914,6 +1914,7 @@ export type Database = {
           death_month?: number | null
           death_year?: number | null
           discography_last_updated?: string | null
+          homepage_url?: string | null
           id?: string
           image_url?: string | null
           instagram_handle?: string | null
@@ -1925,7 +1926,6 @@ export type Database = {
           slug?: string
           spotify_id?: string | null
           total_votes?: number | null
-          twitter_handle?: string | null
           updated_at?: string
           verified?: boolean | null
         }

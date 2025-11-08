@@ -39,7 +39,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     verified: false,
     spotify_id: "",
     instagram_handle: "",
-    twitter_handle: "",
+    homepage_url: "",
     aliases: [],
     tags: [],
     musicbrainz_id: "",
@@ -80,7 +80,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         verified: rapper.verified || false,
         spotify_id: rapper.spotify_id || "",
         instagram_handle: rapper.instagram_handle || "",
-        twitter_handle: rapper.twitter_handle || "",
+        homepage_url: rapper.homepage_url || "",
         aliases: rapper.aliases || [],
         tags: [],
         musicbrainz_id: rapper.musicbrainz_id || "",
@@ -101,7 +101,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         verified: false,
         spotify_id: "",
         instagram_handle: "",
-        twitter_handle: "",
+        homepage_url: "",
         aliases: [],
         tags: [],
         musicbrainz_id: "",
@@ -172,7 +172,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         verified: formData.verified,
         spotify_id: formData.spotify_id.trim() || null,
         instagram_handle: formData.instagram_handle.trim() || null,
-        twitter_handle: formData.twitter_handle.trim() || null,
+        homepage_url: formData.homepage_url.trim() || null,
         aliases: formData.aliases,
         musicbrainz_id: formData.musicbrainz_id.trim() || null,
         slug,
@@ -420,14 +420,14 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         </div>
 
         <div>
-          <Label htmlFor="twitter_handle" className="text-[var(--theme-primary)]">Twitter Handle</Label>
+          <Label htmlFor="homepage_url" className="text-[var(--theme-primary)]">Official Homepage</Label>
           <Input
-            id="twitter_handle"
-            type="text"
-            value={formData.twitter_handle}
-            onChange={(e) => handleInputChange("twitter_handle", e.target.value)}
+            id="homepage_url"
+            type="url"
+            value={formData.homepage_url}
+            onChange={(e) => handleInputChange("homepage_url", e.target.value)}
             className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
-            placeholder="@username"
+            placeholder="https://..."
           />
         </div>
       </div>
