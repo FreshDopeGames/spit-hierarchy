@@ -69,17 +69,7 @@ const RankingsSectionHeader = () => {
           </p>
           
           {/* Decorative Elements */}
-          <div className="mt-8 sm:mt-4 lg:mt-4 flex items-center justify-center gap-2 sm:gap-1 lg:gap-1">
-            <div className="h-px w-20 sm:w-10 lg:w-10" style={{
-            background: `linear-gradient(to right, transparent, ${theme.colors.primary}, transparent)`
-          }} />
-            <Crown className="w-5 h-5 sm:w-4 sm:h-4 lg:w-3 lg:h-3" style={{
-            color: theme.colors.primary
-          }} />
-            <div className="h-px w-20 sm:w-10 lg:w-10" style={{
-            background: `linear-gradient(to right, transparent, ${theme.colors.primary}, transparent)`
-          }} />
-          </div>
+          
         </div>
       </div>
       
