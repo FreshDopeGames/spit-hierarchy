@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { Loader2, Globe, Instagram } from "lucide-react";
+import { Loader2, Globe, Instagram, Music } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 
 interface BulkUpdateResults {
@@ -119,10 +119,11 @@ const SocialMediaBulkUpdate = () => {
           <h3 className="text-lg font-semibold flex items-center gap-2">
             <Instagram className="w-5 h-5" />
             <Globe className="w-5 h-5" />
+            <Music className="w-5 h-5" />
             Social Media & Homepage Bulk Update
           </h3>
           <p className="text-sm text-muted-foreground mt-1">
-            Quickly fetch and update Instagram handles and official homepage URLs from
+            Quickly fetch and update Instagram handles, Spotify IDs, and official homepage URLs from
             MusicBrainz for all rappers. Much faster than full discography fetch
             (processes ~10 rappers per batch).
           </p>
@@ -217,7 +218,7 @@ const SocialMediaBulkUpdate = () => {
                 discography fetch)
               </p>
               <p className="text-xs text-muted-foreground">
-                Note: Only updates empty fields. Existing Instagram handles and
+                Note: Only updates empty fields. Existing Instagram handles, Spotify IDs, and
                 homepage URLs are preserved.
               </p>
             </div>

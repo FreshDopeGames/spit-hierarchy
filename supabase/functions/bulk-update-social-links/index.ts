@@ -42,7 +42,7 @@ serve(async (req) => {
     // Fetch rappers with MusicBrainz IDs
     const { data: rappers, error: fetchError } = await supabase
       .from('rappers')
-      .select('id, name, musicbrainz_id, instagram_handle, homepage_url')
+      .select('id, name, musicbrainz_id, instagram_handle, homepage_url, spotify_id')
       .not('musicbrainz_id', 'is', null)
       .order('name')
       .range(startFromIndex, startFromIndex + batchSize - 1);
@@ -124,6 +124,7 @@ serve(async (req) => {
         const urlRels = (artistData.relations || []).filter((r: any) => r.url);
         let instagramHandle: string | null = null;
         let homepageUrl: string | null = null;
+        let spotifyId: string | null = null;
 
         for (const rel of urlRels) {
           const url = rel.url?.resource || '';
@@ -141,6 +142,14 @@ serve(async (req) => {
           if (relType === 'official homepage' && !homepageUrl) {
             homepageUrl = url;
           }
+
+          // Extract Spotify ID (from streaming music or social network relations)
+          if (url.includes('open.spotify.com/artist/') && !spotifyId) {
+            const match = url.match(/spotify\.com\/artist\/([a-zA-Z0-9]+)/);
+            if (match && match[1]) {
+              spotifyId = match[1];
+            }
+          }
         }
 
         // Prepare update data - only update if currently empty
@@ -157,6 +166,12 @@ serve(async (req) => {
           updateData.homepage_url = homepageUrl;
           hasUpdates = true;
           console.log(`[${rapper.name}] Found homepage: ${homepageUrl}`);
+        }
+
+        if (spotifyId && !rapper.spotify_id) {
+          updateData.spotify_id = spotifyId;
+          hasUpdates = true;
+          console.log(`[${rapper.name}] Found Spotify ID: ${spotifyId}`);
         }
 
         // Update rapper if we have new data
