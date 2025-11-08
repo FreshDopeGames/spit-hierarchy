@@ -122,9 +122,6 @@ const Index = () => {
             {/* Featured Rankings Section */}
             <HomepageRankingSection />
 
-            {/* Ad between sections */}
-            <ContentAdUnit size="medium" />
-
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
 
