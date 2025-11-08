@@ -6,6 +6,9 @@ verify_jwt = false
 [functions.bulk-populate-musicbrainz-ids]
 verify_jwt = false
 
+[functions.bulk-update-social-links]
+verify_jwt = false
+
 [functions.bulk-fetch-discographies]
 verify_jwt = false
 

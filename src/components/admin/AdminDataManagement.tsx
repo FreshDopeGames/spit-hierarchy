@@ -2,6 +2,7 @@ import { Database } from "lucide-react";
 import AdminTabHeader from "./AdminTabHeader";
 import VotingDataResetSection from "./VotingDataResetSection";
 import MusicBrainzBulkPopulation from "./MusicBrainzBulkPopulation";
+import SocialMediaBulkUpdate from "./SocialMediaBulkUpdate";
 import DiscographyBulkFetch from "./DiscographyBulkFetch";
 
 const AdminDataManagement = () => {
@@ -15,6 +16,7 @@ const AdminDataManagement = () => {
       
       <div className="space-y-8">
         <MusicBrainzBulkPopulation />
+        <SocialMediaBulkUpdate />
         <DiscographyBulkFetch />
         <VotingDataResetSection />
       </div>
