@@ -46,7 +46,7 @@ const RankingsSectionHeader = () => {
       <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-surface)]/80 via-[var(--theme-surface)]/60 to-[var(--theme-surface)]/80" />
       
       {/* Content */}
-      <div className="relative z-10 px-6 text-center py-[30px] sm:py-6 lg:py-4">
+      <div className="relative z-10 px-6 text-center sm:py-6 lg:py-4 py-[10px]">
         <div className="max-w-4xl mx-auto">
           {/* Icon and Title */}
           <div className="flex items-center justify-center gap-4 mb-6 sm:gap-2 sm:mb-3 lg:mb-2">
