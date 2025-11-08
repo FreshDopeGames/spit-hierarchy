@@ -10,6 +10,8 @@ import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { PublicProfile } from "@/types/publicProfile";
 import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
+import { Link } from "react-router-dom";
+import GuestProfileCTA from "@/components/profile/GuestProfileCTA";
 
 const PublicUserProfileByUsername = () => {
   const { username } = useParams();
@@ -26,13 +28,10 @@ const PublicUserProfileByUsername = () => {
   });
 
   useEffect(() => {
-    if (username && user) { // Only authenticated users can view profiles
+    if (username) {
       fetchUserProfile();
-    } else if (!user) {
-      setNotFound(true);
-      setLoading(false);
     }
-  }, [username, user]);
+  }, [username]);
 
   const fetchUserProfile = async () => {
     if (!username) return;
@@ -120,7 +119,7 @@ const PublicUserProfileByUsername = () => {
     return <PublicProfileLoading />;
   }
 
-  if (notFound || !profile || !user) {
+  if (notFound || !profile) {
     return <PublicProfileNotFound />;
   }
 
@@ -129,7 +128,14 @@ const PublicUserProfileByUsername = () => {
       <HeaderNavigation isScrolled={false} />
       
       <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
-        <PublicProfileHeader profile={profile} rankingsCount={rankings.length} />
+        <PublicProfileHeader profile={profile} rankingsCount={rankings.length} isGuest={!user} />
+        
+        {!user && (
+          <div className="mb-6">
+            <GuestProfileCTA variant="banner" />
+          </div>
+        )}
+        
         <PublicTopFiveSection userId={profile.id} username={profile.username} />
       </div>
 

@@ -2,6 +2,8 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import RapperAvatar from "@/components/RapperAvatar";
 import { Music } from "lucide-react";
+import { useAuth } from "@/hooks/useAuth";
+import { Link } from "react-router-dom";
 
 interface PublicTopFiveSectionProps {
   userId: string;
@@ -20,6 +22,7 @@ interface TopRapperData {
 }
 
 const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) => {
+  const { user } = useAuth();
   const { data: topRappers, isLoading } = useQuery({
     queryKey: ["public-top-rappers", userId],
     queryFn: async () => {
@@ -148,6 +151,21 @@ const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) =
           ))}
         </div>
       </div>
+
+      {/* Guest CTA for unauthenticated viewers */}
+      {!user && (
+        <div className="mt-6 text-center">
+          <p className="text-sm text-[hsl(var(--theme-textMuted))] font-kaushan">
+            Want to create your own Top 5?{' '}
+            <Link 
+              to="/auth" 
+              className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] font-semibold underline"
+            >
+              Sign up to get started
+            </Link>
+          </p>
+        </div>
+      )}
     </div>
   );
 };
