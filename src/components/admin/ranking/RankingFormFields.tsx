@@ -36,7 +36,7 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
                 placeholder="Enter ranking title" 
                 {...field}
                 onChange={(e) => field.onChange(sanitizeAdminContent(e.target.value))}
-                className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
+                className="admin-themed bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>
             <FormMessage />
@@ -54,7 +54,7 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
                 placeholder="Enter ranking description" 
                 {...field}
                 onChange={(e) => field.onChange(sanitizeAdminContent(e.target.value))}
-                className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
+                className="admin-themed bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>
             <FormMessage />
@@ -69,7 +69,7 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
             <FormLabel className="font-mogra text-rap-platinum">Category</FormLabel>
             <Select onValueChange={field.onChange} defaultValue={field.value}>
               <FormControl>
-                <SelectTrigger className="bg-gray-100 border-rap-gold/30 text-rap-carbon">
+                <SelectTrigger className="admin-themed bg-gray-100 border-rap-gold/30 text-rap-carbon">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
               </FormControl>
@@ -96,7 +96,7 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
                 placeholder="Enter URL slug" 
                 {...field}
                 onChange={(e) => field.onChange(sanitizeAdminInput(e.target.value))}
-                className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
+                className="admin-themed bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>
             <FormMessage />
@@ -117,7 +117,7 @@ const RankingFormFields = ({ form, selectedTags, onTagsChange }: RankingFormFiel
                 {...field}
                 onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
                 value={field.value || 0}
-                className="bg-gray-100 border-rap-gold/30 text-rap-carbon"
+                className="admin-themed bg-gray-100 border-rap-gold/30 text-rap-carbon"
               />
             </FormControl>
             <FormMessage />
