@@ -12,7 +12,8 @@ const CareerStatsCard = ({
 }: CareerStatsCardProps) => {
   const {
     data: stats,
-    isLoading
+    isLoading,
+    isFetching
   } = useRapperCareerStats(rapperId);
   if (isLoading) {
     return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] animate-pulse">
@@ -48,7 +49,7 @@ const CareerStatsCard = ({
   }];
   return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/10 relative">
       <CardContent className="p-6 relative">
-        {isRefreshing && <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+        {(isRefreshing || isFetching) && <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
             <div className="text-center space-y-2">
               <div className="w-8 h-8 border-4 border-[var(--theme-primary)] border-t-transparent rounded-full animate-spin mx-auto"></div>
               <p className="text-sm text-[var(--theme-text)] font-[var(--theme-font-body)]">Updating...</p>
