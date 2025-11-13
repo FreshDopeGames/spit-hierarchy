@@ -21,30 +21,36 @@ export const submitVote = async (
     : 'bronze' as MemberStatus;
 
   // Call atomic vote function - handles duplicate check, both inserts, and validation
+  console.log('Submitting official vote via RPC', { cleanRankingId, cleanRapperId, memberStatus });
   const { data, error } = await supabase.rpc('vote_official', {
     p_ranking_id: cleanRankingId,
     p_rapper_id: cleanRapperId,
     p_member_status: memberStatus
   });
+  console.log('RPC vote_official response', { data, error });
 
   if (error) {
     console.error('Vote submission error:', error);
     
     // Map specific error codes to user-friendly messages
-    if (error.message?.includes('ALREADY_VOTED_TODAY')) {
+    const message = (typeof error.message === 'string') ? error.message : '';
+    if (message.includes('ALREADY_VOTED_TODAY')) {
       throw new Error('You have already voted for this rapper today. Come back tomorrow!');
     }
-    if (error.message?.includes('INVALID_PARAMS')) {
+    if (message.includes('INVALID_PARAMS')) {
       throw new Error('Invalid voting parameters. Please refresh and try again.');
     }
-    if (error.message?.includes('RAPPER_NOT_FOUND')) {
+    if (message.includes('RAPPER_NOT_FOUND')) {
       throw new Error('Rapper not found. Please refresh and try again.');
     }
-    if (error.message?.includes('RANKING_NOT_FOUND')) {
+    if (message.includes('RANKING_NOT_FOUND')) {
       throw new Error('Ranking not found. Please refresh and try again.');
     }
-    if (error.message?.includes('UNAUTHENTICATED')) {
+    if (message.includes('UNAUTHENTICATED')) {
       throw new Error('Please log in to vote.');
+    }
+    if (message.toLowerCase().includes('function') && message.toLowerCase().includes('not found')) {
+      throw new Error('Voting service updating. Please refresh and try again in a moment.');
     }
     
     throw new Error('Failed to submit vote. Please try again.');
