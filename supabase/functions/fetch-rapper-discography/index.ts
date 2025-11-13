@@ -633,13 +633,36 @@ serve(async (req) => {
 
       const releaseType = isMixtape ? 'mixtape' : 'album';
 
-      const { data: existingAlbum } = await supabaseService
+      // Try to find existing album by MusicBrainz ID first
+      let existingAlbum = await supabaseService
         .from('albums')
-        .select('id, has_cover_art')
+        .select('id, has_cover_art, musicbrainz_id, title')
         .eq('musicbrainz_id', rg.id)
-        .single();
+        .maybeSingle()
+        .then(({ data, error }) => {
+          if (error) console.error(`Error finding album by MusicBrainz ID "${rg.id}":`, error);
+          return data;
+        });
+      
+      // Fallback: Try to find by title and release date if not found by MusicBrainz ID
+      if (!existingAlbum && rg['first-release-date']) {
+        existingAlbum = await supabaseService
+          .from('albums')
+          .select('id, has_cover_art, musicbrainz_id, title')
+          .eq('title', rg.title)
+          .eq('release_date', rg['first-release-date'])
+          .maybeSingle()
+          .then(({ data, error }) => {
+            if (error) console.error(`Error finding album by title+date "${rg.title}":`, error);
+            if (data) console.log(`📌 Found album by title+date match: "${rg.title}" (will update MusicBrainz ID)`);
+            return data;
+          });
+      }
+      
       let albumId = existingAlbum?.id as string | undefined;
+      
       if (!albumId) {
+        console.log(`➕ Creating new album: "${rg.title}" (${rg.id})`)
         // Extract streaming links from the release-group details we already fetched
         const rels: Array<any> = rgDetails?.relations || [];
         const findByHost = (host: string) => rels.find((r: any) => r?.url?.resource?.includes(host))?.url?.resource;
@@ -671,7 +694,7 @@ serve(async (req) => {
         const baseSlug = generateSlug(rg.title);
         const uniqueSlug = await ensureUniqueSlug(baseSlug);
         
-        const { data: newAlbum } = await supabaseService
+        const { data: newAlbum, error: insertError } = await supabaseService
           .from('albums')
           .insert({
             title: rg.title,
@@ -679,7 +702,7 @@ serve(async (req) => {
             musicbrainz_id: rg.id,
             release_date: rg['first-release-date'] || null,
             release_type: releaseType,
-            track_count: null, // Not available without inc=releases
+            track_count: null, // Not available without inc=releases - will be populated on-demand
             cover_art_url: hasCoverArt ? coverArtUrl : null,
             has_cover_art: hasCoverArt,
             external_cover_links: externalLinks,
@@ -687,10 +710,25 @@ serve(async (req) => {
           })
           .select('id')
           .single();
+        
+        if (insertError) {
+          console.error(`❌ Failed to insert album "${rg.title}":`, insertError);
+          continue; // Skip to next album
+        }
+        
         albumId = newAlbum?.id;
+        console.log(`✅ Created album "${rg.title}" with ID: ${albumId}`);
       } else {
-        // Update existing albums that need slugs or cover art
+        console.log(`🔄 Updating existing album: "${rg.title}" (${albumId})`);
+        
+        // Update existing albums that need slugs, cover art, or MusicBrainz ID
         const updates: any = {};
+        
+        // Update MusicBrainz ID if it was found by title+date match
+        if (existingAlbum?.musicbrainz_id !== rg.id) {
+          updates.musicbrainz_id = rg.id;
+          console.log(`  → Updating MusicBrainz ID: ${existingAlbum?.musicbrainz_id} → ${rg.id}`);
+        }
         
         // Generate slug if missing
         const { data: currentAlbum } = await supabaseService
@@ -702,6 +740,7 @@ serve(async (req) => {
         if (!currentAlbum?.slug) {
           const baseSlug = generateSlug(currentAlbum?.title || rg.title);
           updates.slug = await ensureUniqueSlug(baseSlug, existingAlbum.id);
+          console.log(`  → Generated slug: ${updates.slug}`);
         }
         
         // Update cover art if missing
@@ -713,31 +752,47 @@ serve(async (req) => {
           if (hasCoverArt) {
             updates.cover_art_url = coverArtUrl;
             updates.has_cover_art = true;
+            console.log(`  → Found cover art`);
           }
         }
         
         // Apply updates if needed
         if (Object.keys(updates).length > 0) {
-          await supabaseService
+          const { error: updateError } = await supabaseService
             .from('albums')
             .update(updates)
             .eq('id', existingAlbum.id);
+          
+          if (updateError) {
+            console.error(`❌ Failed to update album "${rg.title}":`, updateError);
+          } else {
+            console.log(`✅ Updated ${Object.keys(updates).length} field(s) for "${rg.title}"`);
+          }
         }
       }
 
       // Label info not available without inc=releases - skip label processing
 
       if (albumId) {
-        // Track this as a valid album ID
-        validAlbumIds.add(albumId);
-        
-        await supabaseService
+        // Link album to rapper
+        const { error: linkError } = await supabaseService
           .from('rapper_albums')
           .upsert({ rapper_id: rapperId, album_id: albumId, role: 'primary' }, { onConflict: 'rapper_id,album_id' });
+        
+        if (linkError) {
+          console.error(`❌ Failed to link album "${rg.title}" to rapper:`, linkError);
+          // Don't add to validAlbumIds if linking failed
+        } else {
+          // Track this as a valid album ID only after successful linking
+          validAlbumIds.add(albumId);
+          console.log(`🔗 Linked album "${rg.title}" to rapper (validAlbumIds: ${validAlbumIds.size})`);
+        }
 
         // NOTE: Track fetching is skipped during discography sync to avoid compute timeouts
         // Tracks should be fetched on-demand when viewing album details or via a separate background job
         // This dramatically reduces API calls and processing time for artists with large discographies
+      } else {
+        console.warn(`⚠️ No albumId for "${rg.title}" - skipping link`);
       }
       await delay(150);
       } catch (albumError: any) {
@@ -746,22 +801,40 @@ serve(async (req) => {
       }
     }
 
-    // Reconciliation: Remove links to albums that are no longer valid
-    console.log(`Starting reconciliation - valid album count: ${validAlbumIds.size}`);
+    // Reconciliation: Remove links to albums that are no longer in MusicBrainz
+    console.log(`\n📊 Starting reconciliation - valid albums from MusicBrainz: ${validAlbumIds.size}`);
     
-    const { data: currentLinks } = await supabaseService
+    const { data: currentLinks, error: linksError } = await supabaseService
       .from('rapper_albums')
-      .select('album_id')
+      .select('album_id, albums(id, title, musicbrainz_id, track_count)')
       .eq('rapper_id', rapperId)
       .eq('role', 'primary');
+    
+    if (linksError) {
+      console.error('Error fetching current album links for reconciliation:', linksError);
+    }
 
     if (currentLinks && currentLinks.length > 0) {
+      console.log(`📋 Current rapper_albums links: ${currentLinks.length}`);
+      
       const invalidAlbumIds = currentLinks
         .map(link => link.album_id)
         .filter(id => !validAlbumIds.has(id));
 
       if (invalidAlbumIds.length > 0) {
-        console.log(`🗑️ Reconciliation: Removing ${invalidAlbumIds.length} invalid album links (outdated or 0 tracks)`);
+        // Log details about albums being removed for debugging
+        console.log(`🔍 Investigating ${invalidAlbumIds.length} albums not in validAlbumIds:`);
+        for (const albumId of invalidAlbumIds) {
+          const linkData = currentLinks.find(l => l.album_id === albumId);
+          const album = linkData?.albums as any;
+          if (album) {
+            console.log(`  - "${album.title}" (MB: ${album.musicbrainz_id || 'none'}, tracks: ${album.track_count ?? 'null'})`);
+          } else {
+            console.log(`  - Album ${albumId} (no album data found)`);
+          }
+        }
+        
+        console.log(`🗑️ Reconciliation: Removing ${invalidAlbumIds.length} album links not found in MusicBrainz API response`);
         
         const { error: deleteError } = await supabaseService
           .from('rapper_albums')
@@ -770,8 +843,9 @@ serve(async (req) => {
           .in('album_id', invalidAlbumIds);
 
         if (deleteError) {
-          console.error('Error removing invalid links:', deleteError);
+          console.error('❌ Error removing invalid links:', deleteError);
         } else {
+          console.log(`✅ Removed ${invalidAlbumIds.length} outdated album links`);
           await logAuditEvent(supabaseService, {
             rapper_id: rapperId,
             action: 'RECONCILIATION_CLEANUP',
@@ -784,8 +858,10 @@ serve(async (req) => {
           });
         }
       } else {
-        console.log('No invalid album links found - all links are valid');
+        console.log('✅ No invalid album links found - all links match MusicBrainz data');
       }
+    } else {
+      console.log('📋 No existing album links found for this rapper');
     }
 
     // Calculate and update career_start_year from earliest album release (Phase 3)
