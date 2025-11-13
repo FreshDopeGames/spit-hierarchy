@@ -5,6 +5,7 @@ import MusicBrainzBulkPopulation from "./MusicBrainzBulkPopulation";
 import SocialMediaBulkUpdate from "./SocialMediaBulkUpdate";
 import DiscographyBulkFetch from "./DiscographyBulkFetch";
 import AlbumTracksBulkFetch from "./AlbumTracksBulkFetch";
+import WeeklyBlogGenerator from "./WeeklyBlogGenerator";
 
 const AdminDataManagement = () => {
   return (
@@ -16,6 +17,7 @@ const AdminDataManagement = () => {
       />
       
       <div className="space-y-8">
+        <WeeklyBlogGenerator />
         <MusicBrainzBulkPopulation />
         <SocialMediaBulkUpdate />
         <DiscographyBulkFetch />
