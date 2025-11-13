@@ -113,8 +113,8 @@ export const useRefreshDiscography = () => {
       // Ensure dependent stats refresh
       queryClient.invalidateQueries({ queryKey: ["rapper-career-stats", rapperId] });
       setTimeout(() => {
-        queryClient.refetchQueries({ queryKey: ["rapper-career-stats", rapperId] });
-      }, 400);
+        queryClient.refetchQueries({ queryKey: ["rapper-career-stats", rapperId], exact: true });
+      }, 1000);
       
       if (data.rate_limited) {
         toast.info('Using cached results — try again later');

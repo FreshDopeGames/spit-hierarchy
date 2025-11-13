@@ -4,9 +4,11 @@ import { Disc3, Music, Calendar, Trophy, Building2 } from "lucide-react";
 import { useRapperCareerStats } from "@/hooks/useRapperDiscography";
 interface CareerStatsCardProps {
   rapperId: string;
+  isRefreshing?: boolean;
 }
 const CareerStatsCard = ({
-  rapperId
+  rapperId,
+  isRefreshing = false
 }: CareerStatsCardProps) => {
   const {
     data: stats,
@@ -44,8 +46,14 @@ const CareerStatsCard = ({
     value: stats.careerSpan > 0 ? `${stats.careerSpan} yrs` : "N/A",
     color: "text-[var(--theme-text)]"
   }];
-  return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/10">
-      <CardContent className="p-6">
+  return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/10 relative">
+      <CardContent className="p-6 relative">
+        {isRefreshing && <div className="absolute inset-0 bg-black/60 backdrop-blur-sm rounded-lg flex items-center justify-center z-10">
+            <div className="text-center space-y-2">
+              <div className="w-8 h-8 border-4 border-[var(--theme-primary)] border-t-transparent rounded-full animate-spin mx-auto"></div>
+              <p className="text-sm text-[var(--theme-text)] font-[var(--theme-font-body)]">Updating...</p>
+            </div>
+          </div>}
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <h3 className="text-xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">Career Overview</h3>

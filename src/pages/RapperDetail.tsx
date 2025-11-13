@@ -200,7 +200,7 @@ const RapperDetail = () => {
 
           {/* Career Overview - New sports-card style stats */}
           <div className="mb-8">
-            <CareerStatsCard rapperId={rapper.id} />
+            <CareerStatsCard rapperId={rapper.id} isRefreshing={refreshDiscography.isPending} />
           </div>
 
           {/* Ad placement between content sections */}
