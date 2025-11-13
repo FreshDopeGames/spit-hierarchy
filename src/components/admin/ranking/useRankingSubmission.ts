@@ -47,6 +47,23 @@ export const useRankingSubmission = ({
 
         // Re-populate ranking with new filters if criteria changed
         if (values.filter_criteria) {
+          // First, clean out items that don't match the new filter
+          const { data: cleanedCount, error: cleanError } = await supabase.rpc(
+            "clean_official_ranking_items",
+            {
+              ranking_uuid: ranking.id,
+              filter_criteria: values.filter_criteria
+            }
+          );
+
+          if (cleanError) {
+            console.error("Error cleaning ranking items:", cleanError);
+            toast.error("Failed to remove non-matching rappers.");
+          } else if (cleanedCount) {
+            console.log(`Removed ${cleanedCount} rappers that don't match filter`);
+          }
+
+          // Then, populate with rappers that match the new filter
           const { error: populateError } = await supabase.rpc("populate_ranking_with_rappers", {
             ranking_uuid: ranking.id,
             filter_criteria: values.filter_criteria
