@@ -111,7 +111,16 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
       .sort((a, b) => {
         const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
         const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
-        return dateA - dateB; // Chronological order (earliest first)
+        
+        // Primary sort: by date
+        if (dateA !== dateB) {
+          return dateA - dateB;
+        }
+        
+        // Secondary sort: alphabetically by title when dates match
+        const titleA = a.album?.title || '';
+        const titleB = b.album?.title || '';
+        return titleA.localeCompare(titleB);
       }) || [];
   const mixtapes =
     data?.discography
@@ -119,7 +128,16 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
       .sort((a, b) => {
         const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
         const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
-        return dateA - dateB; // Chronological order (earliest first)
+        
+        // Primary sort: by date
+        if (dateA !== dateB) {
+          return dateA - dateB;
+        }
+        
+        // Secondary sort: alphabetically by title when dates match
+        const titleA = a.album?.title || '';
+        const titleB = b.album?.title || '';
+        return titleA.localeCompare(titleB);
       }) || [];
   const formatDate = (dateString: string | null) => {
     if (!dateString) return "Unknown";
