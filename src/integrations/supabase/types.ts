@@ -2141,21 +2141,21 @@ export type Database = {
       user_achievements: {
         Row: {
           achievement_id: string
-          earned_at: string
+          earned_at: string | null
           id: string
           progress_value: number | null
           user_id: string
         }
         Insert: {
           achievement_id: string
-          earned_at?: string
+          earned_at?: string | null
           id?: string
           progress_value?: number | null
           user_id: string
         }
         Update: {
           achievement_id?: string
-          earned_at?: string
+          earned_at?: string | null
           id?: string
           progress_value?: number | null
           user_id?: string
