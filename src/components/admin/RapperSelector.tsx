@@ -1,6 +1,6 @@
 
 import { useState, useRef, useEffect } from "react";
-import { ThemedInput } from "@/components/ui/themed-input";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useRapperAutocomplete } from "@/hooks/useRapperAutocomplete";
 import { Loader2, Search, X, Check } from "lucide-react";
@@ -117,13 +117,13 @@ const RapperSelector = ({
       {/* Autocomplete Input */}
       <div className="relative" ref={dropdownRef}>
         <Search className="absolute left-3 top-3 h-4 w-4 text-gray-500 z-10" />
-        <ThemedInput
+        <Input
           ref={inputRef}
           placeholder={placeholder}
           value={searchTerm}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
-          className="pl-10 pr-10 !bg-white !text-black border-gray-300 placeholder:!text-gray-500"
+          className="admin-themed pl-10 pr-10 bg-gray-100 text-rap-carbon border-rap-gold/30 placeholder:text-gray-500"
           required={required}
           autoComplete="off"
         />

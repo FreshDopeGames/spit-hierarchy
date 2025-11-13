@@ -97,7 +97,7 @@ const AdminVSMatchDialog = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Kendrick Lamar vs Drake"
-              className="!bg-white !text-black border-gray-300 placeholder:!text-gray-500"
+              className="admin-themed bg-gray-100 text-rap-carbon border-rap-gold/30 placeholder:text-gray-500"
               required
             />
           </div>
@@ -109,7 +109,7 @@ const AdminVSMatchDialog = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this matchup..."
-              className="!bg-white !text-black border-gray-300 placeholder:!text-gray-500"
+              className="admin-themed bg-gray-100 text-rap-carbon border-rap-gold/30 placeholder:text-gray-500"
               rows={3}
             />
           </div>
@@ -137,13 +137,13 @@ const AdminVSMatchDialog = ({
           <div className="space-y-2">
             <Label className="text-[var(--theme-text)]">Status</Label>
             <Select value={status} onValueChange={(value) => setStatus(value as "draft" | "published" | "archived")}>
-              <SelectTrigger className="!bg-white !text-black border-gray-300">
+              <SelectTrigger className="admin-themed bg-gray-100 text-rap-carbon border-rap-gold/30">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="!bg-white border-gray-300 z-50">
-                <SelectItem value="draft" className="text-black hover:bg-gray-100">Draft</SelectItem>
-                <SelectItem value="published" className="text-black hover:bg-gray-100">Published</SelectItem>
-                <SelectItem value="archived" className="text-black hover:bg-gray-100">Archived</SelectItem>
+              <SelectContent className="bg-gray-100 border-rap-gold/30 z-50">
+                <SelectItem value="draft" className="text-rap-carbon hover:bg-gray-200">Draft</SelectItem>
+                <SelectItem value="published" className="text-rap-carbon hover:bg-gray-200">Published</SelectItem>
+                <SelectItem value="archived" className="text-rap-carbon hover:bg-gray-200">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>
