@@ -10,12 +10,18 @@ import HeaderNavigation from "@/components/HeaderNavigation";
 import Footer from "@/components/Footer";
 import BackToTopButton from "@/components/BackToTopButton";
 import { ThemedButton } from "@/components/ui/themed-button";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, RefreshCw } from "lucide-react";
 import CommentBubble from "@/components/CommentBubble";
+import { useSecurityContext } from "@/hooks/useSecurityContext";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { useState } from "react";
 
 const AlbumDetail = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const { isAdmin, isModerator } = useSecurityContext();
+  const [isRefreshingTracks, setIsRefreshingTracks] = useState(false);
   const { rapperSlug, albumSlug } = useParams<{
     rapperSlug: string;
     albumSlug: string;
@@ -35,8 +41,42 @@ const AlbumDetail = () => {
     return null; // Will redirect via useEffect
   }
 
-  const { data: album, isLoading, error } = useAlbumDetail(rapperSlug, albumSlug);
+  const { data: album, isLoading, error, isFetchingTracks, refetch } = useAlbumDetail(rapperSlug, albumSlug);
   const { toggleVote, isSubmitting } = useTrackVoting(rapperSlug, albumSlug);
+
+  const isAdminOrModerator = isAdmin || isModerator;
+
+  const handleRefreshTracks = async () => {
+    if (!album) return;
+    
+    setIsRefreshingTracks(true);
+    try {
+      const { data, error } = await supabase.functions.invoke('fetch-album-tracks', {
+        body: { albumId: album.album_id, forceRefresh: true },
+      });
+
+      if (error) {
+        toast.error('Failed to refresh tracklist', {
+          description: error.message,
+        });
+      } else if (data.success) {
+        toast.success('Tracklist refreshed successfully', {
+          description: `${data.track_count} tracks updated`,
+        });
+        await refetch();
+      } else {
+        toast.error('Failed to refresh tracklist', {
+          description: data.error || 'Unknown error',
+        });
+      }
+    } catch (error: any) {
+      toast.error('Unexpected error', {
+        description: error.message,
+      });
+    } finally {
+      setIsRefreshingTracks(false);
+    }
+  };
 
   if (isLoading) {
     return (
@@ -143,10 +183,29 @@ const AlbumDetail = () => {
 
           {/* Track Listing Section */}
           <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6" style={{ fontFamily: "var(--theme-font-heading)" }}>
-              Tracks
-            </h2>
-            <AlbumTrackList 
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold" style={{ fontFamily: "var(--theme-font-heading)" }}>
+                Tracks
+                {isFetchingTracks && (
+                  <span className="ml-3 text-sm text-muted-foreground animate-pulse">
+                    Loading tracklist from MusicBrainz...
+                  </span>
+                )}
+              </h2>
+              {isAdminOrModerator && album && (
+                <ThemedButton
+                  variant="outline"
+                  size="sm"
+                  onClick={handleRefreshTracks}
+                  disabled={isRefreshingTracks || isFetchingTracks}
+                  className="flex items-center gap-2"
+                >
+                  <RefreshCw className={`w-4 h-4 ${isRefreshingTracks ? 'animate-spin' : ''}`} />
+                  Refresh Tracklist
+                </ThemedButton>
+              )}
+            </div>
+            <AlbumTrackList
               tracks={album.tracks}
               rapperName={album.rapper_name}
               onVote={toggleVote} 

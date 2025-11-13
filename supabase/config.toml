@@ -14,3 +14,9 @@ verify_jwt = false
 
 [functions.backfill-birth-years]
 verify_jwt = true
+
+[functions.fetch-album-tracks]
+verify_jwt = false
+
+[functions.bulk-fetch-album-tracks]
+verify_jwt = false

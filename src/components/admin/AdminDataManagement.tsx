@@ -4,6 +4,7 @@ import VotingDataResetSection from "./VotingDataResetSection";
 import MusicBrainzBulkPopulation from "./MusicBrainzBulkPopulation";
 import SocialMediaBulkUpdate from "./SocialMediaBulkUpdate";
 import DiscographyBulkFetch from "./DiscographyBulkFetch";
+import AlbumTracksBulkFetch from "./AlbumTracksBulkFetch";
 
 const AdminDataManagement = () => {
   return (
@@ -18,6 +19,7 @@ const AdminDataManagement = () => {
         <MusicBrainzBulkPopulation />
         <SocialMediaBulkUpdate />
         <DiscographyBulkFetch />
+        <AlbumTracksBulkFetch />
         <VotingDataResetSection />
       </div>
     </div>

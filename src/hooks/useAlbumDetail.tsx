@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { retry } from "@/utils/errorHandler";
+import { useState, useEffect } from "react";
 
 interface AlbumTrack {
   id: string;
@@ -28,7 +29,9 @@ interface AlbumDetail {
 const QUERY_TIMEOUT = 10000; // 10 seconds
 
 export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
-  return useQuery({
+  const [isFetchingTracks, setIsFetchingTracks] = useState(false);
+
+  const query = useQuery({
     queryKey: ["album-detail", rapperSlug, albumSlug],
     queryFn: async () => {
       // Wrap the query with timeout and retry logic
@@ -81,4 +84,44 @@ export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
     gcTime: 1000 * 60 * 10, // 10 minutes
     enabled: !!rapperSlug && !!albumSlug && albumSlug !== 'undefined' && albumSlug !== 'null', // Only run if both slugs are valid
   });
+
+  // Auto-fetch tracks if album has no tracks but has data
+  useEffect(() => {
+    const fetchTracksIfNeeded = async () => {
+      if (!query.data || isFetchingTracks) return;
+      
+      const needsTracks = 
+        query.data.track_count === null || 
+        (query.data.tracks.length === 0 && query.data.track_count !== 0);
+
+      if (needsTracks) {
+        console.log('Album needs tracks, fetching from MusicBrainz...');
+        setIsFetchingTracks(true);
+
+        try {
+          const { error } = await supabase.functions.invoke('fetch-album-tracks', {
+            body: { albumId: query.data.album_id, forceRefresh: false },
+          });
+
+          if (error) {
+            console.error('Error fetching album tracks:', error);
+          } else {
+            // Refetch album data to get the newly added tracks
+            await query.refetch();
+          }
+        } catch (error) {
+          console.error('Unexpected error fetching tracks:', error);
+        } finally {
+          setIsFetchingTracks(false);
+        }
+      }
+    };
+
+    fetchTracksIfNeeded();
+  }, [query.data, isFetchingTracks]);
+
+  return {
+    ...query,
+    isFetchingTracks,
+  };
 };
