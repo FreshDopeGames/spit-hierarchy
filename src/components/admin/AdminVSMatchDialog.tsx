@@ -97,7 +97,7 @@ const AdminVSMatchDialog = ({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g., Kendrick Lamar vs Drake"
-              className="admin-themed bg-gray-100 text-rap-carbon border-rap-gold/30 placeholder:text-gray-500"
+              className="admin-themed bg-[hsl(var(--input))] text-[hsl(var(--foreground))] border-[hsl(var(--border))] placeholder:text-[hsl(var(--muted-foreground))]"
               required
             />
           </div>
@@ -109,7 +109,7 @@ const AdminVSMatchDialog = ({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this matchup..."
-              className="admin-themed bg-gray-100 text-rap-carbon border-rap-gold/30 placeholder:text-gray-500"
+              className="admin-themed bg-[hsl(var(--input))] text-[hsl(var(--foreground))] border-[hsl(var(--border))] placeholder:text-[hsl(var(--muted-foreground))]"
               rows={3}
             />
           </div>
@@ -137,13 +137,13 @@ const AdminVSMatchDialog = ({
           <div className="space-y-2">
             <Label className="text-[var(--theme-text)]">Status</Label>
             <Select value={status} onValueChange={(value) => setStatus(value as "draft" | "published" | "archived")}>
-              <SelectTrigger className="admin-themed bg-gray-100 text-rap-carbon border-rap-gold/30">
+              <SelectTrigger className="admin-themed bg-[hsl(var(--input))] text-[hsl(var(--foreground))] border-[hsl(var(--border))]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-gray-100 border-rap-gold/30 z-50">
-                <SelectItem value="draft" className="text-rap-carbon hover:bg-gray-200">Draft</SelectItem>
-                <SelectItem value="published" className="text-rap-carbon hover:bg-gray-200">Published</SelectItem>
-                <SelectItem value="archived" className="text-rap-carbon hover:bg-gray-200">Archived</SelectItem>
+              <SelectContent className="bg-[hsl(var(--input))] border-[hsl(var(--border))] z-50">
+                <SelectItem value="draft" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Draft</SelectItem>
+                <SelectItem value="published" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Published</SelectItem>
+                <SelectItem value="archived" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>

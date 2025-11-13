@@ -123,7 +123,7 @@ const RapperSelector = ({
           value={searchTerm}
           onChange={handleInputChange}
           onFocus={handleInputFocus}
-          className="admin-themed pl-10 pr-10 bg-gray-100 text-rap-carbon border-rap-gold/30 placeholder:text-gray-500"
+          className="admin-themed pl-10 pr-10 bg-[hsl(var(--input))] text-[hsl(var(--foreground))] border-[hsl(var(--border))] placeholder:text-[hsl(var(--muted-foreground))]"
           required={required}
           autoComplete="off"
         />
