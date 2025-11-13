@@ -3536,6 +3536,14 @@ export type Database = {
         Args: { ranking_uuid: string }
         Returns: undefined
       }
+      vote_official: {
+        Args: {
+          p_member_status: Database["public"]["Enums"]["member_status"]
+          p_ranking_id: string
+          p_rapper_id: string
+        }
+        Returns: Json
+      }
     }
     Enums: {
       achievement_rarity: "common" | "rare" | "epic" | "legendary"

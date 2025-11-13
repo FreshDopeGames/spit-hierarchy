@@ -55,8 +55,9 @@ export const useRankingVotes = () => {
       
       // Clear pending states and invalidate ONLY relevant queries
       if (user) {
-        clearPendingStates(queryClient, data.ranking_id);
-        invalidateRelatedQueries(queryClient, user.id, data.ranking_id);
+        const result = data as { ranking_id: string };
+        clearPendingStates(queryClient, result.ranking_id);
+        invalidateRelatedQueries(queryClient, user.id, result.ranking_id);
       }
     },
     onError: (error, variables) => {

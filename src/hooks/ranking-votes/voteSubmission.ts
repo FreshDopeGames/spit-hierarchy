@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { validateVoteInputs, checkRateLimit, checkDailyVoteDuplicate } from './validation';
+import { validateVoteInputs, checkRateLimit } from './validation';
 
 type MemberStatus = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
@@ -14,51 +14,41 @@ export const submitVote = async (
   const { cleanRankingId, cleanRapperId } = validateVoteInputs(rankingId, rapperId, user);
   
   await checkRateLimit(supabase, user.id);
-  
-  // Check if user already voted for this rapper today
-  await checkDailyVoteDuplicate(supabase, user.id, cleanRapperId, cleanRankingId);
 
   // Ensure currentStatus is a valid member_status
   const memberStatus = ['bronze', 'silver', 'gold', 'platinum', 'diamond'].includes(currentStatus) 
     ? currentStatus as MemberStatus 
     : 'bronze' as MemberStatus;
 
-  // Insert a new ranking vote (no longer using upsert for cumulative daily voting)
-  const { data: voteData, error: voteError } = await supabase
-    .from('ranking_votes')
-    .insert({
-      user_id: user.id,
-      ranking_id: cleanRankingId,
-      rapper_id: cleanRapperId,
-      vote_weight: voteWeight,
-      member_status: memberStatus,
-      vote_date: new Date().toISOString().split('T')[0], // Store as date only
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString()
-    })
-    .select()
-    .single();
+  // Call atomic vote function - handles duplicate check, both inserts, and validation
+  const { data, error } = await supabase.rpc('vote_official', {
+    p_ranking_id: cleanRankingId,
+    p_rapper_id: cleanRapperId,
+    p_member_status: memberStatus
+  });
 
-  if (voteError) {
-    console.error('Vote submission error:', voteError);
+  if (error) {
+    console.error('Vote submission error:', error);
+    
+    // Map specific error codes to user-friendly messages
+    if (error.message?.includes('ALREADY_VOTED_TODAY')) {
+      throw new Error('You have already voted for this rapper today. Come back tomorrow!');
+    }
+    if (error.message?.includes('INVALID_PARAMS')) {
+      throw new Error('Invalid voting parameters. Please refresh and try again.');
+    }
+    if (error.message?.includes('RAPPER_NOT_FOUND')) {
+      throw new Error('Rapper not found. Please refresh and try again.');
+    }
+    if (error.message?.includes('RANKING_NOT_FOUND')) {
+      throw new Error('Ranking not found. Please refresh and try again.');
+    }
+    if (error.message?.includes('UNAUTHENTICATED')) {
+      throw new Error('Please log in to vote.');
+    }
+    
     throw new Error('Failed to submit vote. Please try again.');
   }
 
-  // Insert into daily vote tracking (duplicate already checked)
-  const { error: dailyError } = await supabase
-    .from('daily_vote_tracking')
-    .insert({
-      user_id: user.id,
-      ranking_id: cleanRankingId,
-      user_ranking_id: null,
-      rapper_id: cleanRapperId,
-      vote_date: new Date().toISOString().split('T')[0]
-    });
-
-  if (dailyError) {
-    console.error('Daily tracking error:', dailyError);
-    // Don't throw here as the main vote succeeded
-  }
-
-  return voteData;
+  return data;
 };
