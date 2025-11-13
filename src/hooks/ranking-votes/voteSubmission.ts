@@ -1,6 +1,6 @@
 
 import { supabase } from '@/integrations/supabase/client';
-import { validateVoteInputs, checkRateLimit } from './validation';
+import { validateVoteInputs, checkRateLimit, checkDailyVoteDuplicate } from './validation';
 
 type MemberStatus = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
@@ -14,6 +14,9 @@ export const submitVote = async (
   const { cleanRankingId, cleanRapperId } = validateVoteInputs(rankingId, rapperId, user);
   
   await checkRateLimit(supabase, user.id);
+  
+  // Check if user already voted for this rapper today
+  await checkDailyVoteDuplicate(supabase, user.id, cleanRapperId, cleanRankingId);
 
   // Ensure currentStatus is a valid member_status
   const memberStatus = ['bronze', 'silver', 'gold', 'platinum', 'diamond'].includes(currentStatus) 
@@ -41,17 +44,15 @@ export const submitVote = async (
     throw new Error('Failed to submit vote. Please try again.');
   }
 
-  // Also insert into daily vote tracking with error handling
+  // Insert into daily vote tracking (duplicate already checked)
   const { error: dailyError } = await supabase
     .from('daily_vote_tracking')
-    .upsert({
+    .insert({
       user_id: user.id,
       ranking_id: cleanRankingId,
       user_ranking_id: null,
       rapper_id: cleanRapperId,
       vote_date: new Date().toISOString().split('T')[0]
-    }, {
-      onConflict: 'user_id,rapper_id,ranking_id,vote_date'
     });
 
   if (dailyError) {

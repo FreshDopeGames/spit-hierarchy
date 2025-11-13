@@ -41,3 +41,30 @@ export const checkRateLimit = async (supabase: any, userId: string) => {
     throw new Error('Too many votes in a short time. Please slow down.');
   }
 };
+
+export const checkDailyVoteDuplicate = async (
+  supabase: any, 
+  userId: string, 
+  rapperId: string, 
+  rankingId: string
+) => {
+  const today = new Date().toISOString().split('T')[0];
+  
+  const { data: existingVote, error } = await supabase
+    .from('daily_vote_tracking')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('rapper_id', rapperId)
+    .eq('ranking_id', rankingId)
+    .eq('vote_date', today)
+    .maybeSingle();
+  
+  if (error) {
+    console.error('Duplicate vote check error:', error);
+    throw new Error('Unable to verify vote status');
+  }
+  
+  if (existingVote) {
+    throw new Error('You have already voted for this rapper today. Come back tomorrow!');
+  }
+};
