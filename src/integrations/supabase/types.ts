@@ -3486,7 +3486,7 @@ export type Database = {
           }
         | {
             Args: { filter_criteria?: Json; ranking_uuid: string }
-            Returns: number
+            Returns: undefined
           }
       populate_user_ranking_with_all_rappers: {
         Args: { ranking_uuid: string }
