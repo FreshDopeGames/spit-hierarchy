@@ -94,13 +94,31 @@ export const useUserRankingVotes = () => {
       });
 
       if (error) {
-        const errorMessage = mapErrorToMessage(error);
         console.error('User ranking vote error:', error);
+        console.warn('Vote failed', { 
+          path: 'community', 
+          code: error.code, 
+          details: error.details?.slice?.(0, 200),
+          message: error.message?.slice?.(0, 200)
+        });
+        const errorMessage = mapErrorToMessage(error);
         throw new Error(errorMessage);
       }
 
-      console.log('✅ User ranking vote successful');
-      return data;
+      // Handle JSON success payload from RPC
+      if (data && typeof data === 'object') {
+        if (data.success === false) {
+          // RPC returned a controlled error
+          console.warn('User ranking vote RPC returned failure:', data);
+          if (data.reason === 'ALREADY_VOTED_TODAY') {
+            throw new Error('You already voted for this rapper today. Try another one!');
+          }
+          throw new Error(data.message || 'Failed to submit vote');
+        }
+      }
+
+      console.log('✅ User ranking vote successful:', data);
+      return { user_ranking_id: data?.user_ranking_id || userRankingId, rapper_id: rapperId };
     },
     onMutate: async ({ userRankingId, rapperId }) => {
       toast.loading("Submitting your vote...", {

@@ -165,6 +165,13 @@ export const submitVote = async (
       });
 
       if (error) {
+        console.warn('Vote failed', { 
+          path: 'official', 
+          code: error.code, 
+          details: error.details?.slice?.(0, 200),
+          message: error.message?.slice?.(0, 200)
+        });
+        
         const errorMessage = mapErrorToMessage(error);
         
         // Only use fallback when RPC function is unavailable/missing or network error
@@ -178,8 +185,26 @@ export const submitVote = async (
         throw new Error(errorMessage);
       }
 
-      console.log('✅ RPC vote successful');
-      return data;
+      // Handle JSON success payload from updated RPC
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        const result = data as { success?: boolean; reason?: string; message?: string; ranking_id?: string };
+        if (result.success === false) {
+          // RPC returned a controlled error
+          console.warn('RPC returned failure:', result);
+          if (result.reason === 'ALREADY_VOTED_TODAY') {
+            throw new Error('ALREADY_VOTED_TODAY');
+          }
+          throw new Error(result.message || 'Failed to submit vote');
+        }
+        
+        // Success - return with ranking_id
+        console.log('✅ RPC vote successful:', result);
+        return { ranking_id: result.ranking_id || cleanRankingId };
+      }
+
+      // Legacy format support
+      console.log('✅ RPC vote successful (legacy)');
+      return { ranking_id: cleanRankingId };
     } catch (error: any) {
       // Self-heal: If "already voted" but no actual vote exists, clean up and retry once
       if (error.message === 'ALREADY_VOTED_TODAY' && !hasRetried) {
