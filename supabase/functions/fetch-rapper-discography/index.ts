@@ -492,6 +492,11 @@ serve(async (req) => {
         // Check if the primary MusicBrainz ID matches
         const primaryMatch = creditIds.includes(musicbrainzId);
         
+        // Check if the rapper's name matches any artist-credit name (important for groups)
+        const nameMatch = creditNames.some((creditName: string) => 
+          creditName.toLowerCase() === rapper.name.toLowerCase()
+        );
+        
         // Check if any rapper alias matches the artist-credit names (for name changes like Makaveli)
         const rapperAliases = rapper.aliases || [];
         const aliasMatch = rapperAliases.some((alias: string) => 
@@ -500,13 +505,24 @@ serve(async (req) => {
           )
         );
         
-        if (!primaryMatch && !aliasMatch) {
-          console.log(`⚠ Skipping "${rg.title}" - artist-credit does not include rapper or aliases (RG: ${rg.id})`);
+        // Enhanced logging for debugging
+        console.log(`🔍 Artist-credit check for "${rg.title}" (RG: ${rg.id}):`);
+        console.log(`   - Credit names: ${creditNames.join(', ')}`);
+        console.log(`   - Primary ID match: ${primaryMatch}`);
+        console.log(`   - Name match (${rapper.name}): ${nameMatch}`);
+        console.log(`   - Alias match: ${aliasMatch}`);
+        
+        if (!primaryMatch && !nameMatch && !aliasMatch) {
+          console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, or aliases`);
           continue;
         }
         
-        if (aliasMatch && !primaryMatch) {
+        if (nameMatch && !primaryMatch) {
+          console.log(`✓ Including "${rg.title}" via name match`);
+        } else if (aliasMatch && !primaryMatch) {
           console.log(`✓ Including "${rg.title}" via alias match`);
+        } else {
+          console.log(`✓ Including "${rg.title}" via primary ID match`);
         }
         
         // More lenient release status check
@@ -834,28 +850,38 @@ serve(async (req) => {
           }
         }
         
-        console.log(`🗑️ Reconciliation: Removing ${invalidAlbumIds.length} album links not found in MusicBrainz API response`);
+        // ⚠️ SAFETY CHECK: Only remove albums if we found at least 3 valid albums
+        // This prevents mass deletion when MusicBrainz API fails or returns incomplete data
+        const shouldReconcile = validAlbumIds.size >= 3 || forceRefresh;
         
-        const { error: deleteError } = await supabaseService
-          .from('rapper_albums')
-          .delete()
-          .eq('rapper_id', rapperId)
-          .in('album_id', invalidAlbumIds);
-
-        if (deleteError) {
-          console.error('❌ Error removing invalid links:', deleteError);
+        if (!shouldReconcile) {
+          console.log(`⚠️ SKIPPING RECONCILIATION - Only found ${validAlbumIds.size} valid albums (safety threshold: 3)`);
+          console.log(`   This prevents accidental deletion when API returns incomplete data`);
+          console.log(`   Use forceRefresh=true to override this safety check`);
         } else {
-          console.log(`✅ Removed ${invalidAlbumIds.length} outdated album links`);
-          await logAuditEvent(supabaseService, {
-            rapper_id: rapperId,
-            action: 'RECONCILIATION_CLEANUP',
-            status: 'SUCCESS',
-            user_id: userId,
-            ip_address: clientIP,
-            user_agent: userAgent,
-            response_data: { removedCount: invalidAlbumIds.length, removedAlbumIds: invalidAlbumIds },
-            execution_time_ms: Date.now() - startTime,
-          });
+          console.log(`🗑️ Reconciliation: Removing ${invalidAlbumIds.length} album links not found in MusicBrainz API response`);
+          
+          const { error: deleteError } = await supabaseService
+            .from('rapper_albums')
+            .delete()
+            .eq('rapper_id', rapperId)
+            .in('album_id', invalidAlbumIds);
+
+          if (deleteError) {
+            console.error('❌ Error removing invalid links:', deleteError);
+          } else {
+            console.log(`✅ Removed ${invalidAlbumIds.length} outdated album links`);
+            await logAuditEvent(supabaseService, {
+              rapper_id: rapperId,
+              action: 'RECONCILIATION_CLEANUP',
+              status: 'SUCCESS',
+              user_id: userId,
+              ip_address: clientIP,
+              user_agent: userAgent,
+              response_data: { removedCount: invalidAlbumIds.length, removedAlbumIds: invalidAlbumIds },
+              execution_time_ms: Date.now() - startTime,
+            });
+          }
         }
       } else {
         console.log('✅ No invalid album links found - all links match MusicBrainz data');
