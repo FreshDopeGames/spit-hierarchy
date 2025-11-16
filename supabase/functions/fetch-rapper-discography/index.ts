@@ -505,16 +505,26 @@ serve(async (req) => {
           )
         );
         
+        // Check if the rapper's name appears within any collaboration credit (e.g., "Rakim" in "Eric B. & Rakim")
+        const partialMatch = creditNames.some((creditName: string) => 
+          creditName.toLowerCase().includes(rapper.name.toLowerCase())
+        );
+        
         // Enhanced logging for debugging
         console.log(`🔍 Artist-credit check for "${rg.title}" (RG: ${rg.id}):`);
         console.log(`   - Credit names: ${creditNames.join(', ')}`);
         console.log(`   - Primary ID match: ${primaryMatch}`);
         console.log(`   - Name match (${rapper.name}): ${nameMatch}`);
         console.log(`   - Alias match: ${aliasMatch}`);
+        console.log(`   - Partial match (${rapper.name} in credit): ${partialMatch}`);
         
-        if (!primaryMatch && !nameMatch && !aliasMatch) {
+        if (!primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
           console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, or aliases`);
           continue;
+        }
+        
+        if (partialMatch && !primaryMatch && !nameMatch && !aliasMatch) {
+          console.log(`✓ Including "${rg.title}" via partial name match (collaboration)`);
         }
         
         if (nameMatch && !primaryMatch) {

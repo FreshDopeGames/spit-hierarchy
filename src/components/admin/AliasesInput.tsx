@@ -16,8 +16,8 @@ export const AliasesInput = ({ aliases, onChange }: AliasesInputProps) => {
   const validateAlias = (alias: string): string | null => {
     if (alias.length < 2) return "Alias must be at least 2 characters";
     if (alias.length > 50) return "Alias must be 50 characters or less";
-    if (!/^[a-zA-Z0-9\s'-]+$/.test(alias)) {
-      return "Only letters, numbers, spaces, hyphens, and apostrophes allowed";
+    if (!/^[a-zA-Z0-9\s'&.,-]+$/.test(alias)) {
+      return "Only letters, numbers, spaces, hyphens, apostrophes, periods, ampersands, and commas allowed";
     }
     if (aliases.some(a => a.toLowerCase() === alias.toLowerCase())) {
       return "This alias already exists";
