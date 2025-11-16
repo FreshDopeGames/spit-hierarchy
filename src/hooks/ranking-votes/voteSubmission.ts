@@ -187,13 +187,29 @@ export const submitVote = async (
 
       // Handle JSON success payload from updated RPC
       if (data && typeof data === 'object' && !Array.isArray(data)) {
-        const result = data as { success?: boolean; reason?: string; message?: string; ranking_id?: string };
+        const result = data as { 
+          success?: boolean; 
+          reason?: string; 
+          message?: string; 
+          ranking_id?: string;
+          sqlstate?: string;
+        };
+        
         if (result.success === false) {
           // RPC returned a controlled error
           console.warn('RPC returned failure:', result);
+          
           if (result.reason === 'ALREADY_VOTED_TODAY') {
             throw new Error('ALREADY_VOTED_TODAY');
           }
+          
+          // Show detailed error for debugging unexpected DB errors
+          if (result.reason === 'UNEXPECTED_ERROR') {
+            const detailedMsg = `Database error (${result.sqlstate}): ${result.message}`;
+            console.error('Unexpected DB error:', detailedMsg);
+            throw new Error(result.message || 'Failed to submit vote');
+          }
+          
           throw new Error(result.message || 'Failed to submit vote');
         }
         
