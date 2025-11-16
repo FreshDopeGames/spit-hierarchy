@@ -139,11 +139,22 @@ export const submitVote = async (
   voteWeight: number,
   currentStatus: string
 ) => {
+  console.log('🚀 [submitVote] Starting vote submission', {
+    rankingId,
+    rapperId,
+    userId: user?.id,
+    voteWeight,
+    currentStatus,
+    timestamp: new Date().toISOString()
+  });
+
   const { cleanRankingId, cleanRapperId } = validateVoteInputs(rankingId, rapperId, user);
+  
+  console.log('✓ [submitVote] Input validation passed', { cleanRankingId, cleanRapperId });
   
   // Final guard: ensure IDs are valid UUIDs before sending to Supabase
   if (!cleanRankingId || !cleanRapperId || !UUID_REGEX.test(cleanRankingId) || !UUID_REGEX.test(cleanRapperId)) {
-    console.error('Invalid UUID detected', { cleanRankingId, cleanRapperId });
+    console.error('❌ [submitVote] Invalid UUID detected', { cleanRankingId, cleanRapperId });
     throw new Error('Invalid voting parameters. Please refresh and try again.');
   }
   
@@ -151,25 +162,42 @@ export const submitVote = async (
   const memberStatus = ['bronze', 'silver', 'gold', 'platinum', 'diamond'].includes(currentStatus) 
     ? currentStatus as MemberStatus 
     : 'bronze' as MemberStatus;
+  
+  console.log('✓ [submitVote] Member status validated', { memberStatus });
 
   let hasRetried = false;
 
   const attemptVote = async (): Promise<any> => {
     try {
       // Primary path: Call atomic vote function via RPC
-      console.log('🎯 Submitting official vote via RPC', { cleanRankingId, cleanRapperId, memberStatus });
+      console.log('🎯 [attemptVote] Calling RPC vote_official...', { 
+        p_ranking_id: cleanRankingId, 
+        p_rapper_id: cleanRapperId, 
+        p_member_status: memberStatus,
+        timestamp: new Date().toISOString()
+      });
+      
       const { data, error } = await supabase.rpc('vote_official', {
         p_ranking_id: cleanRankingId,
         p_rapper_id: cleanRapperId,
         p_member_status: memberStatus
       });
+      
+      console.log('📡 [attemptVote] RPC response received', { 
+        hasData: !!data, 
+        hasError: !!error,
+        data: data ? JSON.stringify(data).substring(0, 200) : null,
+        errorCode: error?.code,
+        errorMessage: error?.message?.substring(0, 200)
+      });
 
       if (error) {
-        console.warn('Vote failed', { 
+        console.error('❌ [attemptVote] RPC vote_official error:', { 
           path: 'official', 
           code: error.code, 
           details: error.details?.slice?.(0, 200),
-          message: error.message?.slice?.(0, 200)
+          message: error.message?.slice?.(0, 200),
+          hint: error.hint
         });
         
         const errorMessage = mapErrorToMessage(error);
@@ -178,15 +206,18 @@ export const submitVote = async (
         const message = typeof error.message === 'string' ? error.message : '';
         if ((message.toLowerCase().includes('function') && message.toLowerCase().includes('not found')) ||
             message.toLowerCase().includes('fetch') || message.toLowerCase().includes('network')) {
-          console.warn('⚠️ Using fallback (RPC missing or network error)', error);
+          console.warn('⚠️ [attemptVote] Using fallback (RPC missing or network error)', error);
           return await fallbackOfficialVote(cleanRankingId, cleanRapperId, user, voteWeight, memberStatus);
         }
         
+        console.error('❌ [attemptVote] Throwing error:', errorMessage);
         throw new Error(errorMessage);
       }
 
       // Handle JSON success payload from updated RPC
       if (data && typeof data === 'object' && !Array.isArray(data)) {
+        console.log('✓ [attemptVote] RPC returned object data', { data });
+        
         const result = data as { 
           success?: boolean; 
           reason?: string; 
@@ -197,45 +228,63 @@ export const submitVote = async (
         
         if (result.success === false) {
           // RPC returned a controlled error
-          console.warn('RPC returned failure:', result);
+          console.error('❌ [attemptVote] RPC returned failure:', result);
           
           if (result.reason === 'ALREADY_VOTED_TODAY') {
+            console.error('❌ [attemptVote] User already voted today');
             throw new Error('ALREADY_VOTED_TODAY');
           }
           
           // Show detailed error for debugging unexpected DB errors
           if (result.reason === 'UNEXPECTED_ERROR') {
             const detailedMsg = `Database error (${result.sqlstate}): ${result.message}`;
-            console.error('Unexpected DB error:', detailedMsg);
+            console.error('❌ [attemptVote] Unexpected DB error:', detailedMsg);
             throw new Error(result.message || 'Failed to submit vote');
           }
           
+          console.error('❌ [attemptVote] Throwing RPC failure message:', result.message);
           throw new Error(result.message || 'Failed to submit vote');
         }
         
         // Success - return with ranking_id
-        console.log('✅ RPC vote successful:', result);
+        console.log('✅ [attemptVote] RPC vote successful!', result);
         return { ranking_id: result.ranking_id || cleanRankingId };
       }
 
       // Legacy format support
-      console.log('✅ RPC vote successful (legacy)');
+      console.log('✅ [attemptVote] RPC vote successful (legacy format)');
       return { ranking_id: cleanRankingId };
     } catch (error: any) {
-      // Self-heal: If "already voted" but no actual vote exists, clean up and retry once
-      if (error.message === 'ALREADY_VOTED_TODAY' && !hasRetried) {
-        const actuallyVoted = await hasOfficialVoteToday(user.id, cleanRankingId, cleanRapperId);
-        if (!actuallyVoted) {
-          console.log('🔧 Detected orphan tracking, cleaning up and retrying');
-          await deleteOrphanTracking(user.id, cleanRankingId, cleanRapperId);
+      console.error('❌ [attemptVote] Caught error:', {
+        error,
+        message: error?.message,
+        code: error?.code,
+        details: error?.details,
+        hasRetried
+      });
+      
+      // Handle "ALREADY_VOTED_TODAY" from RPC or unique constraint violation
+      if (error?.message?.includes('ALREADY_VOTED_TODAY') || error?.code === '23505') {
+        console.log('🔍 [attemptVote] Checking for orphan tracking...');
+        
+        // If we haven't retried yet, check if tracking is orphaned
+        if (!hasRetried) {
           hasRetried = true;
-          return await attemptVote();
+          const actualVoteExists = await hasOfficialVoteToday(user.id, cleanRankingId, cleanRapperId);
+          
+          console.log('🔍 [attemptVote] Actual vote check:', { actualVoteExists });
+          
+          if (!actualVoteExists) {
+            // Orphaned tracking record
+            console.log('🧹 [attemptVote] Orphan tracking detected, cleaning up...');
+            await deleteOrphanTracking(user.id, cleanRankingId, cleanRapperId);
+            console.log('🔄 [attemptVote] Retrying after cleaning orphan tracking');
+            return attemptVote();
+          } else {
+            console.log('✓ [attemptVote] Actual vote exists, genuine duplicate');
+          }
         }
-        throw new Error('You have already voted for this rapper today. Come back tomorrow!');
-      }
-
-      // Map other known errors
-      if (error.message === 'ALREADY_VOTED_TODAY') {
+        console.error('❌ [attemptVote] User already voted today (verified)');
         throw new Error('You have already voted for this rapper today. Come back tomorrow!');
       }
       
@@ -244,12 +293,17 @@ export const submitVote = async (
           error.message?.includes('Please log in') ||
           error.message?.includes('not found') ||
           error.message?.includes('Network error')) {
+        console.error('❌ [attemptVote] Re-throwing friendly error');
         throw error;
       }
-
+      
+      console.error('❌ [attemptVote] Unknown error, throwing generic message');
       throw new Error('Failed to submit vote. Please try again.');
     }
   };
 
-  return await attemptVote();
+  console.log('🎬 [submitVote] Calling attemptVote()...');
+  const result = await attemptVote();
+  console.log('✅ [submitVote] Vote submission completed successfully!', result);
+  return result;
 };

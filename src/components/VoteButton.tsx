@@ -31,9 +31,24 @@ const VoteButton = ({
   isPending = false,
   isTopFive = false
 }: VoteButtonProps) => {
+  console.log('🔵 [VoteButton] Rendered', {
+    rankingId,
+    userRankingId,
+    rapperId: rapperId?.substring(0, 8) + '...',
+    showWeightedVoting,
+    isPending,
+    isTopFive
+  });
+
   const { user } = useAuth();
   const { submitRankingVote, getVoteMultiplier: getOfficialMultiplier, currentStatus } = useRankingVotes();
   const { submitUserRankingVote, getVoteMultiplier: getUserMultiplier } = useUserRankingVotes();
+  
+  console.log('🔐 [VoteButton] Auth state:', {
+    hasUser: !!user,
+    userId: user?.id?.substring(0, 8) + '...',
+    userEmail: user?.email
+  });
   
   const trackingRankingId = rankingId || userRankingId;
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(trackingRankingId);
@@ -49,10 +64,30 @@ const VoteButton = ({
   const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId;
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
-  // Enhanced debug logging removed for production
-
   const handleClick = async () => {
+    console.log('🔵 [VoteButton] Click initiated', {
+      rapperId,
+      rankingId,
+      userRankingId,
+      hasUser: !!user,
+      userId: user?.id,
+      hasVoted,
+      isDisabled,
+      isValidRapperId,
+      isValidRankingId,
+      voteMultiplier,
+      showWeightedVoting
+    });
+
     if (isDisabled || !rapperId) {
+      console.log('⛔ [VoteButton] Vote blocked:', {
+        reason: !user ? 'No user' : hasVoted ? 'Already voted' : !isValidRapperId ? 'Invalid rapper ID' : !isValidRankingId ? 'Invalid ranking ID' : 'Unknown',
+        user: !!user,
+        hasVoted,
+        isValidRapperId,
+        isValidRankingId
+      });
+
       if (!user) {
         toast.error("Please sign in to vote for rappers.");
       } else if (hasVoted) {
@@ -64,36 +99,64 @@ const VoteButton = ({
     }
 
     if (showWeightedVoting && user) {
+      console.log('🎯 [VoteButton] Starting weighted vote submission', {
+        rapperId,
+        rankingId: rankingId || userRankingId,
+        voteWeight: voteMultiplier,
+        isUserRanking: !!userRankingId
+      });
+
       // Security check
       if (!rapperId.match(/^[a-f0-9-]{36}$/i)) {
+        console.error('❌ [VoteButton] Invalid rapper ID format:', rapperId);
         toast.error("Invalid voting parameters");
         return;
       }
 
       try {
         if (userRankingId) {
+          console.log('📤 [VoteButton] Submitting user ranking vote...');
           // User ranking vote
           if (!userRankingId.match(/^[a-f0-9-]{36}$/i)) {
+            console.error('❌ [VoteButton] Invalid user ranking ID format:', userRankingId);
             toast.error("Invalid voting parameters");
             return;
           }
-          await submitUserRankingVote.mutateAsync({ userRankingId, rapperId });
+          const result = await submitUserRankingVote.mutateAsync({ userRankingId, rapperId });
+          console.log('✅ [VoteButton] User ranking vote successful:', result);
           // Immediately reflect voted state
           addVoteToTracking(rapperId);
         } else if (rankingId) {
+          console.log('📤 [VoteButton] Submitting official ranking vote...');
           // Official ranking vote
           if (!rankingId.match(/^[a-f0-9-]{36}$/i)) {
+            console.error('❌ [VoteButton] Invalid ranking ID format:', rankingId);
             toast.error("Invalid voting parameters");
             return;
           }
-          await submitRankingVote.mutateAsync({ rankingId, rapperId });
+          const result = await submitRankingVote.mutateAsync({ rankingId, rapperId });
+          console.log('✅ [VoteButton] Official ranking vote successful:', result);
           // Immediately reflect voted state
           addVoteToTracking(rapperId);
         }
-      } catch (error) {
-        console.error(`Vote submission error for rapper ${rapperId}:`, error);
+      } catch (error: any) {
+        console.error('❌ [VoteButton] Vote submission failed:', {
+          error,
+          message: error?.message,
+          code: error?.code,
+          details: error?.details,
+          rapperId,
+          rankingId: rankingId || userRankingId
+        });
+        
+        // Show detailed error to user
+        const errorMessage = error?.message || 'Failed to submit vote. Please try again.';
+        toast.error(errorMessage, {
+          description: error?.details ? `Details: ${error.details}` : undefined
+        });
       }
     } else {
+      console.log('🔄 [VoteButton] Using callback vote handler');
       onVote();
     }
   };
