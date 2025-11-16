@@ -39,9 +39,14 @@ const VoteButton = ({
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(trackingRankingId);
   const isMobile = useIsMobile();
 
-  const hasVoted = rapperId ? hasVotedToday(rapperId) : false;
+  // Strict UUID validation
+  const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+  const isValidRapperId = rapperId && UUID_REGEX.test(rapperId);
+  const isValidRankingId = (rankingId && UUID_REGEX.test(rankingId)) || (userRankingId && UUID_REGEX.test(userRankingId));
+
+  const hasVoted = isValidRapperId ? hasVotedToday(rapperId) : false;
   const isPendingVote = submitRankingVote.isPending || submitUserRankingVote.isPending;
-  const isDisabled = disabled || isPendingVote || !user || hasVoted;
+  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId;
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
   // Enhanced debug logging removed for production
@@ -52,6 +57,8 @@ const VoteButton = ({
         toast.error("Please sign in to vote for rappers.");
       } else if (hasVoted) {
         toast.error("You've already voted for this rapper today. Come back tomorrow!");
+      } else if (!isValidRapperId || !isValidRankingId) {
+        toast.error("Loading ranking info...");
       }
       return;
     }

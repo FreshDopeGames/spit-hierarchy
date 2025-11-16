@@ -7,11 +7,17 @@ import { getTodayKey, getStoredVotes, storeVotes, cleanupOldStorage } from './da
 import { fetchDailyVotes } from './daily-votes/queries';
 import { hasVotedForRapper, createVoteRecord, voteExists } from './daily-votes/validation';
 
+// Strict UUID validation regex
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 export const useDailyVoteStatus = (rankingId?: string) => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
 
-  console.log(`🚀 useDailyVoteStatus initialized for ranking: ${rankingId}, user: ${user?.id}`);
+  // Validate rankingId is a proper UUID before making any queries
+  const isValidRankingId = rankingId && UUID_REGEX.test(rankingId);
+
+  console.log(`🚀 useDailyVoteStatus initialized for ranking: ${rankingId}, user: ${user?.id}, valid: ${isValidRankingId}`);
 
   // Fetch today's votes from database - check both ranking_votes and user_ranking_votes tables
   const { data: dailyVotes = [], isLoading } = useQuery({
@@ -24,9 +30,9 @@ export const useDailyVoteStatus = (rankingId?: string) => {
       console.log(`📡 Fetching daily votes for user ${user.id} in ranking ${rankingId}`);
       return fetchDailyVotes(user.id, rankingId);
     },
-    enabled: !!user && !!rankingId,
+    enabled: !!user && !!isValidRankingId,
     staleTime: 2 * 60 * 1000, // 2 minutes - shorter for daily voting
-    initialData: rankingId && user ? getStoredVotes(rankingId, user.id) : [],
+    initialData: isValidRankingId && user ? getStoredVotes(rankingId, user.id) : [],
   });
 
   // ENHANCED: Check if user has voted for a specific rapper TODAY in THIS ranking
