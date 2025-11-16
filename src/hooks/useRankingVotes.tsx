@@ -12,6 +12,15 @@ export const useRankingVotes = () => {
   const queryClient = useQueryClient();
   const { currentStatus } = useMemberStatus();
 
+  // Log authentication state on mount and when it changes
+  console.log('🔐 [useRankingVotes] Auth state:', {
+    hasUser: !!user,
+    userId: user?.id,
+    userEmail: user?.email,
+    currentStatus,
+    timestamp: new Date().toISOString()
+  });
+
   const getVoteMultiplier = () => {
     switch (currentStatus) {
       case 'diamond': return 5;
@@ -25,9 +34,21 @@ export const useRankingVotes = () => {
 
   const submitRankingVote = useMutation({
     mutationFn: async ({ rankingId, rapperId }: VoteSubmissionParams) => {
-      if (!user) throw new Error('User not authenticated');
+      console.log('🎯 [useRankingVotes] Mutation function called', {
+        rankingId,
+        rapperId,
+        hasUser: !!user,
+        userId: user?.id
+      });
+
+      if (!user) {
+        console.error('❌ [useRankingVotes] No user authenticated');
+        throw new Error('User not authenticated');
+      }
       
       const voteWeight = getVoteMultiplier();
+      console.log('✓ [useRankingVotes] Calling submitVote with weight:', voteWeight);
+      
       return await submitVote(rankingId, rapperId, user, voteWeight, currentStatus);
     },
     onMutate: async ({ rankingId, rapperId }) => {
@@ -61,16 +82,28 @@ export const useRankingVotes = () => {
       }
     },
     onError: (error, variables) => {
-      console.error(`Vote submission failed for rapper ${variables.rapperId} in ranking ${variables.rankingId}:`, error);
+      console.error('❌ [useRankingVotes] Vote submission failed:', {
+        error,
+        errorMessage: error instanceof Error ? error.message : 'Unknown error',
+        errorCode: (error as any)?.code,
+        errorDetails: (error as any)?.details,
+        rapperId: variables.rapperId,
+        rankingId: variables.rankingId,
+        userId: user?.id
+      });
       
-      // Update loading toast to error
-      toast.error(error instanceof Error ? error.message : "Failed to submit vote", {
-        id: 'vote-submission'
+      // Get user-friendly error message
+      const errorMessage = error instanceof Error ? error.message : "Failed to submit vote";
+      
+      // Update loading toast to error with detailed message
+      toast.error(errorMessage, {
+        id: 'vote-submission',
+        description: (error as any)?.details ? `Details: ${(error as any).details}` : undefined
       });
       
       // FIXED: Only revert optimistic updates for the SPECIFIC ranking that failed
       if (user && variables.rankingId) {
-        console.log(`Reverting optimistic updates for ranking ${variables.rankingId}`);
+        console.log(`🔄 [useRankingVotes] Reverting optimistic updates for ranking ${variables.rankingId}`);
         queryClient.invalidateQueries({ 
           queryKey: ['ranking-data-with-deltas', variables.rankingId],
           exact: true 
