@@ -3,6 +3,8 @@ import { Button } from "@/components/ui/button";
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardDescription as CardDescription, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Music, Play, Square, RotateCcw } from "lucide-react";
@@ -22,6 +24,7 @@ interface BulkFetchResults {
 
 const DiscographyBulkFetch = () => {
   const [isRunning, setIsRunning] = useState(false);
+  const [forceRefresh, setForceRefresh] = useState(false);
   const [results, setResults] = useState<BulkFetchResults | null>(null);
   const [currentBatch, setCurrentBatch] = useState(0);
   const [totalProcessed, setTotalProcessed] = useState(0);
@@ -50,11 +53,16 @@ const DiscographyBulkFetch = () => {
       };
 
       // Get total count of rappers needing discography for progress calculation
-      const { count: totalNeedingFetch } = await supabase
+      let query = supabase
         .from('rappers')
         .select('*', { count: 'exact', head: true })
-        .not('musicbrainz_id', 'is', null)
-        .is('discography_last_updated', null);
+        .not('musicbrainz_id', 'is', null);
+      
+      if (!forceRefresh) {
+        query = query.is('discography_last_updated', null);
+      }
+      
+      const { count: totalNeedingFetch } = await query;
 
       const totalToProcess = totalNeedingFetch || 0;
 
@@ -70,7 +78,7 @@ const DiscographyBulkFetch = () => {
         setCurrentBatch(Math.floor(startIndex / batchSize) + 1);
 
         const { data, error } = await supabase.functions.invoke('bulk-fetch-discographies', {
-          body: { batchSize, startFromIndex: startIndex, forceRefresh: false }
+          body: { batchSize, startFromIndex: startIndex, forceRefresh }
         });
 
         if (error) {
@@ -156,6 +164,21 @@ const DiscographyBulkFetch = () => {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
+        <div className="flex items-center space-x-2 pb-2">
+          <Checkbox 
+            id="force-refresh" 
+            checked={forceRefresh}
+            onCheckedChange={(checked) => setForceRefresh(checked as boolean)}
+            disabled={isRunning}
+          />
+          <Label 
+            htmlFor="force-refresh" 
+            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+          >
+            Force Refresh All (re-fetch all rappers including those already processed)
+          </Label>
+        </div>
+        
         <div className="flex gap-2">
           {!isRunning ? (
             <Button onClick={startBulkFetch} disabled={isRunning}>
