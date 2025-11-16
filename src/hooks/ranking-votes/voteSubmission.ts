@@ -42,7 +42,7 @@ const deleteOrphanTracking = async (
   console.log('🧹 Cleaned up orphan tracking record');
 };
 
-// Fallback client-side vote function (vote first, tracking second to avoid orphans)
+// Fallback for network errors or missing RPC (last resort only)
 const fallbackOfficialVote = async (
   cleanRankingId: string,
   cleanRapperId: string,
@@ -50,17 +50,14 @@ const fallbackOfficialVote = async (
   voteWeight: number,
   memberStatus: MemberStatus
 ) => {
-  console.log('🔄 Using fallback voting path');
-  const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD UTC
+  console.log('🔄 Using fallback voting path (network issue or RPC missing)');
+  const today = new Date().toISOString().split('T')[0];
 
-  // Check if vote already exists
   const alreadyVoted = await hasOfficialVoteToday(user.id, cleanRankingId, cleanRapperId);
   if (alreadyVoted) {
-    console.log('❌ Fallback: duplicate vote detected in ranking_votes');
     throw new Error('ALREADY_VOTED_TODAY');
   }
 
-  // Insert the actual vote FIRST (to avoid orphans)
   const { data, error: voteError } = await supabase
     .from('ranking_votes')
     .insert({
@@ -85,24 +82,54 @@ const fallbackOfficialVote = async (
     throw new Error('Failed to submit vote. Please try again.');
   }
 
-  // Best-effort insert into daily_vote_tracking (ignore errors)
-  try {
-    await supabase
-      .from('daily_vote_tracking')
-      .insert({
-        user_id: user.id,
-        ranking_id: cleanRankingId,
-        user_ranking_id: null,
-        rapper_id: cleanRapperId,
-        vote_date: today
-      });
-  } catch (trackingError) {
-    // Tracking is best-effort only, don't fail the vote
-    console.warn('⚠️ Tracking insert failed (non-critical):', trackingError);
-  }
-
   console.log('✅ Fallback vote successful');
   return data;
+};
+
+// Map error to user-friendly message
+const mapErrorToMessage = (error: any): string => {
+  const code = error?.code;
+  const details = error?.details || '';
+  const message = typeof error?.message === 'string' ? error.message : '';
+
+  // Database constraint violations
+  if (code === '23505' || details.includes('unique_official_daily_vote')) {
+    return 'You have already voted for this rapper today. Come back tomorrow!';
+  }
+  
+  // Invalid UUID syntax
+  if (code === '22P02' || message.includes('invalid input syntax for type uuid')) {
+    return 'Invalid voting parameters. Please refresh and try again.';
+  }
+  
+  // Authentication errors
+  if (code === '42501' || message.includes('UNAUTHENTICATED')) {
+    return 'Please log in to vote.';
+  }
+  
+  // Application-level errors from RPC
+  if (message.includes('ALREADY_VOTED_TODAY')) {
+    return 'ALREADY_VOTED_TODAY';
+  }
+  if (message.includes('INVALID_PARAMS')) {
+    return 'Invalid voting parameters. Please refresh and try again.';
+  }
+  if (message.includes('RAPPER_NOT_FOUND')) {
+    return 'Rapper not found. Please refresh and try again.';
+  }
+  if (message.includes('RANKING_NOT_FOUND')) {
+    return 'Ranking not found. Please refresh and try again.';
+  }
+  
+  // Network/connection errors
+  if (message.toLowerCase().includes('fetch') || message.toLowerCase().includes('network')) {
+    return 'Network error. Please check your connection and try again.';
+  }
+  
+  // Log unexpected errors for diagnostics
+  console.warn('Vote failed', { path: 'official', code, details: details?.slice?.(0, 200) });
+  
+  return 'Failed to submit vote. Please try again.';
 };
 
 export const submitVote = async (
@@ -120,8 +147,6 @@ export const submitVote = async (
     throw new Error('Invalid voting parameters. Please refresh and try again.');
   }
   
-  await checkRateLimit(supabase, user.id);
-
   // Ensure currentStatus is a valid member_status
   const memberStatus = ['bronze', 'silver', 'gold', 'platinum', 'diamond'].includes(currentStatus) 
     ? currentStatus as MemberStatus 
@@ -138,42 +163,19 @@ export const submitVote = async (
         p_rapper_id: cleanRapperId,
         p_member_status: memberStatus
       });
-      console.log('RPC vote_official response', { data, error });
 
       if (error) {
-        console.error('Vote submission error:', error);
+        const errorMessage = mapErrorToMessage(error);
         
-        // Map specific error codes to user-friendly messages
-        const message = (typeof error.message === 'string') ? error.message : '';
-        
-        // Check for invalid UUID syntax error
-        if (message.toLowerCase().includes('invalid input syntax for type uuid')) {
-          throw new Error('Invalid voting parameters. Please refresh and try again.');
-        }
-        if (message.includes('ALREADY_VOTED_TODAY')) {
-          throw new Error('ALREADY_VOTED_TODAY');
-        }
-        if (message.includes('INVALID_PARAMS')) {
-          throw new Error('Invalid voting parameters. Please refresh and try again.');
-        }
-        if (message.includes('RAPPER_NOT_FOUND')) {
-          throw new Error('Rapper not found. Please refresh and try again.');
-        }
-        if (message.includes('RANKING_NOT_FOUND')) {
-          throw new Error('Ranking not found. Please refresh and try again.');
-        }
-        if (message.includes('UNAUTHENTICATED')) {
-          throw new Error('Please log in to vote.');
-        }
-        
-        // Only use fallback when RPC function is unavailable/missing
-        if (message.toLowerCase().includes('function') && message.toLowerCase().includes('not found')) {
-          console.warn('⚠️ RPC function not found, using fallback', error);
+        // Only use fallback when RPC function is unavailable/missing or network error
+        const message = typeof error.message === 'string' ? error.message : '';
+        if ((message.toLowerCase().includes('function') && message.toLowerCase().includes('not found')) ||
+            message.toLowerCase().includes('fetch') || message.toLowerCase().includes('network')) {
+          console.warn('⚠️ Using fallback (RPC missing or network error)', error);
           return await fallbackOfficialVote(cleanRankingId, cleanRapperId, user, voteWeight, memberStatus);
         }
         
-        // For all other errors, don't use fallback
-        throw new Error('Failed to submit vote. Please try again.');
+        throw new Error(errorMessage);
       }
 
       console.log('✅ RPC vote successful');
@@ -195,12 +197,12 @@ export const submitVote = async (
       if (error.message === 'ALREADY_VOTED_TODAY') {
         throw new Error('You have already voted for this rapper today. Come back tomorrow!');
       }
-      if (error.message === 'UNAUTHENTICATED') {
-        throw new Error('Please log in to vote.');
-      }
+      
+      // Pass through already-friendly messages
       if (error.message?.includes('Invalid voting') ||
           error.message?.includes('Please log in') ||
-          error.message?.includes('not found')) {
+          error.message?.includes('not found') ||
+          error.message?.includes('Network error')) {
         throw error;
       }
 

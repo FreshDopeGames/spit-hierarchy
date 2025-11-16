@@ -9,6 +9,52 @@ interface UserRankingVoteParams {
   rapperId: string;
 }
 
+// Map error to user-friendly message
+const mapErrorToMessage = (error: any): string => {
+  const code = error?.code;
+  const details = error?.details || '';
+  const message = typeof error?.message === 'string' ? error.message : '';
+
+  // Database constraint violations
+  if (code === '23505' || details.includes('unique_user_ranking_daily_vote')) {
+    return 'You have already voted for this rapper today. Come back tomorrow!';
+  }
+  
+  // Invalid UUID syntax
+  if (code === '22P02' || message.includes('invalid input syntax for type uuid')) {
+    return 'Invalid voting parameters. Please refresh and try again.';
+  }
+  
+  // Authentication errors
+  if (code === '42501' || message.includes('UNAUTHENTICATED')) {
+    return 'Please log in to vote.';
+  }
+  
+  // Application-level errors from RPC
+  if (message.includes('ALREADY_VOTED_TODAY')) {
+    return 'You have already voted for this rapper today. Come back tomorrow!';
+  }
+  if (message.includes('INVALID_PARAMS')) {
+    return 'Invalid voting parameters. Please refresh and try again.';
+  }
+  if (message.includes('RAPPER_NOT_FOUND')) {
+    return 'Rapper not found. Please refresh and try again.';
+  }
+  if (message.includes('RANKING_NOT_FOUND')) {
+    return 'Ranking not found. Please refresh and try again.';
+  }
+  
+  // Network/connection errors
+  if (message.toLowerCase().includes('fetch') || message.toLowerCase().includes('network')) {
+    return 'Network error. Please check your connection and try again.';
+  }
+  
+  // Log unexpected errors for diagnostics
+  console.warn('Vote failed', { path: 'community', code, details: details?.slice?.(0, 200) });
+  
+  return 'Failed to submit vote. Please try again.';
+};
+
 export const useUserRankingVotes = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -29,52 +75,34 @@ export const useUserRankingVotes = () => {
     mutationFn: async ({ userRankingId, rapperId }: UserRankingVoteParams) => {
       if (!user) throw new Error('User not authenticated');
       
-      const voteWeight = getVoteMultiplier();
-      
       // Validate inputs
       if (!userRankingId.match(/^[a-f0-9-]{36}$/i) || !rapperId.match(/^[a-f0-9-]{36}$/i)) {
-        throw new Error('Invalid voting parameters');
+        throw new Error('Invalid voting parameters. Please refresh and try again.');
       }
 
-      // Check rate limit
-      const { data: rateLimitOk } = await supabase.rpc('check_rate_limit', {
-        action_type: 'user_ranking_vote',
-        user_uuid: user.id
+      // Ensure currentStatus is valid
+      const memberStatus = ['bronze', 'silver', 'gold', 'platinum', 'diamond'].includes(currentStatus) 
+        ? currentStatus 
+        : 'bronze';
+
+      // Call RPC function for atomic voting
+      console.log('🎯 Submitting user ranking vote via RPC', { userRankingId, rapperId, memberStatus });
+      const { data, error } = await supabase.rpc('vote_user_ranking' as any, {
+        p_user_ranking_id: userRankingId,
+        p_rapper_id: rapperId,
+        p_member_status: memberStatus
       });
 
-      if (!rateLimitOk) {
-        throw new Error('Rate limit exceeded. Please slow down.');
+      if (error) {
+        const errorMessage = mapErrorToMessage(error);
+        console.error('User ranking vote error:', error);
+        throw new Error(errorMessage);
       }
 
-      // Insert vote
-      const { data: voteData, error: voteError } = await supabase
-        .from('user_ranking_votes')
-        .insert({
-          user_id: user.id,
-          user_ranking_id: userRankingId,
-          rapper_id: rapperId,
-          vote_weight: voteWeight,
-          member_status: currentStatus,
-          vote_date: new Date().toISOString().split('T')[0],
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (voteError) {
-        console.error('User ranking vote error:', voteError);
-        const isDuplicate = (voteError as any)?.code === '23505' || String((voteError as any)?.message || '').includes('unique_user_ranking_daily_vote');
-        if (isDuplicate) {
-          throw new Error('You already voted for this rapper today.');
-        }
-        throw new Error('Failed to submit vote. Please try again.');
-      }
-
-      // Daily vote tracking is now handled automatically by database trigger
-      return voteData;
+      console.log('✅ User ranking vote successful');
+      return data;
     },
-  onMutate: async ({ userRankingId, rapperId }) => {
+    onMutate: async ({ userRankingId, rapperId }) => {
       toast.loading("Submitting your vote...", {
         id: 'user-ranking-vote-submission'
       });
@@ -119,37 +147,26 @@ export const useUserRankingVotes = () => {
       if (user) {
         const today = new Date().toISOString().split('T')[0];
         queryClient.invalidateQueries({ 
-          queryKey: ['user-ranking-detail', variables.userRankingId]
+          queryKey: ['daily-votes', user.id, today, variables.userRankingId]
         });
         queryClient.invalidateQueries({ 
-          queryKey: ['user-rankings']
+          queryKey: ['user-ranking-votes', variables.userRankingId]
         });
-        queryClient.invalidateQueries({
-          queryKey: ['daily-votes', user.id, today, variables.userRankingId]
+        queryClient.invalidateQueries({ 
+          queryKey: ['user-ranking', variables.userRankingId]
         });
       }
     },
-    onError: (error, variables, context) => {
-      console.error('User ranking vote failed:', error);
+    onError: (error: any, variables, context) => {
+      console.error('User ranking vote submission failed:', error);
       
-      toast.error(error instanceof Error ? error.message : "Failed to submit vote", {
+      toast.error(error.message || 'Failed to submit vote', {
         id: 'user-ranking-vote-submission'
       });
       
-      // Rollback optimistic update on error
-      if (context?.previousData && context?.queryKey) {
+      // Rollback optimistic update
+      if (context?.queryKey && context?.previousData !== undefined) {
         queryClient.setQueryData(context.queryKey, context.previousData);
-      }
-
-      // Ensure caches reflect server truth
-      if (user && variables) {
-        const today = new Date().toISOString().split('T')[0];
-        queryClient.invalidateQueries({ 
-          queryKey: ['daily-votes', user.id, today, variables.userRankingId]
-        });
-        queryClient.invalidateQueries({ 
-          queryKey: ['user-ranking-detail', variables.userRankingId]
-        });
       }
     }
   });
