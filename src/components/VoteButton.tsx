@@ -78,6 +78,8 @@ const VoteButton = ({
             return;
           }
           await submitUserRankingVote.mutateAsync({ userRankingId, rapperId });
+          // Immediately reflect voted state
+          addVoteToTracking(rapperId);
         } else if (rankingId) {
           // Official ranking vote
           if (!rankingId.match(/^[a-f0-9-]{36}$/i)) {
@@ -85,6 +87,8 @@ const VoteButton = ({
             return;
           }
           await submitRankingVote.mutateAsync({ rankingId, rapperId });
+          // Immediately reflect voted state
+          addVoteToTracking(rapperId);
         }
       } catch (error) {
         console.error(`Vote submission error for rapper ${rapperId}:`, error);
