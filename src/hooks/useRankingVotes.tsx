@@ -92,13 +92,41 @@ export const useRankingVotes = () => {
         userId: user?.id
       });
       
-      // Get user-friendly error message
-      const errorMessage = error instanceof Error ? error.message : "Failed to submit vote";
+      // Map error codes to user-friendly messages
+      let errorMessage = "Failed to submit vote. Please try again.";
+      let errorDescription: string | undefined;
+      
+      if (error instanceof Error) {
+        const msg = error.message;
+        
+        // Check for specific error codes
+        if (msg.includes('ALREADY_VOTED_TODAY')) {
+          errorMessage = "You've already voted for this rapper today";
+          errorDescription = "Come back tomorrow to vote again!";
+        } else if (msg.includes('UNAUTHENTICATED')) {
+          errorMessage = "Please sign in to vote";
+        } else if (msg.includes('INVALID_PARAMS')) {
+          errorMessage = "Invalid voting parameters";
+          errorDescription = "Please refresh the page and try again";
+        } else if (msg.includes('RAPPER_NOT_FOUND')) {
+          errorMessage = "Rapper not found";
+          errorDescription = "This rapper may have been removed";
+        } else if (msg.includes('RANKING_NOT_FOUND')) {
+          errorMessage = "Ranking not found";
+          errorDescription = "This ranking may no longer exist";
+        } else if (msg.includes('network') || msg.includes('fetch')) {
+          errorMessage = "Network error";
+          errorDescription = "Please check your connection and try again";
+        } else {
+          errorMessage = msg;
+          errorDescription = (error as any)?.details;
+        }
+      }
       
       // Update loading toast to error with detailed message
       toast.error(errorMessage, {
         id: 'vote-submission',
-        description: (error as any)?.details ? `Details: ${(error as any).details}` : undefined
+        description: errorDescription
       });
       
       // FIXED: Only revert optimistic updates for the SPECIFIC ranking that failed
