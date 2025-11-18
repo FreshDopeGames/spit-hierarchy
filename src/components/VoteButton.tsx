@@ -7,6 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
+import { useState } from "react";
 
 interface VoteButtonProps {
   onVote: () => void;
@@ -44,6 +45,9 @@ const VoteButton = ({
   const { submitRankingVote, getVoteMultiplier: getOfficialMultiplier, currentStatus } = useRankingVotes();
   const { submitUserRankingVote, getVoteMultiplier: getUserMultiplier } = useUserRankingVotes();
   
+  // Debouncing state to prevent double-clicks
+  const [isProcessing, setIsProcessing] = useState(false);
+  
   console.log('🔐 [VoteButton] Auth state:', {
     hasUser: !!user,
     userId: user?.id?.substring(0, 8) + '...',
@@ -61,10 +65,16 @@ const VoteButton = ({
 
   const hasVoted = isValidRapperId ? hasVotedToday(rapperId) : false;
   const isPendingVote = submitRankingVote.isPending || submitUserRankingVote.isPending;
-  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId;
+  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing;
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
   const handleClick = async () => {
+    // Prevent double-clicks
+    if (isProcessing) {
+      console.log('⏸️ [VoteButton] Click ignored - already processing');
+      return;
+    }
+
     console.log('🔵 [VoteButton] Click initiated', {
       rapperId,
       rankingId,
@@ -113,6 +123,9 @@ const VoteButton = ({
         return;
       }
 
+      // Set processing state to prevent double-clicks
+      setIsProcessing(true);
+
       try {
         if (userRankingId) {
           console.log('📤 [VoteButton] Submitting user ranking vote...');
@@ -148,12 +161,11 @@ const VoteButton = ({
           rapperId,
           rankingId: rankingId || userRankingId
         });
-        
-        // Show detailed error to user
-        const errorMessage = error?.message || 'Failed to submit vote. Please try again.';
-        toast.error(errorMessage, {
-          description: error?.details ? `Details: ${error.details}` : undefined
-        });
+        // Error is already handled by useRankingVotes/useUserRankingVotes hook
+        // No need for duplicate toast here
+      } finally {
+        // Re-enable button after 1 second to prevent rapid double-clicks
+        setTimeout(() => setIsProcessing(false), 1000);
       }
     } else {
       console.log('🔄 [VoteButton] Using callback vote handler');
