@@ -68,6 +68,19 @@ const VoteButton = ({
   const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing;
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
+  // Debug: Log button state
+  console.log('🎛️ [VoteButton] Button state:', {
+    rapperId: rapperId?.substring(0, 8),
+    isDisabled,
+    disabled,
+    isPendingVote,
+    hasUser: !!user,
+    hasVoted,
+    isValidRapperId,
+    isValidRankingId,
+    isProcessing
+  });
+
   const handleClick = async () => {
     // Prevent double-clicks
     if (isProcessing) {
