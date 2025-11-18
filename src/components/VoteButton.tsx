@@ -82,6 +82,8 @@ const VoteButton = ({
   });
 
   const handleClick = async () => {
+    console.log('🎯 [VoteButton] handleClick CALLED - Function entry point reached!', { rapperId: rapperId?.substring(0, 8) });
+    
     // Prevent double-clicks
     if (isProcessing) {
       console.log('⏸️ [VoteButton] Click ignored - already processing');
@@ -251,9 +253,18 @@ const VoteButton = ({
     );
   };
 
+  console.log('🔧 [VoteButton] Rendering button with:', { 
+    hasOnClick: !!handleClick, 
+    isDisabled,
+    rapperId: rapperId?.substring(0, 8)
+  });
+
   return (
     <ThemedButton
-      onClick={handleClick}
+      onClick={(e) => {
+        console.log('🖱️ [VoteButton] ThemedButton onClick fired!', { rapperId: rapperId?.substring(0, 8), event: e.type });
+        handleClick();
+      }}
       disabled={isDisabled}
       size="sm"
       className={`${getButtonColor()} font-bold flex-1 sm:flex-none ${getButtonSizing()} transition-all duration-200 ${className}`}
