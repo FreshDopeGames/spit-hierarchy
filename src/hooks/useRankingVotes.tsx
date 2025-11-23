@@ -12,15 +12,6 @@ export const useRankingVotes = () => {
   const queryClient = useQueryClient();
   const { currentStatus } = useMemberStatus();
 
-  // Log authentication state on mount and when it changes
-  console.log('🔐 [useRankingVotes] Auth state:', {
-    hasUser: !!user,
-    userId: user?.id,
-    userEmail: user?.email,
-    currentStatus,
-    timestamp: new Date().toISOString()
-  });
-
   const getVoteMultiplier = () => {
     switch (currentStatus) {
       case 'diamond': return 5;
@@ -34,27 +25,13 @@ export const useRankingVotes = () => {
 
   const submitRankingVote = useMutation({
     mutationFn: async ({ rankingId, rapperId }: VoteSubmissionParams) => {
-      console.log('🎯 [useRankingVotes] Mutation function called', {
-        rankingId,
-        rapperId,
-        hasUser: !!user,
-        userId: user?.id
-      });
-
-      if (!user) {
-        console.error('❌ [useRankingVotes] No user authenticated');
-        throw new Error('User not authenticated');
-      }
+      if (!user) throw new Error('User not authenticated');
       
       const voteWeight = getVoteMultiplier();
-      console.log('✓ [useRankingVotes] Calling submitVote with weight:', voteWeight);
-      
       return await submitVote(rankingId, rapperId, user, voteWeight, currentStatus);
     },
     onMutate: async ({ rankingId, rapperId }) => {
       const voteWeight = getVoteMultiplier();
-      
-      console.log(`Starting vote submission for rapper ${rapperId} in ranking ${rankingId}`);
       
       // Show loading toast
       toast.loading("Submitting your vote...", {
@@ -67,8 +44,6 @@ export const useRankingVotes = () => {
       return { voteWeight, rankingId, rapperId };
     },
     onSuccess: (data, variables) => {
-      console.log(`Vote submission successful for rapper ${variables.rapperId} in ranking ${variables.rankingId}`);
-      
       // Update loading toast to success
       toast.success("Vote submitted successfully!", {
         id: 'vote-submission'
@@ -131,8 +106,7 @@ export const useRankingVotes = () => {
       
       // FIXED: Only revert optimistic updates for the SPECIFIC ranking that failed
       if (user && variables.rankingId) {
-        console.log(`🔄 [useRankingVotes] Reverting optimistic updates for ranking ${variables.rankingId}`);
-        queryClient.invalidateQueries({ 
+        queryClient.invalidateQueries({
           queryKey: ['ranking-data-with-deltas', variables.rankingId],
           exact: true 
         });
