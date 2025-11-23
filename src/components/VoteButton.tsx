@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 
 interface VoteButtonProps {
   onVote: () => void;
@@ -80,6 +80,31 @@ const VoteButton = ({
     isValidRankingId,
     isProcessing
   });
+
+  // Add ref to track button element for debugging
+  const buttonRef = useRef<HTMLButtonElement>(null);
+
+  // Debug: Add direct DOM event listener to detect if clicks reach the button at all
+  useEffect(() => {
+    const button = buttonRef.current;
+    if (button) {
+      const directClickHandler = (e: MouseEvent) => {
+        console.log('🎪 [VoteButton] DIRECT DOM CLICK DETECTED!', { 
+          rapperId: rapperId?.substring(0, 8),
+          target: e.target,
+          currentTarget: e.currentTarget,
+          eventPhase: e.eventPhase,
+          bubbles: e.bubbles
+        });
+      };
+      
+      button.addEventListener('click', directClickHandler, { capture: true });
+      
+      return () => {
+        button.removeEventListener('click', directClickHandler, { capture: true });
+      };
+    }
+  }, [rapperId]);
 
   const handleClick = async () => {
     console.log('🎯 [VoteButton] handleClick CALLED - Function entry point reached!', { rapperId: rapperId?.substring(0, 8) });
@@ -261,6 +286,7 @@ const VoteButton = ({
 
   return (
     <ThemedButton
+      ref={buttonRef}
       onClick={(e) => {
         console.log('🖱️ [VoteButton] ThemedButton onClick fired!', { rapperId: rapperId?.substring(0, 8), event: e.type });
         handleClick();
