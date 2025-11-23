@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 interface VoteButtonProps {
   onVote: () => void;
@@ -32,27 +32,12 @@ const VoteButton = ({
   isPending = false,
   isTopFive = false
 }: VoteButtonProps) => {
-  console.log('🔵 [VoteButton] Rendered', {
-    rankingId,
-    userRankingId,
-    rapperId: rapperId?.substring(0, 8) + '...',
-    showWeightedVoting,
-    isPending,
-    isTopFive
-  });
-
   const { user } = useAuth();
   const { submitRankingVote, getVoteMultiplier: getOfficialMultiplier, currentStatus } = useRankingVotes();
   const { submitUserRankingVote, getVoteMultiplier: getUserMultiplier } = useUserRankingVotes();
   
   // Debouncing state to prevent double-clicks
   const [isProcessing, setIsProcessing] = useState(false);
-  
-  console.log('🔐 [VoteButton] Auth state:', {
-    hasUser: !!user,
-    userId: user?.id?.substring(0, 8) + '...',
-    userEmail: user?.email
-  });
   
   const trackingRankingId = rankingId || userRankingId;
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(trackingRankingId);
@@ -68,75 +53,13 @@ const VoteButton = ({
   const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing;
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
-  // Debug: Log button state
-  console.log('🎛️ [VoteButton] Button state:', {
-    rapperId: rapperId?.substring(0, 8),
-    isDisabled,
-    disabled,
-    isPendingVote,
-    hasUser: !!user,
-    hasVoted,
-    isValidRapperId,
-    isValidRankingId,
-    isProcessing
-  });
-
-  // Add ref to track button element for debugging
-  const buttonRef = useRef<HTMLButtonElement>(null);
-
-  // Debug: Add direct DOM event listener to detect if clicks reach the button at all
-  useEffect(() => {
-    const button = buttonRef.current;
-    if (button) {
-      const directClickHandler = (e: MouseEvent) => {
-        console.log('🎪 [VoteButton] DIRECT DOM CLICK DETECTED!', { 
-          rapperId: rapperId?.substring(0, 8),
-          target: e.target,
-          currentTarget: e.currentTarget,
-          eventPhase: e.eventPhase,
-          bubbles: e.bubbles
-        });
-      };
-      
-      button.addEventListener('click', directClickHandler, { capture: true });
-      
-      return () => {
-        button.removeEventListener('click', directClickHandler, { capture: true });
-      };
-    }
-  }, [rapperId]);
-
   const handleClick = async () => {
-    console.log('🎯 [VoteButton] handleClick CALLED - Function entry point reached!', { rapperId: rapperId?.substring(0, 8) });
-    
     // Prevent double-clicks
     if (isProcessing) {
-      console.log('⏸️ [VoteButton] Click ignored - already processing');
       return;
     }
 
-    console.log('🔵 [VoteButton] Click initiated', {
-      rapperId,
-      rankingId,
-      userRankingId,
-      hasUser: !!user,
-      userId: user?.id,
-      hasVoted,
-      isDisabled,
-      isValidRapperId,
-      isValidRankingId,
-      voteMultiplier,
-      showWeightedVoting
-    });
-
     if (isDisabled || !rapperId) {
-      console.log('⛔ [VoteButton] Vote blocked:', {
-        reason: !user ? 'No user' : hasVoted ? 'Already voted' : !isValidRapperId ? 'Invalid rapper ID' : !isValidRankingId ? 'Invalid ranking ID' : 'Unknown',
-        user: !!user,
-        hasVoted,
-        isValidRapperId,
-        isValidRankingId
-      });
 
       if (!user) {
         toast.error("Please sign in to vote for rappers.");
@@ -149,16 +72,8 @@ const VoteButton = ({
     }
 
     if (showWeightedVoting && user) {
-      console.log('🎯 [VoteButton] Starting weighted vote submission', {
-        rapperId,
-        rankingId: rankingId || userRankingId,
-        voteWeight: voteMultiplier,
-        isUserRanking: !!userRankingId
-      });
-
       // Security check
       if (!rapperId.match(/^[a-f0-9-]{36}$/i)) {
-        console.error('❌ [VoteButton] Invalid rapper ID format:', rapperId);
         toast.error("Invalid voting parameters");
         return;
       }
@@ -168,27 +83,21 @@ const VoteButton = ({
 
       try {
         if (userRankingId) {
-          console.log('📤 [VoteButton] Submitting user ranking vote...');
           // User ranking vote
           if (!userRankingId.match(/^[a-f0-9-]{36}$/i)) {
-            console.error('❌ [VoteButton] Invalid user ranking ID format:', userRankingId);
             toast.error("Invalid voting parameters");
             return;
           }
-          const result = await submitUserRankingVote.mutateAsync({ userRankingId, rapperId });
-          console.log('✅ [VoteButton] User ranking vote successful:', result);
+          await submitUserRankingVote.mutateAsync({ userRankingId, rapperId });
           // Immediately reflect voted state
           addVoteToTracking(rapperId);
         } else if (rankingId) {
-          console.log('📤 [VoteButton] Submitting official ranking vote...');
           // Official ranking vote
           if (!rankingId.match(/^[a-f0-9-]{36}$/i)) {
-            console.error('❌ [VoteButton] Invalid ranking ID format:', rankingId);
             toast.error("Invalid voting parameters");
             return;
           }
-          const result = await submitRankingVote.mutateAsync({ rankingId, rapperId });
-          console.log('✅ [VoteButton] Official ranking vote successful:', result);
+          await submitRankingVote.mutateAsync({ rankingId, rapperId });
           // Immediately reflect voted state
           addVoteToTracking(rapperId);
         }
@@ -208,7 +117,6 @@ const VoteButton = ({
         setTimeout(() => setIsProcessing(false), 1000);
       }
     } else {
-      console.log('🔄 [VoteButton] Using callback vote handler');
       onVote();
     }
   };
@@ -278,19 +186,9 @@ const VoteButton = ({
     );
   };
 
-  console.log('🔧 [VoteButton] Rendering button with:', { 
-    hasOnClick: !!handleClick, 
-    isDisabled,
-    rapperId: rapperId?.substring(0, 8)
-  });
-
   return (
     <ThemedButton
-      ref={buttonRef}
-      onClick={(e) => {
-        console.log('🖱️ [VoteButton] ThemedButton onClick fired!', { rapperId: rapperId?.substring(0, 8), event: e.type });
-        handleClick();
-      }}
+      onClick={handleClick}
       disabled={isDisabled}
       size="sm"
       className={`${getButtonColor()} font-bold flex-1 sm:flex-none ${getButtonSizing()} transition-all duration-200 ${className}`}
