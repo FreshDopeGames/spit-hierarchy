@@ -54,6 +54,8 @@ const VoteButton = ({
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
   const handleClick = async () => {
+    console.log('🎯 [VoteButton] Click handler called', { isProcessing, isDisabled, hasVoted, rapperId });
+    
     // Prevent double-clicks
     if (isProcessing) {
       return;
