@@ -3389,27 +3389,23 @@ export type Database = {
         }[]
       }
       get_user_achievement_progress: {
-        Args: { target_user_id?: string }
+        Args: { target_user_id: string }
         Returns: {
+          achievement_badge_color: string
+          achievement_description: string
+          achievement_icon: string
           achievement_id: string
-          badge_color: string
-          description: string
+          achievement_name: string
+          achievement_points: number
+          achievement_rarity: Database["public"]["Enums"]["achievement_rarity"]
+          achievement_type: Database["public"]["Enums"]["achievement_type"]
           earned_at: string
-          icon: string
           is_earned: boolean
-          is_hidden: boolean
-          name: string
           next_tier_id: string
-          points: number
-          progress_percentage: number
           progress_value: number
-          rarity: string
           series_name: string
-          threshold_field: string
           threshold_value: number
           tier_level: number
-          type: string
-          user_id: string
         }[]
       }
       get_user_ranking_preview_items: {
