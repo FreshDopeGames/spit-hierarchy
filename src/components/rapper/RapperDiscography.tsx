@@ -226,6 +226,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                     >
                       <AlbumCoverImage
                         coverUrl={item.album?.cover_art_url}
+                        cachedCoverUrl={(item.album as any)?.cached_cover_url}
                         title={item.album?.title || "Album"}
                         releaseType="album"
                         placeholderColors={placeholder.style}
@@ -377,6 +378,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                     >
                       <AlbumCoverImage
                         coverUrl={item.album?.cover_art_url}
+                        cachedCoverUrl={(item.album as any)?.cached_cover_url}
                         title={item.album?.title || "Mixtape"}
                         releaseType="mixtape"
                         placeholderColors={placeholder.style}

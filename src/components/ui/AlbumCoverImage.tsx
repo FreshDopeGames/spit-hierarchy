@@ -3,6 +3,7 @@ import { Disc3, Music } from "lucide-react";
 
 interface AlbumCoverImageProps {
   coverUrl?: string | null;
+  cachedCoverUrl?: string | null;
   title: string;
   releaseType: 'album' | 'mixtape';
   placeholderColors: {
@@ -14,6 +15,7 @@ interface AlbumCoverImageProps {
 
 export const AlbumCoverImage = ({ 
   coverUrl, 
+  cachedCoverUrl,
   title, 
   releaseType,
   placeholderColors 
@@ -24,8 +26,11 @@ export const AlbumCoverImage = ({
   const Icon = releaseType === 'album' ? Disc3 : Music;
   const iconColor = releaseType === 'album' ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-secondary))';
 
+  // Prioritize cached Supabase URL, fallback to Cover Art Archive URL
+  const imageUrl = cachedCoverUrl || coverUrl;
+
   // Show placeholder if no URL, error, or still loading
-  const showPlaceholder = !coverUrl || imageError || !imageLoaded;
+  const showPlaceholder = !imageUrl || imageError || !imageLoaded;
 
   return (
     <div 
@@ -36,9 +41,9 @@ export const AlbumCoverImage = ({
       }}
     >
       {/* Cover Art Image */}
-      {coverUrl && !imageError && (
+      {imageUrl && !imageError && (
         <img
-          src={coverUrl}
+          src={imageUrl}
           alt={`${title} cover art`}
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-300 ${
             imageLoaded ? 'opacity-100' : 'opacity-0'
