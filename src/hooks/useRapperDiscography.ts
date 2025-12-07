@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -89,13 +90,18 @@ export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true
 
 export const useRefreshDiscography = () => {
   const queryClient = useQueryClient();
+  const [fetchId, setFetchId] = useState<string | null>(null);
 
-  return useMutation({
+  const mutation = useMutation({
     mutationFn: async (rapperId: string) => {
+      // Generate a unique fetch ID for progress tracking
+      const newFetchId = crypto.randomUUID();
+      setFetchId(newFetchId);
+
       const { data, error } = await supabase.functions.invoke(
         "fetch-rapper-discography",
         {
-          body: { rapperId, forceRefresh: true }
+          body: { rapperId, forceRefresh: true, fetchId: newFetchId }
         }
       );
 
@@ -131,7 +137,13 @@ export const useRefreshDiscography = () => {
         toast.error("Failed to refresh discography");
       }
     },
+    onSettled: () => {
+      // Clear fetchId after mutation completes (success or error)
+      setTimeout(() => setFetchId(null), 2000);
+    }
   });
+
+  return { ...mutation, fetchId };
 };
 
 export const useRapperCareerStats = (rapperId: string) => {
