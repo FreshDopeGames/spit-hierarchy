@@ -16,8 +16,10 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+import { ThemedProgress } from "@/components/ui/themed-progress";
 import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink, PlayCircle } from "lucide-react";
 import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDiscography";
+import { useDiscographyProgress } from "@/hooks/useDiscographyProgress";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { format } from "date-fns";
 import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
@@ -34,6 +36,7 @@ interface RapperDiscographyProps {
 const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug = "", scrollPos }: RapperDiscographyProps) => {
   const { data, isLoading, error } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
   const refreshMutation = useRefreshDiscography();
+  const { progress, progressPercentage, estimatedSecondsRemaining } = useDiscographyProgress(refreshMutation.fetchId);
   const { isAdmin } = useSecurityContext();
   const [activeTab, setActiveTab] = useState("albums");
   const [albumsPage, setAlbumsPage] = useState(1);
@@ -43,6 +46,8 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
   const handleRefresh = () => {
     refreshMutation.mutate(rapperId);
   };
+
+  const isRefreshing = refreshMutation.isPending;
 
   const handleTabChange = (value: string) => {
     setActiveTab(value);
@@ -179,6 +184,38 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
       </CardHeader>
 
       <CardContent className="p-6 sm:p-8 py-[10px]">
+        {/* Progress indicator during refresh */}
+        {isRefreshing && progress && progress.total_releases > 0 && (
+          <div className="mb-6 space-y-3 p-4 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg border border-[hsl(var(--theme-primary))]/20">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-[hsl(var(--theme-textMuted))] truncate max-w-[60%]">
+                Processing: <span className="text-[hsl(var(--theme-text))] font-medium">{progress.current_album || 'Starting...'}</span>
+              </span>
+              <span className="text-[hsl(var(--theme-primary))] font-medium whitespace-nowrap">
+                {progress.processed_releases} / {progress.total_releases}
+              </span>
+            </div>
+            <ThemedProgress value={progressPercentage} className="h-2" />
+            {estimatedSecondsRemaining !== null && estimatedSecondsRemaining > 0 && (
+              <p className="text-xs text-[hsl(var(--theme-textMuted))] text-center">
+                ~{estimatedSecondsRemaining}s remaining
+              </p>
+            )}
+          </div>
+        )}
+
+        {/* Simple loading indicator when refresh started but no progress yet */}
+        {isRefreshing && (!progress || progress.total_releases === 0) && (
+          <div className="mb-6 p-4 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg border border-[hsl(var(--theme-primary))]/20">
+            <div className="flex items-center gap-3">
+              <RefreshCw className="w-4 h-4 text-[hsl(var(--theme-primary))] animate-spin" />
+              <span className="text-sm text-[hsl(var(--theme-textMuted))]">
+                Connecting to MusicBrainz...
+              </span>
+            </div>
+          </div>
+        )}
+
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
             <TabsTrigger

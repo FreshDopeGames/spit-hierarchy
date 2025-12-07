@@ -71,8 +71,42 @@ serve(async (req) => {
 
     // Parse request
     const body = await req.json().catch(() => ({}));
-    const { rapperId, forceRefresh = false } = body as { rapperId?: string; forceRefresh?: boolean };
+    const { rapperId, forceRefresh = false, fetchId } = body as { rapperId?: string; forceRefresh?: boolean; fetchId?: string };
     requestedRapperId = rapperId || null; // Capture for audit logging
+
+    // Helper function to update progress
+    const updateProgress = async (updates: { 
+      total_releases?: number; 
+      processed_releases?: number; 
+      current_album?: string; 
+      status?: string 
+    }) => {
+      if (!fetchId || !rapperId) return;
+      try {
+        await supabaseService.from('discography_fetch_progress')
+          .upsert({
+            fetch_id: fetchId,
+            rapper_id: rapperId,
+            ...updates,
+            updated_at: new Date().toISOString()
+          }, { onConflict: 'rapper_id,fetch_id' });
+      } catch (e) {
+        console.warn('Failed to update progress:', e);
+      }
+    };
+
+    // Initialize progress tracking if fetchId provided
+    if (fetchId && rapperId) {
+      await supabaseService.from('discography_fetch_progress').upsert({
+        fetch_id: fetchId,
+        rapper_id: rapperId,
+        status: 'starting',
+        total_releases: 0,
+        processed_releases: 0,
+        started_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      }, { onConflict: 'rapper_id,fetch_id' });
+    }
 
     // Auth (optional)
     const authHeader = req.headers.get('authorization');
@@ -487,11 +521,25 @@ serve(async (req) => {
 
     console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name}`);
 
+    // Update progress with total count
+    await updateProgress({ 
+      status: 'processing', 
+      total_releases: releaseGroups.length,
+      processed_releases: 0 
+    });
+
     // Track valid album IDs for reconciliation
     const validAlbumIds = new Set<string>();
+    let processedCount = 0;
 
     // Process all release groups (removed .slice(0, 50) limit)
     for (const rg of releaseGroups) {
+      // Update progress for each release
+      processedCount++;
+      await updateProgress({ 
+        processed_releases: processedCount,
+        current_album: rg.title 
+      });
       try {
         const primaryType = rg['primary-type'];
         const secondary = rg['secondary-types'] || [];
@@ -984,6 +1032,9 @@ serve(async (req) => {
       }
     }
 
+    // Mark progress as complete
+    await updateProgress({ status: 'complete' });
+
     // Final payload
     const payload = await readDiscographyPayload(supabaseService, rapperId);
     await logAuditEvent(supabaseService, {
@@ -997,6 +1048,16 @@ serve(async (req) => {
       response_data: { albums: payload.discography.length, musicbrainz_id: musicbrainzId },
       execution_time_ms: Date.now() - startTime,
     });
+
+    // Cleanup progress record after a short delay
+    if (fetchId) {
+      setTimeout(async () => {
+        try {
+          await supabaseService.from('discography_fetch_progress').delete().eq('fetch_id', fetchId);
+        } catch {}
+      }, 3000);
+    }
+
     return json({ success: true, cached: false, ...payload });
   } catch (error: any) {
     console.error('Error in fetch-rapper-discography:', error);

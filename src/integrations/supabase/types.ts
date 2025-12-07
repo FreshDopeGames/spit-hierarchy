@@ -637,6 +637,64 @@ export type Database = {
           },
         ]
       }
+      discography_fetch_progress: {
+        Row: {
+          current_album: string | null
+          fetch_id: string
+          id: string
+          processed_releases: number | null
+          rapper_id: string | null
+          started_at: string | null
+          status: string | null
+          total_releases: number | null
+          updated_at: string | null
+        }
+        Insert: {
+          current_album?: string | null
+          fetch_id: string
+          id?: string
+          processed_releases?: number | null
+          rapper_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          total_releases?: number | null
+          updated_at?: string | null
+        }
+        Update: {
+          current_album?: string | null
+          fetch_id?: string
+          id?: string
+          processed_releases?: number | null
+          rapper_id?: string | null
+          started_at?: string | null
+          status?: string | null
+          total_releases?: number | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discography_fetch_progress_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discography_fetch_progress_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discography_fetch_progress_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       member_stats: {
         Row: {
           about_visits: number | null
@@ -3070,6 +3128,7 @@ export type Database = {
         Args: { filter_criteria: Json; ranking_uuid: string }
         Returns: number
       }
+      cleanup_old_fetch_progress: { Args: never; Returns: undefined }
       cleanup_old_page_views: { Args: never; Returns: undefined }
       create_daily_ranking_snapshot: { Args: never; Returns: undefined }
       create_notification: {
