@@ -11,14 +11,37 @@ import {
   hasAchievementNotificationBeenShown 
 } from '@/utils/notificationTracking';
 
+// Transform database column names to frontend expected property names
+const transformAchievement = (raw: any) => ({
+  id: raw.achievement_id,
+  name: raw.achievement_name,
+  description: raw.achievement_description,
+  icon: raw.achievement_icon,
+  points: raw.achievement_points ?? 0,
+  rarity: raw.achievement_rarity,
+  type: raw.achievement_type,
+  badge_color: raw.achievement_badge_color,
+  threshold_value: raw.threshold_value,
+  threshold_field: raw.threshold_field,
+  progress_value: raw.progress_value ?? 0,
+  earned_at: raw.earned_at,
+  is_earned: raw.is_earned ?? false,
+  series_name: raw.series_name,
+  tier_level: raw.tier_level,
+  next_tier_id: raw.next_tier_id,
+  progress_percentage: raw.threshold_value > 0 
+    ? Math.min(100, ((raw.progress_value ?? 0) / raw.threshold_value) * 100) 
+    : (raw.is_earned ? 100 : 0),
+});
+
 export const useAchievements = () => {
   const { user } = useAuth();
   const queryClient = useQueryClient();
   const [newAchievements, setNewAchievements] = useState<any[]>([]);
   
   const { refetchInterval, refetchIntervalInBackground } = useAdaptivePolling({
-    baseInterval: 60000, // Reduced frequency for achievements - 1 minute
-    maxInterval: 600000, // Max 10 minutes
+    baseInterval: 60000,
+    maxInterval: 600000,
     enabled: !!user
   });
 
@@ -32,12 +55,14 @@ export const useAchievements = () => {
         .rpc('get_user_achievement_progress', { target_user_id: user.id });
       
       if (error) throw error;
-      return data;
+      
+      // Transform the data to match expected frontend structure
+      return (data ?? []).map(transformAchievement);
     },
     enabled: !!user,
     refetchInterval,
     refetchIntervalInBackground,
-    staleTime: 5 * 60 * 1000, // 5 minutes - achievements don't change frequently
+    staleTime: 5 * 60 * 1000,
     refetchOnWindowFocus: false,
   });
 
