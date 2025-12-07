@@ -98,11 +98,11 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
                 <p className="text-sm text-foreground whitespace-pre-wrap break-words mb-2">
                   {verse.comment_text}
                 </p>
-                <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                  <span>{format(new Date(verse.created_at), 'MMM d, yyyy')}</span>
+                <div className="flex items-center gap-3 text-xs">
+                  <span className="font-bold text-[hsl(var(--theme-primary))]">{format(new Date(verse.created_at), 'MMM d, yyyy')}</span>
                   <Link 
                     to="/community-cypher"
-                    className="hover:text-[hsl(var(--theme-primary))] transition-colors"
+                    className="font-bold text-[hsl(var(--theme-primary))] hover:opacity-80 transition-opacity"
                   >
                     View in Cypher →
                   </Link>
