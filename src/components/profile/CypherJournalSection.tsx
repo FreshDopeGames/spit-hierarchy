@@ -40,7 +40,7 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
             No verses dropped yet. Hit the cypher and show what you got!
           </p>
           <Link 
-            to="/cypher"
+            to="/community-cypher"
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-[hsl(var(--theme-primary))] text-primary-foreground hover:opacity-90 transition-opacity font-medium"
           >
             <Music className="h-4 w-4" />
@@ -101,7 +101,7 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
                 <div className="flex items-center gap-3 text-xs text-muted-foreground">
                   <span>{format(new Date(verse.created_at), 'MMM d, yyyy')}</span>
                   <Link 
-                    to="/cypher"
+                    to="/community-cypher"
                     className="hover:text-[hsl(var(--theme-primary))] transition-colors"
                   >
                     View in Cypher →
@@ -121,7 +121,7 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
       {/* Link to cypher */}
       <div className="mt-4 pt-4 border-t border-[hsl(var(--theme-primary))]/20 text-center">
         <Link 
-          to="/cypher"
+          to="/community-cypher"
           className="text-sm text-muted-foreground hover:text-[hsl(var(--theme-primary))] transition-colors"
         >
           Continue your legacy in the Community Cypher →
