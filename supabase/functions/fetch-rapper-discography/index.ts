@@ -48,6 +48,11 @@ interface MusicBrainzRecording {
   releases?: Array<{ id: string; title: string; date?: string }>;
 }
 
+// Constants for resource management
+const MAX_EXECUTION_TIME_MS = 50000; // 50 seconds (10s buffer before 60s timeout)
+const MAX_COVER_ART_DOWNLOADS = 5; // Limit cover art caching per run
+const PROGRESS_UPDATE_INTERVAL = 5; // Update progress every N albums
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -531,15 +536,26 @@ serve(async (req) => {
     // Track valid album IDs for reconciliation
     const validAlbumIds = new Set<string>();
     let processedCount = 0;
+    let coverArtDownloads = 0; // Track cover art downloads to limit per run
 
     // Process all release groups (removed .slice(0, 50) limit)
     for (const rg of releaseGroups) {
-      // Update progress for each release
+      // ⏱️ EXECUTION TIME GUARD - prevent timeout
+      const elapsedMs = Date.now() - startTime;
+      if (elapsedMs > MAX_EXECUTION_TIME_MS) {
+        console.warn(`⚠️ Approaching execution limit (${Math.round(elapsedMs/1000)}s elapsed), stopping processing`);
+        console.log(`   Processed ${processedCount}/${releaseGroups.length} albums`);
+        break;
+      }
+
+      // Update progress every N albums (batched to reduce DB calls)
       processedCount++;
-      await updateProgress({ 
-        processed_releases: processedCount,
-        current_album: rg.title 
-      });
+      if (processedCount % PROGRESS_UPDATE_INTERVAL === 0 || processedCount === 1 || processedCount === releaseGroups.length) {
+        await updateProgress({ 
+          processed_releases: processedCount,
+          current_album: rg.title 
+        });
+      }
       try {
         const primaryType = rg['primary-type'];
         const secondary = rg['secondary-types'] || [];
@@ -560,8 +576,8 @@ serve(async (req) => {
       let releaseCheckPassed = false;
       
       try {
-        rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels+artist-credits&fmt=json`);
-        await delay(120);
+      rgDetails = await mbJson<any>(`https://musicbrainz.org/ws/2/release-group/${rg.id}?inc=releases+url-rels+artist-credits&fmt=json`);
+        await delay(1100); // MusicBrainz requires 1 req/sec
         
         // Verify artist-credit includes this rapper or any of their aliases (prevents tribute albums)
         const artistCredits = rgDetails['artist-credit'] || [];
@@ -750,12 +766,15 @@ serve(async (req) => {
         });
       
       // Fallback: Try to find by title and release date if not found by MusicBrainz ID
-      if (!existingAlbum && rg['first-release-date']) {
+      // Parse the date properly to handle year-only formats (e.g., "2005" → "2005-01-01")
+      const parsedReleaseDate = parseMusicBrainzDate(rg['first-release-date']);
+      
+      if (!existingAlbum && parsedReleaseDate) {
         existingAlbum = await supabaseService
           .from('albums')
           .select('id, has_cover_art, musicbrainz_id, title')
           .eq('title', rg.title)
-          .eq('release_date', rg['first-release-date'])
+          .eq('release_date', parsedReleaseDate)
           .maybeSingle()
           .then(({ data, error }) => {
             if (error) console.error(`Error finding album by title+date "${rg.title}":`, error);
@@ -795,12 +814,17 @@ serve(async (req) => {
         let hasCoverArt = false;
         let cachedCoverUrl: string | null = null;
         
-        // Try to download and cache the cover art
-        cachedCoverUrl = await downloadAndCacheCoverArt(supabaseService, rg.id, coverArtUrl);
-        hasCoverArt = cachedCoverUrl !== null;
+        // Only download cover art if under the limit (memory/time optimization)
+        if (coverArtDownloads < MAX_COVER_ART_DOWNLOADS) {
+          cachedCoverUrl = await downloadAndCacheCoverArt(supabaseService, rg.id, coverArtUrl);
+          if (cachedCoverUrl) {
+            coverArtDownloads++;
+            hasCoverArt = true;
+          }
+        }
         
         if (!hasCoverArt) {
-          // Fallback: just check if cover exists (for reference)
+          // Fallback: just check if cover exists (for reference) - uses HEAD request, minimal overhead
           hasCoverArt = await checkCoverArtExists(coverArtUrl);
         }
         await delay(100); // Small delay after cover art check to avoid rate limiting
@@ -815,7 +839,7 @@ serve(async (req) => {
             title: rg.title,
             slug: uniqueSlug,
             musicbrainz_id: rg.id,
-            release_date: rg['first-release-date'] || null,
+            release_date: parsedReleaseDate, // Use parsed date to handle year-only formats
             release_type: releaseType,
             track_count: null, // Not available without inc=releases - will be populated on-demand
             cover_art_url: hasCoverArt ? coverArtUrl : null,
@@ -859,8 +883,8 @@ serve(async (req) => {
           console.log(`  → Generated slug: ${updates.slug}`);
         }
         
-        // Cache cover art if not already cached
-        if (!currentAlbum?.cached_cover_url) {
+        // Cache cover art if not already cached (and under limit)
+        if (!currentAlbum?.cached_cover_url && coverArtDownloads < MAX_COVER_ART_DOWNLOADS) {
           const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
           
           // Try to download and cache
@@ -868,17 +892,18 @@ serve(async (req) => {
           await delay(100);
           
           if (cachedUrl) {
+            coverArtDownloads++;
             updates.cached_cover_url = cachedUrl;
             updates.cover_art_url = coverArtUrl;
             updates.has_cover_art = true;
-            console.log(`  → Cached cover art`);
+            console.log(`  → Cached cover art (${coverArtDownloads}/${MAX_COVER_ART_DOWNLOADS})`);
           } else if (!existingAlbum?.has_cover_art) {
-            // Fallback: just check if cover exists
+            // Fallback: just check if cover exists (HEAD request only)
             const hasCoverArt = await checkCoverArtExists(coverArtUrl);
             if (hasCoverArt) {
               updates.cover_art_url = coverArtUrl;
               updates.has_cover_art = true;
-              console.log(`  → Found cover art (not cached)`);
+              console.log(`  → Found cover art (not cached - at limit)`);
             }
           }
         }
@@ -1200,6 +1225,30 @@ function normalizeName(name: string) {
     .replace(/^the\s+/, '')
     .replace(/\s+/g, ' ')
     .trim();
+}
+
+// Parse MusicBrainz date formats (YYYY, YYYY-MM, or YYYY-MM-DD) into a valid date string
+// Returns null if the date is invalid or incomplete for database storage
+function parseMusicBrainzDate(dateStr: string | undefined): string | null {
+  if (!dateStr) return null;
+  
+  // Full date: YYYY-MM-DD (valid as-is)
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    return dateStr;
+  }
+  
+  // Year-month: YYYY-MM → YYYY-MM-01
+  if (/^\d{4}-\d{2}$/.test(dateStr)) {
+    return `${dateStr}-01`;
+  }
+  
+  // Year only: YYYY → YYYY-01-01
+  if (/^\d{4}$/.test(dateStr)) {
+    return `${dateStr}-01-01`;
+  }
+  
+  console.warn(`Unexpected date format: "${dateStr}"`);
+  return null;
 }
 
 async function resolveArtistId(rapperName: string, aliases: string[] = []): Promise<string | null> {
