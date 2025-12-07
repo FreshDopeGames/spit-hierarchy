@@ -34,9 +34,13 @@ interface RapperDiscographyProps {
   scrollPos?: string;
 }
 const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug = "", scrollPos }: RapperDiscographyProps) => {
-  const { data, isLoading, error } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
+  const { data, isLoading, error, fetchId: initialFetchId } = useRapperDiscography(rapperId, true); // Auto-fetch enabled
   const refreshMutation = useRefreshDiscography();
-  const { progress, progressPercentage, estimatedSecondsRemaining } = useDiscographyProgress(refreshMutation.fetchId);
+  
+  // Use whichever fetchId is active (refresh takes priority)
+  const activeFetchId = refreshMutation.fetchId || initialFetchId;
+  const { progress, progressPercentage, estimatedSecondsRemaining } = useDiscographyProgress(activeFetchId);
+  
   const { isAdmin } = useSecurityContext();
   const [activeTab, setActiveTab] = useState("albums");
   const [albumsPage, setAlbumsPage] = useState(1);
@@ -58,20 +62,38 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
     return (
       <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
         <CardHeader>
-          <div className="h-6 bg-gray-800 rounded w-1/3 animate-pulse"></div>
+          <h3 className="text-xl font-[var(--theme-font-heading)] text-[var(--theme-text)]">Discography</h3>
+          <p className="text-sm text-[var(--theme-textMuted)] mt-1">Fetching from MusicBrainz...</p>
         </CardHeader>
         <CardContent>
-          <div className="space-y-4">
-            {[...Array(3)].map((_, i) => (
-              <div key={i} className="flex gap-4 animate-pulse">
-                <div className="w-16 h-16 bg-gray-800 rounded"></div>
-                <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-gray-800 rounded w-3/4"></div>
-                  <div className="h-3 bg-gray-800 rounded w-1/2"></div>
-                </div>
+          {/* Progress indicator during initial load */}
+          {progress && progress.total_releases > 0 ? (
+            <div className="space-y-3 p-4 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg border border-[hsl(var(--theme-primary))]/20">
+              <div className="flex justify-between items-center text-sm">
+                <span className="text-[hsl(var(--theme-textMuted))] truncate max-w-[60%]">
+                  Processing: <span className="text-[hsl(var(--theme-text))] font-medium">{progress.current_album || 'Starting...'}</span>
+                </span>
+                <span className="text-[hsl(var(--theme-primary))] font-medium whitespace-nowrap">
+                  {progress.processed_releases} / {progress.total_releases}
+                </span>
               </div>
-            ))}
-          </div>
+              <ThemedProgress value={progressPercentage} className="h-2" />
+              {estimatedSecondsRemaining !== null && estimatedSecondsRemaining > 0 && (
+                <p className="text-xs text-[hsl(var(--theme-textMuted))] text-center">
+                  ~{estimatedSecondsRemaining}s remaining
+                </p>
+              )}
+            </div>
+          ) : (
+            <div className="p-4 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg border border-[hsl(var(--theme-primary))]/20">
+              <div className="flex items-center gap-3">
+                <RefreshCw className="w-4 h-4 text-[hsl(var(--theme-primary))] animate-spin" />
+                <span className="text-sm text-[hsl(var(--theme-textMuted))]">
+                  Connecting to MusicBrainz...
+                </span>
+              </div>
+            </div>
+          )}
         </CardContent>
       </Card>
     );
