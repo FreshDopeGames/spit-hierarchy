@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -37,7 +37,11 @@ export interface DiscographyData {
 const ongoingRequests = new Map<string, Promise<DiscographyData>>();
 
 export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true) => {
-  return useQuery({
+  const [fetchId, setFetchId] = useState<string | null>(null);
+  const fetchIdRef = useRef<string | null>(null);
+
+  // Clear fetchId when query completes
+  const query = useQuery({
     queryKey: ["rapper-discography", rapperId],
     queryFn: async (): Promise<DiscographyData> => {
       console.log('Fetching discography for rapper:', rapperId);
@@ -48,13 +52,18 @@ export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true
         return await ongoingRequests.get(rapperId)!;
       }
       
+      // Generate a unique fetch ID for progress tracking
+      const newFetchId = crypto.randomUUID();
+      fetchIdRef.current = newFetchId;
+      setFetchId(newFetchId);
+      
       // Create the request promise
       const requestPromise = (async () => {
         try {
           const { data, error } = await supabase.functions.invoke(
             "fetch-rapper-discography",
             {
-              body: { rapperId }
+              body: { rapperId, fetchId: newFetchId }
             }
           );
 
@@ -69,6 +78,13 @@ export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true
         } finally {
           // Remove from ongoing requests when complete
           ongoingRequests.delete(rapperId);
+          // Clear fetchId after a delay to allow progress UI to show completion
+          setTimeout(() => {
+            if (fetchIdRef.current === newFetchId) {
+              setFetchId(null);
+              fetchIdRef.current = null;
+            }
+          }, 2000);
         }
       })();
       
@@ -86,6 +102,8 @@ export const useRapperDiscography = (rapperId: string, autoFetch: boolean = true
       return failureCount < 2;
     },
   });
+
+  return { ...query, fetchId };
 };
 
 export const useRefreshDiscography = () => {
