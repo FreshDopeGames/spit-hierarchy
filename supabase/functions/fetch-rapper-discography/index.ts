@@ -232,7 +232,7 @@ serve(async (req) => {
       try {
         console.log(`Validating stored MusicBrainz ID: ${musicbrainzId} for ${rapper.name}`);
         const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases&fmt=json`);
-        await delay(120);
+        await delay(1100);
         
         const storedArtistName = normalizeName(artistData.name);
         const rapperName = normalizeName(rapper.name);
@@ -397,7 +397,7 @@ serve(async (req) => {
             });
           }
         }
-        await delay(100);
+        await delay(1100);
       }
     }
 
@@ -416,7 +416,7 @@ serve(async (req) => {
         
         if (releases.length < limit) break; // No more pages
         offset += limit;
-        await delay(150); // Rate limit between pages
+        await delay(1100); // Rate limit between pages (MusicBrainz requires 1 req/sec)
       }
       
       return allReleases;
@@ -427,10 +427,41 @@ serve(async (req) => {
     
     try {
       rgAlbums = await fetchAllReleaseGroups('album');
-      await delay(150);
+      await delay(1100);
       rgEps = await fetchAllReleaseGroups('ep');
     } catch (mbError: any) {
       console.error('MusicBrainz API error:', mbError);
+      
+      // Check if this is a rate limit error - return cached data gracefully
+      const isRateLimit = mbError.message?.includes('503') || 
+                          mbError.message?.includes('429') || 
+                          mbError.message?.includes('rate limit');
+      
+      if (isRateLimit) {
+        const payload = await readDiscographyPayload(supabaseService, rapperId);
+        if (payload.discography.length > 0) {
+          await logAuditEvent(supabaseService, {
+            rapper_id: rapperId,
+            action: 'FETCH_DISCOGRAPHY',
+            status: 'MB_RATE_LIMITED_CACHED',
+            user_id: userId,
+            ip_address: clientIP,
+            user_agent: userAgent,
+            request_data: body,
+            response_data: { albums: payload.discography.length },
+            error_message: mbError.message,
+            execution_time_ms: Date.now() - startTime,
+          });
+          return json({ 
+            success: true, 
+            cached: true, 
+            rate_limited: true,
+            message: 'MusicBrainz rate limited — returning cached results',
+            ...payload 
+          });
+        }
+      }
+      
       await logAuditEvent(supabaseService, {
         rapper_id: requestedRapperId,
         action: 'FETCH_DISCOGRAPHY',
@@ -1122,7 +1153,7 @@ async function resolveArtistId(rapperName: string, aliases: string[] = []): Prom
     
     try {
       const data = await mbJson<any>(url);
-      await delay(100);
+      await delay(1100);
       
       const artists: MusicBrainzArtist[] = data.artists || [];
       const target = normalizeName(searchTerm);
@@ -1164,18 +1195,32 @@ async function resolveArtistId(rapperName: string, aliases: string[] = []): Prom
   return null;
 }
 
-async function mbJson<T>(url: string): Promise<T> {
-  const res = await fetch(url, {
-    headers: {
-      'User-Agent': 'RapperHierarchy/1.1 (https://rapperhierarchy.com; contact@rapperhierarchy.com)',
-      'Accept': 'application/json',
-    },
-  });
-  if (!res.ok) {
-    const text = await res.text().catch(() => '');
-    throw new Error(`MusicBrainz API error ${res.status} ${res.statusText} for ${url} - ${text?.slice(0,200)}`);
+async function mbJson<T>(url: string, retries = 3): Promise<T> {
+  for (let attempt = 0; attempt < retries; attempt++) {
+    const res = await fetch(url, {
+      headers: {
+        'User-Agent': 'RapperHierarchy/1.1 (https://rapperhierarchy.com; contact@rapperhierarchy.com)',
+        'Accept': 'application/json',
+      },
+    });
+    
+    // Handle rate limiting - wait and retry with exponential backoff
+    if (res.status === 503 || res.status === 429) {
+      const waitTime = Math.pow(2, attempt) * 2000; // 2s, 4s, 8s
+      console.warn(`MusicBrainz rate limited (${res.status}), waiting ${waitTime}ms before retry ${attempt + 1}/${retries}`);
+      await delay(waitTime);
+      continue;
+    }
+    
+    if (!res.ok) {
+      const text = await res.text().catch(() => '');
+      throw new Error(`MusicBrainz API error ${res.status} ${res.statusText} for ${url} - ${text?.slice(0,200)}`);
+    }
+    
+    return await res.json() as T;
   }
-  return await res.json() as T;
+  
+  throw new Error(`MusicBrainz API failed after ${retries} retries due to rate limiting`);
 }
 
 function delay(ms: number) {
