@@ -32,6 +32,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Convert *italic* to <em>
         .replace(/\*(.+?)\*/g, "<em>$1</em>")
 
+        // Convert [text](url) markdown links to anchor tags
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>')
+
         // Convert single line breaks to <br> tags, but preserve double line breaks as paragraph spacing
         .replace(/\n{3,}/g, "<br><br><br>") // Multiple line breaks
         .replace(/\n{2}/g, "<br><br>") // Double line breaks
@@ -57,7 +60,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
             className="text-rap-platinum leading-relaxed text-base
             [&_strong]:font-bold
             [&_em]:text-rap-silver [&_em]:italic
-            [&_br]:block [&_br]:my-2"
+            [&_br]:block [&_br]:my-2
+            [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity"
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
         </div>
