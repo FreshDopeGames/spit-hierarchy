@@ -711,9 +711,19 @@ serve(async (req) => {
           ...streamingLinks,
         };
         
-        // Verify cover art exists before storing URL
+        // Verify cover art exists and cache it in Supabase Storage
         const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
-        const hasCoverArt = await checkCoverArtExists(coverArtUrl);
+        let hasCoverArt = false;
+        let cachedCoverUrl: string | null = null;
+        
+        // Try to download and cache the cover art
+        cachedCoverUrl = await downloadAndCacheCoverArt(supabaseService, rg.id, coverArtUrl);
+        hasCoverArt = cachedCoverUrl !== null;
+        
+        if (!hasCoverArt) {
+          // Fallback: just check if cover exists (for reference)
+          hasCoverArt = await checkCoverArtExists(coverArtUrl);
+        }
         await delay(100); // Small delay after cover art check to avoid rate limiting
         
         // Generate unique slug for the album
@@ -730,6 +740,7 @@ serve(async (req) => {
             release_type: releaseType,
             track_count: null, // Not available without inc=releases - will be populated on-demand
             cover_art_url: hasCoverArt ? coverArtUrl : null,
+            cached_cover_url: cachedCoverUrl,
             has_cover_art: hasCoverArt,
             external_cover_links: externalLinks,
             cover_art_colors: null // Will be populated by future user-generated content
@@ -743,7 +754,7 @@ serve(async (req) => {
         }
         
         albumId = newAlbum?.id;
-        console.log(`✅ Created album "${rg.title}" with ID: ${albumId}`);
+        console.log(`✅ Created album "${rg.title}" with ID: ${albumId}${cachedCoverUrl ? ' (cover cached)' : ''}`);
       } else {
         console.log(`🔄 Updating existing album: "${rg.title}" (${albumId})`);
         
@@ -759,7 +770,7 @@ serve(async (req) => {
         // Generate slug if missing
         const { data: currentAlbum } = await supabaseService
           .from('albums')
-          .select('slug, title')
+          .select('slug, title, cached_cover_url')
           .eq('id', existingAlbum.id)
           .single();
         
@@ -769,16 +780,27 @@ serve(async (req) => {
           console.log(`  → Generated slug: ${updates.slug}`);
         }
         
-        // Update cover art if missing
-        if (!existingAlbum?.has_cover_art) {
+        // Cache cover art if not already cached
+        if (!currentAlbum?.cached_cover_url) {
           const coverArtUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
-          const hasCoverArt = await checkCoverArtExists(coverArtUrl);
+          
+          // Try to download and cache
+          const cachedUrl = await downloadAndCacheCoverArt(supabaseService, rg.id, coverArtUrl);
           await delay(100);
           
-          if (hasCoverArt) {
+          if (cachedUrl) {
+            updates.cached_cover_url = cachedUrl;
             updates.cover_art_url = coverArtUrl;
             updates.has_cover_art = true;
-            console.log(`  → Found cover art`);
+            console.log(`  → Cached cover art`);
+          } else if (!existingAlbum?.has_cover_art) {
+            // Fallback: just check if cover exists
+            const hasCoverArt = await checkCoverArtExists(coverArtUrl);
+            if (hasCoverArt) {
+              updates.cover_art_url = coverArtUrl;
+              updates.has_cover_art = true;
+              console.log(`  → Found cover art (not cached)`);
+            }
           }
         }
         
@@ -998,6 +1020,7 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
         release_date,
         release_type,
         cover_art_url,
+        cached_cover_url,
         has_cover_art,
         cover_art_colors,
         external_cover_links,
@@ -1008,6 +1031,59 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
     .eq('rapper_id', rapperId);
 
   return { discography: discography || [] };
+}
+
+// Download cover art and cache it in Supabase Storage
+async function downloadAndCacheCoverArt(
+  supabaseService: any,
+  musicbrainzId: string, 
+  coverArtUrl: string
+): Promise<string | null> {
+  try {
+    console.log(`📦 Downloading cover art for ${musicbrainzId}...`);
+    
+    // Download image from Cover Art Archive
+    const response = await fetch(coverArtUrl, {
+      headers: { 'User-Agent': 'RapperHierarchy/1.1 (https://rapperhierarchy.com)' },
+      redirect: 'follow'
+    });
+    
+    if (!response.ok) {
+      console.log(`   ❌ Download failed: ${response.status}`);
+      return null;
+    }
+    
+    const contentType = response.headers.get('content-type') || 'image/jpeg';
+    const imageData = await response.arrayBuffer();
+    
+    // Determine file extension from content type
+    const extension = contentType.includes('png') ? 'png' : 'jpg';
+    const fileName = `${musicbrainzId}.${extension}`;
+    
+    // Upload to Supabase Storage
+    const { data, error } = await supabaseService.storage
+      .from('album-covers')
+      .upload(fileName, imageData, {
+        contentType: contentType,
+        upsert: true
+      });
+    
+    if (error) {
+      console.error(`   ❌ Storage upload error:`, error.message);
+      return null;
+    }
+    
+    // Get public URL
+    const { data: urlData } = supabaseService.storage
+      .from('album-covers')
+      .getPublicUrl(fileName);
+    
+    console.log(`   ✅ Cached successfully: ${fileName}`);
+    return urlData.publicUrl;
+  } catch (error: any) {
+    console.error(`   ❌ Cover art caching failed:`, error.message);
+    return null;
+  }
 }
 
 // Check if a cover art URL exists and returns a valid image

@@ -161,6 +161,7 @@ export type Database = {
       }
       albums: {
         Row: {
+          cached_cover_url: string | null
           cover_art_colors: Json | null
           cover_art_url: string | null
           created_at: string
@@ -177,6 +178,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          cached_cover_url?: string | null
           cover_art_colors?: Json | null
           cover_art_url?: string | null
           created_at?: string
@@ -193,6 +195,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          cached_cover_url?: string | null
           cover_art_colors?: Json | null
           cover_art_url?: string | null
           created_at?: string
