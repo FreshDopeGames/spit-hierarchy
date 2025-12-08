@@ -5,6 +5,7 @@ import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 import NavigationSidebar from "./NavigationSidebar";
+import ReadingProgressBar from "./blog/ReadingProgressBar";
 
 interface InternalPageHeaderProps {
   title?: string;
@@ -12,16 +13,18 @@ interface InternalPageHeaderProps {
   backLink?: string;
   backText?: string;
   showTitle?: boolean;
+  showReadingProgress?: boolean;
 }
 
 const InternalPageHeader = ({
   backLink = "/",
-  backText = "Back Home"
+  backText = "Back Home",
+  showReadingProgress = false
 }: InternalPageHeaderProps) => {
   const { theme } = useEnhancedTheme();
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-black py-2 sm:py-3 border-b border-[hsl(var(--theme-primary))]/30">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-black py-2 sm:py-3 border-b border-[hsl(var(--theme-primary))]/30 overflow-visible">
       <div className="max-w-7xl mx-auto px-3 sm:px-4 flex items-center justify-between h-full">
         <div className="flex items-center">
           <Link to={backLink} onClick={() => window.scrollTo(0, 0)}>
@@ -51,6 +54,8 @@ const InternalPageHeader = ({
 
         <NavigationSidebar />
       </div>
+      
+      {showReadingProgress && <ReadingProgressBar />}
     </header>
   );
 };
