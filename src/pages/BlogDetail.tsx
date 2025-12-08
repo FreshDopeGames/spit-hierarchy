@@ -128,7 +128,6 @@ const BlogDetail = () => {
 
       <BlogDetailContent
         blogPost={blogPost}
-        slug={slug || ''}
         transformedBlogPost={transformedBlogPost}
         transformedRelatedPosts={transformedRelatedPosts}
         totalComments={totalComments}
