@@ -90,9 +90,8 @@ export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
     const fetchTracksIfNeeded = async () => {
       if (!query.data || isFetchingTracks) return;
       
-      const needsTracks = 
-        query.data.track_count === null || 
-        (query.data.tracks.length === 0 && query.data.track_count !== 0);
+      // Only fetch tracks if we have none - the RPC already returns tracks if they exist
+      const needsTracks = query.data.tracks.length === 0;
 
       if (needsTracks) {
         console.log('Album needs tracks, fetching from MusicBrainz...');
