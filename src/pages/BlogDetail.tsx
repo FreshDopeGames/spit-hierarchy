@@ -38,7 +38,7 @@ const BlogDetail = () => {
   usePageVisitTracking('blog_visits');
 
   // Fetch the blog post by slug - allow viewing drafts if user can manage blog
-  const { data: blogPost, isLoading, error } = useBlogPostBySlug(slug, canManageBlog);
+  const { data: blogPost, isLoading, error } = useBlogPostBySlug(slug, canManageBlog, !isLoadingPermissions);
 
   // Get comment data - use blog post ID when available
   const { totalComments } = useComments({ 
