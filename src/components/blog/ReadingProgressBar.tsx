@@ -1,7 +1,7 @@
 import useReadingProgress from '@/hooks/useReadingProgress';
 
 const ReadingProgressBar = () => {
-  const progress = useReadingProgress();
+  const progress = useReadingProgress('article-content');
 
   return (
     <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-[hsl(var(--theme-surface))]">

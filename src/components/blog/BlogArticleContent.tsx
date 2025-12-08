@@ -53,7 +53,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
   }, [content]);
 
   return (
-    <ThemedCard variant="dark" className="mb-8">
+    <ThemedCard id="article-content" variant="dark" className="mb-8">
       <ThemedCardContent className="p-8">
         <div className="font-merienda">
           <p
