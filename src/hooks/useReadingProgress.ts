@@ -1,9 +1,35 @@
 import { useState, useEffect, useCallback } from 'react';
 
-const useReadingProgress = () => {
+const useReadingProgress = (targetElementId?: string) => {
   const [progress, setProgress] = useState(0);
 
   const updateProgress = useCallback(() => {
+    // If targeting a specific element, calculate progress based on that element
+    if (targetElementId) {
+      const element = document.getElementById(targetElementId);
+      if (element) {
+        const rect = element.getBoundingClientRect();
+        const elementHeight = rect.height;
+        const viewportHeight = window.innerHeight;
+        
+        // Calculate how much of the element has been scrolled through
+        // Progress starts when element top reaches viewport top
+        // Progress ends when element bottom reaches viewport top
+        const scrolledPast = -rect.top;
+        const scrollableDistance = elementHeight - viewportHeight;
+        
+        if (scrollableDistance <= 0) {
+          // Element fits entirely in viewport
+          setProgress(rect.top <= 0 ? 100 : 0);
+        } else {
+          const percent = (scrolledPast / scrollableDistance) * 100;
+          setProgress(Math.min(100, Math.max(0, percent)));
+        }
+        return;
+      }
+    }
+    
+    // Fallback to full page scroll calculation
     const scrollTop = window.scrollY;
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
     
@@ -14,7 +40,7 @@ const useReadingProgress = () => {
     
     const scrollPercent = (scrollTop / docHeight) * 100;
     setProgress(Math.min(100, Math.max(0, scrollPercent)));
-  }, []);
+  }, [targetElementId]);
 
   useEffect(() => {
     let ticking = false;
