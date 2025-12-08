@@ -283,13 +283,28 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                       key={item.id}
                       className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors"
                     >
-                      <AlbumCoverImage
-                        coverUrl={item.album?.cover_art_url}
-                        cachedCoverUrl={(item.album as any)?.cached_cover_url}
-                        title={item.album?.title || "Album"}
-                        releaseType="album"
-                        placeholderColors={placeholder.style}
-                      />
+                      {item.album?.slug ? (
+                        <Link
+                          to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                          className="flex-shrink-0"
+                        >
+                          <AlbumCoverImage
+                            coverUrl={item.album?.cover_art_url}
+                            cachedCoverUrl={(item.album as any)?.cached_cover_url}
+                            title={item.album?.title || "Album"}
+                            releaseType="album"
+                            placeholderColors={placeholder.style}
+                          />
+                        </Link>
+                      ) : (
+                        <AlbumCoverImage
+                          coverUrl={item.album?.cover_art_url}
+                          cachedCoverUrl={(item.album as any)?.cached_cover_url}
+                          title={item.album?.title || "Album"}
+                          releaseType="album"
+                          placeholderColors={placeholder.style}
+                        />
+                      )}
                       <div className="flex-1 min-w-0">
                         {item.album?.slug ? (
                           <Link
@@ -435,13 +450,28 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                       key={item.id}
                       className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors"
                     >
-                      <AlbumCoverImage
-                        coverUrl={item.album?.cover_art_url}
-                        cachedCoverUrl={(item.album as any)?.cached_cover_url}
-                        title={item.album?.title || "Mixtape"}
-                        releaseType="mixtape"
-                        placeholderColors={placeholder.style}
-                      />
+                      {item.album?.slug ? (
+                        <Link
+                          to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                          className="flex-shrink-0"
+                        >
+                          <AlbumCoverImage
+                            coverUrl={item.album?.cover_art_url}
+                            cachedCoverUrl={(item.album as any)?.cached_cover_url}
+                            title={item.album?.title || "Mixtape"}
+                            releaseType="mixtape"
+                            placeholderColors={placeholder.style}
+                          />
+                        </Link>
+                      ) : (
+                        <AlbumCoverImage
+                          coverUrl={item.album?.cover_art_url}
+                          cachedCoverUrl={(item.album as any)?.cached_cover_url}
+                          title={item.album?.title || "Mixtape"}
+                          releaseType="mixtape"
+                          placeholderColors={placeholder.style}
+                        />
+                      )}
                       <div className="flex-1 min-w-0">
                         {item.album?.slug ? (
                           <Link
