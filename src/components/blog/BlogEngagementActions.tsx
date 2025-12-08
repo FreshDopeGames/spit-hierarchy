@@ -7,6 +7,7 @@ interface BlogEngagementActionsProps {
   likes: number;
   isLiked: boolean;
   commentCount?: number;
+  slug: string;
   onLike: () => void;
   onShare: (platform: string) => void;
   onCommentsClick?: () => void;
@@ -17,6 +18,7 @@ const BlogEngagementActions = ({
   likes,
   isLiked,
   commentCount = 0,
+  slug,
   onLike,
   onShare,
   onCommentsClick,
@@ -24,7 +26,9 @@ const BlogEngagementActions = ({
 }: BlogEngagementActionsProps) => {
   const handleShare = async () => {
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      // Use og-redirect Edge Function URL for proper Open Graph metadata when shared
+      const ogRedirectUrl = `https://xzcmkssadekswmiqfbff.supabase.co/functions/v1/og-redirect?slug=${encodeURIComponent(slug)}`;
+      await navigator.clipboard.writeText(ogRedirectUrl);
       toast.success("The article link has been copied to your clipboard.");
     } catch (error) {
       console.error("Failed to copy link:", error);
