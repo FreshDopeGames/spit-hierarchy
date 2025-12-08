@@ -526,14 +526,14 @@ serve(async (req) => {
       });
       return json({ success: false, error: `MusicBrainz API error: ${mbError.message}`, discography: [] }, 500);
     }
-    // Combine and sort by release date (oldest first)
+    // Combine and sort by release date (NEWEST first - prioritize recent albums)
     const releaseGroups: MusicBrainzReleaseGroup[] = [
       ...(rgAlbums || []),
       ...(rgEps || []),
     ].sort((a, b) => {
-      const dateA = a['first-release-date'] || '9999';
-      const dateB = b['first-release-date'] || '9999';
-      return dateA.localeCompare(dateB);
+      const dateA = a['first-release-date'] || '0000';
+      const dateB = b['first-release-date'] || '0000';
+      return dateB.localeCompare(dateA);  // Newest first
     });
 
     console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name}`);
@@ -557,6 +557,12 @@ serve(async (req) => {
       if (elapsedMs > MAX_EXECUTION_TIME_MS) {
         console.warn(`⚠️ Approaching execution limit (${Math.round(elapsedMs/1000)}s elapsed), stopping processing`);
         console.log(`   Processed ${processedCount}/${releaseGroups.length} albums`);
+        
+        // Log the albums that were skipped (for debugging)
+        const skippedAlbums = releaseGroups.slice(processedCount).map(rg => rg.title);
+        if (skippedAlbums.length > 0) {
+          console.log(`   Skipped ${skippedAlbums.length} older albums: ${skippedAlbums.slice(0, 10).join(', ')}${skippedAlbums.length > 10 ? '...' : ''}`);
+        }
         break;
       }
 
