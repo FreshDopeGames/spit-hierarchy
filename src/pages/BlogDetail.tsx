@@ -109,7 +109,8 @@ const BlogDetail = () => {
       
       <InternalPageHeader 
         backLink="/blog" 
-        backText="Back to Blog" 
+        backText="Back to Blog"
+        showReadingProgress={true}
       />
 
       <BlogDetailContent
