@@ -1086,10 +1086,14 @@ serve(async (req) => {
     return json({ success: true, cached: false, ...payload });
   } catch (error: any) {
     console.error('Error in fetch-rapper-discography:', error);
+    
+    // Try to return cached data gracefully on error
     try {
       const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
+      
+      // Log the error
       await logAuditEvent(supabaseService, {
-        rapper_id: requestedRapperId, // Use hoisted variable to avoid NOT NULL violations
+        rapper_id: requestedRapperId,
         action: 'FETCH_DISCOGRAPHY',
         status: 'ERROR',
         user_id: userId,
@@ -1099,7 +1103,25 @@ serve(async (req) => {
         error_message: error?.message || 'Unknown error',
         execution_time_ms: Date.now() - startTime,
       });
-    } catch {}
+      
+      // Try to return cached discography instead of failing
+      if (requestedRapperId) {
+        const payload = await readDiscographyPayload(supabaseService, requestedRapperId);
+        if (payload.discography.length > 0) {
+          console.log(`⚠️ Returning ${payload.discography.length} cached albums after error`);
+          return json({ 
+            success: true, 
+            cached: true, 
+            partial: true,
+            message: 'Partial results - some albums may not have been processed',
+            ...payload 
+          });
+        }
+      }
+    } catch (fallbackError) {
+      console.error('Fallback error handling failed:', fallbackError);
+    }
+    
     return json({ success: false, error: 'Failed to fetch discography data', discography: [] }, 500);
   }
 });
