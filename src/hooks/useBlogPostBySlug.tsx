@@ -29,7 +29,11 @@ interface BlogPost {
   }>;
 }
 
-export const useBlogPostBySlug = (slug: string | undefined, canViewDrafts: boolean = false) => {
+export const useBlogPostBySlug = (
+  slug: string | undefined, 
+  canViewDrafts: boolean = false,
+  enabled: boolean = true
+) => {
   return useQuery({
     queryKey: ['blog-post-by-slug', slug, canViewDrafts],
     queryFn: async () => {
@@ -68,6 +72,6 @@ export const useBlogPostBySlug = (slug: string | undefined, canViewDrafts: boole
       if (error) throw error;
       return data as BlogPost;
     },
-    enabled: !!slug
+    enabled: !!slug && enabled
   });
 };
