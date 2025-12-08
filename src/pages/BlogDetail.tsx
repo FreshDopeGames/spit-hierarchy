@@ -15,6 +15,19 @@ import { useBlogPostBySlug } from "@/hooks/useBlogPostBySlug";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { transformBlogPost, transformRelatedPosts } from "@/utils/blogPostTransformers";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
+// Helper to extract og:image URL from featured_image_url (may be JSON or plain URL)
+const getOgImageUrl = (featuredImageUrl: string | null | undefined): string | undefined => {
+  if (!featuredImageUrl) return undefined;
+  
+  try {
+    const parsed = JSON.parse(featuredImageUrl);
+    // Prefer larger sizes for better social media previews
+    return parsed.hero || parsed.large || parsed.medium || parsed.thumbnail;
+  } catch {
+    // Plain URL string
+    return featuredImageUrl;
+  }
+};
 
 const BlogDetail = () => {
   const { slug } = useParams();
@@ -91,7 +104,7 @@ const BlogDetail = () => {
         title={seoTitle}
         description={seoDescription}
         keywords={seoKeywords}
-        ogImage={blogPost.featured_image_url || undefined}
+        ogImage={getOgImageUrl(blogPost.featured_image_url)}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BlogPosting",
@@ -102,7 +115,7 @@ const BlogDetail = () => {
             "name": transformedBlogPost.author
           },
           "datePublished": blogPost.published_at,
-          "image": blogPost.featured_image_url || undefined,
+          "image": getOgImageUrl(blogPost.featured_image_url),
           "url": typeof window !== 'undefined' ? window.location.href : undefined
         }}
       />
