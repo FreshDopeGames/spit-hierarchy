@@ -38,7 +38,6 @@ interface RelatedPost {
 
 interface BlogDetailContentProps {
   blogPost: BlogPost;
-  slug: string;
   transformedBlogPost: {
     title: string;
     tags: string[];
@@ -59,7 +58,6 @@ interface BlogDetailContentProps {
 
 const BlogDetailContent = ({
   blogPost,
-  slug,
   transformedBlogPost,
   transformedRelatedPosts,
   totalComments,
@@ -84,7 +82,6 @@ const BlogDetailContent = ({
           likes={likesCount}
           isLiked={isLiked}
           commentCount={totalComments}
-          slug={slug}
           onLike={toggleLike}
           onShare={onShare}
           onCommentsClick={onCommentsClick}
