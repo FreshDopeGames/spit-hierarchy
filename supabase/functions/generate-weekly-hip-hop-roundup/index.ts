@@ -155,8 +155,8 @@ Return ONLY the HTML content (no markdown), starting with an opening paragraph, 
 
     console.log('Blog post generated, creating database entry...');
 
-    // Get or create Staff author
-    const { data: staffProfile, error: profileError } = await supabase
+    // Get author - try Staff first, fallback to S2BKAS
+    const { data: staffProfile } = await supabase
       .from('profiles')
       .select('id')
       .eq('username', 'staff')
@@ -165,9 +165,10 @@ Return ONLY the HTML content (no markdown), starting with an opening paragraph, 
     let authorId = staffProfile?.id;
 
     if (!authorId) {
-      console.log('Staff profile not found, using service role user...');
-      // Use a system user ID or create one - for now we'll need an admin to exist
-      throw new Error('Staff profile must exist. Please create a user with username "staff"');
+      // Fallback to S2BKAS account as the primary blog author
+      const S2BKAS_USER_ID = '6f9dbd2b-246e-43f1-9502-3fccc1699c06';
+      console.log('Staff profile not found, using S2BKAS as author...');
+      authorId = S2BKAS_USER_ID;
     }
 
     // Generate slug
