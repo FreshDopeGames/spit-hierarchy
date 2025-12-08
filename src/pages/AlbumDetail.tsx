@@ -83,19 +83,42 @@ const AlbumDetail = () => {
       <>
         <HeaderNavigation isScrolled={false} />
         <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))]">
-          <div className="container mx-auto px-4 pt-20 pb-16 space-y-12">
-            <div className="flex flex-col items-center space-y-8">
+          <div className="container mx-auto px-4 pt-20 pb-16 space-y-4">
+            {/* Back button skeleton */}
+            <div className="max-w-4xl mx-auto">
+              <Skeleton className="h-10 w-48 mb-6" />
+            </div>
+            
+            {/* Album header skeleton - matches AlbumHeader layout */}
+            <div className="flex flex-col items-center text-center space-y-6">
+              {/* Album Cover Art Skeleton */}
               <Skeleton className="w-80 h-80 md:w-96 md:h-96 rounded-lg" />
-              <div className="flex flex-col items-center space-y-4">
-                <Skeleton className="h-12 w-96" />
-                <Skeleton className="h-6 w-48" />
-                <Skeleton className="h-8 w-32" />
+              
+              {/* Title Skeleton */}
+              <Skeleton className="h-10 w-72 md:w-96" />
+              
+              {/* Rapper Avatar Skeleton - matches RapperAvatar size="lg" */}
+              <Skeleton className="w-40 h-40 sm:w-48 sm:h-48 rounded-lg" />
+              
+              {/* Rapper Name Skeleton */}
+              <Skeleton className="h-7 w-48" />
+              
+              {/* Badge/Metadata Skeleton */}
+              <div className="flex items-center gap-3">
+                <Skeleton className="h-6 w-20 rounded-full" />
+                <Skeleton className="h-4 w-12" />
+                <Skeleton className="h-4 w-24" />
               </div>
             </div>
-            <div className="space-y-2 max-w-4xl mx-auto">
-              {Array.from({ length: 10 }).map((_, i) => (
-                <Skeleton key={i} className="h-12 w-full" />
-              ))}
+            
+            {/* Track List Skeleton */}
+            <div className="max-w-4xl mx-auto mt-8">
+              <Skeleton className="h-8 w-24 mb-6" /> {/* "Tracks" heading */}
+              <div className="space-y-2">
+                {Array.from({ length: 10 }).map((_, i) => (
+                  <Skeleton key={i} className="h-12 w-full" />
+                ))}
+              </div>
             </div>
           </div>
         </div>
