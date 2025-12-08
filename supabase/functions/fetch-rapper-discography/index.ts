@@ -440,6 +440,18 @@ serve(async (req) => {
       }
     }
 
+    // Save the updateData (including discography_last_updated) to the database
+    const { error: updateError } = await supabaseService
+      .from('rappers')
+      .update(updateData)
+      .eq('id', rapperId);
+    
+    if (updateError) {
+      console.error('Failed to update rapper metadata:', updateError);
+    } else {
+      console.log(`✓ Updated rapper ${rapper.name} with discography_last_updated and metadata`);
+    }
+
 // Fetch all albums and EPs with pagination (no 100-item limit)
     const fetchAllReleaseGroups = async (type: 'album' | 'ep') => {
       let offset = 0;
