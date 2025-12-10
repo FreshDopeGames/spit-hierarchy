@@ -178,28 +178,30 @@ serve(async (req) => {
       return json({ success: true, cached: true, ...payload });
     }
 
-    // 2) De-dupe calls within 10 minutes - UNCONDITIONAL (runs even with forceRefresh)
-    const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
-    const { data: recentLogs } = await supabaseService
-      .from('musicbrainz_audit_logs')
-      .select('id, status, created_at')
-      .eq('rapper_id', rapperId)
-      .gte('created_at', tenMinutesAgo)
-      .in('status', ['SUCCESS', 'SUCCESS_CACHED']);
-    if ((recentLogs?.length || 0) > 0) {
-      const payload = await readDiscographyPayload(supabaseService, rapperId);
-      await logAuditEvent(supabaseService, {
-        rapper_id: rapperId,
-        action: 'FETCH_DISCOGRAPHY',
-        status: 'SUCCESS_DEDUP',
-        user_id: userId,
-        ip_address: clientIP,
-        user_agent: userAgent,
-        request_data: body,
-        response_data: { albums: payload.discography.length },
-        execution_time_ms: Date.now() - startTime,
-      });
-      return json({ success: true, cached: true, ...payload });
+    // 2) De-dupe calls within 10 minutes - BUT NOT when force refreshing
+    if (!forceRefresh) {
+      const tenMinutesAgo = new Date(Date.now() - 10 * 60 * 1000).toISOString();
+      const { data: recentLogs } = await supabaseService
+        .from('musicbrainz_audit_logs')
+        .select('id, status, created_at')
+        .eq('rapper_id', rapperId)
+        .gte('created_at', tenMinutesAgo)
+        .in('status', ['SUCCESS', 'SUCCESS_CACHED']);
+      if ((recentLogs?.length || 0) > 0) {
+        const payload = await readDiscographyPayload(supabaseService, rapperId);
+        await logAuditEvent(supabaseService, {
+          rapper_id: rapperId,
+          action: 'FETCH_DISCOGRAPHY',
+          status: 'SUCCESS_DEDUP',
+          user_id: userId,
+          ip_address: clientIP,
+          user_agent: userAgent,
+          request_data: body,
+          response_data: { albums: payload.discography.length },
+          execution_time_ms: Date.now() - startTime,
+        });
+        return json({ success: true, cached: true, ...payload });
+      }
     }
 
     // 3) Check if user is admin - admins bypass rate limit
@@ -526,15 +528,22 @@ serve(async (req) => {
       });
       return json({ success: false, error: `MusicBrainz API error: ${mbError.message}`, discography: [] }, 500);
     }
-    // Combine and sort by release date (NEWEST first - prioritize recent albums)
+    // Combine and sort: prioritize studio albums first, then by release date (NEWEST first)
+    // This ensures canonical studio albums are processed before mixtapes/EPs if we hit time limits
     const releaseGroups: MusicBrainzReleaseGroup[] = [
-      ...(rgAlbums || []),
-      ...(rgEps || []),
-    ].sort((a, b) => {
-      const dateA = a['first-release-date'] || '0000';
-      const dateB = b['first-release-date'] || '0000';
-      return dateB.localeCompare(dateA);  // Newest first
-    });
+      // Studio albums first (sorted newest to oldest)
+      ...(rgAlbums || []).sort((a, b) => {
+        const dateA = a['first-release-date'] || '0000';
+        const dateB = b['first-release-date'] || '0000';
+        return dateB.localeCompare(dateA);
+      }),
+      // Then EPs (sorted newest to oldest)
+      ...(rgEps || []).sort((a, b) => {
+        const dateA = a['first-release-date'] || '0000';
+        const dateB = b['first-release-date'] || '0000';
+        return dateB.localeCompare(dateA);
+      }),
+    ];
 
     console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name}`);
 
