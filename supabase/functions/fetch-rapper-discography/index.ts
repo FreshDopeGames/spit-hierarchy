@@ -709,6 +709,7 @@ serve(async (req) => {
       const isPosthumous = rapper.death_year && parseInt(rg['first-release-date']) > rapper.death_year;
       
       const excludedSecondaryTypes = [
+        'Instrumental', // Instrumental versions (no vocals)
         'Live',         // Concert recordings
         'Remix',        // Remix albums
         'Soundtrack',   // Movie/game soundtracks
@@ -780,6 +781,20 @@ serve(async (req) => {
       }
 
       const releaseType = isMixtape ? 'mixtape' : 'album';
+      
+      // For mixtapes, use cover art availability as a quality signal
+      // Mixtapes without cover art on MusicBrainz are often obscure/unverified releases
+      if (isMixtape) {
+        const coverArtCheckUrl = `https://coverartarchive.org/release-group/${rg.id}/front-500`;
+        const hasCoverArt = await checkCoverArtExists(coverArtCheckUrl);
+        await delay(100); // Small delay after cover art check
+        
+        if (!hasCoverArt) {
+          console.log(`⚠ Skipping mixtape "${rg.title}" - no cover art (likely not a prominent release)`);
+          continue;
+        }
+        console.log(`✓ Mixtape "${rg.title}" has cover art - including as quality release`);
+      }
 
       // Try to find existing album by MusicBrainz ID first
       let existingAlbum = await supabaseService
