@@ -115,7 +115,7 @@ Write a weekly blog post following this EXACT structure:
 
 Requirements:
 - Use conversational, confident hip-hop vernacular but keep it accessible
-- Example opening: "What up, people? It's once again that time for the weekly Spit Hierarchy Weekly Wrap-Up..."
+- Example opening: "What up, people? It's once again that time for the weekly Spit Hierarchy Weekly Rap-Up..."
 - Use contractions, rhythm, short punchy sentences
 - Present tense when possible
 - Weave in references to hustle, culture, creative control, Black & Brown excellence
@@ -173,13 +173,13 @@ Return ONLY the HTML content (no markdown), starting with an opening paragraph, 
 
     // Generate slug
     const now = new Date();
-    const slug = `weekly-wrap-up-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    const slug = `weekly-rap-up-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
     // Create blog post
     const { data: blogPost, error: createError } = await supabase
       .from('blog_posts')
       .insert({
-        title: `Weekly Wrap-Up: ${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
+        title: `Weekly Rap-Up: ${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
         slug,
         content: generatedContent,
         excerpt: 'Your weekly roundup of the hottest moves, drops, and headlines from the hip-hop universe.',
