@@ -558,6 +558,7 @@ serve(async (req) => {
     const validAlbumIds = new Set<string>();
     let processedCount = 0;
     let coverArtDownloads = 0; // Track cover art downloads to limit per run
+    let processedAllReleases = true; // Track if we processed ALL releases (for reconciliation safety)
 
     // Process all release groups (removed .slice(0, 50) limit)
     for (const rg of releaseGroups) {
@@ -572,6 +573,7 @@ serve(async (req) => {
         if (skippedAlbums.length > 0) {
           console.log(`   Skipped ${skippedAlbums.length} older albums: ${skippedAlbums.slice(0, 10).join(', ')}${skippedAlbums.length > 10 ? '...' : ''}`);
         }
+        processedAllReleases = false; // Mark that we didn't finish processing all releases
         break;
       }
 
@@ -1035,11 +1037,14 @@ serve(async (req) => {
           }
         }
         
-        // ⚠️ SAFETY CHECK: Only remove albums if we found at least 3 valid albums
-        // This prevents mass deletion when MusicBrainz API fails or returns incomplete data
-        const shouldReconcile = validAlbumIds.size >= 3 || forceRefresh;
+        // ⚠️ SAFETY CHECK: Only reconcile if we processed ALL releases
+        // This prevents removing valid albums when we hit the execution time limit
+        const shouldReconcile = processedAllReleases && (validAlbumIds.size >= 3 || forceRefresh);
         
-        if (!shouldReconcile) {
+        if (!processedAllReleases) {
+          console.log(`⚠️ SKIPPING RECONCILIATION - Did not process all releases (hit time limit)`);
+          console.log(`   Preserving existing album links to prevent data loss`);
+        } else if (validAlbumIds.size < 3 && !forceRefresh) {
           console.log(`⚠️ SKIPPING RECONCILIATION - Only found ${validAlbumIds.size} valid albums (safety threshold: 3)`);
           console.log(`   This prevents accidental deletion when API returns incomplete data`);
           console.log(`   Use forceRefresh=true to override this safety check`);
