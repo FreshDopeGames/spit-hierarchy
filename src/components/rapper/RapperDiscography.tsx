@@ -261,12 +261,12 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
         <div className="flex items-center justify-end gap-2 mb-4">
           <ArrowUpDown className="w-4 h-4 text-[hsl(var(--theme-textMuted))]" />
           <Select value={sortOrder} onValueChange={handleSortChange}>
-            <SelectTrigger className="w-[170px] h-8 text-xs bg-[hsl(var(--theme-backgroundLight))] border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-text))]">
+            <SelectTrigger className="w-[170px] h-8 text-xs bg-white border-[hsl(var(--theme-primary))]/30 text-gray-900">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[hsl(var(--theme-background))] border-[hsl(var(--theme-primary))]/30">
-              <SelectItem value="oldest">Oldest → Newest</SelectItem>
-              <SelectItem value="newest">Newest → Oldest</SelectItem>
+            <SelectContent className="bg-white border-[hsl(var(--theme-primary))]/30 z-50">
+              <SelectItem value="oldest" className="text-gray-900 focus:bg-[hsl(var(--theme-primary))] focus:text-white">Oldest → Newest</SelectItem>
+              <SelectItem value="newest" className="text-gray-900 focus:bg-[hsl(var(--theme-primary))] focus:text-white">Newest → Oldest</SelectItem>
             </SelectContent>
           </Select>
         </div>
