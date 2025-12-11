@@ -668,7 +668,14 @@ serve(async (req) => {
             release && release.status === 'Official'
           );
           
+          // Check if ALL releases are explicitly unofficial (bootleg, promo, pseudo-release)
+          const unofficialStatuses = ['Bootleg', 'Promotion', 'Pseudo-Release'];
+          const allReleasesUnofficial = releases.every((release: any) => 
+            release?.status && unofficialStatuses.includes(release.status)
+          );
+          
           // Also accept if status is undefined but release exists (MusicBrainz data gaps)
+          // BUT only if there are no explicit unofficial releases
           const hasUndefinedStatus = releases.some((release: any) => 
             release && !release.status
           );
@@ -676,7 +683,13 @@ serve(async (req) => {
           if (hasOfficialRelease) {
             console.log(`✓ Including "${rg.title}" - has official release`);
             releaseCheckPassed = true;
+          } else if (allReleasesUnofficial) {
+            // Explicitly reject bootlegs/promos - don't give benefit of doubt
+            const statusList = releases.map((r: any) => r?.status || 'Unknown').join(', ');
+            console.log(`⚠ Skipping "${rg.title}" - no official releases (statuses: ${statusList})`);
+            releaseCheckPassed = false;
           } else if (hasUndefinedStatus) {
+            // Only give benefit of doubt when no release has explicit unofficial status
             console.log(`✓ Including "${rg.title}" - status verification inconclusive, allowing through`);
             releaseCheckPassed = true;
           } else {
