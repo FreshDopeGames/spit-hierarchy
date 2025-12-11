@@ -102,16 +102,24 @@ Deno.serve(async (req) => {
     // Fetch releases for this release-group from MusicBrainz
     console.log(`[fetch-album-tracks] Fetching releases for MusicBrainz ID: ${album.musicbrainz_id}`);
     
-    const mbResponse = await fetch(
-      `https://musicbrainz.org/ws/2/release?release-group=${album.musicbrainz_id}&status=official&fmt=json&inc=recordings`,
-      {
-        headers: {
-          'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)',
-          'Accept': 'application/json',
-        },
-      }
-    );
+    // Helper to fetch releases with optional status filter
+    const fetchReleases = async (statusFilter: string | null) => {
+      const statusParam = statusFilter ? `&status=${statusFilter}` : '';
+      const response = await fetch(
+        `https://musicbrainz.org/ws/2/release?release-group=${album.musicbrainz_id}${statusParam}&fmt=json&inc=recordings`,
+        {
+          headers: {
+            'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)',
+            'Accept': 'application/json',
+          },
+        }
+      );
+      return response;
+    };
 
+    // Try official releases first
+    let mbResponse = await fetchReleases('official');
+    
     if (!mbResponse.ok) {
       console.error(`[fetch-album-tracks] MusicBrainz API error: ${mbResponse.status}`);
       return new Response(
@@ -120,10 +128,25 @@ Deno.serve(async (req) => {
       );
     }
 
-    const mbData = await mbResponse.json();
+    let mbData = await mbResponse.json();
+
+    // If no official releases, try without status filter (catches bootlegs, promos, etc.)
+    if (!mbData.releases || mbData.releases.length === 0) {
+      console.log('[fetch-album-tracks] No official releases found, trying all releases...');
+      
+      // Wait 1.1s for MusicBrainz rate limit
+      await new Promise(resolve => setTimeout(resolve, 1100));
+      
+      mbResponse = await fetchReleases(null);
+      
+      if (mbResponse.ok) {
+        mbData = await mbResponse.json();
+        console.log(`[fetch-album-tracks] Found ${mbData.releases?.length || 0} releases without status filter`);
+      }
+    }
 
     if (!mbData.releases || mbData.releases.length === 0) {
-      console.log('[fetch-album-tracks] No official releases found');
+      console.log('[fetch-album-tracks] No releases found at all');
       // Update track_count to 0
       await supabaseClient
         .from('albums')
@@ -131,7 +154,7 @@ Deno.serve(async (req) => {
         .eq('id', albumId);
       
       return new Response(
-        JSON.stringify({ success: false, error: 'No official releases found' }),
+        JSON.stringify({ success: false, error: 'No releases found' }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 404 }
       );
     }
