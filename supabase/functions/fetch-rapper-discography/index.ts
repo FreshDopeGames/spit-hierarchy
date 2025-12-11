@@ -733,6 +733,13 @@ serve(async (req) => {
         console.log(`Skipping "${rg.title}" - excluded type: [${secondary.join(', ')}]`);
         continue;
       }
+      
+      // Also check disambiguation field for "Instrumental" (some albums are mislabeled in MusicBrainz)
+      const disambiguation = rg.disambiguation?.toLowerCase() || '';
+      if (disambiguation.includes('instrumental')) {
+        console.log(`⚠ Skipping "${rg.title}" - disambiguation contains "instrumental": "${rg.disambiguation}"`);
+        continue;
+      }
 
       // Generate URL-safe slug from title
       const generateSlug = (title: string): string => {
