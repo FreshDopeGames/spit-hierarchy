@@ -16,8 +16,15 @@ import {
   PaginationPrevious,
   PaginationEllipsis,
 } from "@/components/ui/pagination";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { ThemedProgress } from "@/components/ui/themed-progress";
-import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink, PlayCircle } from "lucide-react";
+import { RefreshCw, Calendar, Disc3, Music, Trophy, ExternalLink, PlayCircle, ArrowUpDown } from "lucide-react";
 import { useRapperDiscography, useRefreshDiscography } from "@/hooks/useRapperDiscography";
 import { useDiscographyProgress } from "@/hooks/useDiscographyProgress";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
@@ -26,6 +33,7 @@ import { getSmartAlbumPlaceholder, generateExternalAlbumLinks } from "@/utils/al
 import { AlbumCoverImage } from "@/components/ui/AlbumCoverImage";
 import { Link } from "react-router-dom";
 import { cn } from "@/lib/utils";
+import { getDiscographySortOrder, setDiscographySortOrder, type DiscographySortOrder } from "@/utils/userPreferences";
 
 interface RapperDiscographyProps {
   rapperId: string;
@@ -45,7 +53,15 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
   const [activeTab, setActiveTab] = useState("albums");
   const [albumsPage, setAlbumsPage] = useState(1);
   const [mixtapesPage, setMixtapesPage] = useState(1);
+  const [sortOrder, setSortOrder] = useState<DiscographySortOrder>(() => getDiscographySortOrder());
   const ITEMS_PER_PAGE = 10;
+
+  const handleSortChange = (value: DiscographySortOrder) => {
+    setSortOrder(value);
+    setDiscographySortOrder(value);
+    setAlbumsPage(1);
+    setMixtapesPage(1);
+  };
 
   const handleRefresh = () => {
     refreshMutation.mutate(rapperId);
@@ -132,6 +148,9 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
     );
   }
   if (!data) return null;
+  
+  const sortMultiplier = sortOrder === 'newest' ? -1 : 1;
+  
   const albums =
     data?.discography
       ?.filter((item) => item.album?.release_type === "album")
@@ -139,9 +158,9 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
         const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
         const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
         
-        // Primary sort: by date
+        // Primary sort: by date (direction based on sortOrder)
         if (dateA !== dateB) {
-          return dateA - dateB;
+          return (dateA - dateB) * sortMultiplier;
         }
         
         // Secondary sort: alphabetically by title when dates match
@@ -156,9 +175,9 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
         const dateA = a.album?.release_date ? new Date(a.album.release_date).getTime() : 0;
         const dateB = b.album?.release_date ? new Date(b.album.release_date).getTime() : 0;
         
-        // Primary sort: by date
+        // Primary sort: by date (direction based on sortOrder)
         if (dateA !== dateB) {
-          return dateA - dateB;
+          return (dateA - dateB) * sortMultiplier;
         }
         
         // Secondary sort: alphabetically by title when dates match
@@ -237,6 +256,20 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
             </div>
           </div>
         )}
+
+        {/* Sort Order Control */}
+        <div className="flex items-center justify-end gap-2 mb-4">
+          <ArrowUpDown className="w-4 h-4 text-[hsl(var(--theme-textMuted))]" />
+          <Select value={sortOrder} onValueChange={handleSortChange}>
+            <SelectTrigger className="w-[170px] h-8 text-xs bg-[hsl(var(--theme-backgroundLight))] border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-text))]">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent className="bg-[hsl(var(--theme-background))] border-[hsl(var(--theme-primary))]/30">
+              <SelectItem value="oldest">Oldest → Newest</SelectItem>
+              <SelectItem value="newest">Newest → Oldest</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
 
         <Tabs value={activeTab} onValueChange={handleTabChange}>
           <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 bg-muted/80 rounded-lg p-4 gap-1 sm:gap-2 min-h-[150px] sm:min-h-[70px] items-center px-[8px] py-[8px]">
