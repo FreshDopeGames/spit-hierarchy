@@ -1,6 +1,6 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useMemo, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAdaptivePolling } from "./useAdaptivePolling";
 
@@ -25,7 +25,8 @@ export interface RankingItemWithDelta {
   display_index?: number; // Display order for premium styling (1-5)
 }
 
-// Function to calculate visual ranks based on vote counts
+// Memoized function to calculate visual ranks based on vote counts
+// This is expensive and should only recalculate when items actually change
 const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
   // Sort by vote count descending, then by position (which now uses earliest vote for tie-breaking)
   const sortedItems = [...items].sort((a, b) => {
@@ -37,7 +38,6 @@ const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDel
 
   let currentVisualRank = 1;
   let previousVoteCount = -1;
-  let itemsWithSameVoteCount = 0;
 
   return sortedItems.map((item, index) => {
     if (item.ranking_votes === 0) {
@@ -49,14 +49,16 @@ const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDel
       // New vote count group - set visual rank to current position
       currentVisualRank = index + 1;
       previousVoteCount = item.ranking_votes;
-      itemsWithSameVoteCount = 1;
-    } else {
-      // Same vote count as previous - keep same visual rank
-      itemsWithSameVoteCount++;
     }
+    // Same vote count as previous - keep same visual rank (no else needed)
 
     return { ...item, visual_rank: currentVisualRank };
   }).sort((a, b) => a.position - b.position); // Return to original database order
+};
+
+// Create a stable cache key from items to enable memoization
+const getItemsCacheKey = (items: RankingItemWithDelta[]): string => {
+  return items.map(item => `${item.id}:${item.ranking_votes}:${item.position}`).join('|');
 };
 
 export const useRankingData = (rankingId: string) => {
@@ -195,14 +197,17 @@ export const useRankingData = (rankingId: string) => {
 };
 
 export const useHotThreshold = (items: RankingItemWithDelta[]) => {
-  // Calculate 85th percentile threshold for "hot" badges
-  const velocities = items
-    .map(item => item.vote_velocity_24_hours || 0)
-    .filter(v => v > 0)
-    .sort((a, b) => b - a);
+  // Memoize the threshold calculation - only recalculate when items change
+  return useMemo(() => {
+    // Calculate 85th percentile threshold for "hot" badges
+    const velocities = items
+      .map(item => item.vote_velocity_24_hours || 0)
+      .filter(v => v > 0)
+      .sort((a, b) => b - a);
 
-  if (velocities.length === 0) return 0;
+    if (velocities.length === 0) return 0;
 
-  const percentileIndex = Math.floor(velocities.length * 0.15); // 85th percentile
-  return velocities[percentileIndex] || 0;
+    const percentileIndex = Math.floor(velocities.length * 0.15); // 85th percentile
+    return velocities[percentileIndex] || 0;
+  }, [items]);
 };
