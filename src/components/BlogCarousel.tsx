@@ -150,12 +150,15 @@ const BlogCarousel = () => {
                   <Link to={`/blog/${post.slug}`} className="block">
                     <div className="relative aspect-[3/2] sm:aspect-[16/9] md:aspect-[16/10] overflow-hidden cursor-pointer">
                       <ResponsiveImage src={getImageData(post)} alt={post.title} className="w-full h-full" context="carousel" objectFit="cover" sizes="(max-width: 768px) 100vw, 100vw" />
-                      <div className="absolute bottom-0 left-0 right-0 h-[75%] sm:h-[80%] md:h-[70%] bg-gradient-to-t from-[var(--theme-background)]/95 via-[var(--theme-background)]/50 to-transparent" />
-                      
-                       <div className="absolute bottom-0 left-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] mb-2 sm:mb-3 md:mb-4 leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
+                      {/* Title at TOP */}
+                      <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] text-white leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
                           {post.title}
                         </h3>
+                      </div>
+                      
+                      {/* Metadata in lower third */}
+                      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                         <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[color:var(--theme-textMuted)] drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]" />
