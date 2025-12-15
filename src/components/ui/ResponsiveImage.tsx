@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { cn } from '@/lib/utils';
 
 interface BlogImageSizes {
@@ -15,10 +14,12 @@ interface ResponsiveImageProps {
   className?: string;
   sizes?: string;
   loading?: 'lazy' | 'eager';
+  priority?: boolean; // For critical images (LCP)
   onError?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   onLoad?: (e: React.SyntheticEvent<HTMLImageElement, Event>) => void;
   context?: 'thumbnail' | 'card' | 'hero' | 'carousel';
   objectFit?: 'cover' | 'contain' | 'fill' | 'scale-down' | 'none';
+  showBlurPlaceholder?: boolean;
 }
 
 const ResponsiveImage = ({
@@ -27,12 +28,15 @@ const ResponsiveImage = ({
   className,
   sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
   loading = 'lazy',
+  priority = false,
   onError,
   onLoad,
   context = 'card',
-  objectFit
+  objectFit,
+  showBlurPlaceholder = true
 }: ResponsiveImageProps) => {
   const [imageError, setImageError] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   // Determine object-fit based on context if not explicitly provided
   const getObjectFit = () => {
@@ -44,26 +48,53 @@ const ResponsiveImage = ({
       case 'thumbnail':
       case 'card':
       default:
-        return 'contain'; // Changed to contain to preserve full aspect ratio
+        return 'contain';
     }
   };
 
   const objectFitClass = `object-${getObjectFit()}`;
 
+  const handleLoad = useCallback((e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    setIsLoaded(true);
+    onLoad?.(e);
+  }, [onLoad]);
+
+  const handleError = useCallback((e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    setImageError(true);
+    onError?.(e);
+  }, [onError]);
+
+  // Blur placeholder styles
+  const placeholderStyles = showBlurPlaceholder && !isLoaded ? {
+    filter: 'blur(10px)',
+    transform: 'scale(1.1)',
+  } : {};
+
+  const transitionStyles = showBlurPlaceholder ? {
+    transition: 'filter 0.3s ease-out, transform 0.3s ease-out',
+  } : {};
+
   // If src is a string (legacy single image), use it directly
   if (typeof src === 'string') {
     return (
-      <img
-        src={src}
-        alt={alt}
-        className={cn(objectFitClass, className)}
-        loading={loading}
-        onError={(e) => {
-          setImageError(true);
-          onError?.(e);
-        }}
-        onLoad={onLoad}
-      />
+      <div className={cn('relative overflow-hidden', className)}>
+        {/* Blur placeholder background */}
+        {showBlurPlaceholder && !isLoaded && (
+          <div 
+            className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-surface))] to-[hsl(var(--theme-background))] animate-pulse"
+          />
+        )}
+        <img
+          src={src}
+          alt={alt}
+          className={cn(objectFitClass, 'w-full h-full', isLoaded ? 'opacity-100' : 'opacity-0')}
+          style={{ ...placeholderStyles, ...transitionStyles, transition: 'opacity 0.3s ease-out' }}
+          loading={priority ? 'eager' : loading}
+          fetchPriority={priority ? 'high' : undefined}
+          onError={handleError}
+          onLoad={handleLoad}
+        />
+      </div>
     );
   }
 
@@ -87,8 +118,8 @@ const ResponsiveImage = ({
 
   if (!imageSrc || imageError) {
     return (
-      <div className={cn('bg-gray-200 flex items-center justify-center', className)}>
-        <span className="text-gray-400 text-sm">Image not available</span>
+      <div className={cn('bg-[hsl(var(--theme-surface))] flex items-center justify-center', className)}>
+        <span className="text-[hsl(var(--muted-foreground))] text-sm">Image not available</span>
       </div>
     );
   }
@@ -104,19 +135,26 @@ const ResponsiveImage = ({
   };
 
   return (
-    <img
-      src={imageSrc}
-      srcSet={buildSrcSet()}
-      sizes={sizes}
-      alt={alt}
-      className={cn(objectFitClass, className)}
-      loading={loading}
-      onError={(e) => {
-        setImageError(true);
-        onError?.(e);
-      }}
-      onLoad={onLoad}
-    />
+    <div className={cn('relative overflow-hidden', className)}>
+      {/* Blur placeholder background */}
+      {showBlurPlaceholder && !isLoaded && (
+        <div 
+          className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-surface))] to-[hsl(var(--theme-background))] animate-pulse"
+        />
+      )}
+      <img
+        src={imageSrc}
+        srcSet={buildSrcSet()}
+        sizes={sizes}
+        alt={alt}
+        className={cn(objectFitClass, 'w-full h-full', isLoaded ? 'opacity-100' : 'opacity-0')}
+        style={{ transition: 'opacity 0.3s ease-out' }}
+        loading={priority ? 'eager' : loading}
+        fetchPriority={priority ? 'high' : undefined}
+        onError={handleError}
+        onLoad={handleLoad}
+      />
+    </div>
   );
 };
 

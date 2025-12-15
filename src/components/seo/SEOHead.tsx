@@ -10,6 +10,7 @@ interface SEOHeadProps {
   structuredData?: any;
   robots?: string;
   ogType?: string;
+  preloadImages?: string[]; // Critical images to preload for LCP
 }
 
 const SEOHead = ({
@@ -21,7 +22,8 @@ const SEOHead = ({
   canonicalUrl,
   structuredData,
   robots,
-  ogType = "website"
+  ogType = "website",
+  preloadImages = []
 }: SEOHeadProps) => {
   const defaultKeywords = ['rap rankings', 'hip hop', 'rapper voting', 'music rankings', 'hip hop culture'];
   const allKeywords = [...defaultKeywords, ...keywords];
@@ -33,8 +35,16 @@ const SEOHead = ({
       <meta name="keywords" content={allKeywords.join(', ')} />
       {robots && <meta name="robots" content={robots} />}
       
-      {/* Critical Image Preload for LCP */}
-      <link rel="preload" as="image" href="https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/placeholder-thumb.jpg" fetchPriority="high" />
+      {/* Critical Image Preloads for LCP */}
+      {preloadImages.map((imageUrl, index) => (
+        <link 
+          key={index}
+          rel="preload" 
+          as="image" 
+          href={imageUrl} 
+          fetchPriority={index === 0 ? "high" : "auto"} 
+        />
+      ))}
       
       {/* Open Graph */}
       <meta property="og:title" content={title} />

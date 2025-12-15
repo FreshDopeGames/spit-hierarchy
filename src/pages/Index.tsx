@@ -1,15 +1,25 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import BlogCarousel from "@/components/BlogCarousel";
-import HomepagePoll from "@/components/polls/HomepagePoll";
 import RankingsSectionHeader from "@/components/RankingsSectionHeader";
 import HomepageRankingSection from "@/components/HomepageRankingSection";
-import StatsOverview from "@/components/StatsOverviewRedesigned";
-import GuestCallToAction from "@/components/GuestCallToAction";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SEOHead from "@/components/seo/SEOHead";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
+import LazySection from "@/components/LazySection";
+
+// Lazy load below-fold components for faster initial render
+const HomepagePoll = lazy(() => import("@/components/polls/HomepagePoll"));
+const StatsOverview = lazy(() => import("@/components/StatsOverviewRedesigned"));
+const GuestCallToAction = lazy(() => import("@/components/GuestCallToAction"));
+
+// Minimal loading placeholder for lazy sections
+const SectionPlaceholder = () => (
+  <div className="min-h-[200px] flex items-center justify-center">
+    <div className="w-8 h-8 border-2 border-[hsl(var(--theme-primary))] border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const Index = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -51,17 +61,29 @@ const Index = () => {
             {/* Strategic Ad Placement */}
             <ContentAdUnit size="large" />
 
-            {/* Stats Overview (includes Analytics Button) */}
-            <StatsOverview />
+            {/* Lazy-loaded Stats Overview (below fold) */}
+            <LazySection fallback={<SectionPlaceholder />}>
+              <Suspense fallback={<SectionPlaceholder />}>
+                <StatsOverview />
+              </Suspense>
+            </LazySection>
 
-            {/* Community Polls */}
-            <HomepagePoll />
+            {/* Lazy-loaded Community Polls (below fold) */}
+            <LazySection fallback={<SectionPlaceholder />}>
+              <Suspense fallback={<SectionPlaceholder />}>
+                <HomepagePoll />
+              </Suspense>
+            </LazySection>
 
             {/* Ad after polls */}
             <ContentAdUnit size="medium" />
 
-            {/* Guest user call-to-action */}
-            <GuestCallToAction />
+            {/* Lazy-loaded Guest user call-to-action (below fold) */}
+            <LazySection fallback={<SectionPlaceholder />}>
+              <Suspense fallback={<SectionPlaceholder />}>
+                <GuestCallToAction />
+              </Suspense>
+            </LazySection>
           </div>
         </main>
 

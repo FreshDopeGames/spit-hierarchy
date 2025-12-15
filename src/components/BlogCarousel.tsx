@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
+import BlogCarouselSkeleton from "@/components/BlogCarouselSkeleton";
 import useEmblaCarousel from 'embla-carousel-react';
 const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -136,7 +137,9 @@ const BlogCarousel = () => {
       return post.featured_image_url;
     }
   };
-  if (isLoading || featuredPosts.length === 0) return null;
+  if (isLoading) return <BlogCarouselSkeleton />;
+  if (featuredPosts.length === 0) return null;
+  
   return <section className="mb-16">
       <h2 className="font-ceviche text-primary mb-6 sm:mb-8 tracking-wider text-4xl sm:text-6xl text-center leading-tight">
         FEATURED SLICK TALK
@@ -146,10 +149,19 @@ const BlogCarousel = () => {
         <div className="relative max-w-4xl w-full overflow-hidden rounded-xl bg-[var(--theme-surface)] border-4 border-[color:var(--theme-primary)]/30 shadow-lg shadow-[color:var(--theme-primary)]/20" onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
-              {featuredPosts.map(post => <div key={post.id} className="flex-[0_0_100%] min-w-0">
+              {featuredPosts.map((post, index) => <div key={post.id} className="flex-[0_0_100%] min-w-0">
                   <Link to={`/blog/${post.slug}`} className="block">
                     <div className="relative aspect-[3/2] sm:aspect-[16/9] md:aspect-[16/10] overflow-hidden cursor-pointer">
-                      <ResponsiveImage src={getImageData(post)} alt={post.title} className="w-full h-full" context="carousel" objectFit="cover" sizes="(max-width: 768px) 100vw, 100vw" />
+                      <ResponsiveImage 
+                        src={getImageData(post)} 
+                        alt={post.title} 
+                        className="w-full h-full" 
+                        context="carousel" 
+                        objectFit="cover" 
+                        sizes="(max-width: 768px) 100vw, 100vw"
+                        priority={index === 0}
+                        showBlurPlaceholder={true}
+                      />
                       {/* Title at TOP */}
                       <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
                         <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] text-white leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
