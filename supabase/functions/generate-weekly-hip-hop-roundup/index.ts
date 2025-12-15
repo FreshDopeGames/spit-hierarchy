@@ -119,11 +119,16 @@ Requirements:
 - Use contractions, rhythm, short punchy sentences
 - Present tense when possible
 - Weave in references to hustle, culture, creative control, Black & Brown excellence
-- Include all links as proper HTML anchor tags
+- Include all links in markdown format: [link text](url)
 - Keep total length to 400-600 words
 - End with a call to action for voting/commenting on Spit Hierarchy
 
-Return ONLY the HTML content (no markdown), starting with an opening paragraph, then the four sections with proper HTML formatting (<h2>, <p>, <ul>, <a> tags, etc.).`;
+Return ONLY markdown content using:
+- **bold** for emphasis
+- ## for section headers
+- - for bullet lists
+- [text](url) for links
+- Regular paragraphs separated by blank lines`;
 
     const userPrompt = `Here are this week's hip-hop articles to cover:\n\n${articlesContext}\n\nWrite the weekly roundup blog post.`;
 
