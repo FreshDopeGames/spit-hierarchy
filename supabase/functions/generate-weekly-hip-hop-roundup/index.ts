@@ -40,20 +40,39 @@ serve(async (req) => {
 
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Fetch all rappers and their aliases
+    // Fetch all rappers and their aliases with slugs
     console.log('Fetching rappers and aliases...');
     const { data: rappers, error: rappersError } = await supabase
       .from('rappers')
-      .select('name, aliases');
+      .select('name, aliases, slug');
     
     if (rappersError) throw rappersError;
 
     // Build a set of all artist names and aliases (lowercase for matching)
     const artistNames = new Set<string>();
+    // Build a map of artist names/aliases to their Spit Hierarchy URLs
+    const artistLinkMap = new Map<string, { name: string; url: string }>();
+    const siteBaseUrl = 'https://spithierarchy.com';
+
     rappers?.forEach(rapper => {
       artistNames.add(rapper.name.toLowerCase());
+      const rapperUrl = `${siteBaseUrl}/rapper/${rapper.slug}`;
+      
+      // Add primary name to link map
+      artistLinkMap.set(rapper.name.toLowerCase(), { 
+        name: rapper.name, 
+        url: rapperUrl 
+      });
+      
       if (rapper.aliases) {
-        rapper.aliases.forEach((alias: string) => artistNames.add(alias.toLowerCase()));
+        rapper.aliases.forEach((alias: string) => {
+          artistNames.add(alias.toLowerCase());
+          // Add alias to link map (links to same rapper page)
+          artistLinkMap.set(alias.toLowerCase(), { 
+            name: alias, 
+            url: rapperUrl 
+          });
+        });
       }
     });
 
@@ -156,9 +175,11 @@ Return ONLY markdown content using:
     }
 
     const aiData = await aiResponse.json();
-    const generatedContent = aiData.choices[0].message.content;
+    const rawContent = aiData.choices[0].message.content;
 
-    console.log('Blog post generated, creating database entry...');
+    // Post-process content to wrap rapper mentions with links
+    const generatedContent = wrapRapperMentionsWithLinks(rawContent, artistLinkMap);
+    console.log('Blog post generated and rapper links added, creating database entry...');
 
     // Get author - try Staff first, fallback to S2BKAS
     const { data: staffProfile } = await supabase
@@ -234,6 +255,37 @@ Return ONLY markdown content using:
     );
   }
 });
+
+// Helper to escape special regex characters
+function escapeRegex(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+// Post-process content to wrap rapper mentions with markdown links
+function wrapRapperMentionsWithLinks(
+  content: string, 
+  artistLinkMap: Map<string, { name: string; url: string }>
+): string {
+  let processedContent = content;
+  
+  // Sort by name length (longest first) to avoid partial replacements
+  // e.g., "Ice Cube" should be matched before "Ice"
+  const sortedArtists = Array.from(artistLinkMap.entries())
+    .sort((a, b) => b[0].length - a[0].length);
+  
+  for (const [lowerName, { name, url }] of sortedArtists) {
+    // Use word boundary regex to match whole names only
+    // Case-insensitive matching, preserving original case in output
+    // Negative lookahead to skip text already inside markdown links
+    const regex = new RegExp(`\\b(${escapeRegex(name)})\\b(?![^\\[]*\\])`, 'gi');
+    
+    processedContent = processedContent.replace(regex, (match) => {
+      return `[${match}](${url})`;
+    });
+  }
+  
+  return processedContent;
+}
 
 function parseRSSFeed(xml: string, sourceName: string, cutoffDate: Date): RSSItem[] {
   const items: RSSItem[] = [];
