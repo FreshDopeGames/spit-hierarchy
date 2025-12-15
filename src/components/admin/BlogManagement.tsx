@@ -7,6 +7,9 @@ import BlogCategoriesTab from "./blog/BlogCategoriesTab";
 import BlogPostDialog from "./BlogPostDialog";
 import BlogCategoryDialog from "./BlogCategoryDialog";
 import AdminTabHeader from "./AdminTabHeader";
+import WeeklyBlogGenerator from "./WeeklyBlogGenerator";
+import BlogRapperTagger from "./BlogRapperTagger";
+
 const BlogManagement = () => {
   const queryClient = useQueryClient();
   const [selectedPost, setSelectedPost] = useState(null);
@@ -55,6 +58,12 @@ const BlogManagement = () => {
   };
   return <div className="space-y-6">
       <AdminTabHeader title="Blog Management" icon={PenTool} description="Create and manage blog posts and categories" />
+
+      {/* Blog Tools */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <WeeklyBlogGenerator />
+        <BlogRapperTagger />
+      </div>
 
       <Tabs defaultValue="posts" className="space-y-4 py-4">
         <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-border)] w-full grid grid-cols-2 p-2 gap-1 rounded-lg py-[6px] my-0">

@@ -26,3 +26,6 @@ verify_jwt = false
 
 [functions.og-redirect]
 verify_jwt = false
+
+[functions.tag-rappers-in-blog-posts]
+verify_jwt = false
