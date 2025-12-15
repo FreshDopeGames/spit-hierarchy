@@ -53,157 +53,145 @@ const StatsOverviewRedesigned = () => {
   };
 
   const fetchStats = async () => {
-      // Rappers Section
-      const { count: totalRappers } = await supabase
-        .from("rappers")
-        .select("*", { count: "exact", head: true });
+    // PHASE 1: Critical counts (parallel) - These are what users see first
+    const [
+      rappersCount,
+      votesCount,
+      membersCount,
+      blogCount
+    ] = await Promise.all([
+      supabase.from("rappers").select("*", { count: "exact", head: true }),
+      supabase.from("votes").select("*", { count: "exact", head: true }),
+      supabase.rpc("get_total_member_count"),
+      supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("status", "published")
+    ]);
 
-      const { data: topRappers } = await supabase
-        .from("rappers")
+    // PHASE 2: Secondary data (parallel) - Details for each card
+    const [
+      topRappersResult,
+      allTagsResult,
+      mostLikedPostResult,
+      newestMemberResult,
+      topAchieverResult,
+      topVoterResult
+    ] = await Promise.all([
+      supabase.from("rappers")
         .select("id, name, slug, average_rating, image_url")
         .gt("total_votes", 10)
         .order("average_rating", { ascending: false })
-        .limit(5);
-
-      // Get random tag
-      const { data: allTags } = await supabase
-        .from("rapper_tags")
-        .select("id, name, color");
-      
-      const randomTag = allTags?.[Math.floor(Math.random() * (allTags?.length || 1))];
-
-      let topTaggedRapper: RapperData[] = [];
-      if (randomTag) {
-        const { data: taggedRappers } = await supabase
-          .from("rapper_tag_assignments")
-          .select(`
-            rappers!inner(id, name, slug, average_rating, image_url, total_votes)
-          `)
-          .eq("tag_id", randomTag.id);
-
-        const validRappers = taggedRappers
-          ?.map(item => item.rappers)
-          .filter((r) => r !== null && (r.total_votes ?? 0) > 5)
-          .sort((a, b) => (b?.average_rating ?? 0) - (a?.average_rating ?? 0))
-          .slice(0, 5); // Take only top 5
-
-        if (validRappers && validRappers.length > 0) {
-          topTaggedRapper = validRappers;
-        }
-      }
-
-      // Votes Section
-      const { count: totalVotes } = await supabase
-        .from("votes")
-        .select("*", { count: "exact", head: true });
-
-      const { data: rankingVotes } = await supabase
-        .from("ranking_votes")
-        .select("ranking_id, official_rankings(id, title, slug)");
-
-      const voteCounts: Record<string, { ranking: any; count: number }> = {};
-      rankingVotes?.forEach((vote) => {
-        const ranking = vote.official_rankings;
-        if (ranking && ranking.id) {
-          if (!voteCounts[ranking.id]) {
-            voteCounts[ranking.id] = { ranking, count: 0 };
-          }
-          voteCounts[ranking.id].count++;
-        }
-      });
-
-      const mostActiveRanking = Object.values(voteCounts)
-        .sort((a, b) => b.count - a.count)[0] as { ranking: RankingData; count: number } | undefined;
-
-      const { data: topVoter } = await supabase
-        .from("member_stats")
-        .select("id, total_votes")
-        .gt("total_votes", 0)
-        .order("total_votes", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-      let topVoterProfile: MemberData | null = null;
-      if (topVoter) {
-        const { data: voterData } = await supabase
-          .rpc("get_public_profile_minimal", {
-            profile_user_id: topVoter.id,
-          });
-        if (voterData?.[0]) {
-          topVoterProfile = {
-            id: topVoter.id,
-            username: voterData[0].username,
-            avatar_url: voterData[0].avatar_url,
-            stat_value: topVoter.total_votes,
-          };
-        }
-      }
-
-      // Members Section
-      const { data: totalMembersCount } = await supabase.rpc("get_total_member_count");
-
-      const { data: newestMemberData } = await supabase
-        .from("profiles")
-        .select("id, username, avatar_url, created_at")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle();
-
-
-      // Query to get user with most achievements using secure RPC
-      const { data: topAchiever } = await supabase
-        .rpc('get_member_with_most_achievements')
-        .maybeSingle();
-
-      let mostAchievementsProfile: MemberData | null = null;
-      if (topAchiever) {
-        mostAchievementsProfile = {
-          id: topAchiever.id,
-          username: topAchiever.username,
-          avatar_url: topAchiever.avatar_url,
-          stat_value: topAchiever.achievement_count,
-        };
-      }
-
-      // Blog Section
-      const { count: totalBlogPosts } = await supabase
-        .from("blog_posts")
-        .select("*", { count: "exact", head: true })
-        .eq("status", "published");
-
-      const { data: mostLikedPost } = await supabase
-        .from("blog_posts")
+        .limit(5),
+      supabase.from("rapper_tags").select("id, name, color"),
+      supabase.from("blog_posts")
         .select("id, title, slug, likes_count")
         .eq("status", "published")
         .order("likes_count", { ascending: false })
         .limit(1)
-        .maybeSingle();
+        .maybeSingle(),
+      supabase.from("profiles")
+        .select("id, username, avatar_url, created_at")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase.rpc('get_member_with_most_achievements').maybeSingle(),
+      supabase.from("member_stats")
+        .select("id, total_votes")
+        .gt("total_votes", 0)
+        .order("total_votes", { ascending: false })
+        .limit(1)
+        .maybeSingle()
+    ]);
 
-      return {
+    // PHASE 3: Dependent queries (only if needed)
+    const randomTag = allTagsResult.data?.[Math.floor(Math.random() * (allTagsResult.data?.length || 1))];
+    
+    // Parallel dependent queries
+    const [taggedRappersResult, rankingVotesResult, topVoterProfileResult] = await Promise.all([
+      randomTag 
+        ? supabase.from("rapper_tag_assignments")
+            .select(`rappers!inner(id, name, slug, average_rating, image_url, total_votes)`)
+            .eq("tag_id", randomTag.id)
+        : Promise.resolve({ data: null }),
+      supabase.from("ranking_votes")
+        .select("ranking_id, official_rankings(id, title, slug)"),
+      topVoterResult.data
+        ? supabase.rpc("get_public_profile_minimal", { profile_user_id: topVoterResult.data.id })
+        : Promise.resolve({ data: null })
+    ]);
+
+    // Process tagged rappers
+    let topTaggedRapper: RapperData[] = [];
+    if (taggedRappersResult.data) {
+      const validRappers = taggedRappersResult.data
+        .map(item => item.rappers)
+        .filter((r) => r !== null && (r.total_votes ?? 0) > 5)
+        .sort((a, b) => (b?.average_rating ?? 0) - (a?.average_rating ?? 0))
+        .slice(0, 5);
+      if (validRappers.length > 0) {
+        topTaggedRapper = validRappers;
+      }
+    }
+
+    // Process ranking votes
+    const voteCounts: Record<string, { ranking: any; count: number }> = {};
+    rankingVotesResult.data?.forEach((vote) => {
+      const ranking = vote.official_rankings;
+      if (ranking && ranking.id) {
+        if (!voteCounts[ranking.id]) {
+          voteCounts[ranking.id] = { ranking, count: 0 };
+        }
+        voteCounts[ranking.id].count++;
+      }
+    });
+    const mostActiveRanking = Object.values(voteCounts)
+      .sort((a, b) => b.count - a.count)[0] as { ranking: RankingData; count: number } | undefined;
+
+    // Process top voter profile
+    let topVoterProfile: MemberData | null = null;
+    if (topVoterResult.data && topVoterProfileResult.data?.[0]) {
+      topVoterProfile = {
+        id: topVoterResult.data.id,
+        username: topVoterProfileResult.data[0].username,
+        avatar_url: topVoterProfileResult.data[0].avatar_url,
+        stat_value: topVoterResult.data.total_votes,
+      };
+    }
+
+    // Process most achievements profile
+    let mostAchievementsProfile: MemberData | null = null;
+    if (topAchieverResult.data) {
+      mostAchievementsProfile = {
+        id: topAchieverResult.data.id,
+        username: topAchieverResult.data.username,
+        avatar_url: topAchieverResult.data.avatar_url,
+        stat_value: topAchieverResult.data.achievement_count,
+      };
+    }
+
+    return {
       rappers: {
-        total: totalRappers || 0,
-        topOverallList: topRappers || [],
+        total: rappersCount.count || 0,
+        topOverallList: topRappersResult.data || [],
         topTaggedList: topTaggedRapper || [],
         tagInfo: randomTag,
       },
-        votes: {
-          total: totalVotes || 0,
-          mostActiveRanking: mostActiveRanking ? {
-            ...mostActiveRanking.ranking,
-            vote_count: mostActiveRanking.count,
-          } : null,
-          topVoter: topVoterProfile,
-        },
-        members: {
-          total: totalMembersCount || 0,
-          newest: newestMemberData,
-          mostAchievements: mostAchievementsProfile,
-        },
-        blog: {
-          total: totalBlogPosts || 0,
-          mostLiked: mostLikedPost,
-        },
-      };
+      votes: {
+        total: votesCount.count || 0,
+        mostActiveRanking: mostActiveRanking ? {
+          ...mostActiveRanking.ranking,
+          vote_count: mostActiveRanking.count,
+        } : null,
+        topVoter: topVoterProfile,
+      },
+      members: {
+        total: membersCount.data || 0,
+        newest: newestMemberResult.data,
+        mostAchievements: mostAchievementsProfile,
+      },
+      blog: {
+        total: blogCount.count || 0,
+        mostLiked: mostLikedPostResult.data,
+      },
+    };
   };
 
   const { data: stats, isLoading } = useQuery({
