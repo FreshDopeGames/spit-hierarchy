@@ -4,6 +4,7 @@ import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogPoll from "@/components/polls/BlogPoll";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
+import MentionedRappersCarousel from "@/components/blog/MentionedRappersCarousel";
 import { useBlogPostLikes } from "@/hooks/useBlogPostLikes";
 
 interface BlogPost {
@@ -74,6 +75,9 @@ const BlogDetailContent = ({
       {/* Full-width main content */}
       <div className="space-y-8">
         <BlogArticleContent content={blogPost.content} />
+
+        {/* Rappers mentioned in this post */}
+        <MentionedRappersCarousel content={blogPost.content} />
 
         {/* Strategic ad placement in content */}
         <ContentAdUnit size="medium" />
