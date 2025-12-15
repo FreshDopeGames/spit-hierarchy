@@ -171,15 +171,31 @@ Return ONLY the HTML content (no markdown), starting with an opening paragraph, 
       authorId = S2BKAS_USER_ID;
     }
 
-    // Generate slug
-    const now = new Date();
-    const slug = `weekly-rap-up-${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    // Calculate Sunday of the current week in Pacific Time
+    const getSundayInPacific = (): Date => {
+      const now = new Date();
+      // Get current time in Pacific timezone
+      const pacificTimeStr = now.toLocaleString('en-US', { timeZone: 'America/Los_Angeles' });
+      const pacificTime = new Date(pacificTimeStr);
+      
+      // Calculate days until Sunday (0 = Sunday, 6 = Saturday)
+      const dayOfWeek = pacificTime.getDay();
+      const daysUntilSunday = dayOfWeek === 0 ? 0 : 7 - dayOfWeek;
+      
+      // Add days to get to Sunday
+      pacificTime.setDate(pacificTime.getDate() + daysUntilSunday);
+      
+      return pacificTime;
+    };
+
+    const sundayDate = getSundayInPacific();
+    const slug = `weekly-rap-up-${sundayDate.getFullYear()}-${String(sundayDate.getMonth() + 1).padStart(2, '0')}-${String(sundayDate.getDate()).padStart(2, '0')}`;
 
     // Create blog post
     const { data: blogPost, error: createError } = await supabase
       .from('blog_posts')
       .insert({
-        title: `Weekly Rap-Up: ${now.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
+        title: `Weekly Rap-Up: ${sundayDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}`,
         slug,
         content: generatedContent,
         excerpt: 'Your weekly roundup of the hottest moves, drops, and headlines from the hip-hop universe.',
