@@ -14,7 +14,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         .replace(/\r/g, "\n")
 
         // Convert headings to styled heading spans
-        .replace(/^#{1,6}\s+(.+)$/gm, '<span class="heading">$1</span><br><br>')
+        .replace(/^#{1,6}\s+(.+)$/gm, '<span class="heading">$1</span>')
 
         // Convert unordered lists to inline text with rap-gold bullet characters and proper spacing
         .replace(/^\s*[-*+]\s+(.+)$/gm, '<span class="list-item"><span class="text-rap-gold">●</span> $1</span>')
@@ -43,6 +43,12 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Clean up excessive line breaks
         .replace(/(<br>\s*){4,}/g, "<br><br><br>")
 
+        // Wrap paragraphs that follow list items in an explanation span for consistent indentation
+        .replace(
+          /(<span class="list-item">[^<]*<\/span>)(<br>)+([^<]+?)(?=<span class="list-item">|<span class="heading">|$)/gs,
+          '$1<br><span class="list-explanation">$3</span>'
+        )
+
         // Clean up any remaining whitespace issues
         .trim();
 
@@ -63,7 +69,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
             [&_br]:block [&_br]:my-1
             [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity
             [&_.heading]:block [&_.heading]:text-xl [&_.heading]:font-bold [&_.heading]:mt-6 [&_.heading]:mb-2
-            [&_.list-item]:block [&_.list-item]:mt-4 [&_.list-item]:mb-1 [&_.list-item]:pl-6 [&_.list-item]:-indent-4"
+            [&_.list-item]:block [&_.list-item]:mt-4 [&_.list-item]:mb-1 [&_.list-item]:pl-6 [&_.list-item]:-indent-4
+            [&_.list-explanation]:block [&_.list-explanation]:pl-6 [&_.list-explanation]:mb-2"
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
         </div>
