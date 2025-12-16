@@ -16,8 +16,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Convert headings to bold text with line breaks
         .replace(/^#{1,6}\s+(.+)$/gm, "<strong>$1</strong><br><br>")
 
-        // Convert unordered lists to inline text with rap-gold bullet characters
-        .replace(/^\s*[-*+]\s+(.+)$/gm, '<span class="text-rap-gold">●</span> $1<br>')
+        // Convert unordered lists to inline text with rap-gold bullet characters and proper spacing
+        .replace(/^\s*[-*+]\s+(.+)$/gm, '<span class="list-item"><span class="text-rap-gold">●</span> $1</span>')
 
         // Convert ordered lists to inline text with numbers
         .replace(/^\s*\d+\.\s+(.+)$/gm, (match, text, offset, string) => {
@@ -61,7 +61,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
             [&_strong]:font-bold
             [&_em]:text-rap-silver [&_em]:italic
             [&_br]:block [&_br]:my-2
-            [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity"
+            [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity
+            [&_.list-item]:block [&_.list-item]:mb-3 [&_.list-item]:pl-2"
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
         </div>
