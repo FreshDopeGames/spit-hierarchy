@@ -62,7 +62,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
             [&_em]:text-rap-silver [&_em]:italic
             [&_br]:block [&_br]:my-2
             [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity
-            [&_.list-item]:block [&_.list-item]:mb-3 [&_.list-item]:pl-2"
+            [&_.list-item]:block [&_.list-item]:mt-3 [&_.list-item]:mb-3 [&_.list-item]:pl-2"
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
         </div>

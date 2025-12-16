@@ -42,7 +42,7 @@ export const sanitizeAdminContent = (input: string): string => {
     .replace(/<iframe[^>]*>.*?<\/iframe>/gi, '') // Remove iframe tags
     .replace(/<object[^>]*>.*?<\/object>/gi, '') // Remove object tags
     .replace(/<embed[^>]*>.*?<\/embed>/gi, '') // Remove embed tags
-    .slice(0, 5000); // Much higher limit for rich content
+    .slice(0, 50000); // Generous limit for long-form blog content
 };
 
 export const validateEmail = (email: string): boolean => {
