@@ -63,7 +63,7 @@ serve(async (req) => {
       query = query.eq('id', postId);
     } else if (all) {
       // Get posts that don't already have rapper links
-      query = query.not('content', 'like', '%](/rapper/%');
+      query = query.not('content', 'like', '%](https://spithierarchy.com/rapper/%');
     }
 
     const { data: posts, error: postsError } = await query;
@@ -83,8 +83,8 @@ serve(async (req) => {
       const processedContent = wrapRapperMentionsWithLinks(originalContent, artistLinkMap);
       
       // Count new links added
-      const originalLinkCount = (originalContent.match(/\]\(\/rapper\//g) || []).length;
-      const newLinkCount = (processedContent.match(/\]\(\/rapper\//g) || []).length;
+      const originalLinkCount = (originalContent.match(/\]\(https:\/\/spithierarchy\.com\/rapper\//g) || []).length;
+      const newLinkCount = (processedContent.match(/\]\(https:\/\/spithierarchy\.com\/rapper\//g) || []).length;
       const rappersLinked = newLinkCount - originalLinkCount;
 
       if (rappersLinked > 0) {
