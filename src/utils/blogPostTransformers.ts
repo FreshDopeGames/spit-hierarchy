@@ -1,5 +1,5 @@
 
-import { format } from "date-fns";
+import { formatInTimeZone } from "date-fns-tz";
 
 interface BlogPost {
   id: string;
@@ -37,7 +37,7 @@ interface RelatedPostData {
 
 export const formatDate = (dateString: string) => {
   try {
-    return format(new Date(dateString), 'MMMM d, yyyy');
+    return formatInTimeZone(new Date(dateString), 'America/Los_Angeles', 'MMMM d, yyyy');
   } catch {
     return 'Unknown date';
   }
