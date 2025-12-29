@@ -61,7 +61,7 @@ const BlogManagement = () => {
 
       {/* Blog Tools */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <WeeklyBlogGenerator />
+        <WeeklyBlogGenerator onSuccess={() => queryClient.invalidateQueries({ queryKey: ['admin-blog-posts'] })} />
         <BlogRapperTagger />
       </div>
 

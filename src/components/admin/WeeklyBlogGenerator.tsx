@@ -5,7 +5,11 @@ import { Newspaper, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-const WeeklyBlogGenerator = () => {
+interface WeeklyBlogGeneratorProps {
+  onSuccess?: () => void;
+}
+
+const WeeklyBlogGenerator = ({ onSuccess }: WeeklyBlogGeneratorProps) => {
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = async () => {
@@ -26,6 +30,9 @@ const WeeklyBlogGenerator = () => {
       toast.success('Weekly roundup generated!', {
         description: `Processed ${data.items_processed} articles. Post saved as draft.`
       });
+
+      // Refresh blog listings
+      onSuccess?.();
 
       console.log('Generated post:', data);
     } catch (error) {
