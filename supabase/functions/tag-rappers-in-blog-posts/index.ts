@@ -6,6 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Common words that should never be matched as rapper names/aliases
+const BLOCKLIST = new Set([
+  'big', 'ice', 'young', 'lil', 'old', 'baby', 'king', 'queen',
+  'mr', 'ms', 'dj', 'mc', 'the', 'a', 'an'
+]);
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -41,13 +47,15 @@ serve(async (req) => {
         url: rapperUrl 
       });
       
-      // Add aliases
+      // Add aliases (skip blocklisted words)
       if (rapper.aliases) {
         rapper.aliases.forEach((alias: string) => {
-          artistLinkMap.set(alias.toLowerCase(), { 
-            name: alias, 
-            url: rapperUrl 
-          });
+          if (!BLOCKLIST.has(alias.toLowerCase())) {
+            artistLinkMap.set(alias.toLowerCase(), { 
+              name: alias, 
+              url: rapperUrl 
+            });
+          }
         });
       }
     });
