@@ -6,6 +6,12 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Common words that should never be matched as rapper names/aliases
+const BLOCKLIST = new Set([
+  'big', 'ice', 'young', 'lil', 'old', 'baby', 'king', 'queen',
+  'mr', 'ms', 'dj', 'mc', 'the', 'a', 'an'
+]);
+
 const RSS_FEEDS = [
   { name: "XXL Mag", url: "https://www.xxlmag.com/feed" },
   { name: "The Source", url: "https://thesource.com/feed" },
@@ -64,14 +70,17 @@ serve(async (req) => {
         url: rapperUrl 
       });
       
+      // Add aliases (skip blocklisted words)
       if (rapper.aliases) {
         rapper.aliases.forEach((alias: string) => {
-          artistNames.add(alias.toLowerCase());
-          // Add alias to link map (links to same rapper page)
-          artistLinkMap.set(alias.toLowerCase(), { 
-            name: alias, 
-            url: rapperUrl 
-          });
+          if (!BLOCKLIST.has(alias.toLowerCase())) {
+            artistNames.add(alias.toLowerCase());
+            // Add alias to link map (links to same rapper page)
+            artistLinkMap.set(alias.toLowerCase(), { 
+              name: alias, 
+              url: rapperUrl 
+            });
+          }
         });
       }
     });
