@@ -66,15 +66,15 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
     <ThemedCard id="article-content" variant="dark" className="mb-8">
       <ThemedCardContent className="p-8">
         <div className="font-merienda">
-          <p
+        <p
             className="text-rap-platinum leading-relaxed text-base
             [&_strong]:font-bold
             [&_em]:text-rap-silver [&_em]:italic
-            [&_br]:block [&_br]:my-1
+            [&_br]:block [&_br]:my-0
             [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity
             [&_.heading]:block [&_.heading]:text-xl [&_.heading]:font-bold [&_.heading]:mt-6 [&_.heading]:mb-2
-            [&_.list-item]:block [&_.list-item]:mt-4 [&_.list-item]:mb-1 [&_.list-item]:pl-6 [&_.list-item]:-indent-4
-            [&_.list-explanation]:block [&_.list-explanation]:pl-6 [&_.list-explanation]:mb-2"
+            [&_.list-item]:block [&_.list-item]:mt-4 [&_.list-item]:mb-0 [&_.list-item]:pl-6 [&_.list-item]:-indent-4
+            [&_.list-explanation]:block [&_.list-explanation]:pl-6 [&_.list-explanation]:mt-1 [&_.list-explanation]:mb-3"
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
         </div>
