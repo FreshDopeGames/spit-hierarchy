@@ -12,7 +12,8 @@ interface MentionedRapper {
  * Matches patterns like [Rapper Name](/rapper/rapper-slug)
  */
 const extractRapperSlugsFromContent = (content: string): string[] => {
-  const rapperLinkRegex = /\[([^\]]+)\]\(\/rapper\/([^)]+)\)/g;
+  // Matches both full URLs (https://spithierarchy.com/rapper/slug) and relative paths (/rapper/slug)
+  const rapperLinkRegex = /\[([^\]]+)\]\((?:https:\/\/spithierarchy\.com)?\/rapper\/([^)]+)\)/g;
   const slugs: string[] = [];
   let match;
   
