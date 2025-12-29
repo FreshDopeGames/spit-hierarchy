@@ -44,9 +44,13 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         .replace(/(<br>\s*){4,}/g, "<br><br><br>")
 
         // Wrap paragraphs that follow list items in an explanation span for consistent indentation
+        // Match list item, then any content until the next list item, heading, or end
         .replace(
-          /(<span class="list-item">[^<]*<\/span>)(<br>)+([^<]+?)(?=<span class="list-item">|<span class="heading">|$)/gs,
-          '$1<br><span class="list-explanation">$3</span>'
+          /(<span class="list-item">.*?<\/span>)(<br>)+([\s\S]*?)(?=<span class="list-item">|<span class="heading">|$)/g,
+          (match, listItem, br, explanation) => {
+            if (!explanation.trim()) return listItem + '<br>';
+            return `${listItem}<br><span class="list-explanation">${explanation.trim()}</span>`;
+          }
         )
 
         // Clean up any remaining whitespace issues
