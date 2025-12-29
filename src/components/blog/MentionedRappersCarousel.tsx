@@ -22,7 +22,7 @@ const MentionedRappersCarousel = ({ content }: MentionedRappersCarouselProps) =>
   }
 
   return (
-    <div className="bg-[hsl(var(--theme-surface))] rounded-xl p-6 border border-border">
+    <div className="bg-black rounded-xl p-6 border-4 border-border">
       <div className="flex items-center gap-2 mb-4">
         <Mic2 className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
         <h3 className="font-[family-name:var(--heading-font)] text-lg text-foreground">
@@ -41,7 +41,7 @@ const MentionedRappersCarousel = ({ content }: MentionedRappersCarouselProps) =>
         }}
         className="w-full"
       >
-        <CarouselContent className="-ml-2 md:-ml-4">
+        <CarouselContent className="-ml-2 md:-ml-4 first:[&>div]:ml-5">
           {rappers.map((rapper) => (
             <CarouselItem
               key={rapper.id}
@@ -51,7 +51,7 @@ const MentionedRappersCarousel = ({ content }: MentionedRappersCarouselProps) =>
                 <RapperAvatar
                   rapper={rapper}
                   size="sm"
-                  variant="circular"
+                  variant="square"
                 />
                 <span className="text-xs text-center text-muted-foreground max-w-[100px] line-clamp-2">
                   {rapper.name}
