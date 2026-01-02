@@ -39,7 +39,7 @@ export interface QuizStats {
   accuracy: number;
 }
 
-export type QuizCategory = 'all' | 'rapper_facts' | 'albums' | 'origins' | 'career' | 'discography';
+export type QuizCategory = 'all' | 'rapper_facts' | 'albums' | 'origins' | 'career' | 'discography' | 'birth_year' | 'real_name';
 
 export const useQuiz = (category: QuizCategory = 'all', questionsPerRound: number = 10) => {
   const { user } = useAuth();

@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Brain, User, Disc, MapPin, Calendar, Layers } from 'lucide-react';
+import { User, Disc, MapPin, Calendar, Layers, Cake, UserCheck } from 'lucide-react';
 import type { QuizCategory } from '@/hooks/useQuiz';
 
 interface QuizCategorySelectorProps {
@@ -15,10 +15,12 @@ const categories: Array<{
   description: string;
 }> = [
   { value: 'all', label: 'All Categories', icon: Layers, description: 'Mix of everything' },
-  { value: 'rapper_facts', label: 'Rapper Facts', icon: User, description: 'Names, aliases & more' },
-  { value: 'albums', label: 'Albums', icon: Disc, description: 'Discography knowledge' },
+  { value: 'birth_year', label: 'Birth Year', icon: Cake, description: 'When were they born?' },
+  { value: 'real_name', label: 'Real Name', icon: UserCheck, description: 'Behind the stage name' },
   { value: 'origins', label: 'Origins', icon: MapPin, description: 'Where they\'re from' },
   { value: 'career', label: 'Career', icon: Calendar, description: 'Timeline & history' },
+  { value: 'albums', label: 'Albums', icon: Disc, description: 'Discography knowledge' },
+  { value: 'rapper_facts', label: 'Rapper Facts', icon: User, description: 'Names, aliases & more' },
 ];
 
 const QuizCategorySelector: React.FC<QuizCategorySelectorProps> = ({
@@ -26,7 +28,7 @@ const QuizCategorySelector: React.FC<QuizCategorySelectorProps> = ({
   onCategoryChange,
 }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
       {categories.map(({ value, label, icon: Icon, description }) => (
         <button
           key={value}
