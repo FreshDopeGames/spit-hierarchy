@@ -707,6 +707,10 @@ export type Database = {
           id: string
           last_vote_date: string | null
           profile_views_count: number | null
+          quiz_best_streak: number | null
+          quiz_correct_answers: number | null
+          quiz_current_streak: number | null
+          quiz_questions_answered: number | null
           ranking_lists_created: number | null
           rappers_voted_count: number | null
           referrals_count: number | null
@@ -730,6 +734,10 @@ export type Database = {
           id: string
           last_vote_date?: string | null
           profile_views_count?: number | null
+          quiz_best_streak?: number | null
+          quiz_correct_answers?: number | null
+          quiz_current_streak?: number | null
+          quiz_questions_answered?: number | null
           ranking_lists_created?: number | null
           rappers_voted_count?: number | null
           referrals_count?: number | null
@@ -753,6 +761,10 @@ export type Database = {
           id?: string
           last_vote_date?: string | null
           profile_views_count?: number | null
+          quiz_best_streak?: number | null
+          quiz_correct_answers?: number | null
+          quiz_current_streak?: number | null
+          quiz_questions_answered?: number | null
           ranking_lists_created?: number | null
           rappers_voted_count?: number | null
           referrals_count?: number | null
@@ -1271,6 +1283,142 @@ export type Database = {
           username_last_changed_at?: string | null
         }
         Relationships: []
+      }
+      quiz_badges: {
+        Row: {
+          badge_color: string | null
+          category: string
+          created_at: string
+          description: string
+          icon: string
+          id: string
+          is_active: boolean | null
+          name: string
+          next_tier_id: string | null
+          points: number
+          rarity: string
+          threshold_correct: number
+          tier_level: number | null
+          updated_at: string
+        }
+        Insert: {
+          badge_color?: string | null
+          category: string
+          created_at?: string
+          description: string
+          icon?: string
+          id?: string
+          is_active?: boolean | null
+          name: string
+          next_tier_id?: string | null
+          points?: number
+          rarity?: string
+          threshold_correct: number
+          tier_level?: number | null
+          updated_at?: string
+        }
+        Update: {
+          badge_color?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          icon?: string
+          id?: string
+          is_active?: boolean | null
+          name?: string
+          next_tier_id?: string | null
+          points?: number
+          rarity?: string
+          threshold_correct?: number
+          tier_level?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_badges_next_tier_id_fkey"
+            columns: ["next_tier_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      quiz_questions: {
+        Row: {
+          album_id: string | null
+          category: string
+          correct_answer: string
+          created_at: string
+          difficulty: string
+          id: string
+          is_active: boolean
+          points: number
+          question_text: string
+          question_type: string
+          rapper_id: string | null
+          updated_at: string
+          wrong_answers: Json
+        }
+        Insert: {
+          album_id?: string | null
+          category: string
+          correct_answer: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          is_active?: boolean
+          points?: number
+          question_text: string
+          question_type: string
+          rapper_id?: string | null
+          updated_at?: string
+          wrong_answers?: Json
+        }
+        Update: {
+          album_id?: string | null
+          category?: string
+          correct_answer?: string
+          created_at?: string
+          difficulty?: string
+          id?: string
+          is_active?: boolean
+          points?: number
+          question_text?: string
+          question_type?: string
+          rapper_id?: string | null
+          updated_at?: string
+          wrong_answers?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "quiz_questions_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_questions_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_questions_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "quiz_questions_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ranking_items: {
         Row: {
@@ -2231,6 +2379,73 @@ export type Database = {
           },
         ]
       }
+      user_quiz_attempts: {
+        Row: {
+          attempted_at: string
+          id: string
+          is_correct: boolean
+          question_id: string
+          time_taken_seconds: number | null
+          user_answer: string
+          user_id: string
+        }
+        Insert: {
+          attempted_at?: string
+          id?: string
+          is_correct: boolean
+          question_id: string
+          time_taken_seconds?: number | null
+          user_answer: string
+          user_id: string
+        }
+        Update: {
+          attempted_at?: string
+          id?: string
+          is_correct?: boolean
+          question_id?: string
+          time_taken_seconds?: number | null
+          user_answer?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quiz_attempts_question_id_fkey"
+            columns: ["question_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_questions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_quiz_badges: {
+        Row: {
+          badge_id: string
+          earned_at: string
+          id: string
+          user_id: string
+        }
+        Insert: {
+          badge_id: string
+          earned_at?: string
+          id?: string
+          user_id: string
+        }
+        Update: {
+          badge_id?: string
+          earned_at?: string
+          id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_quiz_badges_badge_id_fkey"
+            columns: ["badge_id"]
+            isOneToOne: false
+            referencedRelation: "quiz_badges"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_ranking_items: {
         Row: {
           created_at: string
@@ -3106,6 +3321,10 @@ export type Database = {
         Args: { target_user_id: string }
         Returns: undefined
       }
+      check_and_award_quiz_badges: {
+        Args: { p_user_id: string }
+        Returns: Json
+      }
       check_musicbrainz_rate_limit: {
         Args: {
           p_ip_address?: string
@@ -3416,6 +3635,30 @@ export type Database = {
           total_votes: number
         }[]
       }
+      get_unanswered_questions: {
+        Args: { p_category?: string; p_limit?: number; p_user_id: string }
+        Returns: {
+          album_id: string | null
+          category: string
+          correct_answer: string
+          created_at: string
+          difficulty: string
+          id: string
+          is_active: boolean
+          points: number
+          question_text: string
+          question_type: string
+          rapper_id: string | null
+          updated_at: string
+          wrong_answers: Json
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "quiz_questions"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       get_unrated_rappers: {
         Args: {
           p_limit?: number
@@ -3468,6 +3711,15 @@ export type Database = {
           series_name: string
           threshold_value: number
           tier_level: number
+        }[]
+      }
+      get_user_quiz_stats_by_category: {
+        Args: { p_user_id: string }
+        Returns: {
+          accuracy: number
+          category: string
+          total_answered: number
+          total_correct: number
         }[]
       }
       get_user_ranking_preview_items: {
@@ -3581,6 +3833,15 @@ export type Database = {
           score: number
           slug: string
         }[]
+      }
+      submit_quiz_answer: {
+        Args: {
+          p_question_id: string
+          p_time_taken?: number
+          p_user_answer: string
+          p_user_id: string
+        }
+        Returns: Json
       }
       toggle_track_vote: {
         Args: { track_uuid: string; user_uuid?: string }

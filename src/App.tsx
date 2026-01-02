@@ -29,6 +29,7 @@ import CookiePolicy from "./pages/CookiePolicy";
 import TermsOfUse from "./pages/TermsOfUse";
 import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
+import Quiz from "./pages/Quiz";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { CookieSettingsLink } from "@/components/CookieSettingsLink";
 
@@ -60,6 +61,14 @@ function App() {
           <Route path="/vs/:slug" element={<VSMatchDetail />} />
           <Route path="/user/:username" element={<PublicUserProfileByUsername />} />
           <Route path="/community-cypher" element={<CommunityCypher />} />
+          <Route 
+            path="/quiz" 
+            element={
+              <AuthGuard requireAuth>
+                <Quiz />
+              </AuthGuard>
+            } 
+          />
           
           {/* Protected Routes */}
           <Route 
