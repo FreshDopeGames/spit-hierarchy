@@ -68,6 +68,8 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
       origins: 'Origins',
       career: 'Career',
       discography: 'Discography',
+      birth_year: 'Birth Year',
+      real_name: 'Real Name',
     };
     return labels[category] || category;
   };

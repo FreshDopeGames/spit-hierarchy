@@ -1,0 +1,874 @@
+question_id,question_text,correct_answer,wrong_answer_1,wrong_answer_2,wrong_answer_3,category,difficulty,source_field,tags
+Q001,What year was DMX born?,1970,1968,1971,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q002,Which city or region is DMX associated with?,"Mount Vernon, NY","Ithaca, NY","Minneapolis, Minnesota","Lima, Peru",Origin,Easy,origin,location
+Q003,What is the real name of DMX?,Earl Simmons,Kimberly Denise Jones,Christopher Brian Bridges,Yannick Koffi,Real Name,Medium,real_name,identity
+Q004,What year was MC Hammer born?,1962,1982,1983,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q005,Which city or region is MC Hammer associated with?,"Oakland, CA","St. Louis, MO","Inglewood, CA","Savannah, GA",Origin,Easy,origin,location
+Q006,What is the real name of MC Hammer?,Stanley Kirk Burrell,Antonio Hardy,Samara Henderson,Yasiin Bey,Real Name,Medium,real_name,identity
+Q007,What year was Will Smith born?,1968,1998,1966,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q008,Which city or region is Will Smith associated with?,"Philadelphia, PA","Wiesbaden, Germany","Dallas, TX","Mableton, GA",Origin,Easy,origin,location
+Q009,What is the real name of Will Smith?,Willard Carroll Smith Jr.,Jason Green,Yannick Koffi,Michael Eagle II,Real Name,Medium,real_name,identity
+Q010,What year was Murda Mook born?,1984,1969,2002,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q011,Which city or region is Murda Mook associated with?,"Harlem, NY","Richmond, VA","Kansas City, MO","Oxnard, CA",Origin,Easy,origin,location
+Q012,What is the real name of Murda Mook?,John Ancrum,Keenon Dequan Ray Jackson,Tobe Nwigwe,"A-Plus, Phesto, Opio, Tajai",Real Name,Medium,real_name,identity
+Q013,What year was Kurupt born?,1972,1981,1986,1971,Birth Year,Easy,birth_year,"bio,origin"
+Q014,Which city or region is Kurupt associated with?,"Philadelphia, PA","East Orange, NJ","Worcester, MA","Spanish Harlem, NY",Origin,Easy,origin,location
+Q015,What is the real name of Kurupt?,Ricardo Emmanuel Brown,Destin Choice Route,Teren Delvon Jones,Joseph Anthony Budden II,Real Name,Medium,real_name,identity
+Q016,Which city or region is Digital Underground associated with?,"Oakland, CA","Newark, NJ","Pontiac, MI","New York City, NY",Origin,Easy,origin,location
+Q017,What is the real name of Digital Underground?,Various Artists,Jatavia Shakara Johnson,Jo-Vaughn Virginie Scott,Keith Omar Murray,Real Name,Medium,real_name,identity
+Q018,What year was MC Eiht born?,1971,1966,1978,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q019,Which city or region is MC Eiht associated with?,"Compton, CA","Canton, OH","Houston, TX","South Orange, NJ",Origin,Easy,origin,location
+Q020,What is the real name of MC Eiht?,Aaron Bernard Tyler,Torrence Ivy Hatch Jr.,Kentrell DeSean Gaulden,Aaron Dontez Yates,Real Name,Medium,real_name,identity
+Q021,Which city or region is EPMD associated with?,"Long Island, NY","Virginia Beach, VA","Hempstead, NY","Philadelphia, PA",Origin,Easy,origin,location
+Q022,What is the real name of EPMD?,"Erick Sermon, PMD",Tamia Monique Carter,André Lauren Benjamin,Vyshonn King Miller,Real Name,Medium,real_name,identity
+Q023,What year was Gunna born?,1993,1978,1975,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q024,Which city or region is Gunna associated with?,"College Park, GA","Houston, TX","South Gate, CA","Detroit, MI",Origin,Easy,origin,location
+Q025,What is the real name of Gunna?,Sergio Giavanni Kitchens,David R. Styles,Quincy Matthew Hanley,Felipe Andres Coronel,Real Name,Medium,real_name,identity
+Q026,What year was LL Cool J born?,1968,1970,1982,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q027,Which city or region is LL Cool J associated with?,"Queens, NY",Virginia,"Philadelphia, PA","Washington, D.C.",Origin,Easy,origin,location
+Q028,What is the real name of LL Cool J?,James Todd Smith,Michael Eagle II,Philip Bernard,Richard Martin Lloyd Walters,Real Name,Medium,real_name,identity
+Q029,What year was Baby Keem born?,2000,1974,1968,1985,Birth Year,Easy,birth_year,"bio,origin"
+Q030,Which city or region is Baby Keem associated with?,"Las Vegas, NV","Baltimore, MD","Pittsburgh, PA","Pompano Beach, FL",Origin,Easy,origin,location
+Q031,What is the real name of Baby Keem?,Hykeem Jamaal Carter Jr.,Sean Duval Price,Tierra Helena Whack,John R. Austin II,Real Name,Medium,real_name,identity
+Q032,What year was B.o.B born?,1988,1976,1987,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q033,Which city or region is B.o.B associated with?,"Winston-Salem, NC","Brooklyn, NY","Vallejo, CA","Detroit, MI",Origin,Easy,origin,location
+Q034,What is the real name of B.o.B?,Bobby Ray Simmons Jr.,Victor James Santiago Jr.,Michael Lamar White IV,Paul Micheal Slayton,Real Name,Medium,real_name,identity
+Q035,What year was Canibus born?,1974,1976,1979,1975,Birth Year,Easy,birth_year,"bio,origin"
+Q036,Which city or region is Canibus associated with?,"Jamaica, Queens","Miami Gardens, FL","Charlotte, NC","St. Louis, MO",Origin,Easy,origin,location
+Q037,What is the real name of Canibus?,Germaine Williams,Tobe Nwigwe,Joseph Anthony Budden II,Leslie Edward Pridgen,Real Name,Medium,real_name,identity
+Q038,What year was Bone Thugs-N-Harmony born?,1991,1997,1985,1972,Birth Year,Easy,birth_year,"bio,origin"
+Q039,Which city or region is Bone Thugs-N-Harmony associated with?,"Cleveland, OH","Memphis, TN","Rockville, MD","Winston-Salem, NC",Origin,Easy,origin,location
+Q040,What is the real name of Bone Thugs-N-Harmony?,"Lazy, Krayzie, Bizzy, Wish, and Flesh-n-Bone",Aubrey Drake Graham,Caresha Romeka Brownlee,Michael Eagle II,Real Name,Medium,real_name,identity
+Q041,What year was Foxy Brown born?,1978,1971,1974,1986,Birth Year,Easy,birth_year,"bio,origin"
+Q042,Which city or region is Foxy Brown associated with?,"Brooklyn, NY","Queens, NY","Port Arthur, TX","Ithaca, NY",Origin,Easy,origin,location
+Q043,What is the real name of Foxy Brown?,Inga DeCarlo Fung Marchand,Shad Gregory Moss,Avery Marcel Joshua Jones,Angel Del Villar II,Real Name,Medium,real_name,identity
+Q044,What year was Lil Tecca born?,2002,1997,1984,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q045,Which city or region is Lil Tecca associated with?,"Queens, NY","Oxnard, CA","Washington, D.C.","Fayetteville, NC",Origin,Easy,origin,location
+Q046,What is the real name of Lil Tecca?,Tyler-Justin Anthony Sharpe,Destin Choice Route,"Q-Tip, Phife Dawg","Phonte, Rapper Big Pooh",Real Name,Medium,real_name,identity
+Q047,What year was Denzel Curry born?,1995,1958,1967,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q048,Which city or region is Denzel Curry associated with?,"Miami Gardens, FL","Raleigh, NC","Snow Hill, NC","Kansas City, MO",Origin,Easy,origin,location
+Q049,What is the real name of Denzel Curry?,Denzel Rae Don Curry,Quincy Matthew Hanley,Mason Durell Betha,Durk Derrick Banks,Real Name,Medium,real_name,identity
+Q050,What year was Lady London born?,1995,2001,1989,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q051,Which city or region is Lady London associated with?,"Harlem, NY","Oxnard, CA","Cheltenham Township, PA","London, ON",Origin,Easy,origin,location
+Q052,What is the real name of Lady London?,Zaire Stewart,Simmie Sims III,Quavious Keyate Marshall,Clifford Smith Jr.,Real Name,Medium,real_name,identity
+Q053,What year was Marlon Craft born?,1993,1994,1992,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q054,Which city or region is Marlon Craft associated with?,"Manhattan, NY","Fayetteville, NC","Irvine, CA","Hempstead, NY",Origin,Easy,origin,location
+Q055,What is the real name of Marlon Craft?,Marlon Craft,Anthony Tremaine Dixson,Bryson Lashun Potts,Shéyaa Bin Abraham-Joseph,Real Name,Medium,real_name,identity
+Q056,What year was Raekwon born?,1970,1971,1981,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q057,Which city or region is Raekwon associated with?,"Staten Island, NY","Rockville, MD","Los Angeles, CA","London, ON",Origin,Easy,origin,location
+Q058,What is the real name of Raekwon?,Corey Woods,William Leonard Roberts II,Dwight Arrington Myers,Lana Michele Moorer,Real Name,Medium,real_name,identity
+Q059,What year was Sean Price born?,1972,2001,1993,1975,Birth Year,Easy,birth_year,"bio,origin"
+Q060,Which city or region is Sean Price associated with?,"Brooklyn, NY","South Orange, NJ","Tampa, FL","Cape Town, South Africa",Origin,Easy,origin,location
+Q061,What is the real name of Sean Price?,Sean Duval Price,Jayson Andrew Jenkins,Keenon Dequan Ray Jackson,Reminisce Kioni Mackie,Real Name,Medium,real_name,identity
+Q062,What year was El-P born?,1975,1987,1992,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q063,Which city or region is El-P associated with?,"New York City, NY","Atlanta, GA","Chattanooga, TN","New Orleans, LA",Origin,Easy,origin,location
+Q064,What is the real name of El-P?,Jaime Stuart Meline,DeAndre Cortez Way,"Pusha T, Malice",Brian Daniel Carenard,Real Name,Medium,real_name,identity
+Q065,What year was LaRussell born?,1987,1986,2002,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q066,Which city or region is LaRussell associated with?,"Vallejo, CA","Snow Hill, NC","Portland, OR","Staten Island, NY",Origin,Easy,origin,location
+Q067,What is the real name of LaRussell?,Russell Santiago,David Andrew Burd,Nasir bin Olu Dara Jones,Isaiah Rashad Joel McClain,Real Name,Medium,real_name,identity
+Q068,What year was Smino born?,1991,1971,1980,1969,Birth Year,Easy,birth_year,"bio,origin"
+Q069,Which city or region is Smino associated with?,"St. Louis, MO","Worcester, MA","Durham, NC","Canton, OH",Origin,Easy,origin,location
+Q070,What is the real name of Smino?,Christopher Smith Jr.,Lauryn Noelle Hill,Quavious Keyate Marshall,John R. Austin II,Real Name,Medium,real_name,identity
+Q071,What year was JT born?,1992,1994,2008,2000,Birth Year,Easy,birth_year,"bio,origin"
+Q072,Which city or region is JT associated with?,"Miami, FL","Bay Area, CA","Morrisville, PA","Saint James, Trinidad and Tobago",Origin,Easy,origin,location
+Q073,What is the real name of JT?,Jatavia Shakara Johnson,William Leonard Roberts II,Jason Powers,Jon Kevin Freeman Jr.,Real Name,Medium,real_name,identity
+Q074,What year was Big Pun born?,1971,1979,1966,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q075,Which city or region is Big Pun associated with?,"The Bronx, NY","Manhattan, NY","Carson, CA","Mobile, AL",Origin,Easy,origin,location
+Q076,What is the real name of Big Pun?,Christopher Lee Rios,Bobby Ray Simmons Jr.,Mach-Hommy,Jordan Michael Houston III,Real Name,Medium,real_name,identity
+Q077,What year was Jon Connor born?,1985,1991,1975,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q078,Which city or region is Jon Connor associated with?,"Flint, MI","Vallejo, CA",Virginia,"Corona, Queens",Origin,Easy,origin,location
+Q079,What is the real name of Jon Connor?,Jon Kevin Freeman Jr.,Fatimah Nyeema Warner,Lawrence Parker,Herbert Anthony Stevens IV,Real Name,Medium,real_name,identity
+Q080,What year was Evidence born?,1976,1980,1986,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q081,Which city or region is Evidence associated with?,"Los Angeles, CA","Clarksdale, MS","Cleveland, OH","Edwards Air Force Base, CA",Origin,Easy,origin,location
+Q082,What is the real name of Evidence?,Michael Taylor Perretta,André 3000 & Big Boi,Dominique Armani Jones,Eric Tyrone Breed,Real Name,Medium,real_name,identity
+Q083,What year was Anderson .Paak born?,1986,1977,2001,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q084,Which city or region is Anderson .Paak associated with?,"Oxnard, CA","Washington, D.C.","Edwards Air Force Base, CA","Pittsburgh, PA",Origin,Easy,origin,location
+Q085,What is the real name of Anderson .Paak?,Brandon Paak Anderson,"Bun B, Pimp C",John R. Austin II,Jayceon Terrell Taylor,Real Name,Medium,real_name,identity
+Q086,What year was De La Soul born?,1968,1976,1972,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q087,Which city or region is De La Soul associated with?,"Long Island, NY","Vallejo, CA","Gadsden, AL","Compton, CA",Origin,Easy,origin,location
+Q088,What is the real name of De La Soul?,"Posdnuos, Trugoy, Maseo","stic.man, M-1",Wesley Eric Weston Jr.,Robert Rihmeek Williams,Real Name,Medium,real_name,identity
+Q089,What year was Lil Yachty born?,1997,1982,2008,1967,Birth Year,Easy,birth_year,"bio,origin"
+Q090,Which city or region is Lil Yachty associated with?,"Mableton, GA","Virginia Beach, VA","Spanish Harlem, NY","Kansas City, MO",Origin,Easy,origin,location
+Q091,What is the real name of Lil Yachty?,Miles Parks McCollum,John Lucks,Thebe Neruda Kgositsile,Rakim Athelaston Mayers,Real Name,Medium,real_name,identity
+Q092,What year was Lil Flip born?,1981,1978,1999,1987,Birth Year,Easy,birth_year,"bio,origin"
+Q093,Which city or region is Lil Flip associated with?,"Houston, TX","Wiesbaden, Germany","Ithaca, NY","Columbus, OH",Origin,Easy,origin,location
+Q094,What is the real name of Lil Flip?,Wesley Eric Weston Jr.,Joseph Antonio Cartagena,Aaron Bernard Tyler,Jeffrey Bruce Atkins,Real Name,Medium,real_name,identity
+Q095,What year was Young M.A born?,1992,1967,1987,1980,Birth Year,Easy,birth_year,"bio,origin"
+Q096,Which city or region is Young M.A associated with?,"Brooklyn, NY","Harlem, NY","Spanish Harlem, NY","Oakland, CA",Origin,Easy,origin,location
+Q097,What is the real name of Young M.A?,Katorah Kasanova Marrero,Derek Keith Barbosa,Christopher Brian Bridges,Jayson Andrew Jenkins,Real Name,Medium,real_name,identity
+Q098,What year was Slick Rick born?,1965,1993,1968,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q099,Which city or region is Slick Rick associated with?,"Mitcham, London","Oakland, CA","Cheltenham Township, PA","Port Arthur, TX",Origin,Easy,origin,location
+Q100,What is the real name of Slick Rick?,Richard Martin Lloyd Walters,Kamaiyah Jamesha Johnson,Clifford Smith Jr.,Shadrach Kabango,Real Name,Medium,real_name,identity
+Q101,What year was J. Cole born?,1985,1976,1968,1983,Birth Year,Easy,birth_year,"bio,origin"
+Q102,Which city or region is J. Cole associated with?,"Fayetteville, NC","Washington, D.C.","Port Arthur, TX","New York City, NY",Origin,Easy,origin,location
+Q103,What is the real name of J. Cole?,Jermaine Lamarr Cole,Stanley Kirk Burrell,Ian Matthias Bavitz,Christopher George Latore Wallace,Real Name,Medium,real_name,identity
+Q104,What year was Earl Sweatshirt born?,1994,1984,1998,1985,Birth Year,Easy,birth_year,"bio,origin"
+Q105,Which city or region is Earl Sweatshirt associated with?,"Los Angeles, CA","Fresno, CA","South Orange, NJ","London, ON",Origin,Easy,origin,location
+Q106,What is the real name of Earl Sweatshirt?,Thebe Neruda Kgositsile,Jaime Stuart Meline,Jane Chika Oranika,Nayvadius DeMun Wilburn,Real Name,Medium,real_name,identity
+Q107,What year was Childish Gambino born?,1983,1988,1997,1982,Birth Year,Easy,birth_year,"bio,origin"
+Q108,Which city or region is Childish Gambino associated with?,"Edwards Air Force Base, CA","Carson, CA","East Orange, NJ","Charlotte, NC",Origin,Easy,origin,location
+Q109,What is the real name of Childish Gambino?,Donald McKinley Glover Jr.,Dwight Equan Grant,Dominick Antron Wickliffe,Christopher George Latore Wallace,Real Name,Medium,real_name,identity
+Q110,What year was Fabolous born?,1977,1988,1965,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q111,Which city or region is Fabolous associated with?,"Brooklyn, NY","Washington, D.C.","Newark, NJ","Mitcham, London",Origin,Easy,origin,location
+Q112,What is the real name of Fabolous?,John David Jackson,Derek Keith Barbosa,Brandon Paak Anderson,David Lawrence Brewster Jr.,Real Name,Medium,real_name,identity
+Q113,What year was Action Bronson born?,1983,2008,1971,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q114,Which city or region is Action Bronson associated with?,"New York City, NY","Brookhaven, MS","Wiesbaden, Germany","Durham, NC",Origin,Easy,origin,location
+Q115,What is the real name of Action Bronson?,Ariyan Arslani,Johnathan Jamall Porter,Mason Durell Betha,Wesley Eric Weston Jr.,Real Name,Medium,real_name,identity
+Q116,What year was Noname born?,1991,2008,1986,1967,Birth Year,Easy,birth_year,"bio,origin"
+Q117,Which city or region is Noname associated with?,"Chicago, IL","Watts, CA","Meridian, MS","Minot, ND",Origin,Easy,origin,location
+Q118,What is the real name of Noname?,Fatimah Nyeema Warner,Jason Green,Paul Micheal Slayton,Simmie Sims III,Real Name,Medium,real_name,identity
+Q119,What year was Master P born?,1967,1987,1999,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q120,Which city or region is Master P associated with?,"New Orleans, LA","Corona, Queens","Oakland, CA","Houston, TX",Origin,Easy,origin,location
+Q121,What is the real name of Master P?,Percy Robert Miller Sr.,Terrence LeVarr Thornton,Tsidi Ibrahim,Mach-Hommy,Real Name,Medium,real_name,identity
+Q122,What year was Gangsta Boo born?,1979,1971,1987,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q123,Which city or region is Gangsta Boo associated with?,"Memphis, TN","Snow Hill, NC","Columbus, OH","Gadsden, AL",Origin,Easy,origin,location
+Q124,What is the real name of Gangsta Boo?,Lola Chantrelle Mitchell,Vincent Jamal Staples,Symere Bysil Woods,Kamaal Ibn John Fareed,Real Name,Medium,real_name,identity
+Q125,What year was Boosie Badazz born?,1982,1991,1960,1965,Birth Year,Easy,birth_year,"bio,origin"
+Q126,Which city or region is Boosie Badazz associated with?,"Baton Rouge, LA","Pompano Beach, FL","Columbus, OH","Mount Vernon, NY",Origin,Easy,origin,location
+Q127,What is the real name of Boosie Badazz?,Torrence Ivy Hatch Jr.,Troy Donald Jamerson,Coi Leray Collins,"Salt, Pepa",Real Name,Medium,real_name,identity
+Q128,What year was A Tribe Called Quest born?,1985,1995,1967,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q129,Which city or region is A Tribe Called Quest associated with?,"Queens, NY","Fayetteville, NC","Mitcham, London","South Gate, CA",Origin,Easy,origin,location
+Q130,What is the real name of A Tribe Called Quest?,"Q-Tip, Phife Dawg",Amir Elkhalifa,Brian Daniel Carenard,Christopher George Latore Wallace,Real Name,Medium,real_name,identity
+Q131,What year was Public Enemy born?,1960,1984,1979,1965,Birth Year,Easy,birth_year,"bio,origin"
+Q132,Which city or region is Public Enemy associated with?,"Long Island, NY","Edwards Air Force Base, CA","Snow Hill, NC","Inglewood, CA",Origin,Easy,origin,location
+Q133,What is the real name of Public Enemy?,"Chuck D, Flavor Flav","Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Michael Lawrence Tyler,Jason Terrance Phillips,Real Name,Medium,real_name,identity
+Q134,What year was J Dilla born?,1974,1989,1967,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q135,Which city or region is J Dilla associated with?,"Detroit, MI","Baton Rouge, LA","Morrisville, PA","Memphis, TN",Origin,Easy,origin,location
+Q136,What is the real name of J Dilla?,James Dewitt Yancey,Brian Daniel Carenard,"Q-Tip, Phife Dawg",Jermaine Lamarr Cole,Real Name,Medium,real_name,identity
+Q137,What year was Black Milk born?,1982,2002,1987,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q138,Which city or region is Black Milk associated with?,"Detroit, MI","New York, NY","Savannah, GA","San Francisco, CA",Origin,Easy,origin,location
+Q139,What is the real name of Black Milk?,Curtis Eugene Cross,Nathaniel Thomas Wilson,Shad Gregory Moss,Felipe Andres Coronel,Real Name,Medium,real_name,identity
+Q140,What year was David Banner born?,1974,1988,1978,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q141,Which city or region is David Banner associated with?,"Brookhaven, MS","Flint, MI","Bronx, NY","Long Beach, CA",Origin,Easy,origin,location
+Q142,What is the real name of David Banner?,Lavell William Crump,Shamele Mackie,Jason Douglas Newman,Derek Keith Barbosa,Real Name,Medium,real_name,identity
+Q143,What year was Juice WRLD born?,1998,1962,1977,1974,Birth Year,Easy,birth_year,"bio,origin"
+Q144,Which city or region is Juice WRLD associated with?,"Chicago, IL","South Orange, NJ","Winston-Salem, NC","Bay Area, CA",Origin,Easy,origin,location
+Q145,What is the real name of Juice WRLD?,Jarad Anthony Higgins,Jermaine Lamarr Cole,Calvin Cordozar Broadus Jr.,Patrick Earl Houston,Real Name,Medium,real_name,identity
+Q146,What year was Cardi B born?,1992,1981,2002,1983,Birth Year,Easy,birth_year,"bio,origin"
+Q147,Which city or region is Cardi B associated with?,"Bronx, NY","Tampa, FL","Vallejo, CA","Jamaica, Queens",Origin,Easy,origin,location
+Q148,What is the real name of Cardi B?,Belcalis Marlenis Almánzar,Clifford Joseph Harris Jr.,Ryan Daniel Montgomery,Lakeyah Danaee Robinson,Real Name,Medium,real_name,identity
+Q149,What year was Talib Kweli born?,1975,1980,1989,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q150,Which city or region is Talib Kweli associated with?,"Brooklyn, NY","Port Arthur, TX","Oxnard, CA","Los Angeles, CA",Origin,Easy,origin,location
+Q151,What is the real name of Talib Kweli?,Talib Kweli Greene,Michael Taylor Perretta,"Salt, Pepa",John Ancrum,Real Name,Medium,real_name,identity
+Q152,What year was Jim Jones born?,1976,1972,1967,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q153,Which city or region is Jim Jones associated with?,"The Bronx, NY","Mobile, AL","Boston, MA","New York City, NY",Origin,Easy,origin,location
+Q154,What is the real name of Jim Jones?,Joseph Guillermo Jones II,John Lucks,Talib Kweli Greene,Destin Choice Route,Real Name,Medium,real_name,identity
+Q155,What year was T.I. born?,1980,1970,2002,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q156,Which city or region is T.I. associated with?,"Atlanta, GA","Yonkers, NY","Brookhaven, MS","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q157,What is the real name of T.I.?,Clifford Joseph Harris Jr.,Sean Michael Leonard Anderson,"Big Gipp, CeeLo Green, Khujo, T-Mo",John David Jackson,Real Name,Medium,real_name,identity
+Q158,What year was Jack Harlow born?,1998,1962,1985,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q159,Which city or region is Jack Harlow associated with?,"Louisville, KY","Inglewood, CA","South Orange, NJ","Hempstead, NY",Origin,Easy,origin,location
+Q160,What is the real name of Jack Harlow?,Jackman Thomas Harlow,Sir Robert Bryson Hall II,David Andrew Burd,Willard Carroll Smith Jr.,Real Name,Medium,real_name,identity
+Q161,What year was AZ born?,1972,1960,1979,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q162,Which city or region is AZ associated with?,"Brooklyn, NY","Tampa, FL","Manhattan, NY","Miami Gardens, FL",Origin,Easy,origin,location
+Q163,What is the real name of AZ?,Anthony Cruz,Kenyatta Lee Frazier Jr.,Ariyan Arslani,Jason Green,Real Name,Medium,real_name,identity
+Q164,What year was Megan Thee Stallion born?,1995,1988,2008,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q165,Which city or region is Megan Thee Stallion associated with?,"San Antonio, TX","Murfreesboro, TN","Fayetteville, NC","Staten Island, NY",Origin,Easy,origin,location
+Q166,What is the real name of Megan Thee Stallion?,Megan Jovon Ruth Pete,Jeffrey James Sidhoo,"Q-Tip, Phife Dawg",Tsidi Ibrahim,Real Name,Medium,real_name,identity
+Q167,What year was Daylyt born?,1987,1968,1966,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q168,Which city or region is Daylyt associated with?,"Watts, CA","Memphis, TN","Brownsville, Brooklyn","Carson, CA",Origin,Easy,origin,location
+Q169,What is the real name of Daylyt?,Terelle Smith,Michael Lawrence Tyler,Reginald Noble,Tauheed K. Epps,Real Name,Medium,real_name,identity
+Q170,What year was Mac Dre born?,1970,1989,1976,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q171,Which city or region is Mac Dre associated with?,"Oakland, CA","Clarksdale, MS","St. Louis, MO","Winston-Salem, NC",Origin,Easy,origin,location
+Q172,What is the real name of Mac Dre?,Andre Louis Hicks,Derek Keith Barbosa,"Chuck D, Flavor Flav",Jason S Hunter,Real Name,Medium,real_name,identity
+Q173,What year was Joe Budden born?,1980,1977,1978,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q174,Which city or region is Joe Budden associated with?,"Spanish Harlem, NY","Atlanta, GA","Saint James, Trinidad and Tobago","Baltimore, MD",Origin,Easy,origin,location
+Q175,What is the real name of Joe Budden?,Joseph Anthony Budden II,"Taboo, will.i.am, APL.DE.AP",Torrence Ivy Hatch Jr.,Nashid Sulaiman,Real Name,Medium,real_name,identity
+Q176,What year was Jadakiss born?,1975,1974,1973,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q177,Which city or region is Jadakiss associated with?,"Yonkers, NY","Long Beach, CA","Philadelphia, PA","Hempstead, NY",Origin,Easy,origin,location
+Q178,What is the real name of Jadakiss?,Jason Terrance Phillips,Clifford Joseph Harris Jr.,Tracy Lauren Marrow,Curtis Eugene Cross,Real Name,Medium,real_name,identity
+Q179,What year was Lupe Fiasco born?,1982,1971,1958,1992,Birth Year,Easy,birth_year,"bio,origin"
+Q180,Which city or region is Lupe Fiasco associated with?,"Chicago, IL","Mobile, AL","Tampa, FL","Inglewood, CA",Origin,Easy,origin,location
+Q181,What is the real name of Lupe Fiasco?,Wasalu Muhammad Jaco,Carlos Coleman,Justin Lewis Scott,John Lucks,Real Name,Medium,real_name,identity
+Q182,What year was Xzibit born?,1974,1972,1997,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q183,Which city or region is Xzibit associated with?,"Detroit, MI","Jamaica, Queens","Cape Town, South Africa","Savannah, GA",Origin,Easy,origin,location
+Q184,What is the real name of Xzibit?,Alvin Nathaniel Joiner,Jeffrey James Sidhoo,Shadrach Kabango,Asher Paul Roth,Real Name,Medium,real_name,identity
+Q185,What year was Logic born?,1990,2000,2001,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q186,Which city or region is Logic associated with?,"Rockville, MD","Cape Town, South Africa","Carson, CA","Milwaukee, WI",Origin,Easy,origin,location
+Q187,What is the real name of Logic?,Sir Robert Bryson Hall II,Katrina Laverne Taylor,DeAndre Cortez Way,Shéyaa Bin Abraham-Joseph,Real Name,Medium,real_name,identity
+Q188,What year was Young Thug born?,1991,1978,1994,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q189,Which city or region is Young Thug associated with?,"Atlanta, GA","Baltimore, MD","Morrisville, PA","Carson, CA",Origin,Easy,origin,location
+Q190,What is the real name of Young Thug?,Jeffery Lamar Williams,Miles Parks McCollum,Various Artists,John Ancrum,Real Name,Medium,real_name,identity
+Q191,What year was Da Brat born?,1974,1994,1967,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q192,Which city or region is Da Brat associated with?,"Chicago, IL","New York City, NY","San Antonio, TX","Canton, OH",Origin,Easy,origin,location
+Q193,What is the real name of Da Brat?,Shawntae Harris-Dupart,Marshall Bruce Mathers III,Corey Woods,Ariyan Arslani,Real Name,Medium,real_name,identity
+Q194,What year was Quavo born?,1991,1969,2000,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q195,Which city or region is Quavo associated with?,"Atlanta, GA","Rockville, MD","Milwaukee, WI","New Orleans, LA",Origin,Easy,origin,location
+Q196,What is the real name of Quavo?,Quavious Keyate Marshall,Marshall Bruce Mathers III,Reginald Noble,Clifford Smith Jr.,Real Name,Medium,real_name,identity
+Q197,What year was Ras Kass born?,1973,1992,1983,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q198,Which city or region is Ras Kass associated with?,"Carson, CA","Clarksdale, MS","Long Island, NY","New York City, NY",Origin,Easy,origin,location
+Q199,What is the real name of Ras Kass?,John R. Austin II,Ariyan Arslani,Bashir Yagami,"Salt, Pepa",Real Name,Medium,real_name,identity
+Q200,What year was Goodie Mob born?,1991,1960,1998,2001,Birth Year,Easy,birth_year,"bio,origin"
+Q201,Which city or region is Goodie Mob associated with?,"Atlanta, GA","The Bronx, NY","Cordova, TN","Gadsden, AL",Origin,Easy,origin,location
+Q202,What is the real name of Goodie Mob?,"Big Gipp, CeeLo Green, Khujo, T-Mo",Asher Paul Roth,Amir Elkhalifa,Bryson Lashun Potts,Real Name,Medium,real_name,identity
+Q203,What year was Yasiin Bey born?,1973,1972,1997,1975,Birth Year,Easy,birth_year,"bio,origin"
+Q204,Which city or region is Yasiin Bey associated with?,"Brooklyn, NY","Bowling Green, KY","Central Islip, NY","Detroit, MI",Origin,Easy,origin,location
+Q205,What is the real name of Yasiin Bey?,Yasiin Bey,Mach-Hommy,Samara Henderson,Donald McKinley Glover Jr.,Real Name,Medium,real_name,identity
+Q206,"What year was Tyler, The Creator born?",1991,1974,1979,1976,Birth Year,Easy,birth_year,"bio,origin"
+Q207,"Which city or region is Tyler, The Creator associated with?","Los Angeles, CA","Washington, D.C.","San Antonio, TX","Chattanooga, TN",Origin,Easy,origin,location
+Q208,"What is the real name of Tyler, The Creator?",Tyler Gregory Okonma,Lola Chantrelle Mitchell,Christopher Brian Bridges,Sir Robert Bryson Hall II,Real Name,Medium,real_name,identity
+Q209,What year was Chino XL born?,1974,1990,1989,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q210,Which city or region is Chino XL associated with?,"East Orange, NJ","College Park, GA","Virginia Beach, VA","Inglewood, CA",Origin,Easy,origin,location
+Q211,What is the real name of Chino XL?,Derek Keith Barbosa,Christopher Smith Jr.,Various Members,Christopher George Latore Wallace,Real Name,Medium,real_name,identity
+Q212,What year was Lil Scrappy born?,1984,1981,1969,1982,Birth Year,Easy,birth_year,"bio,origin"
+Q213,Which city or region is Lil Scrappy associated with?,"Atlanta, GA","Compton, CA","New Orleans, LA","Memphis, TN",Origin,Easy,origin,location
+Q214,What is the real name of Lil Scrappy?,Darryl Raynard Richardson III,Ermias Joseph Asghedom,Corey Woods,Kanye Omari West,Real Name,Medium,real_name,identity
+Q215,What year was Roxanne Shanté born?,1969,1982,1967,1986,Birth Year,Easy,birth_year,"bio,origin"
+Q216,Which city or region is Roxanne Shanté associated with?,"Queensbridge, NY","Yonkers, NY","Brownsville, Brooklyn","Queens, NY",Origin,Easy,origin,location
+Q217,What is the real name of Roxanne Shanté?,Lolita Shanté Gooden,Victor James Santiago Jr.,Hasben Jones,Jason S Hunter,Real Name,Medium,real_name,identity
+Q218,What year was MF DOOM born?,1971,1979,1983,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q219,Which city or region is MF DOOM associated with?,"Long Island, NY","Buffalo, NY","Memphis, TN","Yonkers, NY",Origin,Easy,origin,location
+Q220,What is the real name of MF DOOM?,Daniel Dumile,Lolita Shanté Gooden,Robert Fitzgerald Diggs,Paul Micheal Slayton,Real Name,Medium,real_name,identity
+Q221,What year was Mac Miller born?,1992,1977,1991,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q222,Which city or region is Mac Miller associated with?,"Pittsburgh, PA","Vallejo, CA","Portsmouth, VA","Cleveland, OH",Origin,Easy,origin,location
+Q223,What is the real name of Mac Miller?,Malcolm James McCormick,Xavier Landum,John R. Austin II,Jayceon Terrell Taylor,Real Name,Medium,real_name,identity
+Q224,What year was Ken Carson born?,2000,1980,1986,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q225,Which city or region is Ken Carson associated with?,"Atlanta, GA","Brownsville, Brooklyn","Saint James, Trinidad and Tobago","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q226,What is the real name of Ken Carson?,Kenyatta Lee Frazier Jr.,Tahj Malik Chandler,Ryan Daniel Montgomery,Webster Gradney Jr.,Real Name,Medium,real_name,identity
+Q227,What year was Lauryn Hill born?,1975,2008,1983,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q228,Which city or region is Lauryn Hill associated with?,"East Orange, NJ","Los Angeles, CA","Kansas City, MO","Long Island, NY",Origin,Easy,origin,location
+Q229,What is the real name of Lauryn Hill?,Lauryn Noelle Hill,Adam Aminé Daniel,"Q-Tip, Phife Dawg",Noah Olivier Smith,Real Name,Medium,real_name,identity
+Q230,What year was Soulja Boy born?,1990,1976,1965,1992,Birth Year,Easy,birth_year,"bio,origin"
+Q231,Which city or region is Soulja Boy associated with?,"Atlanta, GA","Murfreesboro, TN","Bay Area, CA","Kingston, Jamaica",Origin,Easy,origin,location
+Q232,What is the real name of Soulja Boy?,DeAndre Cortez Way,Jeffery Lamar Williams,Darold Durard Brown Ferguson Jr.,Duval Clear,Real Name,Medium,real_name,identity
+Q233,What year was JasonMartin born?,1985,1983,1980,1974,Birth Year,Easy,birth_year,"bio,origin"
+Q234,Which city or region is JasonMartin associated with?,"Compton, CA","Lima, Peru","South Orange, NJ","Mableton, GA",Origin,Easy,origin,location
+Q235,What is the real name of JasonMartin?,Jason L. Martin,Webster Gradney Jr.,Tauheed K. Epps,Jason Douglas Newman,Real Name,Medium,real_name,identity
+Q236,What year was Black Thought born?,1971,1966,2001,1967,Birth Year,Easy,birth_year,"bio,origin"
+Q237,Which city or region is Black Thought associated with?,"Philadelphia, PA","Murfreesboro, TN","Portsmouth, VA","Cape Town, South Africa",Origin,Easy,origin,location
+Q238,What is the real name of Black Thought?,Tariq Luqmaan Trotter,Torrence Ivy Hatch Jr.,Lolita Shanté Gooden,Juaquin James Malphurs,Real Name,Medium,real_name,identity
+Q239,What year was The Pharcyde born?,1989,1975,1994,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q240,Which city or region is The Pharcyde associated with?,"Los Angeles, CA","Winston-Salem, NC","Harlem, NY","Morrisville, PA",Origin,Easy,origin,location
+Q241,What is the real name of The Pharcyde?,"Imani, Slimkid3, Bootie Brown, Fatlip",Samara Henderson,Dwight Equan Grant,Germaine Williams,Real Name,Medium,real_name,identity
+Q242,What year was The Game born?,1979,1990,2008,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q243,Which city or region is The Game associated with?,"Compton, CA","Chicago, IL","Winston-Salem, NC","Kingston, Jamaica",Origin,Easy,origin,location
+Q244,What is the real name of The Game?,Jayceon Terrell Taylor,Jeffrey James Sidhoo,Alvin Nathaniel Joiner,Ricardo Emmanuel Brown,Real Name,Medium,real_name,identity
+Q245,Which city or region is Outkast associated with?,"Atlanta, GA","Brooklyn, NY","Los Angeles, CA","New York, NY",Origin,Easy,origin,location
+Q246,What is the real name of Outkast?,André 3000 & Big Boi,"Treach, Vin Rock",Simmie Sims III,Dwight Arrington Myers,Real Name,Medium,real_name,identity
+Q247,Which city or region is UGK associated with?,"Port Arthur, TX","Louisville, KY","Long Island, NY","Canton, OH",Origin,Easy,origin,location
+Q248,What is the real name of UGK?,"Bun B, Pimp C",Yannick Koffi,Jason L. Martin,Terelle Smith,Real Name,Medium,real_name,identity
+Q249,What year was Papoose born?,1978,1969,1992,1970,Birth Year,Easy,birth_year,"bio,origin"
+Q250,Which city or region is Papoose associated with?,"Brooklyn, NY","Vallejo, CA","Pontiac, MI","Raleigh, NC",Origin,Easy,origin,location
+Q251,What is the real name of Papoose?,Shamele Mackie,Michael Santiago Render,Teren Delvon Jones,Jason Green,Real Name,Medium,real_name,identity
+Q252,What year was Kodak Black born?,1997,1974,1966,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q253,Which city or region is Kodak Black associated with?,"Pompano Beach, FL","Bowling Green, KY",Virginia,"Chattanooga, TN",Origin,Easy,origin,location
+Q254,What is the real name of Kodak Black?,Dieuson Octave,Barry Adrian Reese,Bashir Yagami,Hykeem Jamaal Carter Jr.,Real Name,Medium,real_name,identity
+Q255,What year was Doja Cat born?,1995,1976,1962,1971,Birth Year,Easy,birth_year,"bio,origin"
+Q256,Which city or region is Doja Cat associated with?,"Los Angeles, CA","Ithaca, NY","Manhattan, NY","Cheltenham Township, PA",Origin,Easy,origin,location
+Q257,What is the real name of Doja Cat?,Amala Ratna Zandile Dlamini,Philip Bernard,Victor Kwesi Mensah,"Imani, Slimkid3, Bootie Brown, Fatlip",Real Name,Medium,real_name,identity
+Q258,What year was Rakim born?,1968,1998,1966,1989,Birth Year,Easy,birth_year,"bio,origin"
+Q259,Which city or region is Rakim associated with?,"Wyandanch, NY","Flint, MI","Murfreesboro, TN","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q260,What is the real name of Rakim?,William Michael Griffin Jr.,Dwight Equan Grant,Jason Terrance Phillips,"Pusha T, Malice",Real Name,Medium,real_name,identity
+Q261,What year was Nipsey Hussle born?,1985,1991,1976,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q262,Which city or region is Nipsey Hussle associated with?,"Los Angeles, CA","Columbus, OH","Pontiac, MI","Inglewood, CA",Origin,Easy,origin,location
+Q263,What is the real name of Nipsey Hussle?,Ermias Joseph Asghedom,Kentrell DeSean Gaulden,Jarad Anthony Higgins,Lolita Shanté Gooden,Real Name,Medium,real_name,identity
+Q264,What year was Lil Baby born?,1994,1986,1977,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q265,Which city or region is Lil Baby associated with?,"Atlanta, GA","Virginia Beach, VA","Central Islip, NY","South Orange, NJ",Origin,Easy,origin,location
+Q266,What is the real name of Lil Baby?,Dominique Armani Jones,Leonard Eugene Hendricks III,Dwayne Michael Carter Jr.,"Big Gipp, CeeLo Green, Khujo, T-Mo",Real Name,Medium,real_name,identity
+Q267,What year was Jean Grae born?,1976,1989,1974,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q268,Which city or region is Jean Grae associated with?,"Cape Town, South Africa","Oakland, CA","Edwards Air Force Base, CA","Montgomery, AL",Origin,Easy,origin,location
+Q269,What is the real name of Jean Grae?,Tsidi Ibrahim,Todd Anthony Shaw,"Erick Sermon, PMD",Yasiin Bey,Real Name,Medium,real_name,identity
+Q270,What year was Vic Mensa born?,1993,1958,1978,1979,Birth Year,Easy,birth_year,"bio,origin"
+Q271,Which city or region is Vic Mensa associated with?,"Chicago, IL","Brownsville, Brooklyn","Detroit, MI","Kingston, Jamaica",Origin,Easy,origin,location
+Q272,What is the real name of Vic Mensa?,Victor Kwesi Mensah,Percy Robert Miller Sr.,Wasalu Muhammad Jaco,Jeffery Lamar Williams,Real Name,Medium,real_name,identity
+Q273,What year was Open Mike Eagle born?,1980,1968,1969,1967,Birth Year,Easy,birth_year,"bio,origin"
+Q274,Which city or region is Open Mike Eagle associated with?,"Chicago, IL","Carson, CA","Mableton, GA","Baltimore, MD",Origin,Easy,origin,location
+Q275,What is the real name of Open Mike Eagle?,Michael Eagle II,Corey Woods,"T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Johnathan Jamall Porter,Real Name,Medium,real_name,identity
+Q276,What year was Flo Milli born?,2000,1971,1969,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q277,Which city or region is Flo Milli associated with?,"Mobile, AL","Brooklyn, NY","Irvine, CA","Corona, Queens",Origin,Easy,origin,location
+Q278,What is the real name of Flo Milli?,Tamia Monique Carter,Kanye Omari West,"Phonte, Rapper Big Pooh","Taboo, will.i.am, APL.DE.AP",Real Name,Medium,real_name,identity
+Q279,What year was 50 Cent born?,1975,1999,1958,1987,Birth Year,Easy,birth_year,"bio,origin"
+Q280,Which city or region is 50 Cent associated with?,"Queens, NY","Mobile, AL","Buffalo, NY","Watts, CA",Origin,Easy,origin,location
+Q281,What is the real name of 50 Cent?,Curtis James Jackson III,Angel Del Villar II,Jeffery Lamar Williams,"Taboo, will.i.am, APL.DE.AP",Real Name,Medium,real_name,identity
+Q282,What year was Little Brother born?,2001,2002,1984,2000,Birth Year,Easy,birth_year,"bio,origin"
+Q283,Which city or region is Little Brother associated with?,"Durham, NC","Las Vegas, NV","Canton, OH","Brownsville, Brooklyn",Origin,Easy,origin,location
+Q284,What is the real name of Little Brother?,"Phonte, Rapper Big Pooh",LaRon Louis James Sr.,Cameron Ezike Giles,"Imani, Slimkid3, Bootie Brown, Fatlip",Real Name,Medium,real_name,identity
+Q285,What year was Pusha T born?,1977,1996,1995,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q286,Which city or region is Pusha T associated with?,"Virginia Beach, VA","The Bronx, NY","Pontiac, MI","Yonkers, NY",Origin,Easy,origin,location
+Q287,What is the real name of Pusha T?,Terrence LeVarr Thornton,Radric Delantic Davis,Rakim Athelaston Mayers,Various Members,Real Name,Medium,real_name,identity
+Q288,What year was Lil Durk born?,1992,1984,1991,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q289,Which city or region is Lil Durk associated with?,"Chicago, IL","Fayetteville, NC","London, ON","Queens, NY",Origin,Easy,origin,location
+Q290,What is the real name of Lil Durk?,Durk Derrick Banks,"Wyclef Jean, Ms. Lauryn Hill, Pras",Tracy Lauren Marrow,Anthony Cruz,Real Name,Medium,real_name,identity
+Q291,What year was Big K.R.I.T. born?,1986,1987,1975,1976,Birth Year,Easy,birth_year,"bio,origin"
+Q292,Which city or region is Big K.R.I.T. associated with?,"Meridian, MS","Bronx, NY","Kansas City, MO","Bowling Green, KY",Origin,Easy,origin,location
+Q293,What is the real name of Big K.R.I.T.?,Justin Lewis Scott,"N.A.R.D., Belo Zero, AK-47",Gary Maurice Lucas Jr.,Azealia Amanda Banks,Real Name,Medium,real_name,identity
+Q294,What year was Common born?,1972,1989,1998,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q295,Which city or region is Common associated with?,"Chicago, IL","Atlanta, GA","Durham, NC","Miami, FL",Origin,Easy,origin,location
+Q296,What is the real name of Common?,Lonnie Rashid Lynn,Fatimah Nyeema Warner,Jason Powers,Jonathan Lyndale Kirk,Real Name,Medium,real_name,identity
+Q297,What year was Kid Cudi born?,1984,1962,1989,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q298,Which city or region is Kid Cudi associated with?,"Cleveland, OH","Kansas City, MO","College Park, GA","Harlem, NY",Origin,Easy,origin,location
+Q299,What is the real name of Kid Cudi?,Scott Ramon Seguro Mescudi,Quincy Matthew Hanley,Cordae Amari Dunston,Felipe Andres Coronel,Real Name,Medium,real_name,identity
+Q300,Which city or region is Beastie Boys associated with?,"New York, NY","Yonkers, NY","Inglewood, CA","Philadelphia, PA",Origin,Easy,origin,location
+Q301,What is the real name of Beastie Boys?,"MCA, Mike D, Ad-Rock",Tamia Monique Carter,Jon Kevin Freeman Jr.,Ermias Joseph Asghedom,Real Name,Medium,real_name,identity
+Q302,What year was Asher Roth born?,1985,1960,1986,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q303,Which city or region is Asher Roth associated with?,"Morrisville, PA",Virginia,"Clarksdale, MS","Harlem, NY",Origin,Easy,origin,location
+Q304,What is the real name of Asher Roth?,Asher Paul Roth,Caresha Romeka Brownlee,Ian Matthias Bavitz,Shadrach Kabango,Real Name,Medium,real_name,identity
+Q305,What year was Hieroglyphics born?,1991,1958,1967,2002,Birth Year,Easy,birth_year,"bio,origin"
+Q306,Which city or region is Hieroglyphics associated with?,"Oakland, CA","San Francisco, CA","Wyandanch, NY","Pittsburgh, PA",Origin,Easy,origin,location
+Q307,Which city or region is Coast Contra associated with?,"Los Angeles, CA","Meridian, MS","Mount Vernon, NY","Milwaukee, WI",Origin,Easy,origin,location
+Q308,What is the real name of Coast Contra?,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Victor Kwesi Mensah,Tyler-Justin Anthony Sharpe,Jackman Thomas Harlow,Real Name,Medium,real_name,identity
+Q309,What year was Flo Rida born?,1979,1974,1966,1997,Birth Year,Easy,birth_year,"bio,origin"
+Q310,Which city or region is Flo Rida associated with?,"Miami, FL","Mobile, AL","Kansas City, MO","Watts, CA",Origin,Easy,origin,location
+Q311,What is the real name of Flo Rida?,Tramar Lacel Dillard,Jean-Jacques Cadet,Corey Woods,Bobby Ray Simmons Jr.,Real Name,Medium,real_name,identity
+Q312,What year was Lil Dicky born?,1988,1987,1975,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q313,Which city or region is Lil Dicky associated with?,"Cheltenham Township, PA","Wyandanch, NY","Toronto, ON","Virginia Beach, VA",Origin,Easy,origin,location
+Q314,What is the real name of Lil Dicky?,David Andrew Burd,Destin Choice Route,Aaron Bernard Tyler,Earl Simmons,Real Name,Medium,real_name,identity
+Q315,What year was Joyner Lucas born?,1988,1968,1970,1989,Birth Year,Easy,birth_year,"bio,origin"
+Q316,Which city or region is Joyner Lucas associated with?,"Worcester, MA","Durham, NC","Chicago, IL","Newark, NJ",Origin,Easy,origin,location
+Q317,What is the real name of Joyner Lucas?,Gary Maurice Lucas Jr.,"Salt, Pepa",Belcalis Marlenis Almánzar,Cordae Amari Dunston,Real Name,Medium,real_name,identity
+Q318,What year was Ice-T born?,1958,1991,2008,1985,Birth Year,Easy,birth_year,"bio,origin"
+Q319,Which city or region is Ice-T associated with?,"Newark, NJ","Miami, FL","Bronx, NY","Manhattan, NY",Origin,Easy,origin,location
+Q320,What is the real name of Ice-T?,Tracy Lauren Marrow,Melissa Arnette Elliott,Lonnie Rashid Lynn,Jean-Jacques Cadet,Real Name,Medium,real_name,identity
+Q321,What year was N.O.R.E. born?,1977,1998,1979,1997,Birth Year,Easy,birth_year,"bio,origin"
+Q322,Which city or region is N.O.R.E. associated with?,"Queens, NY","Raleigh, NC","Hempstead, NY","Montgomery, AL",Origin,Easy,origin,location
+Q323,What is the real name of N.O.R.E.?,Victor James Santiago Jr.,Curtis Eugene Cross,Avery Marcel Joshua Jones,Jordan Michael Houston III,Real Name,Medium,real_name,identity
+Q324,What year was Beanie Sigel born?,1974,1981,1985,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q325,Which city or region is Beanie Sigel associated with?,"Philadelphia, PA","Corona, Queens","Long Beach, CA","Winston-Salem, NC",Origin,Easy,origin,location
+Q326,What is the real name of Beanie Sigel?,Dwight Equan Grant,Bashir Yagami,Joseph Guillermo Jones II,Troy Donald Jamerson,Real Name,Medium,real_name,identity
+Q327,What year was Blu born?,1983,1998,1970,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q328,Which city or region is Blu associated with?,"Los Angeles, CA","Chicago, IL","Murfreesboro, TN","Cheltenham Township, PA",Origin,Easy,origin,location
+Q329,What is the real name of Blu?,Johnson Barnes III,Dieuson Octave,Angel Del Villar II,Coi Leray Collins,Real Name,Medium,real_name,identity
+Q330,What year was Freestyle Fellowship born?,1991,1969,1992,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q331,Which city or region is Freestyle Fellowship associated with?,"Los Angeles, CA","Mandeville, Jamaica",Virginia,"Portland, OR",Origin,Easy,origin,location
+Q332,What is the real name of Freestyle Fellowship?,"Aceyalone, P.E.A.C.E., Myka 9, Self Jupiter",Torrence Ivy Hatch Jr.,John David Jackson,Mach-Hommy,Real Name,Medium,real_name,identity
+Q333,What year was Immortal Technique born?,1978,1966,2001,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q334,Which city or region is Immortal Technique associated with?,"Lima, Peru","Cheltenham Township, PA","Miami, FL","Hempstead, NY",Origin,Easy,origin,location
+Q335,What is the real name of Immortal Technique?,Felipe Andres Coronel,Christopher George Latore Wallace,Todd Anthony Shaw,Timothy Elpadaro Thedford,Real Name,Medium,real_name,identity
+Q336,What year was Nappy Roots born?,1995,1983,1991,2000,Birth Year,Easy,birth_year,"bio,origin"
+Q337,Which city or region is Nappy Roots associated with?,"Bowling Green, KY","Long Island, NY","Gary, IN","Manhattan, NY",Origin,Easy,origin,location
+Q338,What is the real name of Nappy Roots?,"Skinny DeVille, B. Stille, Ron Clutch, Fish Scales","Prodigy, Havoc",Barry Adrian Reese,Reginald Noble,Real Name,Medium,real_name,identity
+Q339,What year was RZA born?,1969,1983,1977,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q340,Which city or region is RZA associated with?,"Brownsville, Brooklyn","Fresno, CA","Lima, Peru","Miami Gardens, FL",Origin,Easy,origin,location
+Q341,What is the real name of RZA?,Robert Fitzgerald Diggs,Ian Matthias Bavitz,Dwight Equan Grant,Xavier Landum,Real Name,Medium,real_name,identity
+Q342,What year was Snoop Dogg born?,1971,1987,1985,1980,Birth Year,Easy,birth_year,"bio,origin"
+Q343,Which city or region is Snoop Dogg associated with?,"Long Beach, CA","Murfreesboro, TN","Brownsville, Brooklyn","Durham, NC",Origin,Easy,origin,location
+Q344,What is the real name of Snoop Dogg?,Calvin Cordozar Broadus Jr.,Jeffrey James Sidhoo,Katrina Laverne Taylor,Thebe Neruda Kgositsile,Real Name,Medium,real_name,identity
+Q345,What year was YG born?,1990,2000,1984,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q346,Which city or region is YG associated with?,"Compton, CA","Watts, CA","South Gate, CA","Vallejo, CA",Origin,Easy,origin,location
+Q347,What is the real name of YG?,Keenon Dequan Ray Jackson,Jaylah Ji'mya Hickmon,Kenny Mason,Bryson Lashun Potts,Real Name,Medium,real_name,identity
+Q348,What year was Trick Daddy born?,1973,1995,1962,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q349,Which city or region is Trick Daddy associated with?,"Miami, FL","Baltimore, MD","Fresno, CA","Cheltenham Township, PA",Origin,Easy,origin,location
+Q350,What is the real name of Trick Daddy?,Maurice Samuel Young,Herbert Anthony Stevens IV,"Salt, Pepa",Wasalu Muhammad Jaco,Real Name,Medium,real_name,identity
+Q351,What year was André 3000 born?,1975,1971,1972,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q352,Which city or region is André 3000 associated with?,"Atlanta, GA","Irvine, CA","Clarksdale, MS","Milwaukee, WI",Origin,Easy,origin,location
+Q353,What is the real name of André 3000?,André Lauren Benjamin,Kanye Omari West,Anthony Tremaine Dixson,Robert Fitzgerald Diggs,Real Name,Medium,real_name,identity
+Q354,What year was Crucial Conflict born?,1995,1975,1966,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q355,Which city or region is Crucial Conflict associated with?,"Chicago, IL","Oxnard, CA","Miami, FL","Atlanta, GA",Origin,Easy,origin,location
+Q356,What is the real name of Crucial Conflict?,"Coldhard, Wildstyle, Kilo, Never",Tracy Lauren Marrow,Duval Clear,Various Artists,Real Name,Medium,real_name,identity
+Q357,What year was Mickey Factz born?,1982,1969,1998,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q358,Which city or region is Mickey Factz associated with?,"Bronx, NY","Winston-Salem, NC","Snow Hill, NC","Brookhaven, MS",Origin,Easy,origin,location
+Q359,What is the real name of Mickey Factz?,Mark Anthony Williams Jr.,Keith Farrelle Cozart,Lola Chantrelle Mitchell,Tyler-Justin Anthony Sharpe,Real Name,Medium,real_name,identity
+Q360,What year was Slum Village born?,1996,1962,1969,1967,Birth Year,Easy,birth_year,"bio,origin"
+Q361,Which city or region is Slum Village associated with?,"Detroit, MI","Portland, OR","Corona, Queens","Oakland, CA",Origin,Easy,origin,location
+Q362,What is the real name of Slum Village?,"T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Hykeem Jamaal Carter Jr.,Trevor George Smith Jr.,Kendrick Lamar Duckworth,Real Name,Medium,real_name,identity
+Q363,What year was Tobe Nwigwe born?,1987,1972,1996,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q364,Which city or region is Tobe Nwigwe associated with?,"Houston, TX","New York City, NY","Bronx, NY","Boston, MA",Origin,Easy,origin,location
+Q365,What is the real name of Tobe Nwigwe?,Tobe Nwigwe,Alyssa Michelle Stephens,Russell Santiago,Belcalis Marlenis Almánzar,Real Name,Medium,real_name,identity
+Q366,What year was Kemba born?,1990,1985,1991,1983,Birth Year,Easy,birth_year,"bio,origin"
+Q367,Which city or region is Kemba associated with?,"Bronx, NY","Mitcham, London","Gadsden, AL","Portsmouth, VA",Origin,Easy,origin,location
+Q368,What is the real name of Kemba?,Matthew Jefferson,Dwayne Michael Carter Jr.,Jeremie Damon Pennick,"Bun B, Pimp C",Real Name,Medium,real_name,identity
+Q369,What year was Buddy born?,1993,1976,1999,1974,Birth Year,Easy,birth_year,"bio,origin"
+Q370,Which city or region is Buddy associated with?,"Compton, CA","Central Islip, NY","Baton Rouge, LA","Bronx, NY",Origin,Easy,origin,location
+Q371,What is the real name of Buddy?,Simmie Sims III,Jonathan Lyndale Kirk,Terrence LeVarr Thornton,"T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Real Name,Medium,real_name,identity
+Q372,What year was Coi Leray born?,1997,1960,1993,1992,Birth Year,Easy,birth_year,"bio,origin"
+Q373,Which city or region is Coi Leray associated with?,"Boston, MA","Lima, Peru","Vallejo, CA","Cape Town, South Africa",Origin,Easy,origin,location
+Q374,What is the real name of Coi Leray?,Coi Leray Collins,Carlos Coleman,Vyshonn King Miller,Kenyatta Lee Frazier Jr.,Real Name,Medium,real_name,identity
+Q375,What year was DaBaby born?,1991,1987,1980,1979,Birth Year,Easy,birth_year,"bio,origin"
+Q376,Which city or region is DaBaby associated with?,"Charlotte, NC","Portland, OR","New Orleans, LA","Plantation, FL",Origin,Easy,origin,location
+Q377,What is the real name of DaBaby?,Jonathan Lyndale Kirk,Duval Clear,Felipe Andres Coronel,"Lazy, Krayzie, Bizzy, Wish, and Flesh-n-Bone",Real Name,Medium,real_name,identity
+Q378,What year was Kendrick Lamar born?,1987,1989,1969,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q379,Which city or region is Kendrick Lamar associated with?,"Compton, CA","Queens, NY","Virginia Beach, VA","Dallas, TX",Origin,Easy,origin,location
+Q380,What is the real name of Kendrick Lamar?,Kendrick Lamar Duckworth,Dominique Armani Jones,Nayvadius DeMun Wilburn,Artist Julius Dubose,Real Name,Medium,real_name,identity
+Q381,What year was Paul Wall born?,1981,1966,1992,1965,Birth Year,Easy,birth_year,"bio,origin"
+Q382,Which city or region is Paul Wall associated with?,"Houston, TX","Fresno, CA","Brooklyn, NY","Bay Area, CA",Origin,Easy,origin,location
+Q383,What is the real name of Paul Wall?,Paul Micheal Slayton,Brandon Paak Anderson,Angel Del Villar II,Alvin Nathaniel Joiner,Real Name,Medium,real_name,identity
+Q384,What year was Del the Funky Homosapien born?,1972,1995,1962,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q385,Which city or region is Del the Funky Homosapien associated with?,"Oakland, CA","New York City, NY","Durham, NC","Vallejo, CA",Origin,Easy,origin,location
+Q386,What is the real name of Del the Funky Homosapien?,Teren Delvon Jones,Reminisce Kioni Mackie,Lavell William Crump,Ray Vaughn Jr.,Real Name,Medium,real_name,identity
+Q387,What year was MC Lyte born?,1970,1980,1998,1997,Birth Year,Easy,birth_year,"bio,origin"
+Q388,Which city or region is MC Lyte associated with?,"Brooklyn, NY","New York City, NY","Milwaukee, WI","Gary, IN",Origin,Easy,origin,location
+Q389,What is the real name of MC Lyte?,Lana Michele Moorer,Quincy Matthew Hanley,Tyler-Justin Anthony Sharpe,Tyler Gregory Okonma,Real Name,Medium,real_name,identity
+Q390,What year was Playboi Carti born?,1996,1994,1978,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q391,Which city or region is Playboi Carti associated with?,"Atlanta, GA","Winston-Salem, NC","Hempstead, NY","Cheltenham Township, PA",Origin,Easy,origin,location
+Q392,What is the real name of Playboi Carti?,Jordan Terrell Carter,Sir Robert Bryson Hall II,Kenyatta Lee Frazier Jr.,Dominique Armani Jones,Real Name,Medium,real_name,identity
+Q393,What year was Freeway born?,1978,1997,1967,1974,Birth Year,Easy,birth_year,"bio,origin"
+Q394,Which city or region is Freeway associated with?,"Philadelphia, PA","Newark, NJ","Oxnard, CA","St. Louis, MO",Origin,Easy,origin,location
+Q395,What is the real name of Freeway?,Leslie Edward Pridgen,Earl Tywone Stevens,Michael Lawrence Tyler,Lakeyah Danaee Robinson,Real Name,Medium,real_name,identity
+Q396,What year was Jay Electronica born?,1976,1998,2002,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q397,Which city or region is Jay Electronica associated with?,"New Orleans, LA","Fayetteville, NC","Hempstead, NY","Staten Island, NY",Origin,Easy,origin,location
+Q398,What is the real name of Jay Electronica?,Timothy Elpadaro Thedford,Jatavia Shakara Johnson,Sean Michael Leonard Anderson,Kamaal Ibn John Fareed,Real Name,Medium,real_name,identity
+Q399,What year was Wale born?,1984,1991,1997,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q400,Which city or region is Wale associated with?,"Washington, D.C.","Philadelphia, PA","Savannah, GA","Spanish Harlem, NY",Origin,Easy,origin,location
+Q401,What is the real name of Wale?,Olubowale Victor Akintimehin,Tauheed K. Epps,Nashid Sulaiman,Simmie Sims III,Real Name,Medium,real_name,identity
+Q402,What year was Queen Latifah born?,1970,1978,1977,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q403,Which city or region is Queen Latifah associated with?,"Newark, NJ","Long Beach, CA","Mitcham, London","San Francisco, CA",Origin,Easy,origin,location
+Q404,What is the real name of Queen Latifah?,Dana Elaine Owens,Zaire Stewart,Ariyan Arslani,Paul Micheal Slayton,Real Name,Medium,real_name,identity
+Q405,What year was Tech N9ne born?,1971,2008,1984,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q406,Which city or region is Tech N9ne associated with?,"Kansas City, MO","Vallejo, CA","Staten Island, NY","Portsmouth, VA",Origin,Easy,origin,location
+Q407,What is the real name of Tech N9ne?,Aaron Dontez Yates,Symere Bysil Woods,Angel Del Villar II,Tramar Lacel Dillard,Real Name,Medium,real_name,identity
+Q408,What year was Samara Cyn born?,1998,1989,1978,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q409,Which city or region is Samara Cyn associated with?,"Murfreesboro, TN","Miami Gardens, FL","Atlanta, GA","Irvine, CA",Origin,Easy,origin,location
+Q410,What is the real name of Samara Cyn?,Samara Henderson,Rakim Athelaston Mayers,"Bun B, Pimp C","DJ Babu, Evidence, Rakaa Iriscience",Real Name,Medium,real_name,identity
+Q411,What year was Big L born?,1974,1972,1975,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q412,Which city or region is Big L associated with?,"Harlem, NY","Central Islip, NY","Tampa, FL","Yonkers, NY",Origin,Easy,origin,location
+Q413,What is the real name of Big L?,Lamont Coleman,Thebe Neruda Kgositsile,Ray Vaughn Jr.,Radric Delantic Davis,Real Name,Medium,real_name,identity
+Q414,What year was Webbie born?,1985,1986,1984,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q415,Which city or region is Webbie associated with?,"Baton Rouge, LA","Jamaica, Queens","Miami, FL","Long Beach, CA",Origin,Easy,origin,location
+Q416,What is the real name of Webbie?,Webster Gradney Jr.,Fredrick Jamel Tipton,Johnathan Jamall Porter,Quavious Keyate Marshall,Real Name,Medium,real_name,identity
+Q417,What year was Q-Tip born?,1970,1966,1980,2002,Birth Year,Easy,birth_year,"bio,origin"
+Q418,Which city or region is Q-Tip associated with?,"Queens, NY","Raleigh, NC","Minot, ND","Richmond, VA",Origin,Easy,origin,location
+Q419,What is the real name of Q-Tip?,Kamaal Ibn John Fareed,Quincy Matthew Hanley,Tracy Lauren Marrow,Jarad Anthony Higgins,Real Name,Medium,real_name,identity
+Q420,What year was Heavy D born?,1967,2001,1966,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q421,Which city or region is Heavy D associated with?,"Mandeville, Jamaica","Lima, Peru","Edwards Air Force Base, CA","Montgomery, AL",Origin,Easy,origin,location
+Q422,What is the real name of Heavy D?,Dwight Arrington Myers,LaRon Louis James Sr.,Fatimah Nyeema Warner,Nasir bin Olu Dara Jones,Real Name,Medium,real_name,identity
+Q423,What year was Too $hort born?,1966,1986,1976,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q424,Which city or region is Too $hort associated with?,"Oakland, CA","Inglewood, CA","Saint James, Trinidad and Tobago","Worcester, MA",Origin,Easy,origin,location
+Q425,What is the real name of Too $hort?,Todd Anthony Shaw,Nayvadius DeMun Wilburn,Ryan Daniel Montgomery,Kendrick Lamar Duckworth,Real Name,Medium,real_name,identity
+Q426,What year was Chika born?,1997,1983,1981,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q427,Which city or region is Chika associated with?,"Montgomery, AL","Oxnard, CA","Flint, MI","Long Island, NY",Origin,Easy,origin,location
+Q428,What is the real name of Chika?,Jane Chika Oranika,Fatimah Nyeema Warner,Megan Jovon Ruth Pete,Ryan Daniel Montgomery,Real Name,Medium,real_name,identity
+Q429,What year was Azealia Banks born?,1991,1971,1980,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q430,Which city or region is Azealia Banks associated with?,"Harlem, NY","New York City, NY","Saint James, Trinidad and Tobago","Wyandanch, NY",Origin,Easy,origin,location
+Q431,What is the real name of Azealia Banks?,Azealia Amanda Banks,Tamia Monique Carter,Germaine Williams,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Real Name,Medium,real_name,identity
+Q432,What year was Lil Uzi Vert born?,1995,1984,1999,1983,Birth Year,Easy,birth_year,"bio,origin"
+Q433,Which city or region is Lil Uzi Vert associated with?,"Philadelphia, PA","Corona, Queens","Cheltenham Township, PA","Minot, ND",Origin,Easy,origin,location
+Q434,What is the real name of Lil Uzi Vert?,Symere Bysil Woods,Denzel Rae Don Curry,Shawntae Harris-Dupart,Robert Fitzgerald Diggs,Real Name,Medium,real_name,identity
+Q435,Which city or region is Naughty By Nature associated with?,"East Orange, NJ","Louisville, KY","Pompano Beach, FL","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q436,What is the real name of Naughty By Nature?,"Treach, Vin Rock",Brandon Paak Anderson,Donald McKinley Glover Jr.,Lamont Coleman,Real Name,Medium,real_name,identity
+Q437,What year was Eve born?,1978,1995,1981,1965,Birth Year,Easy,birth_year,"bio,origin"
+Q438,Which city or region is Eve associated with?,"Philadelphia, PA","Milwaukee, WI","Wiesbaden, Germany","Harlem, NY",Origin,Easy,origin,location
+Q439,What is the real name of Eve?,Eve Jihan Cooper,John David Jackson,Lolita Shanté Gooden,Jayson Andrew Jenkins,Real Name,Medium,real_name,identity
+Q440,What year was Leikeli47 born?,1990,1992,1979,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q441,Which city or region is Leikeli47 associated with?,Virginia,"Long Beach, CA","New York, NY","Fayetteville, NC",Origin,Easy,origin,location
+Q442,What is the real name of Leikeli47?,Hasben Jones,Victor Kwesi Mensah,"Talib Kweli, Yasiin Bey",Jaylah Ji'mya Hickmon,Real Name,Medium,real_name,identity
+Q443,What year was Aminé born?,1994,1973,1982,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q444,Which city or region is Aminé associated with?,"Portland, OR","Minot, ND","Central Islip, NY","Montgomery, AL",Origin,Easy,origin,location
+Q445,What is the real name of Aminé?,Adam Aminé Daniel,Angel Del Villar II,John R. Austin II,"Joseph Simmons, Darryl McDaniels, Jason Mizell",Real Name,Medium,real_name,identity
+Q446,What year was Jay-Z born?,1969,1971,1983,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q447,Which city or region is Jay-Z associated with?,"Brooklyn, NY","Meridian, MS","Mitcham, London","Inglewood, CA",Origin,Easy,origin,location
+Q448,What is the real name of Jay-Z?,Shawn Corey Carter,Thebe Neruda Kgositsile,Russell Santiago,Rashia Tashan Fisher,Real Name,Medium,real_name,identity
+Q449,What year was Westside Boogie born?,1989,1962,1980,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q450,Which city or region is Westside Boogie associated with?,"Compton, CA","Atlanta, GA","Virginia Beach, VA","Saint James, Trinidad and Tobago",Origin,Easy,origin,location
+Q451,What is the real name of Westside Boogie?,Anthony Tremaine Dixson,Michael Taylor Perretta,Inga DeCarlo Fung Marchand,Eve Jihan Cooper,Real Name,Medium,real_name,identity
+Q452,What year was Kamaiyah born?,1992,1960,1990,1976,Birth Year,Easy,birth_year,"bio,origin"
+Q453,Which city or region is Kamaiyah associated with?,"Oakland, CA","Pittsburgh, PA","Brookhaven, MS","New York City, NY",Origin,Easy,origin,location
+Q454,What is the real name of Kamaiyah?,Kamaiyah Jamesha Johnson,Donald McKinley Glover Jr.,Mach-Hommy,Shyniece Thomas,Real Name,Medium,real_name,identity
+Q455,What year was Ray Vaughn born?,1999,2002,1978,1971,Birth Year,Easy,birth_year,"bio,origin"
+Q456,Which city or region is Ray Vaughn associated with?,"Carson, CA","New York City, NY","St. Louis, MO","Mandeville, Jamaica",Origin,Easy,origin,location
+Q457,What is the real name of Ray Vaughn?,Ray Vaughn Jr.,Keith Farrelle Cozart,Joseph Anthony Budden II,Robert Rihmeek Williams,Real Name,Medium,real_name,identity
+Q458,What year was Eminem born?,1972,1986,1994,1967,Birth Year,Easy,birth_year,"bio,origin"
+Q459,Which city or region is Eminem associated with?,"Detroit, MI","Mitcham, London","East Orange, NJ","San Antonio, TX",Origin,Easy,origin,location
+Q460,What is the real name of Eminem?,Marshall Bruce Mathers III,Olubowale Victor Akintimehin,Inga DeCarlo Fung Marchand,Tobe Nwigwe,Real Name,Medium,real_name,identity
+Q461,What year was Mach-Hommy born?,1977,1958,1983,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q462,Which city or region is Mach-Hommy associated with?,"Newark, NJ","Washington, D.C.","Oakland, CA","Cordova, TN",Origin,Easy,origin,location
+Q463,What is the real name of Mach-Hommy?,Mach-Hommy,Tramar Lacel Dillard,"Q-Tip, Phife Dawg",Reginald Noble,Real Name,Medium,real_name,identity
+Q464,What year was Silkk the Shocker born?,1975,1958,1987,1970,Birth Year,Easy,birth_year,"bio,origin"
+Q465,Which city or region is Silkk the Shocker associated with?,"New Orleans, LA","Portsmouth, VA","Morrisville, PA","Staten Island, NY",Origin,Easy,origin,location
+Q466,What is the real name of Silkk the Shocker?,Vyshonn King Miller,David R. Styles,Radric Delantic Davis,Jackman Thomas Harlow,Real Name,Medium,real_name,identity
+Q467,Which city or region is Mobb Deep associated with?,"Queens, NY","Oxnard, CA","Minneapolis, Minnesota","Baltimore, MD",Origin,Easy,origin,location
+Q468,What is the real name of Mobb Deep?,"Prodigy, Havoc","Coldhard, Wildstyle, Kilo, Never",Various Artists,Radric Delantic Davis,Real Name,Medium,real_name,identity
+Q469,What year was Juicy J born?,1975,1991,1972,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q470,Which city or region is Juicy J associated with?,"Memphis, TN","San Antonio, TX","Queens, NY","Snow Hill, NC",Origin,Easy,origin,location
+Q471,What is the real name of Juicy J?,Jordan Michael Houston III,Santiago Leyva,Sean Michael Leonard Anderson,Denzel Rae Don Curry,Real Name,Medium,real_name,identity
+Q472,What year was Sa-Roc born?,1981,1983,1962,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q473,Which city or region is Sa-Roc associated with?,"Washington, D.C.","Edwards Air Force Base, CA","Flint, MI","New York, NY",Origin,Easy,origin,location
+Q474,What is the real name of Sa-Roc?,Assata Perkins,Teren Delvon Jones,Jo-Vaughn Virginie Scott,Inga DeCarlo Fung Marchand,Real Name,Medium,real_name,identity
+Q475,What year was J.I.D born?,1990,1962,1984,1976,Birth Year,Easy,birth_year,"bio,origin"
+Q476,Which city or region is J.I.D associated with?,"Atlanta, GA","Cleveland, OH","Morrisville, PA","Philadelphia, PA",Origin,Easy,origin,location
+Q477,What is the real name of J.I.D?,Destin Choice Route,"Joseph Simmons, Darryl McDaniels, Jason Mizell","A-Plus, Phesto, Opio, Tajai",Juaquin James Malphurs,Real Name,Medium,real_name,identity
+Q478,What year was Keith Murray born?,1974,1991,1998,2000,Birth Year,Easy,birth_year,"bio,origin"
+Q479,Which city or region is Keith Murray associated with?,"Central Islip, NY","Jamaica, Queens","Boston, MA","Mandeville, Jamaica",Origin,Easy,origin,location
+Q480,What is the real name of Keith Murray?,Keith Omar Murray,Rashia Tashan Fisher,Donald McKinley Glover Jr.,Dana Elaine Owens,Real Name,Medium,real_name,identity
+Q481,What year was Dave East born?,1988,1974,1992,1975,Birth Year,Easy,birth_year,"bio,origin"
+Q482,Which city or region is Dave East associated with?,"New York, NY","Buffalo, NY","Gadsden, AL","Dallas, TX",Origin,Easy,origin,location
+Q483,What is the real name of Dave East?,David Lawrence Brewster Jr.,Jaime Stuart Meline,Kenyatta Lee Frazier Jr.,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Real Name,Medium,real_name,identity
+Q484,What year was Rico Nasty born?,1997,1962,1999,2001,Birth Year,Easy,birth_year,"bio,origin"
+Q485,Which city or region is Rico Nasty associated with?,"New York City, NY","Minot, ND","Baton Rouge, LA","Manhattan, NY",Origin,Easy,origin,location
+Q486,What is the real name of Rico Nasty?,Maria-Cecilia Simone Kelly,Lawrence Parker,Sergio Giavanni Kitchens,Anthony Tremaine Dixson,Real Name,Medium,real_name,identity
+Q487,What year was Method Man born?,1971,1972,1969,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q488,Which city or region is Method Man associated with?,"Hempstead, NY","New York, NY","Inglewood, CA","Jamaica, Queens",Origin,Easy,origin,location
+Q489,What is the real name of Method Man?,Clifford Smith Jr.,Fredrick Jamel Tipton,Jeremie Damon Pennick,Maurice Samuel Young,Real Name,Medium,real_name,identity
+Q490,What year was One Be Lo born?,1976,1971,1993,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q491,Which city or region is One Be Lo associated with?,"Pontiac, MI","Minot, ND","Las Vegas, NV","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q492,What is the real name of One Be Lo?,Nashid Sulaiman,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Shamele Mackie,Antonio Hardy,Real Name,Medium,real_name,identity
+Q493,What year was Jay Worthy born?,1984,1989,1960,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q494,Which city or region is Jay Worthy associated with?,"Compton, CA","South Orange, NJ","Queensbridge, NY","Brookhaven, MS",Origin,Easy,origin,location
+Q495,What is the real name of Jay Worthy?,Jeffrey James Sidhoo,Joseph Antonio Cartagena,Coi Leray Collins,Vincent Jamal Staples,Real Name,Medium,real_name,identity
+Q496,What year was Benny the Butcher born?,1984,1981,1986,1990,Birth Year,Easy,birth_year,"bio,origin"
+Q497,Which city or region is Benny the Butcher associated with?,"Buffalo, NY","Virginia Beach, VA","Watts, CA","South Orange, NJ",Origin,Easy,origin,location
+Q498,What is the real name of Benny the Butcher?,Jeremie Damon Pennick,Earl Simmons,Ariyan Arslani,Ian Matthias Bavitz,Real Name,Medium,real_name,identity
+Q499,What year was NWA born?,1986,1989,1962,1990,Birth Year,Easy,birth_year,"bio,origin"
+Q500,Which city or region is NWA associated with?,"Compton, CA","Oxnard, CA","College Park, GA","Miami Gardens, FL",Origin,Easy,origin,location
+Q501,What is the real name of NWA?,Various Artists,Jermaine Lamarr Cole,John David Jackson,Jean-Jacques Cadet,Real Name,Medium,real_name,identity
+Q502,What year was Loaded Lux born?,1984,1996,1975,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q503,Which city or region is Loaded Lux associated with?,"Harlem, NY","Bronx, NY","Oxnard, CA","Tampa, FL",Origin,Easy,origin,location
+Q504,What is the real name of Loaded Lux?,John Lucks,Asher Paul Roth,Ray Vaughn Jr.,"Pusha T, Malice",Real Name,Medium,real_name,identity
+Q505,What year was Black Star born?,1996,1982,1968,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q506,Which city or region is Black Star associated with?,"Brooklyn, NY","College Park, GA","Washington, D.C.","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q507,What is the real name of Black Star?,"Talib Kweli, Yasiin Bey",Jordan Terrell Carter,"Posdnuos, Trugoy, Maseo",James Dewitt Yancey,Real Name,Medium,real_name,identity
+Q508,What year was Cam'ron born?,1976,1990,1974,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q509,Which city or region is Cam'ron associated with?,"Harlem, NY","Cleveland, OH","Fayetteville, NC","Savannah, GA",Origin,Easy,origin,location
+Q510,What is the real name of Cam'ron?,Cameron Ezike Giles,"Treach, Vin Rock","Salt, Pepa",David R. Styles,Real Name,Medium,real_name,identity
+Q511,What year was Inspectah Deck born?,1970,2002,1973,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q512,Which city or region is Inspectah Deck associated with?,"Brooklyn, NY","Cape Town, South Africa","Ithaca, NY","Houston, TX",Origin,Easy,origin,location
+Q513,What is the real name of Inspectah Deck?,Jason S Hunter,Shad Gregory Moss,Michael Eagle II,Caresha Romeka Brownlee,Real Name,Medium,real_name,identity
+Q514,What year was Ludacris born?,1977,1989,1990,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q515,Which city or region is Ludacris associated with?,"Atlanta, GA","Snow Hill, NC","South Gate, CA","Central Islip, NY",Origin,Easy,origin,location
+Q516,What is the real name of Ludacris?,Christopher Brian Bridges,Paul Micheal Slayton,David Lawrence Brewster Jr.,Stanley Kirk Burrell,Real Name,Medium,real_name,identity
+Q517,What year was Missy Elliott born?,1971,1989,1973,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q518,Which city or region is Missy Elliott associated with?,"Portsmouth, VA","Bowling Green, KY","Watts, CA","Mitcham, London",Origin,Easy,origin,location
+Q519,What is the real name of Missy Elliott?,Melissa Arnette Elliott,Russell Santiago,Ermias Joseph Asghedom,Jason Douglas Newman,Real Name,Medium,real_name,identity
+Q520,What year was Cordae born?,1997,1958,1987,1974,Birth Year,Easy,birth_year,"bio,origin"
+Q521,Which city or region is Cordae associated with?,"Raleigh, NC","Murfreesboro, TN","Richmond, VA","Bowling Green, KY",Origin,Easy,origin,location
+Q522,What is the real name of Cordae?,Cordae Amari Dunston,Brandon Paak Anderson,Shéyaa Bin Abraham-Joseph,"Wyclef Jean, Ms. Lauryn Hill, Pras",Real Name,Medium,real_name,identity
+Q523,What year was Tierra Whack born?,1995,2002,1986,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q524,Which city or region is Tierra Whack associated with?,"Philadelphia, PA","Brookhaven, MS","Jamaica, Queens","London, ON",Origin,Easy,origin,location
+Q525,What is the real name of Tierra Whack?,Tierra Helena Whack,Dana Elaine Owens,Barry Adrian Reese,Clifford Smith Jr.,Real Name,Medium,real_name,identity
+Q526,What year was Uncle Murda born?,1980,1989,1975,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q527,Which city or region is Uncle Murda associated with?,"Brooklyn, NY","Brownsville, Brooklyn","Fresno, CA","New Orleans, LA",Origin,Easy,origin,location
+Q528,What is the real name of Uncle Murda?,Leonard Grant,"DJ Babu, Evidence, Rakaa Iriscience",Kamaal Ibn John Fareed,"Posdnuos, Trugoy, Maseo",Real Name,Medium,real_name,identity
+Q529,What year was Big Daddy Kane born?,1968,1971,1992,1998,Birth Year,Easy,birth_year,"bio,origin"
+Q530,Which city or region is Big Daddy Kane associated with?,"Brooklyn, NY","Winston-Salem, NC","Savannah, GA",Virginia,Origin,Easy,origin,location
+Q531,What is the real name of Big Daddy Kane?,Antonio Hardy,Amala Ratna Zandile Dlamini,Kenny Mason,"T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Real Name,Medium,real_name,identity
+Q532,What year was Homeboy Sandman born?,1980,1988,1990,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q533,Which city or region is Homeboy Sandman associated with?,"Queens, NY","Harlem, NY","Virginia Beach, VA","Chicago, IL",Origin,Easy,origin,location
+Q534,What is the real name of Homeboy Sandman?,Angel Del Villar II,Jeffery Lamar Williams,Herbert Anthony Stevens IV,Victor James Santiago Jr.,Real Name,Medium,real_name,identity
+Q535,What year was YoungBoy Never Broke Again born?,1999,1994,1982,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q536,Which city or region is YoungBoy Never Broke Again associated with?,"Baton Rouge, LA","Memphis, TN","Spanish Harlem, NY","Mobile, AL",Origin,Easy,origin,location
+Q537,What is the real name of YoungBoy Never Broke Again?,Kentrell DeSean Gaulden,Richard Martin Lloyd Walters,Jayson Andrew Jenkins,Joseph Anthony Budden II,Real Name,Medium,real_name,identity
+Q538,What year was Mystikal born?,1970,1978,1968,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q539,Which city or region is Mystikal associated with?,"New Orleans, LA","Brooklyn, NY","Edwards Air Force Base, CA","Staten Island, NY",Origin,Easy,origin,location
+Q540,What is the real name of Mystikal?,Michael Lawrence Tyler,Dwight Arrington Myers,Keith Omar Murray,Oswin Benjamin,Real Name,Medium,real_name,identity
+Q541,What year was Lola Brooke born?,1994,1980,1972,1965,Birth Year,Easy,birth_year,"bio,origin"
+Q542,Which city or region is Lola Brooke associated with?,"Brooklyn, NY","Philadelphia, PA","Virginia Beach, VA","Irvine, CA",Origin,Easy,origin,location
+Q543,What is the real name of Lola Brooke?,Shyniece Thomas,Russell Tyrone Jones,"Bun B, Pimp C","Taboo, will.i.am, APL.DE.AP",Real Name,Medium,real_name,identity
+Q544,Which city or region is Cypress Hill associated with?,"South Gate, CA","Morrisville, PA","Rockville, MD","Buffalo, NY",Origin,Easy,origin,location
+Q545,What year was Kxng Crooked born?,1978,1992,1991,1983,Birth Year,Easy,birth_year,"bio,origin"
+Q546,Which city or region is Kxng Crooked associated with?,"Long Beach, CA","Clarksdale, MS","Detroit, MI","Baton Rouge, LA",Origin,Easy,origin,location
+Q547,What is the real name of Kxng Crooked?,Dominick Antron Wickliffe,"Posdnuos, Trugoy, Maseo",Jason Douglas Newman,Simmie Sims III,Real Name,Medium,real_name,identity
+Q548,What year was Grafh born?,1982,1966,1996,1987,Birth Year,Easy,birth_year,"bio,origin"
+Q549,Which city or region is Grafh associated with?,"Jamaica, Queens","Harlem, NY","Inglewood, CA","Buffalo, NY",Origin,Easy,origin,location
+Q550,What is the real name of Grafh?,Philip Bernard,Noah Olivier Smith,Shyniece Thomas,Curtis Eugene Cross,Real Name,Medium,real_name,identity
+Q551,What year was Rapsody born?,1983,1966,1962,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q552,Which city or region is Rapsody associated with?,"Snow Hill, NC","Atlanta, GA","Cordova, TN","Oxnard, CA",Origin,Easy,origin,location
+Q553,What is the real name of Rapsody?,Marlanna Evans,Cordae Amari Dunston,Shawntae Harris-Dupart,Enongo Lumumba-Kasongo,Real Name,Medium,real_name,identity
+Q554,What year was A Boogie wit da Hoodie born?,1995,1991,1975,1986,Birth Year,Easy,birth_year,"bio,origin"
+Q555,Which city or region is A Boogie wit da Hoodie associated with?,"The Bronx, NY","Rockville, MD","Long Beach, CA","Vallejo, CA",Origin,Easy,origin,location
+Q556,What is the real name of A Boogie wit da Hoodie?,Artist Julius Dubose,Dennis David Coles,"Chuck D, Flavor Flav",Rashia Tashan Fisher,Real Name,Medium,real_name,identity
+Q557,What year was Ja Rule born?,1976,1974,1981,2001,Birth Year,Easy,birth_year,"bio,origin"
+Q558,Which city or region is Ja Rule associated with?,"Queens, NY","Hempstead, NY","New York City, NY","Minneapolis, Minnesota",Origin,Easy,origin,location
+Q559,What is the real name of Ja Rule?,Jeffrey Bruce Atkins,Willard Carroll Smith Jr.,Destin Choice Route,André 3000 & Big Boi,Real Name,Medium,real_name,identity
+Q560,What year was Blueface born?,1997,1974,1972,1980,Birth Year,Easy,birth_year,"bio,origin"
+Q561,Which city or region is Blueface associated with?,"Los Angeles, CA","Plantation, FL","Charlotte, NC","Queens, NY",Origin,Easy,origin,location
+Q562,What is the real name of Blueface?,Johnathan Jamall Porter,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Damian Robert Nesta Marley,Fatimah Nyeema Warner,Real Name,Medium,real_name,identity
+Q563,What year was Shad born?,1982,1974,1997,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q564,Which city or region is Shad associated with?,"London, ON","Durham, NC","Montgomery, AL","New York, NY",Origin,Easy,origin,location
+Q565,What is the real name of Shad?,Shadrach Kabango,Andre Louis Hicks,Radric Delantic Davis,"Salt, Pepa",Real Name,Medium,real_name,identity
+Q566,What year was Arrested Development born?,1988,1968,1985,1986,Birth Year,Easy,birth_year,"bio,origin"
+Q567,Which city or region is Arrested Development associated with?,"Atlanta, GA","Oakland, CA","Hempstead, NY","Miami Gardens, FL",Origin,Easy,origin,location
+Q568,What is the real name of Arrested Development?,Various Artists,Mach-Hommy,Jo-Vaughn Virginie Scott,Jordan Terrell Carter,Real Name,Medium,real_name,identity
+Q569,What year was Mick Jenkins born?,1991,1970,2001,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q570,Which city or region is Mick Jenkins associated with?,"Chicago, IL","Brownsville, Brooklyn","Plantation, FL","Philadelphia, PA",Origin,Easy,origin,location
+Q571,What is the real name of Mick Jenkins?,Jayson Andrew Jenkins,"Fredro Starr, Sticky Fingaz, Sonny Seeza, Big DS",Keith Omar Murray,Yasiin Bey,Real Name,Medium,real_name,identity
+Q572,Which city or region is Fugees associated with?,"South Orange, NJ","Murfreesboro, TN","Pittsburgh, PA","Savannah, GA",Origin,Easy,origin,location
+Q573,What is the real name of Fugees?,"Wyclef Jean, Ms. Lauryn Hill, Pras","Fredro Starr, Sticky Fingaz, Sonny Seeza, Big DS",Stanley Kirk Burrell,Tamia Monique Carter,Real Name,Medium,real_name,identity
+Q574,What year was Ice Cube born?,1969,1981,1979,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q575,Which city or region is Ice Cube associated with?,"Los Angeles, CA","Mandeville, Jamaica","Jamaica, Queens","Mitcham, London",Origin,Easy,origin,location
+Q576,What is the real name of Ice Cube?,O'Shea Jackson Sr.,Megan Jovon Ruth Pete,LaRon Louis James Sr.,Stayve Jerome Thomas,Real Name,Medium,real_name,identity
+Q577,What year was Lil Wayne born?,1982,1970,1968,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q578,Which city or region is Lil Wayne associated with?,"New Orleans, LA","Minot, ND","Las Vegas, NV","Plantation, FL",Origin,Easy,origin,location
+Q579,What is the real name of Lil Wayne?,Dwayne Michael Carter Jr.,"Fredro Starr, Sticky Fingaz, Sonny Seeza, Big DS",Jarad Anthony Higgins,Yannick Koffi,Real Name,Medium,real_name,identity
+Q580,What year was Joey Bada$$ born?,1995,1976,1965,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q581,Which city or region is Joey Bada$$ associated with?,"Brooklyn, NY","Bowling Green, KY","Durham, NC","Savannah, GA",Origin,Easy,origin,location
+Q582,What is the real name of Joey Bada$$?,Jo-Vaughn Virginie Scott,"A-Plus, Phesto, Opio, Tajai","Fredro Starr, Sticky Fingaz, Sonny Seeza, Big DS",Marshall Bruce Mathers III,Real Name,Medium,real_name,identity
+Q583,What year was Rah Digga born?,1974,1987,1993,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q584,Which city or region is Rah Digga associated with?,"Newark, NJ","Baton Rouge, LA","Central Islip, NY","Kansas City, MO",Origin,Easy,origin,location
+Q585,What is the real name of Rah Digga?,Rashia Tashan Fisher,Michael Wayne Atha,Terius Gray,Dieuson Octave,Real Name,Medium,real_name,identity
+Q586,What year was Juelz Santana born?,1982,1967,2008,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q587,Which city or region is Juelz Santana associated with?,"Harlem, NY","New York City, NY","Las Vegas, NV","Louisville, KY",Origin,Easy,origin,location
+Q588,What is the real name of Juelz Santana?,LaRon Louis James Sr.,Ian Matthias Bavitz,"Wyclef Jean, Ms. Lauryn Hill, Pras",Melissa Arnette Elliott,Real Name,Medium,real_name,identity
+Q589,What year was Damian Marley born?,1978,1966,1972,1979,Birth Year,Easy,birth_year,"bio,origin"
+Q590,Which city or region is Damian Marley associated with?,"Kingston, Jamaica","New York, NY","Miami Gardens, FL","Brookhaven, MS",Origin,Easy,origin,location
+Q591,What is the real name of Damian Marley?,Damian Robert Nesta Marley,Cameron Ezike Giles,Philip Bernard,Corey Woods,Real Name,Medium,real_name,identity
+Q592,What year was Travis Scott born?,1991,1990,1965,1984,Birth Year,Easy,birth_year,"bio,origin"
+Q593,Which city or region is Travis Scott associated with?,"Houston, TX","Toronto, ON","Dallas, TX","Miami Gardens, FL",Origin,Easy,origin,location
+Q594,What is the real name of Travis Scott?,Jacques Bermon Webster II,Clifford Joseph Harris Jr.,Avery Marcel Joshua Jones,Nathaniel Thomas Wilson,Real Name,Medium,real_name,identity
+Q595,What year was The Notorious B.I.G. born?,1972,2008,1995,1985,Birth Year,Easy,birth_year,"bio,origin"
+Q596,Which city or region is The Notorious B.I.G. associated with?,"Brooklyn, NY","Oakland, CA","Queensbridge, NY","London, ON",Origin,Easy,origin,location
+Q597,What is the real name of The Notorious B.I.G.?,Christopher George Latore Wallace,Miles Parks McCollum,Alvin Lamar Worthy,Adam Aminé Daniel,Real Name,Medium,real_name,identity
+Q598,What year was Ghostface Killah born?,1970,1991,1971,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q599,Which city or region is Ghostface Killah associated with?,"Staten Island, NY","Virginia Beach, VA","Canton, OH","Cleveland, OH",Origin,Easy,origin,location
+Q600,What is the real name of Ghostface Killah?,Dennis David Coles,Bryson Lashun Potts,James Todd Smith,Jayceon Terrell Taylor,Real Name,Medium,real_name,identity
+Q601,What year was Joell Ortiz born?,1980,1987,1997,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q602,Which city or region is Joell Ortiz associated with?,"Brooklyn, NY","Cape Town, South Africa","Saint James, Trinidad and Tobago","Savannah, GA",Origin,Easy,origin,location
+Q603,What is the real name of Joell Ortiz?,Joell Christopher Ortiz,Avery Marcel Joshua Jones,Samara Henderson,Joseph Antonio Cartagena,Real Name,Medium,real_name,identity
+Q604,What year was 2Pac born?,1971,2008,1990,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q605,Which city or region is 2Pac associated with?,"Bay Area, CA","New York City, NY","Washington, D.C.","South Orange, NJ",Origin,Easy,origin,location
+Q606,What is the real name of 2Pac?,Tupac Amaru Shakur,Antwan André Patton,Christopher George Latore Wallace,Justin Lewis Scott,Real Name,Medium,real_name,identity
+Q607,Which city or region is Dead Prez associated with?,"New York, NY",Virginia,"Raleigh, NC","Washington, D.C.",Origin,Easy,origin,location
+Q608,What is the real name of Dead Prez?,"stic.man, M-1",Carlos Coleman,Onika Tanya Maraj,John Lucks,Real Name,Medium,real_name,identity
+Q609,What year was Sammus born?,1986,1976,1975,1972,Birth Year,Easy,birth_year,"bio,origin"
+Q610,Which city or region is Sammus associated with?,"Ithaca, NY","Louisville, KY","Dallas, TX","Richmond, VA",Origin,Easy,origin,location
+Q611,What is the real name of Sammus?,Enongo Lumumba-Kasongo,Durk Derrick Banks,Katorah Kasanova Marrero,Jason S Hunter,Real Name,Medium,real_name,identity
+Q612,What year was Meek Mill born?,1987,1982,1993,1965,Birth Year,Easy,birth_year,"bio,origin"
+Q613,Which city or region is Meek Mill associated with?,"Philadelphia, PA","Brownsville, Brooklyn","Minot, ND","Montgomery, AL",Origin,Easy,origin,location
+Q614,What is the real name of Meek Mill?,Robert Rihmeek Williams,Victor James Santiago Jr.,Enongo Lumumba-Kasongo,Matthew Jefferson,Real Name,Medium,real_name,identity
+Q615,What year was Vince Staples born?,1993,1985,1983,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q616,Which city or region is Vince Staples associated with?,"Compton, CA","Long Beach, CA","Las Vegas, NV","Cheltenham Township, PA",Origin,Easy,origin,location
+Q617,What is the real name of Vince Staples?,Vincent Jamal Staples,Angel Del Villar II,Nashid Sulaiman,Marlanna Evans,Real Name,Medium,real_name,identity
+Q618,What year was Saigon born?,1977,2002,1967,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q619,Which city or region is Saigon associated with?,"Brooklyn, NY","Hempstead, NY","Wiesbaden, Germany","Los Angeles, CA",Origin,Easy,origin,location
+Q620,What is the real name of Saigon?,Brian Daniel Carenard,LaRon Louis James Sr.,Keith Farrelle Cozart,Robert Fitzgerald Diggs,Real Name,Medium,real_name,identity
+Q621,What year was Chief Keef born?,1995,1974,1992,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q622,Which city or region is Chief Keef associated with?,"Chicago, IL","New York, NY","Jamaica, Queens","Las Vegas, NV",Origin,Easy,origin,location
+Q623,What is the real name of Chief Keef?,Keith Farrelle Cozart,Jackman Thomas Harlow,Yasiin Bey,Leslie Edward Pridgen,Real Name,Medium,real_name,identity
+Q624,What year was A$AP Ferg born?,1988,1970,1987,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q625,Which city or region is A$AP Ferg associated with?,"Harlem, NY","Charlotte, NC","Brookhaven, MS","Washington, D.C.",Origin,Easy,origin,location
+Q626,What is the real name of A$AP Ferg?,Darold Durard Brown Ferguson Jr.,Joseph Guillermo Jones II,Kimberly Denise Jones,Simmie Sims III,Real Name,Medium,real_name,identity
+Q627,What year was Bow Wow born?,1987,1984,2008,2000,Birth Year,Easy,birth_year,"bio,origin"
+Q628,Which city or region is Bow Wow associated with?,"Columbus, OH","Atlanta, GA","Ithaca, NY","Mableton, GA",Origin,Easy,origin,location
+Q629,What is the real name of Bow Wow?,Shad Gregory Moss,Christopher Lee Rios,Avery Marcel Joshua Jones,Tyler-Justin Anthony Sharpe,Real Name,Medium,real_name,identity
+Q630,What year was Nas born?,1973,1994,1960,1985,Birth Year,Easy,birth_year,"bio,origin"
+Q631,Which city or region is Nas associated with?,"Queens, NY","Portsmouth, VA","South Gate, CA","Mableton, GA",Origin,Easy,origin,location
+Q632,What is the real name of Nas?,Nasir bin Olu Dara Jones,Azealia Amanda Banks,Dennis David Coles,"Skinny DeVille, B. Stille, Ron Clutch, Fish Scales",Real Name,Medium,real_name,identity
+Q633,What year was Kenny Mason born?,1995,1997,2008,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q634,Which city or region is Kenny Mason associated with?,"Atlanta, GA","Mitcham, London","Saint James, Trinidad and Tobago","Los Angeles, CA",Origin,Easy,origin,location
+Q635,What is the real name of Kenny Mason?,Kenny Mason,Christopher Lee Rios,Samara Henderson,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Real Name,Medium,real_name,identity
+Q636,What year was Nicki Minaj born?,1982,1974,1998,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q637,Which city or region is Nicki Minaj associated with?,"Saint James, Trinidad and Tobago","Brookhaven, MS","Dallas, TX","Fayetteville, NC",Origin,Easy,origin,location
+Q638,What is the real name of Nicki Minaj?,Onika Tanya Maraj,Victor James Santiago Jr.,Donald McKinley Glover Jr.,Quincy Matthew Hanley,Real Name,Medium,real_name,identity
+Q639,What year was GZA born?,1966,1960,1976,1971,Birth Year,Easy,birth_year,"bio,origin"
+Q640,Which city or region is GZA associated with?,"Staten Island, NY","San Antonio, TX","Los Angeles, CA","Plantation, FL",Origin,Easy,origin,location
+Q641,What is the real name of GZA?,Gary Eldridge Grice,Duval Clear,Alvin Nathaniel Joiner,Tobe Nwigwe,Real Name,Medium,real_name,identity
+Q642,What year was BigXThaPlug born?,1998,1995,1983,1980,Birth Year,Easy,birth_year,"bio,origin"
+Q643,Which city or region is BigXThaPlug associated with?,"Dallas, TX","Raleigh, NC","Yonkers, NY","Chicago, IL",Origin,Easy,origin,location
+Q644,What is the real name of BigXThaPlug?,Xavier Landum,Cameron Jibril Thomaz,Barry Adrian Reese,Darryl Raynard Richardson III,Real Name,Medium,real_name,identity
+Q645,What year was Fat Joe born?,1970,1974,1998,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q646,Which city or region is Fat Joe associated with?,"The Bronx, NY","Clarksdale, MS","New York City, NY","College Park, GA",Origin,Easy,origin,location
+Q647,What is the real name of Fat Joe?,Joseph Antonio Cartagena,Various Artists,Lavell William Crump,Jason L. Martin,Real Name,Medium,real_name,identity
+Q648,What year was KRS-One born?,1965,2001,1979,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q649,Which city or region is KRS-One associated with?,"Bronx, NY","Portsmouth, VA","Baltimore, MD","New York City, NY",Origin,Easy,origin,location
+Q650,What is the real name of KRS-One?,Lawrence Parker,Tyler Gregory Okonma,Timothy Elpadaro Thedford,"Q-Tip, Phife Dawg",Real Name,Medium,real_name,identity
+Q651,Which city or region is 8Ball & MJG associated with?,"Memphis, TN","Saint James, Trinidad and Tobago","Raleigh, NC","Atlanta, GA",Origin,Easy,origin,location
+Q652,Which city or region is Black Eyed Peas associated with?,"Los Angeles, CA","Long Island, NY","Clarksdale, MS","Baton Rouge, LA",Origin,Easy,origin,location
+Q653,What is the real name of Black Eyed Peas?,"Taboo, will.i.am, APL.DE.AP",David Andrew Burd,Hasben Jones,Dwayne Michael Carter Jr.,Real Name,Medium,real_name,identity
+Q654,"What year was Royce da 5'9"" born?",1977,1995,1976,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q655,"Which city or region is Royce da 5'9"" associated with?","Detroit, MI","Chattanooga, TN","Cleveland, OH","Mobile, AL",Origin,Easy,origin,location
+Q656,"What is the real name of Royce da 5'9""?",Ryan Daniel Montgomery,"Taboo, will.i.am, APL.DE.AP",Terrence LeVarr Thornton,Lola Chantrelle Mitchell,Real Name,Medium,real_name,identity
+Q657,Which city or region is Salt‐N‐Pepa associated with?,"Queens, NY","New York, NY","Queensbridge, NY","Wyandanch, NY",Origin,Easy,origin,location
+Q658,What is the real name of Salt‐N‐Pepa?,"Salt, Pepa","N.A.R.D., Belo Zero, AK-47","T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Jacques Bermon Webster II,Real Name,Medium,real_name,identity
+Q659,What year was Wiz Khalifa born?,1987,2000,1981,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q660,Which city or region is Wiz Khalifa associated with?,"Minot, ND","Philadelphia, PA","Durham, NC","New York, NY",Origin,Easy,origin,location
+Q661,What is the real name of Wiz Khalifa?,Cameron Jibril Thomaz,Michael Taylor Perretta,Kentrell DeSean Gaulden,Curtis James Jackson III,Real Name,Medium,real_name,identity
+Q662,Which city or region is Onyx associated with?,"Queens, NY","Savannah, GA","Toronto, ON","Miami, FL",Origin,Easy,origin,location
+Q663,What is the real name of Onyx?,"Fredro Starr, Sticky Fingaz, Sonny Seeza, Big DS",Ariyan Arslani,Destin Choice Route,LaRon Louis James Sr.,Real Name,Medium,real_name,identity
+Q664,What year was Remy Ma born?,1980,1975,1990,1992,Birth Year,Easy,birth_year,"bio,origin"
+Q665,Which city or region is Remy Ma associated with?,"Bronx, NY","Queens, NY","Houston, TX","Oxnard, CA",Origin,Easy,origin,location
+Q666,What is the real name of Remy Ma?,Reminisce Kioni Mackie,Xavier Landum,Barry Adrian Reese,Stayve Jerome Thomas,Real Name,Medium,real_name,identity
+Q667,What year was Busta Rhymes born?,1972,1974,1976,1982,Birth Year,Easy,birth_year,"bio,origin"
+Q668,Which city or region is Busta Rhymes associated with?,"Brooklyn, NY","Fayetteville, NC","Chicago, IL","Buffalo, NY",Origin,Easy,origin,location
+Q669,What is the real name of Busta Rhymes?,Trevor George Smith Jr.,Talib Kweli Greene,Victor James Santiago Jr.,Nashid Sulaiman,Real Name,Medium,real_name,identity
+Q670,What year was Chance The Rapper born?,1993,1990,1971,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q671,Which city or region is Chance The Rapper associated with?,"Chicago, IL","Brownsville, Brooklyn","Compton, CA","Durham, NC",Origin,Easy,origin,location
+Q672,What is the real name of Chance The Rapper?,Chancelor Johnathan Bennett,Willard Carroll Smith Jr.,Lana Michele Moorer,Carlos Coleman,Real Name,Medium,real_name,identity
+Q673,What year was Pharoahe Monch born?,1972,1966,1992,1990,Birth Year,Easy,birth_year,"bio,origin"
+Q674,Which city or region is Pharoahe Monch associated with?,"Queens, NY","Bronx, NY","Irvine, CA","St. Louis, MO",Origin,Easy,origin,location
+Q675,What is the real name of Pharoahe Monch?,Troy Donald Jamerson,Talib Kweli Greene,Tauheed K. Epps,Alvin Lamar Worthy,Real Name,Medium,real_name,identity
+Q676,What year was NLE Choppa born?,2002,1979,1958,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q677,Which city or region is NLE Choppa associated with?,"Cordova, TN","Philadelphia, PA","Richmond, VA","Meridian, MS",Origin,Easy,origin,location
+Q678,What is the real name of NLE Choppa?,Bryson Lashun Potts,Durk Derrick Banks,Tramar Lacel Dillard,Antonio Hardy,Real Name,Medium,real_name,identity
+Q679,What year was 21 Savage born?,1992,1987,1960,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q680,Which city or region is 21 Savage associated with?,"Atlanta, GA","Morrisville, PA","Philadelphia, PA","Bronx, NY",Origin,Easy,origin,location
+Q681,What is the real name of 21 Savage?,Shéyaa Bin Abraham-Joseph,Johnathan Jamall Porter,Juaquin James Malphurs,Nathaniel Thomas Wilson,Real Name,Medium,real_name,identity
+Q682,What year was Killer Mike born?,1975,2008,1999,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q683,Which city or region is Killer Mike associated with?,"Atlanta, GA","Mobile, AL","Bowling Green, KY","Las Vegas, NV",Origin,Easy,origin,location
+Q684,What is the real name of Killer Mike?,Michael Santiago Render,"Q-Tip, Phife Dawg",Daniel Dumile,Terrence LeVarr Thornton,Real Name,Medium,real_name,identity
+Q685,Which city or region is Souls of Mischief associated with?,"Oakland, CA","Las Vegas, NV","Rockville, MD","Pittsburgh, PA",Origin,Easy,origin,location
+Q686,What is the real name of Souls of Mischief?,"A-Plus, Phesto, Opio, Tajai",Jean-Jacques Cadet,Zaire Stewart,Jason S Hunter,Real Name,Medium,real_name,identity
+Q687,What year was E-40 born?,1967,1976,1968,1987,Birth Year,Easy,birth_year,"bio,origin"
+Q688,Which city or region is E-40 associated with?,"Vallejo, CA","Saint James, Trinidad and Tobago","Savannah, GA","Yonkers, NY",Origin,Easy,origin,location
+Q689,What is the real name of E-40?,Earl Tywone Stevens,Denzel Rae Don Curry,Oswin Benjamin,Aaron Bernard Tyler,Real Name,Medium,real_name,identity
+Q690,What year was GloRilla born?,1999,1988,1987,1986,Birth Year,Easy,birth_year,"bio,origin"
+Q691,Which city or region is GloRilla associated with?,"Memphis, TN","Queensbridge, NY","Carson, CA","Oxnard, CA",Origin,Easy,origin,location
+Q692,What is the real name of GloRilla?,Gloria Hallelujah Woods,Adam Aminé Daniel,Noah Olivier Smith,Mark Anthony Williams Jr.,Real Name,Medium,real_name,identity
+Q693,What year was Elzhi born?,1979,2001,1989,1980,Birth Year,Easy,birth_year,"bio,origin"
+Q694,Which city or region is Elzhi associated with?,"Detroit, MI","Buffalo, NY","Chicago, IL","Queensbridge, NY",Origin,Easy,origin,location
+Q695,What is the real name of Elzhi?,Jason Powers,Gloria Hallelujah Woods,James Todd Smith,Keith Omar Murray,Real Name,Medium,real_name,identity
+Q696,What year was Westside Gunn born?,1982,1985,1983,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q697,Which city or region is Westside Gunn associated with?,"Buffalo, NY","Columbus, OH","Canton, OH","Cheltenham Township, PA",Origin,Easy,origin,location
+Q698,What is the real name of Westside Gunn?,Alvin Lamar Worthy,Noah Olivier Smith,Amir Elkhalifa,Germaine Williams,Real Name,Medium,real_name,identity
+Q699,What year was Twista born?,1973,1975,1995,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q700,Which city or region is Twista associated with?,"Chicago, IL","Lima, Peru","Toronto, ON","Murfreesboro, TN",Origin,Easy,origin,location
+Q701,What is the real name of Twista?,Carl Terrell Mitchell,Vyshonn King Miller,"Lazy, Krayzie, Bizzy, Wish, and Flesh-n-Bone","T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Real Name,Medium,real_name,identity
+Q702,What year was 2 Chainz born?,1977,1962,1986,1978,Birth Year,Easy,birth_year,"bio,origin"
+Q703,Which city or region is 2 Chainz associated with?,"College Park, GA","Cleveland, OH","Houston, TX","Wyandanch, NY",Origin,Easy,origin,location
+Q704,What is the real name of 2 Chainz?,Tauheed K. Epps,Quincy Matthew Hanley,Shawn Corey Carter,Michael Lamar White IV,Real Name,Medium,real_name,identity
+Q705,What year was Cassidy born?,1982,1996,1989,1970,Birth Year,Easy,birth_year,"bio,origin"
+Q706,Which city or region is Cassidy associated with?,"Philadelphia, PA","Virginia Beach, VA","Cheltenham Township, PA","Richmond, VA",Origin,Easy,origin,location
+Q707,What is the real name of Cassidy?,Barry Adrian Reese,David Lawrence Brewster Jr.,Jason Powers,Chancelor Johnathan Bennett,Real Name,Medium,real_name,identity
+Q708,What year was Kanye West born?,1977,1979,1989,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q709,Which city or region is Kanye West associated with?,"Chicago, IL","Watts, CA","Brownsville, Brooklyn","Gadsden, AL",Origin,Easy,origin,location
+Q710,What is the real name of Kanye West?,Kanye Omari West,Carl Terrell Mitchell,Mason Durell Betha,Talib Kweli Greene,Real Name,Medium,real_name,identity
+Q711,What year was Trina born?,1978,2008,1979,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q712,Which city or region is Trina associated with?,"Miami, FL","Manhattan, NY","Spanish Harlem, NY","Wyandanch, NY",Origin,Easy,origin,location
+Q713,What is the real name of Trina?,Katrina Laverne Taylor,Chancelor Johnathan Bennett,Xavier Landum,Jackman Thomas Harlow,Real Name,Medium,real_name,identity
+Q714,What year was Styles P born?,1974,1969,1987,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q715,Which city or region is Styles P associated with?,"Queens, NY","Newark, NJ","Virginia Beach, VA","New York City, NY",Origin,Easy,origin,location
+Q716,What is the real name of Styles P?,David R. Styles,Michael Wayne Atha,Vyshonn King Miller,Nasir bin Olu Dara Jones,Real Name,Medium,real_name,identity
+Q717,What year was Kota the Friend born?,1992,1984,1962,1993,Birth Year,Easy,birth_year,"bio,origin"
+Q718,Which city or region is Kota the Friend associated with?,"Brooklyn, NY","Detroit, MI","Miami, FL","East Orange, NJ",Origin,Easy,origin,location
+Q719,What is the real name of Kota the Friend?,Avery Marcel Joshua Jones,Tyler-Justin Anthony Sharpe,Earl Simmons,Dieuson Octave,Real Name,Medium,real_name,identity
+Q720,What year was Isaiah Rashad born?,1991,1985,1976,1996,Birth Year,Easy,birth_year,"bio,origin"
+Q721,Which city or region is Isaiah Rashad associated with?,"Chattanooga, TN","Hempstead, NY","Louisville, KY","New York City, NY",Origin,Easy,origin,location
+Q722,What is the real name of Isaiah Rashad?,Isaiah Rashad Joel McClain,Curtis Eugene Cross,Jeffrey Bruce Atkins,Sir Robert Bryson Hall II,Real Name,Medium,real_name,identity
+Q723,What year was Redman born?,1970,1968,1989,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q724,Which city or region is Redman associated with?,"Newark, NJ","Oxnard, CA","Detroit, MI","Cheltenham Township, PA",Origin,Easy,origin,location
+Q725,What is the real name of Redman?,Reginald Noble,Alvin Lamar Worthy,Philip Bernard,Jackman Thomas Harlow,Real Name,Medium,real_name,identity
+Q726,What year was Trippie Redd born?,1999,1988,2000,1982,Birth Year,Easy,birth_year,"bio,origin"
+Q727,Which city or region is Trippie Redd associated with?,"Canton, OH","Montgomery, AL","Fayetteville, NC","Vallejo, CA",Origin,Easy,origin,location
+Q728,What is the real name of Trippie Redd?,Michael Lamar White IV,Earl Tywone Stevens,DeAndre Cortez Way,Nashid Sulaiman,Real Name,Medium,real_name,identity
+Q729,What year was Mase born?,1975,1973,1980,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q730,Which city or region is Mase associated with?,"Harlem, NY","Chicago, IL","Brownsville, Brooklyn","Pontiac, MI",Origin,Easy,origin,location
+Q731,What is the real name of Mase?,Mason Durell Betha,Tamia Monique Carter,Tyler Gregory Okonma,Lavell William Crump,Real Name,Medium,real_name,identity
+Q732,What year was Project Pat born?,1973,1960,1985,2000,Birth Year,Easy,birth_year,"bio,origin"
+Q733,Which city or region is Project Pat associated with?,"Memphis, TN","Baton Rouge, LA","Durham, NC","Flint, MI",Origin,Easy,origin,location
+Q734,What is the real name of Project Pat?,Patrick Earl Houston,Jatavia Shakara Johnson,Simmie Sims III,Fatimah Nyeema Warner,Real Name,Medium,real_name,identity
+Q735,What year was J-Live born?,1976,1974,1973,2001,Birth Year,Easy,birth_year,"bio,origin"
+Q736,Which city or region is J-Live associated with?,"New York City, NY","South Gate, CA","Jamaica, Queens","San Francisco, CA",Origin,Easy,origin,location
+Q737,What is the real name of J-Live?,Jean-Jacques Cadet,Stayve Jerome Thomas,Kanye Omari West,Christopher Brian Bridges,Real Name,Medium,real_name,identity
+Q738,What year was Yung Miami born?,1994,1986,1984,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q739,Which city or region is Yung Miami associated with?,"Miami, FL","South Gate, CA","Mobile, AL","Saint James, Trinidad and Tobago",Origin,Easy,origin,location
+Q740,What is the real name of Yung Miami?,Caresha Romeka Brownlee,Destin Choice Route,"Lazy, Krayzie, Bizzy, Wish, and Flesh-n-Bone",Azealia Amanda Banks,Real Name,Medium,real_name,identity
+Q741,What year was Freddie Gibbs born?,1982,1965,1995,1987,Birth Year,Easy,birth_year,"bio,origin"
+Q742,Which city or region is Freddie Gibbs associated with?,"Gary, IN","Virginia Beach, VA","Queens, NY","Pittsburgh, PA",Origin,Easy,origin,location
+Q743,What is the real name of Freddie Gibbs?,Fredrick Jamel Tipton,Nayvadius DeMun Wilburn,Carlos Coleman,Isaiah Rashad Joel McClain,Real Name,Medium,real_name,identity
+Q744,What year was Drake born?,1986,1989,1980,1992,Birth Year,Easy,birth_year,"bio,origin"
+Q745,Which city or region is Drake associated with?,"Toronto, ON","St. Louis, MO","Wyandanch, NY","Dallas, TX",Origin,Easy,origin,location
+Q746,What is the real name of Drake?,Aubrey Drake Graham,Ryan Daniel Montgomery,"Erick Sermon, PMD","Taboo, will.i.am, APL.DE.AP",Real Name,Medium,real_name,identity
+Q747,What year was Gucci Mane born?,1980,1971,1998,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q748,Which city or region is Gucci Mane associated with?,"Atlanta, GA","Minot, ND","San Francisco, CA","Worcester, MA",Origin,Easy,origin,location
+Q749,What is the real name of Gucci Mane?,Radric Delantic Davis,Paul Micheal Slayton,Jeffrey Bruce Atkins,Joseph Antonio Cartagena,Real Name,Medium,real_name,identity
+Q750,What year was Ol' Dirty Bastard born?,1968,1973,1995,1970,Birth Year,Easy,birth_year,"bio,origin"
+Q751,Which city or region is Ol' Dirty Bastard associated with?,"Brooklyn, NY","Carson, CA","Toronto, ON","Rockville, MD",Origin,Easy,origin,location
+Q752,What is the real name of Ol' Dirty Bastard?,Russell Tyrone Jones,Jean-Jacques Cadet,William Michael Griffin Jr.,Jason Douglas Newman,Real Name,Medium,real_name,identity
+Q753,What year was Kevin Gates born?,1986,1989,1987,1975,Birth Year,Easy,birth_year,"bio,origin"
+Q754,Which city or region is Kevin Gates associated with?,"Baton Rouge, LA","Worcester, MA","Long Beach, CA","Pittsburgh, PA",Origin,Easy,origin,location
+Q755,What is the real name of Kevin Gates?,Kevin Jerome Gilyard,Nashid Sulaiman,Jason Terrance Phillips,Avery Marcel Joshua Jones,Real Name,Medium,real_name,identity
+Q756,Which city or region is Three 6 Mafia associated with?,"Memphis, TN","Brooklyn, NY","Bowling Green, KY","Corona, Queens",Origin,Easy,origin,location
+Q757,What is the real name of Three 6 Mafia?,Various Artists,"Taboo, will.i.am, APL.DE.AP",Oswin Benjamin,Jayson Andrew Jenkins,Real Name,Medium,real_name,identity
+Q758,What year was Run-D.M.C. born?,1982,1966,2002,1969,Birth Year,Easy,birth_year,"bio,origin"
+Q759,Which city or region is Run-D.M.C. associated with?,"Queens, NY","San Antonio, TX","Queensbridge, NY","College Park, GA",Origin,Easy,origin,location
+Q760,What is the real name of Run-D.M.C.?,"Joseph Simmons, Darryl McDaniels, Jason Mizell",Kentrell DeSean Gaulden,Marlon Craft,David Andrew Burd,Real Name,Medium,real_name,identity
+Q761,What year was Oddisee born?,1985,1977,1991,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q762,Which city or region is Oddisee associated with?,"Washington, D.C.",Virginia,"Mobile, AL","San Francisco, CA",Origin,Easy,origin,location
+Q763,What is the real name of Oddisee?,Amir Elkhalifa,Johnson Barnes III,David Lawrence Brewster Jr.,Coi Leray Collins,Real Name,Medium,real_name,identity
+Q764,What year was MC Breed born?,1971,1992,1976,1982,Birth Year,Easy,birth_year,"bio,origin"
+Q765,Which city or region is MC Breed associated with?,"Flint, MI","Pittsburgh, PA","Lima, Peru","Kingston, Jamaica",Origin,Easy,origin,location
+Q766,What is the real name of MC Breed?,Eric Tyrone Breed,Herbert Anthony Stevens IV,Tracy Lauren Marrow,Leonard Grant,Real Name,Medium,real_name,identity
+Q767,What year was EARTHGANG born?,2008,1966,1999,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q768,Which city or region is EARTHGANG associated with?,"Atlanta, GA","Plantation, FL","Fayetteville, NC","Mount Vernon, NY",Origin,Easy,origin,location
+Q769,What year was Lil Kim born?,1974,1972,1971,1997,Birth Year,Easy,birth_year,"bio,origin"
+Q770,Which city or region is Lil Kim associated with?,"Brooklyn, NY","Corona, Queens","Newark, NJ","Jamaica, Queens",Origin,Easy,origin,location
+Q771,What is the real name of Lil Kim?,Kimberly Denise Jones,Nayvadius DeMun Wilburn,Patrick Earl Houston,Quavious Keyate Marshall,Real Name,Medium,real_name,identity
+Q772,What year was XXXTENTACION born?,1998,1981,2008,1972,Birth Year,Easy,birth_year,"bio,origin"
+Q773,Which city or region is XXXTENTACION associated with?,"Plantation, FL","Bay Area, CA","Mandeville, Jamaica","Bronx, NY",Origin,Easy,origin,location
+Q774,What is the real name of XXXTENTACION?,Jahseh Dwayne Ricardo Onfroy,Joell Christopher Ortiz,Donald McKinley Glover Jr.,Demond Price,Real Name,Medium,real_name,identity
+Q775,What year was Dizaster born?,1984,1987,1989,1994,Birth Year,Easy,birth_year,"bio,origin"
+Q776,Which city or region is Dizaster associated with?,"Los Angeles, CA","College Park, GA","Kingston, Jamaica","Mitcham, London",Origin,Easy,origin,location
+Q777,What is the real name of Dizaster?,Bashir Yagami,Jeffery Lamar Williams,Asher Paul Roth,Cameron Ezike Giles,Real Name,Medium,real_name,identity
+Q778,What year was King Los born?,1982,1995,2001,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q779,Which city or region is King Los associated with?,"Baltimore, MD","Philadelphia, PA","Cape Town, South Africa","Cheltenham Township, PA",Origin,Easy,origin,location
+Q780,What is the real name of King Los?,Carlos Coleman,Tamia Monique Carter,Olubowale Victor Akintimehin,Jeremie Damon Pennick,Real Name,Medium,real_name,identity
+Q781,What year was Conway born?,1982,1971,1990,1966,Birth Year,Easy,birth_year,"bio,origin"
+Q782,Which city or region is Conway associated with?,"Buffalo, NY","Canton, OH","San Antonio, TX","Clarksdale, MS",Origin,Easy,origin,location
+Q783,What is the real name of Conway?,Demond Price,Russell Tyrone Jones,Kendrick Lamar Duckworth,Johnson Barnes III,Real Name,Medium,real_name,identity
+Q784,What year was Masta Ace born?,1966,1965,1974,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q785,Which city or region is Masta Ace associated with?,"Brownsville, Brooklyn","New Orleans, LA","Canton, OH","Ithaca, NY",Origin,Easy,origin,location
+Q786,What is the real name of Masta Ace?,Duval Clear,Aaron Bernard Tyler,Justin Lewis Scott,Alyssa Michelle Stephens,Real Name,Medium,real_name,identity
+Q787,What year was Latto born?,1998,2002,1987,1976,Birth Year,Easy,birth_year,"bio,origin"
+Q788,Which city or region is Latto associated with?,"Columbus, OH","Yonkers, NY","The Bronx, NY","Corona, Queens",Origin,Easy,origin,location
+Q789,What is the real name of Latto?,Alyssa Michelle Stephens,Jon Kevin Freeman Jr.,Nathaniel Thomas Wilson,James Dewitt Yancey,Real Name,Medium,real_name,identity
+Q790,What year was Waka Flocka Flame born?,1986,1966,2000,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q791,Which city or region is Waka Flocka Flame associated with?,"Queens, NY","Mount Vernon, NY","Dallas, TX","Canton, OH",Origin,Easy,origin,location
+Q792,What is the real name of Waka Flocka Flame?,Juaquin James Malphurs,Nathaniel Thomas Wilson,Sir Robert Bryson Hall II,Jeffrey Bruce Atkins,Real Name,Medium,real_name,identity
+Q793,What year was Juvenile born?,1975,1969,1983,1968,Birth Year,Easy,birth_year,"bio,origin"
+Q794,Which city or region is Juvenile associated with?,"New Orleans, LA","Pontiac, MI","Mobile, AL","Corona, Queens",Origin,Easy,origin,location
+Q795,What is the real name of Juvenile?,Terius Gray,Christopher Lee Rios,John David Jackson,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Real Name,Medium,real_name,identity
+Q796,What year was Doechii born?,1998,1985,1967,1997,Birth Year,Easy,birth_year,"bio,origin"
+Q797,Which city or region is Doechii associated with?,"Tampa, FL","South Gate, CA","Brownsville, Brooklyn","Oxnard, CA",Origin,Easy,origin,location
+Q798,What is the real name of Doechii?,Jaylah Ji'mya Hickmon,"Taboo, will.i.am, APL.DE.AP",Maria-Cecilia Simone Kelly,Lana Michele Moorer,Real Name,Medium,real_name,identity
+Q799,What year was Rick Ross born?,1976,1977,1974,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q800,Which city or region is Rick Ross associated with?,"Clarksdale, MS","Milwaukee, WI","Hempstead, NY","Cordova, TN",Origin,Easy,origin,location
+Q801,What is the real name of Rick Ross?,William Leonard Roberts II,Matthew Jefferson,Enongo Lumumba-Kasongo,Cameron Ezike Giles,Real Name,Medium,real_name,identity
+Q802,What year was Lakeyah born?,2001,1986,1974,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q803,Which city or region is Lakeyah associated with?,"Milwaukee, WI","Worcester, MA","New York, NY","Portsmouth, VA",Origin,Easy,origin,location
+Q804,What is the real name of Lakeyah?,Lakeyah Danaee Robinson,"N.A.R.D., Belo Zero, AK-47",Jayceon Terrell Taylor,Andre Louis Hicks,Real Name,Medium,real_name,identity
+Q805,What year was Yeat born?,2000,1970,1960,1985,Birth Year,Easy,birth_year,"bio,origin"
+Q806,Which city or region is Yeat associated with?,"Irvine, CA","Memphis, TN","San Francisco, CA","Cape Town, South Africa",Origin,Easy,origin,location
+Q807,What is the real name of Yeat?,Noah Olivier Smith,"A-Plus, Phesto, Opio, Tajai",Azealia Amanda Banks,Timothy Elpadaro Thedford,Real Name,Medium,real_name,identity
+Q808,What year was Future born?,1983,1999,1971,1995,Birth Year,Easy,birth_year,"bio,origin"
+Q809,Which city or region is Future associated with?,"Atlanta, GA",Virginia,"Mobile, AL","Worcester, MA",Origin,Easy,origin,location
+Q810,What is the real name of Future?,Nayvadius DeMun Wilburn,"Rio Loz, Ras Austin, Taj Austin, Eric Jamal",Stayve Jerome Thomas,Tariq Luqmaan Trotter,Real Name,Medium,real_name,identity
+Q811,What year was Wu-Tang Clan born?,1992,1975,1990,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q812,Which city or region is Wu-Tang Clan associated with?,"Staten Island, NY","San Francisco, CA","Charlotte, NC","Atlanta, GA",Origin,Easy,origin,location
+Q813,What is the real name of Wu-Tang Clan?,Various Members,Shadrach Kabango,John R. Austin II,Jaylah Ji'mya Hickmon,Real Name,Medium,real_name,identity
+Q814,What year was Aesop Rock born?,1976,1990,1985,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q815,Which city or region is Aesop Rock associated with?,"Long Island, NY","Harlem, NY","Gadsden, AL","Cheltenham Township, PA",Origin,Easy,origin,location
+Q816,What is the real name of Aesop Rock?,Ian Matthias Bavitz,Stayve Jerome Thomas,Leonard Eugene Hendricks III,Tauheed K. Epps,Real Name,Medium,real_name,identity
+Q817,What year was Kool G Rap born?,1968,1989,1970,1988,Birth Year,Easy,birth_year,"bio,origin"
+Q818,Which city or region is Kool G Rap associated with?,"Corona, Queens","Cheltenham Township, PA","Morrisville, PA","Savannah, GA",Origin,Easy,origin,location
+Q819,What is the real name of Kool G Rap?,Nathaniel Thomas Wilson,Willard Carroll Smith Jr.,Avery Marcel Joshua Jones,Barry Adrian Reese,Real Name,Medium,real_name,identity
+Q820,What year was Fashawn born?,1988,1985,1977,1979,Birth Year,Easy,birth_year,"bio,origin"
+Q821,Which city or region is Fashawn associated with?,"Fresno, CA","Miami, FL","Newark, NJ","Cleveland, OH",Origin,Easy,origin,location
+Q822,What is the real name of Fashawn?,Santiago Leyva,Kenyatta Lee Frazier Jr.,Yannick Koffi,Avery Marcel Joshua Jones,Real Name,Medium,real_name,identity
+Q823,What year was Yelawolf born?,1979,1989,1983,1991,Birth Year,Easy,birth_year,"bio,origin"
+Q824,Which city or region is Yelawolf associated with?,"Gadsden, AL","Corona, Queens","Portsmouth, VA","Boston, MA",Origin,Easy,origin,location
+Q825,What is the real name of Yelawolf?,Michael Wayne Atha,Wesley Eric Weston Jr.,"Talib Kweli, Yasiin Bey",Avery Marcel Joshua Jones,Real Name,Medium,real_name,identity
+Q826,What year was D Smoke born?,1985,1971,1969,1990,Birth Year,Easy,birth_year,"bio,origin"
+Q827,Which city or region is D Smoke associated with?,"Inglewood, CA","Pontiac, MI","Jamaica, Queens","New York City, NY",Origin,Easy,origin,location
+Q828,What is the real name of D Smoke?,Daniel Anthony Farris,"Imani, Slimkid3, Bootie Brown, Fatlip","Treach, Vin Rock",Caresha Romeka Brownlee,Real Name,Medium,real_name,identity
+Q829,Which city or region is Clipse associated with?,"Virginia Beach, VA","Minot, ND","Cheltenham Township, PA","Ithaca, NY",Origin,Easy,origin,location
+Q830,What is the real name of Clipse?,"Pusha T, Malice",Michael Lamar White IV,Assata Perkins,Ian Matthias Bavitz,Real Name,Medium,real_name,identity
+Q831,What year was Big Sean born?,1988,1976,1972,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q832,Which city or region is Big Sean associated with?,"Detroit, MI","New York, NY","Savannah, GA","Winston-Salem, NC",Origin,Easy,origin,location
+Q833,What is the real name of Big Sean?,Sean Michael Leonard Anderson,"DJ Babu, Evidence, Rakaa Iriscience",Keenon Dequan Ray Jackson,Paul Micheal Slayton,Real Name,Medium,real_name,identity
+Q834,What year was Larry June born?,1991,1973,1966,1997,Birth Year,Easy,birth_year,"bio,origin"
+Q835,Which city or region is Larry June associated with?,"San Francisco, CA","Toronto, ON","Kingston, Jamaica","Durham, NC",Origin,Easy,origin,location
+Q836,What is the real name of Larry June?,Leonard Eugene Hendricks III,Jermaine Lamarr Cole,Assata Perkins,"Chuck D, Flavor Flav",Real Name,Medium,real_name,identity
+Q837,What year was Thurz born?,1985,1996,1969,1986,Birth Year,Easy,birth_year,"bio,origin"
+Q838,Which city or region is Thurz associated with?,"Inglewood, CA","Fayetteville, NC","Rockville, MD","Philadelphia, PA",Origin,Easy,origin,location
+Q839,What is the real name of Thurz?,Yannick Koffi,David R. Styles,Dominique Armani Jones,Trevor George Smith Jr.,Real Name,Medium,real_name,identity
+Q840,What year was A$AP Rocky born?,1988,1972,1958,1981,Birth Year,Easy,birth_year,"bio,origin"
+Q841,Which city or region is A$AP Rocky associated with?,"Harlem, NY","Newark, NJ","Mount Vernon, NY","Fayetteville, NC",Origin,Easy,origin,location
+Q842,What is the real name of A$AP Rocky?,Rakim Athelaston Mayers,Dwayne Michael Carter Jr.,"T3, J Dilla, Baatin, Elzhi, J Illa, Young RJ",Santiago Leyva,Real Name,Medium,real_name,identity
+Q843,What year was Oswin Benjamin born?,1991,2000,1976,1977,Birth Year,Easy,birth_year,"bio,origin"
+Q844,Which city or region is Oswin Benjamin associated with?,"Richmond, VA","Miami Gardens, FL","Buffalo, NY","Louisville, KY",Origin,Easy,origin,location
+Q845,What is the real name of Oswin Benjamin?,Oswin Benjamin,Inga DeCarlo Fung Marchand,Jo-Vaughn Virginie Scott,Zaire Stewart,Real Name,Medium,real_name,identity
+Q846,Which city or region is Dilated Peoples associated with?,"Los Angeles, CA","Oakland, CA","Atlanta, GA","Milwaukee, WI",Origin,Easy,origin,location
+Q847,What is the real name of Dilated Peoples?,"DJ Babu, Evidence, Rakaa Iriscience","Pusha T, Malice",Robert Rihmeek Williams,Shyniece Thomas,Real Name,Medium,real_name,identity
+Q848,What year was Saba born?,1994,1996,2001,1999,Birth Year,Easy,birth_year,"bio,origin"
+Q849,Which city or region is Saba associated with?,"Chicago, IL","Long Island, NY","Baltimore, MD","San Antonio, TX",Origin,Easy,origin,location
+Q850,What is the real name of Saba?,Tahj Malik Chandler,Ian Matthias Bavitz,Shadrach Kabango,"Big Gipp, CeeLo Green, Khujo, T-Mo",Real Name,Medium,real_name,identity
+Q851,Which city or region is Do Or Die associated with?,"Chicago, IL","Bay Area, CA","San Antonio, TX","Corona, Queens",Origin,Easy,origin,location
+Q852,What is the real name of Do Or Die?,"N.A.R.D., Belo Zero, AK-47",Tramar Lacel Dillard,"Imani, Slimkid3, Bootie Brown, Fatlip",Jaylah Ji'mya Hickmon,Real Name,Medium,real_name,identity
+Q853,What year was Brother Ali born?,1977,1973,1971,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q854,Which city or region is Brother Ali associated with?,"Minneapolis, Minnesota","New York, NY","Portsmouth, VA","Newark, NJ",Origin,Easy,origin,location
+Q855,What is the real name of Brother Ali?,Jason Douglas Newman,Hasben Jones,Assata Perkins,Coi Leray Collins,Real Name,Medium,real_name,identity
+Q856,What year was Big Boi born?,1975,1969,1971,1983,Birth Year,Easy,birth_year,"bio,origin"
+Q857,Which city or region is Big Boi associated with?,"Savannah, GA","Long Island, NY","Washington, D.C.","Worcester, MA",Origin,Easy,origin,location
+Q858,What is the real name of Big Boi?,Antwan André Patton,Jason S Hunter,John David Jackson,Gary Eldridge Grice,Real Name,Medium,real_name,identity
+Q859,What year was Nelly born?,1974,1984,2001,1973,Birth Year,Easy,birth_year,"bio,origin"
+Q860,Which city or region is Nelly associated with?,"St. Louis, MO","Winston-Salem, NC","Long Island, NY","Irvine, CA",Origin,Easy,origin,location
+Q861,What is the real name of Nelly?,Cornell Iral Haynes Jr.,Jeffrey Bruce Atkins,Andre Louis Hicks,Patrick Earl Houston,Real Name,Medium,real_name,identity
+Q862,What year was Planet Asia born?,1976,1999,1985,1958,Birth Year,Easy,birth_year,"bio,origin"
+Q863,Which city or region is Planet Asia associated with?,"Fresno, CA","Pompano Beach, FL","New York City, NY","Vallejo, CA",Origin,Easy,origin,location
+Q864,What is the real name of Planet Asia?,Jason Green,Jordan Terrell Carter,Michael Taylor Perretta,Jahseh Dwayne Ricardo Onfroy,Real Name,Medium,real_name,identity
+Q865,What year was Ab-Soul born?,1987,2002,1999,1962,Birth Year,Easy,birth_year,"bio,origin"
+Q866,Which city or region is Ab-Soul associated with?,"Carson, CA","Cordova, TN","College Park, GA","Port Arthur, TX",Origin,Easy,origin,location
+Q867,What is the real name of Ab-Soul?,Herbert Anthony Stevens IV,Jason Douglas Newman,Miles Parks McCollum,Mach-Hommy,Real Name,Medium,real_name,identity
+Q868,What year was Slim Thug born?,1980,1988,1997,2008,Birth Year,Easy,birth_year,"bio,origin"
+Q869,Which city or region is Slim Thug associated with?,"Houston, TX","Miami Gardens, FL","Manhattan, NY","Kansas City, MO",Origin,Easy,origin,location
+Q870,What is the real name of Slim Thug?,Stayve Jerome Thomas,Noah Olivier Smith,Sir Robert Bryson Hall II,Radric Delantic Davis,Real Name,Medium,real_name,identity
+Q871,What year was Schoolboy Q born?,1986,1977,1980,1960,Birth Year,Easy,birth_year,"bio,origin"
+Q872,Which city or region is Schoolboy Q associated with?,"Wiesbaden, Germany","Watts, CA","Oxnard, CA","Wyandanch, NY",Origin,Easy,origin,location
+Q873,What is the real name of Schoolboy Q?,Quincy Matthew Hanley,Shad Gregory Moss,Anthony Cruz,Kamaal Ibn John Fareed,Real Name,Medium,real_name,identity

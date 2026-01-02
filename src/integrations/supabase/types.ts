@@ -1356,6 +1356,7 @@ export type Database = {
           question_text: string
           question_type: string
           rapper_id: string | null
+          rapper_name: string | null
           updated_at: string
           wrong_answers: Json
         }
@@ -1371,6 +1372,7 @@ export type Database = {
           question_text: string
           question_type: string
           rapper_id?: string | null
+          rapper_name?: string | null
           updated_at?: string
           wrong_answers?: Json
         }
@@ -1386,6 +1388,7 @@ export type Database = {
           question_text?: string
           question_type?: string
           rapper_id?: string | null
+          rapper_name?: string | null
           updated_at?: string
           wrong_answers?: Json
         }
@@ -3649,6 +3652,7 @@ export type Database = {
           question_text: string
           question_type: string
           rapper_id: string | null
+          rapper_name: string | null
           updated_at: string
           wrong_answers: Json
         }[]
