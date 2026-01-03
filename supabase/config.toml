@@ -32,3 +32,6 @@ verify_jwt = false
 
 [functions.import-quiz-questions]
 verify_jwt = true
+
+[functions.generate-quiz-questions]
+verify_jwt = true

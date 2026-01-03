@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
-import { Brain, Search, Plus, Edit2, Trash2, Upload, Award, FileText } from 'lucide-react';
+import { Brain, Search, Plus, Edit2, Trash2, Upload, Award, FileText, Sparkles } from 'lucide-react';
 import { ThemedCard } from '@/components/ui/themed-card';
 import { ThemedButton } from '@/components/ui/themed-button';
 import { ThemedInput } from '@/components/ui/themed-input';
@@ -46,12 +46,18 @@ const QuizManagement: React.FC = () => {
   const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [importResult, setImportResult] = useState<{
     total: number;
     imported: number;
     skipped: number;
     errors: string[];
     unmatchedRappers: string[];
+  } | null>(null);
+  const [generateResult, setGenerateResult] = useState<{
+    generated: number;
+    inserted: number;
+    breakdown: { discography: number; aliases: number; career: number };
   } | null>(null);
 
   const handleImportQuestions = async () => {
@@ -167,6 +173,8 @@ const QuizManagement: React.FC = () => {
     { value: 'albums', label: 'Albums' },
     { value: 'origins', label: 'Origins' },
     { value: 'career', label: 'Career' },
+    { value: 'discography', label: 'Discography' },
+    { value: 'aliases', label: 'Aliases' },
     { value: 'birth_year', label: 'Birth Year' },
     { value: 'real_name', label: 'Real Name' },
   ];
@@ -177,6 +185,8 @@ const QuizManagement: React.FC = () => {
       albums: 'bg-blue-500/20 text-blue-300',
       origins: 'bg-green-500/20 text-green-300',
       career: 'bg-orange-500/20 text-orange-300',
+      discography: 'bg-amber-500/20 text-amber-300',
+      aliases: 'bg-indigo-500/20 text-indigo-300',
       birth_year: 'bg-pink-500/20 text-pink-300',
       real_name: 'bg-cyan-500/20 text-cyan-300',
     };
@@ -404,13 +414,85 @@ const QuizManagement: React.FC = () => {
 
         {/* Import Tab */}
         <ThemedTabsContent value="import" className="space-y-4">
+          {/* Generate from Database */}
           <ThemedCard className="p-6">
-            <h3 className="text-lg font-semibold text-foreground mb-4">Import Quiz Questions</h3>
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
+              Generate Questions from Database
+            </h3>
             <p className="text-muted-foreground mb-4">
-              Import 873 pre-prepared questions covering birth years, origins, and real names of hip-hop artists.
+              Automatically generate quiz questions from existing rapper data including discography, aliases, and career timelines.
             </p>
-            <p className="text-sm text-muted-foreground mb-6">
-              The import will automatically match rapper names to existing database entries and extract rapper names from question text.
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="px-2 py-1 rounded text-xs bg-amber-500/20 text-amber-300">Discography</span>
+              <span className="px-2 py-1 rounded text-xs bg-indigo-500/20 text-indigo-300">Aliases</span>
+              <span className="px-2 py-1 rounded text-xs bg-orange-500/20 text-orange-300">Career</span>
+            </div>
+            
+            <ThemedButton 
+              onClick={async () => {
+                setIsGenerating(true);
+                setGenerateResult(null);
+                try {
+                  const { data, error } = await supabase.functions.invoke('generate-quiz-questions', {
+                    body: { categories: ['discography', 'aliases', 'career'] }
+                  });
+                  if (error) throw error;
+                  if (data.success) {
+                    setGenerateResult(data);
+                    toast.success(`Generated ${data.inserted} new questions!`);
+                    queryClient.invalidateQueries({ queryKey: ['admin-quiz-questions'] });
+                  } else {
+                    throw new Error(data.error || 'Generation failed');
+                  }
+                } catch (error: any) {
+                  console.error('Generation error:', error);
+                  toast.error(error.message || 'Failed to generate questions');
+                } finally {
+                  setIsGenerating(false);
+                }
+              }}
+              disabled={isGenerating}
+              className="mb-6"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              {isGenerating ? 'Generating...' : 'Generate Questions'}
+            </ThemedButton>
+
+            {generateResult && (
+              <div className="space-y-4 mt-4 p-4 border border-border rounded-lg">
+                <h4 className="font-semibold text-foreground">Generation Results</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+                  <div className="text-center p-3 bg-muted/50 rounded">
+                    <div className="text-2xl font-bold text-foreground">{generateResult.generated}</div>
+                    <div className="text-xs text-muted-foreground">Generated</div>
+                  </div>
+                  <div className="text-center p-3 bg-green-500/20 rounded">
+                    <div className="text-2xl font-bold text-green-400">{generateResult.inserted}</div>
+                    <div className="text-xs text-muted-foreground">Inserted</div>
+                  </div>
+                  <div className="text-center p-3 bg-amber-500/20 rounded">
+                    <div className="text-2xl font-bold text-amber-400">{generateResult.breakdown.discography}</div>
+                    <div className="text-xs text-muted-foreground">Discography</div>
+                  </div>
+                  <div className="text-center p-3 bg-indigo-500/20 rounded">
+                    <div className="text-2xl font-bold text-indigo-400">{generateResult.breakdown.aliases}</div>
+                    <div className="text-xs text-muted-foreground">Aliases</div>
+                  </div>
+                  <div className="text-center p-3 bg-orange-500/20 rounded">
+                    <div className="text-2xl font-bold text-orange-400">{generateResult.breakdown.career}</div>
+                    <div className="text-xs text-muted-foreground">Career</div>
+                  </div>
+                </div>
+              </div>
+            )}
+          </ThemedCard>
+
+          {/* CSV Import */}
+          <ThemedCard className="p-6">
+            <h3 className="text-lg font-semibold text-foreground mb-4">Import from CSV</h3>
+            <p className="text-muted-foreground mb-4">
+              Import pre-prepared questions covering birth years, origins, and real names.
             </p>
             
             <ThemedButton 
@@ -460,7 +542,7 @@ const QuizManagement: React.FC = () => {
                 
                 {importResult.unmatchedRappers.length > 0 && (
                   <div className="mt-4">
-                    <h5 className="text-sm font-medium text-orange-400 mb-2">Unmatched Rappers (questions still imported with name only):</h5>
+                    <h5 className="text-sm font-medium text-orange-400 mb-2">Unmatched Rappers:</h5>
                     <p className="text-xs text-muted-foreground">
                       {importResult.unmatchedRappers.slice(0, 20).join(', ')}
                       {importResult.unmatchedRappers.length > 20 && ` ...and ${importResult.unmatchedRappers.length - 20} more`}
