@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Brain, ArrowLeft } from 'lucide-react';
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from '@/components/ui/themed-card';
@@ -14,6 +14,7 @@ import { Link } from 'react-router-dom';
 const QuizContainer: React.FC = () => {
   const [selectedCategory, setSelectedCategory] = useState<QuizCategory>('all');
   const [hasStarted, setHasStarted] = useState(false);
+  const quizCardRef = useRef<HTMLDivElement>(null);
 
   const {
     currentQuestion,
@@ -33,6 +34,16 @@ const QuizContainer: React.FC = () => {
     getShuffledAnswers,
     isSubmitting,
   } = useQuiz(selectedCategory);
+
+  // Scroll quiz card into view when question changes
+  useEffect(() => {
+    if (hasStarted && quizCardRef.current && currentQuestionIndex >= 0) {
+      quizCardRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  }, [currentQuestionIndex, hasStarted]);
 
   // Memoize shuffled answers to prevent re-shuffle on every render
   const shuffledAnswers = useMemo(() => {
@@ -187,7 +198,7 @@ const QuizContainer: React.FC = () => {
   }
 
   return (
-    <ThemedCard variant="dark" className="border-2 border-[hsl(var(--theme-primary))]/30">
+    <ThemedCard ref={quizCardRef} variant="dark" className="border-2 border-[hsl(var(--theme-primary))]/30 scroll-mt-24">
       <ThemedCardContent className="p-6 space-y-6">
         {/* Progress */}
         <QuizProgress
