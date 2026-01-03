@@ -16,6 +16,7 @@ import AdminAchievementManagement from "@/components/admin/AdminAchievementManag
 import AdminVSMatchManagement from "@/components/admin/AdminVSMatchManagement";
 import AdminRapperSuggestions from "@/components/admin/AdminRapperSuggestions";
 import { AnnouncementManagement } from "@/components/admin/AnnouncementManagement";
+import QuizManagement from "@/components/admin/QuizManagement";
 const Admin = () => {
   const {
     user,
@@ -39,6 +40,9 @@ const Admin = () => {
   }, {
     value: "polls",
     label: "Polls"
+  }, {
+    value: "quizzes",
+    label: "Quizzes"
   }, {
     value: "vs-matches",
     label: "VS Matches"
@@ -79,6 +83,8 @@ const Admin = () => {
         return <BlogManagement />;
       case "polls":
         return <PollManagement />;
+      case "quizzes":
+        return <QuizManagement />;
       case "vs-matches":
         return <AdminVSMatchManagement />;
       case "achievements":
@@ -121,7 +127,7 @@ const Admin = () => {
 
         {/* Desktop Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <ThemedTabsList className="hidden lg:grid w-full grid-cols-10 gap-1 h-auto p-2">
+          <ThemedTabsList className="hidden lg:grid w-full grid-cols-12 gap-1 h-auto p-2">
             {tabOptions.map(option => <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                 {option.label}
               </ThemedTabsTrigger>)}

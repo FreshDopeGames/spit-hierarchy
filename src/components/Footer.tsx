@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap, Instagram, BarChart3 } from "lucide-react";
+import { Music, Trophy, Calendar, PenTool, Pen, MessageSquare, Info, Zap, Instagram, BarChart3, Brain } from "lucide-react";
 import { APP_VERSION } from "@/config/version";
 const DiscordIcon = ({
   className
@@ -55,6 +55,12 @@ const Footer = () => {
                 <Link to="/vs" className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]" onClick={() => window.scrollTo(0, 0)}>
                   <Zap className="w-4 h-4 mr-2" />
                   VS Matches
+                </Link>
+              </li>
+              <li>
+                <Link to="/quiz" className="flex items-center text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]" onClick={() => window.scrollTo(0, 0)}>
+                  <Brain className="w-4 h-4 mr-2" />
+                  Rapper Quiz
                 </Link>
               </li>
               <li>

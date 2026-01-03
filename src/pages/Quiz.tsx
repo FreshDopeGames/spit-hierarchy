@@ -26,7 +26,7 @@ const Quiz: React.FC = () => {
           {/* Page Header */}
           <div className="text-center mb-8">
             <h1 className="text-3xl md:text-4xl font-[var(--theme-font-heading)] text-foreground mb-2">
-              🎤 Rapper Knowledge Quiz
+              Rapper Knowledge Quiz
             </h1>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               Put your hip-hop knowledge to the test. Answer questions about your favorite rappers, 

@@ -15,6 +15,7 @@ import {
   Shield,
   FileText,
   Instagram,
+  Brain,
 } from "lucide-react";
 import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
 
@@ -185,6 +186,16 @@ const NavigationSidebar = ({
                 >
                   <PenTool className="w-4 h-4 mr-3" />
                   Community Cypher
+                </ThemedButton>
+              </Link>
+
+              <Link to="/quiz" onClick={() => handleNavClick("/quiz")}>
+                <ThemedButton
+                  variant="ghost"
+                  className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
+                >
+                  <Brain className="w-4 h-4 mr-3" />
+                  Rapper Quiz
                 </ThemedButton>
               </Link>
 
