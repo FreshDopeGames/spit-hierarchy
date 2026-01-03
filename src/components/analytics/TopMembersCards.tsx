@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import SmallAvatar from "@/components/avatar/SmallAvatar";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
-import { MessageCircle, Vote, Trophy } from "lucide-react";
+import { MessageCircle, Vote, Trophy, HelpCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface TopMembersCardsProps {
@@ -244,10 +244,92 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
       })));
       return merged;
     },
-    staleTime: 30000, // Cache for 30 seconds only
-    gcTime: 60000, // Keep in cache for 1 minute
-    refetchOnMount: true, // Always refetch when component mounts
-    refetchOnWindowFocus: true, // Refetch when window regains focus
+    staleTime: 30000,
+    gcTime: 60000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
+
+  // Top Quiz Players Query
+  const { data: topQuizPlayers, isLoading: loadingQuizPlayers } = useQuery({
+    queryKey: ['top-quiz-players', timeRange],
+    queryFn: async () => {
+      console.log('Fetching top quiz players for timeRange:', timeRange);
+      
+      if (timeRange === 'week') {
+        // For weekly, count from user_quiz_attempts table directly
+        const { data: attempts, error: attemptsError } = await supabase
+          .from('user_quiz_attempts')
+          .select('user_id')
+          .gte('attempted_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+        
+        if (attemptsError) throw attemptsError;
+        if (!attempts || attempts.length === 0) return [];
+        
+        // Group by user and count
+        const userAttemptCounts = attempts.reduce((acc: any, attempt: any) => {
+          const userId = attempt.user_id;
+          if (!acc[userId]) acc[userId] = { id: userId, quiz_questions_answered: 0 };
+          acc[userId].quiz_questions_answered++;
+          return acc;
+        }, {});
+        
+        const memberStats = Object.values(userAttemptCounts)
+          .sort((a: any, b: any) => b.quiz_questions_answered - a.quiz_questions_answered)
+          .slice(0, 5);
+        
+        const userIds = memberStats.map((stat: any) => stat.id);
+        const { data: profiles } = await supabase
+          .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
+        
+        return memberStats.map((stat: any) => ({
+          id: stat.id,
+          quiz_questions_answered: stat.quiz_questions_answered,
+          profiles: profiles?.find(p => p.id === stat.id) || null
+        }));
+      }
+      
+      // All-time stats from member_stats
+      const { data: memberStats, error: statsError } = await supabase
+        .from('member_stats')
+        .select('id, quiz_questions_answered')
+        .gt('quiz_questions_answered', 0)
+        .order('quiz_questions_answered', { ascending: false })
+        .limit(5);
+      
+      if (statsError) {
+        console.error('Error fetching member stats for quiz players:', statsError);
+        throw statsError;
+      }
+      
+      if (!memberStats || memberStats.length === 0) {
+        console.log('No member stats found for quiz players');
+        return [];
+      }
+      
+      // Get user IDs
+      const userIds = memberStats.map(stat => stat.id);
+      
+      // Fetch profiles for these users using the secure batch function
+      const { data: profiles, error: profilesError } = await supabase
+        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
+      
+      if (profilesError) {
+        console.error('Error fetching profiles for quiz players:', profilesError);
+        throw profilesError;
+      }
+      
+      // Merge the data
+      return memberStats.map(stat => ({
+        id: stat.id,
+        quiz_questions_answered: stat.quiz_questions_answered,
+        profiles: profiles?.find(p => p.id === stat.id) || null
+      }));
+    },
+    staleTime: 30000,
+    gcTime: 60000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
   });
 
   const MemberCard = ({ 
@@ -339,7 +421,7 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
   );
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
       <MemberCard
         title="Top Voters"
         icon={Vote}
@@ -365,6 +447,15 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
         isLoading={loadingCommenters}
         metricKey="total_comments"
         metricLabel="comments"
+      />
+
+      <MemberCard
+        title="Top Quiz Players"
+        icon={HelpCircle}
+        data={topQuizPlayers || []}
+        isLoading={loadingQuizPlayers}
+        metricKey="quiz_questions_answered"
+        metricLabel="questions answered"
       />
     </div>
   );
