@@ -1,6 +1,6 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { User, Disc, MapPin, Calendar, Layers, Cake, UserCheck } from 'lucide-react';
+import { User, Disc, MapPin, Calendar, Layers, Cake, UserCheck, Library, AtSign } from 'lucide-react';
 import type { QuizCategory } from '@/hooks/useQuiz';
 
 interface QuizCategorySelectorProps {
@@ -19,8 +19,10 @@ const categories: Array<{
   { value: 'real_name', label: 'Real Name', icon: UserCheck, description: 'Behind the stage name' },
   { value: 'origins', label: 'Origins', icon: MapPin, description: 'Where they\'re from' },
   { value: 'career', label: 'Career', icon: Calendar, description: 'Timeline & history' },
-  { value: 'albums', label: 'Albums', icon: Disc, description: 'Discography knowledge' },
-  { value: 'rapper_facts', label: 'Rapper Facts', icon: User, description: 'Names, aliases & more' },
+  { value: 'discography', label: 'Discography', icon: Library, description: 'Albums & releases' },
+  { value: 'aliases', label: 'Aliases', icon: AtSign, description: 'AKA & nicknames' },
+  { value: 'albums', label: 'Albums', icon: Disc, description: 'Album trivia' },
+  { value: 'rapper_facts', label: 'Rapper Facts', icon: User, description: 'General knowledge' },
 ];
 
 const QuizCategorySelector: React.FC<QuizCategorySelectorProps> = ({
