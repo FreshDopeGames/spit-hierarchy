@@ -45,6 +45,48 @@ const QuizManagement: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState<string>('all');
   const [editingQuestion, setEditingQuestion] = useState<QuizQuestion | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isImporting, setIsImporting] = useState(false);
+  const [importResult, setImportResult] = useState<{
+    total: number;
+    imported: number;
+    skipped: number;
+    errors: string[];
+    unmatchedRappers: string[];
+  } | null>(null);
+
+  const handleImportQuestions = async () => {
+    setIsImporting(true);
+    setImportResult(null);
+    
+    try {
+      // Fetch the CSV file
+      const response = await fetch('/src/data/quiz-questions-import.csv');
+      if (!response.ok) {
+        throw new Error('Failed to load CSV file');
+      }
+      const csvData = await response.text();
+      
+      // Call the edge function
+      const { data, error } = await supabase.functions.invoke('import-quiz-questions', {
+        body: { csvData, dryRun: false }
+      });
+      
+      if (error) throw error;
+      
+      if (data.success) {
+        setImportResult(data.result);
+        toast.success(`Imported ${data.result.imported} questions successfully!`);
+        queryClient.invalidateQueries({ queryKey: ['admin-quiz-questions'] });
+      } else {
+        throw new Error(data.error || 'Import failed');
+      }
+    } catch (error: any) {
+      console.error('Import error:', error);
+      toast.error(error.message || 'Failed to import questions');
+    } finally {
+      setIsImporting(false);
+    }
+  };
 
   // Fetch questions
   const { data: questions = [], isLoading: loadingQuestions } = useQuery({
@@ -365,22 +407,68 @@ const QuizManagement: React.FC = () => {
           <ThemedCard className="p-6">
             <h3 className="text-lg font-semibold text-foreground mb-4">Import Quiz Questions</h3>
             <p className="text-muted-foreground mb-4">
-              Import questions from a CSV file. The CSV should have the following columns:
+              Import 873 pre-prepared questions covering birth years, origins, and real names of hip-hop artists.
             </p>
-            <ul className="list-disc list-inside text-muted-foreground mb-6 space-y-1">
-              <li><strong>rapper_name</strong> - Name of the rapper (for matching)</li>
-              <li><strong>category</strong> - Birth Year, Origin, or Real Name</li>
-              <li><strong>question_text</strong> - The quiz question</li>
-              <li><strong>correct_answer</strong> - The correct answer</li>
-              <li><strong>wrong_answer_1, wrong_answer_2, wrong_answer_3</strong> - Incorrect options</li>
-            </ul>
-            <p className="text-sm text-muted-foreground mb-4">
-              A sample CSV with 873 questions has been prepared. Use the edge function to import it.
+            <p className="text-sm text-muted-foreground mb-6">
+              The import will automatically match rapper names to existing database entries and extract rapper names from question text.
             </p>
-            <ThemedButton disabled className="opacity-50">
+            
+            <ThemedButton 
+              onClick={handleImportQuestions} 
+              disabled={isImporting}
+              className="mb-6"
+            >
               <Upload className="w-4 h-4 mr-2" />
-              CSV Upload Coming Soon
+              {isImporting ? 'Importing...' : 'Import Questions from CSV'}
             </ThemedButton>
+
+            {importResult && (
+              <div className="space-y-4 mt-4 p-4 border border-border rounded-lg">
+                <h4 className="font-semibold text-foreground">Import Results</h4>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  <div className="text-center p-3 bg-muted/50 rounded">
+                    <div className="text-2xl font-bold text-foreground">{importResult.total}</div>
+                    <div className="text-xs text-muted-foreground">Total Parsed</div>
+                  </div>
+                  <div className="text-center p-3 bg-green-500/20 rounded">
+                    <div className="text-2xl font-bold text-green-400">{importResult.imported}</div>
+                    <div className="text-xs text-muted-foreground">Imported</div>
+                  </div>
+                  <div className="text-center p-3 bg-yellow-500/20 rounded">
+                    <div className="text-2xl font-bold text-yellow-400">{importResult.skipped}</div>
+                    <div className="text-xs text-muted-foreground">Skipped</div>
+                  </div>
+                  <div className="text-center p-3 bg-orange-500/20 rounded">
+                    <div className="text-2xl font-bold text-orange-400">{importResult.unmatchedRappers.length}</div>
+                    <div className="text-xs text-muted-foreground">Unmatched Rappers</div>
+                  </div>
+                </div>
+                
+                {importResult.errors.length > 0 && (
+                  <div className="mt-4">
+                    <h5 className="text-sm font-medium text-destructive mb-2">Errors:</h5>
+                    <ul className="text-xs text-muted-foreground space-y-1 max-h-32 overflow-y-auto">
+                      {importResult.errors.slice(0, 10).map((err, i) => (
+                        <li key={i}>{err}</li>
+                      ))}
+                      {importResult.errors.length > 10 && (
+                        <li>...and {importResult.errors.length - 10} more</li>
+                      )}
+                    </ul>
+                  </div>
+                )}
+                
+                {importResult.unmatchedRappers.length > 0 && (
+                  <div className="mt-4">
+                    <h5 className="text-sm font-medium text-orange-400 mb-2">Unmatched Rappers (questions still imported with name only):</h5>
+                    <p className="text-xs text-muted-foreground">
+                      {importResult.unmatchedRappers.slice(0, 20).join(', ')}
+                      {importResult.unmatchedRappers.length > 20 && ` ...and ${importResult.unmatchedRappers.length - 20} more`}
+                    </p>
+                  </div>
+                )}
+              </div>
+            )}
           </ThemedCard>
         </ThemedTabsContent>
       </ThemedTabs>

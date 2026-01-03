@@ -6,13 +6,16 @@ const corsHeaders = {
 };
 
 interface CSVQuestion {
-  rapper: string;
-  category: string;
-  question: string;
+  question_id: string;
+  question_text: string;
   correct_answer: string;
   wrong_answer_1: string;
   wrong_answer_2: string;
   wrong_answer_3: string;
+  category: string;
+  difficulty: string;
+  source_field: string;
+  tags: string;
 }
 
 interface ImportResult {
@@ -56,13 +59,16 @@ Deno.serve(async (req) => {
       const values = parseCSVLine(lines[i]);
       if (values.length >= 7) {
         questions.push({
-          rapper: values[0]?.trim() || '',
-          category: values[1]?.trim() || '',
-          question: values[2]?.trim() || '',
-          correct_answer: values[3]?.trim() || '',
-          wrong_answer_1: values[4]?.trim() || '',
-          wrong_answer_2: values[5]?.trim() || '',
-          wrong_answer_3: values[6]?.trim() || '',
+          question_id: values[0]?.trim() || '',
+          question_text: values[1]?.trim() || '',
+          correct_answer: values[2]?.trim() || '',
+          wrong_answer_1: values[3]?.trim() || '',
+          wrong_answer_2: values[4]?.trim() || '',
+          wrong_answer_3: values[5]?.trim() || '',
+          category: values[6]?.trim() || '',
+          difficulty: values[7]?.trim() || 'medium',
+          source_field: values[8]?.trim() || '',
+          tags: values[9]?.trim() || '',
         });
       }
     }
@@ -108,28 +114,29 @@ Deno.serve(async (req) => {
       // Map category
       const category = mapCategory(q.category);
       if (!category) {
-        result.errors.push(`Unknown category: ${q.category} for question: ${q.question.substring(0, 50)}...`);
+        result.errors.push(`Unknown category: ${q.category} for question: ${q.question_text.substring(0, 50)}...`);
         result.skipped++;
         continue;
       }
 
-      // Try to match rapper
-      const rapperMatch = rapperMap.get(q.rapper.toLowerCase());
+      // Extract rapper name from question text
+      const rapperName = extractRapperName(q.question_text);
+      const rapperMatch = rapperName ? rapperMap.get(rapperName.toLowerCase()) : null;
       
-      if (!rapperMatch) {
-        unmatchedSet.add(q.rapper);
+      if (rapperName && !rapperMatch) {
+        unmatchedSet.add(rapperName);
       }
 
-      // Determine difficulty based on category
-      const difficulty = determineDifficulty(category, q);
+      // Use difficulty from CSV
+      const difficulty = q.difficulty.toLowerCase() || 'medium';
 
       questionsToInsert.push({
-        question_text: q.question,
+        question_text: q.question_text,
         question_type: 'multiple_choice',
         category,
         difficulty,
         rapper_id: rapperMatch?.id || null,
-        rapper_name: q.rapper,
+        rapper_name: rapperName || null,
         correct_answer: q.correct_answer,
         wrong_answers: [q.wrong_answer_1, q.wrong_answer_2, q.wrong_answer_3].filter(Boolean),
         points: getPointsForDifficulty(difficulty),
@@ -200,11 +207,31 @@ function parseCSVLine(line: string): string[] {
   return result;
 }
 
+function extractRapperName(questionText: string): string | null {
+  // Pattern: "What year was X born?"
+  let match = questionText.match(/What year was (.+?) born\?/i);
+  if (match) return match[1];
+  
+  // Pattern: "Which city or region is X associated with?"
+  match = questionText.match(/Which city or region is (.+?) associated with\?/i);
+  if (match) return match[1];
+  
+  // Pattern: "What is the real name of X?"
+  match = questionText.match(/What is the real name of (.+?)\?/i);
+  if (match) return match[1];
+  
+  return null;
+}
+
 function mapCategory(csvCategory: string): string | null {
   const categoryMap: Record<string, string> = {
+    'birth_year': 'birth_year',
     'birth year': 'birth_year',
     'origin': 'origins',
+    'origins': 'origins',
+    'real_name': 'real_name',
     'real name': 'real_name',
+    'rapper_facts': 'rapper_facts',
     'rapper facts': 'rapper_facts',
     'albums': 'albums',
     'career': 'career',
@@ -212,23 +239,6 @@ function mapCategory(csvCategory: string): string | null {
   };
   
   return categoryMap[csvCategory.toLowerCase()] || null;
-}
-
-function determineDifficulty(category: string, q: CSVQuestion): string {
-  // Birth year questions: harder if years are close together
-  if (category === 'birth_year') {
-    const years = [q.correct_answer, q.wrong_answer_1, q.wrong_answer_2, q.wrong_answer_3]
-      .map(y => parseInt(y))
-      .filter(y => !isNaN(y));
-    
-    if (years.length >= 4) {
-      const range = Math.max(...years) - Math.min(...years);
-      if (range <= 5) return 'hard';
-      if (range <= 10) return 'medium';
-    }
-  }
-  
-  return 'medium'; // Default difficulty
 }
 
 function getPointsForDifficulty(difficulty: string): number {
