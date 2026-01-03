@@ -3538,6 +3538,7 @@ export type Database = {
         Args: { profile_user_id: string }
         Returns: {
           bars_upvotes: number
+          quiz_questions_answered: number
           rappers_ranked: number
           rappers_rated: number
           total_achievements: number

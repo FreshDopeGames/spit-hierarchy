@@ -15,6 +15,7 @@ interface MemberStats {
   rappers_ranked?: number;
   rappers_rated?: number;
   bars_upvotes?: number;
+  quiz_questions_answered?: number;
   vs_match_votes?: number;
   total_achievements?: number;
 }
@@ -160,7 +161,7 @@ const UnifiedProfileHeader = ({
         {/* Stats */}
         {!isOwnProfile && profile.member_stats?.rappers_ranked !== undefined ? (
           // Public profile stats
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 border-t border-[var(--theme-textMuted)]/20 pt-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 border-t border-[var(--theme-textMuted)]/20 pt-6">
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
                 {profile.member_stats?.rappers_ranked || 0}
@@ -178,6 +179,12 @@ const UnifiedProfileHeader = ({
                 {profile.member_stats?.bars_upvotes || 0}
               </div>
               <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Bars</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
+                {profile.member_stats?.quiz_questions_answered || 0}
+              </div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Quiz Questions</div>
             </div>
             <div className="text-center">
               <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
