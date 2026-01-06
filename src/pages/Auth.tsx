@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
@@ -9,6 +8,7 @@ import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import AuthForm from "@/components/auth/AuthForm";
 import AuthToggle from "@/components/auth/AuthToggle";
 import SEOHead from "@/components/seo/SEOHead";
+import { useUTMCapture, getStoredUTMData, clearUTMData } from "@/hooks/useUTMCapture";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,6 +19,9 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const [socialLoading, setSocialLoading] = useState<string | null>(null);
   const [isScrolled, setIsScrolled] = useState(false);
+  
+  // Capture UTM parameters on page load
+  useUTMCapture();
 
   useEffect(() => {
     // Check if user is already logged in
@@ -42,10 +45,24 @@ const Auth = () => {
   const handleSocialAuth = async (provider: 'google') => {
     setSocialLoading(provider);
     try {
+      // Get UTM data for OAuth signups
+      const utmData = getStoredUTMData();
+      const utmParams = utmData ? new URLSearchParams({
+        ...(utmData.utm_source && { utm_source: utmData.utm_source }),
+        ...(utmData.utm_medium && { utm_medium: utmData.utm_medium }),
+        ...(utmData.utm_campaign && { utm_campaign: utmData.utm_campaign }),
+        ...(utmData.utm_content && { utm_content: utmData.utm_content }),
+        ...(utmData.utm_term && { utm_term: utmData.utm_term }),
+      }).toString() : '';
+      
+      const redirectUrl = utmParams 
+        ? `${window.location.origin}/?${utmParams}` 
+        : `${window.location.origin}/`;
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider,
         options: {
-          redirectTo: `${window.location.origin}/`
+          redirectTo: redirectUrl
         }
       });
       if (error) throw error;
@@ -74,19 +91,33 @@ const Auth = () => {
           window.location.href = '/';
         }
       } else {
+        // Get UTM data for email signups
+        const utmData = getStoredUTMData();
+        
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
           options: {
             emailRedirectTo: `${window.location.origin}/`,
             data: {
-              username
+              username,
+              // Include UTM data in user metadata
+              utm_source: utmData?.utm_source || null,
+              utm_medium: utmData?.utm_medium || null,
+              utm_campaign: utmData?.utm_campaign || null,
+              utm_content: utmData?.utm_content || null,
+              utm_term: utmData?.utm_term || null,
+              referrer_url: utmData?.referrer_url || null,
+              landing_page: utmData?.landing_page || null,
             }
           }
         });
         if (error) throw error;
         
         if (data.user) {
+          // Clear UTM data after successful signup
+          clearUTMData();
+          
           if (data.user.email_confirmed_at) {
             toast.success("Welcome to Spit Hierarchy! You can now start ranking rap legends");
             window.location.href = '/';
