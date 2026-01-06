@@ -2706,6 +2706,51 @@ export type Database = {
           },
         ]
       }
+      user_referrals: {
+        Row: {
+          created_at: string | null
+          id: string
+          ip_address: string | null
+          landing_page: string | null
+          referrer_url: string | null
+          user_agent: string | null
+          user_id: string | null
+          utm_campaign: string | null
+          utm_content: string | null
+          utm_medium: string | null
+          utm_source: string | null
+          utm_term: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          landing_page?: string | null
+          referrer_url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          ip_address?: string | null
+          landing_page?: string | null
+          referrer_url?: string | null
+          user_agent?: string | null
+          user_id?: string | null
+          utm_campaign?: string | null
+          utm_content?: string | null
+          utm_medium?: string | null
+          utm_source?: string | null
+          utm_term?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -3385,6 +3430,14 @@ export type Database = {
         Args: { album_id: string; album_title: string }
         Returns: string
       }
+      get_acquisition_by_source: {
+        Args: { end_date?: string; start_date?: string }
+        Returns: {
+          medium: string
+          signup_count: number
+          source: string
+        }[]
+      }
       get_album_by_slugs: {
         Args: { p_album_slug: string; p_rapper_slug: string }
         Returns: Json
@@ -3402,6 +3455,17 @@ export type Database = {
           tracks: Json
         }[]
       }
+      get_campaign_performance: {
+        Args: { end_date?: string; start_date?: string }
+        Returns: {
+          campaign: string
+          first_signup: string
+          last_signup: string
+          medium: string
+          signup_count: number
+          source: string
+        }[]
+      }
       get_category_voting_analytics: {
         Args: never
         Returns: {
@@ -3412,6 +3476,14 @@ export type Database = {
           total_votes: number
           unique_rappers: number
           unique_voters: number
+        }[]
+      }
+      get_daily_signups_by_source: {
+        Args: { end_date?: string; start_date?: string }
+        Returns: {
+          signup_count: number
+          signup_date: string
+          source: string
         }[]
       }
       get_member_with_most_achievements: {
