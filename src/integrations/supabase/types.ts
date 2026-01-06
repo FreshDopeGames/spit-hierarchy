@@ -3838,6 +3838,7 @@ export type Database = {
         Args: { stat_field: string }
         Returns: undefined
       }
+      increment_session_count: { Args: never; Returns: number }
       is_admin: { Args: never; Returns: boolean }
       is_admin_user: { Args: never; Returns: boolean }
       is_moderator_or_admin: { Args: never; Returns: boolean }

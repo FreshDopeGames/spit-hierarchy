@@ -4,6 +4,7 @@ import AppInitializer from "@/components/AppInitializer";
 import EmailConfirmationHandler from "@/components/auth/EmailConfirmationHandler";
 import ScrollToTop from "@/components/ScrollToTop";
 import { useUTMCapture } from "@/hooks/useUTMCapture";
+import { useSessionTracking } from "@/hooks/useSessionTracking";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import UserProfile from "./pages/UserProfile";
@@ -33,9 +34,10 @@ import Quiz from "./pages/Quiz";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { CookieSettingsLink } from "@/components/CookieSettingsLink";
 
-// Component to capture UTM params on any page
-const UTMCaptureWrapper = ({ children }: { children: React.ReactNode }) => {
+// Component to capture UTM params and track sessions
+const AppHooksWrapper = ({ children }: { children: React.ReactNode }) => {
   useUTMCapture();
+  useSessionTracking();
   return <>{children}</>;
 };
 
@@ -43,7 +45,7 @@ function App() {
   return (
     <AppInitializer>
       <BrowserRouter>
-        <UTMCaptureWrapper>
+        <AppHooksWrapper>
           <ScrollToTop />
           <EmailConfirmationHandler />
           <CookieConsentBanner />
@@ -109,7 +111,7 @@ function App() {
           {/* Catch all route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-        </UTMCaptureWrapper>
+        </AppHooksWrapper>
       </BrowserRouter>
     </AppInitializer>
   );
