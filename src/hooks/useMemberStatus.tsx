@@ -13,19 +13,19 @@ import {
 export type MemberStatus = 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond';
 
 interface StatusThresholds {
-  bronze: { min: 0; max: 249; multiplier: 1 };
-  silver: { min: 250; max: 749; multiplier: 2 };
-  gold: { min: 750; max: 1499; multiplier: 3 };
-  platinum: { min: 1500; max: 2999; multiplier: 4 };
-  diamond: { min: 3000; max: number; multiplier: 5 };
+  bronze: { min: number; max: number; multiplier: number };
+  silver: { min: number; max: number; multiplier: number };
+  gold: { min: number; max: number; multiplier: number };
+  platinum: { min: number; max: number; multiplier: number };
+  diamond: { min: number; max: number; multiplier: number };
 }
 
 const STATUS_THRESHOLDS: StatusThresholds = {
-  bronze: { min: 0, max: 249, multiplier: 1 },
-  silver: { min: 250, max: 749, multiplier: 2 },
-  gold: { min: 750, max: 1499, multiplier: 3 },
-  platinum: { min: 1500, max: 2999, multiplier: 4 },
-  diamond: { min: 3000, max: Infinity, multiplier: 5 }
+  bronze: { min: 0, max: 499, multiplier: 1 },
+  silver: { min: 500, max: 1499, multiplier: 2 },
+  gold: { min: 1500, max: 3499, multiplier: 3 },
+  platinum: { min: 3500, max: 6999, multiplier: 4 },
+  diamond: { min: 7000, max: Infinity, multiplier: 5 }
 };
 
 export const useMemberStatus = () => {
