@@ -121,6 +121,22 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Efficient Data Fetching**: Single aggregated query with 5-minute cache, minimal data transfer
 - **Loading States**: Skeleton with 4 cards matching final grid layout
 
+### 12. About Page
+- **Platform Introduction**: Hero section with animated call-to-action
+- **What We Do**: Mission statement and platform value proposition
+- **Features Overview**: Key platform capabilities with icons
+- **How It Works**: Step-by-step guide for new users (Vote, Earn, Rise, Connect)
+- **Member Levels Card**: XP economy explanation with visual progress bar
+  - Equal-width segmented progress bar (Bronze → Diamond)
+  - XP threshold markers (0, 500, 1.5k, 3.5k, 7k+)
+  - Vote power multipliers (1x → 5x) in grid layout
+  - Ways to earn XP (session visits, achievements)
+- **Creator Card**: Platform creator bio with photo
+  - Craig Tinsley (S2BKAS) profile
+  - Responsive layout (stacked mobile, side-by-side desktop)
+  - Themed card styling with primary color accents
+- **Call to Action**: Registration/exploration encouragement
+
 ## Technical Architecture
 
 ### Frontend Stack

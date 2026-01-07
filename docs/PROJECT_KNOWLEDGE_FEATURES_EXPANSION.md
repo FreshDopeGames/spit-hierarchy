@@ -1144,4 +1144,71 @@ career_length = current_year - career_start_year (if still active)
 
 ---
 
+## About Page Components
+
+### Overview
+The About page provides comprehensive information about the platform, its creator, and the member progression system.
+
+### About Page Sections
+
+#### Hero Section
+- **Component**: `src/components/about/AboutHero.tsx`
+- Animated entry with platform tagline
+- Call-to-action buttons
+
+#### What We Do Section
+- **Component**: `src/components/about/AboutWhatWeDo.tsx`
+- Platform mission and value proposition
+- Feature highlights with descriptions
+
+#### Features Section
+- **Component**: `src/components/about/AboutFeatures.tsx`
+- Icon-based feature grid
+- Key platform capabilities overview
+
+#### How It Works Section
+- **Component**: `src/components/about/AboutHowItWorks.tsx`
+- Step-by-step engagement guide:
+  1. Vote - Cast votes on favorite rappers
+  2. Earn - Gain XP and achievements
+  3. Rise - Progress through member levels
+  4. Connect - Engage with community
+
+#### Member Levels Section
+- **Component**: `src/components/about/AboutMemberLevels.tsx`
+- **Visual Progress Bar**: Equal-width segments for all 5 tiers (Bronze → Diamond)
+- **XP Thresholds**: Markers at 0, 500, 1.5k, 3.5k, 7k+ aligned to segments
+- **Vote Power Grid**: Multiplier display (Bronze 1x → Diamond 5x)
+- **Ways to Earn XP**:
+  - Session visits (+10 XP per new session)
+  - Achievements (+5 to +4,000 XP depending on rarity)
+- **Design**: Dark themed card with gradient progress segments
+
+#### Creator Section
+- **Component**: `src/components/about/AboutCreator.tsx`
+- **Creator Profile**: Craig Tinsley (S2BKAS)
+- **Bio**: Educator, designer, and lyricist from Los Angeles
+- **Image**: `src/assets/creator-craig-tinsley.jpg`
+- **Layout**: Responsive flexbox (vertical mobile, horizontal desktop)
+- **Styling**: Themed card with primary color borders and shadows
+
+#### Call to Action Section
+- **Component**: `src/components/about/AboutCallToAction.tsx`
+- Registration encouragement
+- Exploration prompts
+
+### Implementation Details
+
+**Page Component**: `src/pages/About.tsx`
+
+**Features**:
+- Page visit tracking for achievements (`about_visits`)
+- SEO metadata with custom title and description
+- Scroll-based header state management
+- Consistent themed card styling throughout
+
+**Routing**: `/about`
+
+---
+
 *This document provides comprehensive details on advanced features. For basic feature overview, see PROJECT_KNOWLEDGE.md. For site architecture, see SITE_REPORT.md.*
