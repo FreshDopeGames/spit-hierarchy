@@ -16,11 +16,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
   return (
     <div
       onClick={onClick}
-      className="border rounded-lg p-3 cursor-pointer transition-colors group relative hover:opacity-90"
-      style={{
-        backgroundColor: 'hsl(var(--theme-surfaceSecondary))',
-        borderColor: 'hsl(var(--theme-border))',
-      }}
+      className="border-2 border-[hsl(var(--theme-primary))]/20 rounded-lg p-3 cursor-pointer transition-colors group relative hover:opacity-90 bg-[hsl(var(--theme-surfaceSecondary))]"
     >
       {/* Position number in top left */}
       <div 
@@ -39,11 +35,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
         {rapper ? (
           <>
             <div 
-              className="w-full max-w-60 h-32 sm:h-40 rounded-lg overflow-hidden border"
-              style={{
-                backgroundColor: 'hsl(var(--theme-surface))',
-                borderColor: 'hsl(var(--theme-border))'
-              }}
+              className="w-full max-w-60 h-32 sm:h-40 rounded-lg overflow-hidden border border-[hsl(var(--theme-primary))]/20 bg-[hsl(var(--theme-surface))]"
             >
               {rapper.image_url ? (
                 <img 
@@ -70,11 +62,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
         ) : (
           <>
             <div 
-              className="w-full max-w-60 h-32 sm:h-40 rounded-lg border-2 border-dashed flex items-center justify-center group-hover:opacity-80"
-              style={{
-                backgroundColor: 'hsl(var(--theme-surface))',
-                borderColor: 'hsl(var(--theme-border))'
-              }}
+              className="w-full max-w-60 h-32 sm:h-40 rounded-lg border-2 border-dashed border-[hsl(var(--theme-primary))]/30 flex items-center justify-center group-hover:opacity-80 bg-[hsl(var(--theme-surface))]"
             >
               <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
             </div>

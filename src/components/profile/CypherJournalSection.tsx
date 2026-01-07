@@ -14,7 +14,7 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
 
   if (isLoading) {
     return (
-      <div className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[hsl(var(--theme-primary))]/20 rounded-lg p-6">
+      <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20 rounded-lg p-6">
         <h3 className="text-lg sm:text-xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-center mb-4">
           Cypher Journal
         </h3>
@@ -30,7 +30,7 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
   // Don't render if user has no cypher verses
   if (!data || data.verses.length === 0) {
     return (
-      <div className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[hsl(var(--theme-primary))]/20 rounded-lg p-6">
+      <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20 rounded-lg p-6">
         <h3 className="text-lg sm:text-xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-center mb-4">
           Cypher Journal
         </h3>
@@ -54,7 +54,7 @@ const CypherJournalSection = ({ userId }: CypherJournalSectionProps) => {
   const { verses, stats } = data;
 
   return (
-    <div className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[hsl(var(--theme-primary))]/20 rounded-lg p-6">
+    <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20 rounded-lg p-6">
       {/* Header */}
       <h3 className="text-lg sm:text-xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-center mb-4">
         Cypher Journal
