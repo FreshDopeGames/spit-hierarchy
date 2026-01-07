@@ -10,7 +10,7 @@ const VoteNotesSection = ({
   if (!voteNotes || voteNotes.length === 0) {
     return;
   }
-  return <div className="bg-card rounded-lg p-6 border-4">
+  return <div className="bg-black rounded-lg p-6 border-4 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20">
       <div className="flex items-center gap-2 mb-4">
         <MessageSquare className="h-5 w-5 text-muted-foreground" />
         <h3 className="text-lg font-semibold">Vote Notes ({voteNotes.length})</h3>
