@@ -32,8 +32,8 @@ export const useSessionTracking = () => {
         sessionStorage.setItem(SESSION_KEY, 'true');
 
         // Show welcome back toast with XP
-        toast.success('Welcome back! +5 XP', {
-          description: `Session #${sessionCount} - You earned 5 points for starting a new session`,
+        toast.success('Welcome back! +10 XP', {
+          description: `Session #${sessionCount} - You earned 10 points for starting a new session`,
         });
       } catch (err) {
         console.error('Session tracking error:', err);
