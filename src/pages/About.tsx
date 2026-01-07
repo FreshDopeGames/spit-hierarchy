@@ -7,6 +7,7 @@ import AboutWhatWeDo from "@/components/about/AboutWhatWeDo";
 import AboutFeatures from "@/components/about/AboutFeatures";
 import AboutHowItWorks from "@/components/about/AboutHowItWorks";
 import AboutMemberLevels from "@/components/about/AboutMemberLevels";
+import AboutCreator from "@/components/about/AboutCreator";
 import AboutCallToAction from "@/components/about/AboutCallToAction";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 import SEOHead from "@/components/seo/SEOHead";
@@ -46,6 +47,7 @@ const About = () => {
           <AboutFeatures />
           <AboutHowItWorks />
           <AboutMemberLevels />
+          <AboutCreator />
           <AboutCallToAction />
         </div>
 
