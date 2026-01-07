@@ -27,37 +27,30 @@ const AboutMemberLevels = () => {
         </p>
 
         {/* Segmented Progress Bar */}
-        <div className="space-y-3">
+        <div className="space-y-2">
           <div className="flex h-8 rounded-lg overflow-hidden border-2 border-[hsl(var(--theme-primary))]/30">
-            {levels.map((level, index) => {
-              const width = level.maxXP 
-                ? ((level.maxXP - level.minXP + 1) / totalXP) * 100
-                : 15; // Diamond gets extra visual space
-              
-              return (
-                <div
-                  key={level.name}
-                  className={`bg-gradient-to-r ${level.color} flex items-center justify-center relative group`}
-                  style={{ width: `${width}%` }}
-                >
-                  <span className="text-xs font-bold text-black/80 hidden sm:block">
-                    {level.name}
-                  </span>
-                  {index < levels.length - 1 && (
-                    <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-black/30" />
-                  )}
-                </div>
-              );
-            })}
+            {levels.map((level, index) => (
+              <div
+                key={level.name}
+                className={`bg-gradient-to-r ${level.color} flex items-center justify-center relative flex-1`}
+              >
+                <span className="text-xs font-bold text-black/80 hidden sm:block">
+                  {level.name}
+                </span>
+                {index < levels.length - 1 && (
+                  <div className="absolute right-0 top-0 bottom-0 w-0.5 bg-black/30" />
+                )}
+              </div>
+            ))}
           </div>
           
-          {/* XP Markers */}
-          <div className="flex justify-between text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
-            <span>0 XP</span>
-            <span>500</span>
-            <span>1,500</span>
-            <span>3,500</span>
-            <span>7,000+</span>
+          {/* XP Markers - aligned to segment boundaries */}
+          <div className="flex text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+            <span className="flex-1 text-left">0</span>
+            <span className="flex-1 text-center">500</span>
+            <span className="flex-1 text-center">1.5k</span>
+            <span className="flex-1 text-center">3.5k</span>
+            <span className="flex-1 text-right">7k+</span>
           </div>
         </div>
 
