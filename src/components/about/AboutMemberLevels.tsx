@@ -4,10 +4,10 @@ import { Crown, Star } from "lucide-react";
 
 const levels = [
   { name: "Bronze", minXP: 0, maxXP: 499, color: "from-amber-700 to-amber-600", textColor: "text-amber-600", multiplier: "1x" },
-  { name: "Silver", minXP: 500, maxXP: 1499, color: "from-gray-400 to-gray-300", textColor: "text-gray-400", multiplier: "1.5x" },
-  { name: "Gold", minXP: 1500, maxXP: 3499, color: "from-yellow-500 to-yellow-400", textColor: "text-yellow-500", multiplier: "2x" },
-  { name: "Platinum", minXP: 3500, maxXP: 6999, color: "from-slate-300 to-white", textColor: "text-slate-300", multiplier: "2.5x" },
-  { name: "Diamond", minXP: 7000, maxXP: null, color: "from-cyan-400 to-cyan-300", textColor: "text-cyan-400", multiplier: "3x" },
+  { name: "Silver", minXP: 500, maxXP: 1499, color: "from-gray-400 to-gray-300", textColor: "text-gray-400", multiplier: "2x" },
+  { name: "Gold", minXP: 1500, maxXP: 3499, color: "from-yellow-500 to-yellow-400", textColor: "text-yellow-500", multiplier: "3x" },
+  { name: "Platinum", minXP: 3500, maxXP: 6999, color: "from-slate-300 to-white", textColor: "text-slate-300", multiplier: "4x" },
+  { name: "Diamond", minXP: 7000, maxXP: null, color: "from-cyan-400 to-cyan-300", textColor: "text-cyan-400", multiplier: "5x" },
 ];
 
 const AboutMemberLevels = () => {
