@@ -50,7 +50,7 @@ const MyTopFiveSection = () => {
     };
   });
   if (isLoading) {
-    return <div className="bg-black border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+    return <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[hsl(var(--theme-primary))]/20">
         <div className="animate-pulse">
           <div className="h-6 rounded mb-4 w-32 mx-auto bg-rap-carbon/30"></div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
@@ -62,12 +62,12 @@ const MyTopFiveSection = () => {
       </div>;
   }
   return <>
-      <div className="bg-black border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+      <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[hsl(var(--theme-primary))]/20">
         <div className="relative mb-4">
           <h3 className="text-lg sm:text-xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] text-center">
             My Top 5
           </h3>
-          <Button onClick={() => setIsShareOpen(true)} variant="outline" size="sm" className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 border-rap-gold/30 text-rap-gold hover:bg-rap-gold hover:text-black">
+          <Button onClick={() => setIsShareOpen(true)} variant="outline" size="sm" className="absolute right-0 top-1/2 -translate-y-1/2 flex items-center gap-2 border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-black">
             <Share2 className="w-4 h-4" />
             Share
           </Button>

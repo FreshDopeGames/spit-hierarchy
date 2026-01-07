@@ -213,39 +213,16 @@ const UserProfile = () => {
 
               {/* Show onboarding trigger if user has no top 5 */}
               {memberStats?.top_five_created === 0 && (
-                <div 
-                  className="border-4 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg text-center"
-                  style={{
-                    backgroundColor: 'hsl(var(--theme-surface))',
-                    borderColor: 'hsl(var(--theme-border))',
-                    boxShadow: '0 10px 25px -5px hsl(var(--theme-primary)/0.1), 0 4px 6px -2px hsl(var(--theme-primary)/0.05)'
-                  }}
-                >
-                  <h3 
-                    className="text-lg font-bold mb-2"
-                    style={{ 
-                      color: 'hsl(var(--theme-primary))',
-                      fontFamily: 'var(--theme-font-heading)'
-                    }}
-                  >
+                <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[hsl(var(--theme-primary))]/20 text-center">
+                  <h3 className="text-lg font-bold mb-2 text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
                     Get Started with Your Top 5
                   </h3>
-                  <p 
-                    className="mb-4"
-                    style={{ 
-                      color: 'hsl(var(--theme-textMuted))',
-                      fontFamily: 'var(--theme-font-body)'
-                    }}
-                  >
+                  <p className="mb-4 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
                     Select your favorite rappers to personalize your experience and connect with the community.
                   </p>
                   <Button
                     onClick={openOnboarding}
-                    style={{
-                      backgroundColor: 'hsl(var(--theme-primary))',
-                      color: 'hsl(var(--theme-textLight))'
-                    }}
-                    className="hover:opacity-90"
+                    className="bg-[hsl(var(--theme-primary))] text-[hsl(var(--theme-textLight))] hover:opacity-90"
                   >
                     Choose My Top 5
                   </Button>
