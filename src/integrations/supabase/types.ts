@@ -714,6 +714,7 @@ export type Database = {
           ranking_lists_created: number | null
           rappers_voted_count: number | null
           referrals_count: number | null
+          session_count: number
           status: Database["public"]["Enums"]["member_status"] | null
           top_five_created: number | null
           total_comments: number | null
@@ -741,6 +742,7 @@ export type Database = {
           ranking_lists_created?: number | null
           rappers_voted_count?: number | null
           referrals_count?: number | null
+          session_count?: number
           status?: Database["public"]["Enums"]["member_status"] | null
           top_five_created?: number | null
           total_comments?: number | null
@@ -768,6 +770,7 @@ export type Database = {
           ranking_lists_created?: number | null
           rappers_voted_count?: number | null
           referrals_count?: number | null
+          session_count?: number
           status?: Database["public"]["Enums"]["member_status"] | null
           top_five_created?: number | null
           total_comments?: number | null

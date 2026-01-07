@@ -23,7 +23,7 @@ const MemberStatusCard = ({ memberStats }: MemberStatusCardProps) => {
   const voteMultiplier = getVoteMultiplier();
 
   return (
-    <div className="bg-rap-carbon/90 border border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 shadow-lg shadow-rap-gold/20">
+    <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-4 sm:mb-6 shadow-lg shadow-[hsl(var(--theme-primary))]/20">
       <div className="flex items-center justify-center">
         <div className="text-center w-full">
           <div className="flex items-center justify-center mb-2">

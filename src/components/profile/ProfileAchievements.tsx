@@ -15,7 +15,7 @@ const ProfileAchievements = () => {
     isLoading
   } = useAchievements();
   if (isLoading) {
-    return <Card className="bg-black border-4 border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
+    return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20">
         <CardHeader>
           <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
             <Trophy className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -50,7 +50,7 @@ const ProfileAchievements = () => {
     threshold_value: item.threshold_value || 0,
     progress_value: item.progress_value || 0,
   });
-  return <Card className="bg-black border-4 border-rap-gold/30 rounded-lg shadow-lg shadow-rap-gold/20">
+  return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20">
       <CardHeader>
         <div className="relative">
           <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center justify-center gap-2 text-lg sm:text-xl mb-4">
