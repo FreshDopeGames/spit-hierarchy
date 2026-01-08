@@ -6,7 +6,7 @@ const AboutWhatWeDo = () => {
   return (
     <ThemedCard variant="dark">
       <ThemedCardHeader>
-        <ThemedCardTitle className="flex items-center text-3xl sm:text-5xl font-normal whitespace-nowrap">
+        <ThemedCardTitle className="flex items-center text-2xl sm:text-4xl font-normal whitespace-nowrap">
           <Music className="w-6 h-6 mr-3 text-[var(--theme-primary)]" />
           What We Do
         </ThemedCardTitle>

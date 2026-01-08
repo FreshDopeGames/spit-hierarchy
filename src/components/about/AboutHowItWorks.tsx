@@ -5,7 +5,7 @@ const AboutHowItWorks = () => {
   return (
     <ThemedCard variant="dark">
       <ThemedCardHeader>
-        <ThemedCardTitle className="text-5xl font-normal">
+        <ThemedCardTitle className="text-2xl sm:text-4xl font-normal whitespace-nowrap">
           How It Works
         </ThemedCardTitle>
       </ThemedCardHeader>
