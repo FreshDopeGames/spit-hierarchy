@@ -9,8 +9,14 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **User Registration/Login**: Email-based authentication with Supabase Auth
 - **Social Authentication**: Currently disabled (infrastructure preserved for future restoration - see DEVELOPER_NOTES.md)
 - **User Profiles**: Custom profiles with avatars, bios, usernames
-- **Member Status System**: Bronze → Silver → Gold → Platinum → Diamond progression based on achievement points
-- **Achievement System**: Point-based achievements with automatic awarding via database triggers
+- **Member Status System**: Bronze → Silver → Gold → Platinum → Diamond progression based on XP points
+  - Bronze: 0-499 XP (1x vote weight)
+  - Silver: 500-1,499 XP (2x vote weight)
+  - Gold: 1,500-3,499 XP (3x vote weight)
+  - Platinum: 3,500-6,999 XP (4x vote weight)
+  - Diamond: 7,000+ XP (5x vote weight)
+- **XP Economy**: Session visits (+10 XP per new session), achievements (+5 to +4,000 XP based on rarity)
+- **Achievement System**: XP-based achievements with automatic awarding via database triggers across 10+ categories
 - **Secure Profile Viewing**: Authenticated users can view other members' public profiles with access logging
 - **New User Onboarding**: 3-step guided onboarding flow (Welcome → Username → Top 5 Selection)
 - **Profile Access Tracking**: Security logging for profile views and access patterns
@@ -47,6 +53,10 @@ A comprehensive web application for ranking and voting on rap artists, featuring
 - **Public Profiles**: Secure viewing of other users' stats and rankings with minimal data exposure
 - **VS Matches**: Head-to-head rapper battle voting system with real-time results
 - **Community Cypher**: Long-form community space for rap bars and verses (up to 2000 characters)
+- **Cypher Journal**: Profile section displaying user's Community Cypher verses with engagement statistics
+  - Total verses (number of cypher posts)
+  - Total bars (sum of likes received)
+  - Average bars per verse (engagement ratio)
 - **Content Moderation**: User-initiated content flagging with moderator review workflow
 
 ### 5. Content Management
