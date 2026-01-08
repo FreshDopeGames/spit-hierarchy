@@ -70,7 +70,82 @@ Community space for users to post rap bars, verses, and freestyle content with e
 
 ---
 
-## New User Onboarding System
+## Cypher Journal (Profile Feature)
+
+### Overview
+Personal archive of a user's Community Cypher contributions displayed on their profile page, creating a "Spit Hierarchy" showcase of lyrical content and engagement.
+
+### Core Features
+- **Verse Collection**: All cypher posts (parent comments only, not replies) from the user
+- **Aggregated Statistics**: Total verses, total bars (likes), average bars per verse
+- **Chronological Display**: Most recent verses first with scrollable list
+- **Empty State CTA**: Encouragement to drop first verse with direct link to Community Cypher
+
+### Statistics Displayed
+| Stat | Description |
+|------|-------------|
+| Cypher Verses | Total number of posts in Community Cypher |
+| Total Bars | Sum of likes received across all verses |
+| Avg Bars/Verse | Average engagement per post (bars ÷ verses) |
+
+### Terminology
+- **Cypher Verses**: Individual posts in Community Cypher (not replies)
+- **Bars**: Likes/upvotes on cypher content (rap terminology for quality lines)
+- **Spit Hierarchy**: Community leaderboard concept based on lyrical engagement
+
+### UI/UX Details
+- **Card Styling**: Black background with themed primary color borders (consistent with other profile sections)
+- **Verse Cards**: Individual verses with timestamp and "View in Cypher" link
+- **Bars Badge**: Each verse shows like count with thumbs-up icon
+- **Max Height**: Scrollable container (max-h-96) for long verse lists
+- **Link to Cypher**: Footer link to continue posting in Community Cypher
+- **Loading State**: Skeleton loaders during data fetch
+- **Empty State**: Encouragement message with CTA when no verses exist
+
+### Implementation Details
+
+**Hook**: `src/hooks/useUserCypherJournal.tsx`
+- Fetches user's cypher comments with like counts
+- Calculates aggregate statistics (totalVerses, totalBars, averageBarsPerVerse)
+- Returns verses array and stats object
+- React Query integration with caching
+
+**Component**: `src/components/profile/CypherJournalSection.tsx`
+- Displays on profile page after Vote Notes section
+- Loading skeleton during data fetch
+- Empty state with CTA when no verses exist
+- Responsive grid for stats summary
+- Scrollable verse list with themed styling
+
+**Database Query**:
+```sql
+SELECT id, comment_text, created_at, comment_likes
+FROM comments
+WHERE user_id = :userId
+  AND content_type = 'cypher'
+  AND content_id = 'community-cypher'
+  AND parent_id IS NULL
+ORDER BY created_at DESC
+```
+
+**Data Interfaces**:
+```typescript
+interface CypherVerse {
+  id: string;
+  comment_text: string;
+  created_at: string;
+  bars_count: number;
+}
+
+interface CypherJournalStats {
+  totalVerses: number;
+  totalBars: number;
+  averageBarsPerVerse: number;
+}
+```
+
+---
+
 
 ### Overview
 3-step guided onboarding flow to help new users set up their account and start engaging with the platform.
@@ -443,36 +518,147 @@ Flexible polling system supporting homepage polls and blog-embedded polls with m
 ## Member Status & Achievement System (Detailed)
 
 ### Overview
-Comprehensive gamification system with automatic achievement tracking, point calculation, and member tier progression.
+Comprehensive gamification system with automatic achievement tracking, XP-based progression, and member tier advancement designed for long-term engagement.
 
-### Member Tiers
+### Member Tiers & XP Economy
 
 **Status Levels** (Bronze → Silver → Gold → Platinum → Diamond):
-- **Bronze**: 0-99 points (1x vote weight)
-- **Silver**: 100-299 points (2x vote weight)
-- **Gold**: 300-599 points (3x vote weight)
-- **Platinum**: 600-999 points (4x vote weight)
-- **Diamond**: 1000+ points (5x vote weight)
+- **Bronze**: 0-499 XP (1x vote weight)
+- **Silver**: 500-1,499 XP (2x vote weight)
+- **Gold**: 1,500-3,499 XP (3x vote weight)
+- **Platinum**: 3,500-6,999 XP (4x vote weight)
+- **Diamond**: 7,000+ XP (5x vote weight)
+
+**XP Economy**:
+- **Session XP**: +10 XP per new web session (tracked via `sessionStorage` and `increment_session_count` RPC)
+- **Achievement XP**: +5 to +4,000 XP depending on achievement rarity
+- **Diamond Goal**: Approximately 1 year of consistent engagement to reach top tier
+- **Session Tracking**: `member_stats.session_count` tracks total sessions for "Session Warrior" achievements
 
 **Vote Weight Impact**:
-- Vote weight multiplier applied to all ranking votes
-- Higher tiers have greater influence on rankings
-- Encourages engagement and participation
+- Whole-number vote weight multipliers (1x, 2x, 3x, 4x, 5x) for simplicity
+- Vote weight multiplier applied to all official ranking votes
+- Higher tiers have greater influence on final rankings
+- Encourages long-term engagement and consistent participation
 
 ### Achievement System
 
-**Achievement Types**:
-- **Vote-based**: Total votes milestones (10, 50, 100, 500, 1000)
-- **Streak-based**: Consecutive voting days (3, 7, 30, 100)
-- **Content-based**: Comments, rankings created, top 5 completion
-- **Social-based**: Upvotes received, profile views
+**Achievement Categories**:
+
+#### Account Milestone Achievements
+| Achievement | Requirement | Points | Rarity |
+|-------------|-------------|--------|--------|
+| Welcome | Join the community | 10 | Common |
+| Early Adopter | Join in the first year | 500 | Epic |
+| Beta Tester | Participate in beta testing | 200 | Epic |
+
+#### Community Voice Achievements (threshold_field: total_comments)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| First Comment | 1 comment | 10 | Common |
+| Getting Chatty | 5 comments | 30 | Common |
+| Conversationalist | 10 comments | 50 | Common |
+| Discussion Starter | 25 comments | 80 | Rare |
+| Community Voice | 50 comments | 130 | Rare |
+| Discussion Leader | 100 comments | 200 | Rare |
+| Forum Expert | 250 comments | 350 | Epic |
+| Community Pillar | 500 comments | 600 | Epic |
+| Discussion Legend | 1,000 comments | 1,000 | Legendary |
+
+#### Consistency King Achievements (threshold_field: consecutive_voting_days)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| First Streak | 2 days | 25 | Common |
+| Weekend Warrior | 3 days | 40 | Common |
+| Work Week | 5 days | 65 | Common |
+| Week Warrior | 7 days | 125 | Rare |
+| Two Week Streak | 14 days | 200 | Rare |
+| Month Master | 30 days | 400 | Epic |
+| Quarter Champion | 90 days | 1,000 | Epic |
+| Streak Legend | 180 days | 2,000 | Legendary |
+| Year of Dedication | 365 days | 4,000 | Legendary |
+
+#### Discovery Achievements (threshold_field: profile_views_count)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| Explorer | 10 profiles | 20 | Common |
+| Deep Diver | 50 profiles | 60 | Rare |
+| Researcher | 100 profiles | 120 | Rare |
+
+#### Exploration Achievements (various threshold_fields)
+| Achievement | Requirement | Points | Rarity |
+|-------------|-------------|--------|--------|
+| Blog Reader | Visit blog page | 20 | Common |
+| About Explorer | Visit About page | 30 | Common |
+| Self Reflector | Visit own profile | 30 | Common |
+| VS Enthusiast | Visit VS Matches page | 40 | Common |
+| Cypher Junkie I | Visit Community Cypher | 30 | Common |
+| Cypher Junkie II | 5 cypher visits | 60 | Rare |
+| Cypher Junkie III | 25 cypher visits | 120 | Epic |
+| Data Analyst I | Visit Analytics page | 50 | Rare |
+| Data Analyst II | 5 analytics visits | 100 | Epic |
+| Data Analyst III | 25 analytics visits | 200 | Legendary |
+
+#### Rapper Connoisseur Achievements (threshold_field: rappers_voted_count)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| First Rating | 1 rapper | 10 | Common |
+| Exploring Talent | 5 rappers | 25 | Common |
+| Diverse Voter | 10 rappers | 50 | Common |
+| Hip Hop Scholar | 25 rappers | 85 | Rare |
+| Rap Encyclopedia | 50 rappers | 150 | Rare |
+| Genre Expert | 100 rappers | 250 | Epic |
+| Rap Historian | 250 rappers | 450 | Epic |
+| Complete Authority | 500 rappers | 800 | Legendary |
+
+#### Ranking Curator Achievements (threshold_field: ranking_lists_created)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| First List | 1 list | 15 | Common |
+| List Builder | 3 lists | 40 | Common |
+| Ranking Enthusiast | 5 lists | 75 | Rare |
+| Master Curator | 10 lists | 150 | Epic |
+
+#### Top Five Achievements (threshold_field: top_five_created)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| Top Five Beginner | Create top 5 list | 20 | Common |
+
+#### Upvote Champion Achievements (threshold_field: total_upvotes)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| First Like | 1 upvote | 10 | Common |
+| Getting Noticed | 5 upvotes | 30 | Common |
+| Popular Voice | 10 upvotes | 50 | Common |
+| Community Favorite | 25 upvotes | 80 | Rare |
+| Rising Star | 50 upvotes | 130 | Rare |
+| Influential Voice | 100 upvotes | 200 | Rare |
+| Crowd Pleaser | 250 upvotes | 350 | Epic |
+| Community Star | 500 upvotes | 600 | Epic |
+| Legendary Contributor | 1,000 upvotes | 1,000 | Legendary |
+
+#### Vote Master Achievements (threshold_field: total_votes)
+| Achievement | Threshold | Points | Rarity |
+|-------------|-----------|--------|--------|
+| First Vote | 1 vote | 10 | Common |
+| Vote Apprentice | 5 votes | 25 | Common |
+| Vote Enthusiast | 10 votes | 50 | Common |
+| Vote Contributor | 25 votes | 85 | Common |
+| Vote Specialist | 50 votes | 125 | Rare |
+| Vote Expert | 100 votes | 185 | Rare |
+| Vote Professional | 250 votes | 300 | Rare |
+| Vote Master | 500 votes | 500 | Epic |
+| Vote Champion | 1,000 votes | 850 | Epic |
+| Vote Legend | 2,500 votes | 1,500 | Legendary |
+| Vote Immortal | 5,000 votes | 2,500 | Legendary |
 
 **Achievement Configuration**:
-- `threshold_field` - Stat to track (e.g., 'total_votes')
+- `threshold_field` - Stat to track (e.g., 'total_votes', 'consecutive_voting_days')
 - `threshold_value` - Required value to unlock
-- `points` - Points awarded on unlock
-- `rarity` - Common, Uncommon, Rare, Epic, Legendary
-- `icon` - Display icon identifier
+- `points` - XP awarded on unlock
+- `rarity` - Common, Rare, Epic, Legendary
+- `series_name` - Achievement category grouping
+- `tier_level` - Progression level within series
 
 ### Automatic Achievement Checking
 
