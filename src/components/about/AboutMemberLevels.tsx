@@ -17,7 +17,7 @@ const AboutMemberLevels = () => {
     <ThemedCard variant="dark">
       <ThemedCardHeader>
         <ThemedCardTitle className="text-2xl sm:text-4xl font-normal flex items-center gap-3 whitespace-nowrap">
-          <Crown className="w-10 h-10 text-[var(--theme-primary)]" />
+          <Crown className="w-6 h-6 text-[var(--theme-primary)]" />
           Member Levels
         </ThemedCardTitle>
       </ThemedCardHeader>
