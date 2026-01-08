@@ -6,8 +6,8 @@ const AboutFeatures = () => {
   return <div className="grid md:grid-cols-2 gap-6">
       <ThemedCard variant="dark" className="shadow-lg border-2">
         <ThemedCardHeader>
-          <ThemedCardTitle className="flex items-center font-normal text-4xl">
-            <Vote className="w-5 h-5 mr-3 text-[var(--theme-secondary)]" />
+        <ThemedCardTitle className="flex items-center font-normal text-2xl sm:text-4xl whitespace-nowrap">
+            <Vote className="w-6 h-6 mr-3 text-[var(--theme-secondary)]" />
             Vote & Rank
           </ThemedCardTitle>
         </ThemedCardHeader>
@@ -21,8 +21,8 @@ const AboutFeatures = () => {
 
       <ThemedCard variant="dark" className="shadow-lg border-2">
         <ThemedCardHeader>
-          <ThemedCardTitle className="flex items-center font-normal text-4xl">
-            <Trophy className="w-5 h-5 mr-3 text-[var(--theme-accent)]" />
+        <ThemedCardTitle className="flex items-center font-normal text-2xl sm:text-4xl whitespace-nowrap">
+            <Trophy className="w-6 h-6 mr-3 text-[var(--theme-accent)]" />
             Real Rankings
           </ThemedCardTitle>
         </ThemedCardHeader>
@@ -36,8 +36,8 @@ const AboutFeatures = () => {
 
       <ThemedCard variant="dark" className="shadow-lg border-2">
         <ThemedCardHeader>
-          <ThemedCardTitle className="flex items-center font-thin text-2xl sm:text-4xl whitespace-nowrap">
-            <Users className="w-5 h-5 mr-3 text-[var(--theme-primary)]" />
+        <ThemedCardTitle className="flex items-center font-normal text-2xl sm:text-4xl whitespace-nowrap">
+            <Users className="w-6 h-6 mr-3 text-[var(--theme-primary)]" />
             Community Driven
           </ThemedCardTitle>
         </ThemedCardHeader>
@@ -51,8 +51,8 @@ const AboutFeatures = () => {
 
       <ThemedCard variant="dark" className="shadow-lg border-2">
         <ThemedCardHeader>
-          <ThemedCardTitle className="flex items-center font-normal text-4xl">
-            <BarChart3 className="w-5 h-5 mr-3 text-[var(--theme-textMuted)]" />
+        <ThemedCardTitle className="flex items-center font-normal text-2xl sm:text-4xl whitespace-nowrap">
+            <BarChart3 className="w-6 h-6 mr-3 text-[var(--theme-textMuted)]" />
             Deep Analytics
           </ThemedCardTitle>
         </ThemedCardHeader>

@@ -8,8 +8,8 @@ const AboutCreator = () => {
   return (
     <ThemedCard variant="dark">
       <ThemedCardHeader>
-        <ThemedCardTitle className="text-5xl font-normal flex items-center gap-3">
-          <User className="w-10 h-10 text-[hsl(var(--theme-primary))]" />
+        <ThemedCardTitle className="text-2xl sm:text-4xl font-normal flex items-center gap-3 whitespace-nowrap">
+          <User className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
           The Creator
         </ThemedCardTitle>
       </ThemedCardHeader>
