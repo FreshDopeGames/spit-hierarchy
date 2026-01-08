@@ -36,7 +36,7 @@ const AboutFeatures = () => {
 
       <ThemedCard variant="dark" className="shadow-lg border-2">
         <ThemedCardHeader>
-          <ThemedCardTitle className="flex items-center font-thin text-4xl">
+          <ThemedCardTitle className="flex items-center font-thin text-2xl sm:text-4xl whitespace-nowrap">
             <Users className="w-5 h-5 mr-3 text-[var(--theme-primary)]" />
             Community Driven
           </ThemedCardTitle>
