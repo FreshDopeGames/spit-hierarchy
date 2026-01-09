@@ -203,7 +203,7 @@ const Contact = () => {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Your name"
-                            className={`bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))] ${errors.name ? 'border-red-500' : ''}`}
+                            className={`themed-input ${errors.name ? 'border-red-500' : ''}`}
                           />
                           {errors.name && (
                             <p className="text-sm text-red-500">{errors.name}</p>
@@ -219,7 +219,7 @@ const Contact = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="your@email.com"
-                            className={`bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))] ${errors.email ? 'border-red-500' : ''}`}
+                            className={`themed-input ${errors.email ? 'border-red-500' : ''}`}
                           />
                           {errors.email && (
                             <p className="text-sm text-red-500">{errors.email}</p>
@@ -235,7 +235,7 @@ const Contact = () => {
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="What is this about?"
-                          className={`bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))] ${errors.subject ? 'border-red-500' : ''}`}
+                          className={`themed-input ${errors.subject ? 'border-red-500' : ''}`}
                         />
                         {errors.subject && (
                           <p className="text-sm text-red-500">{errors.subject}</p>
