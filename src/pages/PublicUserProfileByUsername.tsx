@@ -12,6 +12,7 @@ import { PublicProfile } from "@/types/publicProfile";
 import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
 import { Link } from "react-router-dom";
 import GuestProfileCTA from "@/components/profile/GuestProfileCTA";
+import SEOHead from "@/components/seo/SEOHead";
 
 const PublicUserProfileByUsername = () => {
   const { username } = useParams();
@@ -124,23 +125,31 @@ const PublicUserProfileByUsername = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
-      <HeaderNavigation isScrolled={false} />
-      
-      <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
-        <PublicProfileHeader profile={profile} rankingsCount={rankings.length} isGuest={!user} />
+    <>
+      <SEOHead
+        title={`${profile.username}'s Profile - Spit Hierarchy`}
+        description={`View ${profile.username}'s hip-hop rankings, top 5 favorite rappers, and contributions to the Spit Hierarchy community.`}
+        canonicalUrl={`/user/${profile.username}`}
+        ogType="profile"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
+        <HeaderNavigation isScrolled={false} />
         
-        {!user && (
-          <div className="mb-6">
-            <GuestProfileCTA variant="banner" />
-          </div>
-        )}
-        
-        <PublicTopFiveSection userId={profile.id} username={profile.username} />
-      </div>
+        <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
+          <PublicProfileHeader profile={profile} rankingsCount={rankings.length} isGuest={!user} />
+          
+          {!user && (
+            <div className="mb-6">
+              <GuestProfileCTA variant="banner" />
+            </div>
+          )}
+          
+          <PublicTopFiveSection userId={profile.id} username={profile.username} />
+        </div>
 
-      <Footer />
-    </div>
+        <Footer />
+      </div>
+    </>
   );
 };
 

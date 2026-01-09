@@ -105,6 +105,10 @@ const BlogDetail = () => {
         description={seoDescription}
         keywords={seoKeywords}
         ogImage={getOgImageUrl(blogPost.featured_image_url)}
+        canonicalUrl={`/blog/${blogPost.slug}`}
+        ogType="article"
+        articlePublishedTime={blogPost.published_at || undefined}
+        articleTags={transformedBlogPost.tags || []}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "BlogPosting",
@@ -116,7 +120,7 @@ const BlogDetail = () => {
           },
           "datePublished": blogPost.published_at,
           "image": getOgImageUrl(blogPost.featured_image_url),
-          "url": typeof window !== 'undefined' ? window.location.href : undefined
+          "url": `https://spithierarchy.com/blog/${blogPost.slug}`
         }}
       />
       

@@ -26,8 +26,9 @@ export default function Notifications() {
   return (
     <div className="min-h-screen bg-[hsl(var(--theme-background))]">
       <SEOHead 
-        title="Notifications"
+        title="Notifications - Spit Hierarchy"
         description="View your notifications, achievements, and system announcements"
+        robots="noindex, nofollow"
       />
       <HeaderNavigation isScrolled={false} />
       
