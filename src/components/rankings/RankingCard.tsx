@@ -79,7 +79,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
                 >
                   <EnhancedImage
                     src={getOptimizedPlaceholder("thumb")}
-                    alt="Placeholder"
+                          alt="Empty ranking spot"
                     className="opacity-30"
                     size="thumb"
                   />

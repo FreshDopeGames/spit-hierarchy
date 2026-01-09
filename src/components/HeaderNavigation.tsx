@@ -35,7 +35,7 @@ const HeaderNavigation = ({
           <Link to="/" className="absolute left-1/2 -translate-x-1/2 flex items-center group">
             <img 
               src="/lovable-uploads/logo-header.png" 
-              alt="Logo" 
+              alt="Spit Hierarchy - Hip Hop Rankings Logo" 
               className="h-10 sm:h-12 w-auto" 
             />
           </Link>
