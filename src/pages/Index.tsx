@@ -40,7 +40,31 @@ const Index = () => {
       <SEOHead 
         title="Spit Hierarchy - The Ultimate Rap Rankings Platform" 
         description="Join the ultimate rapper ranking platform. Vote on your favorite rappers, discover new artists, and explore the best in hip-hop culture. Community-driven rankings with real-time voting." 
-        keywords={["rap rankings", "hip hop voting", "rapper polls", "music community", "hip hop culture", "rap battles"]} 
+        keywords={["rap rankings", "hip hop voting", "rapper polls", "music community", "hip hop culture", "rap battles"]}
+        canonicalUrl="/"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "Spit Hierarchy",
+          "url": "https://spithierarchy.com",
+          "description": "The ultimate community-driven hip-hop ranking platform",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://spithierarchy.com/rappers?search={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Spit Hierarchy",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Logo_Rect_02.png"
+            }
+          }
+        }}
       />
       <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon overflow-x-hidden">
         {/* Sticky Header */}
