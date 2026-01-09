@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -17,6 +17,7 @@ import VotingHistorySection from "@/components/profile/VotingHistorySection";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
+import SEOHead from "@/components/seo/SEOHead";
 
 const UserProfile = () => {
   const { user, loading: authLoading } = useAuth();
@@ -27,11 +28,6 @@ const UserProfile = () => {
     accessedProfileId: user?.id || '',
     isSelf: true
   });
-
-  // Set page title
-  useEffect(() => {
-    document.title = user ? "My Profile - Spit Hierarchy" : "Sign In Required - Spit Hierarchy";
-  }, [user]);
 
   const { data: profile, isLoading: profileLoading } = useQuery({
     queryKey: ["user-profile", user?.id],
@@ -98,68 +94,82 @@ const UserProfile = () => {
   // Show loading screen while auth is initializing
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-        <HeaderNavigation isScrolled={false} />
-        
-        <div className="relative z-10 pt-24 sm:pt-28 max-w-4xl mx-auto p-3 sm:p-6">
-          {/* Profile Header Skeleton */}
-          <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
-            <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-              <div className="flex-shrink-0 mx-auto sm:mx-0">
-                <AvatarSkeleton size="lg" className="w-24 h-24 sm:w-32 sm:h-32" />
+      <>
+        <SEOHead
+          title="My Profile - Spit Hierarchy"
+          description="View and manage your Spit Hierarchy profile, rankings, achievements, and voting history."
+          robots="noindex, nofollow"
+        />
+        <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+          <HeaderNavigation isScrolled={false} />
+          
+          <div className="relative z-10 pt-24 sm:pt-28 max-w-4xl mx-auto p-3 sm:p-6">
+            {/* Profile Header Skeleton */}
+            <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+              <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+                <div className="flex-shrink-0 mx-auto sm:mx-0">
+                  <AvatarSkeleton size="lg" className="w-24 h-24 sm:w-32 sm:h-32" />
+                </div>
+                <div className="flex-1 text-center sm:text-left w-full">
+                  <TextSkeleton width="w-48" height="h-8" className="mb-2 mx-auto sm:mx-0" />
+                  <TextSkeleton width="w-32" height="h-4" className="mb-4 mx-auto sm:mx-0" />
+                  <TextSkeleton width="w-24" height="h-4" className="mx-auto sm:mx-0" />
+                </div>
               </div>
-              <div className="flex-1 text-center sm:text-left w-full">
-                <TextSkeleton width="w-48" height="h-8" className="mb-2 mx-auto sm:mx-0" />
-                <TextSkeleton width="w-32" height="h-4" className="mb-4 mx-auto sm:mx-0" />
-                <TextSkeleton width="w-24" height="h-4" className="mx-auto sm:mx-0" />
+            </div>
+            
+            {/* Additional skeleton elements for other sections */}
+            <div className="space-y-6">
+              <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
+                <TextSkeleton width="w-32" height="h-6" className="mb-4" />
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                  {[1, 2, 3, 4].map((i) => (
+                    <div key={i} className="text-center">
+                      <TextSkeleton width="w-12" height="h-8" className="mx-auto mb-2" />
+                      <TextSkeleton width="w-16" height="h-4" className="mx-auto" />
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
           
-          {/* Additional skeleton elements for other sections */}
-          <div className="space-y-6">
-            <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
-              <TextSkeleton width="w-32" height="h-6" className="mb-4" />
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="text-center">
-                    <TextSkeleton width="w-12" height="h-8" className="mx-auto mb-2" />
-                    <TextSkeleton width="w-16" height="h-4" className="mx-auto" />
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
+          <Footer />
         </div>
-        
-        <Footer />
-      </div>
+      </>
     );
   }
 
   // Show sign-in prompt if not authenticated
   if (!user) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-        <div className="relative z-10 flex flex-col min-h-screen">
-          <div className="flex-1 flex items-center justify-center px-4">
-            <div className="text-center">
-              <h2 className="text-xl sm:text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">
-                Please sign in to view your profile
-              </h2>
-              <Link to="/auth">
-                <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40">
-                  <LogIn className="w-4 h-4 mr-2" />
-                  Sign In
-                </Button>
-              </Link>
+      <>
+        <SEOHead
+          title="Sign In Required - Spit Hierarchy"
+          description="Please sign in to view your profile on Spit Hierarchy."
+          robots="noindex, nofollow"
+        />
+        <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+          <div className="relative z-10 flex flex-col min-h-screen">
+            <div className="flex-1 flex items-center justify-center px-4">
+              <div className="text-center">
+                <h2 className="text-xl sm:text-2xl font-mogra text-rap-gold mb-4 animate-text-glow">
+                  Please sign in to view your profile
+                </h2>
+                <Link to="/auth">
+                  <Button className="bg-gradient-to-r from-rap-burgundy via-rap-gold to-rap-forest hover:from-rap-burgundy-light hover:via-rap-gold-light hover:to-rap-forest-light font-mogra text-rap-silver shadow-xl shadow-rap-gold/40">
+                    <LogIn className="w-4 h-4 mr-2" />
+                    Sign In
+                  </Button>
+                </Link>
+              </div>
             </div>
+            <Footer />
           </div>
-          <Footer />
         </div>
-      </div>
+      </>
     );
   }
 
@@ -167,93 +177,100 @@ const UserProfile = () => {
   const isDataLoading = profileLoading || memberStatsLoading || voteNotesLoading || publicStatsLoading;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
-      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
-      
-      <div className="relative z-10 flex flex-col min-h-screen">
-        <HeaderNavigation isScrolled={false} />
+    <>
+      <SEOHead
+        title="My Profile - Spit Hierarchy"
+        description="View and manage your Spit Hierarchy profile, rankings, achievements, and voting history."
+        robots="noindex, nofollow"
+      />
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
+        <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
+        
+        <div className="relative z-10 flex flex-col min-h-screen">
+          <HeaderNavigation isScrolled={false} />
 
-        <main className="flex-1 max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28">
-          {isDataLoading ? (
-            // Show skeleton while profile data loads
-            <>
-              <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
-                <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
-                  <div className="flex-shrink-0 mx-auto sm:mx-0">
-                    <AvatarSkeleton size="lg" className="w-24 h-24 sm:w-32 sm:h-32" />
-                  </div>
-                  <div className="flex-1 text-center sm:text-left w-full">
-                    <TextSkeleton width="w-48" height="h-8" className="mb-2 mx-auto sm:mx-0" />
-                    <TextSkeleton width="w-32" height="h-4" className="mb-4 mx-auto sm:mx-0" />
-                    <TextSkeleton width="w-24" height="h-4" className="mx-auto sm:mx-0" />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="space-y-6">
-                <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
-                  <TextSkeleton width="w-32" height="h-6" className="mb-4" />
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                    {[1, 2, 3, 4].map((i) => (
-                      <div key={i} className="text-center">
-                        <TextSkeleton width="w-12" height="h-8" className="mx-auto mb-2" />
-                        <TextSkeleton width="w-16" height="h-4" className="mx-auto" />
-                      </div>
-                    ))}
+          <main className="flex-1 max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28">
+            {isDataLoading ? (
+              // Show skeleton while profile data loads
+              <>
+                <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
+                  <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
+                    <div className="flex-shrink-0 mx-auto sm:mx-0">
+                      <AvatarSkeleton size="lg" className="w-24 h-24 sm:w-32 sm:h-32" />
+                    </div>
+                    <div className="flex-1 text-center sm:text-left w-full">
+                      <TextSkeleton width="w-48" height="h-8" className="mb-2 mx-auto sm:mx-0" />
+                      <TextSkeleton width="w-32" height="h-4" className="mb-4 mx-auto sm:mx-0" />
+                      <TextSkeleton width="w-24" height="h-4" className="mx-auto sm:mx-0" />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </>
-          ) : (
-            // Show actual content when loaded
-            <>
-              <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
-              
-              <MyTopFiveSection />
-
-              {/* Show onboarding trigger if user has no top 5 */}
-              {memberStats?.top_five_created === 0 && (
-                <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[hsl(var(--theme-primary))]/20 text-center">
-                  <h3 className="text-lg font-bold mb-2 text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
-                    Get Started with Your Top 5
-                  </h3>
-                  <p className="mb-4 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
-                    Select your favorite rappers to personalize your experience and connect with the community.
-                  </p>
-                  <Button
-                    onClick={openOnboarding}
-                    className="bg-[hsl(var(--theme-primary))] text-[hsl(var(--theme-textLight))] hover:opacity-90"
-                  >
-                    Choose My Top 5
-                  </Button>
+                
+                <div className="space-y-6">
+                  <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
+                    <TextSkeleton width="w-32" height="h-6" className="mb-4" />
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                      {[1, 2, 3, 4].map((i) => (
+                        <div key={i} className="text-center">
+                          <TextSkeleton width="w-12" height="h-8" className="mx-auto mb-2" />
+                          <TextSkeleton width="w-16" height="h-4" className="mx-auto" />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              )}
+              </>
+            ) : (
+              // Show actual content when loaded
+              <>
+                <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
+                
+                <MyTopFiveSection />
 
-              <ProfileStats memberStats={memberStats} publicStats={publicStats} />
+                {/* Show onboarding trigger if user has no top 5 */}
+                {memberStats?.top_five_created === 0 && (
+                  <div className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-[hsl(var(--theme-primary))]/20 text-center">
+                    <h3 className="text-lg font-bold mb-2 text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+                      Get Started with Your Top 5
+                    </h3>
+                    <p className="mb-4 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
+                      Select your favorite rappers to personalize your experience and connect with the community.
+                    </p>
+                    <Button
+                      onClick={openOnboarding}
+                      className="bg-[hsl(var(--theme-primary))] text-[hsl(var(--theme-textLight))] hover:opacity-90"
+                    >
+                      Choose My Top 5
+                    </Button>
+                  </div>
+                )}
 
-              {/* Voting History */}
-              <div className="mb-6 sm:mb-8">
-                <VotingHistorySection />
-              </div>
+                <ProfileStats memberStats={memberStats} publicStats={publicStats} />
 
-              {/* Achievements */}
-              <div className="mb-6 sm:mb-8">
-                <ProfileAchievements />
-              </div>
+                {/* Voting History */}
+                <div className="mb-6 sm:mb-8">
+                  <VotingHistorySection />
+                </div>
 
-              <VoteNotesSection voteNotes={voteNotes || []} />
+                {/* Achievements */}
+                <div className="mb-6 sm:mb-8">
+                  <ProfileAchievements />
+                </div>
 
-              {/* Cypher Journal */}
-              <div className="mt-6 sm:mt-8">
-                <CypherJournalSection userId={user.id} />
-              </div>
-            </>
-          )}
-        </main>
+                <VoteNotesSection voteNotes={voteNotes || []} />
 
-        <Footer />
+                {/* Cypher Journal */}
+                <div className="mt-6 sm:mt-8">
+                  <CypherJournalSection userId={user.id} />
+                </div>
+              </>
+            )}
+          </main>
+
+          <Footer />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

@@ -165,7 +165,7 @@ const VSMatchDetail = () => {
   return (
     <>
       <SEOHead 
-        title={`${vsMatch!.title} - VS Match`}
+        title={`${vsMatch!.title} - VS Match | Spit Hierarchy`}
         description={vsMatch!.description || `Vote in the ultimate matchup between ${vsMatch!.rapper_1.name} and ${vsMatch!.rapper_2.name}. See who the community thinks is better!`}
         canonicalUrl={`/vs/${vsMatch!.slug}`}
       />

@@ -166,6 +166,8 @@ const RapperDetail = () => {
         title={seoTitle}
         description={seoDescription}
         keywords={seoKeywords}
+        canonicalUrl={`/rapper/${rapper.slug}`}
+        ogImage={rapper.image_url || undefined}
         structuredData={{
           "@context": "https://schema.org",
           "@type": "Person",
@@ -174,7 +176,8 @@ const RapperDetail = () => {
           "description": rapper.bio || `${rapper.name} is a rapper featured on Spit Hierarchy`,
           "birthPlace": rapper.origin || undefined,
           "birthDate": rapper.birth_year ? `${rapper.birth_year}` : undefined,
-          "url": typeof window !== 'undefined' ? window.location.href : undefined
+          "image": rapper.image_url || undefined,
+          "url": `https://spithierarchy.com/rapper/${rapper.slug}`
         }}
       />
       

@@ -35,3 +35,6 @@ verify_jwt = true
 
 [functions.generate-quiz-questions]
 verify_jwt = true
+
+[functions.generate-sitemap]
+verify_jwt = false
