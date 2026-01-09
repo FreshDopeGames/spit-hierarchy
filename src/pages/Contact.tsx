@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { ThemedInput } from '@/components/ui/themed-input';
 import { ThemedTextarea } from '@/components/ui/themed-textarea';
 import { Label } from '@/components/ui/label';
-import { Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
+import { Mail, Clock, Send, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import { z } from 'zod';
 
@@ -142,15 +142,6 @@ const Contact = () => {
                     </div>
                   </div>
 
-                  <div className="flex items-start gap-4">
-                    <div className="p-3 bg-[hsl(var(--theme-primary))]/10 rounded-lg">
-                      <MapPin className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
-                    </div>
-                    <div>
-                      <h3 className="font-semibold text-white mb-1">Company</h3>
-                      <p className="text-muted-foreground">Fresh Dope Biz LLC</p>
-                    </div>
-                  </div>
 
                   <div className="flex items-start gap-4">
                     <div className="p-3 bg-[hsl(var(--theme-primary))]/10 rounded-lg">
