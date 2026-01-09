@@ -149,10 +149,19 @@ const Footer = () => {
             </ul>
           </div>
 
-          {/* Legal */}
+          {/* Legal & Contact */}
           <div>
-            <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Legal</h3>
+            <h3 className="text-white font-[var(--theme-font-heading)] text-lg mb-4">Legal & Contact</h3>
             <ul className="space-y-2">
+              <li>
+                <Link
+                  to="/contact"
+                  className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors font-[var(--theme-font-body)]"
+                  onClick={() => window.scrollTo(0, 0)}
+                >
+                  Contact Us
+                </Link>
+              </li>
               <li>
                 <Link
                   to="/privacy"
