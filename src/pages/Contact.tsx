@@ -68,7 +68,7 @@ const Contact = () => {
       );
       
       // Open mailto link
-      window.location.href = `mailto:contact@spithierarchy.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+      window.location.href = `mailto:admin@spithierarchy.com?subject=${mailtoSubject}&body=${mailtoBody}`;
       
       setIsSubmitted(true);
       toast.success('Opening your email client...', {
@@ -124,10 +124,10 @@ const Contact = () => {
                     <div>
                       <h3 className="font-semibold text-white mb-1">Email</h3>
                       <a 
-                        href="mailto:contact@spithierarchy.com"
+                        href="mailto:admin@spithierarchy.com"
                         className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors"
                       >
-                        contact@spithierarchy.com
+                        admin@spithierarchy.com
                       </a>
                     </div>
                   </div>
@@ -203,7 +203,7 @@ const Contact = () => {
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Your name"
-                            className={errors.name ? 'border-red-500' : ''}
+                            className={`bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))] ${errors.name ? 'border-red-500' : ''}`}
                           />
                           {errors.name && (
                             <p className="text-sm text-red-500">{errors.name}</p>
@@ -219,7 +219,7 @@ const Contact = () => {
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="your@email.com"
-                            className={errors.email ? 'border-red-500' : ''}
+                            className={`bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))] ${errors.email ? 'border-red-500' : ''}`}
                           />
                           {errors.email && (
                             <p className="text-sm text-red-500">{errors.email}</p>
@@ -235,7 +235,7 @@ const Contact = () => {
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="What is this about?"
-                          className={errors.subject ? 'border-red-500' : ''}
+                          className={`bg-[hsl(var(--theme-surface))] text-[hsl(var(--theme-text))] ${errors.subject ? 'border-red-500' : ''}`}
                         />
                         {errors.subject && (
                           <p className="text-sm text-red-500">{errors.subject}</p>
