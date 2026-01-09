@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import HeaderNavigation from '@/components/HeaderNavigation';
+
 import InternalPageHeader from '@/components/InternalPageHeader';
 import Footer from '@/components/Footer';
 import { ThemedCard, ThemedCardHeader, ThemedCardTitle, ThemedCardContent } from '@/components/ui/themed-card';
@@ -100,7 +100,7 @@ const Contact = () => {
       </Helmet>
 
       <div className="min-h-screen bg-rap-dark">
-        <HeaderNavigation isScrolled={false} />
+        
         
         <div className="pt-24">
           <InternalPageHeader
@@ -109,7 +109,7 @@ const Contact = () => {
           />
 
           {/* Page Title */}
-          <div className="text-center mb-8 pt-4 max-w-6xl mx-auto px-4">
+          <div className="text-center mb-4 pt-4 max-w-6xl mx-auto px-4">
             <h1 className="text-4xl sm:text-6xl font-ceviche text-[hsl(var(--theme-primary))] mb-4">
               Contact Us
             </h1>
@@ -118,7 +118,7 @@ const Contact = () => {
             </p>
           </div>
 
-          <main className="max-w-6xl mx-auto px-4 py-12">
+          <main className="max-w-6xl mx-auto px-4 pt-4 pb-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Information */}
             <div className="lg:col-span-1 space-y-6">
