@@ -5,8 +5,8 @@ import InternalPageHeader from '@/components/InternalPageHeader';
 import Footer from '@/components/Footer';
 import { ThemedCard, ThemedCardHeader, ThemedCardTitle, ThemedCardContent } from '@/components/ui/themed-card';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { ThemedInput } from '@/components/ui/themed-input';
+import { ThemedTextarea } from '@/components/ui/themed-textarea';
 import { Label } from '@/components/ui/label';
 import { Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
 import { toast } from 'sonner';
@@ -193,17 +193,17 @@ const Contact = () => {
                       </Button>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6 [--theme-element-input-bg:var(--theme-background)] [--theme-element-textarea-bg:var(--theme-background)]">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <Label htmlFor="name">Name *</Label>
-                          <Input
+                          <ThemedInput
                             id="name"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Your name"
-                            className={`themed-input ${errors.name ? 'border-red-500' : ''}`}
+                            className={errors.name ? 'border-red-500' : ''}
                           />
                           {errors.name && (
                             <p className="text-sm text-red-500">{errors.name}</p>
@@ -212,14 +212,14 @@ const Contact = () => {
 
                         <div className="space-y-2">
                           <Label htmlFor="email">Email *</Label>
-                          <Input
+                          <ThemedInput
                             id="email"
                             name="email"
                             type="email"
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="your@email.com"
-                            className={`themed-input ${errors.email ? 'border-red-500' : ''}`}
+                            className={errors.email ? 'border-red-500' : ''}
                           />
                           {errors.email && (
                             <p className="text-sm text-red-500">{errors.email}</p>
@@ -229,13 +229,13 @@ const Contact = () => {
 
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject *</Label>
-                        <Input
+                        <ThemedInput
                           id="subject"
                           name="subject"
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="What is this about?"
-                          className={`themed-input ${errors.subject ? 'border-red-500' : ''}`}
+                          className={errors.subject ? 'border-red-500' : ''}
                         />
                         {errors.subject && (
                           <p className="text-sm text-red-500">{errors.subject}</p>
@@ -244,7 +244,7 @@ const Contact = () => {
 
                       <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
-                        <Textarea
+                        <ThemedTextarea
                           id="message"
                           name="message"
                           value={formData.message}
