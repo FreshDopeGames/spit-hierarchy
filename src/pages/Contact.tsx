@@ -1,40 +1,32 @@
-import React, { useState } from "react";
-import { Helmet } from "react-helmet-async";
-import HeaderNavigation from "@/components/HeaderNavigation";
-import InternalPageHeader from "@/components/InternalPageHeader";
-import Footer from "@/components/Footer";
-import { ThemedCard, ThemedCardHeader, ThemedCardTitle, ThemedCardContent } from "@/components/ui/themed-card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Mail, MapPin, Clock, Send, CheckCircle } from "lucide-react";
-import { toast } from "sonner";
-import { z } from "zod";
+import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import HeaderNavigation from '@/components/HeaderNavigation';
+import InternalPageHeader from '@/components/InternalPageHeader';
+import Footer from '@/components/Footer';
+import { ThemedCard, ThemedCardHeader, ThemedCardTitle, ThemedCardContent } from '@/components/ui/themed-card';
+import { Button } from '@/components/ui/button';
+import { ThemedInput } from '@/components/ui/themed-input';
+import { ThemedTextarea } from '@/components/ui/themed-textarea';
+import { Label } from '@/components/ui/label';
+import { Mail, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
+import { toast } from 'sonner';
+import { z } from 'zod';
 
 const contactSchema = z.object({
-  name: z.string().trim().min(1, "Name is required").max(100, "Name must be less than 100 characters"),
-  email: z
-    .string()
-    .trim()
-    .email("Please enter a valid email address")
-    .max(255, "Email must be less than 255 characters"),
-  subject: z.string().trim().min(1, "Subject is required").max(200, "Subject must be less than 200 characters"),
-  message: z
-    .string()
-    .trim()
-    .min(10, "Message must be at least 10 characters")
-    .max(2000, "Message must be less than 2000 characters"),
+  name: z.string().trim().min(1, 'Name is required').max(100, 'Name must be less than 100 characters'),
+  email: z.string().trim().email('Please enter a valid email address').max(255, 'Email must be less than 255 characters'),
+  subject: z.string().trim().min(1, 'Subject is required').max(200, 'Subject must be less than 200 characters'),
+  message: z.string().trim().min(10, 'Message must be at least 10 characters').max(2000, 'Message must be less than 2000 characters'),
 });
 
 type ContactFormData = z.infer<typeof contactSchema>;
 
 const Contact = () => {
   const [formData, setFormData] = useState<ContactFormData>({
-    name: "",
-    email: "",
-    subject: "",
-    message: "",
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
   });
   const [errors, setErrors] = useState<Partial<Record<keyof ContactFormData, string>>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -42,10 +34,10 @@ const Contact = () => {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ ...prev, [name]: value }));
     // Clear error when user starts typing
     if (errors[name as keyof ContactFormData]) {
-      setErrors((prev) => ({ ...prev, [name]: undefined }));
+      setErrors(prev => ({ ...prev, [name]: undefined }));
     }
   };
 
@@ -57,7 +49,7 @@ const Contact = () => {
     const result = contactSchema.safeParse(formData);
     if (!result.success) {
       const fieldErrors: Partial<Record<keyof ContactFormData, string>> = {};
-      result.error.errors.forEach((err) => {
+      result.error.errors.forEach(err => {
         if (err.path[0]) {
           fieldErrors[err.path[0] as keyof ContactFormData] = err.message;
         }
@@ -72,25 +64,25 @@ const Contact = () => {
       // Create mailto link as fallback (works without backend)
       const mailtoSubject = encodeURIComponent(result.data.subject);
       const mailtoBody = encodeURIComponent(
-        `Name: ${result.data.name}\nEmail: ${result.data.email}\n\nMessage:\n${result.data.message}`,
+        `Name: ${result.data.name}\nEmail: ${result.data.email}\n\nMessage:\n${result.data.message}`
       );
-
+      
       // Open mailto link
-      window.location.href = `mailto:contact@spithierarchy.com?subject=${mailtoSubject}&body=${mailtoBody}`;
-
+      window.location.href = `mailto:admin@spithierarchy.com?subject=${mailtoSubject}&body=${mailtoBody}`;
+      
       setIsSubmitted(true);
-      toast.success("Opening your email client...", {
-        description: "Please send the email to complete your message.",
+      toast.success('Opening your email client...', {
+        description: 'Please send the email to complete your message.',
       });
     } catch (error) {
-      toast.error("Something went wrong. Please try again.");
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const resetForm = () => {
-    setFormData({ name: "", email: "", subject: "", message: "" });
+    setFormData({ name: '', email: '', subject: '', message: '' });
     setIsSubmitted(false);
     setErrors({});
   };
@@ -99,9 +91,9 @@ const Contact = () => {
     <>
       <Helmet>
         <title>Contact Us | Spit Hierarchy - Hip-Hop Rankings</title>
-        <meta
-          name="description"
-          content="Get in touch with Spit Hierarchy. Contact us for questions, feedback, or partnership inquiries about our hip-hop ranking platform."
+        <meta 
+          name="description" 
+          content="Get in touch with Spit Hierarchy. Contact us for questions, feedback, or partnership inquiries about our hip-hop ranking platform." 
         />
         <link rel="canonical" href="https://spithierarchy.com/contact" />
         <meta name="robots" content="index, follow" />
@@ -109,11 +101,25 @@ const Contact = () => {
 
       <div className="min-h-screen bg-rap-dark">
         <HeaderNavigation isScrolled={false} />
+        
+        <div className="pt-24">
+          <InternalPageHeader
+            title="Contact Us"
+            subtitle="Get in touch with the Spit Hierarchy team"
+          />
 
-        <InternalPageHeader title="Contact Us" subtitle="Get in touch with the Spit Hierarchy team" />
+          {/* Page Title */}
+          <div className="text-center mb-8 pt-4 max-w-6xl mx-auto px-4">
+            <h1 className="text-4xl sm:text-6xl font-ceviche text-[hsl(var(--theme-primary))] mb-4">
+              Contact Us
+            </h1>
+            <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-lg max-w-2xl mx-auto">
+              Get in touch with the Spit Hierarchy team
+            </p>
+          </div>
 
-        <main className="max-w-6xl mx-auto px-4 py-12">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <main className="max-w-6xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Information */}
             <div className="lg:col-span-1 space-y-6">
               <ThemedCard>
@@ -127,11 +133,11 @@ const Contact = () => {
                     </div>
                     <div>
                       <h3 className="font-semibold text-white mb-1">Email</h3>
-                      <a
-                        href="mailto:contact@spithierarchy.com"
+                      <a 
+                        href="mailto:admin@spithierarchy.com"
                         className="text-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-primaryLight))] transition-colors"
                       >
-                        contact@spithierarchy.com
+                        admin@spithierarchy.com
                       </a>
                     </div>
                   </div>
@@ -189,77 +195,89 @@ const Contact = () => {
                       </div>
                       <h3 className="text-xl font-semibold text-white mb-2">Check Your Email Client</h3>
                       <p className="text-muted-foreground mb-6">
-                        Your default email app should have opened with your message pre-filled. Send the email to
-                        complete your inquiry.
+                        Your default email app should have opened with your message pre-filled. 
+                        Send the email to complete your inquiry.
                       </p>
                       <Button onClick={resetForm} variant="outline">
                         Send Another Message
                       </Button>
                     </div>
                   ) : (
-                    <form onSubmit={handleSubmit} className="space-y-6">
+                    <form onSubmit={handleSubmit} className="space-y-6 [--theme-element-input-bg:var(--theme-background)] [--theme-element-textarea-bg:var(--theme-background)]">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                           <Label htmlFor="name">Name *</Label>
-                          <Input
+                          <ThemedInput
                             id="name"
                             name="name"
                             value={formData.name}
                             onChange={handleChange}
                             placeholder="Your name"
-                            className={errors.name ? "border-red-500" : ""}
+                            className={errors.name ? 'border-red-500' : ''}
                           />
-                          {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                          {errors.name && (
+                            <p className="text-sm text-red-500">{errors.name}</p>
+                          )}
                         </div>
 
                         <div className="space-y-2">
                           <Label htmlFor="email">Email *</Label>
-                          <Input
+                          <ThemedInput
                             id="email"
                             name="email"
                             type="email"
                             value={formData.email}
                             onChange={handleChange}
                             placeholder="your@email.com"
-                            className={errors.email ? "border-red-500" : ""}
+                            className={errors.email ? 'border-red-500' : ''}
                           />
-                          {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
+                          {errors.email && (
+                            <p className="text-sm text-red-500">{errors.email}</p>
+                          )}
                         </div>
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="subject">Subject *</Label>
-                        <Input
+                        <ThemedInput
                           id="subject"
                           name="subject"
                           value={formData.subject}
                           onChange={handleChange}
                           placeholder="What is this about?"
-                          className={errors.subject ? "border-red-500" : ""}
+                          className={errors.subject ? 'border-red-500' : ''}
                         />
-                        {errors.subject && <p className="text-sm text-red-500">{errors.subject}</p>}
+                        {errors.subject && (
+                          <p className="text-sm text-red-500">{errors.subject}</p>
+                        )}
                       </div>
 
                       <div className="space-y-2">
                         <Label htmlFor="message">Message *</Label>
-                        <Textarea
+                        <ThemedTextarea
                           id="message"
                           name="message"
                           value={formData.message}
                           onChange={handleChange}
                           placeholder="Tell us what's on your mind..."
                           rows={6}
-                          className={errors.message ? "border-red-500" : ""}
+                          className={errors.message ? 'border-red-500' : ''}
                         />
-                        {errors.message && <p className="text-sm text-red-500">{errors.message}</p>}
+                        {errors.message && (
+                          <p className="text-sm text-red-500">{errors.message}</p>
+                        )}
                         <p className="text-xs text-muted-foreground text-right">
                           {formData.message.length}/2000 characters
                         </p>
                       </div>
 
-                      <Button type="submit" className="w-full" disabled={isSubmitting}>
+                      <Button 
+                        type="submit" 
+                        className="w-full"
+                        disabled={isSubmitting}
+                      >
                         {isSubmitting ? (
-                          "Opening Email..."
+                          'Opening Email...'
                         ) : (
                           <>
                             <Send className="w-4 h-4 mr-2" />
@@ -269,7 +287,7 @@ const Contact = () => {
                       </Button>
 
                       <p className="text-xs text-muted-foreground text-center">
-                        By submitting this form, you agree to our{" "}
+                        By submitting this form, you agree to our{' '}
                         <a href="/privacy" className="text-[hsl(var(--theme-primary))] hover:underline">
                           Privacy Policy
                         </a>
@@ -281,7 +299,8 @@ const Contact = () => {
               </ThemedCard>
             </div>
           </div>
-        </main>
+          </main>
+        </div>
 
         <Footer />
       </div>
