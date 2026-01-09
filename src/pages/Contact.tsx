@@ -112,8 +112,8 @@ const Contact = () => {
 
         <InternalPageHeader title="Contact Us" subtitle="Get in touch with the Spit Hierarchy team" />
 
-        <main className="max-w-6xl mx-auto px-4 py-10">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <main className="max-w-6xl mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
             {/* Contact Information */}
             <div className="lg:col-span-1 space-y-6">
               <ThemedCard>
