@@ -108,6 +108,16 @@ const Contact = () => {
             subtitle="Get in touch with the Spit Hierarchy team"
           />
 
+          {/* Page Title */}
+          <div className="text-center mb-8 pt-4 max-w-6xl mx-auto px-4">
+            <h1 className="text-4xl sm:text-6xl font-ceviche text-[hsl(var(--theme-primary))] mb-4">
+              Contact Us
+            </h1>
+            <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-lg max-w-2xl mx-auto">
+              Get in touch with the Spit Hierarchy team
+            </p>
+          </div>
+
           <main className="max-w-6xl mx-auto px-4 py-12">
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Contact Information */}
