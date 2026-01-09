@@ -5,6 +5,12 @@ import { toast } from 'sonner';
 
 const SESSION_KEY = 'spit_hierarchy_session_tracked';
 
+interface SessionResponse {
+  session_count: number;
+  xp_awarded: boolean;
+  daily_sessions_remaining: number;
+}
+
 export const useSessionTracking = () => {
   const { user } = useAuth();
   const hasTracked = useRef(false);
@@ -21,7 +27,7 @@ export const useSessionTracking = () => {
       hasTracked.current = true;
 
       try {
-        const { data: sessionCount, error } = await supabase.rpc('increment_session_count');
+        const { data, error } = await supabase.rpc('increment_session_count');
         
         if (error) {
           console.error('Error tracking session:', error);
@@ -31,10 +37,18 @@ export const useSessionTracking = () => {
         // Mark session as tracked
         sessionStorage.setItem(SESSION_KEY, 'true');
 
-        // Show welcome back toast with XP
-        toast.success('Welcome back! +10 XP', {
-          description: `Session #${sessionCount} - You earned 10 points for starting a new session`,
-        });
+        const response = data as unknown as SessionResponse;
+
+        // Show appropriate toast based on whether XP was awarded
+        if (response?.xp_awarded) {
+          toast.success('Welcome back! +10 XP', {
+            description: `Session #${response.session_count} - You earned 10 points for starting a new session`,
+          });
+        } else {
+          toast.info('Welcome back!', {
+            description: `Session #${response.session_count} - Daily XP limit reached (2/2)`,
+          });
+        }
       } catch (err) {
         console.error('Session tracking error:', err);
       }
