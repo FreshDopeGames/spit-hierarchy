@@ -131,13 +131,27 @@ const Admin = () => {
           </ThemedSelect>
         </div>
 
-        {/* Desktop Tabs Navigation */}
+        {/* Desktop Tabs Navigation - Two Rows */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-          <ThemedTabsList className="hidden lg:grid w-full grid-cols-13 gap-1 h-auto p-2">
-            {tabOptions.map(option => <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
-                {option.label}
-              </ThemedTabsTrigger>)}
-          </ThemedTabsList>
+          <div className="hidden lg:flex flex-col gap-2">
+            {/* Row 1: First 7 tabs */}
+            <ThemedTabsList className="w-full grid grid-cols-7 gap-1 h-auto p-2">
+              {tabOptions.slice(0, 7).map(option => (
+                <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
+                  {option.label}
+                </ThemedTabsTrigger>
+              ))}
+            </ThemedTabsList>
+            
+            {/* Row 2: Remaining 6 tabs */}
+            <ThemedTabsList className="w-full grid grid-cols-6 gap-1 h-auto p-2">
+              {tabOptions.slice(7).map(option => (
+                <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
+                  {option.label}
+                </ThemedTabsTrigger>
+              ))}
+            </ThemedTabsList>
+          </div>
 
         {/* Tab Content */}
         <div className="bg-[hsl(var(--theme-surface))] p-3 sm:p-6 rounded-lg border border-[hsl(var(--theme-primary))] shadow-lg">
