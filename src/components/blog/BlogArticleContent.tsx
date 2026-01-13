@@ -16,8 +16,8 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Convert headings to styled heading spans (without trailing line breaks)
         .replace(/^#{1,6}\s+(.+)$/gm, '<span class="heading">$1</span>')
         
-        // Remove line breaks immediately after headings (the heading's mb-2 controls spacing)
-        .replace(/(<span class="heading">.*?<\/span>)\n+/g, '$1')
+        // Normalize multiple line breaks after headings to exactly one (preserves start-of-line for list items)
+        .replace(/(<span class="heading">.*?<\/span>)\n+/g, '$1\n')
 
         // Convert unordered lists to inline text with rap-gold bullet characters and proper spacing
         .replace(/^\s*[-*+]\s+(.+)$/gm, '<span class="list-item"><span class="text-rap-gold">●</span> $1</span>')
