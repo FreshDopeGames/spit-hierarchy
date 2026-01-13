@@ -133,29 +133,33 @@ serve(async (req) => {
 
 Write a weekly blog post following this EXACT structure:
 
-1. **Top 5 Headlines** — Quick bullets with title, source, and one-line hot-take.
+1. **Top 5 Headlines** — Quick bullets. EVERY headline MUST include a clickable source link to the original article. Format each exactly as:
+   *   **Headline Title** - [Source Name](article_url): One-line hot-take.
+   Example: *   **Drake Announces Tour** - [XXL Mag](https://www.xxlmag.com/drake-tour/): This is gonna be legendary.
 
-2. **Deep Move Spotlight** — Pick one story with major industry implications (deal, tour, social move) and riff on how it affects culture + independent creators.
+2. **Deep Move Spotlight** — Pick one story with major industry implications (deal, tour, social move) and riff on how it affects culture + independent creators. Include a link to the source article in the text.
 
-3. **New Drops & Aliased Plays** — List 3-4 new albums/singles or artist maneuvers; include link + why it matters for creators.
+3. **New Drops & Aliased Plays** — List 3-4 new albums/singles or artist maneuvers. EVERY item MUST include a clickable source link. Format each exactly as:
+   *   **Artist - Title/News** - [Source Name](article_url): Why it matters for creators.
+   Example: *   **A$AP Rocky - "HELICOPTER$"** - [The Source](https://thesource.com/asap-rocky/): Rocky's back with new flavor.
 
 4. **Community Check-In** — Short call-out to Spit Hierarchy audience: what to watch next week, what to comment on, what to vote on.
 
-Requirements:
+CRITICAL Requirements:
+- EVERY bullet point in Top 5 Headlines and New Drops MUST have a clickable [Source Name](url) link to the original article
 - Use conversational, confident hip-hop vernacular but keep it accessible
 - Example opening: "What up, people? It's once again that time for the weekly Spit Hierarchy Weekly Rap-Up..."
 - Use contractions, rhythm, short punchy sentences
 - Present tense when possible
 - Weave in references to hustle, culture, creative control, Black & Brown excellence
-- Include all links in markdown format: [link text](url)
 - Keep total length to 400-600 words
 - End with a call to action for voting/commenting on Spit Hierarchy
 
 Return ONLY markdown content using:
 - **bold** for emphasis
 - ## for section headers
-- - for bullet lists
-- [text](url) for links
+- * for bullet lists (use asterisk, not dash)
+- [text](url) for ALL source links - this is mandatory
 - Regular paragraphs separated by blank lines`;
 
     const userPrompt = `Here are this week's hip-hop articles to cover:\n\n${articlesContext}\n\nWrite the weekly roundup blog post.`;
@@ -277,18 +281,36 @@ function wrapRapperMentionsWithLinks(
 ): string {
   let processedContent = content;
   
+  // Common words that follow rapper name-like words in non-rapper contexts
+  // e.g., "future generations", "future plans", "ice cold"
+  const CONTEXT_BLOCKLIST = [
+    'generations', 'plans', 'projects', 'releases', 'music', 'years',
+    'of', 'the', 'is', 'are', 'was', 'will', 'would', 'could', 'should',
+    'cold', 'cream', 'berg', 'breaker', 'skating'
+  ];
+  
   // Sort by name length (longest first) to avoid partial replacements
   // e.g., "Ice Cube" should be matched before "Ice"
   const sortedArtists = Array.from(artistLinkMap.entries())
     .sort((a, b) => b[0].length - a[0].length);
   
   for (const [lowerName, { name, url }] of sortedArtists) {
+    // Skip single-word names that are common English words (extra safety)
+    if (name.length <= 3 && !name.includes(' ')) continue;
+    
     // Use word boundary regex to match whole names only
     // Case-insensitive matching, preserving original case in output
     // Negative lookahead to skip text already inside markdown links
     const regex = new RegExp(`\\b(${escapeRegex(name)})\\b(?![^\\[]*\\])`, 'gi');
     
-    processedContent = processedContent.replace(regex, (match) => {
+    processedContent = processedContent.replace(regex, (match, group1, offset) => {
+      // Check if followed by a context word that suggests non-rapper usage
+      const afterMatch = processedContent.slice(offset + match.length, offset + match.length + 20).toLowerCase();
+      for (const contextWord of CONTEXT_BLOCKLIST) {
+        if (afterMatch.startsWith(` ${contextWord}`) || afterMatch.startsWith(` ${contextWord}s`)) {
+          return match; // Don't link - likely not referring to the rapper
+        }
+      }
       return `[${match}](${url})`;
     });
   }
