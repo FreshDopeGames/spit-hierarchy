@@ -8,6 +8,7 @@ import UserProfileDropdown from './UserProfileDropdown';
 import NavigationSidebar from './NavigationSidebar';
 import GlobalSearch from './GlobalSearch';
 import { NotificationBell } from './NotificationBell';
+import { FullscreenToggle } from './pwa/FullscreenToggle';
 import { AvatarSkeleton, TextSkeleton } from '@/components/ui/skeleton';
 
 interface HeaderNavigationProps {
@@ -41,7 +42,10 @@ const HeaderNavigation = ({
           </Link>
 
           {/* Right: Search Icon + Notifications + User Menu */}
-          <div className="flex items-center gap-2 sm:gap-4">
+          <div className="flex items-center gap-1 sm:gap-3">
+            {/* Fullscreen Toggle (mobile/tablet only) */}
+            <FullscreenToggle showOnlyOnMobile={true} />
+            
             {/* Global Search */}
             <GlobalSearch />
             

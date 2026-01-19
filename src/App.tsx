@@ -34,6 +34,7 @@ import Quiz from "./pages/Quiz";
 import Contact from "./pages/Contact";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { CookieSettingsLink } from "@/components/CookieSettingsLink";
+import { InstallPrompt } from "@/components/pwa/InstallPrompt";
 
 // Component to capture UTM params and track sessions
 const AppHooksWrapper = ({ children }: { children: React.ReactNode }) => {
@@ -51,6 +52,7 @@ function App() {
           <EmailConfirmationHandler />
           <CookieConsentBanner />
           <CookieSettingsLink />
+          <InstallPrompt />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/auth" element={<Auth />} />
