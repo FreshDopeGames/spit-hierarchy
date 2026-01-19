@@ -18,6 +18,8 @@ import AdminRapperSuggestions from "@/components/admin/AdminRapperSuggestions";
 import { AnnouncementManagement } from "@/components/admin/AnnouncementManagement";
 import QuizManagement from "@/components/admin/QuizManagement";
 import AcquisitionAnalytics from "@/components/admin/AcquisitionAnalytics";
+import BioBulkPopulation from "@/components/admin/BioBulkPopulation";
+
 const Admin = () => {
   const {
     user,
@@ -68,6 +70,9 @@ const Admin = () => {
   }, {
     value: "acquisition",
     label: "Acquisition"
+  }, {
+    value: "bios",
+    label: "Bios"
   }];
   if (isLoading) {
     return <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
@@ -105,6 +110,8 @@ const Admin = () => {
         return <AnnouncementManagement />;
       case "acquisition":
         return <AcquisitionAnalytics />;
+      case "bios":
+        return <BioBulkPopulation />;
       default:
         return <AdminRapperManagement />;
     }
