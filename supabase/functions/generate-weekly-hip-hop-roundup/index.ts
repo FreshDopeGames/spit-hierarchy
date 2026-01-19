@@ -124,8 +124,19 @@ serve(async (req) => {
       );
     }
 
+    // Diversify sources before passing to AI (round-robin selection)
+    const diversifiedItems = diversifyArticlesBySource(relevantItems, 15);
+    console.log(`Diversified to ${diversifiedItems.length} items across sources`);
+    
+    // Log source distribution for debugging
+    const sourceCount: Record<string, number> = {};
+    diversifiedItems.forEach(item => {
+      sourceCount[item.source] = (sourceCount[item.source] || 0) + 1;
+    });
+    console.log('Source distribution:', JSON.stringify(sourceCount));
+
     // Prepare context for AI
-    const articlesContext = relevantItems.map((item, i) => 
+    const articlesContext = diversifiedItems.map((item, i) => 
       `${i + 1}. ${item.title}\n   Source: ${item.source}\n   Link: ${item.link}\n   Summary: ${item.description}\n   Date: ${item.pubDate}`
     ).join('\n\n');
 
@@ -133,7 +144,7 @@ serve(async (req) => {
 
 Write a weekly blog post following this EXACT structure:
 
-1. **Top 5 Headlines** — Quick bullets. EVERY headline MUST include a clickable source link to the original article. Format each exactly as:
+1. **Top 5 Headlines** — Quick bullets. CRITICAL: You MUST select headlines from at least 3-4 DIFFERENT sources for variety - do NOT use the same source multiple times. EVERY headline MUST include a clickable source link to the original article. Format each exactly as:
    *   **Headline Title** - [Source Name](article_url): One-line hot-take.
    Example: *   **Drake Announces Tour** - [XXL Mag](https://www.xxlmag.com/drake-tour/): This is gonna be legendary.
 
@@ -316,6 +327,40 @@ function wrapRapperMentionsWithLinks(
   }
   
   return processedContent;
+}
+
+// Diversify articles by source using round-robin selection
+function diversifyArticlesBySource(items: RSSItem[], maxItems: number = 15): RSSItem[] {
+  // Group by source
+  const bySource: Map<string, RSSItem[]> = new Map();
+  for (const item of items) {
+    if (!bySource.has(item.source)) {
+      bySource.set(item.source, []);
+    }
+    bySource.get(item.source)!.push(item);
+  }
+  
+  const sources = Array.from(bySource.keys());
+  const diversified: RSSItem[] = [];
+  let sourceIndex = 0;
+  let emptyRounds = 0;
+  
+  // Round-robin selection until we hit maxItems or run out
+  while (diversified.length < maxItems && emptyRounds < sources.length) {
+    const source = sources[sourceIndex % sources.length];
+    const sourceItems = bySource.get(source)!;
+    
+    if (sourceItems.length > 0) {
+      diversified.push(sourceItems.shift()!);
+      emptyRounds = 0;
+    } else {
+      emptyRounds++;
+    }
+    
+    sourceIndex++;
+  }
+  
+  return diversified;
 }
 
 function parseRSSFeed(xml: string, sourceName: string, cutoffDate: Date): RSSItem[] {
