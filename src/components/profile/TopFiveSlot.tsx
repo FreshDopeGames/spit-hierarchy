@@ -1,6 +1,8 @@
 
 import React from "react";
-import { Music } from "lucide-react";
+import { Link } from "react-router-dom";
+import { Music, Pencil } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
 interface TopFiveSlotProps {
   position: number;
@@ -8,15 +10,21 @@ interface TopFiveSlotProps {
     id: string;
     name: string;
     image_url: string | null;
+    slug?: string | null;
   } | null;
-  onClick: () => void;
+  onEditClick: () => void;
 }
 
-const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
+const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
+  const handleEditClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    onEditClick();
+  };
+
   return (
     <div
-      onClick={onClick}
-      className="border-2 border-[hsl(var(--theme-primary))]/20 rounded-lg p-3 cursor-pointer transition-colors group relative hover:opacity-90 bg-[hsl(var(--theme-surfaceSecondary))]"
+      className="border-2 border-[hsl(var(--theme-primary))]/20 rounded-lg p-3 relative bg-[hsl(var(--theme-surfaceSecondary))]"
     >
       {/* Position number in top left */}
       <div 
@@ -34,8 +42,9 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
       <div className="flex flex-col items-center space-y-4">
         {rapper ? (
           <>
-            <div 
-              className="w-full max-w-60 h-32 sm:h-40 rounded-lg overflow-hidden border border-[hsl(var(--theme-primary))]/20 bg-[hsl(var(--theme-surface))]"
+            <Link 
+              to={`/rapper/${rapper.slug || rapper.id}`}
+              className="w-full max-w-60 h-32 sm:h-40 rounded-lg overflow-hidden border border-[hsl(var(--theme-primary))]/20 bg-[hsl(var(--theme-surface))] block hover:opacity-90 transition-opacity"
             >
               {rapper.image_url ? (
                 <img 
@@ -48,7 +57,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
                   <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
                 </div>
               )}
-            </div>
+            </Link>
             <div 
               className="text-sm sm:text-lg font-bold text-center line-clamp-2"
               style={{ 
@@ -58,16 +67,28 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
             >
               {rapper.name}
             </div>
+            {/* Edit button */}
+            <Button
+              onClick={handleEditClick}
+              size="icon"
+              variant="outline"
+              className="absolute bottom-2 right-2 w-8 h-8 rounded-full border-[hsl(var(--theme-primary))]/50 bg-[hsl(var(--theme-surface))] hover:bg-[hsl(var(--theme-primary))] hover:text-black text-[hsl(var(--theme-primary))]"
+            >
+              <Pencil className="w-4 h-4" />
+            </Button>
           </>
         ) : (
-          <>
+          <div 
+            onClick={onEditClick}
+            className="cursor-pointer group w-full"
+          >
             <div 
-              className="w-full max-w-60 h-32 sm:h-40 rounded-lg border-2 border-dashed border-[hsl(var(--theme-primary))]/30 flex items-center justify-center group-hover:opacity-80 bg-[hsl(var(--theme-surface))]"
+              className="w-full max-w-60 h-32 sm:h-40 rounded-lg border-2 border-dashed border-[hsl(var(--theme-primary))]/30 flex items-center justify-center group-hover:opacity-80 bg-[hsl(var(--theme-surface))] mx-auto"
             >
               <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
             </div>
             <div 
-              className="text-sm sm:text-lg font-bold text-center"
+              className="text-sm sm:text-lg font-bold text-center mt-4"
               style={{ 
                 color: 'hsl(var(--theme-textMuted))',
                 fontFamily: 'var(--theme-font-body)'
@@ -75,7 +96,7 @@ const TopFiveSlot = ({ position, rapper, onClick }: TopFiveSlotProps) => {
             >
               Click to add rapper
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>

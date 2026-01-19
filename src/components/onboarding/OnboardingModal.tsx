@@ -452,7 +452,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                         key={slot.position}
                         position={slot.position}
                         rapper={slot.rapper}
-                        onClick={() => handleSlotClick(slot.position)}
+                        onEditClick={() => handleSlotClick(slot.position)}
                       />
                     ))}
                   </div>
@@ -462,7 +462,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                         key={slot.position}
                         position={slot.position}
                         rapper={slot.rapper}
-                        onClick={() => handleSlotClick(slot.position)}
+                        onEditClick={() => handleSlotClick(slot.position)}
                       />
                     ))}
                   </div>
@@ -476,7 +476,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                         key={slot.position}
                         position={slot.position}
                         rapper={slot.rapper}
-                        onClick={() => handleSlotClick(slot.position)}
+                        onEditClick={() => handleSlotClick(slot.position)}
                       />
                     ))}
                   </div>
