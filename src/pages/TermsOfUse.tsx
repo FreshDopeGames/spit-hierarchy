@@ -135,7 +135,53 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Changes to Terms</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Push Notifications & Browser Permissions</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    Spit Hierarchy may request permission to send push notifications to your device. By granting notification permissions, you consent to receive:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Updates on ranking changes for your favorite artists</li>
+                    <li>Achievement and badge unlock notifications</li>
+                    <li>New content alerts including blog posts and community activity</li>
+                    <li>Important platform announcements and system updates</li>
+                    <li>Reminders for voting streaks and engagement milestones</li>
+                  </ul>
+                  <p>
+                    You may revoke notification permissions at any time through your browser or device settings. 
+                    Notification preferences can also be managed in your account settings. We will not sell or share 
+                    your notification tokens with third parties except as necessary to deliver notifications through 
+                    standard browser APIs.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. App Installation & Home Screen Access</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    Spit Hierarchy can be installed as a Progressive Web App (PWA) on your device. By installing the app:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>You can access the platform directly from your home screen</li>
+                    <li>The app will work offline for previously cached content</li>
+                    <li>You may experience improved performance through local caching</li>
+                    <li>The app will operate in fullscreen mode for an immersive experience</li>
+                  </ul>
+                  <p>
+                    Installing the app is optional and does not grant additional data access beyond what is already 
+                    collected through normal browser usage. You can uninstall the app at any time through your device's 
+                    standard app management interface.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Changes to Terms</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   We reserve the right to modify these terms at any time. Users will be notified of significant changes, 
                   and continued use of the platform constitutes acceptance of modified terms.
@@ -145,7 +191,7 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. Contact Information</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">11. Contact Information</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   For questions about these Terms of Use, please contact Fresh Dope Biz LLC through our platform's support channels.
                 </p>
