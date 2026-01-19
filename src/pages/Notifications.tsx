@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { useNotifications } from '@/hooks/useNotifications';
+import { usePWA } from '@/hooks/usePWA';
 import HeaderNavigation from '@/components/HeaderNavigation';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { CheckCheck, Bell, Inbox } from 'lucide-react';
+import { CheckCheck, Bell, Inbox, BellRing, BellOff, Settings } from 'lucide-react';
 import { NotificationCard } from '@/components/notifications/NotificationCard';
 import SEOHead from '@/components/seo/SEOHead';
+import { toast } from 'sonner';
 
 export default function Notifications() {
   const { 
@@ -15,7 +18,37 @@ export default function Notifications() {
     markAllAsRead, 
     deleteNotification 
   } = useNotifications();
+  const { notificationPermission, requestNotificationPermission } = usePWA();
   const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
+
+  const handleToggleNotifications = async () => {
+    if (notificationPermission === 'granted') {
+      toast.info('To disable notifications, update your browser settings');
+      return;
+    }
+    
+    const result = await requestNotificationPermission();
+    if (result.success) {
+      toast.success('Push notifications enabled!');
+    } else {
+      toast.error('Could not enable notifications. Check your browser settings.');
+    }
+  };
+
+  const getNotificationStatus = () => {
+    switch (notificationPermission) {
+      case 'granted':
+        return { icon: BellRing, color: 'text-green-500', message: 'Push notifications are enabled', enabled: true };
+      case 'denied':
+        return { icon: BellOff, color: 'text-red-500', message: 'Blocked - enable in browser settings', enabled: false };
+      case 'unsupported':
+        return { icon: BellOff, color: 'text-[hsl(var(--theme-text))]/50', message: 'Not supported in this browser', enabled: false };
+      default:
+        return { icon: Bell, color: 'text-amber-500', message: 'Enable to receive push notifications', enabled: false };
+    }
+  };
+
+  const status = getNotificationStatus();
 
   const filteredNotifications = filter === 'unread'
     ? notifications?.filter(n => !n.is_read)
@@ -42,7 +75,27 @@ export default function Notifications() {
             <p className="text-[hsl(var(--theme-text))]/70 mt-2">
               Stay updated on your activity and achievements
             </p>
+        </div>
+
+        {/* Notification Settings */}
+        <div className="mb-6 p-4 rounded-xl bg-[hsl(var(--theme-surface))] border border-[hsl(var(--theme-primary))]/20">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className={`p-2 rounded-lg bg-[hsl(var(--theme-background))] ${status.color}`}>
+                <status.icon className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-[hsl(var(--theme-text))]">Push Notifications</h3>
+                <p className="text-sm text-[hsl(var(--theme-text))]/60">{status.message}</p>
+              </div>
+            </div>
+            <Switch
+              checked={status.enabled}
+              onCheckedChange={handleToggleNotifications}
+              disabled={notificationPermission === 'unsupported'}
+            />
           </div>
+        </div>
           
           {unreadCount > 0 && (
             <Button
