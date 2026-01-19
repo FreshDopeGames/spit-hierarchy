@@ -9,11 +9,17 @@ interface BeforeInstallPromptEvent extends Event {
   prompt(): Promise<void>;
 }
 
+type BrowserType = 'chrome' | 'edge' | 'firefox' | 'safari' | 'opera' | 'other';
+type PlatformType = 'ios' | 'android' | 'desktop';
+
 interface PWAState {
   isInstallable: boolean;
   isInstalled: boolean;
   isIOS: boolean;
+  isAndroid: boolean;
   isStandalone: boolean;
+  browser: BrowserType;
+  platform: PlatformType;
   notificationPermission: NotificationPermission | 'unsupported';
 }
 
@@ -23,7 +29,10 @@ export const usePWA = () => {
     isInstallable: false,
     isInstalled: false,
     isIOS: false,
+    isAndroid: false,
     isStandalone: false,
+    browser: 'other',
+    platform: 'desktop',
     notificationPermission: 'unsupported'
   });
 
@@ -32,8 +41,35 @@ export const usePWA = () => {
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches 
       || (window.navigator as any).standalone === true;
     
+    const ua = navigator.userAgent;
+    
     // Check for iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+    const isIOS = /iPad|iPhone|iPod/.test(ua) && !(window as any).MSStream;
+    
+    // Check for Android
+    const isAndroid = /Android/.test(ua);
+    
+    // Detect browser
+    let browser: BrowserType = 'other';
+    if (ua.includes('Edg/')) {
+      browser = 'edge';
+    } else if (ua.includes('OPR/') || ua.includes('Opera')) {
+      browser = 'opera';
+    } else if (ua.includes('Chrome')) {
+      browser = 'chrome';
+    } else if (ua.includes('Firefox')) {
+      browser = 'firefox';
+    } else if (ua.includes('Safari')) {
+      browser = 'safari';
+    }
+    
+    // Detect platform
+    let platform: PlatformType = 'desktop';
+    if (isIOS) {
+      platform = 'ios';
+    } else if (isAndroid) {
+      platform = 'android';
+    }
     
     // Check notification support
     const notificationPermission = 'Notification' in window 
@@ -44,6 +80,9 @@ export const usePWA = () => {
       ...prev,
       isStandalone,
       isIOS,
+      isAndroid,
+      browser,
+      platform,
       isInstalled: isStandalone,
       notificationPermission
     }));
