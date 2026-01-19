@@ -147,6 +147,72 @@ A comprehensive web application for ranking and voting on rap artists, featuring
   - Themed card styling with primary color accents
 - **Call to Action**: Registration/exploration encouragement
 
+### 13. Progressive Web App (PWA) Integration
+- **Display Mode**: Standalone mode for native app-like experience
+- **Service Worker**: Auto-updating service worker via `vite-plugin-pwa`
+- **Offline Support**: Workbox caching for static assets, Supabase images, and Google Fonts
+- **Installability**: Native install prompt on supported browsers with manual fallback instructions
+
+#### Core PWA Hook (`usePWA`)
+Central state management providing:
+- **Install State**: `isInstallable`, `canInstall`, `isInstalled`, `isStandalone`
+- **Platform Detection**: `isIOS`, `isAndroid`, `platform` (ios/android/desktop)
+- **Browser Detection**: `browser` (chrome/edge/firefox/safari/opera/other)
+- **Notification Management**: `notificationPermission`, `requestNotificationPermission()`
+- **Fullscreen API**: `enterFullscreen()`, `exitFullscreen()`, `isFullscreen()`
+- **Install Prompt**: `promptInstall()` for triggering native install dialog
+
+#### InstallPrompt Component
+- **Location**: Rendered globally in `App.tsx`
+- **Trigger**: Appears after 10 seconds for eligible devices
+- **Dismissal**: 7-day persistence via localStorage
+- **Platform Instructions**:
+  - iOS: Share → Add to Home Screen steps
+  - Firefox Android: Menu → Add to Home screen
+  - Chrome/Edge Desktop: Menu → Install as app
+  - Unsupported browsers: Guidance to use Chrome/Edge
+- **Notification Integration**: Optional push notification permission request
+
+#### FullscreenToggle Component
+- **Location**: HeaderNavigation (right-side utility section)
+- **Visibility**: Mobile/tablet devices only (`showOnlyOnMobile={true}`)
+- **Functionality**: Toggle button using Fullscreen API for immersive browsing
+- **Icons**: Maximize/Minimize with themed styling
+
+#### Notification Settings (Notifications Page)
+- **Push Notification Toggle**: Enable/disable push notifications
+- **Status Indicators**:
+  - Granted (green): "Push notifications are enabled"
+  - Denied (red): "Blocked - enable in browser settings"
+  - Default (amber): "Enable to receive push notifications"
+  - Unsupported (gray): "Not supported in this browser"
+- **Browser Limitation**: Disabling requires browser settings (cannot be done programmatically)
+- **Preview Limitation**: Push notifications cannot be tested in Lovable preview iframe; requires published URL
+
+#### PWA Configuration (vite.config.ts)
+- **Register Type**: `autoUpdate` for seamless updates
+- **Manifest**: App name, theme colors, icons (192x192, 512x512), screenshots
+- **Workbox Caching**:
+  - Supabase storage images (CacheFirst, 30-day expiry, max 100 entries)
+  - Google Fonts stylesheets (StaleWhileRevalidate, 365-day expiry)
+  - Google Fonts webfonts (CacheFirst, 365-day expiry, max 30 entries)
+
+#### Apple-Specific Meta Tags (index.html)
+- `apple-mobile-web-app-capable`: Enable standalone mode on iOS
+- `apple-mobile-web-app-status-bar-style`: Black translucent status bar
+- `apple-mobile-web-app-title`: "Spit Hierarchy"
+- iOS viewport configuration for full-screen experience
+
+#### Key PWA Files
+| File | Purpose |
+|------|---------|
+| `src/hooks/usePWA.tsx` | Central PWA state and API management |
+| `src/components/pwa/InstallPrompt.tsx` | Install banner with platform instructions |
+| `src/components/pwa/FullscreenToggle.tsx` | Fullscreen toggle button |
+| `src/pages/Notifications.tsx` | Push notification toggle UI |
+| `vite.config.ts` | PWA plugin and manifest configuration |
+| `index.html` | Apple meta tags and PWA capabilities |
+
 ## Technical Architecture
 
 ### Frontend Stack
