@@ -252,7 +252,7 @@ export const InstallPrompt = () => {
           exit={{ opacity: 0, y: 100 }}
           className="fixed bottom-4 left-4 right-4 md:left-auto md:right-4 md:w-96 z-50"
         >
-          <div className="bg-[hsl(var(--theme-card))] border border-[hsl(var(--theme-primary))]/30 rounded-xl p-4 shadow-2xl">
+          <div className="bg-[hsl(var(--theme-surface))] border border-[hsl(var(--theme-primary))]/30 rounded-xl p-4 shadow-2xl">
             <button
               onClick={handleDismiss}
               className="absolute top-2 right-2 p-1 text-[hsl(var(--theme-text))]/50 hover:text-[hsl(var(--theme-text))] transition-colors"
