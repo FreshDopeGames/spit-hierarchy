@@ -77,11 +77,11 @@ const MyTopFiveSection = () => {
         <div className="hidden lg:block">
           {/* Top 2 rappers */}
           <div className="grid grid-cols-2 gap-4 mb-4">
-            {slots.slice(0, 2).map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onClick={() => handleSlotClick(slot.position)} />)}
+            {slots.slice(0, 2).map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onEditClick={() => handleSlotClick(slot.position)} />)}
           </div>
           {/* Bottom 3 rappers */}
           <div className="grid grid-cols-3 gap-4">
-            {slots.slice(2, 5).map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onClick={() => handleSlotClick(slot.position)} />)}
+            {slots.slice(2, 5).map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onEditClick={() => handleSlotClick(slot.position)} />)}
           </div>
         </div>
 
@@ -92,7 +92,7 @@ const MyTopFiveSection = () => {
             <TopFiveSlot 
               position={slots[0].position} 
               rapper={slots[0].rapper} 
-              onClick={() => handleSlotClick(slots[0].position)} 
+              onEditClick={() => handleSlotClick(slots[0].position)} 
             />
           </div>
           {/* Middle row - Positions #2 and #3 */}
@@ -102,7 +102,7 @@ const MyTopFiveSection = () => {
                 key={slot.position} 
                 position={slot.position} 
                 rapper={slot.rapper} 
-                onClick={() => handleSlotClick(slot.position)} 
+                onEditClick={() => handleSlotClick(slot.position)} 
               />
             ))}
           </div>
@@ -113,7 +113,7 @@ const MyTopFiveSection = () => {
                 key={slot.position} 
                 position={slot.position} 
                 rapper={slot.rapper} 
-                onClick={() => handleSlotClick(slot.position)} 
+                onEditClick={() => handleSlotClick(slot.position)} 
               />
             ))}
           </div>
@@ -122,7 +122,7 @@ const MyTopFiveSection = () => {
         {/* Mobile Layout */}
         <div className="block sm:hidden">
           <div className="grid grid-cols-1 gap-4">
-            {slots.map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onClick={() => handleSlotClick(slot.position)} />)}
+            {slots.map(slot => <TopFiveSlot key={slot.position} position={slot.position} rapper={slot.rapper} onEditClick={() => handleSlotClick(slot.position)} />)}
           </div>
         </div>
       </div>

@@ -20,7 +20,8 @@ export const useUserTopRappers = () => {
           rappers (
             id,
             name,
-            image_url
+            image_url,
+            slug
           )
         `)
         .eq("user_id", user.id)
