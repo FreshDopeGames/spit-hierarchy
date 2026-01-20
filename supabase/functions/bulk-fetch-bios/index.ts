@@ -102,6 +102,7 @@ serve(async (req) => {
       failed: 0,
       skipped: 0,
       errors: [] as Array<{ rapper: string; error: string }>,
+      successfulRappers: [] as Array<{ rapper: string; wordCount: number; source: string }>,
       progress: {
         startIndex: startFromIndex,
         batchSize,
@@ -150,8 +151,13 @@ serve(async (req) => {
             console.log(`⊘ Skipped ${rapper.name} - bio already sufficient`);
             results.skipped++;
           } else {
-            console.log(`✓ Updated bio for ${rapper.name} (${data.bioLength} chars, ${data.wordCount} words)`);
+            console.log(`✓ Updated bio for ${rapper.name} (${data.bioLength} chars, ${data.wordCount} words) via ${data.source}`);
             results.successful++;
+            results.successfulRappers.push({
+              rapper: rapper.name,
+              wordCount: data.wordCount || 0,
+              source: data.source || 'unknown'
+            });
           }
         } else {
           console.log(`✗ Failed for ${rapper.name}: ${data.error}`);
