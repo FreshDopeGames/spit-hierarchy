@@ -62,6 +62,20 @@ const getBarColorByElement = (signName: string): string => {
   return ELEMENT_COLORS[element]?.primary || '#FFD700';
 };
 
+// Get dynamic font size based on name length
+const getDynamicFontSize = (name: string): string => {
+  const length = name.length;
+  if (length <= 6) return 'text-sm';      // Short names: "Nas", "Drake"
+  if (length <= 10) return 'text-xs';     // Medium: "Meek Mill", "Rico Nasty"
+  return 'text-[10px]';                   // Long: "Ghostface Killah"
+};
+
+const getDynamicDateSize = (name: string): string => {
+  const length = name.length;
+  if (length <= 6) return 'text-xs';      // More room for date
+  return 'text-[10px]';                   // Standard size
+};
+
 const ZodiacDistributionCard = () => {
   const [selectedSign, setSelectedSign] = useState<string | null>(null);
   const [shuffleKey, setShuffleKey] = useState(0);
@@ -353,10 +367,10 @@ const ZodiacDistributionCard = () => {
                             </div>
                           )}
                         </div>
-                        <span className="text-rap-platinum font-kaushan text-xs truncate block group-hover:text-rap-gold transition-colors">
+                        <span className={`text-rap-platinum font-kaushan ${getDynamicFontSize(rapper.name)} truncate block group-hover:text-rap-gold transition-colors`}>
                           {rapper.name}
                         </span>
-                        <span className="text-rap-smoke text-[10px]">
+                        <span className={`text-rap-smoke ${getDynamicDateSize(rapper.name)}`}>
                           {formatShortBirthdate(rapper.birth_month, rapper.birth_day)}
                         </span>
                       </Link>
