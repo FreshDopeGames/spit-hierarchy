@@ -4,6 +4,9 @@ import RapperCard from "@/components/RapperCard";
 import LoadMoreButton from "@/components/LoadMoreButton";
 import { useIncrementalRapperData } from "@/hooks/useIncrementalRapperData";
 import { useScrollAnchor } from "@/hooks/useScrollAnchor";
+import { useAuth } from "@/hooks/useAuth";
+import { useQuery } from "@tanstack/react-query";
+import { supabase } from "@/integrations/supabase/client";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -16,7 +19,6 @@ interface AllRappersGridProps {
   itemsPerPage: number;
   onLoadMore: () => void;
   currentPage: number;
-  showRatedBadge?: boolean;
 }
 
 const AllRappersGrid = ({
@@ -26,9 +28,27 @@ const AllRappersGrid = ({
   isFetching,
   itemsPerPage,
   onLoadMore,
-  currentPage,
-  showRatedBadge = false
+  currentPage
 }: AllRappersGridProps) => {
+  const { user } = useAuth();
+  
+  // Fetch user's rated rapper IDs from votes table
+  const { data: ratedRapperIds } = useQuery({
+    queryKey: ["user-rated-rappers", user?.id],
+    queryFn: async () => {
+      if (!user) return new Set<string>();
+      const { data } = await supabase
+        .from("votes")
+        .select("rapper_id")
+        .eq("user_id", user.id);
+      // Get unique rapper IDs
+      const uniqueIds = [...new Set((data || []).map(r => r.rapper_id))];
+      return new Set(uniqueIds);
+    },
+    enabled: !!user,
+    staleTime: 60000,
+  });
+
   // Incrementally load rapper data (only fetches NEW rappers)
   const rapperIds = rappers.map(rapper => rapper.id);
   const { imageMap, statsMap } = useIncrementalRapperData(rapperIds);
@@ -132,7 +152,7 @@ const AllRappersGrid = ({
             imageUrl={imageMap[rapper.id]} 
             stats={statsMap[rapper.id]}
             currentPage={currentPage}
-            showRatedBadge={showRatedBadge}
+            showRatedBadge={ratedRapperIds?.has(rapper.id) || false}
           />
         ))}
       </div>

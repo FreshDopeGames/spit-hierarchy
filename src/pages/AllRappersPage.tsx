@@ -22,7 +22,6 @@ const AllRappersPage = () => {
     searchTerm,
     locationInput,
     locationFilter,
-    ratedFilter,
     zodiacFilter,
     allRappers,
     rappersData,
@@ -33,7 +32,6 @@ const AllRappersPage = () => {
     handleOrderChange,
     handleSearchInput,
     handleLocationInput,
-    handleRatedFilterChange,
     handleZodiacFilterChange,
     handleLoadMore,
     currentPage,
@@ -116,13 +114,11 @@ const AllRappersPage = () => {
           locationFilter={locationFilter}
           sortBy={sortBy}
           sortOrder={sortOrder}
-          ratedFilter={ratedFilter}
           zodiacFilter={zodiacFilter}
           onSearchInput={handleSearchInput}
           onLocationInput={handleLocationInput}
           onSortChange={handleSortChange}
           onOrderChange={handleOrderChange}
-          onRatedFilterChange={handleRatedFilterChange}
           onZodiacFilterChange={handleZodiacFilterChange}
         />
 
@@ -141,7 +137,6 @@ const AllRappersPage = () => {
               itemsPerPage={itemsPerPage}
               onLoadMore={handleLoadMore}
               currentPage={currentPage}
-              showRatedBadge={ratedFilter === "rated"}
             />
           </>
         )}
