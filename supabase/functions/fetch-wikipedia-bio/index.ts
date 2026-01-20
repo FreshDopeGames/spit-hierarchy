@@ -67,21 +67,28 @@ serve(async (req) => {
       });
     }
 
-    if (!rapper.musicbrainz_id) {
-      console.log(`No MusicBrainz ID for ${rapper.name}`);
-      return json({ success: false, error: 'No MusicBrainz ID available' }, 400);
+    // Step 1: Try MusicBrainz first, then fallback to Wikipedia search
+    let wikipediaUrl: string | null = null;
+    let source = 'musicbrainz';
+
+    if (rapper.musicbrainz_id) {
+      console.log(`Fetching MusicBrainz relations for ${rapper.musicbrainz_id}`);
+      wikipediaUrl = await getWikipediaUrlFromMusicBrainz(rapper.musicbrainz_id);
     }
 
-    // Step 1: Fetch Wikipedia URL from MusicBrainz
-    console.log(`Fetching MusicBrainz relations for ${rapper.musicbrainz_id}`);
-    const wikipediaUrl = await getWikipediaUrlFromMusicBrainz(rapper.musicbrainz_id);
+    // Fallback: Search Wikipedia directly by name
+    if (!wikipediaUrl) {
+      console.log(`No MusicBrainz Wikipedia link, searching Wikipedia for: ${rapper.name}`);
+      wikipediaUrl = await searchWikipediaForRapper(rapper.name);
+      source = 'wikipedia-search';
+    }
 
     if (!wikipediaUrl) {
-      console.log(`No Wikipedia link found for ${rapper.name}`);
-      return json({ success: false, error: 'No Wikipedia article linked in MusicBrainz' }, 404);
+      console.log(`No Wikipedia article found for ${rapper.name}`);
+      return json({ success: false, error: 'No Wikipedia article found via MusicBrainz or direct search' }, 404);
     }
 
-    console.log(`Found Wikipedia URL: ${wikipediaUrl}`);
+    console.log(`Found Wikipedia URL via ${source}: ${wikipediaUrl}`);
 
     // Step 2: Fetch Wikipedia summary
     const wikipediaTitle = extractWikipediaTitle(wikipediaUrl);
@@ -131,7 +138,7 @@ serve(async (req) => {
       bioLength: expandedBio.length,
       wordCount: expandedBio.split(/\s+/).length,
       executionTimeMs: Date.now() - startTime,
-      source: 'wikipedia'
+      source
     });
 
   } catch (error: any) {
@@ -178,6 +185,66 @@ async function getWikipediaUrlFromMusicBrainz(musicbrainzId: string): Promise<st
     return null;
   } catch (error) {
     console.error('Error fetching from MusicBrainz:', error);
+    return null;
+  }
+}
+
+async function searchWikipediaForRapper(rapperName: string): Promise<string | null> {
+  try {
+    // Try multiple search queries with hip-hop qualifiers
+    const searchQueries = [
+      `${rapperName} rapper`,
+      `${rapperName} hip hop artist`,
+      rapperName
+    ];
+    
+    for (const query of searchQueries) {
+      const url = `https://en.wikipedia.org/w/api.php?action=opensearch&search=${encodeURIComponent(query)}&limit=5&format=json`;
+      
+      console.log(`Searching Wikipedia for: ${query}`);
+      
+      const response = await fetch(url, {
+        headers: {
+          'User-Agent': 'RapperHierarchy/1.1 (https://rapperhierarchy.com; contact@rapperhierarchy.com)',
+          'Accept': 'application/json',
+        },
+      });
+      
+      if (!response.ok) {
+        console.error(`Wikipedia search error: ${response.status}`);
+        continue;
+      }
+      
+      const data = await response.json();
+      // OpenSearch returns: [query, [titles], [descriptions], [urls]]
+      const titles = data[1] || [];
+      const urls = data[3] || [];
+      
+      if (titles.length === 0) continue;
+      
+      // Look for a matching result
+      const rapperLower = rapperName.toLowerCase();
+      
+      for (let i = 0; i < titles.length; i++) {
+        const title = titles[i].toLowerCase();
+        
+        // Check if title contains the rapper name or vice versa
+        if (title.includes(rapperLower) || rapperLower.includes(title.split(' ')[0])) {
+          console.log(`Found Wikipedia match: ${titles[i]}`);
+          return urls[i];
+        }
+      }
+      
+      // If no exact match, take the first result for queries with "rapper" qualifier
+      if (query.includes('rapper') && urls.length > 0) {
+        console.log(`Using first result for "${query}": ${titles[0]}`);
+        return urls[0];
+      }
+    }
+    
+    return null;
+  } catch (error) {
+    console.error('Wikipedia search error:', error);
     return null;
   }
 }
