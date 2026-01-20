@@ -105,7 +105,7 @@ const AllRappersFilters = ({
           <Button
             variant="outline"
             onClick={() => onOrderChange(sortOrder === 'asc' ? 'desc' : 'asc')}
-            className="w-full h-10 bg-black/95 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] hover:bg-[hsl(var(--theme-primary))]/20 hover:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm"
+            className="w-full h-10 bg-[hsl(var(--theme-primary))] border-[hsl(var(--theme-primary))] text-black font-bold hover:bg-[hsl(var(--theme-primary))]/80 hover:text-black font-[var(--theme-fontSecondary)] text-sm"
           >
             {sortOrder === 'asc' ? (
               <>
