@@ -4,6 +4,7 @@ import AlbumStatsCard from "./AlbumStatsCard";
 import CareerLengthCard from "./CareerLengthCard";
 import TopTagsCard from "./TopTagsCard";
 import TopRappersByCategoryCard from "./TopRappersByCategoryCard";
+import ZodiacDistributionCard from "./ZodiacDistributionCard";
 
 const RapperStatsAnalytics = () => {
   return (
@@ -25,6 +26,9 @@ const RapperStatsAnalytics = () => {
 
       {/* Top Tags */}
       <TopTagsCard />
+
+      {/* Zodiac Distribution */}
+      <ZodiacDistributionCard />
     </div>
   );
 };
