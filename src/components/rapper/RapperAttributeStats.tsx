@@ -192,7 +192,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
               onClick={onVoteClick}
               className="px-6 py-3 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-semibold transition-all duration-200 hover:scale-105 font-[var(--theme-fontSecondary)]"
             >
-              Rate Rapper
+              Rate Skills
             </button>
           </div>
         )}
@@ -388,7 +388,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                 onClick={onVoteClick}
                 className="px-6 py-3 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-semibold transition-all duration-200 hover:scale-105 font-[var(--theme-fontSecondary)]"
               >
-                Rate This Rapper
+                Rate Skills
               </button>
             )}
           </div>
