@@ -9,6 +9,7 @@ export interface AllFilters {
   sort?: string;
   order?: string;
   rated?: string;
+  zodiac?: string;
   scrollPos?: number;
 }
 
@@ -25,6 +26,7 @@ export const useNavigationState = () => {
       sort: searchParams.get('sort') || 'activity',
       order: searchParams.get('order') || 'desc',
       rated: searchParams.get('rated') || 'all',
+      zodiac: searchParams.get('zodiac') || 'all',
       scrollPos: searchParams.get('scrollPos') ? parseInt(searchParams.get('scrollPos')!, 10) : 0,
     };
   }, [searchParams]);
@@ -80,6 +82,12 @@ export const useNavigationState = () => {
       newSearchParams.set('rated', mergedFilters.rated);
     } else if (mergedFilters.rated === 'all') {
       newSearchParams.delete('rated');
+    }
+    
+    if (mergedFilters.zodiac !== undefined && mergedFilters.zodiac !== 'all') {
+      newSearchParams.set('zodiac', mergedFilters.zodiac);
+    } else if (mergedFilters.zodiac === 'all') {
+      newSearchParams.delete('zodiac');
     }
     
     if (mergedFilters.scrollPos !== undefined) {
