@@ -68,17 +68,14 @@ serve(async (req) => {
 
     console.log(`Starting bulk bio population (batch: ${batchSize}, starting from: ${startFromIndex})`);
 
-    // Get rappers that need bios - must have MusicBrainz ID and bio shorter than minimum
-    let query = supabaseService
+    // Get rappers that need bios - must have MusicBrainz ID
+    // Note: We filter by bio length in JavaScript since Supabase PostgREST 
+    // doesn't support LENGTH() in query filters
+    const query = supabaseService
       .from('rappers')
       .select('id, name, musicbrainz_id, bio')
       .not('musicbrainz_id', 'is', null)
       .order('name');
-
-    if (!forceRefresh) {
-      // Only get rappers with short or missing bios
-      query = query.or(`bio.is.null,bio.lt.${minBioLength}`);
-    }
 
     const { data: allRappers, error: countError } = await query;
 
