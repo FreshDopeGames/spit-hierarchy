@@ -16,6 +16,7 @@ interface AllRappersGridProps {
   itemsPerPage: number;
   onLoadMore: () => void;
   currentPage: number;
+  showRatedBadge?: boolean;
 }
 
 const AllRappersGrid = ({
@@ -25,7 +26,8 @@ const AllRappersGrid = ({
   isFetching,
   itemsPerPage,
   onLoadMore,
-  currentPage
+  currentPage,
+  showRatedBadge = false
 }: AllRappersGridProps) => {
   // Incrementally load rapper data (only fetches NEW rappers)
   const rapperIds = rappers.map(rapper => rapper.id);
@@ -130,6 +132,7 @@ const AllRappersGrid = ({
             imageUrl={imageMap[rapper.id]} 
             stats={statsMap[rapper.id]}
             currentPage={currentPage}
+            showRatedBadge={showRatedBadge}
           />
         ))}
       </div>

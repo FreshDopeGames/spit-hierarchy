@@ -141,6 +141,7 @@ const AllRappersPage = () => {
               itemsPerPage={itemsPerPage}
               onLoadMore={handleLoadMore}
               currentPage={currentPage}
+              showRatedBadge={ratedFilter === "rated"}
             />
           </>
         )}
