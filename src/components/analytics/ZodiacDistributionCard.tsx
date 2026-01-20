@@ -190,7 +190,7 @@ const ZodiacDistributionCard = () => {
 
   return (
     <Card className="bg-black border-4 border-rap-gold/30">
-      <CardHeader className="pb-3">
+      <CardHeader className="pb-2 sm:pb-3">
         <div className="flex items-center justify-between flex-wrap gap-2">
           <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
             <Star className="w-5 h-5" />
@@ -207,9 +207,9 @@ const ZodiacDistributionCard = () => {
           </Button>
         </div>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-4">
         {/* Element Legend */}
-        <div className="flex flex-wrap justify-center gap-4 text-xs">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 text-xs">
           {Object.entries(ELEMENT_COLORS).map(([element, colors]) => (
             <div key={element} className="flex items-center gap-1.5">
               <div 
@@ -222,12 +222,12 @@ const ZodiacDistributionCard = () => {
         </div>
 
         {/* Bar Chart - Taller for all 12 signs */}
-        <div className="h-[500px]">
+        <div className="h-[400px] sm:h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={zodiacCounts}
               layout="vertical"
-              margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
+              margin={{ top: 5, right: 20, left: 60, bottom: 5 }}
             >
               <XAxis type="number" stroke="#888888" fontSize={12} />
               <YAxis
@@ -235,7 +235,7 @@ const ZodiacDistributionCard = () => {
                 dataKey="name"
                 stroke="#888888"
                 fontSize={11}
-                width={95}
+                width={55}
                 tickFormatter={(value) => {
                   const sign = zodiacCounts.find((s) => s.name === value);
                   return sign ? `${sign.symbol} ${value}` : value;
@@ -277,7 +277,7 @@ const ZodiacDistributionCard = () => {
         </div>
 
         {/* All Signs with 5 Rappers Each */}
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
           <h4 className="text-rap-platinum font-kaushan text-lg border-b border-rap-gold/20 pb-2">
             Rappers by Zodiac Sign
           </h4>
@@ -291,7 +291,7 @@ const ZodiacDistributionCard = () => {
             return (
               <div 
                 key={sign.name} 
-                className={`space-y-3 p-3 rounded-lg transition-all ${
+                className={`space-y-2 sm:space-y-3 p-2 sm:p-3 rounded-lg transition-all ${
                   isSelected ? 'bg-rap-gold/10 ring-1 ring-rap-gold/30' : 'hover:bg-rap-smoke/5'
                 }`}
               >
