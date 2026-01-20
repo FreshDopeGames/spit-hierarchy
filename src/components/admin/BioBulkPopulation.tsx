@@ -15,6 +15,7 @@ interface BulkBioResults {
   failed: number;
   skipped: number;
   errors: Array<{ rapper: string; error: string }>;
+  successfulRappers: Array<{ rapper: string; wordCount: number; source: string }>;
   progress: {
     startIndex: number;
     batchSize: number;
@@ -49,6 +50,7 @@ const BioBulkPopulation = () => {
         failed: 0,
         skipped: 0,
         errors: [],
+        successfulRappers: [],
         progress: { startIndex: 0, batchSize, totalToProcess: 0, processedInBatch: 0 }
       };
 
@@ -81,6 +83,7 @@ const BioBulkPopulation = () => {
         allResults.failed += data.results.failed;
         allResults.skipped += data.results.skipped;
         allResults.errors.push(...data.results.errors);
+        allResults.successfulRappers.push(...(data.results.successfulRappers || []));
         allResults.progress.totalToProcess = data.results.progress.totalToProcess;
 
         setTotalProcessed(allResults.processed);
@@ -219,9 +222,32 @@ const BioBulkPopulation = () => {
               </div>
             </div>
 
+            {results.successfulRappers.length > 0 && (
+              <div className="space-y-2">
+                <h4 className="font-semibold text-sm text-green-500">Successfully Updated:</h4>
+                <div className="max-h-40 overflow-y-auto space-y-1">
+                  {results.successfulRappers.slice(0, 30).map((item, index) => (
+                    <div key={index} className="flex items-center gap-2 text-sm">
+                      <Badge variant="secondary" className="shrink-0 bg-green-500/20 text-green-400">
+                        {item.rapper}
+                      </Badge>
+                      <span className="text-muted-foreground text-xs">
+                        {item.wordCount} words via {item.source}
+                      </span>
+                    </div>
+                  ))}
+                  {results.successfulRappers.length > 30 && (
+                    <div className="text-sm text-muted-foreground">
+                      ... and {results.successfulRappers.length - 30} more updated
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+
             {results.errors.length > 0 && (
               <div className="space-y-2">
-                <h4 className="font-semibold text-sm">Errors:</h4>
+                <h4 className="font-semibold text-sm text-destructive">Errors:</h4>
                 <div className="max-h-40 overflow-y-auto space-y-1">
                   {results.errors.slice(0, 20).map((error, index) => (
                     <div key={index} className="flex items-center gap-2 text-sm">
