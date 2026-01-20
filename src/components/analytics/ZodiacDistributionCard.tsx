@@ -15,14 +15,24 @@ interface RapperWithZodiac {
   image_url: string | null;
   average_rating: number | null;
   zodiacSign: string;
+  birth_month: number;
+  birth_day: number;
 }
 
 interface ZodiacCount {
   name: string;
   symbol: string;
   count: number;
-  color: string;
+  element: string;
 }
+
+// Element color palette - consistent colors for each element
+const ELEMENT_COLORS: Record<string, { primary: string; secondary: string }> = {
+  Fire: { primary: '#ef4444', secondary: '#f97316' },   // Red/Orange - Aries, Leo, Sagittarius
+  Water: { primary: '#3b82f6', secondary: '#8b5cf6' },  // Blue/Purple - Cancer, Scorpio, Pisces
+  Air: { primary: '#facc15', secondary: '#22d3ee' },    // Yellow/Cyan - Gemini, Libra, Aquarius
+  Earth: { primary: '#22c55e', secondary: '#78716c' }   // Green/Stone - Taurus, Virgo, Capricorn
+};
 
 // Shuffle array using Fisher-Yates algorithm
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -32,6 +42,24 @@ const shuffleArray = <T,>(array: T[]): T[] => {
     [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
   }
   return shuffled;
+};
+
+// Format birth date as short month + day (e.g., "Sep 16")
+const formatShortBirthdate = (month: number, day: number): string => {
+  const shortMonths = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return `${shortMonths[month - 1]} ${day}`;
+};
+
+// Get element for a zodiac sign
+const getSignElement = (signName: string): string => {
+  const sign = getAllZodiacSigns().find(s => s.name === signName);
+  return sign?.element || 'Fire';
+};
+
+// Get bar color based on element
+const getBarColorByElement = (signName: string): string => {
+  const element = getSignElement(signName);
+  return ELEMENT_COLORS[element]?.primary || '#FFD700';
 };
 
 const ZodiacDistributionCard = () => {
@@ -58,8 +86,10 @@ const ZodiacDistributionCard = () => {
           image_url: rapper.image_url,
           average_rating: rapper.average_rating,
           zodiacSign: getZodiacName(rapper.birth_month, rapper.birth_day),
+          birth_month: rapper.birth_month!,
+          birth_day: rapper.birth_day!,
         }))
-        .filter((r) => r.zodiacSign); // Only include rappers with valid zodiac signs
+        .filter((r) => r.zodiacSign) as RapperWithZodiac[];
     },
     staleTime: 30 * 60 * 1000, // 30 minutes
   });
@@ -80,12 +110,12 @@ const ZodiacDistributionCard = () => {
       counts.set(rapper.zodiacSign, current + 1);
     });
 
-    // Convert to array with colors
+    // Convert to array with element info
     return allSigns.map((sign) => ({
       name: sign.name,
       symbol: sign.symbol,
       count: counts.get(sign.name) || 0,
-      color: sign.color.replace("bg-", ""),
+      element: sign.element,
     }));
   }, [rappers]);
 
@@ -101,20 +131,21 @@ const ZodiacDistributionCard = () => {
     return grouped;
   }, [rappers]);
 
-  // Get 5 random rappers from the selected sign (or all signs)
-  const randomRappers = useMemo(() => {
-    if (!rappers || rappers.length === 0) return [];
-
-    let pool: RapperWithZodiac[];
-    if (selectedSign) {
-      pool = rappersBySign.get(selectedSign) || [];
-    } else {
-      pool = rappers;
-    }
-
-    return shuffleArray(pool).slice(0, 5);
+  // Get 5 random rappers per sign
+  const randomRappersPerSign = useMemo(() => {
+    if (!rappers) return new Map<string, RapperWithZodiac[]>();
+    
+    const result = new Map<string, RapperWithZodiac[]>();
+    const allSigns = getAllZodiacSigns();
+    
+    allSigns.forEach(sign => {
+      const signRappers = rappersBySign.get(sign.name) || [];
+      result.set(sign.name, shuffleArray(signRappers).slice(0, 5));
+    });
+    
+    return result;
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [rappers, rappersBySign, selectedSign, shuffleKey]);
+  }, [rappers, rappersBySign, shuffleKey]);
 
   const handleBarClick = (data: ZodiacCount) => {
     setSelectedSign(selectedSign === data.name ? null : data.name);
@@ -122,25 +153,6 @@ const ZodiacDistributionCard = () => {
 
   const handleShuffle = () => {
     setShuffleKey((prev) => prev + 1);
-  };
-
-  // Get color for bar based on zodiac sign
-  const getBarColor = (signName: string): string => {
-    const colorMap: Record<string, string> = {
-      Aries: "#ef4444",
-      Taurus: "#22c55e",
-      Gemini: "#eab308",
-      Cancer: "#3b82f6",
-      Leo: "#f97316",
-      Virgo: "#10b981",
-      Libra: "#ec4899",
-      Scorpio: "#a855f7",
-      Sagittarius: "#6366f1",
-      Capricorn: "#6b7280",
-      Aquarius: "#06b6d4",
-      Pisces: "#14b8a6",
-    };
-    return colorMap[signName] || "#FFD700";
   };
 
   if (isLoading) {
@@ -153,49 +165,77 @@ const ZodiacDistributionCard = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="animate-pulse space-y-4">
-            <div className="h-64 bg-rap-smoke/20 rounded"></div>
-            <div className="grid grid-cols-5 gap-3">
-              {[...Array(5)].map((_, i) => (
-                <div key={i} className="space-y-2">
-                  <div className="aspect-square bg-rap-smoke/20 rounded-lg"></div>
-                  <div className="h-3 bg-rap-smoke/20 rounded w-3/4 mx-auto"></div>
+          <div className="animate-pulse space-y-6">
+            <div className="h-[500px] bg-rap-smoke/20 rounded" />
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="space-y-2">
+                <div className="h-4 bg-rap-smoke/20 rounded w-1/4" />
+                <div className="grid grid-cols-3 sm:grid-cols-5 gap-3">
+                  {[...Array(5)].map((_, j) => (
+                    <div key={j} className="space-y-1">
+                      <div className="aspect-square bg-rap-smoke/20 rounded-lg" />
+                      <div className="h-3 bg-rap-smoke/20 rounded w-3/4 mx-auto" />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
         </CardContent>
       </Card>
     );
   }
 
-  const selectedSignData = selectedSign
-    ? getAllZodiacSigns().find((s) => s.name === selectedSign)
-    : null;
+  const allSigns = getAllZodiacSigns();
 
   return (
     <Card className="bg-black border-4 border-rap-gold/30">
       <CardHeader className="pb-3">
-        <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
-          <Star className="w-5 h-5" />
-          Zodiac Distribution
-        </CardTitle>
+        <div className="flex items-center justify-between flex-wrap gap-2">
+          <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
+            <Star className="w-5 h-5" />
+            Zodiac Distribution
+          </CardTitle>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={handleShuffle}
+            className="text-rap-gold hover:text-rap-gold/80 hover:bg-rap-gold/10"
+          >
+            <Shuffle className="w-4 h-4 mr-1" />
+            Shuffle All
+          </Button>
+        </div>
       </CardHeader>
       <CardContent className="space-y-6">
-        {/* Bar Chart */}
-        <div className="h-72">
+        {/* Element Legend */}
+        <div className="flex flex-wrap justify-center gap-4 text-xs">
+          {Object.entries(ELEMENT_COLORS).map(([element, colors]) => (
+            <div key={element} className="flex items-center gap-1.5">
+              <div 
+                className="w-3 h-3 rounded-full" 
+                style={{ backgroundColor: colors.primary }}
+              />
+              <span className="text-rap-platinum">{element}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Bar Chart - Taller for all 12 signs */}
+        <div className="h-[500px]">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={zodiacCounts}
               layout="vertical"
-              margin={{ top: 5, right: 30, left: 60, bottom: 5 }}
+              margin={{ top: 5, right: 30, left: 100, bottom: 5 }}
             >
               <XAxis type="number" stroke="#888888" fontSize={12} />
               <YAxis
                 type="category"
                 dataKey="name"
                 stroke="#888888"
-                fontSize={12}
+                fontSize={11}
+                width={95}
                 tickFormatter={(value) => {
                   const sign = zodiacCounts.find((s) => s.name === value);
                   return sign ? `${sign.symbol} ${value}` : value;
@@ -209,7 +249,10 @@ const ZodiacDistributionCard = () => {
                 }}
                 labelStyle={{ color: "#FFD700", fontWeight: "bold" }}
                 itemStyle={{ color: "#E5E5E5" }}
-                formatter={(value: number) => [`${value} rappers`, "Count"]}
+                formatter={(value: number, _name, props) => {
+                  const element = (props.payload as ZodiacCount).element;
+                  return [`${value} rappers`, `${element} Sign`];
+                }}
                 labelFormatter={(label) => {
                   const sign = zodiacCounts.find((s) => s.name === label);
                   return sign ? `${sign.symbol} ${label}` : label;
@@ -224,7 +267,7 @@ const ZodiacDistributionCard = () => {
                 {zodiacCounts.map((entry) => (
                   <Cell
                     key={entry.name}
-                    fill={getBarColor(entry.name)}
+                    fill={getBarColorByElement(entry.name)}
                     opacity={selectedSign && selectedSign !== entry.name ? 0.3 : 1}
                   />
                 ))}
@@ -233,88 +276,100 @@ const ZodiacDistributionCard = () => {
           </ResponsiveContainer>
         </div>
 
-        {/* Random Rappers Section */}
-        <div className="space-y-3">
-          <div className="flex items-center justify-between flex-wrap gap-2">
-            <div className="flex items-center gap-2">
-              <h4 className="text-rap-platinum font-kaushan text-lg">
-                {selectedSign ? (
-                  <>
-                    <span className="text-rap-gold">{selectedSignData?.symbol}</span>{" "}
-                    {selectedSign} Rappers
-                  </>
-                ) : (
-                  "Random Rappers from All Signs"
-                )}
-              </h4>
-              {selectedSign && (
-                <button
-                  onClick={() => setSelectedSign(null)}
-                  className="text-xs text-rap-smoke hover:text-rap-gold transition-colors"
-                >
-                  (clear)
-                </button>
-              )}
-            </div>
-            <div className="flex items-center gap-2">
-              {selectedSign && (
-                <Link
-                  to={`/all-rappers?zodiac=${selectedSign}`}
-                  className="text-xs bg-[hsl(var(--theme-primary))] text-black px-3 py-1.5 rounded font-medium hover:bg-[hsl(var(--theme-primary))]/80 transition-colors"
-                >
-                  All {selectedSign}s →
-                </Link>
-              )}
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleShuffle}
-                className="text-rap-gold hover:text-rap-gold/80 hover:bg-rap-gold/10"
+        {/* All Signs with 5 Rappers Each */}
+        <div className="space-y-6">
+          <h4 className="text-rap-platinum font-kaushan text-lg border-b border-rap-gold/20 pb-2">
+            Rappers by Zodiac Sign
+          </h4>
+          
+          {allSigns.map(sign => {
+            const signRappers = randomRappersPerSign.get(sign.name) || [];
+            const count = zodiacCounts.find(z => z.name === sign.name)?.count || 0;
+            const elementColor = ELEMENT_COLORS[sign.element]?.primary;
+            const isSelected = selectedSign === sign.name;
+            
+            return (
+              <div 
+                key={sign.name} 
+                className={`space-y-3 p-3 rounded-lg transition-all ${
+                  isSelected ? 'bg-rap-gold/10 ring-1 ring-rap-gold/30' : 'hover:bg-rap-smoke/5'
+                }`}
               >
-                <Shuffle className="w-4 h-4 mr-1" />
-                Shuffle
-              </Button>
-            </div>
-          </div>
-
-          {randomRappers.length > 0 ? (
-            <div className="grid grid-cols-5 gap-3">
-              {randomRappers.map((rapper) => (
-                <Link
-                  key={rapper.id}
-                  to={`/rappers/${rapper.slug}`}
-                  className="group text-center"
-                >
-                  <div className="aspect-square rounded-lg overflow-hidden bg-rap-smoke/20 mb-2">
-                    {rapper.image_url ? (
-                      <img
-                        src={rapper.image_url}
-                        alt={rapper.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-rap-smoke text-2xl font-mogra">
-                        {rapper.name.charAt(0)}
-                      </div>
-                    )}
-                  </div>
-                  <span className="text-rap-platinum font-kaushan text-xs truncate block group-hover:text-rap-gold transition-colors">
-                    {rapper.name}
-                  </span>
-                  {rapper.average_rating && (
-                    <span className="text-rap-smoke text-xs">
-                      ★ {rapper.average_rating.toFixed(1)}
+                {/* Row Header */}
+                <div className="flex items-center justify-between flex-wrap gap-2">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    <button
+                      onClick={() => setSelectedSign(isSelected ? null : sign.name)}
+                      className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+                    >
+                      <span 
+                        className="text-xl" 
+                        style={{ color: elementColor }}
+                      >
+                        {sign.symbol}
+                      </span>
+                      <span className="text-rap-platinum font-kaushan text-base sm:text-lg">
+                        {sign.name}
+                      </span>
+                    </button>
+                    <span 
+                      className="text-[10px] sm:text-xs px-2 py-0.5 rounded-full"
+                      style={{ backgroundColor: `${elementColor}20`, color: elementColor }}
+                    >
+                      {sign.element}
                     </span>
-                  )}
-                </Link>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center text-rap-smoke font-kaushan py-4">
-              No rappers with birth dates available
-            </div>
-          )}
+                    <span className="text-rap-smoke text-xs sm:text-sm">
+                      ({count} rappers)
+                    </span>
+                  </div>
+                  <Link
+                    to={`/all-rappers?zodiac=${sign.name}`}
+                    className="text-xs text-rap-gold hover:text-rap-gold/80 hover:underline"
+                  >
+                    View All →
+                  </Link>
+                </div>
+                
+                {/* Rapper Grid - Responsive */}
+                {signRappers.length > 0 ? (
+                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3">
+                    {signRappers.map(rapper => (
+                      <Link
+                        key={rapper.id}
+                        to={`/rappers/${rapper.slug}`}
+                        className="group text-center"
+                      >
+                        <div className="aspect-square rounded-lg overflow-hidden bg-rap-smoke/20 mb-1.5">
+                          {rapper.image_url ? (
+                            <img
+                              src={rapper.image_url}
+                              alt={rapper.name}
+                              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                              loading="lazy"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-rap-smoke text-xl font-mogra">
+                              {rapper.name.charAt(0)}
+                            </div>
+                          )}
+                        </div>
+                        <span className="text-rap-platinum font-kaushan text-xs truncate block group-hover:text-rap-gold transition-colors">
+                          {rapper.name}
+                        </span>
+                        <span className="text-rap-smoke text-[10px]">
+                          {formatShortBirthdate(rapper.birth_month, rapper.birth_day)}
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                ) : (
+                  <div className="text-center text-rap-smoke text-xs py-2">
+                    No rappers with known birth dates
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </CardContent>
     </Card>
