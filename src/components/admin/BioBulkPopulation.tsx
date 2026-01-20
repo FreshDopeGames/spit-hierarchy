@@ -9,6 +9,9 @@ import { BookOpen, Play, Square, RotateCcw, RefreshCw, AlignLeft } from "lucide-
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
+const STORAGE_KEY = 'bio_bulk_population_results';
+const REFORMAT_STORAGE_KEY = 'bio_reformat_results';
+
 interface BulkBioResults {
   processed: number;
   successful: number;
@@ -32,16 +35,92 @@ interface ReformatResults {
   reformattedRappers: Array<{ rapper: string; paragraphCount: number }>;
 }
 
+// Save results to localStorage
+const saveResults = (results: BulkBioResults | null) => {
+  try {
+    if (results) {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        results,
+        timestamp: Date.now()
+      }));
+    } else {
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  } catch (e) {
+    console.warn('Failed to persist bio results:', e);
+  }
+};
+
+// Load results from localStorage
+const loadResults = (): BulkBioResults | null => {
+  try {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      const { results, timestamp } = JSON.parse(stored);
+      // Keep results for 24 hours
+      if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+        return results;
+      }
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  } catch (e) {
+    console.warn('Failed to load bio results:', e);
+  }
+  return null;
+};
+
+// Save reformat results to localStorage
+const saveReformatResults = (results: ReformatResults | null) => {
+  try {
+    if (results) {
+      localStorage.setItem(REFORMAT_STORAGE_KEY, JSON.stringify({
+        results,
+        timestamp: Date.now()
+      }));
+    } else {
+      localStorage.removeItem(REFORMAT_STORAGE_KEY);
+    }
+  } catch (e) {
+    console.warn('Failed to persist reformat results:', e);
+  }
+};
+
+// Load reformat results from localStorage
+const loadReformatResults = (): ReformatResults | null => {
+  try {
+    const stored = localStorage.getItem(REFORMAT_STORAGE_KEY);
+    if (stored) {
+      const { results, timestamp } = JSON.parse(stored);
+      if (Date.now() - timestamp < 24 * 60 * 60 * 1000) {
+        return results;
+      }
+      localStorage.removeItem(REFORMAT_STORAGE_KEY);
+    }
+  } catch (e) {
+    console.warn('Failed to load reformat results:', e);
+  }
+  return null;
+};
+
 const BioBulkPopulation = () => {
   const [isRunning, setIsRunning] = useState(false);
-  const [results, setResults] = useState<BulkBioResults | null>(null);
+  const [results, setResults] = useState<BulkBioResults | null>(() => loadResults());
   const [currentBatch, setCurrentBatch] = useState(0);
-  const [totalProcessed, setTotalProcessed] = useState(0);
-  const [overallProgress, setOverallProgress] = useState(0);
+  const [totalProcessed, setTotalProcessed] = useState(() => {
+    const loaded = loadResults();
+    return loaded?.processed ?? 0;
+  });
+  const [overallProgress, setOverallProgress] = useState(() => {
+    const loaded = loadResults();
+    if (loaded?.progress.totalToProcess) {
+      return (loaded.processed / loaded.progress.totalToProcess) * 100;
+    }
+    return 0;
+  });
   const [forceRefresh, setForceRefresh] = useState(false);
   const [shouldStop, setShouldStop] = useState(false);
   const [isReformatting, setIsReformatting] = useState(false);
-  const [reformatResults, setReformatResults] = useState<ReformatResults | null>(null);
+  const [reformatResults, setReformatResults] = useState<ReformatResults | null>(() => loadReformatResults());
 
   const startBulkPopulation = async () => {
     setIsRunning(true);
@@ -97,7 +176,8 @@ const BioBulkPopulation = () => {
         allResults.progress.totalToProcess = data.results.progress.totalToProcess;
 
         setTotalProcessed(allResults.processed);
-        setResults(allResults);
+        setResults({ ...allResults });
+        saveResults(allResults);
 
         // Update progress
         const totalToProcess = data.results.progress.totalToProcess;
@@ -144,6 +224,9 @@ const BioBulkPopulation = () => {
     setTotalProcessed(0);
     setOverallProgress(0);
     setReformatResults(null);
+    // Clear from localStorage
+    saveResults(null);
+    saveReformatResults(null);
   };
 
   const reformatExistingBios = async () => {
@@ -168,6 +251,7 @@ const BioBulkPopulation = () => {
       }
 
       setReformatResults(data.results);
+      saveReformatResults(data.results);
       toast.success("Bio Reformatting Complete", {
         description: `Reformatted ${data.results.reformatted} bios with paragraph breaks.`,
       });
