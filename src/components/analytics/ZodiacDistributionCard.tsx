@@ -191,21 +191,10 @@ const ZodiacDistributionCard = () => {
   return (
     <Card className="bg-black border-4 border-rap-gold/30">
       <CardHeader className="pb-2 sm:pb-3">
-        <div className="flex items-center justify-between flex-wrap gap-2">
-          <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
-            <Star className="w-5 h-5" />
-            Zodiac Distribution
-          </CardTitle>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={handleShuffle}
-            className="text-rap-gold hover:text-rap-gold/80 hover:bg-rap-gold/10"
-          >
-            <Shuffle className="w-4 h-4 mr-1" />
-            Shuffle All
-          </Button>
-        </div>
+        <CardTitle className="text-[hsl(var(--theme-primary))] flex items-center gap-2 font-mogra">
+          <Star className="w-5 h-5" />
+          Zodiac Distribution
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Element Legend */}
@@ -278,9 +267,20 @@ const ZodiacDistributionCard = () => {
 
         {/* All Signs with 5 Rappers Each */}
         <div className="space-y-4 sm:space-y-6">
-          <h4 className="text-rap-platinum font-kaushan text-lg border-b border-rap-gold/20 pb-2">
-            Rappers by Zodiac Sign
-          </h4>
+          <div className="flex items-center justify-between flex-wrap gap-2 border-b border-rap-gold/20 pb-2">
+            <h4 className="text-rap-platinum font-kaushan text-lg">
+              Rappers by Zodiac Sign
+            </h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleShuffle}
+              className="text-rap-gold hover:text-rap-gold/80 hover:bg-rap-gold/10"
+            >
+              <Shuffle className="w-4 h-4 mr-1" />
+              Shuffle All
+            </Button>
+          </div>
           
           {allSigns.map(sign => {
             const signRappers = randomRappersPerSign.get(sign.name) || [];
