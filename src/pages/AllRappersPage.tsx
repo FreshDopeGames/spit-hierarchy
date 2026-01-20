@@ -23,6 +23,7 @@ const AllRappersPage = () => {
     locationInput,
     locationFilter,
     ratedFilter,
+    zodiacFilter,
     allRappers,
     rappersData,
     isLoading,
@@ -33,6 +34,7 @@ const AllRappersPage = () => {
     handleSearchInput,
     handleLocationInput,
     handleRatedFilterChange,
+    handleZodiacFilterChange,
     handleLoadMore,
     currentPage,
   } = useAllRappers({
@@ -115,11 +117,13 @@ const AllRappersPage = () => {
           sortBy={sortBy}
           sortOrder={sortOrder}
           ratedFilter={ratedFilter}
+          zodiacFilter={zodiacFilter}
           onSearchInput={handleSearchInput}
           onLocationInput={handleLocationInput}
           onSortChange={handleSortChange}
           onOrderChange={handleOrderChange}
           onRatedFilterChange={handleRatedFilterChange}
+          onZodiacFilterChange={handleZodiacFilterChange}
         />
 
         {isLoading && currentPage === 0 ? (

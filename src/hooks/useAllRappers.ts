@@ -9,6 +9,25 @@ export interface UseAllRappersOptions {
   itemsPerPage?: number;
 }
 
+// Get zodiac date ranges for filtering
+const getZodiacDateRanges = (signName: string): { month1: number; dayStart1: number; dayEnd1: number; month2: number; dayStart2: number; dayEnd2: number } | null => {
+  const ranges: Record<string, { month1: number; dayStart1: number; dayEnd1: number; month2: number; dayStart2: number; dayEnd2: number }> = {
+    'Aries': { month1: 3, dayStart1: 21, dayEnd1: 31, month2: 4, dayStart2: 1, dayEnd2: 19 },
+    'Taurus': { month1: 4, dayStart1: 20, dayEnd1: 30, month2: 5, dayStart2: 1, dayEnd2: 20 },
+    'Gemini': { month1: 5, dayStart1: 21, dayEnd1: 31, month2: 6, dayStart2: 1, dayEnd2: 20 },
+    'Cancer': { month1: 6, dayStart1: 21, dayEnd1: 30, month2: 7, dayStart2: 1, dayEnd2: 22 },
+    'Leo': { month1: 7, dayStart1: 23, dayEnd1: 31, month2: 8, dayStart2: 1, dayEnd2: 22 },
+    'Virgo': { month1: 8, dayStart1: 23, dayEnd1: 31, month2: 9, dayStart2: 1, dayEnd2: 22 },
+    'Libra': { month1: 9, dayStart1: 23, dayEnd1: 30, month2: 10, dayStart2: 1, dayEnd2: 22 },
+    'Scorpio': { month1: 10, dayStart1: 23, dayEnd1: 31, month2: 11, dayStart2: 1, dayEnd2: 21 },
+    'Sagittarius': { month1: 11, dayStart1: 22, dayEnd1: 30, month2: 12, dayStart2: 1, dayEnd2: 21 },
+    'Capricorn': { month1: 12, dayStart1: 22, dayEnd1: 31, month2: 1, dayStart2: 1, dayEnd2: 19 },
+    'Aquarius': { month1: 1, dayStart1: 20, dayEnd1: 31, month2: 2, dayStart2: 1, dayEnd2: 18 },
+    'Pisces': { month1: 2, dayStart1: 19, dayEnd1: 29, month2: 3, dayStart2: 1, dayEnd2: 20 },
+  };
+  return ranges[signName] || null;
+};
+
 export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) => {
   const { getAllFilters, setAllFilters } = useNavigationState();
   const urlFilters = getAllFilters();
@@ -21,6 +40,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const [locationInput, setLocationInput] = useState(urlFilters.location || "");
   const [locationFilter, setLocationFilter] = useState(urlFilters.location || "");
   const [ratedFilter, setRatedFilter] = useState(urlFilters.rated || "all");
+  const [zodiacFilter, setZodiacFilter] = useState(urlFilters.zodiac || "all");
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(urlFilters.page || 0);
   const [isInitialMount, setIsInitialMount] = useState(true);
@@ -76,7 +96,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   }, [allRappers.length, isMicroBatchMode]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
-    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, currentPage, isMicroBatchMode],
+    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, zodiacFilter, currentPage, isMicroBatchMode],
     queryFn: async () => {
       // Always load from page 0 to allow scrolling to earlier pages
       const effectiveStartPage = 0;
@@ -155,6 +175,17 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
       // Apply location filter
       if (locationFilter) {
         query = query.ilike("origin", `%${locationFilter}%`);
+      }
+
+      // Apply zodiac filter
+      if (zodiacFilter && zodiacFilter !== "all") {
+        const ranges = getZodiacDateRanges(zodiacFilter);
+        if (ranges) {
+          // Build OR condition for the two month ranges of the zodiac sign
+          query = query.or(
+            `and(birth_month.eq.${ranges.month1},birth_day.gte.${ranges.dayStart1},birth_day.lte.${ranges.dayEnd1}),and(birth_month.eq.${ranges.month2},birth_day.gte.${ranges.dayStart2},birth_day.lte.${ranges.dayEnd2})`
+          );
+        }
       }
 
       // Apply sorting with secondary sort for consistent ordering
@@ -272,6 +303,14 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     setAllFilters({ rated: value, page: 0 });
   };
 
+  const handleZodiacFilterChange = (value: string) => {
+    console.log(`[Hook] Zodiac filter changing to: ${value}`);
+    setZodiacFilter(value);
+    setCurrentPage(0);
+    setAllRappers([]);
+    setAllFilters({ zodiac: value, page: 0 });
+  };
+
   const handleLoadMore = () => {
     console.log(`[Hook] Loading more: current page ${currentPage} -> ${currentPage + 1}`);
     const newPage = currentPage + 1;
@@ -287,6 +326,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     locationInput,
     locationFilter,
     ratedFilter,
+    zodiacFilter,
     allRappers,
     currentPage,
     itemsPerPage: effectiveItemsPerPage, // Return effective size
@@ -300,6 +340,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     handleSearchInput,
     handleLocationInput,
     handleRatedFilterChange,
+    handleZodiacFilterChange,
     handleLoadMore,
   };
 };

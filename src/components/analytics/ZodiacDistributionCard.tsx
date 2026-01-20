@@ -235,7 +235,7 @@ const ZodiacDistributionCard = () => {
 
         {/* Random Rappers Section */}
         <div className="space-y-3">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <h4 className="text-rap-platinum font-kaushan text-lg">
                 {selectedSign ? (
@@ -256,15 +256,25 @@ const ZodiacDistributionCard = () => {
                 </button>
               )}
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleShuffle}
-              className="text-rap-gold hover:text-rap-gold/80 hover:bg-rap-gold/10"
-            >
-              <Shuffle className="w-4 h-4 mr-1" />
-              Shuffle
-            </Button>
+            <div className="flex items-center gap-2">
+              {selectedSign && (
+                <Link
+                  to={`/all-rappers?zodiac=${selectedSign}`}
+                  className="text-xs bg-[hsl(var(--theme-primary))] text-black px-3 py-1.5 rounded font-medium hover:bg-[hsl(var(--theme-primary))]/80 transition-colors"
+                >
+                  All {selectedSign}s →
+                </Link>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleShuffle}
+                className="text-rap-gold hover:text-rap-gold/80 hover:bg-rap-gold/10"
+              >
+                <Shuffle className="w-4 h-4 mr-1" />
+                Shuffle
+              </Button>
+            </div>
           </div>
 
           {randomRappers.length > 0 ? (

@@ -5,7 +5,9 @@ import { useAuth } from "@/hooks/useAuth";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Search, Loader2, Mic, Lock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Search, Loader2, Mic, Lock, ArrowUp, ArrowDown } from "lucide-react";
+import { getAllZodiacSigns } from "@/utils/zodiacUtils";
 
 interface AllRappersFiltersProps {
   searchInput: string;
@@ -15,11 +17,13 @@ interface AllRappersFiltersProps {
   sortBy: string;
   sortOrder: string;
   ratedFilter: string;
+  zodiacFilter: string;
   onSearchInput: (value: string) => void;
   onLocationInput: (value: string) => void;
   onSortChange: (value: string) => void;
   onOrderChange: (value: string) => void;
   onRatedFilterChange: (value: string) => void;
+  onZodiacFilterChange: (value: string) => void;
 }
 
 const AllRappersFilters = ({
@@ -30,11 +34,13 @@ const AllRappersFilters = ({
   sortBy,
   sortOrder,
   ratedFilter,
+  zodiacFilter,
   onSearchInput,
   onLocationInput,
   onSortChange,
   onOrderChange,
-  onRatedFilterChange
+  onRatedFilterChange,
+  onZodiacFilterChange
 }: AllRappersFiltersProps) => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -45,6 +51,8 @@ const AllRappersFilters = ({
     }
   };
 
+  const zodiacSigns = getAllZodiacSigns();
+
   return (
     <div className="bg-black border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 sm:p-4 mb-8 backdrop-blur-sm shadow-lg overflow-hidden min-w-0 max-w-full">
       <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 min-w-0">
@@ -53,9 +61,9 @@ const AllRappersFilters = ({
         <div className="flex-1 h-px bg-gradient-to-r from-[hsl(var(--theme-secondary))] via-[hsl(var(--theme-accent))] to-transparent min-w-0"></div>
       </div>
       
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3 min-w-0 max-w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 min-w-0 max-w-full">
         {/* Search */}
-        <div className="relative min-w-0">
+        <div className="relative min-w-0 col-span-2 sm:col-span-1">
           <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--theme-textMuted))] w-4 h-4" />
           <ThemedInput placeholder="Search..." value={searchInput} onChange={e => onSearchInput(e.target.value)} className="pl-8 sm:pl-10 pr-8 bg-black border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
           {searchInput !== searchTerm && <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
@@ -65,7 +73,7 @@ const AllRappersFilters = ({
 
         {/* Location Filter (Debounced now) */}
         <div className="relative min-w-0">
-          <ThemedInput placeholder="City (ex., &quot;Bronx&quot;) or State (ex., &quot;NY&quot;)" value={locationInput} onChange={e => onLocationInput(e.target.value)} className="pr-8 bg-black border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
+          <ThemedInput placeholder="Location" value={locationInput} onChange={e => onLocationInput(e.target.value)} className="pr-8 bg-black border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] placeholder-[hsl(var(--theme-textMuted))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] !text-[hsl(var(--theme-text))] text-sm truncate" />
           {locationInput !== locationFilter && <div className="absolute right-2 sm:right-3 top-1/2 transform -translate-y-1/2">
               <Loader2 className="w-4 h-4 text-[hsl(var(--theme-textMuted))] animate-spin" />
             </div>}
@@ -79,7 +87,7 @@ const AllRappersFilters = ({
               className="absolute inset-0 z-10 cursor-pointer flex items-center justify-center bg-[hsl(var(--theme-surface))]/95 border-2 border-[hsl(var(--theme-primary))]/50 rounded-md backdrop-blur-sm hover:border-[hsl(var(--theme-primary))] transition-colors"
             >
               <Lock className="w-4 h-4 text-[hsl(var(--theme-primary))] mr-2" />
-              <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-fontSecondary)] text-sm font-semibold">Sign Up to Filter</span>
+              <span className="text-[hsl(var(--theme-primary))] font-[var(--theme-fontSecondary)] text-sm font-semibold">Login</span>
             </div>
           )}
           <Select 
@@ -93,7 +101,28 @@ const AllRappersFilters = ({
             <SelectContent className="bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
               <SelectItem value="all" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">All Rappers</SelectItem>
               <SelectItem value="rated" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rated by Me</SelectItem>
-              <SelectItem value="not_rated" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Not Rated by Me</SelectItem>
+              <SelectItem value="not_rated" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Not Rated</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Zodiac Filter */}
+        <div className="min-w-0 max-w-full">
+          <Select value={zodiacFilter} onValueChange={onZodiacFilterChange}>
+            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
+              <SelectValue placeholder="Zodiac" />
+            </SelectTrigger>
+            <SelectContent className="bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50 max-h-60">
+              <SelectItem value="all" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">All Signs</SelectItem>
+              {zodiacSigns.map((sign) => (
+                <SelectItem 
+                  key={sign.name} 
+                  value={sign.name}
+                  className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm"
+                >
+                  {sign.symbol} {sign.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
@@ -108,23 +137,31 @@ const AllRappersFilters = ({
               <SelectItem value="activity" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Activity</SelectItem>
               <SelectItem value="name" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Name</SelectItem>
               <SelectItem value="rating" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Rating</SelectItem>
-              <SelectItem value="votes" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Vote Count</SelectItem>
+              <SelectItem value="votes" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Votes</SelectItem>
               <SelectItem value="origin" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Location</SelectItem>
             </SelectContent>
           </Select>
         </div>
 
-        {/* Sort Order */}
+        {/* Sort Order Toggle Button */}
         <div className="min-w-0 max-w-full">
-          <Select value={sortOrder} onValueChange={onOrderChange}>
-            <SelectTrigger className="bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
-              <SelectValue placeholder="Order" />
-            </SelectTrigger>
-            <SelectContent className="bg-[hsl(var(--theme-surface))]/100 border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] !bg-opacity-100 z-50">
-              <SelectItem value="asc" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Ascending</SelectItem>
-              <SelectItem value="desc" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">Descending</SelectItem>
-            </SelectContent>
-          </Select>
+          <Button
+            variant="outline"
+            onClick={() => onOrderChange(sortOrder === 'asc' ? 'desc' : 'asc')}
+            className="w-full h-10 bg-[hsl(var(--theme-surface))]/90 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] hover:bg-[hsl(var(--theme-primary))]/20 hover:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm"
+          >
+            {sortOrder === 'asc' ? (
+              <>
+                <ArrowUp className="w-4 h-4 mr-1" />
+                Asc
+              </>
+            ) : (
+              <>
+                <ArrowDown className="w-4 h-4 mr-1" />
+                Desc
+              </>
+            )}
+          </Button>
         </div>
       </div>
     </div>
