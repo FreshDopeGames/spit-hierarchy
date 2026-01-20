@@ -7,6 +7,7 @@ import { formatBirthdate } from "@/utils/zodiacUtils";
 import { useNavigationState } from "@/hooks/useNavigationState";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { formatNumber } from "@/utils/numberFormatter";
+import RatedBadge from "@/assets/Rated_Badge_64.png";
 
 type Rapper = Tables<"rappers">;
 
@@ -17,6 +18,7 @@ interface RapperCardProps {
   currentPage?: number;
   position?: number;
   compact?: boolean;
+  showRatedBadge?: boolean;
 }
 
 const RapperCard = ({
@@ -25,7 +27,8 @@ const RapperCard = ({
   stats,
   currentPage = 1,
   position,
-  compact = false
+  compact = false,
+  showRatedBadge = false
 }: RapperCardProps) => {
   const { navigateToRapper } = useNavigationState();
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
@@ -68,6 +71,17 @@ const RapperCard = ({
     >
       {/* Theme accent bar */}
       <div className="absolute top-0 left-0 w-full h-1 bg-[var(--theme-primary)]"></div>
+      
+      {/* Rated By Me badge */}
+      {showRatedBadge && (
+        <div className="absolute top-2 left-2 z-10">
+          <img 
+            src={RatedBadge} 
+            alt="Rated by you" 
+            className="w-10 h-10 sm:w-12 sm:h-12 drop-shadow-lg"
+          />
+        </div>
+      )}
       
       {/* Position indicator for ranked items */}
       {position && (
