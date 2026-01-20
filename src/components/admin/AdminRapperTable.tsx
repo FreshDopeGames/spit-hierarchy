@@ -1,4 +1,5 @@
 
+import { Link } from "react-router-dom";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedBadge } from "@/components/ui/themed-badge";
@@ -68,15 +69,17 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
     <ThemedCard className="hover:border-[var(--theme-primary)]/40 transition-all duration-300" style={{background: 'linear-gradient(135deg, #0D0D0D, #1A1A1A, #0D0D0D)'}}>
       <ThemedCardContent className="p-4">
         {/* Rapper Image */}
-        <AspectRatio ratio={1} className="mb-3">
-          <div className="w-full h-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-primary)]/60 rounded-lg flex items-center justify-center overflow-hidden">
-            <img 
-              src={imageUrl} 
-              alt={rapper.name}
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </AspectRatio>
+        <Link to={`/rapper/${rapper.slug || rapper.id}`} onClick={() => window.scrollTo(0, 0)}>
+          <AspectRatio ratio={1} className="mb-3">
+            <div className="w-full h-full bg-gradient-to-br from-[var(--theme-primary)] to-[var(--theme-primary)]/60 rounded-lg flex items-center justify-center overflow-hidden cursor-pointer group">
+              <img 
+                src={imageUrl} 
+                alt={rapper.name}
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+              />
+            </div>
+          </AspectRatio>
+        </Link>
 
         {/* Rapper Info */}
         <div className="space-y-2">
