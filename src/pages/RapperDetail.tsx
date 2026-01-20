@@ -12,7 +12,7 @@ import VoteModal from "@/components/VoteModal";
 import CommentBubble from "@/components/CommentBubble";
 import BackToTopButton from "@/components/BackToTopButton";
 import RapperHeader from "@/components/rapper/RapperHeader";
-import RapperBioExpanded from "@/components/content/RapperBioExpanded";
+import RapperBio from "@/components/rapper/RapperBio";
 import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import CareerStatsCard from "@/components/rapper/CareerStatsCard";
@@ -199,7 +199,7 @@ const RapperDetail = () => {
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
           {/* Enhanced Bio Section with more content */}
-          <RapperBioExpanded rapper={rapper} />
+          <RapperBio rapper={rapper} />
 
           {/* Career Overview - New sports-card style stats */}
           <div className="mb-8">
