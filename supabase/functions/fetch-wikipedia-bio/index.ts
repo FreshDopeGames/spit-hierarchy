@@ -285,7 +285,7 @@ async function expandBioWithAI(
   wikipediaExtract: string
 ): Promise<string | null> {
   try {
-    const systemPrompt = `You are a music journalist writing comprehensive artist biographies for a hip-hop ranking website. Your bios should be engaging, factual, and well-structured. Write in third person with a professional yet accessible tone. Do not use markdown formatting - write in plain paragraphs.`;
+    const systemPrompt = `You are a music journalist writing comprehensive artist biographies for a hip-hop ranking website. Your bios should be engaging, factual, and well-structured. Write in third person with a professional yet accessible tone. Do not use markdown formatting - write in plain paragraphs separated by double newlines.`;
 
     const userPrompt = `Write a comprehensive biography (500-600 words) for the hip-hop artist "${rapper.name}".
 
@@ -303,11 +303,16 @@ The biography should cover:
 5. Notable collaborations and achievements
 6. Current status and legacy in hip-hop
 
-Important guidelines:
+Important formatting guidelines:
 - Write exactly 500-600 words
+- Structure the biography into 5-6 distinct paragraphs
+- Each paragraph should be 3-4 sentences long
+- Separate paragraphs with double newlines (blank lines between paragraphs)
+- Do NOT use any markdown formatting (no #, *, **, etc.)
+
+Important content guidelines:
 - Use only facts from the Wikipedia summary - do not fabricate information
 - If certain details are unknown, gracefully omit them rather than guessing
-- Write in flowing paragraphs, not bullet points
 - Focus on their musical career and impact on hip-hop culture
 - Be engaging and informative for hip-hop fans`;
 

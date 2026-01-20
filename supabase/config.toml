@@ -38,3 +38,12 @@ verify_jwt = true
 
 [functions.generate-sitemap]
 verify_jwt = false
+
+[functions.reformat-bios]
+verify_jwt = false
+
+[functions.fetch-wikipedia-bio]
+verify_jwt = false
+
+[functions.bulk-fetch-bios]
+verify_jwt = false
