@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Crown, MapPin, Calendar, Music, Instagram, Globe, Star } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
-import { getZodiacSign, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
+import { getZodiacSign, getZodiacName, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { useRapperTags } from "@/hooks/useRapperTags";
 import { getContrastTextColor } from "@/lib/utils";
@@ -23,6 +24,7 @@ const RapperHeader = ({
   onVoteClick
 }: RapperHeaderProps) => {
   const zodiacSign = getZodiacSign(rapper.birth_month, rapper.birth_day);
+  const zodiacName = getZodiacName(rapper.birth_month, rapper.birth_day);
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
   const deathdate = formatDeathdate(rapper.death_year, rapper.death_month, rapper.death_day);
   const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge for profile detail
@@ -112,10 +114,12 @@ const RapperHeader = ({
                   <Badge variant="secondary" className="bg-[hsl(var(--theme-accent))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-accent))]/30 px-4 py-2 font-[var(--theme-font-body)]">
                     {rapper.total_votes || 0} votes
                   </Badge>
-                  {zodiacSign && (
-                    <Badge variant="secondary" className="bg-[hsl(var(--theme-secondary))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-secondary))]/30 px-4 py-2 font-[var(--theme-font-body)]">
-                      {zodiacSign}
-                    </Badge>
+                  {zodiacSign && zodiacName && (
+                    <Link to={`/all-rappers?zodiac=${zodiacName}`}>
+                      <Badge variant="secondary" className="bg-[hsl(var(--theme-secondary))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-secondary))]/30 px-4 py-2 font-[var(--theme-font-body)] cursor-pointer hover:bg-[hsl(var(--theme-secondary))]/40 transition-colors">
+                        {zodiacSign}
+                      </Badge>
+                    </Link>
                   )}
                 </div>
               </div>
