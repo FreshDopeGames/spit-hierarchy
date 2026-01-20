@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { BookOpen, Play, Square, RotateCcw, RefreshCw } from "lucide-react";
+import { BookOpen, Play, Square, RotateCcw, RefreshCw, AlignLeft } from "lucide-react";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 
@@ -24,6 +24,14 @@ interface BulkBioResults {
   };
 }
 
+interface ReformatResults {
+  processed: number;
+  reformatted: number;
+  skipped: number;
+  errors: Array<{ rapper: string; error: string }>;
+  reformattedRappers: Array<{ rapper: string; paragraphCount: number }>;
+}
+
 const BioBulkPopulation = () => {
   const [isRunning, setIsRunning] = useState(false);
   const [results, setResults] = useState<BulkBioResults | null>(null);
@@ -32,6 +40,8 @@ const BioBulkPopulation = () => {
   const [overallProgress, setOverallProgress] = useState(0);
   const [forceRefresh, setForceRefresh] = useState(false);
   const [shouldStop, setShouldStop] = useState(false);
+  const [isReformatting, setIsReformatting] = useState(false);
+  const [reformatResults, setReformatResults] = useState<ReformatResults | null>(null);
 
   const startBulkPopulation = async () => {
     setIsRunning(true);
@@ -133,6 +143,43 @@ const BioBulkPopulation = () => {
     setCurrentBatch(0);
     setTotalProcessed(0);
     setOverallProgress(0);
+    setReformatResults(null);
+  };
+
+  const reformatExistingBios = async () => {
+    setIsReformatting(true);
+    setReformatResults(null);
+
+    try {
+      const { data, error } = await supabase.functions.invoke('reformat-bios');
+
+      if (error) {
+        toast.error("Failed to reformat bios", {
+          description: error.message,
+        });
+        return;
+      }
+
+      if (!data.success) {
+        toast.error("Error", {
+          description: data.error || "Unknown error occurred",
+        });
+        return;
+      }
+
+      setReformatResults(data.results);
+      toast.success("Bio Reformatting Complete", {
+        description: `Reformatted ${data.results.reformatted} bios with paragraph breaks.`,
+      });
+
+    } catch (error: any) {
+      console.error('Error during bio reformatting:', error);
+      toast.error("Error", {
+        description: error.message || "An unexpected error occurred",
+      });
+    } finally {
+      setIsReformatting(false);
+    }
   };
 
   return (
@@ -269,6 +316,77 @@ const BioBulkPopulation = () => {
             )}
           </div>
         )}
+
+        {/* Bio Reformat Section */}
+        <div className="border-t border-border pt-4 mt-4">
+          <h4 className="font-semibold mb-2 flex items-center gap-2">
+            <AlignLeft className="h-4 w-4" />
+            Reformat Existing Bios
+          </h4>
+          <p className="text-sm text-muted-foreground mb-3">
+            Add paragraph breaks to existing bios that are currently walls of text (every 3 sentences).
+          </p>
+          
+          <Button 
+            onClick={reformatExistingBios} 
+            disabled={isReformatting || isRunning}
+            variant="outline"
+          >
+            {isReformatting ? (
+              <>
+                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
+                Reformatting...
+              </>
+            ) : (
+              <>
+                <AlignLeft className="h-4 w-4 mr-2" />
+                Reformat Existing Bios
+              </>
+            )}
+          </Button>
+
+          {reformatResults && (
+            <div className="mt-4 space-y-2">
+              <div className="grid grid-cols-3 gap-4">
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-primary">{reformatResults.reformatted}</div>
+                  <div className="text-sm text-muted-foreground">Reformatted</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold text-muted-foreground">{reformatResults.skipped}</div>
+                  <div className="text-sm text-muted-foreground">Skipped</div>
+                </div>
+                <div className="text-center">
+                  <div className="text-2xl font-bold">{reformatResults.processed}</div>
+                  <div className="text-sm text-muted-foreground">Processed</div>
+                </div>
+              </div>
+
+              {reformatResults.reformattedRappers.length > 0 && (
+                <div className="space-y-2">
+                  <h4 className="font-semibold text-sm text-green-500">Reformatted Bios:</h4>
+                  <div className="max-h-32 overflow-y-auto space-y-1">
+                    {reformatResults.reformattedRappers.slice(0, 20).map((item, index) => (
+                      <div key={index} className="flex items-center gap-2 text-sm">
+                        <Badge variant="secondary" className="shrink-0 bg-green-500/20 text-green-400">
+                          {item.rapper}
+                        </Badge>
+                        <span className="text-muted-foreground text-xs">
+                          {item.paragraphCount} paragraphs
+                        </span>
+                      </div>
+                    ))}
+                    {reformatResults.reformattedRappers.length > 20 && (
+                      <div className="text-sm text-muted-foreground">
+                        ... and {reformatResults.reformattedRappers.length - 20} more reformatted
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
 
         <div className="text-sm text-muted-foreground space-y-1">
           <p><strong>Data Sources:</strong> Wikipedia (via MusicBrainz links) + Lovable AI for bio expansion</p>
