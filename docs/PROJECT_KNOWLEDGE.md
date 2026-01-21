@@ -746,13 +746,6 @@ border: 1px solid #cccccc;
 - Theme versioning and rollback system
 - Visual Edit integration improvements
 
-## Future Considerations
-- Mobile app development
-- Advanced analytics dashboard
-- Real-time notifications
-- Enhanced moderation tools
-- API rate limiting improvements
-- Advanced caching strategies
-- Theme marketplace and sharing
-- Advanced animation controls in theme system
-- Component-level theme overrides
+## Future Development
+
+For planned features, monetization roadmap, and the feature backlog, see **[NEXT_FEATURES.md](./NEXT_FEATURES.md)**.
