@@ -29,9 +29,11 @@ const AchievementCard = ({ achievement, showProgress = true }: AchievementCardPr
 
   return (
     <Card
-      className={`bg-black border-4 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20 ${
-        achievement.is_earned ? "opacity-100" : "opacity-60"
-      } transition-all hover:scale-105`}
+      className={`bg-black border-4 ${
+        achievement.is_earned 
+          ? "border-[hsl(var(--theme-primary))] opacity-100" 
+          : "border-[hsl(var(--theme-primary))]/30 opacity-60"
+      } shadow-lg shadow-[hsl(var(--theme-primary))]/20 transition-all hover:scale-105`}
     >
       <CardContent className="p-4">
         <div className="flex items-start space-x-3">
