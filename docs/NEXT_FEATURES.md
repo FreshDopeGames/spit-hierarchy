@@ -73,7 +73,6 @@ This document tracks upcoming features, improvements, and the platform's monetiz
 - [ ] Regional landing pages (/region/east-coast, etc.)
 - [ ] Rapper comparison tool
 - [ ] User-generated content moderation improvements
-- [ ] Mobile app (PWA enhancements)
 
 ### Low Priority / Future
 - [ ] Creator partnerships program
@@ -90,6 +89,7 @@ _Move items here as they are finished, then archive periodically._
 | Feature | Completed | Notes |
 |---------|-----------|-------|
 | Profile card border styling (100% opacity) | 2026-01-21 | My Top 5, Achievements, Cypher Journal, earned achievement cards |
+| PWA enhancements (Mobile app) | 2026-01-21 | Install prompts, platform detection, push notifications, Workbox caching |
 
 ---
 
