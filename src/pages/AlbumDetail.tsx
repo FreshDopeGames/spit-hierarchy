@@ -16,6 +16,7 @@ import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useState } from "react";
+import { generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
 
 const AlbumDetail = () => {
   const navigate = useNavigate();
@@ -90,18 +91,24 @@ const AlbumDetail = () => {
             </div>
             
             {/* Album header skeleton - matches AlbumHeader layout */}
-            <div className="flex flex-col items-center text-center space-y-6">
+            <div className="flex flex-col items-center text-center space-y-4">
               {/* Album Cover Art Skeleton */}
               <Skeleton className="w-80 h-80 md:w-96 md:h-96 rounded-lg" />
               
               {/* Title Skeleton */}
               <Skeleton className="h-10 w-72 md:w-96" />
               
-              {/* Rapper Avatar Skeleton - matches RapperAvatar size="lg" */}
-              <Skeleton className="w-40 h-40 sm:w-48 sm:h-48 rounded-lg" />
-              
-              {/* Rapper Name Skeleton */}
-              <Skeleton className="h-7 w-48" />
+              {/* Artist Row Skeleton - smaller avatar + name + streaming buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl mx-auto">
+                <div className="flex items-center gap-3">
+                  <Skeleton className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg" />
+                  <Skeleton className="h-6 w-32" />
+                </div>
+                <div className="flex items-center gap-2">
+                  <Skeleton className="h-9 w-24 rounded-md" />
+                  <Skeleton className="h-9 w-32 rounded-md" />
+                </div>
+              </div>
               
               {/* Badge/Metadata Skeleton */}
               <div className="flex items-center gap-3">
@@ -193,16 +200,33 @@ const AlbumDetail = () => {
           </div>
 
           {/* Centered Album Header */}
-          <AlbumHeader
-            rapperId={album.rapper_id}
-            albumTitle={album.album_title}
-            rapperName={album.rapper_name}
-            rapperSlug={album.rapper_slug}
-            coverArtUrl={album.cover_art_url}
-            releaseDate={album.release_date}
-            releaseType={album.release_type}
-            trackCount={album.track_count}
-          />
+          {(() => {
+            // Generate streaming links with fallback to search URLs
+            const searchLinks = generateExternalAlbumLinks(
+              album.album_title,
+              album.rapper_name,
+              album.release_type as 'album' | 'mixtape' | 'ep' | 'single'
+            );
+            const directLinks = album.external_cover_links || {};
+            const externalLinks = {
+              spotify: directLinks.spotify || searchLinks.spotify,
+              appleMusic: directLinks.apple_music || searchLinks.appleMusic,
+            };
+            
+            return (
+              <AlbumHeader
+                rapperId={album.rapper_id}
+                albumTitle={album.album_title}
+                rapperName={album.rapper_name}
+                rapperSlug={album.rapper_slug}
+                coverArtUrl={album.cover_art_url}
+                releaseDate={album.release_date}
+                releaseType={album.release_type}
+                trackCount={album.track_count}
+                externalLinks={externalLinks}
+              />
+            );
+          })()}
 
           {/* Track Listing Section */}
           <div className="max-w-4xl mx-auto">
