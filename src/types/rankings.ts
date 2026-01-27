@@ -8,6 +8,7 @@ export type RankingItem = Tables<"ranking_items"> & {
 
 export interface RankingWithItems extends OfficialRanking {
   items: RankingItem[];
+  totalRappers?: number;
 }
 
 // Unified ranking interface that works for both official and user rankings
@@ -28,7 +29,8 @@ export interface UnifiedRanking {
   }>;
   likes: number;
   views: number;
-  totalVotes: number; // Add totalVotes field
+  totalVotes: number;
+  totalRappers: number;
   isOfficial: boolean;
   tags: string[];
   slug: string; // Always required

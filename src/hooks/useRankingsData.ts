@@ -67,10 +67,17 @@ export const useRankingsData = () => {
           const { data: voteCount } = await supabase
             .rpc('get_official_ranking_vote_count', { ranking_uuid: ranking.id });
 
+          // Get total rapper count for this ranking
+          const { count: totalRappers } = await supabase
+            .from("ranking_items")
+            .select("*", { count: "exact", head: true })
+            .eq("ranking_id", ranking.id);
+
           return { 
             ...ranking, 
             items: formattedItems,
-            totalVotes: voteCount || 0
+            totalVotes: voteCount || 0,
+            totalRappers: totalRappers || 0
           };
         })
       );
