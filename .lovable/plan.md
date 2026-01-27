@@ -1,83 +1,31 @@
 
-
-# Fix Eve's Discography - Wrong Artist Linked
+# Fix "Storytelling" Label Cutoff on Artistry Radar Chart
 
 ## Problem
 
-Eve's profile is linked to the **wrong MusicBrainz artist**. The current data shows a Japanese singer/producer named Eve (career start 2014), not **Eve Jihan Cooper**, the American hip-hop artist from Ruff Ryders who debuted in 1999.
-
-### Current State (Wrong)
-
-| Album | Year |
-|-------|------|
-| Wonder Word | 2014 |
-| Round Robin | 2015 |
-| 文化 (Bunka) | 2017 |
-| 蒼 (Ao) | 2018 |
-| おとぎ (Otogi) | 2019 |
-
-### Expected Discography (Eve the Rapper)
-
-| Album | Year |
-|-------|------|
-| Let There Be Eve...Ruff Ryders' First Lady | 1999 |
-| Scorpion | 2001 |
-| Eve-Olution | 2002 |
-| Lip Lock | 2013 |
-
----
+The "Storytelling" skill label on the Artistry radar chart is being cut off on the left edge on desktop. This happens because the chart's left margin (currently 60px) isn't providing enough space for the full label width when it's positioned with `textAnchor="end"`.
 
 ## Solution
 
-Update Eve's MusicBrainz ID in the database and refresh her discography.
+Increase the left margin of the Artistry radar chart from 60px to 80px to provide adequate space for the "Storytelling" label.
 
-### Step 1: Database Migration
+## File to Modify
 
-Create a migration to:
-1. Update Eve's `musicbrainz_id` to the correct value
-2. Remove the incorrectly linked albums
-3. Update `career_start_year` to reflect her actual debut
+**`src/components/rapper/RapperAttributeStats.tsx`** (line 299)
 
-```sql
--- Fix Eve rapper record - wrong MusicBrainz artist linked
--- Current: 66bdd1c9-d1c5-40b7-a487-5061fffbd87d (Japanese Eve)
--- Correct: 1ac10f5e-2079-4435-b78f-dda6ecdeba15 (Eve Jihan Cooper, Ruff Ryders)
+### Change
 
--- Update the MusicBrainz ID and career start year
-UPDATE rappers
-SET 
-  musicbrainz_id = '1ac10f5e-2079-4435-b78f-dda6ecdeba15',
-  career_start_year = 1999,
-  discography_last_updated = NULL  -- Force re-fetch
-WHERE slug = 'eve';
+```typescript
+// Before (line 299)
+<RadarChart data={artistry} margin={{ top: 40, right: 50, bottom: 25, left: 60 }}>
 
--- Remove incorrectly linked albums (Japanese Eve's discography)
-DELETE FROM rapper_albums 
-WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve');
+// After
+<RadarChart data={artistry} margin={{ top: 40, right: 50, bottom: 25, left: 80 }}>
 ```
 
-### Step 2: Refresh Discography
+## Why This Works
 
-After the migration runs, clicking "Refresh" on Eve's discography page will fetch her correct albums from MusicBrainz:
-- Let There Be Eve...Ruff Ryders' First Lady (1999)
-- Scorpion (2001)
-- Eve-Olution (2002)
-- Lip Lock (2013)
-
----
-
-## Files to Modify
-
-| File | Changes |
-|------|---------|
-| New SQL migration | Update MusicBrainz ID, clear wrong albums |
-
----
-
-## Expected Result
-
-After implementation:
-- Eve's profile shows career start: **1999**
-- Discography shows her Ruff Ryders albums
-- She correctly appears in **Best 90s Rappers** rankings (debut 1999)
-
+- Labels on the left side of radar charts use `textAnchor="end"`, meaning text extends leftward from the anchor point
+- "Storytelling" is a longer word that needs more horizontal space than shorter labels
+- Increasing the left margin from 60px to 80px (adding ~20px) provides the extra clearance needed
+- This change only affects the Artistry chart where the issue occurs; the Technique chart margin remains at 50px since its left-side labels ("Technical Skill", "Performance") are not clipped
