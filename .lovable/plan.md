@@ -1,69 +1,117 @@
 
-# Fix Ranking Sort Order
+# Safe Implementation: Partial Alias Matching for Collaborations
 
-## Problem Summary
+## The Risk You Identified
 
-The "Best 80s Rappers" ranking (and other rankings) shows rappers in incorrect order:
-- **Beastie Boys** appears at #1 with 0 votes
-- **De La Soul** appears at #3 with 8 votes (should be #1)
-- **LL Cool J** appears at #6 with 6 votes (should be #2)
+Adding naive partial alias matching could cause incorrect album attribution:
+- **"BIG"** (Notorious B.I.G. alias) could match "Big L", "Big Boi", "Big Daddy Kane"
+- **"Ye"** (Kanye West alias) could match "Yeezy", "Years", or other words
+- **"Tip"** (T.I. alias) could match "Tiptoe", "Q-Tip", etc.
+- **"PE"** (Public Enemy alias) could match "PE" anywhere in credits
+- Short aliases are particularly dangerous with `includes()` matching
 
-This happens because:
-1. The recent migration repopulated the ranking items with default positions
-2. The `recalculate_ranking_positions` function (which sorts by votes) only runs once daily at 1 AM
-3. The synchronous trigger was previously removed for performance reasons
+The existing `partialMatch` works because it uses the **full rapper name** (e.g., "Rakim" in "Eric B. & Rakim"), which is usually unique enough.
 
-## Solution
+## Proposed Safe Solution
 
-### Part 1: Immediate Frontend Fix
-Update the `useRankingData` hook to sort items by votes client-side instead of relying on stale database positions:
+Instead of a simple `includes()` check for aliases, implement **word boundary matching** with a minimum length threshold:
 
-- Sort by `ranking_votes` descending (most votes first)
-- Then by `position` ascending (earliest vote wins ties)
-- Then alphabetically by name (for 0-vote rappers)
+### Safeguards
 
-This ensures users always see the correct order, regardless of when the database maintenance runs.
+1. **Minimum alias length**: Only allow partial alias matching for aliases with 6+ characters
+   - This excludes: "LB", "PE", "Ye", "Pun", "BIG", "Pac", "Hov", "Tip", "JID", "DOOM", "ATCQ"
+   - This includes: "The Fresh Prince" (16 chars), "Tupac" (5 - excluded), "Makaveli" (8 chars)
 
-### Part 2: Database Position Recalculation
-Run `recalculate_ranking_positions()` immediately to fix the current database positions. This ensures:
-- Position deltas calculate correctly
-- Future refetches have correct data
-- Any caching or snapshots are accurate
+2. **Word boundary matching**: The alias must appear as a distinct word/phrase, not just a substring
+   - Match: "DJ Jazzy Jeff & **The Fresh Prince**" ✓
+   - No match: "Fresh Beats Vol. 1" (partial word match) ✗
 
-## Technical Changes
+3. **Maintain existing filters**: All current safeguards remain active:
+   - Instrumental filtering
+   - Bootleg/promo rejection
+   - Tribute album detection
+   - Official release status check
 
-### File: `src/hooks/useRankingData.tsx`
+### Implementation Details
 
-Update the query result processing to sort by votes instead of database position:
+**File:** `supabase/functions/fetch-rapper-discography/index.ts`
 
+**Location:** After line 635 (after existing `partialMatch` definition)
+
+**New Code Logic:**
 ```text
-Current (line 95):
-.order("position", { ascending: true })
+// Partial alias match - only for longer aliases (6+ chars) to prevent false positives
+// Uses word boundary matching to ensure alias is a distinct phrase, not a substring
+const MIN_ALIAS_LENGTH_FOR_PARTIAL = 6;
 
-Change to client-side sort after fetching:
-Sort items by:
-1. ranking_votes DESC
-2. position ASC (for tie-breaking by earliest vote)
-3. rapper.name ASC (for 0-vote rappers)
+const partialAliasMatch = rapperAliases.some((alias: string) => {
+  // Skip short aliases that could cause false matches (BIG, Ye, Tip, etc.)
+  if (alias.length < MIN_ALIAS_LENGTH_FOR_PARTIAL) return false;
+  
+  return creditNames.some((creditName: string) => {
+    const aliasLower = alias.toLowerCase();
+    const creditLower = creditName.toLowerCase();
+    
+    // Check if alias appears as a word boundary match
+    // This handles "The Fresh Prince" in "DJ Jazzy Jeff & The Fresh Prince"
+    // But rejects "Fresh" matching "Freshly Baked Beats"
+    const wordBoundaryPattern = new RegExp(
+      `(^|[^a-z])${aliasLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`,
+      'i'
+    );
+    return wordBoundaryPattern.test(creditLower);
+  });
+});
 ```
 
-The `calculateVisualRanks` function already sorts correctly but then re-sorts back to database order on line 56. We need to maintain the vote-based order throughout.
-
-### Database: Run Position Recalculation
-
-Execute the existing function to fix current data:
-```sql
-SELECT recalculate_ranking_positions();
+**Update condition at line 645:**
+```text
+if (!primaryMatch && !nameMatch && !aliasMatch && !partialMatch && !partialAliasMatch) {
+  console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, or aliases`);
+  continue;
+}
 ```
 
-This will update all rankings to have correct positions immediately.
+**Add logging for partial alias matches (after line 657):**
+```text
+if (partialAliasMatch && !primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
+  console.log(`✓ Including "${rg.title}" via partial alias match (collaboration)`);
+}
+```
 
-## Expected Result
+### Will Smith Test Case
 
-After implementation:
-- De La Soul (8 votes) → Position #1
-- LL Cool J (6 votes) → Position #2
-- Big Daddy Kane, MC Lyte, Run-D.M.C. (5 votes each) → Positions #3-5 (sorted by earliest vote, then alphabetically)
-- All 0-vote rappers → Grouped at the bottom, sorted alphabetically
+- **Alias:** "The Fresh Prince" (16 characters) ✓ Passes length check
+- **Credit:** "DJ Jazzy Jeff & The Fresh Prince"
+- **Match:** Word boundary regex finds "The Fresh Prince" as distinct phrase ✓
 
-Rankings will display correctly in real-time based on vote counts, with proper tie-breaking for rappers with equal votes.
+### Protected Cases (Will NOT Match)
+
+| Rapper | Short Alias | Why Protected |
+|--------|-------------|---------------|
+| Notorious B.I.G. | "BIG" (3 chars) | Below 6-char minimum |
+| Kanye West | "Ye" (2 chars) | Below 6-char minimum |
+| T.I. | "Tip" (3 chars) | Below 6-char minimum |
+| MF DOOM | "DOOM" (4 chars) | Below 6-char minimum |
+| Public Enemy | "PE" (2 chars) | Below 6-char minimum |
+| Big Pun | "Pun" (3 chars) | Below 6-char minimum |
+
+### Expected Outcome for Will Smith
+
+After deploying and refreshing his discography:
+- *Rock the House* (1987) ✓
+- *He's the DJ, I'm the Rapper* (1988) ✓
+- *And in This Corner...* (1989) ✓
+- *Homebase* (1991) ✓
+- *Code Red* (1993) ✓
+- Plus existing solo albums (1997+)
+
+Will Smith will then qualify for the "Best 80s Rappers" ranking based on his 1987 first release.
+
+### Summary
+
+This approach balances functionality with safety:
+- Enables collaboration matching for meaningful aliases like "The Fresh Prince"
+- Protects against false positives from short, common aliases
+- Maintains all existing quality filters (instrumental, bootleg, tribute, etc.)
+- Uses word boundary matching to prevent substring false matches
