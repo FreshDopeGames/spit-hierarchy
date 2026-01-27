@@ -634,6 +634,30 @@ serve(async (req) => {
           creditName.toLowerCase().includes(rapper.name.toLowerCase())
         );
         
+        // Partial alias match - only for longer aliases (6+ chars) to prevent false positives
+        // Uses word boundary matching to ensure alias is a distinct phrase, not a substring
+        // This handles cases like "The Fresh Prince" in "DJ Jazzy Jeff & The Fresh Prince"
+        // But protects against short aliases like "BIG", "Ye", "Tip" matching incorrectly
+        const MIN_ALIAS_LENGTH_FOR_PARTIAL = 6;
+        const partialAliasMatch = rapperAliases.some((alias: string) => {
+          // Skip short aliases that could cause false matches (BIG, Ye, Tip, etc.)
+          if (alias.length < MIN_ALIAS_LENGTH_FOR_PARTIAL) return false;
+          
+          return creditNames.some((creditName: string) => {
+            const aliasLower = alias.toLowerCase();
+            const creditLower = creditName.toLowerCase();
+            
+            // Check if alias appears as a word boundary match
+            // This handles "The Fresh Prince" in "DJ Jazzy Jeff & The Fresh Prince"
+            // But rejects "Fresh" matching "Freshly Baked Beats"
+            const wordBoundaryPattern = new RegExp(
+              `(^|[^a-z])${aliasLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`,
+              'i'
+            );
+            return wordBoundaryPattern.test(creditLower);
+          });
+        });
+        
         // Enhanced logging for debugging
         console.log(`🔍 Artist-credit check for "${rg.title}" (RG: ${rg.id}):`);
         console.log(`   - Credit names: ${creditNames.join(', ')}`);
@@ -641,17 +665,18 @@ serve(async (req) => {
         console.log(`   - Name match (${rapper.name}): ${nameMatch}`);
         console.log(`   - Alias match: ${aliasMatch}`);
         console.log(`   - Partial match (${rapper.name} in credit): ${partialMatch}`);
+        console.log(`   - Partial alias match (6+ char aliases): ${partialAliasMatch}`);
         
-        if (!primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
+        if (!primaryMatch && !nameMatch && !aliasMatch && !partialMatch && !partialAliasMatch) {
           console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, or aliases`);
           continue;
         }
         
-        if (partialMatch && !primaryMatch && !nameMatch && !aliasMatch) {
+        if (partialAliasMatch && !primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
+          console.log(`✓ Including "${rg.title}" via partial alias match (collaboration)`);
+        } else if (partialMatch && !primaryMatch && !nameMatch && !aliasMatch) {
           console.log(`✓ Including "${rg.title}" via partial name match (collaboration)`);
-        }
-        
-        if (nameMatch && !primaryMatch) {
+        } else if (nameMatch && !primaryMatch) {
           console.log(`✓ Including "${rg.title}" via name match`);
         } else if (aliasMatch && !primaryMatch) {
           console.log(`✓ Including "${rg.title}" via alias match`);
