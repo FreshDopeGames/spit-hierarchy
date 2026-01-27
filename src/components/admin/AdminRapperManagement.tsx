@@ -21,71 +21,20 @@ const ITEMS_PER_PAGE = 28; // 4 rappers per row × 7 rows = 28 rappers per page
 const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [avatarFilter, setAvatarFilter] = useState<"all" | "with_avatar" | "no_avatar">("all");
+  const [sortBy, setSortBy] = useState<"alphabetical" | "rating" | "ranking_votes">("alphabetical");
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [rapperToDelete, setRapperToDelete] = useState<Rapper | null>(null);
   const [isDeleting, setIsDeleting] = useState(false);
 
-  const {
-    data: rappers,
-    isLoading,
-    refetch,
-    isFetching
-  } = useQuery({
-    queryKey: ["rappers", currentPage, searchTerm, avatarFilter],
+  // Fetch all ranking vote counts upfront for sorting
+  const { data: allRankingVoteCounts } = useQuery({
+    queryKey: ["all-ranking-vote-counts"],
     queryFn: async () => {
-      let query = supabase
-        .from("rappers")
-        .select(`
-          *,
-          rapper_images!left(id)
-        `, {
-          count: "exact"
-        })
-        .order("created_at", {
-          ascending: false
-        })
-        .range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
-      
-      if (searchTerm) {
-        query = query.ilike("name", `%${searchTerm}%`);
-      }
-      
-      if (avatarFilter === "no_avatar") {
-        query = query.or("image_url.is.null,image_url.eq.").is("rapper_images.id", null);
-      } else if (avatarFilter === "with_avatar") {
-        query = query.or("image_url.not.is.null,rapper_images.id.not.is.null");
-      }
-      
-      const {
-        data,
-        error,
-        count
-      } = await query;
-      if (error) {
-        throw new Error(error.message);
-      }
-      return {
-        data,
-        count
-      };
-    },
-    staleTime: 5 * 60 * 1000 // 5 minutes
-  });
-
-  // Fetch ranking vote counts for current page rappers
-  const rapperIds = rappers?.data?.map(r => r.id) || [];
-  const { data: rankingVoteCounts } = useQuery({
-    queryKey: ["ranking-vote-counts", rapperIds],
-    queryFn: async () => {
-      if (rapperIds.length === 0) return {};
-      
       const { data, error } = await supabase
         .from("ranking_votes")
-        .select("rapper_id")
-        .in("rapper_id", rapperIds);
+        .select("rapper_id");
       
       if (error) throw error;
       
@@ -96,13 +45,75 @@ const AdminRapperManagement = () => {
       });
       return counts;
     },
-    enabled: rapperIds.length > 0,
     staleTime: 5 * 60 * 1000
   });
 
+  const {
+    data: rappers,
+    isLoading,
+    refetch,
+    isFetching
+  } = useQuery({
+    queryKey: ["rappers", currentPage, searchTerm, sortBy],
+    queryFn: async () => {
+      let query = supabase
+        .from("rappers")
+        .select(`*`, { count: "exact" });
+      
+      // Apply sorting based on sortBy (except ranking_votes which is client-side)
+      if (sortBy === "alphabetical") {
+        query = query.order("name", { ascending: true });
+      } else if (sortBy === "rating") {
+        query = query.order("average_rating", { ascending: false, nullsFirst: false });
+      } else {
+        // For ranking_votes, we'll fetch all and sort client-side, then paginate
+        query = query.order("name", { ascending: true });
+      }
+      
+      if (searchTerm) {
+        query = query.ilike("name", `%${searchTerm}%`);
+      }
+      
+      // Only apply server-side pagination for non-ranking_votes sorts
+      if (sortBy !== "ranking_votes") {
+        query = query.range((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE - 1);
+      }
+      
+      const { data, error, count } = await query;
+      if (error) {
+        throw new Error(error.message);
+      }
+      
+      // For ranking_votes sort, do client-side sorting and pagination
+      if (sortBy === "ranking_votes" && data && allRankingVoteCounts) {
+        const sorted = [...data].sort((a, b) => {
+          const aVotes = allRankingVoteCounts[a.id] || 0;
+          const bVotes = allRankingVoteCounts[b.id] || 0;
+          return bVotes - aVotes; // Descending
+        });
+        const paginated = sorted.slice(
+          (currentPage - 1) * ITEMS_PER_PAGE,
+          currentPage * ITEMS_PER_PAGE
+        );
+        return { data: paginated, count };
+      }
+      
+      return { data, count };
+    },
+    staleTime: 5 * 60 * 1000,
+    enabled: sortBy !== "ranking_votes" || !!allRankingVoteCounts
+  });
+
+  // Get ranking vote counts for current page rappers (for display)
+  const rapperIds = rappers?.data?.map(r => r.id) || [];
+  const rankingVoteCounts = rapperIds.reduce((acc, id) => {
+    acc[id] = allRankingVoteCounts?.[id] || 0;
+    return acc;
+  }, {} as Record<string, number>);
+
   useEffect(() => {
     refetch();
-  }, [currentPage, searchTerm, avatarFilter, refetch]);
+  }, [currentPage, searchTerm, sortBy, refetch]);
 
   const totalItems = rappers?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -116,9 +127,9 @@ const AdminRapperManagement = () => {
     setCurrentPage(1); // Reset to first page on search
   };
 
-  const handleAvatarFilterChange = (value: "all" | "with_avatar" | "no_avatar") => {
-    setAvatarFilter(value);
-    setCurrentPage(1); // Reset to first page on filter change
+  const handleSortChange = (value: "alphabetical" | "rating" | "ranking_votes") => {
+    setSortBy(value);
+    setCurrentPage(1); // Reset to first page on sort change
   };
 
   const handleEdit = (rapper: Rapper) => {
@@ -190,16 +201,16 @@ const AdminRapperManagement = () => {
             
             <div>
               <Label className="text-theme-text font-bold">
-                Filter by Avatar:
+                Sort By:
               </Label>
-              <Select value={avatarFilter} onValueChange={handleAvatarFilterChange}>
+              <Select value={sortBy} onValueChange={handleSortChange}>
                 <SelectTrigger className="mt-1">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Rappers</SelectItem>
-                  <SelectItem value="with_avatar">With Avatar</SelectItem>
-                  <SelectItem value="no_avatar">No Avatar</SelectItem>
+                  <SelectItem value="alphabetical">Alphabetical (A-Z)</SelectItem>
+                  <SelectItem value="rating">Rating (Highest First)</SelectItem>
+                  <SelectItem value="ranking_votes">Ranking Votes (Most First)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
