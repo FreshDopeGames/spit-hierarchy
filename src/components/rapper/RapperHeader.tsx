@@ -180,9 +180,9 @@ const RapperHeader = ({
               <div className="flex flex-wrap gap-3">
                 {rapper.instagram_handle && (
                   <ThemedButton 
-                    variant="gradient" 
+                    variant="default" 
                     size="sm" 
-                    className="text-black hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
+                    className="bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryLight))] border-0"
                     asChild
                   >
                     <a 
@@ -197,9 +197,9 @@ const RapperHeader = ({
                 )}
                 {rapper.homepage_url && (
                   <ThemedButton 
-                    variant="gradient" 
+                    variant="default" 
                     size="sm" 
-                    className="text-black hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
+                    className="bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryLight))] border-0"
                     asChild
                   >
                     <a 
@@ -214,9 +214,9 @@ const RapperHeader = ({
                 )}
                 {rapper.spotify_id && (
                   <ThemedButton 
-                    variant="gradient" 
+                    variant="default" 
                     size="sm" 
-                    className="text-black hover:bg-white hover:text-black border-2 border-[hsl(var(--theme-primary))]"
+                    className="bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryLight))] border-0"
                     asChild
                   >
                     <a 
