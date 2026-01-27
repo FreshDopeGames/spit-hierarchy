@@ -1,128 +1,68 @@
 
 
-# Fix Missing Roots Albums (Phrenology & More) for Black Thought
+# Fix Eve's Discography - Wrong Artist Linked
 
-## Problem Summary
+## Problem
 
-**Phrenology (2002)** and 5 other classic Roots albums are missing from Black Thought's discography because the edge function **timed out** before processing them.
+Eve's profile is linked to the **wrong MusicBrainz artist**. The current data shows a Japanese singer/producer named Eve (career start 2014), not **Eve Jihan Cooper**, the American hip-hop artist from Ruff Ryders who debuted in 1999.
 
-The Roots have an exceptionally large discography (30+ releases including live albums, collaborations, etc.), and the current 50-second timeout isn't sufficient to process all of them.
+### Current State (Wrong)
 
-### What's Missing
+| Album | Year |
+|-------|------|
+| Wonder Word | 2014 |
+| Round Robin | 2015 |
+| 文化 (Bunka) | 2017 |
+| 蒼 (Ao) | 2018 |
+| おとぎ (Otogi) | 2019 |
 
-| Album | Year | Status |
-|-------|------|--------|
-| Phrenology | 2002 | ❌ Skipped |
-| The Tipping Point | 2004 | ❌ Skipped |
-| Game Theory | 2006 | ❌ Skipped |
-| Rising Down | 2008 | ❌ Skipped |
-| How I Got Over | 2010 | ❌ Skipped |
-| undun | 2011 | ❌ Skipped |
+### Expected Discography (Eve the Rapper)
 
-### Why They're Skipped
-
-The function uses a "hybrid processing order":
-1. **10 oldest group releases** first (Organix through Things Fall Apart)
-2. Then **newest-to-oldest** for remaining releases (2023 → 2013)
-
-This leaves 2000s albums in the "dead zone" when timeout hits:
-
-```text
-Processing Order Timeline:
-┌──────────────────────────────────────────────────────────────────────┐
-│  [1993] ─────► [1999]    [2023] ◄───── [2014] ◄─ [2013]              │
-│  ↑ Oldest 10 prioritized      ↑ Newest-first after that             │
-│                                                                      │
-│                    ⛔ TIMEOUT HITS HERE                              │
-│                    ↓                                                 │
-│            [2002]  [2004]  [2006]  [2008]  [2010]  [2011]           │
-│            ↑ SKIPPED - Middle ground not reached                    │
-└──────────────────────────────────────────────────────────────────────┘
-```
+| Album | Year |
+|-------|------|
+| Let There Be Eve...Ruff Ryders' First Lady | 1999 |
+| Scorpion | 2001 |
+| Eve-Olution | 2002 |
+| Lip Lock | 2013 |
 
 ---
 
-## Solution: Prioritize Studio Albums Over Other Release Types
+## Solution
 
-Rather than process ALL releases (including live albums, EPs, remixes), we should prioritize **studio albums** and process them first. This ensures the canonical discography is always complete before timeout.
+Update Eve's MusicBrainz ID in the database and refresh her discography.
 
-### Implementation Steps
+### Step 1: Database Migration
 
-#### Step 1: Separate Studio Albums from Other Release Types
+Create a migration to:
+1. Update Eve's `musicbrainz_id` to the correct value
+2. Remove the incorrectly linked albums
+3. Update `career_start_year` to reflect her actual debut
 
-Modify the processing order in `supabase/functions/fetch-rapper-discography/index.ts`:
+```sql
+-- Fix Eve rapper record - wrong MusicBrainz artist linked
+-- Current: 66bdd1c9-d1c5-40b7-a487-5061fffbd87d (Japanese Eve)
+-- Correct: 1ac10f5e-2079-4435-b78f-dda6ecdeba15 (Eve Jihan Cooper, Ruff Ryders)
 
-```typescript
-// BEFORE: All albums in one pool
-const allReleases = [...rgAlbums, ...rgEps];
+-- Update the MusicBrainz ID and career start year
+UPDATE rappers
+SET 
+  musicbrainz_id = '1ac10f5e-2079-4435-b78f-dda6ecdeba15',
+  career_start_year = 1999,
+  discography_last_updated = NULL  -- Force re-fetch
+WHERE slug = 'eve';
 
-// AFTER: Separate by release type for prioritization
-const studioAlbums = rgAlbums.filter((rg: any) => {
-  const secondary = rg['secondary-types'] || [];
-  // Studio albums have no secondary types (not live, remix, compilation, etc.)
-  return secondary.length === 0;
-});
-
-const otherReleases = [
-  ...rgAlbums.filter((rg: any) => (rg['secondary-types'] || []).length > 0),
-  ...rgEps
-];
+-- Remove incorrectly linked albums (Japanese Eve's discography)
+DELETE FROM rapper_albums 
+WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve');
 ```
 
-#### Step 2: Sort Both Groups by Date (Oldest-First for Historical Completeness)
+### Step 2: Refresh Discography
 
-```typescript
-// For studio albums: chronological order (ensures complete discography)
-studioAlbums.sort((a, b) => {
-  const dateA = a['first-release-date'] || '9999';
-  const dateB = b['first-release-date'] || '9999';
-  return dateA.localeCompare(dateB); // Oldest first
-});
-
-// For other releases: newest first (recent EPs/live albums prioritized)
-otherReleases.sort((a, b) => {
-  const dateA = a['first-release-date'] || '0000';
-  const dateB = b['first-release-date'] || '0000';
-  return dateB.localeCompare(dateA); // Newest first
-});
-```
-
-#### Step 3: Process Studio Albums First
-
-```typescript
-// Final order: ALL studio albums first, then other release types
-const releaseGroups: MusicBrainzReleaseGroup[] = [
-  ...studioAlbums,
-  ...otherReleases,
-];
-
-console.log(`Processing ${releaseGroups.length} releases for ${rapper.name}`);
-console.log(`  - ${studioAlbums.length} studio albums (processed first)`);
-console.log(`  - ${otherReleases.length} other releases (EPs, live, etc.)`);
-```
-
-### Expected Processing Order After Fix
-
-```text
-New Processing Order:
-┌──────────────────────────────────────────────────────────────────────┐
-│  STUDIO ALBUMS (oldest → newest):                                    │
-│  [1993] Organix                                                      │
-│  [1994] Do You Want More?                                            │
-│  [1996] Illadelph Halflife                                           │
-│  [1999] Things Fall Apart                                            │
-│  [2002] Phrenology ✓ NOW INCLUDED                                    │
-│  [2004] The Tipping Point ✓ NOW INCLUDED                             │
-│  [2006] Game Theory ✓ NOW INCLUDED                                   │
-│  [2008] Rising Down ✓ NOW INCLUDED                                   │
-│  [2010] How I Got Over ✓ NOW INCLUDED                                │
-│  [2011] undun ✓ NOW INCLUDED                                         │
-│  ...through 2023                                                     │
-│                                                                      │
-│  OTHER RELEASES (newest → oldest):                                   │
-│  [Live albums, EPs, collaborations...]                               │
-└──────────────────────────────────────────────────────────────────────┘
-```
+After the migration runs, clicking "Refresh" on Eve's discography page will fetch her correct albums from MusicBrainz:
+- Let There Be Eve...Ruff Ryders' First Lady (1999)
+- Scorpion (2001)
+- Eve-Olution (2002)
+- Lip Lock (2013)
 
 ---
 
@@ -130,28 +70,14 @@ New Processing Order:
 
 | File | Changes |
 |------|---------|
-| `supabase/functions/fetch-rapper-discography/index.ts` | Refactor processing order to prioritize studio albums |
+| New SQL migration | Update MusicBrainz ID, clear wrong albums |
 
 ---
 
-## Technical Considerations
+## Expected Result
 
-1. **Maintains Group Membership Logic**: The fix preserves the existing group membership detection that correctly links Roots albums to Black Thought
-
-2. **Backwards Compatible**: Rappers without group memberships (most artists) will see no change - solo studio albums are already processed first
-
-3. **Graceful Degradation**: If timeout still hits, at least all studio albums are captured. Live albums, EPs, and compilations are deprioritized
-
-4. **Immediate Fix Available**: After deploying the code change, clicking "Refresh" on Black Thought's discography will fetch the missing albums
-
----
-
-## Alternative Immediate Workaround
-
-If you need the albums NOW before the code fix:
-
-A **manual database migration** can directly link the missing MusicBrainz albums. However, the code fix is the proper long-term solution since it:
-- Automatically handles future discography refreshes
-- Works for ALL artists with large group discographies (not just Black Thought)
-- Ensures new releases are captured correctly
+After implementation:
+- Eve's profile shows career start: **1999**
+- Discography shows her Ruff Ryders albums
+- She correctly appears in **Best 90s Rappers** rankings (debut 1999)
 
