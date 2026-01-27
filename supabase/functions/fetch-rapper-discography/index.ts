@@ -706,6 +706,11 @@ serve(async (req) => {
         // Check if the primary MusicBrainz ID matches
         const primaryMatch = creditIds.includes(musicbrainzId);
         
+        // Check if the release came from a group membership (e.g., BDP albums for KRS-One)
+        // These should be auto-accepted since we explicitly fetched them from the group's discography
+        const isGroupRelease = rg._sourceArtistId && groupArtistIds.has(rg._sourceArtistId);
+        const groupCreditMatch = isGroupRelease && creditIds.includes(rg._sourceArtistId);
+        
         // Check if the rapper's name matches any artist-credit name (important for groups)
         const nameMatch = creditNames.some((creditName: string) => 
           creditName.toLowerCase() === rapper.name.toLowerCase()
@@ -752,17 +757,21 @@ serve(async (req) => {
         console.log(`🔍 Artist-credit check for "${rg.title}" (RG: ${rg.id}):`);
         console.log(`   - Credit names: ${creditNames.join(', ')}`);
         console.log(`   - Primary ID match: ${primaryMatch}`);
+        console.log(`   - Group credit match: ${groupCreditMatch}`);
         console.log(`   - Name match (${rapper.name}): ${nameMatch}`);
         console.log(`   - Alias match: ${aliasMatch}`);
         console.log(`   - Partial match (${rapper.name} in credit): ${partialMatch}`);
         console.log(`   - Partial alias match (6+ char aliases): ${partialAliasMatch}`);
         
-        if (!primaryMatch && !nameMatch && !aliasMatch && !partialMatch && !partialAliasMatch) {
-          console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, or aliases`);
+        if (!primaryMatch && !groupCreditMatch && !nameMatch && !aliasMatch && !partialMatch && !partialAliasMatch) {
+          console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, group, or aliases`);
           continue;
         }
         
-        if (partialAliasMatch && !primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
+        if (groupCreditMatch && !primaryMatch) {
+          const groupName = groupMemberships.find(g => g.id === rg._sourceArtistId)?.name || 'Unknown Group';
+          console.log(`✓ Including "${rg.title}" via group membership (${groupName})`);
+        } else if (partialAliasMatch && !primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
           console.log(`✓ Including "${rg.title}" via partial alias match (collaboration)`);
         } else if (partialMatch && !primaryMatch && !nameMatch && !aliasMatch) {
           console.log(`✓ Including "${rg.title}" via partial name match (collaboration)`);
