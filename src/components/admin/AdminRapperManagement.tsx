@@ -75,6 +75,31 @@ const AdminRapperManagement = () => {
     staleTime: 5 * 60 * 1000 // 5 minutes
   });
 
+  // Fetch ranking vote counts for current page rappers
+  const rapperIds = rappers?.data?.map(r => r.id) || [];
+  const { data: rankingVoteCounts } = useQuery({
+    queryKey: ["ranking-vote-counts", rapperIds],
+    queryFn: async () => {
+      if (rapperIds.length === 0) return {};
+      
+      const { data, error } = await supabase
+        .from("ranking_votes")
+        .select("rapper_id")
+        .in("rapper_id", rapperIds);
+      
+      if (error) throw error;
+      
+      // Count votes per rapper
+      const counts: Record<string, number> = {};
+      data?.forEach(vote => {
+        counts[vote.rapper_id] = (counts[vote.rapper_id] || 0) + 1;
+      });
+      return counts;
+    },
+    enabled: rapperIds.length > 0,
+    staleTime: 5 * 60 * 1000
+  });
+
   useEffect(() => {
     refetch();
   }, [currentPage, searchTerm, avatarFilter, refetch]);
@@ -182,7 +207,7 @@ const AdminRapperManagement = () => {
 
           {isLoading ? <div className="text-center py-8">
               <div className="text-theme-text">Loading rappers...</div>
-            </div> : <AdminRapperTable rappers={rappers?.data || []} isLoading={isLoading} onEdit={handleEdit} onDelete={handleDelete} />}
+            </div> : <AdminRapperTable rappers={rappers?.data || []} isLoading={isLoading} onEdit={handleEdit} onDelete={handleDelete} rankingVoteCounts={rankingVoteCounts || {}} />}
         </CardContent>
       </Card>
 
