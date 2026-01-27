@@ -148,6 +148,11 @@ function escapeRegex(str: string): string {
 }
 
 // Post-process content to wrap rapper mentions with markdown links
+// Names that are common phrases when lowercase - require exact case match
+const CASE_SENSITIVE_NAMES = new Set([
+  'the game'
+]);
+
 function wrapRapperMentionsWithLinks(
   content: string, 
   artistLinkMap: Map<string, { name: string; url: string }>
@@ -159,10 +164,16 @@ function wrapRapperMentionsWithLinks(
     .sort((a, b) => b[0].length - a[0].length);
   
   for (const [lowerName, { name, url }] of sortedArtists) {
+    // Check if this name requires case-sensitive matching
+    const requiresCaseSensitive = CASE_SENSITIVE_NAMES.has(lowerName);
+    
     // Use word boundary regex to match whole names only
-    // Case-insensitive matching, preserving original case in output
     // Negative lookahead to skip text already inside markdown links
-    const regex = new RegExp(`\\b(${escapeRegex(name)})\\b(?![^\\[]*\\])`, 'gi');
+    // Use 'g' only for case-sensitive names, 'gi' for others
+    const regex = new RegExp(
+      `\\b(${escapeRegex(name)})\\b(?![^\\[]*\\])`, 
+      requiresCaseSensitive ? 'g' : 'gi'
+    );
     
     processedContent = processedContent.replace(regex, (match) => {
       return `[${match}](${url})`;

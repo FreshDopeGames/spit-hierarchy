@@ -285,6 +285,11 @@ function escapeRegex(str: string): string {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
+// Names that are common phrases when lowercase - require exact case match
+const CASE_SENSITIVE_NAMES = new Set([
+  'the game'
+]);
+
 // Post-process content to wrap rapper mentions with markdown links
 function wrapRapperMentionsWithLinks(
   content: string, 
@@ -309,10 +314,16 @@ function wrapRapperMentionsWithLinks(
     // Skip single-word names that are common English words (extra safety)
     if (name.length <= 3 && !name.includes(' ')) continue;
     
+    // Check if this name requires case-sensitive matching
+    const requiresCaseSensitive = CASE_SENSITIVE_NAMES.has(lowerName);
+    
     // Use word boundary regex to match whole names only
-    // Case-insensitive matching, preserving original case in output
     // Negative lookahead to skip text already inside markdown links
-    const regex = new RegExp(`\\b(${escapeRegex(name)})\\b(?![^\\[]*\\])`, 'gi');
+    // Use 'g' only for case-sensitive names, 'gi' for others
+    const regex = new RegExp(
+      `\\b(${escapeRegex(name)})\\b(?![^\\[]*\\])`, 
+      requiresCaseSensitive ? 'g' : 'gi'
+    );
     
     processedContent = processedContent.replace(regex, (match, group1, offset) => {
       // Check if followed by a context word that suggests non-rapper usage
