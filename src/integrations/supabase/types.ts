@@ -3499,6 +3499,20 @@ export type Database = {
           username: string
         }[]
       }
+      get_official_ranking_preview_items: {
+        Args: { item_limit?: number; ranking_uuid: string }
+        Returns: {
+          id: string
+          is_ranked: boolean
+          item_position: number
+          ranking_votes: number
+          rapper_id: string
+          rapper_image_url: string
+          rapper_name: string
+          rapper_slug: string
+          reason: string
+        }[]
+      }
       get_official_ranking_vote_count: {
         Args: { ranking_uuid: string }
         Returns: number
