@@ -52,7 +52,7 @@ const QuizBadgeDisplay: React.FC<QuizBadgeDisplayProps> = ({
           <Skeleton className="h-6 w-32" />
         </ThemedCardHeader>
         <ThemedCardContent>
-          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
             {[...Array(6)].map((_, i) => (
               <Skeleton key={i} className="aspect-square rounded-xl" />
             ))}
@@ -103,7 +103,7 @@ const QuizBadgeDisplay: React.FC<QuizBadgeDisplayProps> = ({
         </ThemedCardTitle>
       </ThemedCardHeader>
       <ThemedCardContent>
-        <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
           {limitedBadges.map((badgeData, index) => {
             const { badge, isEarned, percentage, currentProgress } = badgeData;
             const IconComponent = iconMap[badge.icon] || Award;
@@ -115,37 +115,37 @@ const QuizBadgeDisplay: React.FC<QuizBadgeDisplayProps> = ({
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: index * 0.05 }}
                 className={cn(
-                  "relative aspect-square rounded-xl border-2 flex flex-col items-center justify-center p-2 transition-all duration-200",
+                  "relative min-h-[120px] rounded-xl border-2 flex flex-col items-center justify-center p-3 sm:p-4 transition-all duration-200",
                   isEarned 
                     ? cn(getRarityColor(badge.rarity), getRarityGlow(badge.rarity))
                     : "border-border/50 bg-black/20 opacity-60"
                 )}
               >
                 {!isEarned && (
-                  <Lock className="absolute top-1 right-1 w-3 h-3 text-muted-foreground" />
+                  <Lock className="absolute top-2 right-2 w-3.5 h-3.5 text-muted-foreground" />
                 )}
                 
                 <IconComponent className={cn(
-                  "w-6 h-6 mb-1",
+                  "w-7 h-7 sm:w-8 sm:h-8 mb-2",
                   isEarned ? "" : "text-muted-foreground"
                 )} />
                 
                 <span className={cn(
-                  "text-[10px] text-center font-[var(--theme-font-heading)] leading-tight",
+                  "text-xs sm:text-sm text-center font-[var(--theme-font-heading)] leading-tight line-clamp-2",
                   !isEarned && "text-muted-foreground"
                 )}>
                   {badge.name}
                 </span>
                 
                 {showProgress && !isEarned && (
-                  <div className="absolute bottom-1 left-1 right-1">
-                    <div className="h-1 bg-black/50 rounded-full overflow-hidden">
+                  <div className="w-full mt-2 px-1">
+                    <div className="h-1.5 bg-black/50 rounded-full overflow-hidden">
                       <div
                         className="h-full bg-[hsl(var(--theme-primary))]/50"
                         style={{ width: `${percentage}%` }}
                       />
                     </div>
-                    <span className="text-[8px] text-muted-foreground">
+                    <span className="text-[10px] text-muted-foreground block text-center mt-0.5">
                       {currentProgress}/{badge.threshold_correct}
                     </span>
                   </div>
