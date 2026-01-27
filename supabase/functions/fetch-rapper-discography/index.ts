@@ -588,54 +588,48 @@ serve(async (req) => {
       return json({ success: false, error: `MusicBrainz API error: ${mbError.message}`, discography: [] }, 500);
     }
     
-    // ============ HYBRID TWO-PHASE PROCESSING ============
-    // For artists with group memberships (e.g., KRS-One with BDP), we need to ensure
-    // historic group releases aren't cut off by the 50-second timeout.
-    // Strategy: Process oldest group releases FIRST, then continue with newest-first for the rest.
+    // ============ STUDIO ALBUM PRIORITIZATION ============
+    // Ensures canonical studio discography is complete even if timeout occurs.
+    // Strategy: Process ALL studio albums (oldest→newest) FIRST, then other release types.
+    // This prevents missing 2000s classics like Phrenology when groups have large catalogs.
     
     const allReleases = [...rgAlbums, ...rgEps];
     
-    // Separate group releases from solo releases
-    const groupReleases = allReleases.filter((rg: any) => groupArtistIds.has(rg._sourceArtistId));
-    const soloReleases = allReleases.filter((rg: any) => !groupArtistIds.has(rg._sourceArtistId));
+    // Separate studio albums (no secondary types) from other releases
+    const studioAlbums = rgAlbums.filter((rg: any) => {
+      const secondary = rg['secondary-types'] || [];
+      // Studio albums have NO secondary types (not live, remix, compilation, DJ-mix, etc.)
+      return secondary.length === 0;
+    });
     
-    // Get the 10 OLDEST group releases (sorted by date ascending)
-    const MAX_PRIORITIZED_GROUP_RELEASES = 10;
-    const oldestGroupReleases = [...groupReleases]
-      .sort((a, b) => {
-        const dateA = a['first-release-date'] || '9999';
-        const dateB = b['first-release-date'] || '9999';
-        return dateA.localeCompare(dateB); // Oldest first
-      })
-      .slice(0, MAX_PRIORITIZED_GROUP_RELEASES);
+    const otherReleases = [
+      ...rgAlbums.filter((rg: any) => (rg['secondary-types'] || []).length > 0),
+      ...rgEps
+    ];
     
-    const oldestGroupIds = new Set(oldestGroupReleases.map((rg: any) => rg.id));
+    // Sort studio albums chronologically (oldest first) - ensures complete canonical discography
+    studioAlbums.sort((a, b) => {
+      const dateA = a['first-release-date'] || '9999';
+      const dateB = b['first-release-date'] || '9999';
+      return dateA.localeCompare(dateB); // Oldest first
+    });
     
-    if (oldestGroupReleases.length > 0) {
-      console.log(`⏰ Prioritizing ${oldestGroupReleases.length} oldest group releases:`);
-      oldestGroupReleases.forEach((rg: any) => {
-        const groupName = groupMemberships.find(g => g.id === rg._sourceArtistId)?.name || 'Unknown';
-        console.log(`   - "${rg.title}" (${rg['first-release-date'] || 'no date'}) [${groupName}]`);
-      });
-    }
-    
-    // Remaining releases (everything except the prioritized oldest group releases)
-    const remainingReleases = allReleases.filter((rg: any) => !oldestGroupIds.has(rg.id));
-    
-    // Sort remaining releases: newest first (to get current work after historic group albums)
-    remainingReleases.sort((a, b) => {
+    // Sort other releases newest first (recent EPs, live albums prioritized if we have time)
+    otherReleases.sort((a, b) => {
       const dateA = a['first-release-date'] || '0000';
       const dateB = b['first-release-date'] || '0000';
       return dateB.localeCompare(dateA); // Newest first
     });
     
-    // Final order: oldest group releases first, then newest-first for remaining
+    // Final order: ALL studio albums first (chronological), then other releases (newest first)
     const releaseGroups: MusicBrainzReleaseGroup[] = [
-      ...oldestGroupReleases,
-      ...remainingReleases,
+      ...studioAlbums,
+      ...otherReleases,
     ];
 
-    console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name} (${oldestGroupReleases.length} prioritized historic group releases)`);
+    console.log(`Processing ${releaseGroups.length} releases for ${rapper.name}`);
+    console.log(`  - ${studioAlbums.length} studio albums (oldest→newest, processed first)`);
+    console.log(`  - ${otherReleases.length} other releases (EPs, live, compilations - newest first)`);
 
     // Update progress with total count
     await updateProgress({ 
