@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemedCard, ThemedCardContent, ThemedCardHeader, ThemedCardTitle } from "@/components/ui/themed-card";
 import SmallAvatar from "@/components/avatar/SmallAvatar";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
-import { MessageCircle, Vote, Trophy, HelpCircle } from "lucide-react";
+import { MessageCircle, Vote, Trophy, HelpCircle, Medal } from "lucide-react";
 import { Link } from "react-router-dom";
 
 interface TopMembersCardsProps {
@@ -332,7 +332,101 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
     refetchOnWindowFocus: true,
   });
 
-  const MemberCard = ({ 
+  // Top Achievement Earners Query
+  const { data: topAchievers, isLoading: loadingAchievers } = useQuery({
+    queryKey: ['top-achievers', timeRange],
+    queryFn: async () => {
+      console.log('Fetching top achievers for timeRange:', timeRange);
+      
+      if (timeRange === 'week') {
+        // For weekly, count from user_achievements with earned_at filter
+        const { data: achievements, error: achievementsError } = await supabase
+          .from('user_achievements')
+          .select('user_id')
+          .gte('earned_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+        
+        if (achievementsError) throw achievementsError;
+        if (!achievements || achievements.length === 0) return [];
+        
+        // Group by user and count
+        const userAchievementCounts = achievements.reduce((acc: any, achievement: any) => {
+          const userId = achievement.user_id;
+          if (!acc[userId]) acc[userId] = { id: userId, total_achievements: 0 };
+          acc[userId].total_achievements++;
+          return acc;
+        }, {});
+        
+        const memberStats = Object.values(userAchievementCounts)
+          .sort((a: any, b: any) => b.total_achievements - a.total_achievements)
+          .slice(0, 5);
+        
+        const userIds = memberStats.map((stat: any) => stat.id);
+        const { data: profiles } = await supabase
+          .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
+        
+        return memberStats.map((stat: any) => ({
+          id: stat.id,
+          total_achievements: stat.total_achievements,
+          profiles: profiles?.find(p => p.id === stat.id) || null
+        }));
+      }
+      
+      // All-time stats - count from user_achievements table
+      const { data: achievementCounts, error: achievementsError } = await supabase
+        .from('user_achievements')
+        .select('user_id');
+      
+      if (achievementsError) {
+        console.error('Error fetching achievement counts:', achievementsError);
+        throw achievementsError;
+      }
+      
+      if (!achievementCounts || achievementCounts.length === 0) {
+        console.log('No achievements found');
+        return [];
+      }
+      
+      // Group by user and count
+      const userAchievementCounts = achievementCounts.reduce((acc: any, achievement: any) => {
+        const userId = achievement.user_id;
+        if (!acc[userId]) acc[userId] = { id: userId, total_achievements: 0 };
+        acc[userId].total_achievements++;
+        return acc;
+      }, {});
+      
+      const memberStats = Object.values(userAchievementCounts)
+        .sort((a: any, b: any) => b.total_achievements - a.total_achievements)
+        .slice(0, 5);
+      
+      // Get user IDs
+      const userIds = memberStats.map((stat: any) => stat.id);
+      console.log('User IDs for achievers:', userIds);
+      
+      // Fetch profiles for these users using the secure batch function
+      const { data: profiles, error: profilesError } = await supabase
+        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
+      
+      if (profilesError) {
+        console.error('Error fetching profiles for achievers:', profilesError);
+        throw profilesError;
+      }
+      
+      console.log('Profiles found for achievers:', profiles);
+      
+      // Merge the data
+      return memberStats.map((stat: any) => ({
+        id: stat.id,
+        total_achievements: stat.total_achievements,
+        profiles: profiles?.find(p => p.id === stat.id) || null
+      }));
+    },
+    staleTime: 30000,
+    gcTime: 60000,
+    refetchOnMount: true,
+    refetchOnWindowFocus: true,
+  });
+
+  const MemberCard = ({
     title, 
     icon: Icon, 
     data, 
@@ -421,7 +515,7 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
   );
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
       <MemberCard
         title="Top Voters"
         icon={Vote}
@@ -456,6 +550,15 @@ const TopMembersCards = ({ timeRange = 'all' }: TopMembersCardsProps) => {
         isLoading={loadingQuizPlayers}
         metricKey="quiz_questions_answered"
         metricLabel="questions answered"
+      />
+
+      <MemberCard
+        title="🥇 Most Achievements"
+        icon={Medal}
+        data={topAchievers || []}
+        isLoading={loadingAchievers}
+        metricKey="total_achievements"
+        metricLabel="achievements"
       />
     </div>
   );
