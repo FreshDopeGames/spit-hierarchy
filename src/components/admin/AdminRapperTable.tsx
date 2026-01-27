@@ -19,9 +19,10 @@ interface AdminRapperTableProps {
   isLoading: boolean;
   onEdit: (rapper: Rapper) => void;
   onDelete: (id: string) => void;
+  rankingVoteCounts: Record<string, number>;
 }
 
-const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperTableProps) => {
+const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete, rankingVoteCounts }: AdminRapperTableProps) => {
   if (isLoading) {
     return (
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -55,13 +56,13 @@ const AdminRapperTable = ({ rappers, isLoading, onEdit, onDelete }: AdminRapperT
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {rappers.map((rapper) => (
-        <RapperCardWithImage key={rapper.id} rapper={rapper} onEdit={onEdit} onDelete={onDelete} />
+        <RapperCardWithImage key={rapper.id} rapper={rapper} onEdit={onEdit} onDelete={onDelete} rankingVoteCount={rankingVoteCounts[rapper.id] || 0} />
       ))}
     </div>
   );
 };
 
-const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onEdit: (rapper: Rapper) => void; onDelete: (id: string) => void; }) => {
+const RapperCardWithImage = ({ rapper, onEdit, onDelete, rankingVoteCount }: { rapper: Rapper; onEdit: (rapper: Rapper) => void; onDelete: (id: string) => void; rankingVoteCount: number }) => {
   const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge size for admin table
   const birthdate = formatBirthdate(rapper.birth_year, rapper.birth_month, rapper.birth_day);
 
@@ -115,7 +116,7 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete }: { rapper: Rapper; onE
               </span>
             </div>
             <ThemedBadge variant="ghost" className="text-xs">
-              {rapper.total_votes || 0} votes
+              {rankingVoteCount} ranking {rankingVoteCount === 1 ? 'vote' : 'votes'}
             </ThemedBadge>
           </div>
 
