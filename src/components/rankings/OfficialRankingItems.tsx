@@ -1,6 +1,7 @@
 
 import React, { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { RankingItemWithDelta } from "@/hooks/useRankingData";
 import { useRapperImages } from "@/hooks/useImageStyle";
 import RankingItemCard from "./RankingItemCard";
@@ -91,18 +92,34 @@ const OfficialRankingItems = ({
       </div>
 
       {/* Ranking Items */}
-      {displayedItems.map((item) => (
-        <RankingItemCard
-          key={item.id}
-          item={item}
-          onVote={onVote}
-          userLoggedIn={userLoggedIn}
-          hotThreshold={hotThreshold}
-          rankingId={rankingId}
-          userRankingId={userRankingId}
-          rapperImageUrl={rapperImages[item.rapper?.id]}
-        />
-      ))}
+      <AnimatePresence mode="popLayout">
+        {displayedItems.map((item) => (
+          <motion.div
+            key={item.id}
+            layout
+            layoutId={item.id}
+            initial={false}
+            animate={{ 
+              opacity: 1,
+              scale: (item as any).justMoved ? [1, 1.02, 1] : 1
+            }}
+            transition={{ 
+              layout: { type: "spring", stiffness: 400, damping: 35 },
+              scale: { duration: 0.4, ease: "easeOut" }
+            }}
+          >
+            <RankingItemCard
+              item={item}
+              onVote={onVote}
+              userLoggedIn={userLoggedIn}
+              hotThreshold={hotThreshold}
+              rankingId={rankingId}
+              userRankingId={userRankingId}
+              rapperImageUrl={rapperImages[item.rapper?.id]}
+            />
+          </motion.div>
+        ))}
+      </AnimatePresence>
 
       {/* Show message if no items to display */}
       {displayedItems.length === 0 && !loading && (
