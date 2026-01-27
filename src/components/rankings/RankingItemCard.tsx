@@ -29,6 +29,7 @@ const RankingItemCard = ({
   const isHot = item.ranking_votes >= hotThreshold;
   const voteVelocity = isHot ? Math.floor(Math.random() * 15) + 5 : 0;
   const isPending = (item as any).isPending || false;
+  const justMoved = (item as any).justMoved || false;
   const isTopFive = (item as any).display_index <= 5;
 
   const getCardStyling = () => {
@@ -75,7 +76,9 @@ const RankingItemCard = ({
 
   return (
     <div className={`flex ${getLayout()} ${getCardHeight()} border transition-all duration-300 relative ${getCardStyling()} ${
-      isPending ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
+      justMoved ? 'ring-2 ring-rap-gold/70 shadow-lg shadow-rap-gold/30' : ''
+    } ${
+      isPending && !justMoved ? 'ring-2 ring-yellow-500/50 bg-yellow-500/10' : ''
     } overflow-hidden ${getContainerRadius()}`}>
       {/* Position Cap - Pass vote count and visual rank */}
       <RankingItemPositionCap 

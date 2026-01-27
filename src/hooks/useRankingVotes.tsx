@@ -5,7 +5,7 @@ import { useMemberStatus } from "@/hooks/useMemberStatus";
 import { toast } from "sonner";
 import { VoteSubmissionParams } from "./ranking-votes/types";
 import { submitVote } from "./ranking-votes/voteSubmission";
-import { applyOptimisticUpdate, clearPendingStates, invalidateRelatedQueries } from "./ranking-votes/optimisticUpdates";
+import { applyOptimisticUpdate, clearPendingStates, clearJustMovedStates, invalidateRelatedQueries } from "./ranking-votes/optimisticUpdates";
 
 export const useRankingVotes = () => {
   const { user } = useAuth();
@@ -38,8 +38,11 @@ export const useRankingVotes = () => {
         id: 'vote-submission'
       });
       
-      // Apply optimistic update
+      // Apply optimistic update with immediate re-sorting
       applyOptimisticUpdate(queryClient, rankingId, rapperId, voteWeight);
+      
+      // Clear the justMoved glow after animation completes
+      clearJustMovedStates(queryClient, rankingId);
       
       return { voteWeight, rankingId, rapperId };
     },

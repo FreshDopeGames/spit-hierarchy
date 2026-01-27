@@ -28,7 +28,7 @@ export interface RankingItemWithDelta {
 // Memoized function to calculate visual ranks based on vote counts
 // This is expensive and should only recalculate when items actually change
 // Sort items by votes (descending), then by position (for tie-breaking), then alphabetically
-const sortItemsByVotes = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
+export const sortItemsByVotes = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
   return [...items].sort((a, b) => {
     // Primary: most votes first
     if (b.ranking_votes !== a.ranking_votes) {
@@ -43,7 +43,7 @@ const sortItemsByVotes = (items: RankingItemWithDelta[]): RankingItemWithDelta[]
   });
 };
 
-const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
+export const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
   // Items should already be sorted by votes before this function is called
   let currentVisualRank = 1;
   let previousVoteCount = -1;
