@@ -203,8 +203,7 @@ const QuizQuestion: React.FC<QuizQuestionProps> = ({
             
             <ThemedButton
               onClick={handleNext}
-              className="w-full"
-              variant="gradient"
+              className="w-full !bg-[hsl(var(--theme-primary))] !text-black hover:!bg-[hsl(var(--theme-primary))]/90"
             >
               {questionNumber < totalQuestions ? 'Next Question' : 'See Results'}
             </ThemedButton>
