@@ -27,19 +27,28 @@ export interface RankingItemWithDelta {
 
 // Memoized function to calculate visual ranks based on vote counts
 // This is expensive and should only recalculate when items actually change
-const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
-  // Sort by vote count descending, then by position (which now uses earliest vote for tie-breaking)
-  const sortedItems = [...items].sort((a, b) => {
+// Sort items by votes (descending), then by position (for tie-breaking), then alphabetically
+const sortItemsByVotes = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
+  return [...items].sort((a, b) => {
+    // Primary: most votes first
     if (b.ranking_votes !== a.ranking_votes) {
       return b.ranking_votes - a.ranking_votes;
     }
-    return a.position - b.position; // Use database position for tie-breaking order
+    // Secondary: earliest vote (lower position) first for items with same votes
+    if (a.position !== b.position) {
+      return a.position - b.position;
+    }
+    // Tertiary: alphabetically by name for 0-vote rappers
+    return (a.rapper?.name || '').localeCompare(b.rapper?.name || '');
   });
+};
 
+const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDelta[] => {
+  // Items should already be sorted by votes before this function is called
   let currentVisualRank = 1;
   let previousVoteCount = -1;
 
-  return sortedItems.map((item, index) => {
+  return items.map((item, index) => {
     if (item.ranking_votes === 0) {
       // Rappers with 0 votes get null visual rank (will display as "–")
       return { ...item, visual_rank: null };
@@ -53,7 +62,8 @@ const calculateVisualRanks = (items: RankingItemWithDelta[]): RankingItemWithDel
     // Same vote count as previous - keep same visual rank (no else needed)
 
     return { ...item, visual_rank: currentVisualRank };
-  }).sort((a, b) => a.position - b.position); // Return to original database order
+  });
+  // No longer re-sorting back to database order - we want vote-based order
 };
 
 // Create a stable cache key from items to enable memoization
@@ -130,10 +140,11 @@ export const useRankingData = (rankingId: string) => {
         })
       );
 
-      // Calculate visual ranks for items with tied vote counts
-      const itemsWithVisualRanks = calculateVisualRanks(itemsWithVotesAndDeltas);
+      // Sort items by votes first, then calculate visual ranks
+      const sortedItems = sortItemsByVotes(itemsWithVotesAndDeltas);
+      const itemsWithVisualRanks = calculateVisualRanks(sortedItems);
 
-      // Add display_index based on the current sort order (by position)
+      // Add display_index based on the sorted order (by votes)
       const itemsWithDisplayIndex = itemsWithVisualRanks.map((item, index) => ({
         ...item,
         display_index: index + 1 // 1-based display order for premium styling
