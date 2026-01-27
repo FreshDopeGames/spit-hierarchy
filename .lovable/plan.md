@@ -1,171 +1,184 @@
 
-# Fix Official Ranking Card Top 5 Images
+# Replace "View Ranking" with Rapper Count on Ranking Cards
 
-## Problem
+## Overview
 
-The Ranking Cards for official rankings (Best 80s, 90s, etc.) currently display the top 5 rappers based on **database position** (alphabetical order) instead of the **actual vote-based ranking** shown on the detail pages.
+Replace the "View Ranking" call-to-action in the bottom right corner of ranking cards with a count of how many rappers are in the ranking. This gives users a snapshot of the ranking size before clicking.
 
-| 80s Ranking Card Shows (Wrong) | Detail Page Shows (Correct) |
-|------------------------------|---------------------------|
-| 1. Beastie Boys (0 votes) | 1. De La Soul (8 votes) |
-| 2. Big Daddy Kane | 2. LL Cool J (6 votes) |
-| 3. De La Soul | 3. Big Daddy Kane (5 votes) |
-| 4. EPMD | 4. MC Lyte (5 votes) |
-| 5. Ice-T | 5. Run-D.M.C. (5 votes) |
-
-## Root Cause Analysis
-
-```text
-┌─────────────────────────────────────────────────────────────────┐
-│                    CURRENT FLOW (BROKEN)                        │
-├─────────────────────────────────────────────────────────────────┤
-│  useRankingsData.ts                                             │
-│     ↓                                                           │
-│  SELECT * FROM ranking_items                                    │
-│  ORDER BY position  ← alphabetical, not vote-based              │
-│  LIMIT 5                                                        │
-│     ↓                                                           │
-│  RankingCard receives items with wrong order                    │
-│     ↓                                                           │
-│  Card displays Beastie Boys, Big Daddy Kane... (wrong!)         │
-└─────────────────────────────────────────────────────────────────┘
-```
-
-The detail page (`useRankingData.tsx`) correctly sorts by votes using `sortItemsByVotes()`, but this logic isn't used for the ranking cards.
-
-## Solution
-
-Create an RPC function that returns the top 5 items sorted by actual votes, and use it for official ranking cards.
+| Current State | New State |
+|--------------|-----------|
+| "View Ranking" with Award icon | "299 Rappers" with Users icon |
 
 ---
 
 ## Implementation Steps
 
-### Step 1: Create RPC Function `get_official_ranking_preview_items`
+### Step 1: Add `totalRappers` Field to Types
 
-**File:** New SQL migration
+**File:** `src/types/rankings.ts`
 
-This function returns the top 5 ranking items sorted by:
-1. Total vote weight (descending)
-2. Database position (ascending) for tie-breaking
-3. Alphabetically by name for 0-vote rappers
+Add `totalRappers` to both interfaces:
 
-```sql
-CREATE OR REPLACE FUNCTION get_official_ranking_preview_items(
-  ranking_uuid UUID,
-  item_limit INTEGER DEFAULT 5
-)
-RETURNS TABLE(
-  id UUID,
-  item_position INTEGER,
-  reason TEXT,
-  is_ranked BOOLEAN,
-  rapper_id UUID,
-  rapper_name TEXT,
-  rapper_image_url TEXT,
-  rapper_slug TEXT,
-  ranking_votes BIGINT
-)
-LANGUAGE sql
-SECURITY DEFINER
-SET search_path = public
-AS $$
-  SELECT
-    ri.id,
-    ri.position AS item_position,
-    ri.reason,
-    ri.is_ranked,
-    r.id AS rapper_id,
-    r.name AS rapper_name,
-    r.image_url AS rapper_image_url,
-    r.slug AS rapper_slug,
-    COALESCE(rvc.total_vote_weight, 0) AS ranking_votes
-  FROM ranking_items ri
-  JOIN rappers r ON r.id = ri.rapper_id
-  LEFT JOIN ranking_vote_counts rvc 
-    ON rvc.rapper_id = ri.rapper_id 
-    AND rvc.ranking_id = ri.ranking_id
-  WHERE ri.ranking_id = ranking_uuid
-  ORDER BY
-    COALESCE(rvc.total_vote_weight, 0) DESC,
-    ri.position ASC,
-    r.name ASC
-  LIMIT item_limit;
-$$;
+```typescript
+// In RankingWithItems interface (line 9-11)
+export interface RankingWithItems extends OfficialRanking {
+  items: RankingItem[];
+  totalRappers?: number;  // Add this
+}
+
+// In UnifiedRanking interface (line 14-38)
+export interface UnifiedRanking {
+  // ... existing fields ...
+  totalVotes: number;
+  totalRappers: number;  // Add this new field
+  isOfficial: boolean;
+  // ...
+}
 ```
 
-### Step 2: Update `useRankingsData.ts` to Use the RPC
+### Step 2: Fetch Total Rapper Count in `useRankingsData.ts`
 
 **File:** `src/hooks/useRankingsData.ts`
 
-Replace the direct query with the RPC call:
+Add a count query for each ranking alongside the existing vote count query:
 
 ```typescript
-// Before (broken - returns alphabetical order):
-const { data: itemsData } = await supabase
+// After fetching itemsData and formattedItems, add:
+
+// Get total rapper count for this ranking
+const { count: totalRappers } = await supabase
   .from("ranking_items")
-  .select(`*, rapper:rappers(*)`)
-  .eq("ranking_id", ranking.id)
-  .order("position")
-  .limit(5);
-
-// After (fixed - returns vote-based order):
-const { data: itemsData } = await supabase.rpc(
-  'get_official_ranking_preview_items',
-  { ranking_uuid: ranking.id, item_limit: 5 }
-);
-```
-
-### Step 3: Update Transform to Handle RPC Response Format
-
-**File:** `src/hooks/useRankingsData.ts`
-
-The RPC returns a flat structure, so we need to reshape it to match the expected format:
-
-```typescript
-// Transform RPC response to match existing format
-const formattedItems = (itemsData || []).map((item: any) => ({
-  id: item.id,
-  position: item.item_position,
-  reason: item.reason,
-  is_ranked: item.is_ranked,
-  ranking_votes: item.ranking_votes,
-  rapper: {
-    id: item.rapper_id,
-    name: item.rapper_name,
-    image_url: item.rapper_image_url,
-    slug: item.rapper_slug
-  }
-}));
+  .select("*", { count: "exact", head: true })
+  .eq("ranking_id", ranking.id);
 
 return { 
   ...ranking, 
   items: formattedItems,
-  totalVotes: voteCount || 0
+  totalVotes: voteCount || 0,
+  totalRappers: totalRappers || 0  // Add this
 };
 ```
 
-### Step 4: Update `transformOfficialRankings` to Preserve Vote-Based Order
+### Step 3: Update `transformOfficialRankings` to Pass Through Count
 
 **File:** `src/utils/rankingTransformers.ts`
 
-The items are now pre-sorted by votes, so we use array index for rank instead of `item.position`:
+Add `totalRappers` to the transformed ranking object:
 
 ```typescript
-// Before (used alphabetical position):
-rappers: (ranking.items || []).map(item => ({
-  rank: item.position || 0,  // ← position is alphabetical!
-  ...
-})),
+// In transformOfficialRankings function
+return {
+  id: ranking.id,
+  title: ranking.title || "Untitled Ranking",
+  // ... existing fields ...
+  totalVotes,
+  totalRappers: ranking.totalRappers || ranking.items?.length || 0,  // Add this
+  isOfficial: true,
+  // ...
+};
+```
 
-// After (use array index to preserve vote-based order):
-rappers: (ranking.items || []).map((item, index) => ({
-  rank: index + 1,  // ← preserve RPC's vote-based order
-  name: item.rapper?.name || "Unknown",
-  reason: item.reason || "",
-  id: item.rapper?.id || "",
-  image_url: item.rapper?.image_url || undefined
-})),
+### Step 4: Update `RankingCard.tsx` - Replace "View Ranking" with Rapper Count
+
+**File:** `src/components/rankings/RankingCard.tsx`
+
+Replace the "View Ranking" CTA (lines 236-249) with a rapper count display:
+
+```tsx
+// Before (lines 236-249):
+{/* View Ranking CTA */}
+<div className="flex items-center gap-1 ...">
+  <Award className="w-4 h-4" />
+  <span>View Ranking</span>
+</div>
+
+// After:
+{/* Rapper Count */}
+<div
+  className="flex items-center gap-1 text-xs sm:text-sm"
+  style={{
+    color: "var(--theme-element-ranking_card_stats-color, #BFBFBF)",
+    fontSize: "var(--theme-element-ranking_card_stats-font-size, 0.75rem)",
+    fontWeight: "var(--theme-element-ranking_card_stats-font-weight, 400)",
+    lineHeight: "var(--theme-element-ranking_card_stats-line-height, 1.25)",
+  }}
+>
+  <Users className="w-4 h-4" />
+  <span>{(ranking.totalRappers || ranking.rappers.length).toLocaleString()} Rappers</span>
+</div>
+```
+
+### Step 5: Update `RankingPreviewCard.tsx` - Replace "View Ranking" with Rapper Count
+
+**File:** `src/components/RankingPreviewCard.tsx`
+
+First, add `totalRappers` to the props interface:
+
+```typescript
+interface RankingPreviewCardProps {
+  ranking: OfficialRanking;
+  items: RankingItem[];
+  totalVotes?: number;
+  totalRappers?: number;  // Add this
+  priority?: boolean;
+}
+```
+
+Then replace the "View Ranking" CTA (lines 218-231):
+
+```tsx
+// Before (lines 218-231):
+{/* View Ranking CTA */}
+<div className="flex items-center gap-1 ...">
+  <Award className="w-4 h-4" />
+  <span>View Ranking</span>
+</div>
+
+// After:
+{/* Rapper Count */}
+<div 
+  className="flex items-center gap-1 text-xs sm:text-sm"
+  style={{
+    color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
+    fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
+    fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
+    lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
+  }}
+>
+  <Users className="w-4 h-4" />
+  <span>{(totalRappers || items.length).toLocaleString()} Rappers</span>
+</div>
+```
+
+### Step 6: Update `HomepageRankingSection.tsx` to Pass `totalRappers`
+
+**File:** `src/components/HomepageRankingSection.tsx`
+
+Add a count query in the data fetching and pass it to `RankingPreviewCard`:
+
+```typescript
+// In the Promise.all map, add rapper count query:
+const { count: totalRappers } = await supabase
+  .from("ranking_items")
+  .select("*", { count: "exact", head: true })
+  .eq("ranking_id", ranking.id);
+
+return {
+  ...ranking,
+  items: processedItems,
+  totalVotes: totalVotes || 0,
+  totalRappers: totalRappers || 0  // Add this
+};
+
+// Then update the RankingPreviewCard component call:
+<RankingPreviewCard 
+  key={ranking.id} 
+  ranking={ranking} 
+  items={ranking.items} 
+  totalVotes={ranking.totalVotes}
+  totalRappers={ranking.totalRappers}  // Add this
+  priority={index === 0} 
+/>
 ```
 
 ---
@@ -174,25 +187,34 @@ rappers: (ranking.items || []).map((item, index) => ({
 
 | File | Changes |
 |------|---------|
-| New SQL migration | Create `get_official_ranking_preview_items` RPC function |
-| `src/hooks/useRankingsData.ts` | Use RPC instead of direct query, format response |
-| `src/utils/rankingTransformers.ts` | Use array index for rank to preserve vote order |
+| `src/types/rankings.ts` | Add `totalRappers` field to `RankingWithItems` and `UnifiedRanking` |
+| `src/hooks/useRankingsData.ts` | Fetch total rapper count for each ranking |
+| `src/utils/rankingTransformers.ts` | Pass through `totalRappers` in transform function |
+| `src/components/rankings/RankingCard.tsx` | Replace "View Ranking" with rapper count, use `Users` icon |
+| `src/components/RankingPreviewCard.tsx` | Add `totalRappers` prop, replace "View Ranking" with rapper count |
+| `src/components/HomepageRankingSection.tsx` | Fetch and pass `totalRappers` to preview cards |
 
 ---
 
 ## Expected Result
 
 After implementation:
-- **80s Ranking Card** will show: De La Soul, LL Cool J, Big Daddy Kane, MC Lyte, Run-D.M.C.
-- **90s Ranking Card** will show the top 5 by votes (2Pac, etc.)
-- All other era rankings will display their actual top 5 voters
-- The mosaic images will match what users see when they click into the ranking
+
+**Rankings Page Cards:**
+- Left side: "1,234 Votes" with TrendingUp icon
+- Right side: "299 Rappers" with Users icon
+
+**Homepage Preview Cards:**
+- Left side: "1,234 Votes" with TrendingUp icon  
+- Right side: "35 Rappers" with Users icon (varies per ranking)
+
+Users will immediately see the scale of each ranking before clicking, helping them understand what they're getting into (e.g., "Best Groups" has 35 rappers vs "Greatest Of All Time" has 299).
 
 ---
 
 ## Technical Notes
 
-- The RPC uses the same sorting logic as `sortItemsByVotes()` in `useRankingData.tsx`
-- The `ranking_vote_counts` view aggregates votes per rapper per ranking
-- Using `LEFT JOIN` ensures rappers with 0 votes are still included
-- The `SECURITY DEFINER` ensures the function runs with proper permissions
+- The `Users` icon is already imported in both card components but unused
+- The `Award` icon import can be removed after this change
+- Uses the same styling as the "Votes" stat for visual consistency
+- Fallback to `items.length` or `rappers.length` if `totalRappers` is not available
