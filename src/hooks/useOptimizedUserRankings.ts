@@ -86,21 +86,20 @@ export const useOptimizedUserRankings = ({
       // Get preview items for each ranking using the RPC function
       const rankingsWithItems = await Promise.all(
         data.map(async (ranking) => {
-          const { data: items } = await supabase.rpc(
-            'get_user_ranking_preview_items',
-            { ranking_uuid: ranking.id, item_limit: 5 }
-          );
-
-          // Get vote count for community ranking
-          const { data: voteCount } = await supabase
-            .rpc('get_user_ranking_vote_count', { ranking_uuid: ranking.id });
+          // Fetch preview items, vote count, and total rapper count in parallel
+          const [itemsResult, voteCountResult, totalRappersResult] = await Promise.all([
+            supabase.rpc('get_user_ranking_preview_items', { ranking_uuid: ranking.id, item_limit: 5 }),
+            supabase.rpc('get_user_ranking_vote_count', { ranking_uuid: ranking.id }),
+            supabase.from("user_ranking_items").select("*", { count: "exact", head: true }).eq("ranking_id", ranking.id)
+          ]);
 
           const userProfile = profilesMap.get(ranking.user_id);
 
           return {
             ...ranking,
-            preview_items: items || [],
-            totalVotes: voteCount || 0,
+            preview_items: itemsResult.data || [],
+            totalVotes: voteCountResult.data || 0,
+            totalRappers: totalRappersResult.count || 0,
             profiles: userProfile ? { username: userProfile.username } : null
           };
         })
