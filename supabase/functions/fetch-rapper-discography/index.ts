@@ -22,6 +22,7 @@ interface MusicBrainzArtist {
     type?: string;
     label?: { id: string; name: string };
     url?: { resource: string };
+    artist?: { id: string; name: string }; // For artist-rels (group memberships)
     begin?: string;
     end?: string;
   }>;
@@ -346,8 +347,8 @@ serve(async (req) => {
       return json({ success: false, error: 'Artist not found on MusicBrainz', discography: [] }, 404);
     }
 
-// Fetch artist details (labels, lifespan, and URLs via relations)
-    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels+url-rels&fmt=json`);
+// Fetch artist details (labels, lifespan, URLs, and group memberships via relations)
+    const artistData = await mbJson<MusicBrainzArtist>(`https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels+url-rels+artist-rels&fmt=json`);
 
     // Store birth_year (for solo) or formation year (for groups) from life-span.begin
     const birthYear = artistData['life-span']?.begin ? parseInt(artistData['life-span'].begin.substring(0, 4)) : null;
@@ -454,15 +455,39 @@ serve(async (req) => {
       console.log(`✓ Updated rapper ${rapper.name} with discography_last_updated and metadata`);
     }
 
+// Extract group memberships from artist relations (e.g., "Will Smith" → "DJ Jazzy Jeff & The Fresh Prince")
+    const groupMemberships: Array<{ id: string; name: string }> = [];
+    const artistRels = (artistData.relations || []).filter(r => r['target-type'] === 'artist');
+    
+    for (const rel of artistRels) {
+      // "member of band" relationship indicates group membership
+      if (rel.type === 'member of band' && rel.artist?.id && rel.artist?.name) {
+        console.log(`🎤 Found group membership: ${rel.artist.name} (${rel.artist.id})`);
+        groupMemberships.push({ id: rel.artist.id, name: rel.artist.name });
+      }
+    }
+    
+    console.log(`Found ${groupMemberships.length} group memberships for ${rapper.name}`);
+
+    // Deduplication helper - prevents duplicate albums when same release appears under multiple artists
+    const deduplicateById = (items: any[]): any[] => {
+      const seen = new Set<string>();
+      return items.filter(item => {
+        if (seen.has(item.id)) return false;
+        seen.add(item.id);
+        return true;
+      });
+    };
+
 // Fetch all albums and EPs with pagination (no 100-item limit)
-    const fetchAllReleaseGroups = async (type: 'album' | 'ep') => {
+    const fetchAllReleaseGroups = async (type: 'album' | 'ep', artistId: string = musicbrainzId) => {
       let offset = 0;
       const limit = 100;
       let allReleases: any[] = [];
       
       while (true) {
         const response = await mbJson<any>(
-          `https://musicbrainz.org/ws/2/release-group?artist=${musicbrainzId}&type=${type}&fmt=json&limit=${limit}&offset=${offset}`
+          `https://musicbrainz.org/ws/2/release-group?artist=${artistId}&type=${type}&fmt=json&limit=${limit}&offset=${offset}`
         );
         const releases = response['release-groups'] || [];
         allReleases.push(...releases);
@@ -475,13 +500,42 @@ serve(async (req) => {
       return allReleases;
     };
 
+    // Fetch releases from both the solo artist AND any groups they're a member of
+    const allArtistIds = [musicbrainzId, ...groupMemberships.map(g => g.id)];
+    
     let rgAlbums: any[] = [];
     let rgEps: any[] = [];
     
     try {
-      rgAlbums = await fetchAllReleaseGroups('album');
-      await delay(1100);
-      rgEps = await fetchAllReleaseGroups('ep');
+      for (const artistId of allArtistIds) {
+        const isGroup = artistId !== musicbrainzId;
+        if (isGroup) {
+          const groupName = groupMemberships.find(g => g.id === artistId)?.name;
+          console.log(`📀 Fetching discography for group: ${groupName}`);
+        }
+        
+        const albums = await fetchAllReleaseGroups('album', artistId);
+        await delay(1100);
+        const eps = await fetchAllReleaseGroups('ep', artistId);
+        
+        rgAlbums.push(...albums);
+        rgEps.push(...eps);
+        
+        // Rate limit between artist queries (except after last artist)
+        if (artistId !== allArtistIds[allArtistIds.length - 1]) {
+          await delay(1100);
+        }
+      }
+      
+      // Deduplicate by release group ID (in case same album appears under multiple artists)
+      const albumCountBefore = rgAlbums.length;
+      const epCountBefore = rgEps.length;
+      rgAlbums = deduplicateById(rgAlbums);
+      rgEps = deduplicateById(rgEps);
+      
+      if (albumCountBefore !== rgAlbums.length || epCountBefore !== rgEps.length) {
+        console.log(`🔄 Deduplicated: ${albumCountBefore} → ${rgAlbums.length} albums, ${epCountBefore} → ${rgEps.length} EPs`);
+      }
     } catch (mbError: any) {
       console.error('MusicBrainz API error:', mbError);
       
