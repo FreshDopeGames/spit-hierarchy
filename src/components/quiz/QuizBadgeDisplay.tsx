@@ -117,7 +117,7 @@ const QuizBadgeDisplay: React.FC<QuizBadgeDisplayProps> = ({
                 className={cn(
                   "relative min-h-[120px] rounded-xl border-2 flex flex-col items-center justify-center p-3 sm:p-4 transition-all duration-200",
                   isEarned 
-                    ? cn(getRarityColor(badge.rarity), getRarityGlow(badge.rarity))
+                    ? "bg-[hsl(var(--theme-primary))] border-black"
                     : "border-border/50 bg-black/20 opacity-60"
                 )}
               >
@@ -127,12 +127,12 @@ const QuizBadgeDisplay: React.FC<QuizBadgeDisplayProps> = ({
                 
                 <IconComponent className={cn(
                   "w-7 h-7 sm:w-8 sm:h-8 mb-2",
-                  isEarned ? "" : "text-muted-foreground"
+                  isEarned ? "text-black" : "text-muted-foreground"
                 )} />
                 
                 <span className={cn(
                   "text-xs sm:text-sm text-center font-[var(--theme-font-heading)] leading-tight line-clamp-2",
-                  !isEarned && "text-muted-foreground"
+                  isEarned ? "text-black" : "text-muted-foreground"
                 )}>
                   {badge.name}
                 </span>
