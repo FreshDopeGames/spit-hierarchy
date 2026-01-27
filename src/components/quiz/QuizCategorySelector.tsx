@@ -1,6 +1,8 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { User, Disc, MapPin, Calendar, Layers, Cake, UserCheck, Library, AtSign } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
+import { supabase } from '@/integrations/supabase/client';
 import type { QuizCategory } from '@/hooks/useQuiz';
 
 interface QuizCategorySelectorProps {
@@ -29,39 +31,76 @@ const QuizCategorySelector: React.FC<QuizCategorySelectorProps> = ({
   selectedCategory,
   onCategoryChange,
 }) => {
+  // Fetch question counts per category
+  const { data: categoryCounts } = useQuery({
+    queryKey: ['quiz-category-counts'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('quiz_questions')
+        .select('category')
+        .eq('is_active', true);
+      
+      if (error) throw error;
+      
+      // Count questions per category
+      const counts: Record<string, number> = {};
+      let total = 0;
+      data?.forEach((q) => {
+        counts[q.category] = (counts[q.category] || 0) + 1;
+        total++;
+      });
+      counts['all'] = total;
+      
+      return counts;
+    },
+    staleTime: 60000, // Cache for 1 minute
+  });
+
   return (
     <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7 gap-3">
-      {categories.map(({ value, label, icon: Icon, description }) => (
-        <button
-          key={value}
-          onClick={() => onCategoryChange(value)}
-          className={cn(
-            "flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200",
-            "hover:border-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/5",
-            selectedCategory === value
-              ? "border-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-primary))]/10"
-              : "border-border bg-black/30"
-          )}
-        >
-          <Icon className={cn(
-            "w-6 h-6 mb-2",
-            selectedCategory === value 
-              ? "text-[hsl(var(--theme-primary))]" 
-              : "text-muted-foreground"
-          )} />
-          <span className={cn(
-            "text-sm font-[var(--theme-font-heading)] text-center",
-            selectedCategory === value 
-              ? "text-[hsl(var(--theme-primary))]" 
-              : "text-foreground"
-          )}>
-            {label}
-          </span>
-          <span className="text-xs text-muted-foreground text-center mt-1 hidden sm:block">
-            {description}
-          </span>
-        </button>
-      ))}
+      {categories.map(({ value, label, icon: Icon, description }) => {
+        const count = categoryCounts?.[value] || 0;
+        
+        return (
+          <button
+            key={value}
+            onClick={() => onCategoryChange(value)}
+            className={cn(
+              "flex flex-col items-center p-4 rounded-xl border-2 transition-all duration-200",
+              "hover:border-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/5",
+              selectedCategory === value
+                ? "border-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-primary))]/10"
+                : "border-border bg-black/30"
+            )}
+          >
+            <Icon className={cn(
+              "w-6 h-6 mb-2",
+              selectedCategory === value 
+                ? "text-[hsl(var(--theme-primary))]" 
+                : "text-muted-foreground"
+            )} />
+            <span className={cn(
+              "text-sm font-[var(--theme-font-heading)] text-center",
+              selectedCategory === value 
+                ? "text-[hsl(var(--theme-primary))]" 
+                : "text-foreground"
+            )}>
+              {label}
+            </span>
+            <span className="text-xs text-muted-foreground text-center mt-1 hidden sm:block">
+              {description}
+            </span>
+            <span className={cn(
+              "text-xs font-medium mt-2",
+              selectedCategory === value 
+                ? "text-[hsl(var(--theme-primary))]" 
+                : "text-muted-foreground"
+            )}>
+              {count} questions
+            </span>
+          </button>
+        );
+      })}
     </div>
   );
 };
