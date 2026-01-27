@@ -14,6 +14,7 @@ type RankingItem = Tables<"ranking_items"> & {
 interface RankingWithItems extends OfficialRanking {
   items: RankingItem[];
   totalVotes: number;
+  totalRappers: number;
 }
 const HomepageRankingSection = () => {
   const {
@@ -59,7 +60,8 @@ const HomepageRankingSection = () => {
           return {
             ...ranking,
             items: [],
-            totalVotes: 0
+            totalVotes: 0,
+            totalRappers: 0
           };
         }
 
@@ -69,6 +71,15 @@ const HomepageRankingSection = () => {
         } = await supabase.from("ranking_votes").select("*", {
           count: "exact"
         }).eq("ranking_id", ranking.id);
+
+        // Get total rapper count for this ranking
+        const {
+          count: totalRappers
+        } = await supabase.from("ranking_items").select("*", {
+          count: "exact",
+          head: true
+        }).eq("ranking_id", ranking.id);
+
         const processedItems = (itemsData || []).map(item => ({
           rapper: item.rapper,
           position: item.position,
@@ -77,7 +88,8 @@ const HomepageRankingSection = () => {
         return {
           ...ranking,
           items: processedItems,
-          totalVotes: totalVotes || 0
+          totalVotes: totalVotes || 0,
+          totalRappers: totalRappers || 0
         };
       }));
       return rankingsWithItems;
@@ -125,7 +137,7 @@ const HomepageRankingSection = () => {
       <ContentAdUnit size="medium" className="mb-8" />
       
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-        {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} priority={index === 0} />)}
+        {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} totalRappers={ranking.totalRappers} priority={index === 0} />)}
       </div>
       
       {/* All Rankings Button - Centered */}

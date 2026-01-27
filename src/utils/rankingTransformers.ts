@@ -51,6 +51,7 @@ export const transformOfficialRankings = (rankings: (RankingWithItems & { totalV
       likes: 0, // Remove fake likes
       views: 0, // Set to 0 until we implement view tracking
       totalVotes,
+      totalRappers: ranking.totalRappers || ranking.items?.length || 0,
       isOfficial: true,
       tags: ["Official", ranking.category || "General"].filter(Boolean),
       slug: ranking.slug || `official-${ranking.id}`,
@@ -96,6 +97,7 @@ export const transformUserRankings = async (userRankingData: any): Promise<Unifi
       likes: 0, // Remove fake likes
       views: 0, // Set to 0 until we implement view tracking
       totalVotes,
+      totalRappers: ranking.preview_items?.length || 0,
       isOfficial: false,
       tags: ["Community", ranking.category || "General"].filter(Boolean),
       category: ranking.category || "General",

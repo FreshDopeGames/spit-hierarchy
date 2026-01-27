@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, Users, Award, User } from "lucide-react";
+import { TrendingUp, Users, User } from "lucide-react";
 import { UnifiedRanking } from "@/types/rankings";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import EnhancedImage from "@/components/ui/EnhancedImage";
@@ -233,19 +233,18 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
               <span>{(ranking.totalVotes || 0).toLocaleString()} Votes</span>
             </div>
 
-            {/* View Ranking CTA */}
+            {/* Rapper Count */}
             <div
-              className="flex items-center gap-1 text-xs sm:text-sm transition-colors duration-300 group-hover:opacity-80"
+              className="flex items-center gap-1 text-xs sm:text-sm"
               style={{
-                color: "hsl(var(--theme-primary))",
-                fontFamily: "var(--theme-font-body)",
-                fontSize: "var(--theme-element-ranking_card_cta-font-size, 0.75rem)",
-                fontWeight: "var(--theme-element-ranking_card_cta-font-weight, 500)",
-                lineHeight: "var(--theme-element-ranking_card_cta-line-height, 1.25)",
+                color: "var(--theme-element-ranking_card_stats-color, #BFBFBF)",
+                fontSize: "var(--theme-element-ranking_card_stats-font-size, 0.75rem)",
+                fontWeight: "var(--theme-element-ranking_card_stats-font-weight, 400)",
+                lineHeight: "var(--theme-element-ranking_card_stats-line-height, 1.25)",
               }}
             >
-              <Award className="w-4 h-4" />
-              <span>View Ranking</span>
+              <Users className="w-4 h-4" />
+              <span>{(ranking.totalRappers || ranking.rappers.length).toLocaleString()} Rappers</span>
             </div>
           </div>
         </div>
