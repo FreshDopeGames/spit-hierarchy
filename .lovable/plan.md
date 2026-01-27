@@ -1,31 +1,129 @@
 
-# Fix "Storytelling" Label Cutoff on Artistry Radar Chart
+# Clean Up Eve's Record Label Associations
 
 ## Problem
 
-The "Storytelling" skill label on the Artistry radar chart is being cut off on the left edge on desktop. This happens because the chart's left margin (currently 60px) isn't providing enough space for the full label width when it's positioned with `textAnchor="end"`.
+Eve currently has record labels from the **wrong Eve** (Japanese artist) mixed with some correct ones. The database shows:
+
+| Label | Status | Verdict |
+|-------|--------|---------|
+| Aftermath Entertainment (1998) | ❌ Ended 1998 | ✅ Keep - correct, but she was briefly signed |
+| TOY'S FACTORY (2019-current) | ✅ Current | ❌ Remove - Japanese label |
+| harapeco records | ✅ Current | ❌ Remove - Japanese label |
+| factoryS | ✅ Current | ❌ Remove - Japanese label |
+| Erving Wonder | ✅ Current | ❌ Remove - Japanese label |
+| Interscope Records | ✅ Current | ✅ Keep - but needs proper dates |
+
+## Eve's Actual Label History
+
+Based on research:
+- **Aftermath Entertainment** (1998) - Brief signing as "Eve of Destruction"
+- **Ruff Ryders Entertainment / Interscope Records** (1999–2007) - Her main career
+- **From The Rib Music** (2011–present) - Her independent label for *Lip Lock*
 
 ## Solution
 
-Increase the left margin of the Artistry radar chart from 60px to 80px to provide adequate space for the "Storytelling" label.
+### Step 1: Delete Wrong Japanese Labels
 
-## File to Modify
+Remove the 4 incorrect label associations:
+- TOY'S FACTORY
+- harapeco records
+- factoryS  
+- Erving Wonder
 
-**`src/components/rapper/RapperAttributeStats.tsx`** (line 299)
+### Step 2: Update Correct Label Dates
 
-### Change
+Fix the existing correct labels with proper dates:
+- **Aftermath Entertainment**: 1998–1998 (brief signing)
+- **Interscope Records**: 1999–2007 (main career years)
 
-```typescript
-// Before (line 299)
-<RadarChart data={artistry} margin={{ top: 40, right: 50, bottom: 25, left: 60 }}>
+### Step 3: Create Missing Labels
 
-// After
-<RadarChart data={artistry} margin={{ top: 40, right: 50, bottom: 25, left: 80 }}>
+Add labels that don't exist yet:
+- **Ruff Ryders Entertainment** (new label record)
+- **From The Rib Music** (new label record)
+
+### Step 4: Link Missing Labels to Eve
+
+Create rapper_labels entries:
+- Ruff Ryders Entertainment (1999–2007)
+- From The Rib Music (2011–present, is_current = true)
+
+---
+
+## SQL Migration
+
+```sql
+-- Fix Eve's record label associations
+-- Remove wrong Japanese labels
+
+DELETE FROM rapper_labels 
+WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve')
+AND label_id IN (
+  SELECT id FROM record_labels 
+  WHERE name IN ('TOY''S FACTORY', 'harapeco records', 'factoryS', 'Erving Wonder')
+);
+
+-- Update Aftermath Entertainment dates (1998 brief signing)
+UPDATE rapper_labels
+SET start_year = 1998, end_year = 1998, is_current = false
+WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve')
+AND label_id = (SELECT id FROM record_labels WHERE name = 'Aftermath Entertainment');
+
+-- Update Interscope Records dates (1999-2007)
+UPDATE rapper_labels
+SET start_year = 1999, end_year = 2007, is_current = false
+WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve')
+AND label_id = (SELECT id FROM record_labels WHERE name = 'Interscope Records');
+
+-- Create Ruff Ryders Entertainment label if it doesn't exist
+INSERT INTO record_labels (name)
+SELECT 'Ruff Ryders Entertainment'
+WHERE NOT EXISTS (SELECT 1 FROM record_labels WHERE name = 'Ruff Ryders Entertainment');
+
+-- Create From The Rib Music label if it doesn't exist
+INSERT INTO record_labels (name)
+SELECT 'From The Rib Music'
+WHERE NOT EXISTS (SELECT 1 FROM record_labels WHERE name = 'From The Rib Music');
+
+-- Link Ruff Ryders Entertainment to Eve (1999-2007)
+INSERT INTO rapper_labels (rapper_id, label_id, start_year, end_year, is_current)
+SELECT 
+  (SELECT id FROM rappers WHERE slug = 'eve'),
+  (SELECT id FROM record_labels WHERE name = 'Ruff Ryders Entertainment'),
+  1999,
+  2007,
+  false
+WHERE NOT EXISTS (
+  SELECT 1 FROM rapper_labels 
+  WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve')
+  AND label_id = (SELECT id FROM record_labels WHERE name = 'Ruff Ryders Entertainment')
+);
+
+-- Link From The Rib Music to Eve (2011-present)
+INSERT INTO rapper_labels (rapper_id, label_id, start_year, end_year, is_current)
+SELECT 
+  (SELECT id FROM rappers WHERE slug = 'eve'),
+  (SELECT id FROM record_labels WHERE name = 'From The Rib Music'),
+  2011,
+  NULL,
+  true
+WHERE NOT EXISTS (
+  SELECT 1 FROM rapper_labels 
+  WHERE rapper_id = (SELECT id FROM rappers WHERE slug = 'eve')
+  AND label_id = (SELECT id FROM record_labels WHERE name = 'From The Rib Music')
+);
 ```
 
-## Why This Works
+---
 
-- Labels on the left side of radar charts use `textAnchor="end"`, meaning text extends leftward from the anchor point
-- "Storytelling" is a longer word that needs more horizontal space than shorter labels
-- Increasing the left margin from 60px to 80px (adding ~20px) provides the extra clearance needed
-- This change only affects the Artistry chart where the issue occurs; the Technique chart margin remains at 50px since its left-side labels ("Technical Skill", "Performance") are not clipped
+## Expected Result
+
+After implementation, Eve's Career Overview card will show:
+
+| Label | Years |
+|-------|-------|
+| Aftermath Entertainment | 1998 |
+| Ruff Ryders Entertainment | 1999–2007 |
+| Interscope Records | 1999–2007 |
+| From The Rib Music | 2011–present |
