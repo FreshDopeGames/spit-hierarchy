@@ -40,8 +40,9 @@ export const transformOfficialRankings = (rankings: (RankingWithItems & { totalV
       authorId: "editorial-team", // Default ID for official rankings
       timeAgo: new Date(ranking.created_at || "").toLocaleDateString(),
       createdAt: ranking.created_at || new Date().toISOString(),
-      rappers: (ranking.items || []).map(item => ({
-        rank: item.position || 0,
+      // Use array index to preserve RPC's vote-based order
+      rappers: (ranking.items || []).map((item, index) => ({
+        rank: index + 1,
         name: item.rapper?.name || "Unknown",
         reason: item.reason || "",
         id: item.rapper?.id || "",
