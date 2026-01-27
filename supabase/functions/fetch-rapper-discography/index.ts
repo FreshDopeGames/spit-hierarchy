@@ -502,6 +502,7 @@ serve(async (req) => {
 
     // Fetch releases from both the solo artist AND any groups they're a member of
     const allArtistIds = [musicbrainzId, ...groupMemberships.map(g => g.id)];
+    const groupArtistIds = new Set(groupMemberships.map(g => g.id));
     
     let rgAlbums: any[] = [];
     let rgEps: any[] = [];
@@ -517,6 +518,10 @@ serve(async (req) => {
         const albums = await fetchAllReleaseGroups('album', artistId);
         await delay(1100);
         const eps = await fetchAllReleaseGroups('ep', artistId);
+        
+        // Tag each release with source artist ID for prioritization later
+        albums.forEach((a: any) => { a._sourceArtistId = artistId; });
+        eps.forEach((e: any) => { e._sourceArtistId = artistId; });
         
         rgAlbums.push(...albums);
         rgEps.push(...eps);
@@ -582,24 +587,55 @@ serve(async (req) => {
       });
       return json({ success: false, error: `MusicBrainz API error: ${mbError.message}`, discography: [] }, 500);
     }
-    // Combine and sort: prioritize studio albums first, then by release date (NEWEST first)
-    // This ensures canonical studio albums are processed before mixtapes/EPs if we hit time limits
+    
+    // ============ HYBRID TWO-PHASE PROCESSING ============
+    // For artists with group memberships (e.g., KRS-One with BDP), we need to ensure
+    // historic group releases aren't cut off by the 50-second timeout.
+    // Strategy: Process oldest group releases FIRST, then continue with newest-first for the rest.
+    
+    const allReleases = [...rgAlbums, ...rgEps];
+    
+    // Separate group releases from solo releases
+    const groupReleases = allReleases.filter((rg: any) => groupArtistIds.has(rg._sourceArtistId));
+    const soloReleases = allReleases.filter((rg: any) => !groupArtistIds.has(rg._sourceArtistId));
+    
+    // Get the 10 OLDEST group releases (sorted by date ascending)
+    const MAX_PRIORITIZED_GROUP_RELEASES = 10;
+    const oldestGroupReleases = [...groupReleases]
+      .sort((a, b) => {
+        const dateA = a['first-release-date'] || '9999';
+        const dateB = b['first-release-date'] || '9999';
+        return dateA.localeCompare(dateB); // Oldest first
+      })
+      .slice(0, MAX_PRIORITIZED_GROUP_RELEASES);
+    
+    const oldestGroupIds = new Set(oldestGroupReleases.map((rg: any) => rg.id));
+    
+    if (oldestGroupReleases.length > 0) {
+      console.log(`⏰ Prioritizing ${oldestGroupReleases.length} oldest group releases:`);
+      oldestGroupReleases.forEach((rg: any) => {
+        const groupName = groupMemberships.find(g => g.id === rg._sourceArtistId)?.name || 'Unknown';
+        console.log(`   - "${rg.title}" (${rg['first-release-date'] || 'no date'}) [${groupName}]`);
+      });
+    }
+    
+    // Remaining releases (everything except the prioritized oldest group releases)
+    const remainingReleases = allReleases.filter((rg: any) => !oldestGroupIds.has(rg.id));
+    
+    // Sort remaining releases: newest first (to get current work after historic group albums)
+    remainingReleases.sort((a, b) => {
+      const dateA = a['first-release-date'] || '0000';
+      const dateB = b['first-release-date'] || '0000';
+      return dateB.localeCompare(dateA); // Newest first
+    });
+    
+    // Final order: oldest group releases first, then newest-first for remaining
     const releaseGroups: MusicBrainzReleaseGroup[] = [
-      // Studio albums first (sorted newest to oldest)
-      ...(rgAlbums || []).sort((a, b) => {
-        const dateA = a['first-release-date'] || '0000';
-        const dateB = b['first-release-date'] || '0000';
-        return dateB.localeCompare(dateA);
-      }),
-      // Then EPs (sorted newest to oldest)
-      ...(rgEps || []).sort((a, b) => {
-        const dateA = a['first-release-date'] || '0000';
-        const dateB = b['first-release-date'] || '0000';
-        return dateB.localeCompare(dateA);
-      }),
+      ...oldestGroupReleases,
+      ...remainingReleases,
     ];
 
-    console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name}`);
+    console.log(`Processing ${releaseGroups.length} release groups for ${rapper.name} (${oldestGroupReleases.length} prioritized historic group releases)`);
 
     // Update progress with total count
     await updateProgress({ 
