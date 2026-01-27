@@ -1,180 +1,127 @@
 
+## Plan: Fix Quiz Badge Progress Card Responsive Layout
 
-## Plan: Add "Most Achievements" Card to Community Members Analytics
+### Problem Analysis
 
-### Overview
+From the screenshot, the badge cards on mobile are too cramped:
+- 3-column grid on mobile makes each card very narrow
+- The `aspect-square` constraint forces a fixed height that can't accommodate all content
+- Badge names overflow/get cut off (e.g., "Birth Year Beginner")
+- Progress bars and counts overlap with the badge name text
+- Icons, text, and progress elements compete for limited vertical space
 
-Add a fifth card titled "Most Achievements" to the Community Members analytics section (`TopMembersCards.tsx`). This card will display the top 5 members ranked by total achievements earned, using the same styling as the existing cards but with a gold medal icon.
+---
+
+### Solution
+
+Redesign the badge card layout to be more spacious on mobile/tablet by:
+1. Reducing columns on smaller screens (2 cols on mobile, 3 on tablet)
+2. Removing the `aspect-square` constraint in favor of a flexible min-height
+3. Increasing internal padding and spacing
+4. Using slightly larger text sizes for readability
+5. Repositioning progress elements to flow naturally below the name
 
 ---
 
 ### Technical Details
 
-#### File to Modify: `src/components/analytics/TopMembersCards.tsx`
+#### File to Modify: `src/components/quiz/QuizBadgeDisplay.tsx`
 
-**1. Add Import for Medal Icon (line 7)**
+**1. Update Grid Column Breakpoints (lines 55-56, 106)**
 
-Add `Medal` to the existing lucide-react imports:
+Change from `grid-cols-3 sm:grid-cols-4 md:grid-cols-6` to `grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6`:
 
 ```tsx
-import { MessageCircle, Vote, Trophy, HelpCircle, Medal } from "lucide-react";
+<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3">
 ```
 
-**2. Add New Query for Top Achievement Earners (after line 333)**
+**2. Redesign Badge Card Container (lines 117-122)**
 
-Create a new `useQuery` hook following the existing pattern:
+Remove `aspect-square` and add proper min-height with more padding:
 
 ```tsx
-// Top Achievement Earners Query
-const { data: topAchievers, isLoading: loadingAchievers } = useQuery({
-  queryKey: ['top-achievers', timeRange],
-  queryFn: async () => {
-    console.log('Fetching top achievers for timeRange:', timeRange);
-    
-    if (timeRange === 'week') {
-      // For weekly, count from user_achievements with earned_at filter
-      const { data: achievements, error: achievementsError } = await supabase
-        .from('user_achievements')
-        .select('user_id')
-        .gte('earned_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
-      
-      if (achievementsError) throw achievementsError;
-      if (!achievements || achievements.length === 0) return [];
-      
-      // Group by user and count
-      const userAchievementCounts = achievements.reduce((acc: any, achievement: any) => {
-        const userId = achievement.user_id;
-        if (!acc[userId]) acc[userId] = { id: userId, total_achievements: 0 };
-        acc[userId].total_achievements++;
-        return acc;
-      }, {});
-      
-      const memberStats = Object.values(userAchievementCounts)
-        .sort((a: any, b: any) => b.total_achievements - a.total_achievements)
-        .slice(0, 5);
-      
-      const userIds = memberStats.map((stat: any) => stat.id);
-      const { data: profiles } = await supabase
-        .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
-      
-      return memberStats.map((stat: any) => ({
-        id: stat.id,
-        total_achievements: stat.total_achievements,
-        profiles: profiles?.find(p => p.id === stat.id) || null
-      }));
-    }
-    
-    // All-time stats - count from user_achievements table
-    const { data: achievementCounts, error: achievementsError } = await supabase
-      .from('user_achievements')
-      .select('user_id');
-    
-    if (achievementsError) {
-      console.error('Error fetching achievement counts:', achievementsError);
-      throw achievementsError;
-    }
-    
-    if (!achievementCounts || achievementCounts.length === 0) {
-      console.log('No achievements found');
-      return [];
-    }
-    
-    // Group by user and count
-    const userAchievementCounts = achievementCounts.reduce((acc: any, achievement: any) => {
-      const userId = achievement.user_id;
-      if (!acc[userId]) acc[userId] = { id: userId, total_achievements: 0 };
-      acc[userId].total_achievements++;
-      return acc;
-    }, {});
-    
-    const memberStats = Object.values(userAchievementCounts)
-      .sort((a: any, b: any) => b.total_achievements - a.total_achievements)
-      .slice(0, 5);
-    
-    // Get user IDs
-    const userIds = memberStats.map((stat: any) => stat.id);
-    console.log('User IDs for achievers:', userIds);
-    
-    // Fetch profiles for these users using the secure batch function
-    const { data: profiles, error: profilesError } = await supabase
-      .rpc('get_profiles_for_analytics', { profile_user_ids: userIds });
-    
-    if (profilesError) {
-      console.error('Error fetching profiles for achievers:', profilesError);
-      throw profilesError;
-    }
-    
-    console.log('Profiles found for achievers:', profiles);
-    
-    // Merge the data
-    return memberStats.map((stat: any) => ({
-      id: stat.id,
-      total_achievements: stat.total_achievements,
-      profiles: profiles?.find(p => p.id === stat.id) || null
-    }));
-  },
-  staleTime: 30000,
-  gcTime: 60000,
-  refetchOnMount: true,
-  refetchOnWindowFocus: true,
-});
+className={cn(
+  "relative min-h-[120px] rounded-xl border-2 flex flex-col items-center justify-center p-3 sm:p-4 transition-all duration-200",
+  isEarned 
+    ? cn(getRarityColor(badge.rarity), getRarityGlow(badge.rarity))
+    : "border-border/50 bg-black/20 opacity-60"
+)}
 ```
 
-**3. Update Grid Layout (line 424)**
+**3. Increase Icon Size (lines 128-131)**
 
-Change from 4 columns to 5 columns on large screens:
+Make icons slightly larger for better visibility:
 
 ```tsx
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6">
+<IconComponent className={cn(
+  "w-7 h-7 sm:w-8 sm:h-8 mb-2",
+  isEarned ? "" : "text-muted-foreground"
+)} />
 ```
 
-**4. Add New MemberCard (after line 459, before closing `</div>`)**
+**4. Improve Badge Name Text (lines 133-138)**
 
-Add the new card with the Medal icon (or use emoji in title):
+Increase font size and add proper line clamping:
 
 ```tsx
-<MemberCard
-  title="🥇 Most Achievements"
-  icon={Medal}
-  data={topAchievers || []}
-  isLoading={loadingAchievers}
-  metricKey="total_achievements"
-  metricLabel="achievements"
-/>
+<span className={cn(
+  "text-xs sm:text-sm text-center font-[var(--theme-font-heading)] leading-tight line-clamp-2",
+  !isEarned && "text-muted-foreground"
+)}>
+  {badge.name}
+</span>
+```
+
+**5. Redesign Progress Section (lines 140-151)**
+
+Move from absolute positioning to relative flow below the name:
+
+```tsx
+{showProgress && !isEarned && (
+  <div className="w-full mt-2 px-1">
+    <div className="h-1.5 bg-black/50 rounded-full overflow-hidden">
+      <div
+        className="h-full bg-[hsl(var(--theme-primary))]/50"
+        style={{ width: `${percentage}%` }}
+      />
+    </div>
+    <span className="text-[10px] text-muted-foreground block text-center mt-0.5">
+      {currentProgress}/{badge.threshold_correct}
+    </span>
+  </div>
+)}
+```
+
+**6. Adjust Lock Icon Position (lines 124-126)**
+
+Slightly larger lock for visibility:
+
+```tsx
+{!isEarned && (
+  <Lock className="absolute top-2 right-2 w-3.5 h-3.5 text-muted-foreground" />
+)}
 ```
 
 ---
 
-### Visual Design
+### Visual Comparison
 
-| Element | Value |
-|---------|-------|
-| Card title | "🥇 Most Achievements" |
-| Icon | `Medal` from lucide-react (as fallback in icon slot) |
-| Metric label | "achievements" |
-| Grid layout | 5 columns on lg+ screens (was 4) |
-| Styling | Identical to existing cards (4px theme border, black bg, primary shadow) |
-
----
-
-### Data Flow
-
-```text
-All Time:
-user_achievements table → group by user_id → count → order desc → top 5
-
-This Week:
-user_achievements (earned_at >= 7 days ago) → group by user_id → count → order desc → top 5
-```
+| Property | Before | After |
+|----------|--------|-------|
+| Mobile columns | 3 | 2 |
+| Tablet columns | 4 | 3-4 |
+| Card height | Fixed (aspect-square) | Flexible (min-h-[120px]) |
+| Badge name size | 10px | 12px (xs) - 14px (sm) |
+| Progress position | Absolute bottom | Flow below name |
+| Internal padding | p-2 | p-3 sm:p-4 |
+| Icon size | w-6 h-6 | w-7 h-7 sm:w-8 sm:h-8 |
 
 ---
 
-### Summary
+### Expected Result
 
-| Change | Location | Description |
-|--------|----------|-------------|
-| Import | Line 7 | Add `Medal` icon import |
-| Query | After line 333 | New `topAchievers` useQuery with weekly/all-time support |
-| Grid | Line 424 | Update to `lg:grid-cols-5` |
-| Card | After line 459 | Add "🥇 Most Achievements" MemberCard |
-
+- Badge cards will be larger and more readable on mobile (2 per row)
+- All content (icon, name, progress) will fit without overlapping
+- Progress bars will appear below the badge name in their own section
+- Text will be more legible across all screen sizes
+- Tablet view will show 3-4 columns with comfortable spacing
