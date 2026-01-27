@@ -172,7 +172,7 @@ const QuizContainer: React.FC = () => {
           <ThemedButton
             onClick={handleStartQuiz}
             variant="gradient"
-            className="w-full"
+            className="w-full bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90"
             disabled={totalQuestions === 0}
           >
             Start Quiz
