@@ -1,117 +1,170 @@
 
-# Safe Implementation: Partial Alias Matching for Collaborations
+# Fetch Group Discographies for Solo Artists
 
-## The Risk You Identified
+## Problem Analysis
 
-Adding naive partial alias matching could cause incorrect album attribution:
-- **"BIG"** (Notorious B.I.G. alias) could match "Big L", "Big Boi", "Big Daddy Kane"
-- **"Ye"** (Kanye West alias) could match "Yeezy", "Years", or other words
-- **"Tip"** (T.I. alias) could match "Tiptoe", "Q-Tip", etc.
-- **"PE"** (Public Enemy alias) could match "PE" anywhere in credits
-- Short aliases are particularly dangerous with `includes()` matching
+The partial alias matching we implemented works correctly for albums that are **already being fetched**. However, the DJ Jazzy Jeff & The Fresh Prince albums are never fetched because:
 
-The existing `partialMatch` works because it uses the **full rapper name** (e.g., "Rakim" in "Eric B. & Rakim"), which is usually unique enough.
+1. **Current behavior**: The Edge Function queries MusicBrainz using `artist=${musicbrainzId}` - this only returns releases directly credited to Will Smith's MusicBrainz ID (`5bae7081-64ef-4473-825a-38d310deb14c`)
 
-## Proposed Safe Solution
+2. **The duo is a separate entity**: In MusicBrainz, "DJ Jazzy Jeff & The Fresh Prince" is its own artist with ID `0d41a3cd-2e31-4e01-a200-f2fd93ceee2c` - it's not the same as Will Smith's solo ID
 
-Instead of a simple `includes()` check for aliases, implement **word boundary matching** with a minimum length threshold:
+3. **MusicBrainz tracks memberships**: The API provides `artist-rels` (artist relationships) that show Will Smith is a member of "DJ Jazzy Jeff & The Fresh Prince"
 
-### Safeguards
+## Solution
 
-1. **Minimum alias length**: Only allow partial alias matching for aliases with 6+ characters
-   - This excludes: "LB", "PE", "Ye", "Pun", "BIG", "Pac", "Hov", "Tip", "JID", "DOOM", "ATCQ"
-   - This includes: "The Fresh Prince" (16 chars), "Tupac" (5 - excluded), "Makaveli" (8 chars)
+Enhance the Edge Function to:
+1. Fetch artist relationships including `artist-rels` (group memberships)
+2. Identify groups where the rapper is listed as a member
+3. Fetch discographies for each related group
+4. Apply the existing filtering and matching logic to include those albums
 
-2. **Word boundary matching**: The alias must appear as a distinct word/phrase, not just a substring
-   - Match: "DJ Jazzy Jeff & **The Fresh Prince**" ✓
-   - No match: "Fresh Beats Vol. 1" (partial word match) ✗
+---
 
-3. **Maintain existing filters**: All current safeguards remain active:
-   - Instrumental filtering
-   - Bootleg/promo rejection
-   - Tribute album detection
-   - Official release status check
+## Technical Implementation
 
-### Implementation Details
+### Step 1: Add artist-rels to artist lookup
 
 **File:** `supabase/functions/fetch-rapper-discography/index.ts`
 
-**Location:** After line 635 (after existing `partialMatch` definition)
-
-**New Code Logic:**
+**Line ~350 - Add artist-rels to the inc parameter:**
 ```text
-// Partial alias match - only for longer aliases (6+ chars) to prevent false positives
-// Uses word boundary matching to ensure alias is a distinct phrase, not a substring
-const MIN_ALIAS_LENGTH_FOR_PARTIAL = 6;
+// Current:
+const artistData = await mbJson<MusicBrainzArtist>(
+  `https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels+url-rels&fmt=json`
+);
 
-const partialAliasMatch = rapperAliases.some((alias: string) => {
-  // Skip short aliases that could cause false matches (BIG, Ye, Tip, etc.)
-  if (alias.length < MIN_ALIAS_LENGTH_FOR_PARTIAL) return false;
+// Change to:
+const artistData = await mbJson<MusicBrainzArtist>(
+  `https://musicbrainz.org/ws/2/artist/${musicbrainzId}?inc=aliases+label-rels+url-rels+artist-rels&fmt=json`
+);
+```
+
+### Step 2: Extract group memberships from relations
+
+Add code after fetching artist data to identify groups:
+
+```text
+// Extract group memberships from artist relations
+const groupMemberships: Array<{ id: string; name: string }> = [];
+const artistRels = (artistData.relations || []).filter(r => r['target-type'] === 'artist');
+
+for (const rel of artistRels) {
+  // "member of band" relationship indicates group membership
+  if (rel.type === 'member of band' && rel.artist?.id && rel.artist?.name) {
+    console.log(`Found group membership: ${rel.artist.name} (${rel.artist.id})`);
+    groupMemberships.push({ id: rel.artist.id, name: rel.artist.name });
+  }
+}
+
+console.log(`Found ${groupMemberships.length} group memberships for ${rapper.name}`);
+```
+
+### Step 3: Fetch discographies for related groups
+
+Modify the release group fetching to include groups:
+
+```text
+// Fetch releases from both the solo artist AND any groups they're a member of
+const allArtistIds = [musicbrainzId, ...groupMemberships.map(g => g.id)];
+
+let rgAlbums: any[] = [];
+let rgEps: any[] = [];
+
+for (const artistId of allArtistIds) {
+  const isGroup = artistId !== musicbrainzId;
+  if (isGroup) {
+    console.log(`Fetching discography for group: ${groupMemberships.find(g => g.id === artistId)?.name}`);
+  }
   
-  return creditNames.some((creditName: string) => {
-    const aliasLower = alias.toLowerCase();
-    const creditLower = creditName.toLowerCase();
-    
-    // Check if alias appears as a word boundary match
-    // This handles "The Fresh Prince" in "DJ Jazzy Jeff & The Fresh Prince"
-    // But rejects "Fresh" matching "Freshly Baked Beats"
-    const wordBoundaryPattern = new RegExp(
-      `(^|[^a-z])${aliasLower.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}([^a-z]|$)`,
-      'i'
-    );
-    return wordBoundaryPattern.test(creditLower);
+  const albums = await fetchAllReleaseGroups('album', artistId);
+  const eps = await fetchAllReleaseGroups('ep', artistId);
+  
+  rgAlbums.push(...albums);
+  rgEps.push(...eps);
+  
+  await delay(1100);
+}
+
+// Deduplicate by release group ID (in case same album appears under multiple artists)
+rgAlbums = deduplicateById(rgAlbums);
+rgEps = deduplicateById(rgEps);
+```
+
+### Step 4: Update fetchAllReleaseGroups to accept artist ID parameter
+
+```text
+// Current signature:
+const fetchAllReleaseGroups = async (type: 'album' | 'ep') => {
+
+// Change to:
+const fetchAllReleaseGroups = async (type: 'album' | 'ep', artistId: string = musicbrainzId) => {
+```
+
+### Step 5: Add deduplication helper
+
+```text
+const deduplicateById = (items: any[]): any[] => {
+  const seen = new Set<string>();
+  return items.filter(item => {
+    if (seen.has(item.id)) return false;
+    seen.add(item.id);
+    return true;
   });
-});
+};
 ```
 
-**Update condition at line 645:**
-```text
-if (!primaryMatch && !nameMatch && !aliasMatch && !partialMatch && !partialAliasMatch) {
-  console.log(`❌ EXCLUDED - artist-credit does not include rapper name, ID, or aliases`);
-  continue;
-}
-```
+---
 
-**Add logging for partial alias matches (after line 657):**
-```text
-if (partialAliasMatch && !primaryMatch && !nameMatch && !aliasMatch && !partialMatch) {
-  console.log(`✓ Including "${rg.title}" via partial alias match (collaboration)`);
-}
-```
+## Expected Result for Will Smith
 
-### Will Smith Test Case
+After deployment and refresh:
 
-- **Alias:** "The Fresh Prince" (16 characters) ✓ Passes length check
-- **Credit:** "DJ Jazzy Jeff & The Fresh Prince"
-- **Match:** Word boundary regex finds "The Fresh Prince" as distinct phrase ✓
+**Group memberships detected:**
+- DJ Jazzy Jeff & The Fresh Prince (`0d41a3cd-2e31-4e01-a200-f2fd93ceee2c`)
 
-### Protected Cases (Will NOT Match)
-
-| Rapper | Short Alias | Why Protected |
-|--------|-------------|---------------|
-| Notorious B.I.G. | "BIG" (3 chars) | Below 6-char minimum |
-| Kanye West | "Ye" (2 chars) | Below 6-char minimum |
-| T.I. | "Tip" (3 chars) | Below 6-char minimum |
-| MF DOOM | "DOOM" (4 chars) | Below 6-char minimum |
-| Public Enemy | "PE" (2 chars) | Below 6-char minimum |
-| Big Pun | "Pun" (3 chars) | Below 6-char minimum |
-
-### Expected Outcome for Will Smith
-
-After deploying and refreshing his discography:
-- *Rock the House* (1987) ✓
-- *He's the DJ, I'm the Rapper* (1988) ✓
-- *And in This Corner...* (1989) ✓
-- *Homebase* (1991) ✓
-- *Code Red* (1993) ✓
+**Albums now included:**
+- Rock the House (1987)
+- He's the DJ, I'm the Rapper (1988)
+- And in This Corner... (1989)
+- Homebase (1991)
+- Code Red (1993)
 - Plus existing solo albums (1997+)
 
-Will Smith will then qualify for the "Best 80s Rappers" ranking based on his 1987 first release.
+---
 
-### Summary
+## Benefits for Other Artists
 
-This approach balances functionality with safety:
-- Enables collaboration matching for meaningful aliases like "The Fresh Prince"
-- Protects against false positives from short, common aliases
-- Maintains all existing quality filters (instrumental, bootleg, tribute, etc.)
-- Uses word boundary matching to prevent substring false matches
+This enhancement will also help:
+- **Rakim** → Eric B. & Rakim albums
+- **Phife Dawg** → A Tribe Called Quest albums
+- **Q-Tip** → A Tribe Called Quest albums
+- **Black Thought** → The Roots albums
+- Any solo artist who was part of a group
+
+---
+
+## Safeguards
+
+1. **Existing filters remain active**: Instrumental, bootleg, tribute album filtering still applies
+2. **Credit validation still runs**: Albums must still pass the artist credit validation
+3. **Deduplication**: Same album won't appear twice if credited to both solo and group
+4. **Rate limiting**: Proper 1.1s delays between MusicBrainz API calls
+5. **Execution time guard**: Still respects 50-second limit
+
+---
+
+## Files to Modify
+
+| File | Changes |
+|------|---------|
+| `supabase/functions/fetch-rapper-discography/index.ts` | Add artist-rels lookup, group membership extraction, multi-artist discography fetching |
+
+---
+
+## Deployment Steps
+
+1. Update the Edge Function with group membership logic
+2. Deploy the updated function
+3. Force refresh Will Smith's discography
+4. Verify DJ Jazzy Jeff & The Fresh Prince albums appear
