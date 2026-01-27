@@ -53,21 +53,21 @@ const ProfileAchievements = () => {
   return <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20">
       <CardHeader>
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between">
-            <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 text-lg sm:text-xl">
-              <Trophy className="w-5 h-5" />
-              Achievements
-            </CardTitle>
+          <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center justify-center gap-2 text-lg sm:text-xl">
+            <Trophy className="w-5 h-5" />
+            Achievements
+          </CardTitle>
+          <div className="flex items-center justify-between gap-4 py-2 px-4 bg-[hsl(var(--theme-surface))]/30 rounded-lg border border-[hsl(var(--theme-primary))]/20">
+            <div className="flex items-center gap-2">
+              <Trophy className="w-4 h-4 text-[hsl(var(--theme-primary))]" />
+              <span className="text-[hsl(var(--theme-secondary))] text-sm">Total Points:</span>
+              <span className="text-[hsl(var(--theme-primary))] font-bold text-lg">{getTotalPoints()}</span>
+            </div>
             <Link to="/analytics?tab=achievements">
               <Button variant="outline" size="sm" className="border-[hsl(var(--theme-primary))]/30 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-[hsl(var(--theme-background))] text-xs sm:text-sm">
                 View All Achievements
               </Button>
             </Link>
-          </div>
-          <div className="flex items-center justify-center gap-2 py-2 px-4 bg-[hsl(var(--theme-surface))]/30 rounded-lg border border-[hsl(var(--theme-primary))]/20">
-            <Trophy className="w-4 h-4 text-[hsl(var(--theme-primary))]" />
-            <span className="text-[hsl(var(--theme-secondary))] text-sm">Total Points:</span>
-            <span className="text-[hsl(var(--theme-primary))] font-bold text-lg">{getTotalPoints()}</span>
           </div>
         </div>
       </CardHeader>
