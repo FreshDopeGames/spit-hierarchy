@@ -1,177 +1,257 @@
 
-# Fix KRS-One's Missing Boogie Down Productions Albums
 
-## Problem Summary
+# Add Spotify & Apple Music Links to Album Detail Page
 
-KRS-One's discography is missing his essential 1980s albums with **Boogie Down Productions (BDP)**:
-- *Criminal Minded* (1987)
-- *By All Means Necessary* (1988)  
-- *Ghetto Music: The Blueprint of Hip Hop* (1989)
-- *Edutainment* (1990)
-- *Sex and Violence* (1992)
+## Overview
 
-The group membership detection is working correctly - the Edge Function found BDP and is fetching its releases. However, the current sorting logic processes releases **newest-first**, and with KRS-One's massive 53+ release catalog, the function times out before reaching the 1980s BDP albums.
+This plan adds Spotify and Apple Music buttons to the Album Detail page with a redesigned layout:
+- Smaller rapper avatar, left-aligned under the album title
+- Streaming service buttons aligned to the right of the avatar
+- Uses the same "gold fill" button styling as the Rapper Header social buttons
 
 ---
 
-## Root Cause
-
-Current sorting order in `fetch-rapper-discography`:
+## Current Layout
 
 ```text
-1. Solo studio albums (newest → oldest): 2025 → 1993
-2. Solo EPs (newest → oldest)
-3. Group albums (newest → oldest): These never get reached
+┌─────────────────────────────────────┐
+│         [Album Cover 384px]         │
+│                                     │
+│           Album Title               │
+│                                     │
+│      [Rapper Avatar 192px]          │ ← Centered, large
+│                                     │
+│          Rapper Name                │
+│                                     │
+│    [Badge] [Year] [Track Count]     │
+└─────────────────────────────────────┘
 ```
-
-With 7 group memberships and 53 release groups, plus 1.1-second delays between MusicBrainz API calls, the 50-second execution limit is hit after ~12 albums.
 
 ---
 
-## Solution: Interleave Group Releases Into Timeline
-
-Modify the sorting logic to **combine solo and group releases into a single timeline sorted by date**, rather than processing solo albums first and group albums last.
-
-### Current Behavior (problematic):
-```text
-Solo albums first → Groups last → Old group albums get skipped
-```
-
-### New Behavior:
-```text
-All releases combined → Sorted by date (newest first) → BDP 1987 albums still may be cut off...
-```
-
-Wait - even interleaving won't fully solve this because KRS-One has 53+ releases and BDP albums are still the oldest. We need a different approach.
-
----
-
-## Recommended Solution: Hybrid Two-Phase Processing
-
-### Phase 1: Process the N newest releases (current behavior)
-### Phase 2: If groups exist, also process the N oldest group releases
-
-This ensures we capture:
-- Recent/current work (newest-first)
-- Historic/foundational group work (oldest group releases)
-
-### Implementation
-
-**File:** `supabase/functions/fetch-rapper-discography/index.ts`
-
-After sorting release groups, add logic to prioritize oldest group releases:
+## New Layout
 
 ```text
-// Current code (lines 585-600):
-// Combines albums and EPs, sorted newest-first
-
-// ADD: Extract and prioritize oldest group releases
-const groupReleaseGroupIds = new Set(
-  groupMemberships.flatMap(g => {
-    // Get all release groups that came from this group artist ID
-    return releaseGroups
-      .filter(rg => rg._sourceArtistId === g.id)  // Need to track source
-      .map(rg => rg.id);
-  })
-);
-
-// Get the 10 oldest group releases and move them to the front
-const oldestGroupReleases = releaseGroups
-  .filter(rg => groupReleaseGroupIds.has(rg.id))
-  .sort((a, b) => {
-    const dateA = a['first-release-date'] || '9999';
-    const dateB = b['first-release-date'] || '9999';
-    return dateA.localeCompare(dateB); // Oldest first
-  })
-  .slice(0, 10);
-
-// Prepend oldest group releases, then continue with newest-first solo
-const prioritizedReleases = [
-  ...oldestGroupReleases,
-  ...releaseGroups.filter(rg => !oldestGroupReleases.some(og => og.id === rg.id))
-];
+┌─────────────────────────────────────┐
+│         [Album Cover 384px]         │
+│                                     │
+│           Album Title               │
+│                                     │
+│  ┌─────────────────────────────┐    │
+│  │ [Avatar]  Rapper Name       │ [Spotify] [Apple Music]
+│  │  96px     (link)            │    │
+│  └─────────────────────────────┘    │
+│                                     │
+│    [Badge] [Year] [Track Count]     │
+└─────────────────────────────────────┘
 ```
 
----
-
-## Simpler Alternative: Manual Migration for KRS-One
-
-Since KRS-One is a specific high-profile case, we can directly link the BDP albums via SQL migration:
-
-```sql
--- Link Boogie Down Productions albums to KRS-One
-WITH bdp_albums AS (
-  SELECT id FROM albums 
-  WHERE musicbrainz_id IN (
-    -- Criminal Minded (1987)
-    '5a6f1a3e-3b4e-3c9d-9e8f-1a2b3c4d5e6f',
-    -- By All Means Necessary (1988)
-    '...',
-    -- etc.
-  )
-)
-INSERT INTO rapper_albums (rapper_id, album_id, role)
-SELECT 
-  'bee82e36-5aa9-4514-861b-f4e381fd6b8c', -- KRS-One's ID
-  id,
-  'primary'
-FROM bdp_albums
-ON CONFLICT (rapper_id, album_id) DO NOTHING;
-
--- Update career_start_year to 1987
-UPDATE rappers 
-SET career_start_year = 1987 
-WHERE id = 'bee82e36-5aa9-4514-861b-f4e381fd6b8c';
-```
-
----
-
-## Recommended Approach
-
-**Implement both:**
-
-1. **Immediate fix (migration):** Manually link BDP albums to KRS-One's profile now
-2. **Long-term fix (code):** Update sorting logic to prioritize oldest group releases for historical artists
-
----
-
-## Files to Modify
-
-| File | Change |
-|------|--------|
-| `supabase/functions/fetch-rapper-discography/index.ts` | Add logic to track source artist ID and prioritize oldest group releases |
-| New migration | Manually link BDP albums to KRS-One |
+The avatar row becomes a horizontal flex layout with:
+- Left side: Small avatar (sm size, ~96px) + rapper name link
+- Right side: Spotify and Apple Music buttons
 
 ---
 
 ## Implementation Steps
 
-### Step 1: Create migration to fix KRS-One immediately
-- Look up BDP album MusicBrainz IDs
-- Insert albums into database if not present
-- Link to KRS-One via `rapper_albums`
-- Update `career_start_year` to 1987
+### Step 1: Update Database Function to Return Streaming Links
 
-### Step 2: Update Edge Function sorting logic
-- Track which artist ID each release came from
-- After combining releases, extract oldest 10 group releases
-- Prepend them to the processing queue
-- This ensures historic group work is never skipped
+**File:** New SQL migration
+
+Add `external_cover_links` to the `get_album_with_tracks` function:
+
+```sql
+CREATE OR REPLACE FUNCTION get_album_with_tracks(album_uuid UUID)
+RETURNS TABLE (...existing fields..., external_cover_links JSONB)
+AS $$
+  SELECT
+    a.id as album_id,
+    -- ...existing fields...
+    a.external_cover_links,  -- ADD THIS
+    COALESCE(...tracks...) as tracks
+  FROM public.albums a
+  ...
+$$
+```
+
+### Step 2: Update useAlbumDetail Hook
+
+**File:** `src/hooks/useAlbumDetail.tsx`
+
+Add `external_cover_links` to the `AlbumDetail` interface and query return:
+
+```typescript
+interface AlbumDetail {
+  // ...existing fields...
+  external_cover_links?: {
+    spotify?: string;
+    apple_music?: string;
+    deezer?: string;
+    youtube_music?: string;
+  };
+}
+
+// In the queryFn return:
+return {
+  // ...existing fields...
+  external_cover_links: album.external_cover_links || null,
+};
+```
+
+### Step 3: Update AlbumHeader Component
+
+**File:** `src/components/album/AlbumHeader.tsx`
+
+#### 3a. Update interface to accept streaming links
+
+```typescript
+interface AlbumHeaderProps {
+  // ...existing props...
+  externalLinks?: {
+    spotify?: string;
+    appleMusic?: string;
+  };
+}
+```
+
+#### 3b. Import necessary components
+
+```typescript
+import { ThemedButton } from "@/components/ui/themed-button";
+import { Music } from "lucide-react"; // For Spotify icon
+```
+
+#### 3c. Redesign the avatar/name section
+
+Replace the current centered avatar + name section with a horizontal layout:
+
+```tsx
+{/* Artist + Streaming Links Row */}
+<div className="flex flex-col sm:flex-row items-center sm:items-start justify-center gap-4 w-full max-w-lg mx-auto">
+  {/* Left: Avatar + Name */}
+  <div className="flex items-center gap-3">
+    <RapperAvatar
+      rapper={{
+        id: rapperId,
+        name: rapperName,
+        slug: rapperSlug
+      }}
+      size="sm"  // Smaller size (96px instead of 192px)
+      variant="square"
+    />
+    <Link
+      to={`/rapper/${rapperSlug}`}
+      className="text-lg md:text-xl text-muted-foreground hover:text-[hsl(var(--theme-primary))] transition-colors font-semibold"
+    >
+      {rapperName}
+    </Link>
+  </div>
+  
+  {/* Right: Streaming Buttons */}
+  <div className="flex items-center gap-2">
+    {externalLinks?.spotify && (
+      <ThemedButton
+        variant="default"
+        size="sm"
+        className="bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryLight))] border-0"
+        asChild
+      >
+        <a href={externalLinks.spotify} target="_blank" rel="noopener noreferrer">
+          <Music className="w-4 h-4 mr-2" />
+          Spotify
+        </a>
+      </ThemedButton>
+    )}
+    {externalLinks?.appleMusic && (
+      <ThemedButton
+        variant="default"
+        size="sm"
+        className="bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primaryLight))] border-0"
+        asChild
+      >
+        <a href={externalLinks.appleMusic} target="_blank" rel="noopener noreferrer">
+          <Music className="w-4 h-4 mr-2" />
+          Apple Music
+        </a>
+      </ThemedButton>
+    )}
+  </div>
+</div>
+```
+
+### Step 4: Update AlbumDetail Page to Pass Streaming Links
+
+**File:** `src/pages/AlbumDetail.tsx`
+
+Generate links using both direct DB links and fallback search links:
+
+```typescript
+import { generateExternalAlbumLinks } from "@/utils/albumPlaceholderUtils";
+
+// Before rendering AlbumHeader:
+const searchLinks = generateExternalAlbumLinks(
+  album.album_title,
+  album.rapper_name,
+  album.release_type as 'album' | 'mixtape' | 'ep' | 'single'
+);
+const directLinks = album.external_cover_links || {};
+const externalLinks = {
+  spotify: directLinks.spotify || searchLinks.spotify,
+  appleMusic: directLinks.apple_music || searchLinks.appleMusic,
+};
+
+// Pass to AlbumHeader:
+<AlbumHeader
+  // ...existing props...
+  externalLinks={externalLinks}
+/>
+```
+
+### Step 5: Update Loading Skeleton
+
+**File:** `src/pages/AlbumDetail.tsx`
+
+Update the skeleton to match the new layout (smaller avatar, horizontal arrangement):
+
+```tsx
+{/* Artist Row Skeleton */}
+<div className="flex items-center justify-center gap-4 w-full max-w-lg mx-auto">
+  <div className="flex items-center gap-3">
+    <Skeleton className="w-24 h-24 sm:w-28 sm:h-28 rounded-lg" /> {/* sm avatar */}
+    <Skeleton className="h-6 w-32" /> {/* rapper name */}
+  </div>
+  <div className="flex items-center gap-2">
+    <Skeleton className="h-9 w-24 rounded-md" /> {/* Spotify button */}
+    <Skeleton className="h-9 w-32 rounded-md" /> {/* Apple Music button */}
+  </div>
+</div>
+```
 
 ---
 
-## Expected Result
+## Files to Modify
 
-After implementation:
-- KRS-One's discography includes BDP albums (1987-1992)
-- He appears in 1980s decade rankings
-- Other solo-from-group artists (Rakim, Q-Tip, etc.) will also get their group albums prioritized
+| File | Changes |
+|------|---------|
+| New SQL migration | Add `external_cover_links` to `get_album_with_tracks` function |
+| `src/hooks/useAlbumDetail.tsx` | Add `external_cover_links` to interface and return |
+| `src/components/album/AlbumHeader.tsx` | Resize avatar to "sm", add horizontal layout, add streaming buttons |
+| `src/pages/AlbumDetail.tsx` | Generate external links and pass to AlbumHeader, update skeleton |
 
 ---
 
-## Technical Notes
+## Visual Result
 
-- The Edge Function already correctly detects group memberships (BDP found for KRS-One)
-- The issue is purely sorting/prioritization, not detection
-- Adding `_sourceArtistId` tracking to release groups enables smart prioritization
-- The 50-second timeout is a hard constraint we must work around
+- **Avatar**: Reduced from 192px (lg) to 96px (sm) for better proportion
+- **Layout**: Rapper avatar and name left-aligned, streaming buttons right-aligned
+- **Buttons**: Gold-filled Spotify and Apple Music buttons matching the Rapper Header style
+- **Fallback**: If direct links aren't in the database, search-based links are generated
+
+---
+
+## Mobile Behavior
+
+On mobile (< sm breakpoint), the layout stacks vertically:
+- Avatar + Name centered
+- Streaming buttons centered below
+
