@@ -20,6 +20,12 @@ interface AlbumDetail {
   release_type: string;
   cover_art_url: string | null;
   track_count: number | null;
+  external_cover_links?: {
+    spotify?: string;
+    apple_music?: string;
+    deezer?: string;
+    youtube_music?: string;
+  } | null;
   tracks: AlbumTrack[];
   rapper_id?: string;
   rapper_name?: string;
@@ -73,6 +79,7 @@ export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
           release_type: album.release_type,
           cover_art_url: album.cover_art_url,
           track_count: album.track_count,
+          external_cover_links: album.external_cover_links || null,
           tracks: (Array.isArray(album.tracks) ? album.tracks : []) as unknown as AlbumTrack[],
           rapper_id: data.rapper_id,
           rapper_name: data.rapper_name,

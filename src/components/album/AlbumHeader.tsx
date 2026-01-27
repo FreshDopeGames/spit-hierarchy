@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
-import { ChevronRight } from "lucide-react";
-import { getSmartAlbumPlaceholder } from "@/utils/albumPlaceholderUtils";
+import { ThemedButton } from "@/components/ui/themed-button";
+import { Music } from "lucide-react";
 import RapperAvatar from "@/components/RapperAvatar";
 
 interface AlbumHeaderProps {
@@ -13,6 +13,10 @@ interface AlbumHeaderProps {
   releaseDate: string | null;
   releaseType: string;
   trackCount: number | null;
+  externalLinks?: {
+    spotify?: string;
+    appleMusic?: string;
+  };
 }
 
 export const AlbumHeader = ({
@@ -24,11 +28,12 @@ export const AlbumHeader = ({
   releaseDate,
   releaseType,
   trackCount,
+  externalLinks,
 }: AlbumHeaderProps) => {
   const releaseYear = releaseDate ? new Date(releaseDate).getFullYear() : null;
 
   return (
-    <div className="flex flex-col items-center text-center space-y-2">
+    <div className="flex flex-col items-center text-center space-y-4">
       {/* Cover Art - Centered and Large */}
       <div className="flex-shrink-0">
         {coverArtUrl ? (
@@ -44,33 +49,66 @@ export const AlbumHeader = ({
         )}
       </div>
 
-      {/* Details - Centered */}
-      <div className="space-y-4">
-        <h1 className="text-4xl md:text-5xl font-bold mb-3" style={{ fontFamily: "var(--theme-font-heading)" }}>
-          {albumTitle}
-        </h1>
-        
-        {/* Rapper Avatar - Half size of album cover */}
-        <div className="flex justify-center">
+      {/* Album Title */}
+      <h1 className="text-4xl md:text-5xl font-bold" style={{ fontFamily: "var(--theme-font-heading)" }}>
+        {albumTitle}
+      </h1>
+
+      {/* Artist Row: Avatar + Name (left) and Streaming Buttons (right) */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl mx-auto">
+        {/* Left: Avatar + Name */}
+        <div className="flex items-center gap-3">
           <RapperAvatar
             rapper={{
               id: rapperId,
               name: rapperName,
               slug: rapperSlug
             }}
-            size="lg"
+            size="sm"
             variant="square"
           />
+          <Link
+            to={`/rapper/${rapperSlug}`}
+            className="text-lg md:text-xl text-muted-foreground hover:text-[hsl(var(--theme-primary))] transition-colors font-semibold"
+          >
+            {rapperName}
+          </Link>
         </div>
-        
-        <Link
-          to={`/rapper/${rapperSlug}`}
-          className="text-xl md:text-2xl text-muted-foreground hover:text-[hsl(var(--theme-primary))] transition-colors"
-        >
-          {rapperName}
-        </Link>
+
+        {/* Right: Streaming Buttons */}
+        {(externalLinks?.spotify || externalLinks?.appleMusic) && (
+          <div className="flex items-center gap-2">
+            {externalLinks?.spotify && (
+              <ThemedButton
+                variant="default"
+                size="sm"
+                className="!bg-[hsl(var(--theme-primary))] !text-black hover:!bg-[hsl(var(--theme-primaryLight))] !border-0"
+                asChild
+              >
+                <a href={externalLinks.spotify} target="_blank" rel="noopener noreferrer">
+                  <Music className="w-4 h-4 mr-2" />
+                  Spotify
+                </a>
+              </ThemedButton>
+            )}
+            {externalLinks?.appleMusic && (
+              <ThemedButton
+                variant="default"
+                size="sm"
+                className="!bg-[hsl(var(--theme-primary))] !text-black hover:!bg-[hsl(var(--theme-primaryLight))] !border-0"
+                asChild
+              >
+                <a href={externalLinks.appleMusic} target="_blank" rel="noopener noreferrer">
+                  <Music className="w-4 h-4 mr-2" />
+                  Apple Music
+                </a>
+              </ThemedButton>
+            )}
+          </div>
+        )}
       </div>
 
+      {/* Metadata Badges */}
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Badge variant="secondary" className="capitalize">
           {releaseType}
