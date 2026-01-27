@@ -1,184 +1,127 @@
 
-# Replace "View Ranking" with Rapper Count on Ranking Cards
 
-## Overview
+# Fix Missing Roots Albums (Phrenology & More) for Black Thought
 
-Replace the "View Ranking" call-to-action in the bottom right corner of ranking cards with a count of how many rappers are in the ranking. This gives users a snapshot of the ranking size before clicking.
+## Problem Summary
 
-| Current State | New State |
-|--------------|-----------|
-| "View Ranking" with Award icon | "299 Rappers" with Users icon |
+**Phrenology (2002)** and 5 other classic Roots albums are missing from Black Thought's discography because the edge function **timed out** before processing them.
+
+The Roots have an exceptionally large discography (30+ releases including live albums, collaborations, etc.), and the current 50-second timeout isn't sufficient to process all of them.
+
+### What's Missing
+
+| Album | Year | Status |
+|-------|------|--------|
+| Phrenology | 2002 | ❌ Skipped |
+| The Tipping Point | 2004 | ❌ Skipped |
+| Game Theory | 2006 | ❌ Skipped |
+| Rising Down | 2008 | ❌ Skipped |
+| How I Got Over | 2010 | ❌ Skipped |
+| undun | 2011 | ❌ Skipped |
+
+### Why They're Skipped
+
+The function uses a "hybrid processing order":
+1. **10 oldest group releases** first (Organix through Things Fall Apart)
+2. Then **newest-to-oldest** for remaining releases (2023 → 2013)
+
+This leaves 2000s albums in the "dead zone" when timeout hits:
+
+```text
+Processing Order Timeline:
+┌──────────────────────────────────────────────────────────────────────┐
+│  [1993] ─────► [1999]    [2023] ◄───── [2014] ◄─ [2013]              │
+│  ↑ Oldest 10 prioritized      ↑ Newest-first after that             │
+│                                                                      │
+│                    ⛔ TIMEOUT HITS HERE                              │
+│                    ↓                                                 │
+│            [2002]  [2004]  [2006]  [2008]  [2010]  [2011]           │
+│            ↑ SKIPPED - Middle ground not reached                    │
+└──────────────────────────────────────────────────────────────────────┘
+```
 
 ---
 
-## Implementation Steps
+## Solution: Prioritize Studio Albums Over Other Release Types
 
-### Step 1: Add `totalRappers` Field to Types
+Rather than process ALL releases (including live albums, EPs, remixes), we should prioritize **studio albums** and process them first. This ensures the canonical discography is always complete before timeout.
 
-**File:** `src/types/rankings.ts`
+### Implementation Steps
 
-Add `totalRappers` to both interfaces:
+#### Step 1: Separate Studio Albums from Other Release Types
 
-```typescript
-// In RankingWithItems interface (line 9-11)
-export interface RankingWithItems extends OfficialRanking {
-  items: RankingItem[];
-  totalRappers?: number;  // Add this
-}
-
-// In UnifiedRanking interface (line 14-38)
-export interface UnifiedRanking {
-  // ... existing fields ...
-  totalVotes: number;
-  totalRappers: number;  // Add this new field
-  isOfficial: boolean;
-  // ...
-}
-```
-
-### Step 2: Fetch Total Rapper Count in `useRankingsData.ts`
-
-**File:** `src/hooks/useRankingsData.ts`
-
-Add a count query for each ranking alongside the existing vote count query:
+Modify the processing order in `supabase/functions/fetch-rapper-discography/index.ts`:
 
 ```typescript
-// After fetching itemsData and formattedItems, add:
+// BEFORE: All albums in one pool
+const allReleases = [...rgAlbums, ...rgEps];
 
-// Get total rapper count for this ranking
-const { count: totalRappers } = await supabase
-  .from("ranking_items")
-  .select("*", { count: "exact", head: true })
-  .eq("ranking_id", ranking.id);
+// AFTER: Separate by release type for prioritization
+const studioAlbums = rgAlbums.filter((rg: any) => {
+  const secondary = rg['secondary-types'] || [];
+  // Studio albums have no secondary types (not live, remix, compilation, etc.)
+  return secondary.length === 0;
+});
 
-return { 
-  ...ranking, 
-  items: formattedItems,
-  totalVotes: voteCount || 0,
-  totalRappers: totalRappers || 0  // Add this
-};
+const otherReleases = [
+  ...rgAlbums.filter((rg: any) => (rg['secondary-types'] || []).length > 0),
+  ...rgEps
+];
 ```
 
-### Step 3: Update `transformOfficialRankings` to Pass Through Count
-
-**File:** `src/utils/rankingTransformers.ts`
-
-Add `totalRappers` to the transformed ranking object:
+#### Step 2: Sort Both Groups by Date (Oldest-First for Historical Completeness)
 
 ```typescript
-// In transformOfficialRankings function
-return {
-  id: ranking.id,
-  title: ranking.title || "Untitled Ranking",
-  // ... existing fields ...
-  totalVotes,
-  totalRappers: ranking.totalRappers || ranking.items?.length || 0,  // Add this
-  isOfficial: true,
-  // ...
-};
+// For studio albums: chronological order (ensures complete discography)
+studioAlbums.sort((a, b) => {
+  const dateA = a['first-release-date'] || '9999';
+  const dateB = b['first-release-date'] || '9999';
+  return dateA.localeCompare(dateB); // Oldest first
+});
+
+// For other releases: newest first (recent EPs/live albums prioritized)
+otherReleases.sort((a, b) => {
+  const dateA = a['first-release-date'] || '0000';
+  const dateB = b['first-release-date'] || '0000';
+  return dateB.localeCompare(dateA); // Newest first
+});
 ```
 
-### Step 4: Update `RankingCard.tsx` - Replace "View Ranking" with Rapper Count
-
-**File:** `src/components/rankings/RankingCard.tsx`
-
-Replace the "View Ranking" CTA (lines 236-249) with a rapper count display:
-
-```tsx
-// Before (lines 236-249):
-{/* View Ranking CTA */}
-<div className="flex items-center gap-1 ...">
-  <Award className="w-4 h-4" />
-  <span>View Ranking</span>
-</div>
-
-// After:
-{/* Rapper Count */}
-<div
-  className="flex items-center gap-1 text-xs sm:text-sm"
-  style={{
-    color: "var(--theme-element-ranking_card_stats-color, #BFBFBF)",
-    fontSize: "var(--theme-element-ranking_card_stats-font-size, 0.75rem)",
-    fontWeight: "var(--theme-element-ranking_card_stats-font-weight, 400)",
-    lineHeight: "var(--theme-element-ranking_card_stats-line-height, 1.25)",
-  }}
->
-  <Users className="w-4 h-4" />
-  <span>{(ranking.totalRappers || ranking.rappers.length).toLocaleString()} Rappers</span>
-</div>
-```
-
-### Step 5: Update `RankingPreviewCard.tsx` - Replace "View Ranking" with Rapper Count
-
-**File:** `src/components/RankingPreviewCard.tsx`
-
-First, add `totalRappers` to the props interface:
+#### Step 3: Process Studio Albums First
 
 ```typescript
-interface RankingPreviewCardProps {
-  ranking: OfficialRanking;
-  items: RankingItem[];
-  totalVotes?: number;
-  totalRappers?: number;  // Add this
-  priority?: boolean;
-}
+// Final order: ALL studio albums first, then other release types
+const releaseGroups: MusicBrainzReleaseGroup[] = [
+  ...studioAlbums,
+  ...otherReleases,
+];
+
+console.log(`Processing ${releaseGroups.length} releases for ${rapper.name}`);
+console.log(`  - ${studioAlbums.length} studio albums (processed first)`);
+console.log(`  - ${otherReleases.length} other releases (EPs, live, etc.)`);
 ```
 
-Then replace the "View Ranking" CTA (lines 218-231):
+### Expected Processing Order After Fix
 
-```tsx
-// Before (lines 218-231):
-{/* View Ranking CTA */}
-<div className="flex items-center gap-1 ...">
-  <Award className="w-4 h-4" />
-  <span>View Ranking</span>
-</div>
-
-// After:
-{/* Rapper Count */}
-<div 
-  className="flex items-center gap-1 text-xs sm:text-sm"
-  style={{
-    color: 'var(--theme-element-ranking_card_stats-color, #BFBFBF)',
-    fontSize: 'var(--theme-element-ranking_card_stats-font-size, 0.75rem)',
-    fontWeight: 'var(--theme-element-ranking_card_stats-font-weight, 400)',
-    lineHeight: 'var(--theme-element-ranking_card_stats-line-height, 1.25)'
-  }}
->
-  <Users className="w-4 h-4" />
-  <span>{(totalRappers || items.length).toLocaleString()} Rappers</span>
-</div>
-```
-
-### Step 6: Update `HomepageRankingSection.tsx` to Pass `totalRappers`
-
-**File:** `src/components/HomepageRankingSection.tsx`
-
-Add a count query in the data fetching and pass it to `RankingPreviewCard`:
-
-```typescript
-// In the Promise.all map, add rapper count query:
-const { count: totalRappers } = await supabase
-  .from("ranking_items")
-  .select("*", { count: "exact", head: true })
-  .eq("ranking_id", ranking.id);
-
-return {
-  ...ranking,
-  items: processedItems,
-  totalVotes: totalVotes || 0,
-  totalRappers: totalRappers || 0  // Add this
-};
-
-// Then update the RankingPreviewCard component call:
-<RankingPreviewCard 
-  key={ranking.id} 
-  ranking={ranking} 
-  items={ranking.items} 
-  totalVotes={ranking.totalVotes}
-  totalRappers={ranking.totalRappers}  // Add this
-  priority={index === 0} 
-/>
+```text
+New Processing Order:
+┌──────────────────────────────────────────────────────────────────────┐
+│  STUDIO ALBUMS (oldest → newest):                                    │
+│  [1993] Organix                                                      │
+│  [1994] Do You Want More?                                            │
+│  [1996] Illadelph Halflife                                           │
+│  [1999] Things Fall Apart                                            │
+│  [2002] Phrenology ✓ NOW INCLUDED                                    │
+│  [2004] The Tipping Point ✓ NOW INCLUDED                             │
+│  [2006] Game Theory ✓ NOW INCLUDED                                   │
+│  [2008] Rising Down ✓ NOW INCLUDED                                   │
+│  [2010] How I Got Over ✓ NOW INCLUDED                                │
+│  [2011] undun ✓ NOW INCLUDED                                         │
+│  ...through 2023                                                     │
+│                                                                      │
+│  OTHER RELEASES (newest → oldest):                                   │
+│  [Live albums, EPs, collaborations...]                               │
+└──────────────────────────────────────────────────────────────────────┘
 ```
 
 ---
@@ -187,34 +130,28 @@ return {
 
 | File | Changes |
 |------|---------|
-| `src/types/rankings.ts` | Add `totalRappers` field to `RankingWithItems` and `UnifiedRanking` |
-| `src/hooks/useRankingsData.ts` | Fetch total rapper count for each ranking |
-| `src/utils/rankingTransformers.ts` | Pass through `totalRappers` in transform function |
-| `src/components/rankings/RankingCard.tsx` | Replace "View Ranking" with rapper count, use `Users` icon |
-| `src/components/RankingPreviewCard.tsx` | Add `totalRappers` prop, replace "View Ranking" with rapper count |
-| `src/components/HomepageRankingSection.tsx` | Fetch and pass `totalRappers` to preview cards |
+| `supabase/functions/fetch-rapper-discography/index.ts` | Refactor processing order to prioritize studio albums |
 
 ---
 
-## Expected Result
+## Technical Considerations
 
-After implementation:
+1. **Maintains Group Membership Logic**: The fix preserves the existing group membership detection that correctly links Roots albums to Black Thought
 
-**Rankings Page Cards:**
-- Left side: "1,234 Votes" with TrendingUp icon
-- Right side: "299 Rappers" with Users icon
+2. **Backwards Compatible**: Rappers without group memberships (most artists) will see no change - solo studio albums are already processed first
 
-**Homepage Preview Cards:**
-- Left side: "1,234 Votes" with TrendingUp icon  
-- Right side: "35 Rappers" with Users icon (varies per ranking)
+3. **Graceful Degradation**: If timeout still hits, at least all studio albums are captured. Live albums, EPs, and compilations are deprioritized
 
-Users will immediately see the scale of each ranking before clicking, helping them understand what they're getting into (e.g., "Best Groups" has 35 rappers vs "Greatest Of All Time" has 299).
+4. **Immediate Fix Available**: After deploying the code change, clicking "Refresh" on Black Thought's discography will fetch the missing albums
 
 ---
 
-## Technical Notes
+## Alternative Immediate Workaround
 
-- The `Users` icon is already imported in both card components but unused
-- The `Award` icon import can be removed after this change
-- Uses the same styling as the "Votes" stat for visual consistency
-- Fallback to `items.length` or `rappers.length` if `totalRappers` is not available
+If you need the albums NOW before the code fix:
+
+A **manual database migration** can directly link the missing MusicBrainz albums. However, the code fix is the proper long-term solution since it:
+- Automatically handles future discography refreshes
+- Works for ALL artists with large group discographies (not just Black Thought)
+- Ensures new releases are captured correctly
+
