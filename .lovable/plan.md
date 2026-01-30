@@ -1,265 +1,147 @@
 
-
-# Enhanced Track Fetching with MusicBrainz Artist Credits & Collaboration Network
+# Make Rapper Tags Clickable on Detail Page
 
 ## Overview
 
-This plan enhances the track fetching system to capture featured artist credits from MusicBrainz and builds a rapper collaboration network. Importantly, **only artists that exist in our database will be hyperlinked** - all other artists will display as plain text.
+This feature adds clickable functionality to the style/genre tags shown on rapper detail pages. Clicking a tag will navigate to the All Rappers page filtered to show only rappers with that tag.
 
 ---
 
-## Phase 1: Database Schema
+## Current State
 
-### New Tables
-
-**1. `track_artists`** - Store all artist credits for each track
-
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | uuid | Primary key |
-| `track_id` | uuid | Foreign key to `album_tracks` |
-| `artist_name` | text | Artist name as credited on MusicBrainz |
-| `musicbrainz_artist_id` | text | MusicBrainz artist ID |
-| `join_phrase` | text | Credit separator: " feat. ", " & ", etc. |
-| `is_primary` | boolean | True for main artist, false for features |
-| `position` | integer | Order in artist credit (1 = first) |
-| `rapper_id` | uuid (nullable) | Link to `rappers` table **if matched** |
-
-**2. `rapper_collaborations`** - Aggregated collaboration pairs
-
-| Column | Type | Description |
-|--------|------|-------------|
-| `id` | uuid | Primary key |
-| `rapper_id` | uuid | First rapper |
-| `collaborator_id` | uuid | Second rapper |
-| `collaboration_count` | integer | Number of tracks together |
-| `source` | text | 'track_credit', 'shared_album', 'manual' |
-| `track_ids` | uuid[] | Tracks they collaborated on |
-| `album_ids` | uuid[] | Unique albums |
+- Tags display on rapper detail page in `RapperHeader.tsx` as static badges
+- Tags have `name`, `slug`, and `color` properties
+- All Rappers page has filters for search, location, zodiac, sort, and order
+- No tag filter currently exists on the All Rappers page
 
 ---
 
-## Phase 2: Enhanced Track Fetching
+## Implementation Steps
 
-### MusicBrainz API Change
+### 1. Update Navigation State to Support Tag Filter
 
-Update `fetch-album-tracks/index.ts` to request artist credits:
+**File:** `src/hooks/useNavigationState.ts`
 
-```text
-Current:  inc=recordings
-Enhanced: inc=recordings+artist-credits
-```
+Add `tag` to the `AllFilters` interface and handle it in URL parameter management:
 
-This returns data like:
-
-```json
-{
-  "recording": {
-    "title": "Renegade",
-    "artist-credit": [
-      { "artist": { "id": "abc", "name": "Jay-Z" }, "joinphrase": " feat. " },
-      { "artist": { "id": "xyz", "name": "Eminem" }, "joinphrase": "" }
-    ]
-  }
+```typescript
+export interface AllFilters {
+  // ...existing fields
+  tag?: string;  // Tag slug for filtering
 }
 ```
 
-### Processing Logic
-
-For each track:
-1. Parse the `artist-credit` array
-2. Insert each artist into `track_artists` with position and join phrase
-3. Mark the first artist as `is_primary = true`
-4. Attempt to match to our `rappers` table (see Phase 3)
+Update `getAllFilters()` and `setAllFilters()` to read/write the `tag` param.
 
 ---
 
-## Phase 3: Rapper Matching Logic
+### 2. Add Tag Filter to useAllRappers Hook
 
-After capturing artist credits, link them to our database when possible:
+**File:** `src/hooks/useAllRappers.ts`
 
-### Matching Strategy (in priority order)
+- Add state for `tagFilter` initialized from URL params
+- Add handler `handleTagFilterChange`
+- Modify the query to filter rappers by tag assignment
 
-1. **MusicBrainz ID match** - `musicbrainz_artist_id` matches `rappers.musicbrainz_id`
-2. **Exact name match** - Case-insensitive `artist_name` matches `rappers.name`
-3. **Alias match** - `artist_name` matches any entry in `rappers.aliases`
+The query will join with `rapper_tag_assignments` and `rapper_tags` to filter:
 
-### Batch Matching Function
-
-```sql
-CREATE OR REPLACE FUNCTION match_track_artists_to_rappers()
-RETURNS INTEGER AS $$
--- Matches unlinked track_artists records to rappers
--- Sets rapper_id when a match is found
--- Returns count of newly matched records
-$$
+```typescript
+// When tagFilter is set, get rapper IDs with that tag first
+if (tagFilter && tagFilter !== "all") {
+  // Get rapper IDs that have this tag
+  const { data: taggedRapperIds } = await supabase
+    .from("rapper_tag_assignments")
+    .select("rapper_id, rapper_tags!inner(slug)")
+    .eq("rapper_tags.slug", tagFilter);
+  
+  // Filter main query by these IDs
+  query = query.in("id", taggedRapperIds.map(r => r.rapper_id));
+}
 ```
 
-**Important**: Artists that don't match remain with `rapper_id = NULL` - they'll still display but won't be linked.
+---
+
+### 3. Update AllRappersFilters Component
+
+**File:** `src/components/AllRappersFilters.tsx`
+
+Add an active tag badge that shows when filtering by tag, with an "X" to clear:
+
+```tsx
+interface AllRappersFiltersProps {
+  // ...existing props
+  tagFilter: string;
+  onTagFilterChange: (value: string) => void;
+}
+
+// Show active tag badge when filtering
+{tagFilter && tagFilter !== "all" && (
+  <Badge 
+    className="cursor-pointer"
+    onClick={() => onTagFilterChange("all")}
+  >
+    {tagFilter} ✕
+  </Badge>
+)}
+```
 
 ---
 
-## Phase 4: Conditional Display in Track List
+### 4. Update AllRappersPage
 
-### Updated `AlbumTrackList.tsx` Component
+**File:** `src/pages/AllRappersPage.tsx`
 
-The track list will show featured artists with conditional linking:
+Pass the new tag filter props to the filters component.
+
+---
+
+### 5. Make Tags Clickable on Rapper Detail
+
+**File:** `src/components/rapper/RapperHeader.tsx`
+
+Wrap each tag badge in a `Link` component:
 
 ```tsx
-// Example: Rendering artist credits
-{track.artists?.map((artist, i) => (
-  <span key={artist.id}>
-    {i > 0 && <span className="text-muted-foreground">{artist.join_phrase || ", "}</span>}
-    {artist.rapper_id ? (
-      // Linked - rapper exists in our database
-      <Link 
-        to={`/rapper/${artist.rapper_slug}`}
-        className="hover:text-[var(--theme-primary)] hover:underline"
-      >
-        {artist.artist_name}
-      </Link>
-    ) : (
-      // Plain text - artist not in our database
-      <span className="text-muted-foreground">{artist.artist_name}</span>
-    )}
-  </span>
+{tags.map((tag) => (
+  <Link key={tag.id} to={`/all-rappers?tag=${tag.slug}`}>
+    <Badge
+      variant="secondary"
+      className="font-[var(--theme-font-body)] cursor-pointer hover:opacity-80 transition-opacity"
+      style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
+    >
+      {tag.name}
+    </Badge>
+  </Link>
 ))}
 ```
 
-### Visual Example
-
-For a track "Renegade" by Jay-Z feat. Eminem:
-- If both Jay-Z and Eminem are in our database: **Jay-Z** feat. **Eminem** (both linked)
-- If only Jay-Z is in our database: **Jay-Z** feat. Eminem (only Jay-Z linked)
-- If neither is matched: Jay-Z feat. Eminem (plain text)
-
 ---
-
-## Phase 5: Collaboration Aggregation
-
-### Database Function: `refresh_rapper_collaborations()`
-
-Builds the network from matched artists only:
-
-```sql
--- Find tracks where 2+ artists have rapper_id set
--- Group by pairs and count collaborations
-INSERT INTO rapper_collaborations (...)
-SELECT 
-  LEAST(ta1.rapper_id, ta2.rapper_id),
-  GREATEST(ta1.rapper_id, ta2.rapper_id),
-  COUNT(DISTINCT ta1.track_id),
-  'track_credit',
-  ARRAY_AGG(DISTINCT ta1.track_id),
-  ARRAY_AGG(DISTINCT at.album_id)
-FROM track_artists ta1
-JOIN track_artists ta2 ON ta1.track_id = ta2.track_id 
-  AND ta1.rapper_id < ta2.rapper_id
-JOIN album_tracks at ON ta1.track_id = at.id
-WHERE ta1.rapper_id IS NOT NULL 
-  AND ta2.rapper_id IS NOT NULL  -- Only matched rappers
-GROUP BY ...
-```
-
----
-
-## Phase 6: Network Visualization
-
-### Collaborator Network Graph (`CollaboratorNetworkGraph.tsx`)
-
-Force-directed canvas visualization for the Analytics page:
-- **Nodes**: Rappers sized by total collaborations
-- **Edges**: Connections weighted by collaboration count
-- **Interaction**: Click to view details, filter by min collaborations
-
-### Collaborators Card (`CollaboratorsCard.tsx`)
-
-For individual rapper profiles:
-- Shows top 5-10 collaborators with counts
-- Lists sample track titles
-- Links to collaborator profiles
-
----
-
-## Files to Create
-
-| File | Purpose |
-|------|---------|
-| `supabase/migrations/xxx_create_track_artists.sql` | New table with RLS |
-| `supabase/migrations/xxx_create_rapper_collaborations.sql` | Aggregation table + functions |
-| `src/hooks/useRapperCollaborations.ts` | Fetch full network data |
-| `src/hooks/useRapperCollaborators.ts` | Fetch single rapper's collaborators |
-| `src/hooks/useTrackArtists.ts` | Fetch track artist credits |
-| `src/components/analytics/CollaboratorNetworkGraph.tsx` | Network visualization |
-| `src/components/rapper/CollaboratorsCard.tsx` | Profile collaborators card |
-| `src/components/album/TrackArtistCredits.tsx` | Conditional artist display |
 
 ## Files to Modify
 
 | File | Change |
 |------|--------|
-| `supabase/functions/fetch-album-tracks/index.ts` | Add `+artist-credits` to API call, parse and store credits |
-| `supabase/functions/bulk-fetch-album-tracks/index.ts` | Add re-fetch mode for existing tracks |
-| `src/components/album/AlbumTrackList.tsx` | Display featured artists with conditional links |
-| `src/hooks/useAlbumDetail.tsx` | Include track artist credits in query |
-| `src/components/analytics/RapperStatsAnalytics.tsx` | Add CollaboratorNetworkGraph |
-| `src/pages/RapperDetail.tsx` | Add CollaboratorsCard |
-| `src/components/admin/AdminDataManagement.tsx` | Add collaboration refresh button |
+| `src/hooks/useNavigationState.ts` | Add `tag` to AllFilters interface and URL handling |
+| `src/hooks/useAllRappers.ts` | Add tagFilter state, handler, and query filter logic |
+| `src/components/AllRappersFilters.tsx` | Add active tag display with clear button |
+| `src/pages/AllRappersPage.tsx` | Pass tag filter props |
+| `src/components/rapper/RapperHeader.tsx` | Wrap tags in Link components |
 
 ---
 
-## Data Flow
+## User Experience
 
-```text
-MusicBrainz API (artist-credits)
-        |
-        v
-fetch-album-tracks (parse credits)
-        |
-        v
-track_artists table (ALL artists stored)
-        |
-        v
-match_track_artists_to_rappers() 
-        |
-   +----+----+
-   |         |
-   v         v
-rapper_id   NULL
- (linked)  (plain text display)
-   |
-   v
-refresh_rapper_collaborations()
-   |
-   v
-rapper_collaborations table
-   |
-   v
-Network Visualization
-```
+1. User visits a rapper's profile (e.g., Kendrick Lamar)
+2. User sees tags like "Lyricist", "Conscious", "Introspective"
+3. User clicks "Lyricist" tag
+4. User is navigated to `/all-rappers?tag=lyricist`
+5. All Rappers page shows only rappers tagged as "Lyricist" (154 rappers)
+6. An active filter badge shows "Lyricist ✕" - clicking clears the filter
 
 ---
 
-## Key Behavior Summary
+## URL Examples
 
-| Artist Status | Track Display | Network Graph |
-|--------------|---------------|---------------|
-| In our database (matched) | Hyperlinked to profile | Included in network |
-| Not in database | Plain text (no link) | Not included |
-
-This ensures users only see clickable links for rappers we actually have pages for, while still capturing the full collaboration data from MusicBrainz.
-
----
-
-## Implementation Order
-
-1. Create `track_artists` table and RLS
-2. Create `rapper_collaborations` table and aggregation function
-3. Update `fetch-album-tracks` to capture artist credits
-4. Create rapper matching function
-5. Build `TrackArtistCredits` component with conditional linking
-6. Update `AlbumTrackList` to display credits
-7. Run bulk re-fetch on albums with MusicBrainz IDs
-8. Build network visualization components
-9. Add to Analytics page and rapper profiles
-
+- `/all-rappers?tag=lyricist` - Filter by Lyricist tag
+- `/all-rappers?tag=conscious&sort=rating` - Conscious rappers sorted by rating
+- `/all-rappers?tag=gangsta&location=Compton` - Gangsta rappers from Compton
