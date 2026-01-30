@@ -41,6 +41,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   const [locationFilter, setLocationFilter] = useState(urlFilters.location || "");
   const [ratedFilter, setRatedFilter] = useState(urlFilters.rated || "all");
   const [zodiacFilter, setZodiacFilter] = useState(urlFilters.zodiac || "all");
+  const [tagFilter, setTagFilter] = useState(urlFilters.tag || "all");
   const [allRappers, setAllRappers] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(urlFilters.page || 0);
   const [isInitialMount, setIsInitialMount] = useState(true);
@@ -96,7 +97,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
   }, [allRappers.length, isMicroBatchMode]);
 
   const { data: rappersData, isLoading, isFetching } = useQuery({
-    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, zodiacFilter, currentPage, isMicroBatchMode],
+    queryKey: ["all-rappers", sortBy, sortOrder, searchTerm, locationFilter, ratedFilter, zodiacFilter, tagFilter, currentPage, isMicroBatchMode],
     queryFn: async () => {
       // Always load from page 0 to allow scrolling to earlier pages
       const effectiveStartPage = 0;
@@ -165,6 +166,24 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
 
       // Standard query for "all" rappers
       let query = supabase.from("rappers").select("*", { count: "exact" });
+
+      // Apply tag filter - get rapper IDs with this tag first
+      if (tagFilter && tagFilter !== "all") {
+        const { data: taggedRapperIds, error: tagError } = await supabase
+          .from("rapper_tag_assignments")
+          .select("rapper_id, rapper_tags!inner(slug)")
+          .eq("rapper_tags.slug", tagFilter);
+        
+        if (tagError) {
+          console.error("[Hook] Tag filter error:", tagError);
+        } else if (taggedRapperIds && taggedRapperIds.length > 0) {
+          const rapperIds = taggedRapperIds.map(r => r.rapper_id);
+          query = query.in("id", rapperIds);
+        } else {
+          // No rappers have this tag - return empty
+          return { rappers: [], total: 0, hasMore: false };
+        }
+      }
 
       // Apply enhanced search filter with normalization
       if (searchTerm) {
@@ -311,6 +330,14 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     setAllFilters({ zodiac: value, page: 0 });
   };
 
+  const handleTagFilterChange = (value: string) => {
+    console.log(`[Hook] Tag filter changing to: ${value}`);
+    setTagFilter(value);
+    setCurrentPage(0);
+    setAllRappers([]);
+    setAllFilters({ tag: value, page: 0 });
+  };
+
   const handleLoadMore = () => {
     console.log(`[Hook] Loading more: current page ${currentPage} -> ${currentPage + 1}`);
     const newPage = currentPage + 1;
@@ -327,6 +354,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     locationFilter,
     ratedFilter,
     zodiacFilter,
+    tagFilter,
     allRappers,
     currentPage,
     itemsPerPage: effectiveItemsPerPage, // Return effective size
@@ -341,6 +369,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
     handleLocationInput,
     handleRatedFilterChange,
     handleZodiacFilterChange,
+    handleTagFilterChange,
     handleLoadMore,
   };
 };

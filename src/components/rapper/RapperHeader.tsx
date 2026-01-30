@@ -163,14 +163,15 @@ const RapperHeader = ({
                   <h4 className="text-sm font-medium text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] mb-2">Tags</h4>
                   <div className="flex flex-wrap gap-2">
                     {tags.map((tag) => (
-                      <Badge
-                        key={tag.id}
-                        variant="secondary"
-                        className="font-[var(--theme-font-body)]"
-                        style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
-                      >
-                        {tag.name}
-                      </Badge>
+                      <Link key={tag.id} to={`/all-rappers?tag=${tag.slug}`}>
+                        <Badge
+                          variant="secondary"
+                          className="font-[var(--theme-font-body)] cursor-pointer hover:opacity-80 transition-opacity"
+                          style={{ backgroundColor: tag.color, color: getContrastTextColor(tag.color) }}
+                        >
+                          {tag.name}
+                        </Badge>
+                      </Link>
                     ))}
                   </div>
                 </div>
