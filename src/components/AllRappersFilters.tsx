@@ -3,9 +3,9 @@ import React from "react";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Search, Loader2, Mic, ArrowUp, ArrowDown, X } from "lucide-react";
+import { Search, Loader2, Mic, ArrowUp, ArrowDown } from "lucide-react";
 import { getAllZodiacSigns } from "@/utils/zodiacUtils";
+import { useAllRapperTags } from "@/hooks/useAllRapperTags";
 
 interface AllRappersFiltersProps {
   searchInput: string;
@@ -41,6 +41,7 @@ const AllRappersFilters = ({
   onTagFilterChange
 }: AllRappersFiltersProps) => {
   const zodiacSigns = getAllZodiacSigns();
+  const { data: allTags = [] } = useAllRapperTags();
 
   return (
     <div className="bg-black border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 sm:p-4 mb-8 backdrop-blur-sm shadow-lg overflow-hidden min-w-0 max-w-full">
@@ -49,22 +50,8 @@ const AllRappersFilters = ({
         <h3 className="text-[hsl(var(--theme-textMuted))] font-[var(--theme-fontPrimary)] text-lg sm:text-xl animate-text-glow truncate">Search The Greatest</h3>
         <div className="flex-1 h-px bg-gradient-to-r from-[hsl(var(--theme-secondary))] via-[hsl(var(--theme-accent))] to-transparent min-w-0"></div>
       </div>
-
-      {/* Active Tag Filter Badge */}
-      {tagFilter && tagFilter !== "all" && (
-        <div className="mb-3 sm:mb-4">
-          <Badge 
-            variant="secondary"
-            className="bg-[hsl(var(--theme-primary))] text-black font-bold px-3 py-1.5 cursor-pointer hover:opacity-80 transition-opacity inline-flex items-center gap-2"
-            onClick={() => onTagFilterChange("all")}
-          >
-            {tagFilter}
-            <X className="w-3 h-3" />
-          </Badge>
-        </div>
-      )}
       
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 min-w-0 max-w-full">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3 min-w-0 max-w-full">
         {/* Search */}
         <div className="relative min-w-0 col-span-2 sm:col-span-1">
           <Search className="absolute left-2 sm:left-3 top-1/2 transform -translate-y-1/2 text-[hsl(var(--theme-textMuted))] w-4 h-4" />
@@ -97,6 +84,27 @@ const AllRappersFilters = ({
                   className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm"
                 >
                   {sign.symbol} {sign.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Rap Style Filter */}
+        <div className="min-w-0 max-w-full">
+          <Select value={tagFilter || "all"} onValueChange={onTagFilterChange}>
+            <SelectTrigger className="bg-black/95 border-[hsl(var(--theme-border))] text-[hsl(var(--theme-text))] focus:border-[hsl(var(--theme-primary))] focus:ring-[hsl(var(--theme-primary))]/30 font-[var(--theme-fontSecondary)] text-sm w-full">
+              <SelectValue placeholder="Style" />
+            </SelectTrigger>
+            <SelectContent className="bg-black border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))] z-50 max-h-60">
+              <SelectItem value="all" className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm">All Styles</SelectItem>
+              {allTags.map((tag) => (
+                <SelectItem 
+                  key={tag.id} 
+                  value={tag.slug}
+                  className="bg-transparent text-[hsl(var(--theme-text))] focus:bg-[hsl(var(--theme-backgroundLight))] focus:text-[hsl(var(--theme-text))] font-[var(--theme-fontSecondary)] text-sm"
+                >
+                  {tag.name}
                 </SelectItem>
               ))}
             </SelectContent>
