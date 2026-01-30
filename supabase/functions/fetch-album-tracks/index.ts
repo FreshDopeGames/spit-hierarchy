@@ -5,12 +5,22 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+interface MusicBrainzArtistCredit {
+  artist: {
+    id: string;
+    name: string;
+    'sort-name'?: string;
+  };
+  joinphrase?: string;
+}
+
 interface MusicBrainzTrack {
   position: number;
   recording: {
     id: string;
     title: string;
     length?: number;
+    'artist-credit'?: MusicBrainzArtistCredit[];
   };
 }
 
@@ -103,10 +113,11 @@ Deno.serve(async (req) => {
     console.log(`[fetch-album-tracks] Fetching releases for MusicBrainz ID: ${album.musicbrainz_id}`);
     
     // Helper to fetch releases with optional status filter
+    // Include artist-credits to capture featured artists
     const fetchReleases = async (statusFilter: string | null) => {
       const statusParam = statusFilter ? `&status=${statusFilter}` : '';
       const response = await fetch(
-        `https://musicbrainz.org/ws/2/release?release-group=${album.musicbrainz_id}${statusParam}&fmt=json&inc=recordings`,
+        `https://musicbrainz.org/ws/2/release?release-group=${album.musicbrainz_id}${statusParam}&fmt=json&inc=recordings+artist-credits`,
         {
           headers: {
             'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)',
@@ -200,6 +211,16 @@ Deno.serve(async (req) => {
       musicbrainz_id: string;
     }> = [];
 
+    // Also collect artist credits for each track
+    const allArtistCredits: Array<{
+      track_musicbrainz_id: string;
+      artist_name: string;
+      musicbrainz_artist_id: string;
+      join_phrase: string | null;
+      is_primary: boolean;
+      position: number;
+    }> = [];
+
     let trackPosition = 1;
     for (const medium of bestRelease.media) {
       if (!medium.tracks) continue;
@@ -212,9 +233,27 @@ Deno.serve(async (req) => {
           duration_ms: track.recording.length || null,
           musicbrainz_id: track.recording.id,
         });
+
+        // Extract artist credits if available
+        const artistCredits = track.recording['artist-credit'];
+        if (artistCredits && Array.isArray(artistCredits)) {
+          artistCredits.forEach((credit, creditIndex) => {
+            allArtistCredits.push({
+              track_musicbrainz_id: track.recording.id,
+              artist_name: credit.artist.name,
+              musicbrainz_artist_id: credit.artist.id,
+              join_phrase: credit.joinphrase || null,
+              is_primary: creditIndex === 0,
+              position: creditIndex + 1,
+            });
+          });
+        }
+
         trackPosition++;
       }
     }
+
+    console.log(`[fetch-album-tracks] Found ${allArtistCredits.length} artist credits across ${allTracks.length} tracks`);
 
     if (allTracks.length === 0) {
       console.log('[fetch-album-tracks] No tracks found in release');
@@ -244,9 +283,10 @@ Deno.serve(async (req) => {
     }
 
     // Insert tracks
-    const { error: insertError } = await supabaseClient
+    const { data: insertedTracks, error: insertError } = await supabaseClient
       .from('album_tracks')
-      .insert(allTracks);
+      .insert(allTracks)
+      .select('id, musicbrainz_id');
 
     if (insertError) {
       console.error('[fetch-album-tracks] Error inserting tracks:', insertError);
@@ -254,6 +294,53 @@ Deno.serve(async (req) => {
         JSON.stringify({ success: false, error: 'Failed to insert tracks', details: insertError.message }),
         { headers: { ...corsHeaders, 'Content-Type': 'application/json' }, status: 500 }
       );
+    }
+
+    // Create a map of musicbrainz_id to track_id for artist credits
+    const trackIdMap = new Map<string, string>();
+    if (insertedTracks) {
+      insertedTracks.forEach((track: { id: string; musicbrainz_id: string | null }) => {
+        if (track.musicbrainz_id) {
+          trackIdMap.set(track.musicbrainz_id, track.id);
+        }
+      });
+    }
+
+    // Insert artist credits with proper track_id references
+    if (allArtistCredits.length > 0 && insertedTracks) {
+      const artistCreditsToInsert = allArtistCredits
+        .filter(credit => trackIdMap.has(credit.track_musicbrainz_id))
+        .map(credit => ({
+          track_id: trackIdMap.get(credit.track_musicbrainz_id)!,
+          artist_name: credit.artist_name,
+          musicbrainz_artist_id: credit.musicbrainz_artist_id,
+          join_phrase: credit.join_phrase,
+          is_primary: credit.is_primary,
+          position: credit.position,
+        }));
+
+      if (artistCreditsToInsert.length > 0) {
+        const { error: creditsError } = await supabaseClient
+          .from('track_artists')
+          .insert(artistCreditsToInsert);
+
+        if (creditsError) {
+          console.error('[fetch-album-tracks] Error inserting artist credits:', creditsError);
+          // Don't fail the whole operation, just log the error
+        } else {
+          console.log(`[fetch-album-tracks] Successfully added ${artistCreditsToInsert.length} artist credits`);
+          
+          // Run the matching function to link credits to rappers
+          const { data: matchCount, error: matchError } = await supabaseClient
+            .rpc('match_track_artists_to_rappers');
+          
+          if (matchError) {
+            console.error('[fetch-album-tracks] Error matching artists to rappers:', matchError);
+          } else {
+            console.log(`[fetch-album-tracks] Matched ${matchCount} track artists to rappers`);
+          }
+        }
+      }
     }
 
     // Update album track_count

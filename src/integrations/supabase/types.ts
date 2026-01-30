@@ -1724,6 +1724,85 @@ export type Database = {
           },
         ]
       }
+      rapper_collaborations: {
+        Row: {
+          album_ids: string[] | null
+          collaboration_count: number
+          collaborator_id: string
+          created_at: string
+          id: string
+          rapper_id: string
+          source: string
+          track_ids: string[] | null
+          updated_at: string
+        }
+        Insert: {
+          album_ids?: string[] | null
+          collaboration_count?: number
+          collaborator_id: string
+          created_at?: string
+          id?: string
+          rapper_id: string
+          source?: string
+          track_ids?: string[] | null
+          updated_at?: string
+        }
+        Update: {
+          album_ids?: string[] | null
+          collaboration_count?: number
+          collaborator_id?: string
+          created_at?: string
+          id?: string
+          rapper_id?: string
+          source?: string
+          track_ids?: string[] | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_collaborations_collaborator_id_fkey"
+            columns: ["collaborator_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_collaborations_collaborator_id_fkey"
+            columns: ["collaborator_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_collaborations_collaborator_id_fkey"
+            columns: ["collaborator_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_collaborations_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_collaborations_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_collaborations_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_images: {
         Row: {
           created_at: string
@@ -2320,6 +2399,74 @@ export type Database = {
             columns: ["created_by"]
             isOneToOne: false
             referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      track_artists: {
+        Row: {
+          artist_name: string
+          created_at: string
+          id: string
+          is_primary: boolean
+          join_phrase: string | null
+          musicbrainz_artist_id: string | null
+          position: number
+          rapper_id: string | null
+          track_id: string
+          updated_at: string
+        }
+        Insert: {
+          artist_name: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          join_phrase?: string | null
+          musicbrainz_artist_id?: string | null
+          position?: number
+          rapper_id?: string | null
+          track_id: string
+          updated_at?: string
+        }
+        Update: {
+          artist_name?: string
+          created_at?: string
+          id?: string
+          is_primary?: boolean
+          join_phrase?: string | null
+          musicbrainz_artist_id?: string | null
+          position?: number
+          rapper_id?: string | null
+          track_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_artists_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "track_artists_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "track_artists_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "track_artists_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: false
+            referencedRelation: "album_tracks"
             referencedColumns: ["id"]
           },
         ]
@@ -3868,6 +4015,7 @@ export type Database = {
         Args: { access_type?: string; accessed_id: string }
         Returns: undefined
       }
+      match_track_artists_to_rappers: { Args: never; Returns: number }
       matches_alias: {
         Args: { aliases: string[]; search_term: string }
         Returns: boolean
@@ -3903,6 +4051,7 @@ export type Database = {
         Args: { target_ranking_id?: string }
         Returns: undefined
       }
+      refresh_rapper_collaborations: { Args: never; Returns: number }
       reset_all_voting_data: { Args: never; Returns: Json }
       search_profiles_admin: {
         Args: { search_term?: string }

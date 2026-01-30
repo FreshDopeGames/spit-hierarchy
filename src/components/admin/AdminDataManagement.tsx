@@ -6,6 +6,7 @@ import SocialMediaBulkUpdate from "./SocialMediaBulkUpdate";
 import DiscographyBulkFetch from "./DiscographyBulkFetch";
 import AlbumTracksBulkFetch from "./AlbumTracksBulkFetch";
 import WeeklyBlogGenerator from "./WeeklyBlogGenerator";
+import CollaborationTools from "./CollaborationTools";
 
 const AdminDataManagement = () => {
   return (
@@ -22,6 +23,7 @@ const AdminDataManagement = () => {
         <SocialMediaBulkUpdate />
         <DiscographyBulkFetch />
         <AlbumTracksBulkFetch />
+        <CollaborationTools />
         <VotingDataResetSection />
       </div>
     </div>
