@@ -3,7 +3,8 @@ import React from "react";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { Search, Loader2, Mic, ArrowUp, ArrowDown } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
+import { Search, Loader2, Mic, ArrowUp, ArrowDown, X } from "lucide-react";
 import { getAllZodiacSigns } from "@/utils/zodiacUtils";
 
 interface AllRappersFiltersProps {
@@ -14,11 +15,13 @@ interface AllRappersFiltersProps {
   sortBy: string;
   sortOrder: string;
   zodiacFilter: string;
+  tagFilter: string;
   onSearchInput: (value: string) => void;
   onLocationInput: (value: string) => void;
   onSortChange: (value: string) => void;
   onOrderChange: (value: string) => void;
   onZodiacFilterChange: (value: string) => void;
+  onTagFilterChange: (value: string) => void;
 }
 
 const AllRappersFilters = ({
@@ -29,11 +32,13 @@ const AllRappersFilters = ({
   sortBy,
   sortOrder,
   zodiacFilter,
+  tagFilter,
   onSearchInput,
   onLocationInput,
   onSortChange,
   onOrderChange,
-  onZodiacFilterChange
+  onZodiacFilterChange,
+  onTagFilterChange
 }: AllRappersFiltersProps) => {
   const zodiacSigns = getAllZodiacSigns();
 
@@ -44,6 +49,20 @@ const AllRappersFilters = ({
         <h3 className="text-[hsl(var(--theme-textMuted))] font-[var(--theme-fontPrimary)] text-lg sm:text-xl animate-text-glow truncate">Search The Greatest</h3>
         <div className="flex-1 h-px bg-gradient-to-r from-[hsl(var(--theme-secondary))] via-[hsl(var(--theme-accent))] to-transparent min-w-0"></div>
       </div>
+
+      {/* Active Tag Filter Badge */}
+      {tagFilter && tagFilter !== "all" && (
+        <div className="mb-3 sm:mb-4">
+          <Badge 
+            variant="secondary"
+            className="bg-[hsl(var(--theme-primary))] text-black font-bold px-3 py-1.5 cursor-pointer hover:opacity-80 transition-opacity inline-flex items-center gap-2"
+            onClick={() => onTagFilterChange("all")}
+          >
+            {tagFilter}
+            <X className="w-3 h-3" />
+          </Badge>
+        </div>
+      )}
       
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 min-w-0 max-w-full">
         {/* Search */}
