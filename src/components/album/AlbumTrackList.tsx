@@ -1,4 +1,6 @@
 import { TrackVoteButton } from "./TrackVoteButton";
+import { TrackArtistCredits } from "./TrackArtistCredits";
+import { useTrackArtists } from "@/hooks/useTrackArtists";
 import { cn } from "@/lib/utils";
 
 interface AlbumTrack {
@@ -15,6 +17,7 @@ interface AlbumTrackListProps {
   rapperName: string;
   onVote: (trackId: string) => Promise<any>;
   isVoting: boolean;
+  showArtistCredits?: boolean;
 }
 
 const formatDuration = (durationMs: number | null) => {
@@ -35,7 +38,11 @@ const generateGeniusUrl = (rapperName: string, trackTitle: string) => {
   return `https://genius.com/${slug}-lyrics`;
 };
 
-export const AlbumTrackList = ({ tracks, rapperName, onVote, isVoting }: AlbumTrackListProps) => {
+export const AlbumTrackList = ({ tracks, rapperName, onVote, isVoting, showArtistCredits = true }: AlbumTrackListProps) => {
+  // Fetch artist credits for all tracks
+  const trackIds = tracks.map(t => t.id);
+  const { data: artistsByTrack } = useTrackArtists(trackIds);
+
   if (tracks.length === 0) {
     return (
       <div className="text-center py-12">
@@ -56,14 +63,22 @@ export const AlbumTrackList = ({ tracks, rapperName, onVote, isVoting }: AlbumTr
         >
           <div className="flex-shrink-0 w-4 text-center text-sm text-muted-foreground">{track.track_number}</div>
           <div className="flex-1 min-w-0">
-            <a
-              href={generateGeniusUrl(rapperName, track.title)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-medium hover:text-[var(--theme-primary)] transition-colors hover:underline"
-            >
-              {track.title}
-            </a>
+            <div className="flex flex-wrap items-baseline gap-x-1">
+              <a
+                href={generateGeniusUrl(rapperName, track.title)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium hover:text-[var(--theme-primary)] transition-colors hover:underline"
+              >
+                {track.title}
+              </a>
+              {showArtistCredits && artistsByTrack?.[track.id] && (
+                <TrackArtistCredits 
+                  artists={artistsByTrack[track.id]} 
+                  primaryRapperName={rapperName}
+                />
+              )}
+            </div>
           </div>
           {track.duration_ms && (
             <div className="flex-shrink-0 text-sm text-muted-foreground hidden sm:block">
