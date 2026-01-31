@@ -135,7 +135,7 @@ const RankingItemContent = ({
               </span>
             </div>
             {isPending && (
-              <span className="text-yellow-400 text-xs font-merienda">(processing...)</span>
+              <span className={`text-yellow-400 font-merienda ${isTopFive ? 'text-xs' : 'text-[10px]'}`}>(processing...)</span>
             )}
           </div>
         </div>
