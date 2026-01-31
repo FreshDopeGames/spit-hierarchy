@@ -1,101 +1,94 @@
 
-# Add Rap Style Tag Dropdown Filter to All Rappers Page
+# Mobile Top 5 Ranking Cards - Position Cap Top + Larger Left-Aligned Avatars
 
 ## Overview
 
-Add a dropdown filter for rap style tags on the All Rappers page, allowing users to browse rappers by style directly without needing to click through from a rapper's profile.
+Redesign the mobile top 5 ranking cards to keep the prominent position cap at the top while creating a horizontal layout below it with a larger left-aligned avatar and metadata/buttons to the right.
 
 ---
 
-## Current State
+## New Layout Structure (Mobile Top 5)
 
-- The page already has `tagFilter` state and `onTagFilterChange` handler connected
-- A tag badge with "X" button shows when filtering by tag (from URL deep-link)
-- There are 26 rap style tags in the database
-- The Zodiac dropdown provides a pattern to follow
-
----
-
-## Implementation
-
-### Create Hook to Fetch All Tags
-
-**New File:** `src/hooks/useAllRapperTags.ts`
-
-```typescript
-// Fetch all rapper_tags for the dropdown
-const { data, error } = await supabase
-  .from("rapper_tags")
-  .select("id, name, slug, color")
-  .order("name");
+```
++------------------------------------------+
+|            [1] Position Cap              |  <- Full-width bar at TOP (kept)
++------------------------------------------+
+| [AVATAR]  | Kendrick Lamar         ↑    |
+|  112x112  | Compton, CA            ─    |
+|           | ★ 156 votes                 |
+|           |                      [VOTE] |
++------------------------------------------+
 ```
 
----
-
-### Update AllRappersFilters Component
-
-**File:** `src/components/AllRappersFilters.tsx`
-
-Add a new Style/Tag dropdown between Zodiac and Sort By:
-
-```tsx
-{/* Rap Style Filter */}
-<div className="min-w-0 max-w-full">
-  <Select value={tagFilter} onValueChange={onTagFilterChange}>
-    <SelectTrigger className="bg-black/95 border-[hsl(var(--theme-border))] ...">
-      <SelectValue placeholder="Style" />
-    </SelectTrigger>
-    <SelectContent className="bg-black border-2 border-[hsl(var(--theme-primary))] ... max-h-60">
-      <SelectItem value="all">All Styles</SelectItem>
-      {allTags.map((tag) => (
-        <SelectItem key={tag.id} value={tag.slug}>
-          {tag.name}
-        </SelectItem>
-      ))}
-    </SelectContent>
-  </Select>
-</div>
-```
+- Position cap: Stays at top (full-width horizontal bar) to distinguish legendary positions
+- Below cap: Horizontal layout with larger avatar on left
+- Avatar: 112x112 (larger than current 80x80)
+- Metadata: Left-aligned to the right of avatar
+- Vote button: Positioned at bottom-right of the content row
 
 ---
 
-### Grid Layout Update
+## Changes by Component
 
-Expand from 5 columns to 6 columns on large screens to accommodate the new dropdown:
+### 1. RankingItemCard.tsx
 
-```tsx
-<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
-```
+Keep the outer card as `flex-col` for mobile top 5, but change the **content wrapper** to `flex-row`:
 
----
-
-### Remove Duplicate Active Tag Badge
-
-Since there's now a dropdown for tag selection, the separate active tag badge shown above the filters becomes redundant. Remove it to keep the UI clean - the dropdown itself will show the selected value.
+| Element | Current | New |
+|---------|---------|-----|
+| Outer layout | `flex-col` | `flex-col` (keep - position cap on top) |
+| Content wrapper | `flex-col` | `flex-row` (avatar left, metadata right) |
+| Card height | `min-h-[140px]` | `min-h-[150px]` (slightly taller for larger avatar) |
 
 ---
 
-## Files to Create
+### 2. RankingItemPositionCap.tsx
 
-| File | Purpose |
-|------|---------|
-| `src/hooks/useAllRapperTags.ts` | Fetch all rapper tags for dropdown |
+No changes needed - mobile top 5 already uses `h-10 w-full` with `rounded-t-lg`.
+
+---
+
+### 3. RankingItemContent.tsx
+
+Update mobile top 5 to use horizontal layout with larger avatar:
+
+| Function | Current | New |
+|----------|---------|-----|
+| `getImageSize()` mobile top 5 | `w-20 h-20` (80px) | `w-28 h-28` (112px) |
+| `getContentAlignment()` mobile top 5 | `items-center text-center` | `items-start text-left` |
+| Main container flex | `flex-col` for mobile top 5 | `flex-row` (avatar and text side by side) |
+| Name/reason alignment | `flex-col items-center` | `flex-col items-start` |
+| Vote count justify | `justify-center` | `justify-start` |
+
+---
+
+### 4. RankingItemVoteSection.tsx
+
+Update mobile top 5 vote button to be right-aligned with auto width:
+
+| Function | Current | New |
+|----------|---------|-----|
+| `getContainerAlignment()` mobile top 5 | `w-full flex justify-center` | `flex items-center justify-end` |
+| `getVoteButtonWidth()` mobile top 5 | `w-full` | `w-auto` |
+
+---
 
 ## Files to Modify
 
-| File | Change |
-|------|--------|
-| `src/components/AllRappersFilters.tsx` | Add Style dropdown, update grid to 6 columns, remove duplicate badge |
+| File | Changes |
+|------|---------|
+| `src/components/rankings/RankingItemCard.tsx` | Change content wrapper from `flex-col` to `flex-row` for mobile top 5, adjust height |
+| `src/components/rankings/RankingItemContent.tsx` | Larger avatar (28x28/112px), always `flex-row`, left-align all text |
+| `src/components/rankings/RankingItemVoteSection.tsx` | Right-align vote button with auto width |
 
 ---
 
-## User Experience
+## Visual Result
 
-1. User visits `/all-rappers`
-2. User sees "Style" dropdown alongside Zodiac, Sort By, etc.
-3. User clicks Style dropdown and sees all 26 rap styles (Battle Rapper, Conscious, Gangsta, Lyricist, etc.)
-4. User selects "Party Vibes"
-5. URL updates to `/all-rappers?tag=party-vibes`
-6. Grid filters to show only rappers with the Party Vibes tag
-7. Dropdown shows "Party Vibes" as selected value
-8. User can select "All Styles" to clear the filter
+The top 5 cards on mobile will now have:
+- A prominent full-width position cap at the top displaying the rank (1-5) - preserved for legendary distinction
+- Below the cap: a horizontal row with large 112x112 avatar on the left
+- Rapper name, origin, and vote count left-aligned next to the avatar
+- Vote button tucked in the right side of the row
+
+This gives maximum prominence to both the legendary rank position AND the rapper's image.
