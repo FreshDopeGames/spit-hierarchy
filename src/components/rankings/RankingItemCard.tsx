@@ -41,7 +41,8 @@ const RankingItemCard = ({
 
   const getCardHeight = () => {
     if (isTopFive) {
-      return "min-h-[150px] sm:min-h-[120px]";
+      // Taller to accommodate 168px avatar on mobile
+      return "min-h-[200px] sm:min-h-[120px]";
     }
     // Reduced height for 6+ rankings on mobile for better fit
     return "h-[60px] sm:h-[78px]";
@@ -90,25 +91,52 @@ const RankingItemCard = ({
       
       {/* Content with appropriate margin for absolute positioned cap */}
       <div className={`flex-1 flex flex-row ${getContentRoundedCorners()} ${getContentMargin()}`}>
-        <RankingItemContent
-          item={item}
-          isTopFive={isTopFive}
-          isHot={isHot}
-          voteVelocity={voteVelocity}
-          rapperImageUrl={rapperImageUrl}
-          isPending={isPending}
-        />
-        
-        <RankingItemVoteSection
-          onVote={onVote}
-          userLoggedIn={userLoggedIn}
-          isTopFive={isTopFive}
-          rankingId={rankingId}
-          userRankingId={userRankingId}
-          rapperId={item.rapper?.id}
-          rapperName={item.rapper?.name}
-          isPending={isPending}
-        />
+        {/* Avatar section - fixed width on mobile top 5 */}
+        {isTopFive && isMobile ? (
+          <>
+            <RankingItemContent
+              item={item}
+              isTopFive={isTopFive}
+              isHot={isHot}
+              voteVelocity={voteVelocity}
+              rapperImageUrl={rapperImageUrl}
+              isPending={isPending}
+              voteSection={
+                <RankingItemVoteSection
+                  onVote={onVote}
+                  userLoggedIn={userLoggedIn}
+                  isTopFive={isTopFive}
+                  rankingId={rankingId}
+                  userRankingId={userRankingId}
+                  rapperId={item.rapper?.id}
+                  rapperName={item.rapper?.name}
+                  isPending={isPending}
+                />
+              }
+            />
+          </>
+        ) : (
+          <>
+            <RankingItemContent
+              item={item}
+              isTopFive={isTopFive}
+              isHot={isHot}
+              voteVelocity={voteVelocity}
+              rapperImageUrl={rapperImageUrl}
+              isPending={isPending}
+            />
+            <RankingItemVoteSection
+              onVote={onVote}
+              userLoggedIn={userLoggedIn}
+              isTopFive={isTopFive}
+              rankingId={rankingId}
+              userRankingId={userRankingId}
+              rapperId={item.rapper?.id}
+              rapperName={item.rapper?.name}
+              isPending={isPending}
+            />
+          </>
+        )}
       </div>
       
       {/* Pending Indicator */}

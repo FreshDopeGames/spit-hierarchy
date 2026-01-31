@@ -13,6 +13,7 @@ interface RankingItemContentProps {
   voteVelocity: number;
   rapperImageUrl?: string;
   isPending: boolean;
+  voteSection?: React.ReactNode;
 }
 
 const RankingItemContent = ({
@@ -21,7 +22,8 @@ const RankingItemContent = ({
   isHot,
   voteVelocity,
   rapperImageUrl,
-  isPending
+  isPending,
+  voteSection
 }: RankingItemContentProps) => {
   const isMobile = useIsMobile();
   const delta = item.position_delta || 0;
@@ -47,7 +49,8 @@ const RankingItemContent = ({
 
   const getImageSize = () => {
     if (isTopFive) {
-      return "w-28 h-28 sm:w-32 sm:h-32";
+      // 1.5x larger: 168px on mobile, 128px on desktop
+      return "w-[168px] h-[168px] sm:w-32 sm:h-32";
     }
     return "w-10 h-10 sm:w-14 sm:h-14";
   };
@@ -58,7 +61,8 @@ const RankingItemContent = ({
 
   const getContentSpacing = () => {
     if (isTopFive) {
-      return isMobile ? "gap-3 p-2" : "gap-4 pr-3 py-3";
+      // For mobile top 5, use pr-3 to extend to right edge with padding
+      return isMobile ? "gap-3 p-3" : "gap-4 pr-3 py-3";
     }
     return isMobile ? "gap-2 px-2 py-1" : "gap-2 px-3 py-2";
   };
@@ -100,39 +104,48 @@ const RankingItemContent = ({
         </div>
       </Link>
       
-      {/* Main Content */}
-      <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
-        <div className={`flex items-start gap-2 flex-wrap`}>
-          <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
-            {item.rapper?.name}
-          </Link>
-          {/* Only show trending icon next to name for top 5 */}
-          {isTopFive && getTrendingIcon()}
-        </div>
-        
-        {isTopFive && (
-          <>
-            {(item.reason || item.rapper?.origin) && (
-              <p className={`font-merienda ${textSizes.reason} text-left`}>
-                {item.reason || item.rapper?.origin || 'Unknown'}
-              </p>
-            )}
-          </>
-        )}
-        
-        <div className={`flex items-center gap-2 text-sm justify-start`}>
-          <div className="flex items-center gap-1">
-            {/* For rankings 6+, show trending icon before the vote count */}
-            {!isTopFive && getTrendingIcon()}
-            <Star className={`w-3 h-3 ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`} />
-            <span className={`font-merienda ${isTopFive ? 'text-base sm:text-lg text-rap-gold font-bold' : 'text-xs text-rap-gold/70'}`}>
-              {item.ranking_votes} vote{item.ranking_votes !== 1 ? 's' : ''}
-              {isPending && (
-                <span className="text-yellow-400 ml-1">(processing...)</span>
+      {/* Main Content - for mobile top 5 with voteSection, use flex-col to stack metadata and button */}
+      <div className={`flex-1 min-w-0 flex ${voteSection ? 'flex-col justify-between' : ''} ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
+        <div className={voteSection ? '' : ''}>
+          <div className={`flex items-start gap-2 flex-wrap`}>
+            <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
+              {item.rapper?.name}
+            </Link>
+            {/* Only show trending icon next to name for top 5 */}
+            {isTopFive && getTrendingIcon()}
+          </div>
+          
+          {isTopFive && (
+            <>
+              {(item.reason || item.rapper?.origin) && (
+                <p className={`font-merienda ${textSizes.reason} text-left mt-1`}>
+                  {item.reason || item.rapper?.origin || 'Unknown'}
+                </p>
               )}
-            </span>
+            </>
+          )}
+          
+          <div className={`flex items-center gap-2 text-sm justify-start mt-1`}>
+            <div className="flex items-center gap-1">
+              {/* For rankings 6+, show trending icon before the vote count */}
+              {!isTopFive && getTrendingIcon()}
+              <Star className={`w-3 h-3 ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`} />
+              <span className={`font-merienda ${isTopFive ? 'text-base sm:text-lg text-rap-gold font-bold' : 'text-xs text-rap-gold/70'}`}>
+                {item.ranking_votes} vote{item.ranking_votes !== 1 ? 's' : ''}
+                {isPending && (
+                  <span className="text-yellow-400 ml-1">(processing...)</span>
+                )}
+              </span>
+            </div>
           </div>
         </div>
+        
+        {/* Vote section at bottom right for mobile top 5 */}
+        {voteSection && (
+          <div className="flex justify-end mt-2">
+            {voteSection}
+          </div>
+        )}
       </div>
     </div>
   );
