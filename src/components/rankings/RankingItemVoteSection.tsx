@@ -34,15 +34,12 @@ const RankingItemVoteSection = ({
   };
 
   const getVoteButtonWidth = () => {
-    if (isTopFive && isMobile) {
-      return "w-full";
-    }
     return "w-auto";
   };
 
   const getContainerAlignment = () => {
     if (isTopFive && isMobile) {
-      return "w-full flex justify-center";
+      return "flex items-end justify-end";
     }
     return "flex items-center flex-shrink-0";
   };
