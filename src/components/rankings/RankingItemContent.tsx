@@ -125,18 +125,18 @@ const RankingItemContent = ({
             </>
           )}
           
-          <div className={`flex items-center gap-2 text-sm justify-start mt-1`}>
+          <div className={`flex flex-wrap items-center gap-x-2 gap-y-1 text-sm justify-start mt-1`}>
             <div className="flex items-center gap-1">
               {/* For rankings 6+, show trending icon before the vote count */}
               {!isTopFive && getTrendingIcon()}
               <Star className={`w-3 h-3 ${isTopFive ? 'text-rap-gold' : 'text-rap-gold/70'}`} />
               <span className={`font-merienda ${isTopFive ? 'text-base sm:text-lg text-rap-gold font-bold' : 'text-xs text-rap-gold/70'}`}>
                 {item.ranking_votes} vote{item.ranking_votes !== 1 ? 's' : ''}
-                {isPending && (
-                  <span className="text-yellow-400 ml-1">(processing...)</span>
-                )}
               </span>
             </div>
+            {isPending && (
+              <span className="text-yellow-400 text-xs font-merienda">(processing...)</span>
+            )}
           </div>
         </div>
         
