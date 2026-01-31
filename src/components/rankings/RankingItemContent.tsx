@@ -47,16 +47,13 @@ const RankingItemContent = ({
 
   const getImageSize = () => {
     if (isTopFive) {
-      return "w-20 h-20 sm:w-32 sm:h-32";
+      return "w-28 h-28 sm:w-32 sm:h-32";
     }
     return "w-10 h-10 sm:w-14 sm:h-14";
   };
 
   const getContentAlignment = () => {
-    if (isTopFive && isMobile) {
-      return "items-center text-center";
-    }
-    return "items-center text-left";
+    return "items-start text-left";
   };
 
   const getContentSpacing = () => {
@@ -75,7 +72,7 @@ const RankingItemContent = ({
   const imageToDisplay = rapperImageUrl && rapperImageUrl.trim() !== "" ? rapperImageUrl : placeholderImage;
 
   return (
-    <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
+    <div className={`flex-1 flex flex-row ${getContentAlignment()} ${getContentSpacing()} min-w-0`}>
       {/* Rapper Image - Always displayed with placeholder fallback */}
       <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`${getImageSize()} rounded-lg overflow-hidden bg-rap-carbon-light/50 flex-shrink-0 hover:opacity-80 transition-opacity relative`}>
         <img 
@@ -105,7 +102,7 @@ const RankingItemContent = ({
       
       {/* Main Content */}
       <div className={`flex-1 min-w-0 ${isTopFive ? 'space-y-2' : isMobile ? 'space-y-1' : 'space-y-1'}`}>
-        <div className={`flex ${isTopFive && isMobile ? 'flex-col items-center' : 'items-start'} gap-2 flex-wrap`}>
+        <div className={`flex items-start gap-2 flex-wrap`}>
           <Link to={`/rapper/${item.rapper?.slug || item.rapper?.id}`} className={`font-semibold ${textSizes.name} font-mogra ${isTopFive ? '' : 'leading-tight'} hover:opacity-80 transition-opacity`}>
             {item.rapper?.name}
           </Link>
@@ -116,14 +113,14 @@ const RankingItemContent = ({
         {isTopFive && (
           <>
             {(item.reason || item.rapper?.origin) && (
-              <p className={`font-merienda ${textSizes.reason} ${isMobile ? 'text-center' : 'text-left'}`}>
+              <p className={`font-merienda ${textSizes.reason} text-left`}>
                 {item.reason || item.rapper?.origin || 'Unknown'}
               </p>
             )}
           </>
         )}
         
-        <div className={`flex items-center gap-2 text-sm ${isTopFive && isMobile ? 'justify-center' : 'justify-start'}`}>
+        <div className={`flex items-center gap-2 text-sm justify-start`}>
           <div className="flex items-center gap-1">
             {/* For rankings 6+, show trending icon before the vote count */}
             {!isTopFive && getTrendingIcon()}

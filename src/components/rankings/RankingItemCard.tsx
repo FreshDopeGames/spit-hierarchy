@@ -41,7 +41,7 @@ const RankingItemCard = ({
 
   const getCardHeight = () => {
     if (isTopFive) {
-      return "min-h-[140px] sm:min-h-[120px]";
+      return "min-h-[150px] sm:min-h-[120px]";
     }
     // Reduced height for 6+ rankings on mobile for better fit
     return "h-[60px] sm:h-[78px]";
@@ -89,7 +89,7 @@ const RankingItemCard = ({
       />
       
       {/* Content with appropriate margin for absolute positioned cap */}
-      <div className={`flex-1 flex ${isTopFive && isMobile ? 'flex-col' : 'flex-row'} ${getContentRoundedCorners()} ${getContentMargin()}`}>
+      <div className={`flex-1 flex flex-row ${getContentRoundedCorners()} ${getContentMargin()}`}>
         <RankingItemContent
           item={item}
           isTopFive={isTopFive}
