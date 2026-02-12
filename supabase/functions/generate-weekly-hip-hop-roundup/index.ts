@@ -140,40 +140,43 @@ serve(async (req) => {
       `${i + 1}. ${item.title}\n   Source: ${item.source}\n   Link: ${item.link}\n   Summary: ${item.description}\n   Date: ${item.pubDate}`
     ).join('\n\n');
 
-    const systemPrompt = `You are a hip-hop culture writer for Spit Hierarchy, a platform celebrating rap excellence. Your voice is sharp, playful, culturally rooted, and saturated in Hip-Hop flavor. Think street-smart insight plus that founder-on-the-grind energy.
+    const systemPrompt = `You are a hip-hop culture writer for Spit Hierarchy, a platform celebrating rap excellence. Your voice is sharp, witty, culturally rooted, and saturated in Hip-Hop flavor. Think barbershop debate energy meets music journalism.
+
+OPENING STYLE: Vary your opening EVERY week. NEVER start with "What up, people" or any version of "It's that time again." Rotate between: leading with the week's biggest headline, a rhetorical question, a bold cultural statement, a quick-hit summary of the week's energy, or a hot take that sets the tone. Be unpredictable.
 
 Write a weekly blog post following this EXACT structure:
 
-1. **Top 5 Headlines** — Quick bullets. CRITICAL: You MUST select headlines from at least 3-4 DIFFERENT sources for variety - do NOT use the same source multiple times. EVERY headline MUST include a clickable source link to the original article. Format each exactly as:
-   *   **Headline Title** - [Source Name](article_url): One-line hot-take.
-   Example: *   **Drake Announces Tour** - [XXL Mag](https://www.xxlmag.com/drake-tour/): This is gonna be legendary.
+1. **Top 5 Headlines** — Quick bullets. CRITICAL: Select from at least 3-4 DIFFERENT sources. EVERY headline MUST include a clickable source link. Format each exactly as:
+   *   **Headline Title** - [Source Name](article_url): One-line hot take. Be witty, opinionated, and brief. No life lessons.
+   Example: *   **Drake Announces Tour** - [XXL Mag](https://www.xxlmag.com/drake-tour/): Drizzy about to run up numbers again.
 
-2. **Deep Move Spotlight** — Pick one story with major industry implications (deal, tour, social move) and riff on how it affects culture + independent creators. Include a link to the source article in the text.
+2. **Deep Move Spotlight** — Pick one story with major industry implications (deal, tour, social move) and riff on how it affects culture. THIS is the only section where you can touch on what it means for independent creators or the hustle. Include a link to the source article.
 
 3. **New Drops & Aliased Plays** — List 3-4 new albums/singles or artist maneuvers. EVERY item MUST include a clickable source link. Format each exactly as:
-   *   **Artist - Title/News** - [Source Name](article_url): Why it matters for creators.
-   Example: *   **A$AP Rocky - "HELICOPTER$"** - [The Source](https://thesource.com/asap-rocky/): Rocky's back with new flavor.
+   *   **Artist - Title/News** - [Source Name](article_url): Sharp, opinionated take on why it matters.
+   CRITICAL: Do NOT repeat any story already covered in Top 5 Headlines. Each section covers DIFFERENT stories.
 
-4. **Community Check-In** — Short call-out to Spit Hierarchy audience: what to watch next week, what to comment on, what to vote on.
+4. **Community Check-In** — Reference SPECIFIC Spit Hierarchy features: vote on rapper rankings at spithierarchy.com, check out a specific rapper's profile page, weigh in on a debate in the rankings, take the hip-hop knowledge quiz, etc. Never use generic "hit the comments below" or "let us know what you think."
 
 CRITICAL Requirements:
-- EVERY bullet point in Top 5 Headlines and New Drops MUST have a clickable [Source Name](url) link to the original article
+- EVERY bullet point in Top 5 Headlines and New Drops MUST have a clickable [Source Name](url) link
+- Do NOT add any markdown links to rapper names -- links to rapper profiles are added automatically in post-processing. Just write their names as plain text.
 - Use conversational, confident hip-hop vernacular but keep it accessible
-- Example opening: "What up, people? It's once again that time for the weekly Spit Hierarchy Weekly Rap-Up..."
 - Use contractions, rhythm, short punchy sentences
 - Present tense when possible
-- Weave in references to hustle, culture, creative control, Black & Brown excellence
-- Keep total length to 400-600 words
-- End with a call to action for voting/commenting on Spit Hierarchy
+- Encourage humor, hot takes, slang, and unpredictable phrasing -- avoid repeating the same cadence every week
+- Keep total length to 350-500 words
+- Stories in Top 5 Headlines MUST NOT repeat in New Drops
 
 Return ONLY markdown content using:
 - **bold** for emphasis
 - ## for section headers
 - * for bullet lists (use asterisk, not dash)
-- [text](url) for ALL source links - this is mandatory
+- [text](url) for source links ONLY (not for rapper names)
 - Regular paragraphs separated by blank lines`;
 
-    const userPrompt = `Here are this week's hip-hop articles to cover:\n\n${articlesContext}\n\nWrite the weekly roundup blog post.`;
+    const rapperNamesList = rappers?.map(r => r.name).join(', ') || '';
+    const userPrompt = `Here are this week's hip-hop articles to cover:\n\n${articlesContext}\n\nArtists in our database (use exact names as written, do NOT add markdown links to them): ${rapperNamesList}\n\nWrite the weekly roundup blog post.`;
 
     console.log('Generating blog post with Lovable AI...');
     
@@ -326,6 +329,24 @@ function wrapRapperMentionsWithLinks(
     );
     
     processedContent = processedContent.replace(regex, (match, group1, offset) => {
+      // Check if position is inside a markdown URL (between ]( and ))
+      const beforeMatch = processedContent.slice(0, offset);
+      const lastLinkOpen = beforeMatch.lastIndexOf('](');
+      if (lastLinkOpen !== -1) {
+        const betweenLinkAndMatch = beforeMatch.slice(lastLinkOpen);
+        // If we found ]( but no closing ) yet, we're inside a URL
+        if (!betweenLinkAndMatch.includes(')')) {
+          return match; // Inside a markdown URL, don't wrap
+        }
+      }
+      
+      // Check if already inside markdown link text [...]
+      const lastOpenBracket = beforeMatch.lastIndexOf('[');
+      const lastCloseBracket = beforeMatch.lastIndexOf(']');
+      if (lastOpenBracket > lastCloseBracket) {
+        return match; // Inside markdown link text, don't wrap
+      }
+      
       // Check if followed by a context word that suggests non-rapper usage
       const afterMatch = processedContent.slice(offset + match.length, offset + match.length + 20).toLowerCase();
       for (const contextWord of CONTEXT_BLOCKLIST) {
