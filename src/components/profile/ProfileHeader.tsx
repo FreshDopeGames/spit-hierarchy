@@ -50,7 +50,7 @@ const ProfileHeader = ({
             <div className="flex-1 lg:flex-shrink">
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-2">
                 <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold break-words text-yellow-600">
-                  {profile?.username || profile?.full_name || user.email}
+                  {profile?.username || profile?.full_name || "User"}
                 </h2>
                 <TooltipProvider>
                   <Tooltip>

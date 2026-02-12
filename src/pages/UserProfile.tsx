@@ -173,8 +173,8 @@ const UserProfile = () => {
     );
   }
 
-  // Combined loading state for profile data
-  const isDataLoading = profileLoading || memberStatsLoading || voteNotesLoading || publicStatsLoading;
+  // Core loading: only profile + member stats block the header
+  const isCoreLoading = profileLoading || memberStatsLoading;
 
   return (
     <>
@@ -190,8 +190,8 @@ const UserProfile = () => {
           <HeaderNavigation isScrolled={false} />
 
           <main className="flex-1 max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28">
-            {isDataLoading ? (
-              // Show skeleton while profile data loads
+            {isCoreLoading ? (
+              // Show skeleton while core profile data loads
               <>
                 <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 shadow-lg shadow-rap-gold/20">
                   <div className="flex flex-col sm:flex-row items-start sm:items-start space-y-4 sm:space-y-0 sm:space-x-6">
@@ -205,23 +205,9 @@ const UserProfile = () => {
                     </div>
                   </div>
                 </div>
-                
-                <div className="space-y-6">
-                  <div className="bg-carbon-fiber/90 border-4 border-rap-gold/30 rounded-lg p-4 sm:p-6 shadow-lg shadow-rap-gold/20">
-                    <TextSkeleton width="w-32" height="h-6" className="mb-4" />
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                      {[1, 2, 3, 4].map((i) => (
-                        <div key={i} className="text-center">
-                          <TextSkeleton width="w-12" height="h-8" className="mx-auto mb-2" />
-                          <TextSkeleton width="w-16" height="h-4" className="mx-auto" />
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-                </div>
               </>
             ) : (
-              // Show actual content when loaded
+              // Show content progressively as data arrives
               <>
                 <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
                 
