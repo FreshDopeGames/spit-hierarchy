@@ -3688,7 +3688,8 @@ export type Database = {
         Returns: {
           avatar_url: string
           bio: string
-          birthdate: string
+          birth_day: number
+          birth_month: number
           created_at: string
           full_name: string
           id: string
