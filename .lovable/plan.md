@@ -1,67 +1,104 @@
 
 
-# Fix Slow Profile Page + Email Showing as Name
+# Revise Weekly Rap-Up Tone and Cadence
 
-## Problem Summary
+## Problems Identified
 
-1. **Slow loading**: The profile page blocks rendering until ALL 4 database queries finish. The slowest one (`get_public_profile_stats`) runs expensive JOINs and subqueries. Additionally, `check_and_award_achievements` fires on every visit and loops through every achievement.
+1. **Cookie-cutter openings** -- Every post starts with nearly the same "What up, people? It's once again that time..." line
+2. **Forced "creator lesson" syndrome** -- Every single bullet shoehorns in advice for "independent creators" or "emerging artists," making the whole thing read like a motivational newsletter instead of a hip-hop blog
+3. **Section overlap** -- The same stories appear in both "Top 5 Headlines" and "New Drops," wasting space
+4. **Generic Community Check-In** -- Always "hit the comments below" with no reference to actual Spit Hierarchy features like voting or rankings
+5. **Double-linking bug** -- The rapper mention post-processor wraps names that already appear inside markdown link URLs, creating broken nested links like `[Drizzy](https://spithierarchy.com/rapper/[drake](...))` 
 
-2. **Email showing as name**: The fallback `profile?.username || profile?.full_name || user.email` shows the email when the profile query hasn't loaded yet or errors out.
+## Changes
 
----
+### 1. Rewrite the AI System Prompt
 
-## Solution
+**File: `supabase/functions/generate-weekly-hip-hop-roundup/index.ts`**
 
-### 1. Progressive Loading (show content as it arrives)
+Update the `systemPrompt` variable with these tone/cadence changes:
 
-Instead of waiting for all 4 queries, render the `ProfileHeader` as soon as the profile and member stats load. The other sections (vote notes, public stats, achievements) load independently with their own loading states.
+- **Varied openings**: Instruct the AI to rotate opening styles (direct headline lead-in, rhetorical question, bold statement about the week) -- explicitly say "Do NOT start with 'What up, people' or any version of 'It's that time again'"
+- **Cut the preachiness**: Remove instructions about "weave in references to hustle" and "independent creators" from every bullet. Instead, limit the creator/hustle angle to ONLY the Deep Move Spotlight section where it fits naturally. Headlines and New Drops should just be sharp commentary, not life lessons
+- **No duplicate stories**: Add explicit instruction that a story covered in Top 5 Headlines must NOT reappear in New Drops
+- **Specific Community Check-In**: Replace generic "hit the comments" with instructions to reference actual Spit Hierarchy features -- voting on rapper rankings, checking out rapper profiles, upcoming battles, etc.
+- **Tighter word count**: Reduce from 400-600 words to 350-500 to cut the filler
+- **More personality, less formula**: Encourage humor, hot takes, and unpredictable phrasing rather than the same cadence every week
 
-**File: `src/pages/UserProfile.tsx`**
-- Split `isDataLoading` into two tiers:
-  - **Critical data** (profile + memberStats): blocks the header
-  - **Secondary data** (voteNotes, publicStats): each section shows its own loading spinner
-- This means the page header appears much faster since it only waits for 2 quick queries
+### 2. Fix the Double-Linking Bug
 
-### 2. Fix the Email Fallback
+**File: `supabase/functions/generate-weekly-hip-hop-roundup/index.ts`**
 
-**File: `src/components/profile/ProfileHeader.tsx`**
-- Remove `user.email` from the display name fallback chain
-- Use a safe fallback like "Loading..." or just show the username/full_name, never the email
-- The `profile` data is guaranteed to exist when `ProfileHeader` renders (it's gated by the critical loading check)
+Update the `wrapRapperMentionsWithLinks` function:
 
-### 3. Defer Achievement Tracking
+- Add a check to skip replacement when the match is already inside a markdown link (both the text portion `[...]` and the URL portion `(...)`)
+- The current negative lookahead `(?![^\[]*\])` only checks if the match is inside `[...]` brackets but doesn't prevent matches inside `(...)` URL parentheses
+- Add a second check: skip if the match position falls between `(` and `)` that are part of a markdown link pattern
 
-**File: `src/pages/UserProfile.tsx`**
-- Move `useProfileAccessTracking` so it doesn't fire until after profile data has loaded, preventing it from competing with the initial data fetch queries
+### 3. Instruct AI to Use Canonical Rapper Names
 
----
+**File: `supabase/functions/generate-weekly-hip-hop-roundup/index.ts`**
+
+- Pass the list of rapper names from the database into the user prompt so the AI uses exact spellings
+- Add instruction: "When mentioning rappers, use their name exactly as written -- do NOT add markdown links yourself, links will be added automatically in post-processing"
+- This prevents the AI from creating its own `[rapper](url)` links that then get double-wrapped by the post-processor
 
 ## Technical Details
 
-### Changes to `src/pages/UserProfile.tsx`
+### System Prompt Revision (key changes)
 
-- Replace `isDataLoading` with `const isCoreLoading = profileLoading || memberStatsLoading;`
-- Render `ProfileHeader`, `MyTopFiveSection`, and the onboarding section once core data is ready
-- Let `ProfileStats`, `VoteNotesSection`, and other sections handle their own loading states (they already receive data props -- just pass potentially-undefined values and let them show skeletons internally)
+```
+Old: "Example opening: 'What up, people? It's once again that time...'"
+New: "Vary your opening every week. NEVER start with 'What up people' or 
+     'It's that time again.' Try: leading with the biggest headline, a 
+     rhetorical question, a bold cultural statement, or a quick-hit summary 
+     of the week's energy."
 
-### Changes to `src/components/profile/ProfileHeader.tsx`
+Old: "Weave in references to hustle, culture, creative control"
+New: "Save the hustle/creator angle for the Deep Move Spotlight only. 
+     Headlines and New Drops should be pure commentary -- witty, opinionated, 
+     and brief. No life lessons in bullet points."
 
-- Change the name display from:
-  `profile?.username || profile?.full_name || user.email`
-  to:
-  `profile?.username || profile?.full_name || "User"`
-- This prevents the email from ever being displayed as the name
+Old: "End with a call to action for voting/commenting on Spit Hierarchy"
+New: "End with a SPECIFIC call to action referencing Spit Hierarchy features: 
+     vote on rapper rankings, check a specific rapper's profile, weigh in on 
+     a debate in the rankings, etc. Never use generic 'hit the comments below.'"
 
-### Changes to `src/hooks/useProfileAccessTracking.ts` (optional optimization)
+Add: "Stories in Top 5 Headlines MUST NOT repeat in New Drops. Each section 
+     covers different stories."
+```
 
-- No structural changes needed, but the 1-second delay in the hook already helps. The main performance win comes from not blocking the UI on all 4 queries.
+### Double-Link Fix
 
----
+Update the regex in `wrapRapperMentionsWithLinks` to also skip matches inside URL parentheses:
+
+```typescript
+// Before replacing, check if position is inside a markdown URL
+const beforeMatch = processedContent.slice(0, offset);
+const openParens = (beforeMatch.match(/\]\(/g) || []).length;
+const closeParens = (beforeMatch.slice(beforeMatch.lastIndexOf(']('))
+  .match(/\)/g) || []).length;
+if (openParens > closeParens) {
+  return match; // Inside a URL, don't wrap
+}
+```
+
+Also add instruction to the AI prompt: "Do NOT add any markdown links to rapper names. Links are added automatically after generation."
+
+### User Prompt Enhancement
+
+Pass rapper names to the AI so it uses correct spellings:
+
+```typescript
+const rapperNamesList = rappers.map(r => r.name).join(', ');
+const userPrompt = `Here are this week's hip-hop articles...\n\n${articlesContext}\n\n
+Artists in our database (use exact names, do NOT add links to them): ${rapperNamesList}\n\n
+Write the weekly roundup blog post.`;
+```
 
 ## Files to Modify
 
 | File | Change |
 |------|--------|
-| `src/pages/UserProfile.tsx` | Split loading into core vs. secondary; render progressively |
-| `src/components/profile/ProfileHeader.tsx` | Remove `user.email` from display name fallback |
+| `supabase/functions/generate-weekly-hip-hop-roundup/index.ts` | Rewrite system prompt for better tone/variety; fix double-linking bug; pass rapper names to AI; tell AI not to link rappers |
 
