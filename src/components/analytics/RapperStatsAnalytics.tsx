@@ -13,6 +13,12 @@ const RapperStatsAnalytics = () => {
         Rapper Statistics
       </h3>
 
+      {/* Albums & Top Cities */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <AlbumStatsCard />
+        <TopCitiesCard />
+      </div>
+
       {/* Top Rappers by Category */}
       <TopRappersByCategoryCard />
 
@@ -20,8 +26,6 @@ const RapperStatsAnalytics = () => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <RapperAgeCard />
         <CareerLengthCard />
-        <AlbumStatsCard />
-        <TopCitiesCard />
       </div>
 
       {/* Top Tags */}
