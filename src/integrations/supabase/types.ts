@@ -3986,6 +3986,12 @@ export type Database = {
         Args: { ranking_uuid: string }
         Returns: number
       }
+      get_user_rated_rapper_ids: {
+        Args: { p_user_id: string }
+        Returns: {
+          rapper_id: string
+        }[]
+      }
       get_user_voting_stats: {
         Args: never
         Returns: {
