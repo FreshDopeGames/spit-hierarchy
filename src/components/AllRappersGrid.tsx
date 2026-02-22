@@ -32,18 +32,14 @@ const AllRappersGrid = ({
 }: AllRappersGridProps) => {
   const { user } = useAuth();
   
-  // Fetch user's rated rapper IDs from votes table
+  // Fetch user's rated rapper IDs using RPC to avoid 1000-row limit
   const { data: ratedRapperIds } = useQuery({
     queryKey: ["user-rated-rappers", user?.id],
     queryFn: async () => {
       if (!user) return new Set<string>();
       const { data } = await supabase
-        .from("votes")
-        .select("rapper_id")
-        .eq("user_id", user.id);
-      // Get unique rapper IDs
-      const uniqueIds = [...new Set((data || []).map(r => r.rapper_id))];
-      return new Set(uniqueIds);
+        .rpc("get_user_rated_rapper_ids", { p_user_id: user.id });
+      return new Set((data || []).map((r: { rapper_id: string }) => r.rapper_id));
     },
     enabled: !!user,
     staleTime: 60000,

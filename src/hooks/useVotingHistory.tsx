@@ -73,23 +73,36 @@ export const useVotingHistory = () => {
   const { data: attributeVotes, isLoading: attributeVotesLoading } = useQuery({
     queryKey: ['attribute-votes-history', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('votes')
-        .select(`
-          rapper_id,
-          created_at,
-          rating,
-          rappers!votes_rapper_id_fkey (
-            id,
-            name,
-            slug,
-            image_url
-          )
-        `)
-        .eq('user_id', user!.id)
-        .order('created_at', { ascending: false });
+      // Fetch all votes in batches to avoid the 1000-row default limit
+      let allData: any[] = [];
+      let from = 0;
+      const batchSize = 1000;
+      while (true) {
+        const { data, error } = await supabase
+          .from('votes')
+          .select(`
+            rapper_id,
+            created_at,
+            rating,
+            rappers!votes_rapper_id_fkey (
+              id,
+              name,
+              slug,
+              image_url
+            )
+          `)
+          .eq('user_id', user!.id)
+          .order('created_at', { ascending: false })
+          .range(from, from + batchSize - 1);
 
-      if (error) throw error;
+        if (error) throw error;
+        allData = allData.concat(data || []);
+        if (!data || data.length < batchSize) break;
+        from += batchSize;
+      }
+
+      const data = allData;
+
 
       // Group by rapper and calculate user's average rating
       const rapperVotes = new Map<string, { votes: any[]; latestDate: string }>();
