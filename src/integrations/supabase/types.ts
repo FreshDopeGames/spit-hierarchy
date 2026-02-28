@@ -168,6 +168,7 @@ export type Database = {
           external_cover_links: Json | null
           has_cover_art: boolean | null
           id: string
+          is_flagged_unofficial: boolean
           label_id: string | null
           musicbrainz_id: string | null
           release_date: string | null
@@ -175,6 +176,7 @@ export type Database = {
           slug: string
           title: string
           track_count: number | null
+          unofficial_flag_reason: string | null
           updated_at: string
         }
         Insert: {
@@ -185,6 +187,7 @@ export type Database = {
           external_cover_links?: Json | null
           has_cover_art?: boolean | null
           id?: string
+          is_flagged_unofficial?: boolean
           label_id?: string | null
           musicbrainz_id?: string | null
           release_date?: string | null
@@ -192,6 +195,7 @@ export type Database = {
           slug: string
           title: string
           track_count?: number | null
+          unofficial_flag_reason?: string | null
           updated_at?: string
         }
         Update: {
@@ -202,6 +206,7 @@ export type Database = {
           external_cover_links?: Json | null
           has_cover_art?: boolean | null
           id?: string
+          is_flagged_unofficial?: boolean
           label_id?: string | null
           musicbrainz_id?: string | null
           release_date?: string | null
@@ -209,6 +214,7 @@ export type Database = {
           slug?: string
           title?: string
           track_count?: number | null
+          unofficial_flag_reason?: string | null
           updated_at?: string
         }
         Relationships: [

@@ -1337,7 +1337,7 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
     .select(`
       id,
       role,
-      album:albums (
+      album:albums!inner (
         id,
         title,
         slug,
@@ -1349,10 +1349,12 @@ async function readDiscographyPayload(supabaseService: any, rapperId: string) {
         cover_art_colors,
         external_cover_links,
         track_count,
+        is_flagged_unofficial,
         label:record_labels ( id, name )
       )
     `)
-    .eq('rapper_id', rapperId);
+    .eq('rapper_id', rapperId)
+    .eq('albums.is_flagged_unofficial', false);
 
   return { discography: discography || [] };
 }
