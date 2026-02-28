@@ -70,6 +70,7 @@ This document tracks upcoming features, improvements, and the platform's monetiz
 - [ ] Push notification campaigns
 
 ### Medium Priority
+- [ ] YouTube video buttons on album tracklist (edge function + YouTube Data API + caching table)
 - [ ] Regional landing pages (/region/east-coast, etc.)
 - [ ] Rapper comparison tool
 - [ ] User-generated content moderation improvements
