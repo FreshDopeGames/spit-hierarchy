@@ -19,6 +19,7 @@ interface AlbumDetail {
   release_date: string | null;
   release_type: string;
   cover_art_url: string | null;
+  cached_cover_url: string | null;
   track_count: number | null;
   external_cover_links?: {
     spotify?: string;
@@ -77,7 +78,8 @@ export const useAlbumDetail = (rapperSlug: string, albumSlug: string) => {
           album_slug: album.album_slug,
           release_date: album.release_date,
           release_type: album.release_type,
-          cover_art_url: album.cover_art_url,
+          cover_art_url: album.cached_cover_url || album.cover_art_url,
+          cached_cover_url: album.cached_cover_url || null,
           track_count: album.track_count,
           external_cover_links: album.external_cover_links || null,
           tracks: (Array.isArray(album.tracks) ? album.tracks : []) as unknown as AlbumTrack[],
