@@ -3601,6 +3601,7 @@ export type Database = {
           album_id: string
           album_slug: string
           album_title: string
+          cached_cover_url: string
           cover_art_url: string
           external_cover_links: Json
           release_date: string
