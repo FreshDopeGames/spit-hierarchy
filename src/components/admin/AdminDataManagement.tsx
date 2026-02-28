@@ -7,6 +7,7 @@ import DiscographyBulkFetch from "./DiscographyBulkFetch";
 import AlbumTracksBulkFetch from "./AlbumTracksBulkFetch";
 import WeeklyBlogGenerator from "./WeeklyBlogGenerator";
 import CollaborationTools from "./CollaborationTools";
+import FlaggedMixtapesReview from "./FlaggedMixtapesReview";
 
 const AdminDataManagement = () => {
   return (
@@ -18,6 +19,7 @@ const AdminDataManagement = () => {
       />
       
       <div className="space-y-8">
+        <FlaggedMixtapesReview />
         <WeeklyBlogGenerator />
         <MusicBrainzBulkPopulation />
         <SocialMediaBulkUpdate />
