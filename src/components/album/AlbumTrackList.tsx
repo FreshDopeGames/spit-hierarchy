@@ -81,7 +81,7 @@ export const AlbumTrackList = ({ tracks, rapperName, onVote, isVoting, showArtis
               {formatDuration(track.duration_ms)}
             </div>
           )}
-          <div className="flex-shrink-0 flex items-center gap-1">
+          <div className="flex-shrink-0 flex flex-col items-center gap-1">
             <TrackVoteButton
               trackId={track.id}
               voteCount={track.vote_count}
@@ -96,7 +96,7 @@ export const AlbumTrackList = ({ tracks, rapperName, onVote, isVoting, showArtis
               className="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-semibold bg-[hsl(var(--theme-primary))] text-black hover:opacity-80 transition-opacity"
             >
               <ExternalLink className="h-3 w-3" />
-              <span className="hidden sm:inline">Lyrics</span>
+              Lyrics
             </a>
           </div>
         </div>
