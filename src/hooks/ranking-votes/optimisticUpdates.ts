@@ -102,8 +102,12 @@ export const invalidateRelatedQueries = (
     exact: true // Only invalidate exact match, not partial matches
   });
   
-  // Only invalidate ranking data for THIS specific ranking
+  // Only invalidate ranking data for THIS specific ranking, then force refetch
   queryClient.invalidateQueries({ 
+    queryKey: ['ranking-data-with-deltas', rankingId],
+    exact: true
+  });
+  queryClient.refetchQueries({ 
     queryKey: ['ranking-data-with-deltas', rankingId],
     exact: true
   });
