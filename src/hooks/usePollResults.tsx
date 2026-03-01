@@ -17,39 +17,34 @@ export const usePollResults = (pollId: string) => {
   return useQuery({
     queryKey: ['poll-results', pollId],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from('poll_votes')
-        .select(`
-          option_id,
-          poll_options (
-            option_text
-          )
-        `)
-        .eq('poll_id', pollId);
+      // Fetch aggregated vote counts from the poll_results view (no RLS restriction)
+      const [resultsResponse, optionsResponse] = await Promise.all([
+        supabase
+          .from('poll_results')
+          .select('option_id, vote_count')
+          .eq('poll_id', pollId),
+        supabase
+          .from('poll_options')
+          .select('id, option_text')
+          .eq('poll_id', pollId)
+      ]);
 
-      if (error) throw error;
+      if (resultsResponse.error) throw resultsResponse.error;
+      if (optionsResponse.error) throw optionsResponse.error;
 
-      // Group votes by option
-      const voteCounts = data.reduce((acc, vote) => {
-        const optionId = vote.option_id;
-        const optionText = vote.poll_options?.option_text || '';
-        
-        if (!acc[optionId]) {
-          acc[optionId] = {
-            optionId,
-            optionText,
-            voteCount: 0
-          };
-        }
-        acc[optionId].voteCount++;
-        return acc;
-      }, {} as Record<string, { optionId: string; optionText: string; voteCount: number }>);
+      // Build option text lookup
+      const optionTextMap = new Map(
+        optionsResponse.data.map(opt => [opt.id, opt.option_text])
+      );
 
-      // Calculate total votes and percentages
-      const totalVotes = data.length;
-      const results: PollResult[] = Object.values(voteCounts).map(option => ({
-        ...option,
-        percentage: totalVotes > 0 ? Math.round((option.voteCount / totalVotes) * 100) : 0
+      // Calculate total votes
+      const totalVotes = resultsResponse.data.reduce((sum, r) => sum + (Number(r.vote_count) || 0), 0);
+
+      const results: PollResult[] = resultsResponse.data.map(r => ({
+        optionId: r.option_id!,
+        optionText: optionTextMap.get(r.option_id!) || '',
+        voteCount: Number(r.vote_count) || 0,
+        percentage: totalVotes > 0 ? Math.round(((Number(r.vote_count) || 0) / totalVotes) * 100) : 0
       }));
 
       return { results, totalVotes };
