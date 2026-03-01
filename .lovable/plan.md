@@ -1,56 +1,29 @@
 
 
-# Add Album Search to Global Search Bar
+## Investigation Results
 
-## Overview
+**Database state is correct**: J. Cole has 37 total vote weight, Jay-Z has 34. The `sortItemsByVotes` function sorts by `ranking_votes` descending, so J. Cole should appear above Jay-Z.
 
-Extend the global search to also search albums alongside rappers. Results will be grouped into two sections -- "Rappers" and "Albums" -- so users can find and navigate to any album directly.
+**Root cause**: Aggressive caching prevents the UI from reflecting the correct sort order.
 
-## What Changes
+1. `staleTime: 5 * 60 * 1000` (5 minutes) — data considered fresh for 5 minutes, suppressing refetches
+2. `refetchOnWindowFocus: false` — switching tabs doesn't trigger a refresh
+3. After a vote, `invalidateRelatedQueries` fires with a 1-second delayed second invalidation, but the `staleTime` may cause the component to serve the cached (stale-sorted) data until the timer expires
 
-### 1. New Album Search Hook
+**The optimistic update should work** during the moment of voting (it re-sorts locally), but once the real refetch completes, the response is cached with the 5-minute stale window. If the user loaded the page when J. Cole had fewer votes, that cached order may persist.
 
-Create a `useAlbumSearch` hook that queries the `albums` table with a debounced search term, joining through `rapper_albums` to include the rapper name and slug (needed for the album URL pattern `/rapper/:rapperSlug/:albumSlug`).
+## Plan
 
-### 2. Update GlobalSearch Component
+### 1. Reduce `staleTime` in `useRankingData.tsx`
+- Change `staleTime` from `5 * 60 * 1000` (5 minutes) to `30 * 1000` (30 seconds)
+- This ensures the vote-sorted data refreshes more promptly after invalidation
 
-- Use the new `useAlbumSearch` hook alongside the existing rapper autocomplete
-- Change placeholder text from "Search for rappers..." to "Search rappers and albums..."
-- Display results in two labeled sections:
-  - **Rappers** -- existing rapper results with the Music icon and avatar (unchanged)
-  - **Albums** -- album results showing cover art thumbnail, album title, rapper name, and release type badge (Album/Mixtape)
-- Clicking an album navigates to `/rapper/{rapperSlug}/{albumSlug}`
-- The "No results" state only shows when BOTH rapper and album searches return empty
-- The results count footer combines both totals
+### 2. Re-enable `refetchOnWindowFocus` 
+- Change `refetchOnWindowFocus` from `false` to `true` (default)
+- Users switching back to the tab will see fresh data
 
-### 3. Album Search Query
+### 3. Force immediate refetch after vote success
+- In `invalidateRelatedQueries`, after invalidating the ranking data query, also call `queryClient.refetchQueries()` for the ranking data to ensure the cache is actually refreshed, not just marked stale
 
-Query the `albums` table directly using `.ilike('title', '%term%')` joined with `rapper_albums` and `rappers` to get the rapper name and slug. Limited to 15 results, ordered by title.
-
----
-
-## Technical Details
-
-### New file: `src/hooks/useAlbumSearch.ts`
-
-- Mirrors `useRapperAutocomplete` pattern (debounced search, react-query)
-- Query: `supabase.from('albums').select('id, title, slug, cover_art_url, release_type, rapper_albums(rappers(name, slug))').ilike('title', '%term%').limit(15)`
-- Returns array of `{ id, title, slug, cover_art_url, release_type, rapper_name, rapper_slug }`
-- Flattens the nested join so the component gets a clean interface
-
-### Modified file: `src/components/GlobalSearch.tsx`
-
-- Import and call `useAlbumSearch` with the same `searchTerm`
-- Combine loading states: `isSearching = rapperSearching || albumSearching`
-- Combine empty check: show "no results" only when both are empty
-- Render rapper results under a "Rappers" subheader (only if results exist)
-- Render album results under a "Albums" subheader (only if results exist)
-- Album result row: cover art thumbnail (40x40, rounded, with Disc3 fallback icon), title, rapper name subtitle, release type badge
-- Album click handler: `navigate(/rapper/${rapper_slug}/${album_slug})`
-- Update results count to sum both lists
-
-| File | Change |
-|------|--------|
-| `src/hooks/useAlbumSearch.ts` | New hook for searching albums by title |
-| `src/components/GlobalSearch.tsx` | Add album results section alongside rappers |
+These are small changes to two files: `src/hooks/useRankingData.tsx` (lines 157-158) and `src/hooks/ranking-votes/optimisticUpdates.ts` (lines 105-108).
 
