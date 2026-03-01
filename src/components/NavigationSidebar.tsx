@@ -231,7 +231,7 @@ const NavigationSidebar = ({
                 </ThemedButton>
               </a>
 
-              <a href="https://discord.gg/aTvt6XbAk" target="_blank" rel="noopener noreferrer">
+              <a href="https://discord.gg/AxQezMVytf" target="_blank" rel="noopener noreferrer">
                 <ThemedButton
                   variant="ghost"
                   className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
