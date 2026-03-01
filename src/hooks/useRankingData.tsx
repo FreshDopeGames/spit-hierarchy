@@ -154,8 +154,8 @@ export const useRankingData = (rankingId: string) => {
     },
     refetchInterval,
     refetchIntervalInBackground,
-    staleTime: 5 * 60 * 1000, // 5 minutes - shorter since positions are now database-maintained
-    refetchOnWindowFocus: false, // Disabled to prevent unnecessary refetches during tab switching
+    staleTime: 30 * 1000, // 30 seconds - ensures vote-sorted data refreshes promptly
+    refetchOnWindowFocus: true, // Re-enabled so tab switching shows fresh data
   });
 
   // Set up real-time subscription for ranking_votes table updates
