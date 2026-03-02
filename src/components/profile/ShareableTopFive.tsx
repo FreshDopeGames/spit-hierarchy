@@ -91,7 +91,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           bottom: 0,
           left: 0,
           right: 0,
-          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 0.95}px`,
+          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 1.4}px`,
           background: 'linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)',
           display: 'flex',
           alignItems: 'center',
