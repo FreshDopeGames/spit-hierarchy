@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import html2canvas from "html2canvas";
 import ShareableTopFive from "./ShareableTopFive";
 import { Download, Copy, Loader2 } from "lucide-react";
+import { useRapperImages } from "@/hooks/useImageStyle";
 
 interface ShareTopFiveModalProps {
   isOpen: boolean;
@@ -38,6 +39,29 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
   const shareableRef = useRef<HTMLDivElement>(null);
 
   const { w, h } = FORMATS[format];
+
+  // Fetch high-res images for all rappers in the top 5
+  const rapperIds = useMemo(
+    () => slots.filter(s => s.rapper).map(s => s.rapper!.id),
+    [slots]
+  );
+  const { data: hiResImages } = useRapperImages(rapperIds, 'xlarge');
+
+  // Map high-res URLs into slots
+  const enhancedSlots = useMemo(() => {
+    if (!hiResImages) return slots;
+    return slots.map(slot => {
+      if (!slot.rapper) return slot;
+      const hiResUrl = hiResImages[slot.rapper.id];
+      if (hiResUrl) {
+        return {
+          ...slot,
+          rapper: { ...slot.rapper, image_url: hiResUrl },
+        };
+      }
+      return slot;
+    });
+  }, [slots, hiResImages]);
 
   // Compute scale so the preview fits within max 320px wide
   const maxPreviewWidth = 320;
@@ -141,7 +165,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
                 >
                   <div ref={shareableRef}>
                     <ShareableTopFive
-                      slots={slots}
+                      slots={enhancedSlots}
                       username={username}
                       format={format}
                     />

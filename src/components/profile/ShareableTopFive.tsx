@@ -1,5 +1,4 @@
 import React from "react";
-import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 
 interface ShareableTopFiveProps {
   slots: Array<{
@@ -13,6 +12,10 @@ interface ShareableTopFiveProps {
   username: string;
   format?: 'square' | 'landscape' | 'portrait';
 }
+
+// Bold, universally-available fonts that html2canvas renders reliably
+const HEADING_FONT = "Impact, 'Arial Black', 'Helvetica Neue', sans-serif";
+const BODY_FONT = "'Arial Black', 'Helvetica Neue', Arial, sans-serif";
 
 const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({ 
   slots, 
@@ -55,7 +58,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           flex: 1,
           overflow: 'hidden',
           borderRadius,
-          background: 'hsl(0 0% 8%)',
+          background: '#141414',
         }}
       >
         {/* Image */}
@@ -66,7 +69,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
               height: '100%',
               backgroundImage: `url(${slot.rapper.image_url})`,
               backgroundSize: 'cover',
-              backgroundPosition: 'center center',
+              backgroundPosition: isLandscape ? 'center 35%' : 'center center',
               backgroundRepeat: 'no-repeat',
             }}
           />
@@ -74,23 +77,23 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           <div style={{
             width: '100%',
             height: '100%',
-            background: 'hsl(0 0% 12%)',
+            background: '#1f1f1f',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
           }}>
-            <span style={{ color: 'hsl(0 0% 40%)', fontSize: nameFont * 1.5 }}>—</span>
+            <span style={{ color: '#666666', fontSize: nameFont * 1.5 }}>—</span>
           </div>
         )}
 
-        {/* Top gradient overlay with name */}
+        {/* Top gradient overlay with name — using hex alpha for html2canvas compatibility */}
         <div style={{
           position: 'absolute',
           top: 0,
           left: 0,
           right: 0,
           padding: `${badgeSize * 0.6}px ${badgeSize * 0.5}px ${badgeSize * 1.2}px`,
-          background: 'linear-gradient(to bottom, rgba(0,0,0,0.75) 0%, rgba(0,0,0,0.3) 60%, transparent 100%)',
+          background: 'linear-gradient(to bottom, #000000BF 0%, #0000004D 60%, #00000000 100%)',
           display: 'flex',
           alignItems: 'flex-start',
           gap: badgeSize * 0.4,
@@ -100,13 +103,14 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             width: badgeSize,
             height: badgeSize,
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, hsl(45 85% 55%), hsl(45 85% 45%))',
+            background: 'linear-gradient(135deg, #D4A520, #B8860B)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            color: 'hsl(0 0% 0%)',
+            color: '#000000',
             fontWeight: 800,
             fontSize: badgeFont,
+            fontFamily: HEADING_FONT,
             flexShrink: 0,
           }}>
             {slot.position}
@@ -114,15 +118,15 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
 
           {/* Name */}
           <p style={{
-            color: '#fff',
+            color: '#ffffff',
             fontSize: nameFont,
             fontWeight: 700,
-            fontFamily: 'var(--theme-font-heading, system-ui, sans-serif)',
+            fontFamily: HEADING_FONT,
             margin: 0,
             lineHeight: 1.2,
             textTransform: 'uppercase',
             letterSpacing: '0.02em',
-            textShadow: '0 2px 8px rgba(0,0,0,0.5)',
+            textShadow: '0 2px 8px #00000080',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
@@ -142,10 +146,10 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
       style={{
         width: dims.width,
         height: dims.height,
-        background: 'hsl(0 0% 5%)',
+        background: '#0d0d0d',
         position: 'relative',
         overflow: 'hidden',
-        fontFamily: 'var(--theme-font-body, system-ui, -apple-system, sans-serif)',
+        fontFamily: BODY_FONT,
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -158,7 +162,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         justifyContent: 'center',
         gap: headerFont * 0.4,
         padding: '0 20px',
-        background: 'hsl(0 0% 5%)',
+        background: '#0d0d0d',
         flexShrink: 0,
       }}>
         <img
@@ -168,10 +172,10 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           crossOrigin="anonymous"
         />
         <h1 style={{
-          color: 'hsl(45 85% 55%)',
+          color: '#D4A520',
           fontSize: headerFont,
           fontWeight: 800,
-          fontFamily: 'var(--theme-font-heading, system-ui, sans-serif)',
+          fontFamily: HEADING_FONT,
           margin: 0,
           letterSpacing: '-0.02em',
         }}>
@@ -212,13 +216,13 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'hsl(0 0% 5%)',
+        background: '#0d0d0d',
         flexShrink: 0,
       }}>
         <p style={{
-          color: 'hsl(45 85% 55% / 0.6)',
+          color: '#D4A52099',
           fontSize: footerFont,
-          fontFamily: 'var(--theme-font-body, system-ui, sans-serif)',
+          fontFamily: BODY_FONT,
           margin: 0,
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
