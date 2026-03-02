@@ -1,37 +1,30 @@
 
 
-## Investigation Results
+## Root Cause
 
-**Root cause**: The `usePollResults` hook in `src/hooks/usePollResults.tsx` queries the `poll_votes` table directly (line 21-28). However, the RLS policy on `poll_votes` only allows users to see their own votes (`auth.uid() = user_id`). This means the vote count aggregation only counts the current user's vote, not all votes.
+The quiz answer submission in `src/hooks/useQuiz.ts` (line 145) invalidates cache key `['quiz-badges', user?.id]`, but the actual query key in `src/hooks/useQuizBadges.ts` (line 54) is `['user-quiz-badges', targetUserId]`. The keys don't match, so the earned badges query is **never refreshed** after earning new badges. The "(X earned)" count stays stale until a full page reload.
 
-A `poll_results` database view already exists with columns `poll_id`, `option_id`, and `vote_count` — and it has no RLS restrictions, making it accessible to everyone.
+Additionally, the category stats query key `['quiz-category-stats', targetUserId]` is also never invalidated.
 
 ## Plan
 
-### 1. Update `usePollResults` hook to use the `poll_results` view
+### 1. Fix cache invalidation keys in `src/hooks/useQuiz.ts`
 
-In `src/hooks/usePollResults.tsx`, change the `usePollResults` query to:
-- Fetch from `poll_results` view (which has pre-aggregated vote counts) instead of `poll_votes`
-- Join with `poll_options` to get option text
-- Calculate percentages from the aggregated `vote_count` column
-
-The `useUserPollVotes` hook is fine — it correctly queries `poll_votes` filtered to the current user.
-
-### Technical Details
-
-Current broken query:
+At line 145, change:
 ```typescript
-supabase.from('poll_votes').select('option_id, poll_options(option_text)').eq('poll_id', pollId)
-// RLS filters this to only current user's votes
+queryClient.invalidateQueries({ queryKey: ['quiz-badges', user?.id] });
+```
+to:
+```typescript
+queryClient.invalidateQueries({ queryKey: ['user-quiz-badges', user?.id] });
+queryClient.invalidateQueries({ queryKey: ['quiz-category-stats', user?.id] });
+queryClient.invalidateQueries({ queryKey: ['all-quiz-badges'] });
 ```
 
-Fixed approach:
-```typescript
-// Use poll_results view for counts (no RLS restriction)
-supabase.from('poll_results').select('option_id, vote_count').eq('poll_id', pollId)
-// Separately fetch option text from poll_options
-supabase.from('poll_options').select('id, option_text').eq('poll_id', pollId)
-```
+This ensures:
+- The earned badges list refreshes (fixes the "(X earned)" count)
+- The category stats refresh (fixes progress bars)
+- The full badge list refreshes (in case any badge metadata changed)
 
-This is a single-file change to `src/hooks/usePollResults.tsx`.
+Single file change: `src/hooks/useQuiz.ts`, lines 144-145.
 
