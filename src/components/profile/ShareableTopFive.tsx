@@ -13,9 +13,8 @@ interface ShareableTopFiveProps {
   format?: 'square' | 'landscape' | 'portrait';
 }
 
-// Bold, universally-available fonts that html2canvas renders reliably
-const HEADING_FONT = "Arial, Helvetica, sans-serif";
-const BODY_FONT = "Arial, Helvetica, sans-serif";
+const HEADING_FONT = "sans-serif";
+const BODY_FONT = "sans-serif";
 
 const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({ 
   slots, 
@@ -108,7 +107,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             color: '#000000',
-            fontWeight: 900,
+            fontWeight: 'bold',
             fontSize: badgeFont,
             fontFamily: HEADING_FONT,
             flexShrink: 0,
@@ -120,17 +119,15 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           <p style={{
             color: '#ffffff',
             fontSize: nameFont,
-            fontWeight: 900,
+            fontWeight: 'bold',
             fontFamily: HEADING_FONT,
             margin: 0,
             lineHeight: 1.2,
-            textTransform: 'uppercase',
+            textTransform: 'uppercase' as const,
             letterSpacing: '0.02em',
-            textShadow: '0 2px 8px #00000080',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
-            paddingTop: (badgeSize - nameFont) / 2,
+            whiteSpace: 'nowrap' as const,
             flex: 1,
             minWidth: 0,
           }}>
@@ -174,10 +171,9 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         <h1 style={{
           color: '#D4A520',
           fontSize: headerFont,
-          fontWeight: 900,
+          fontWeight: 'bold',
           fontFamily: HEADING_FONT,
           margin: 0,
-          letterSpacing: '-0.02em',
         }}>
           {username}'s Top 5
         </h1>
