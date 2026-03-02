@@ -89,19 +89,21 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
         link.click();
         toast.success("Image downloaded successfully!");
       } else if (action === 'copy') {
-        canvas.toBlob(async (blob) => {
-          if (blob) {
-            try {
-              await navigator.clipboard.write([
-                new ClipboardItem({ 'image/png': blob })
-              ]);
-              toast.success("Image copied to clipboard!");
-            } catch (err) {
-              console.error('Failed to copy image:', err);
-              toast.error("Failed to copy image. Try downloading instead.");
-            }
+        const blob = await new Promise<Blob | null>(resolve => canvas.toBlob(resolve, 'image/png'));
+        if (blob) {
+          try {
+            await navigator.clipboard.write([
+              new ClipboardItem({ 'image/png': blob })
+            ]);
+            toast.success("Image copied to clipboard!");
+          } catch {
+            const link = document.createElement('a');
+            link.download = `${username}-top5-${format}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            toast.info("Clipboard not supported — image downloaded instead.");
           }
-        }, 'image/png');
+        }
       }
     } catch (error) {
       console.error('Error generating image:', error);
