@@ -142,7 +142,9 @@ export const useQuiz = (category: QuizCategory = 'all', questionsPerRound: numbe
         
         // Invalidate stats
         queryClient.invalidateQueries({ queryKey: ['quiz-stats', user?.id] });
-        queryClient.invalidateQueries({ queryKey: ['quiz-badges', user?.id] });
+        queryClient.invalidateQueries({ queryKey: ['user-quiz-badges', user?.id] });
+        queryClient.invalidateQueries({ queryKey: ['quiz-category-stats', user?.id] });
+        queryClient.invalidateQueries({ queryKey: ['all-quiz-badges'] });
       }
     },
   });
