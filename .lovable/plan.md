@@ -1,13 +1,17 @@
 
 
-## Plan: Center-crop images in landscape format
+## Plan: Center-crop all formats + activate theme fonts
 
-### Change in `src/components/profile/ShareableTopFive.tsx`
+### Changes in `src/components/profile/ShareableTopFive.tsx`
 
-Update the `backgroundPosition` in the mosaic cell renderer to use `'center center'` for landscape format instead of `'center top'`. This crops equally from top and bottom, showing more of the rapper's face rather than the top of their head/background.
+**1. Center-crop all orientations**
+- Line 69: Change `backgroundPosition: isLandscape ? 'center center' : 'center top'` → `'center center'` for all formats
 
-- For landscape: `backgroundPosition: 'center center'`
-- For portrait/square: keep `'center top'` (taller cells have enough room)
+**2. Activate theme fonts**
+- Line 147: Root container `fontFamily` → `'var(--theme-font-body)'`
+- Line 169-175: Header title `fontFamily` → `'var(--theme-font-heading)'`
+- Line 116-131: Rapper name overlay `fontFamily` → `'var(--theme-font-heading)'`
+- Line 216-223: Footer `fontFamily` → `'var(--theme-font-body)'`
 
-This is a one-line conditional change in the `renderMosaicCell` function where the background image div is rendered.
+### No other files changed
 
