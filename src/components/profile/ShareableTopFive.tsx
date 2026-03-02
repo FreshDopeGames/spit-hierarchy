@@ -66,7 +66,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
               height: '100%',
               backgroundImage: `url(${slot.rapper.image_url})`,
               backgroundSize: 'cover',
-              backgroundPosition: isLandscape ? 'center center' : 'center top',
+              backgroundPosition: 'center center',
               backgroundRepeat: 'no-repeat',
             }}
           />
@@ -117,6 +117,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             color: '#fff',
             fontSize: nameFont,
             fontWeight: 700,
+            fontFamily: 'var(--theme-font-heading, system-ui, sans-serif)',
             margin: 0,
             lineHeight: 1.2,
             textTransform: 'uppercase',
@@ -144,7 +145,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         background: 'hsl(0 0% 5%)',
         position: 'relative',
         overflow: 'hidden',
-        fontFamily: 'system-ui, -apple-system, sans-serif',
+        fontFamily: 'var(--theme-font-body, system-ui, -apple-system, sans-serif)',
         display: 'flex',
         flexDirection: 'column',
       }}
@@ -170,6 +171,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           color: 'hsl(45 85% 55%)',
           fontSize: headerFont,
           fontWeight: 800,
+          fontFamily: 'var(--theme-font-heading, system-ui, sans-serif)',
           margin: 0,
           letterSpacing: '-0.02em',
         }}>
@@ -216,6 +218,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         <p style={{
           color: 'hsl(45 85% 55% / 0.6)',
           fontSize: footerFont,
+          fontFamily: 'var(--theme-font-body, system-ui, sans-serif)',
           margin: 0,
           letterSpacing: '0.1em',
           textTransform: 'uppercase',
