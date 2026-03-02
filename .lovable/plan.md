@@ -1,56 +1,32 @@
 
 
-## Plan: Mosaic-Style Share Image with Overlaid Names
+## Plan: Fix Share Card Output Issues
 
-Redesign the shareable image to match the reference — a tight, colorful mosaic where rapper avatars fill the entire space and names are overlaid on a shaded gradient at the top of each cell.
+### Problems from screenshots
 
-### Layout
-
-```text
-┌─────────────────────────────┐
-│  LOGO  ·  username's Top 5  │  ← thin header bar
-├─────────────────────────────┤
-│                             │
-│      #1 RAPPER IMAGE        │  ← full-width row, image fills cell
-│      ┌─NAME──────────┐      │     name overlaid on dark gradient
-│                             │
-├──────────────┬──────────────┤
-│  #2 IMAGE    │  #3 IMAGE    │  ← two equal columns
-│  ┌─NAME──┐   │  ┌─NAME──┐   │
-├──────────────┼──────────────┤
-│  #4 IMAGE    │  #5 IMAGE    │
-│  ┌─NAME──┐   │  ┌─NAME──┐   │
-└──────────────┴──────────────┘
-│    spithierarchy.com        │  ← thin footer
-└─────────────────────────────┘
-```
+1. **Names not rendering**: The name `<p>` tags exist but are likely being clipped or not painted by `html2canvas`. The `textOverflow: 'ellipsis'` + `whiteSpace: 'nowrap'` combined with `overflow: 'hidden'` on a flex child without explicit width causes the text to collapse to zero width.
+2. **Header barely visible**: The logo and title are rendering but extremely small relative to the canvas — the `headerH` values (50-100px) are tiny on a 1080-1920px canvas.
+3. **Footer invisible**: Same issue — `footerH` of 30-50px is negligible on these canvas sizes.
+4. **Landscape too cramped**: The `flex: 2` for row 1 vs `flex: 1.5` for rows 2-3 in only 630px height with a header/footer leaves very little room.
 
 ### Changes — `src/components/profile/ShareableTopFive.tsx`
 
-**Remove** the current card-based `renderRapperCard` with badges, padded cards, and separate image/name columns.
+**Fix name rendering:**
+- Give the name `<p>` tag `flex: 1` and `minWidth: 0` so it takes remaining space in the flex row without collapsing
+- This is a known flexbox text-overflow pattern needed for `html2canvas` compatibility
 
-**Replace with** a mosaic cell renderer:
-- Each cell is a `position: relative` container where the rapper image is `object-fit: cover` filling 100% width and height
-- Name is positioned at the **top** of the cell with a gradient overlay (`linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)`) — styled bold, uppercase, white text with a slight text shadow
-- Position number badge sits in the top-left corner as a small gold circle overlay
-- Empty slots show a dark placeholder with "—"
+**Increase header/footer sizes:**
+- Portrait: header 140px, footer 70px
+- Square: header 100px, footer 50px  
+- Landscape: header 60px, footer 35px
 
-**Grid structure:**
-- Header and footer are compact (fixed height, not flex-growing)
-- The image grid takes all remaining space via `flex: 1`
-- Row 1 (rapper #1) gets `flex: 2` height weight; rows 2 and 3 get `flex: 1.5` each — ensuring #1 is visually dominant but all rows are substantial
-- Gap between cells: 4px (tight mosaic feel, like the reference)
-- No outer padding around the grid — images go edge-to-edge within the card (small padding only on header/footer)
-- Border-radius on corner cells only for the outer corners of the mosaic
+**Increase font/logo sizes proportionally:**
+- Logo: landscape 36px, portrait 70px, square 55px
+- Header font: landscape 26px, portrait 48px, square 36px
+- Footer font: landscape 14px, portrait 22px, square 18px
 
-**Dimensions stay the same** (1080x1080, 1080x1920, 1200x630). The mosaic naturally fills all orientations since it's flex-based.
+**Landscape row balance:**
+- Change row flex weights: row 1 `flex: 1.8`, rows 2-3 `flex: 1.2` — gives more even distribution in the limited height
 
-**Color usage:**
-- Gold (`hsl(45 85% 55%)`) for the position badge, header text, and footer
-- The images themselves provide the color/vibrancy — no card backgrounds needed
-- Name overlay gradient: black to transparent from top
-
-### No changes to `ShareTopFiveModal.tsx`
-
-The modal scaling logic remains as-is since only the inner content changes.
+### No other files changed
 
