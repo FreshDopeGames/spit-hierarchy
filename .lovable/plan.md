@@ -1,45 +1,21 @@
 
 
-## Plan: Fix Share Top 5 — Fonts, Image Quality, Gradient, and Landscape Crop
+## Plan: Fix Copy Button UX
 
-### Problems identified
+### Problem
+`navigator.clipboard.write()` with image blobs fails in most contexts because the async `html2canvas` rendering breaks the "user gesture" requirement browsers enforce for clipboard write access. This isn't fixable without a fundamentally different approach.
 
-1. **Fonts not rendering**: CSS variables (`var(--theme-font-heading)`) don't resolve inside `html2canvas` — it renders an offscreen iframe that doesn't inherit computed CSS variable values, so all text falls back to `system-ui` which renders as generic sans-serif with no visual weight.
-2. **Low-res images**: The share card uses `slot.rapper.image_url` which comes from the legacy `rappers.image_url` column (low-res thumbnails). The high-res images live in `rapper_images` table and are accessed via `getRapperImageUrl(basePath, 'xlarge')`.
-3. **Gradient overlay not rendering**: The `linear-gradient` text overlay uses `rgba()` which `html2canvas` sometimes struggles with.
-4. **Landscape crop too centered**: Needs `center 35%` instead of `center center` to show rapper's eyes.
+### Solution
+Replace the current copy behavior with a **fallback strategy**:
 
-### Changes
+1. **Try clipboard write** first (works in Chrome on desktop with recent user gesture)
+2. **On failure**, fall back to downloading the image automatically instead of showing an error
+3. Show a toast: *"Clipboard not supported — image downloaded instead"*
 
-#### 1. `src/components/profile/ShareableTopFive.tsx` — Use hardcoded bold fonts
+### Change in `src/components/profile/ShareTopFiveModal.tsx`
 
-Replace all `var(--theme-font-heading)` and `var(--theme-font-body)` references with explicit, bold, universally-available system fonts that `html2canvas` can render reliably:
-
-- Headings/names: `fontFamily: "'Impact', 'Arial Black', 'Helvetica Neue', sans-serif"`
-- Body/footer: `fontFamily: "'Arial Black', 'Helvetica Neue', Arial, sans-serif"`
-
-These are bold, high-impact fonts available on all platforms and render correctly in `html2canvas`.
-
-#### 2. `src/components/profile/ShareableTopFive.tsx` — Landscape crop position
-
-Change `backgroundPosition` from `'center center'` to `isLandscape ? 'center 35%' : 'center center'` — this shifts the crop point ~15% above center, ensuring rapper eyes/face are visible in the shorter landscape cells.
-
-#### 3. `src/components/profile/ShareTopFiveModal.tsx` — Resolve high-res images before rendering
-
-Before passing slots to `ShareableTopFive`, resolve each rapper's image to the high-res `xlarge` URL using `getRapperImageUrl` from the `rapper_images` table:
-
-- Import `useRapperImages` batch hook from `useImageStyle`
-- Extract rapper IDs from slots
-- Fetch `xlarge` size images in batch
-- Map the resolved high-res URLs into the slots before passing to `ShareableTopFive`
-
-This ensures the share card uses the highest-quality comic_book style images.
-
-#### 4. `src/components/profile/ShareableTopFive.tsx` — Fix gradient overlay
-
-Replace `rgba(0,0,0,0.75)` gradient with simpler opacity approach or ensure the gradient syntax is `html2canvas`-compatible by using hex-with-alpha format (`#000000BF`) which `html2canvas` handles more reliably.
-
-### Files changed
-- `src/components/profile/ShareableTopFive.tsx`
-- `src/components/profile/ShareTopFiveModal.tsx`
+Update the `copy` branch inside `generateImage`:
+- Wrap the clipboard write in try/catch
+- On catch, trigger the download flow as fallback
+- Replace the error toast with a friendly info toast explaining the fallback
 
