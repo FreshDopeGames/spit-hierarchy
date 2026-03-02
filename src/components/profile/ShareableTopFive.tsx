@@ -91,11 +91,12 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           bottom: 0,
           left: 0,
           right: 0,
-          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 1.4}px`,
+          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 1.5}px`,
           background: 'linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)',
           display: 'flex',
-          alignItems: 'center',
+          alignItems: 'flex-end',
           gap: badgeSize * 0.4,
+          overflow: 'visible',
         }}>
           {/* Position badge */}
           <div style={{
@@ -122,14 +123,15 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             fontWeight: 'bold',
             fontFamily: HEADING_FONT,
             margin: 0,
-            lineHeight: 1.35,
+            lineHeight: 1.18,
             textTransform: 'uppercase' as const,
             letterSpacing: '0.01em',
-            overflow: 'hidden',
+            overflow: 'visible',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap' as const,
             display: 'block',
-            paddingBottom: 0,
+            paddingTop: badgeSize * 0.04,
+            paddingBottom: badgeSize * 0.14,
             flex: 1,
             minWidth: 0,
           }}>
