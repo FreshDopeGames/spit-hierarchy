@@ -1,52 +1,26 @@
 
 
-## Plan: Redesign Share Your Top 5 Experience
+## Plan: Optimize Share Card Layout and Image Sizes
 
-### Problems identified
-1. **Layout**: #1 rapper should span the full top row, then two rows of 2 rappers each (#2-3, #4-5)
-2. **Colors**: Using hardcoded `gray-800`, `yellow-400`, `gray-900` instead of the site's theme variables (gold primary `--theme-primary: 45 85% 55%`, dark background `--theme-background: 0 0% 5%`, surface `--theme-surface: 0 0% 17%`)
-3. **Logo missing**: No site logo in the shareable image — add the Spit Hierarchy logo at the top
-4. **Horizontal scroll bug**: The modal preview container renders the full-resolution image (1080px+) with only `overflow-hidden` on the inner wrapper but the scaled container doesn't constrain its layout box properly, causing horizontal overflow on the dialog
+### Changes to `src/components/profile/ShareableTopFive.tsx`
 
-### Changes
+**1. Center the #1 featured card**
+- Add `justifyContent: 'center'` and `maxWidth: '80%'` (or similar) with `margin: '0 auto'` to the featured card wrapper so it sits centered rather than spanning edge-to-edge.
 
-#### 1. `src/components/profile/ShareableTopFive.tsx` — Full rewrite of layout + theming
+**2. Dramatically increase avatar sizes**
+- Current sizes are too small (portrait: 140/110, square: 120/90, landscape: 80/60)
+- New sizes:
+  - **Portrait**: featured 220px, grid 160px
+  - **Square**: featured 180px, grid 130px  
+  - **Landscape**: featured 110px, grid 80px
+- This makes the card much more visual/image-forward
 
-**New layout (all formats):**
-```text
-┌──────────────────────────────┐
-│         [LOGO]               │
-│     USERNAME'S TOP 5         │
-│  "My favorite rappers ranked"│
-│                              │
-│  ┌──────────────────────┐    │
-│  │   #1  [IMAGE] NAME   │    │  ← Full width featured row
-│  └──────────────────────┘    │
-│  ┌──────────┐ ┌──────────┐   │
-│  │ #2 IMG   │ │ #3 IMG   │   │  ← Row of 2
-│  └──────────┘ └──────────┘   │
-│  ┌──────────┐ ┌──────────┐   │
-│  │ #4 IMG   │ │ #5 IMG   │   │  ← Row of 2
-│  └──────────┘ └──────────┘   │
-│                              │
-│     spithierarchy.com        │
-└──────────────────────────────┘
-```
+**3. Make rows stretch to fill in portrait mode**
+- Add `flex: 1` to each row container (the featured row div and each 2-up row div) when in portrait mode, so they evenly distribute the vertical space
+- Cards within rows also get `flex: 1` in the cross-axis direction with `alignItems: 'stretch'`
 
-- Replace all hardcoded colors with theme HSL variables:
-  - Background: `hsl(var(--theme-background))` / `hsl(var(--theme-backgroundDark))`
-  - Cards: `hsl(var(--theme-surface))`
-  - Borders/badges: `hsl(var(--theme-primary))` (the gold)
-  - Text: `hsl(var(--theme-text))`, `hsl(var(--theme-textMuted))`
-  - Radial glow: use `--theme-primary` instead of `#ffd700`
-- Add site logo image at the top (`/lovable-uploads/logo-header.png`)
-- #1 rapper card spans full width with larger image
-- #2-5 in a 2-column grid across two rows
-- Footer text: "spithierarchy.com" or "Spit Hierarchy"
+**4. Grid cards fill their row**
+- The 2-up row cards already have `flex: 1` but need `alignSelf: 'stretch'` and the row containers need `alignItems: 'stretch'` so cards expand vertically to fill the row height in portrait
 
-#### 2. `src/components/profile/ShareTopFiveModal.tsx` — Fix horizontal scroll + preview scaling
-
-- Wrap the preview in a container that uses `transform-origin: top center` with proper width/height constraints so the scaled content doesn't cause overflow
-- Set the container's actual CSS dimensions to the scaled size (e.g., `width * scale`, `height * scale`) so the parent layout respects the visual size
-- Remove any source of horizontal overflow — the preview div should have explicit max-width and the parent should use `overflow: hidden`
+### No other files changed
 
