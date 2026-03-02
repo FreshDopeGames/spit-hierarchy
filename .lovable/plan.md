@@ -1,26 +1,56 @@
 
 
-## Plan: Optimize Share Card Layout and Image Sizes
+## Plan: Mosaic-Style Share Image with Overlaid Names
 
-### Changes to `src/components/profile/ShareableTopFive.tsx`
+Redesign the shareable image to match the reference — a tight, colorful mosaic where rapper avatars fill the entire space and names are overlaid on a shaded gradient at the top of each cell.
 
-**1. Center the #1 featured card**
-- Add `justifyContent: 'center'` and `maxWidth: '80%'` (or similar) with `margin: '0 auto'` to the featured card wrapper so it sits centered rather than spanning edge-to-edge.
+### Layout
 
-**2. Dramatically increase avatar sizes**
-- Current sizes are too small (portrait: 140/110, square: 120/90, landscape: 80/60)
-- New sizes:
-  - **Portrait**: featured 220px, grid 160px
-  - **Square**: featured 180px, grid 130px  
-  - **Landscape**: featured 110px, grid 80px
-- This makes the card much more visual/image-forward
+```text
+┌─────────────────────────────┐
+│  LOGO  ·  username's Top 5  │  ← thin header bar
+├─────────────────────────────┤
+│                             │
+│      #1 RAPPER IMAGE        │  ← full-width row, image fills cell
+│      ┌─NAME──────────┐      │     name overlaid on dark gradient
+│                             │
+├──────────────┬──────────────┤
+│  #2 IMAGE    │  #3 IMAGE    │  ← two equal columns
+│  ┌─NAME──┐   │  ┌─NAME──┐   │
+├──────────────┼──────────────┤
+│  #4 IMAGE    │  #5 IMAGE    │
+│  ┌─NAME──┐   │  ┌─NAME──┐   │
+└──────────────┴──────────────┘
+│    spithierarchy.com        │  ← thin footer
+└─────────────────────────────┘
+```
 
-**3. Make rows stretch to fill in portrait mode**
-- Add `flex: 1` to each row container (the featured row div and each 2-up row div) when in portrait mode, so they evenly distribute the vertical space
-- Cards within rows also get `flex: 1` in the cross-axis direction with `alignItems: 'stretch'`
+### Changes — `src/components/profile/ShareableTopFive.tsx`
 
-**4. Grid cards fill their row**
-- The 2-up row cards already have `flex: 1` but need `alignSelf: 'stretch'` and the row containers need `alignItems: 'stretch'` so cards expand vertically to fill the row height in portrait
+**Remove** the current card-based `renderRapperCard` with badges, padded cards, and separate image/name columns.
 
-### No other files changed
+**Replace with** a mosaic cell renderer:
+- Each cell is a `position: relative` container where the rapper image is `object-fit: cover` filling 100% width and height
+- Name is positioned at the **top** of the cell with a gradient overlay (`linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, transparent 100%)`) — styled bold, uppercase, white text with a slight text shadow
+- Position number badge sits in the top-left corner as a small gold circle overlay
+- Empty slots show a dark placeholder with "—"
+
+**Grid structure:**
+- Header and footer are compact (fixed height, not flex-growing)
+- The image grid takes all remaining space via `flex: 1`
+- Row 1 (rapper #1) gets `flex: 2` height weight; rows 2 and 3 get `flex: 1.5` each — ensuring #1 is visually dominant but all rows are substantial
+- Gap between cells: 4px (tight mosaic feel, like the reference)
+- No outer padding around the grid — images go edge-to-edge within the card (small padding only on header/footer)
+- Border-radius on corner cells only for the outer corners of the mosaic
+
+**Dimensions stay the same** (1080x1080, 1080x1920, 1200x630). The mosaic naturally fills all orientations since it's flex-based.
+
+**Color usage:**
+- Gold (`hsl(45 85% 55%)`) for the position badge, header text, and footer
+- The images themselves provide the color/vibrancy — no card backgrounds needed
+- Name overlay gradient: black to transparent from top
+
+### No changes to `ShareTopFiveModal.tsx`
+
+The modal scaling logic remains as-is since only the inner content changes.
 
