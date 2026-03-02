@@ -14,8 +14,8 @@ interface ShareableTopFiveProps {
 }
 
 // Bold, universally-available fonts that html2canvas renders reliably
-const HEADING_FONT = "Impact, 'Arial Black', 'Helvetica Neue', sans-serif";
-const BODY_FONT = "'Arial Black', 'Helvetica Neue', Arial, sans-serif";
+const HEADING_FONT = "Arial, Helvetica, sans-serif";
+const BODY_FONT = "Arial, Helvetica, sans-serif";
 
 const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({ 
   slots, 
@@ -86,16 +86,16 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           </div>
         )}
 
-        {/* Top gradient overlay with name — using hex alpha for html2canvas compatibility */}
+        {/* Bottom gradient overlay with name */}
         <div style={{
           position: 'absolute',
-          top: 0,
+          bottom: 0,
           left: 0,
           right: 0,
-          padding: `${badgeSize * 0.6}px ${badgeSize * 0.5}px ${badgeSize * 1.2}px`,
-          background: 'linear-gradient(to bottom, #000000BF 0%, #0000004D 60%, #00000000 100%)',
+          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 0.6}px`,
+          background: 'linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)',
           display: 'flex',
-          alignItems: 'flex-start',
+          alignItems: 'flex-end',
           gap: badgeSize * 0.4,
         }}>
           {/* Position badge */}
@@ -108,7 +108,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             alignItems: 'center',
             justifyContent: 'center',
             color: '#000000',
-            fontWeight: 800,
+            fontWeight: 900,
             fontSize: badgeFont,
             fontFamily: HEADING_FONT,
             flexShrink: 0,
@@ -120,7 +120,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           <p style={{
             color: '#ffffff',
             fontSize: nameFont,
-            fontWeight: 700,
+            fontWeight: 900,
             fontFamily: HEADING_FONT,
             margin: 0,
             lineHeight: 1.2,
@@ -174,7 +174,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         <h1 style={{
           color: '#D4A520',
           fontSize: headerFont,
-          fontWeight: 800,
+          fontWeight: 900,
           fontFamily: HEADING_FONT,
           margin: 0,
           letterSpacing: '-0.02em',
