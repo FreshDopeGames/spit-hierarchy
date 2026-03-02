@@ -36,7 +36,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
 }) => {
   const [format, setFormat] = useState<keyof typeof FORMATS>('portrait');
   const [isGenerating, setIsGenerating] = useState(false);
-  const shareableRef = useRef<HTMLDivElement>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const { w, h } = FORMATS[format];
 
@@ -70,11 +70,15 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
   const previewH = h * scale;
 
   const generateImage = async (action: 'download' | 'copy') => {
-    if (!shareableRef.current) return;
+    if (!exportRef.current) return;
 
     setIsGenerating(true);
     try {
-      const canvas = await html2canvas(shareableRef.current, {
+      if (document.fonts?.ready) {
+        await document.fonts.ready;
+      }
+
+      const canvas = await html2canvas(exportRef.current, {
         backgroundColor: null,
         scale: 2,
         useCORS: true,
@@ -165,14 +169,33 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
                     transformOrigin: 'top left',
                   }}
                 >
-                  <div ref={shareableRef}>
-                    <ShareableTopFive
-                      slots={enhancedSlots}
-                      username={username}
-                      format={format}
-                    />
-                  </div>
+                  <ShareableTopFive
+                    slots={enhancedSlots}
+                    username={username}
+                    format={format}
+                  />
                 </div>
+              </div>
+            </div>
+
+            {/* Hidden full-size render target for export (no transform) */}
+            <div
+              aria-hidden="true"
+              style={{
+                position: 'fixed',
+                left: '-99999px',
+                top: 0,
+                width: w,
+                height: h,
+                pointerEvents: 'none',
+              }}
+            >
+              <div ref={exportRef}>
+                <ShareableTopFive
+                  slots={enhancedSlots}
+                  username={username}
+                  format={format}
+                />
               </div>
             </div>
 
