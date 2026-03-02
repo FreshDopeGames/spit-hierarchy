@@ -38,6 +38,7 @@ const VotingHistorySection = () => {
           <History className="w-4 h-4 sm:w-5 sm:h-5" />
           Voting History
         </CardTitle>
+        <p className="text-xs text-muted-foreground text-center mt-1">(Only visible to you)</p>
       </CardHeader>
       <CardContent>
         <ThemedTabs defaultValue="rankings" className="w-full">
