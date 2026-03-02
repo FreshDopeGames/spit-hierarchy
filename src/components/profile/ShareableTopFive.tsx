@@ -60,16 +60,15 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
       >
         {/* Image */}
         {slot.rapper?.image_url ? (
-          <img
-            src={slot.rapper.image_url}
-            alt={slot.rapper.name}
+          <div
             style={{
               width: '100%',
               height: '100%',
-              objectFit: 'cover',
-              display: 'block',
+              backgroundImage: `url(${slot.rapper.image_url})`,
+              backgroundSize: 'cover',
+              backgroundPosition: isLandscape ? 'center center' : 'center top',
+              backgroundRepeat: 'no-repeat',
             }}
-            crossOrigin="anonymous"
           />
         ) : (
           <div style={{
