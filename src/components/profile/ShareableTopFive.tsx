@@ -38,8 +38,8 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
   const badgeSize = isLandscape ? 32 : isPortrait ? 56 : 44;
   const badgeFont = isLandscape ? 16 : isPortrait ? 24 : 20;
   const nameFont = isLandscape ? 14 : isPortrait ? 22 : 18;
-  const featuredImgSize = isLandscape ? 80 : isPortrait ? 140 : 120;
-  const gridImgSize = isLandscape ? 60 : isPortrait ? 110 : 90;
+  const featuredImgSize = isLandscape ? 110 : isPortrait ? 220 : 180;
+  const gridImgSize = isLandscape ? 80 : isPortrait ? 160 : 130;
   const footerFont = isLandscape ? 14 : isPortrait ? 20 : 16;
   const padding = isLandscape ? 24 : isPortrait ? 48 : 40;
   const gap = isLandscape ? 12 : isPortrait ? 20 : 16;
@@ -64,8 +64,9 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           boxShadow: isFeatured 
             ? '0 8px 32px hsl(45 85% 55% / 0.15)' 
             : '0 4px 16px hsl(0 0% 0% / 0.3)',
-          flex: isFeatured ? undefined : 1,
+          flex: 1,
           minWidth: 0,
+          alignSelf: isPortrait ? 'stretch' : undefined,
         }}
       >
         {/* Position Badge */}
@@ -209,17 +210,25 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
 
         {/* Rappers Grid: 1 + 2 + 2 */}
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap, justifyContent: 'center' }}>
-          {/* #1 Featured - Full Width */}
-          {slots[0] && renderRapperCard(slots[0], true)}
+          {/* #1 Featured - Centered */}
+          <div style={{ 
+            display: 'flex', 
+            justifyContent: 'center',
+            flex: isPortrait ? 1 : undefined,
+          }}>
+            <div style={{ width: '80%' }}>
+              {slots[0] && renderRapperCard(slots[0], true)}
+            </div>
+          </div>
 
           {/* #2 and #3 */}
-          <div style={{ display: 'flex', gap }}>
+          <div style={{ display: 'flex', gap, flex: isPortrait ? 1 : undefined, alignItems: 'stretch' }}>
             {slots[1] && renderRapperCard(slots[1], false)}
             {slots[2] && renderRapperCard(slots[2], false)}
           </div>
 
           {/* #4 and #5 */}
-          <div style={{ display: 'flex', gap }}>
+          <div style={{ display: 'flex', gap, flex: isPortrait ? 1 : undefined, alignItems: 'stretch' }}>
             {slots[3] && renderRapperCard(slots[3], false)}
             {slots[4] && renderRapperCard(slots[4], false)}
           </div>
