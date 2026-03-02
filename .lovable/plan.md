@@ -1,54 +1,52 @@
 
 
-## Plan: Enforce Username for All Users
+## Plan: Redesign Share Your Top 5 Experience
 
-### Problem
-1. Username is optional during sign-up (users can skip the onboarding modal)
-2. Users who sign in via Google OAuth get auto-generated usernames that look like email addresses
-3. No enforcement to set a proper username after login
-
-### Approach
-
-Create a new **`UsernameEnforcementModal`** component that displays a blocking modal when:
-- User is authenticated
-- Their profile username is missing, empty, or looks like an email (contains `@`)
-
-This modal cannot be dismissed — it requires setting a valid username before continuing.
+### Problems identified
+1. **Layout**: #1 rapper should span the full top row, then two rows of 2 rappers each (#2-3, #4-5)
+2. **Colors**: Using hardcoded `gray-800`, `yellow-400`, `gray-900` instead of the site's theme variables (gold primary `--theme-primary: 45 85% 55%`, dark background `--theme-background: 0 0% 5%`, surface `--theme-surface: 0 0% 17%`)
+3. **Logo missing**: No site logo in the shareable image — add the Spit Hierarchy logo at the top
+4. **Horizontal scroll bug**: The modal preview container renders the full-resolution image (1080px+) with only `overflow-hidden` on the inner wrapper but the scaled container doesn't constrain its layout box properly, causing horizontal overflow on the dialog
 
 ### Changes
 
-#### 1. New component: `src/components/auth/UsernameEnforcementModal.tsx`
-- A blocking `Dialog` (no close button, `onOpenChange` disabled) that:
-  - Shows messaging about style and anonymity: "Choose a username that represents your style. This keeps your identity anonymous while you rep your favorites."
-  - Reuses the same username validation logic from `OnboardingModal` (check availability, 3-30 chars, alphanumeric + `_` and `-`)
-  - On save, updates the `profiles` table and invalidates relevant query caches
-  - No skip/close option
+#### 1. `src/components/profile/ShareableTopFive.tsx` — Full rewrite of layout + theming
 
-#### 2. New hook: `src/hooks/useUsernameCheck.ts`
-- Fetches the current user's profile username
-- Returns `needsUsername: boolean` — true if username is null, empty, or matches an email pattern (`/@/` test)
-- Uses `useAuth()` for the user ID
-
-#### 3. Wire into `src/main.tsx`
-- Add `UsernameEnforcementModal` inside the provider tree (after `SecureAuthProvider`, before `OnboardingProvider`) so it takes priority over onboarding
-
-#### 4. Update sign-up in `src/components/auth/AuthForm.tsx`
-- Username field is already present and marked with `*` but `required` is only set when `!isLogin`
-- Add client-side validation: prevent submit if username is empty or invalid during sign-up (already mostly done via `validateUsername`)
-- No changes needed here — existing validation already enforces it on the form level
-
-#### 5. Update `src/components/onboarding/OnboardingModal.tsx`
-- Skip step 2 (username) if the user already has a valid username (since the enforcement modal handles it)
-- This avoids double-prompting
-
-### Technical Details
-
-**Email-like username detection:**
-```typescript
-const looksLikeEmail = (username: string) => username.includes('@');
+**New layout (all formats):**
+```text
+┌──────────────────────────────┐
+│         [LOGO]               │
+│     USERNAME'S TOP 5         │
+│  "My favorite rappers ranked"│
+│                              │
+│  ┌──────────────────────┐    │
+│  │   #1  [IMAGE] NAME   │    │  ← Full width featured row
+│  └──────────────────────┘    │
+│  ┌──────────┐ ┌──────────┐   │
+│  │ #2 IMG   │ │ #3 IMG   │   │  ← Row of 2
+│  └──────────┘ └──────────┘   │
+│  ┌──────────┐ ┌──────────┐   │
+│  │ #4 IMG   │ │ #5 IMG   │   │  ← Row of 2
+│  └──────────┘ └──────────┘   │
+│                              │
+│     spithierarchy.com        │
+└──────────────────────────────┘
 ```
 
-**Modal priority:** The enforcement modal renders unconditionally when `needsUsername` is true, blocking all other UI. It sits above `OnboardingProvider` in the tree so it fires first.
+- Replace all hardcoded colors with theme HSL variables:
+  - Background: `hsl(var(--theme-background))` / `hsl(var(--theme-backgroundDark))`
+  - Cards: `hsl(var(--theme-surface))`
+  - Borders/badges: `hsl(var(--theme-primary))` (the gold)
+  - Text: `hsl(var(--theme-text))`, `hsl(var(--theme-textMuted))`
+  - Radial glow: use `--theme-primary` instead of `#ffd700`
+- Add site logo image at the top (`/lovable-uploads/logo-header.png`)
+- #1 rapper card spans full width with larger image
+- #2-5 in a 2-column grid across two rows
+- Footer text: "spithierarchy.com" or "Spit Hierarchy"
 
-**Cache invalidation on save:** Invalidate `['own-profile']`, `['public-profile-minimal']`, and `['profile-for-display']` after username update.
+#### 2. `src/components/profile/ShareTopFiveModal.tsx` — Fix horizontal scroll + preview scaling
+
+- Wrap the preview in a container that uses `transform-origin: top center` with proper width/height constraints so the scaled content doesn't cause overflow
+- Set the container's actual CSS dimensions to the scaled size (e.g., `width * scale`, `height * scale`) so the parent layout respects the visual size
+- Remove any source of horizontal overflow — the preview div should have explicit max-width and the parent should use `overflow: hidden`
 
