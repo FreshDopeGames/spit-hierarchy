@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -21,15 +21,29 @@ interface ShareTopFiveModalProps {
   username: string;
 }
 
+const FORMATS = {
+  portrait: { w: 1080, h: 1920, label: 'Portrait', sub: 'Instagram Story' },
+  square: { w: 1080, h: 1080, label: 'Square', sub: 'Instagram Post' },
+  landscape: { w: 1200, h: 630, label: 'Landscape', sub: 'Twitter/Facebook' },
+} as const;
+
 const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
   isOpen,
   onClose,
   slots,
   username
 }) => {
-  const [format, setFormat] = useState<'square' | 'landscape' | 'portrait'>('portrait');
+  const [format, setFormat] = useState<keyof typeof FORMATS>('portrait');
   const [isGenerating, setIsGenerating] = useState(false);
   const shareableRef = useRef<HTMLDivElement>(null);
+
+  const { w, h } = FORMATS[format];
+
+  // Compute scale so the preview fits within max 320px wide
+  const maxPreviewWidth = 320;
+  const scale = useMemo(() => Math.min(maxPreviewWidth / w, 1), [w]);
+  const previewW = w * scale;
+  const previewH = h * scale;
 
   const generateImage = async (action: 'download' | 'copy') => {
     if (!shareableRef.current) return;
@@ -38,21 +52,19 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
     try {
       const canvas = await html2canvas(shareableRef.current, {
         backgroundColor: null,
-        scale: 2, // Higher quality
+        scale: 2,
         useCORS: true,
         allowTaint: false,
         logging: false,
       });
 
       if (action === 'download') {
-        // Download the image
         const link = document.createElement('a');
         link.download = `${username}-top5-${format}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
         toast.success("Image downloaded successfully!");
       } else if (action === 'copy') {
-        // Copy to clipboard
         canvas.toBlob(async (blob) => {
           if (blob) {
             try {
@@ -79,7 +91,7 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="w-[95vw] max-w-sm sm:max-w-md md:max-w-2xl lg:max-w-4xl max-h-[95vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-md max-h-[95vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle className="text-center">Share Your Top 5</DialogTitle>
         </DialogHeader>
@@ -96,86 +108,68 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
         ) : (
           <div className="space-y-4">
             {/* Format Selection */}
-            <div className="flex flex-col sm:flex-row justify-center gap-2">
-              <Badge 
-                variant={format === 'portrait' ? 'default' : 'outline'}
-                className="cursor-pointer text-xs px-3 py-2 text-center"
-                onClick={() => setFormat('portrait')}
-              >
-                <span className="block sm:inline">Portrait</span>
-                <span className="hidden sm:inline"> - Instagram Story</span>
-              </Badge>
-              <Badge 
-                variant={format === 'square' ? 'default' : 'outline'}
-                className="cursor-pointer text-xs px-3 py-2 text-center"
-                onClick={() => setFormat('square')}
-              >
-                <span className="block sm:inline">Square</span>
-                <span className="hidden sm:inline"> - Instagram Post</span>
-              </Badge>
-              <Badge 
-                variant={format === 'landscape' ? 'default' : 'outline'}
-                className="cursor-pointer text-xs px-3 py-2 text-center"
-                onClick={() => setFormat('landscape')}
-              >
-                <span className="block sm:inline">Landscape</span>
-                <span className="hidden sm:inline"> - Twitter/Facebook</span>
-              </Badge>
+            <div className="flex justify-center gap-2 flex-wrap">
+              {(Object.entries(FORMATS) as [keyof typeof FORMATS, typeof FORMATS[keyof typeof FORMATS]][]).map(([key, { label, sub }]) => (
+                <Badge
+                  key={key}
+                  variant={format === key ? 'default' : 'outline'}
+                  className="cursor-pointer text-xs px-3 py-2 text-center"
+                  onClick={() => setFormat(key)}
+                >
+                  {label}
+                  <span className="hidden sm:inline"> - {sub}</span>
+                </Badge>
+              ))}
             </div>
 
-            {/* Preview */}
-            <div className="flex justify-center overflow-hidden">
-              <div 
-                className="transform origin-top border border-border rounded-lg overflow-hidden"
-                style={{ 
-                  width: format === 'portrait' ? '1080px' : format === 'square' ? '1080px' : '1200px',
-                  height: format === 'portrait' ? '1920px' : format === 'square' ? '1080px' : '630px',
-                  transform: format === 'portrait' 
-                    ? 'scale(0.15)' 
-                    : format === 'square' 
-                      ? 'scale(0.35)' 
-                      : 'scale(0.3)'
+            {/* Preview — fixed-size container, no overflow */}
+            <div className="flex justify-center">
+              <div
+                className="border border-border rounded-lg overflow-hidden"
+                style={{
+                  width: previewW,
+                  height: previewH,
                 }}
               >
-                <div ref={shareableRef}>
-                  <ShareableTopFive 
-                    slots={slots}
-                    username={username}
-                    format={format}
-                  />
+                <div
+                  style={{
+                    width: w,
+                    height: h,
+                    transform: `scale(${scale})`,
+                    transformOrigin: 'top left',
+                  }}
+                >
+                  <div ref={shareableRef}>
+                    <ShareableTopFive
+                      slots={slots}
+                      username={username}
+                      format={format}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row justify-center gap-2 sm:gap-3 px-4 sm:px-0">
+            <div className="flex justify-center gap-3">
               <Button
                 onClick={() => generateImage('download')}
                 disabled={isGenerating}
-                className="flex items-center justify-center gap-2 w-full sm:w-auto"
+                className="flex items-center gap-2"
                 size="sm"
               >
-                {isGenerating ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Download className="w-4 h-4" />
-                )}
+                {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
                 Download
               </Button>
-              
               <Button
                 onClick={() => generateImage('copy')}
                 disabled={isGenerating}
                 variant="outline"
-                className="flex items-center justify-center gap-2 w-full sm:w-auto"
+                className="flex items-center gap-2"
                 size="sm"
               >
-                {isGenerating ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Copy className="w-4 h-4" />
-                )}
-                Copy to Clipboard
+                {isGenerating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Copy className="w-4 h-4" />}
+                Copy
               </Button>
             </div>
           </div>
