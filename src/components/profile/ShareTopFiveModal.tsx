@@ -183,11 +183,13 @@ const ShareTopFiveModal: React.FC<ShareTopFiveModalProps> = ({
               aria-hidden="true"
               style={{
                 position: 'fixed',
-                left: '-99999px',
+                left: 0,
                 top: 0,
                 width: w,
                 height: h,
                 pointerEvents: 'none',
+                opacity: 0,
+                zIndex: -9999,
               }}
             >
               <div ref={exportRef}>
