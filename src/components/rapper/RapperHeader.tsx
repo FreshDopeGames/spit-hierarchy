@@ -101,7 +101,7 @@ const RapperHeader = ({
               </button>
               <button
                 onClick={handleShare}
-                className="hidden md:flex w-full h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors items-center justify-center gap-2"
+                className="hidden md:flex w-full h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors items-center justify-center gap-2 mt-4"
               >
                 <Share2 className="w-5 h-5 mr-2" />
                 Share
