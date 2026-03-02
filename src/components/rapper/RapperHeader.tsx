@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard as Card, ThemedCardContent as CardContent } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
-import { Crown, MapPin, Calendar, Music, Instagram, Globe, Star } from "lucide-react";
+import { Crown, MapPin, Calendar, Music, Instagram, Globe, Star, Share2 } from "lucide-react";
+import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, getZodiacName, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
@@ -35,6 +36,24 @@ const RapperHeader = ({
   
   // Use rapper image if available and not empty, otherwise use placeholder
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : PLACEHOLDER_IMAGE;
+
+  const handleShare = async () => {
+    const url = `${window.location.origin}/rapper/${rapper.slug}`;
+    const shareData = { title: rapper.name, text: `Check out ${rapper.name} on Spit Hierarchy`, url };
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData);
+      } else {
+        await navigator.clipboard.writeText(url);
+        toast.success("Link copied to clipboard!");
+      }
+    } catch (err) {
+      if ((err as Error)?.name !== "AbortError") {
+        await navigator.clipboard.writeText(url);
+        toast.success("Link copied to clipboard!");
+      }
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -80,6 +99,13 @@ const RapperHeader = ({
                 <Star className="w-5 h-5 mr-2" />
                 Rate Skills
               </button>
+              <button
+                onClick={handleShare}
+                className="hidden md:flex w-full h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors items-center justify-center gap-2"
+              >
+                <Share2 className="w-5 h-5 mr-2" />
+                Share
+              </button>
             </div>
 
             {/* Rapper Info */}
@@ -102,6 +128,13 @@ const RapperHeader = ({
               >
                 <Star className="w-5 h-5 mr-2" />
                 Rate Skills
+              </button>
+              <button
+                onClick={handleShare}
+                className="md:hidden w-full sm:w-auto h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors inline-flex items-center justify-center gap-2"
+              >
+                <Share2 className="w-5 h-5 mr-2" />
+                Share
               </button>
                 
                 <div className="flex flex-wrap gap-4">
