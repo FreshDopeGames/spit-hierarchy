@@ -30,14 +30,14 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
 
   const dims = getDimensions();
   const cellGap = 4;
-  const headerH = isLandscape ? 50 : isPortrait ? 100 : 70;
-  const footerH = isLandscape ? 30 : isPortrait ? 50 : 40;
+  const headerH = isLandscape ? 60 : isPortrait ? 140 : 100;
+  const footerH = isLandscape ? 35 : isPortrait ? 70 : 50;
   const badgeSize = isLandscape ? 28 : isPortrait ? 48 : 38;
   const badgeFont = isLandscape ? 14 : isPortrait ? 22 : 18;
   const nameFont = isLandscape ? 16 : isPortrait ? 28 : 22;
-  const logoSize = isLandscape ? 28 : isPortrait ? 50 : 40;
-  const headerFont = isLandscape ? 20 : isPortrait ? 36 : 28;
-  const footerFont = isLandscape ? 12 : isPortrait ? 18 : 14;
+  const logoSize = isLandscape ? 36 : isPortrait ? 70 : 55;
+  const headerFont = isLandscape ? 26 : isPortrait ? 48 : 36;
+  const footerFont = isLandscape ? 14 : isPortrait ? 22 : 18;
 
   const renderMosaicCell = (slot: typeof slots[0], isTopLeft = false, isTopRight = false, isBottomLeft = false, isBottomRight = false, isFullWidth = false) => {
     const borderRadius = [
@@ -127,6 +127,8 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap',
             paddingTop: (badgeSize - nameFont) / 2,
+            flex: 1,
+            minWidth: 0,
           }}>
             {slot.rapper?.name || 'Empty'}
           </p>
@@ -186,18 +188,18 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
         minHeight: 0,
       }}>
         {/* Row 1: #1 featured */}
-        <div style={{ flex: 2, display: 'flex', minHeight: 0 }}>
+        <div style={{ flex: isLandscape ? 1.8 : 2, display: 'flex', minHeight: 0 }}>
           {slots[0] && renderMosaicCell(slots[0], true, true, false, false, true)}
         </div>
 
         {/* Row 2: #2 and #3 */}
-        <div style={{ flex: 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
+        <div style={{ flex: isLandscape ? 1.2 : 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
           {slots[1] && renderMosaicCell(slots[1], false, false, false, false)}
           {slots[2] && renderMosaicCell(slots[2], false, false, false, false)}
         </div>
 
         {/* Row 3: #4 and #5 */}
-        <div style={{ flex: 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
+        <div style={{ flex: isLandscape ? 1.2 : 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
           {slots[3] && renderMosaicCell(slots[3], false, false, true, false)}
           {slots[4] && renderMosaicCell(slots[4], false, false, false, true)}
         </div>
