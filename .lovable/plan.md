@@ -1,30 +1,26 @@
 
 
-## Root Cause
+## Plan: Add "Share Rapper" Button to Rapper Detail Header
 
-The quiz answer submission in `src/hooks/useQuiz.ts` (line 145) invalidates cache key `['quiz-badges', user?.id]`, but the actual query key in `src/hooks/useQuizBadges.ts` (line 54) is `['user-quiz-badges', targetUserId]`. The keys don't match, so the earned badges query is **never refreshed** after earning new badges. The "(X earned)" count stays stale until a full page reload.
+### What
+Add a share button below the "Rate Skills" button (both desktop and mobile versions) that copies the rapper's profile URL to the clipboard, using the Web Share API when available.
 
-Additionally, the category stats query key `['quiz-category-stats', targetUserId]` is also never invalidated.
+### Changes
 
-## Plan
+**File: `src/components/rapper/RapperHeader.tsx`**
 
-### 1. Fix cache invalidation keys in `src/hooks/useQuiz.ts`
+1. Import `Share2` from `lucide-react` and `toast` from `sonner`
+2. Add a `handleShare` function that:
+   - Uses `navigator.share()` if available (mobile native share sheet) with title, text, and URL (`/rapper/${rapper.slug}`)
+   - Falls back to `navigator.clipboard.writeText()` with a toast confirmation
+3. Add a "Share" button directly below each "Rate Skills" button (both the desktop version under the avatar at ~line 82, and the mobile version at ~line 103), styled as a secondary/outline button to visually distinguish it from the primary gold CTA
 
-At line 145, change:
-```typescript
-queryClient.invalidateQueries({ queryKey: ['quiz-badges', user?.id] });
-```
-to:
-```typescript
-queryClient.invalidateQueries({ queryKey: ['user-quiz-badges', user?.id] });
-queryClient.invalidateQueries({ queryKey: ['quiz-category-stats', user?.id] });
-queryClient.invalidateQueries({ queryKey: ['all-quiz-badges'] });
-```
+### Button placement
+- **Desktop**: Below "Rate Skills" under the avatar (after line 82)
+- **Mobile**: Below the mobile "Rate Skills" button (after line 103)
 
-This ensures:
-- The earned badges list refreshes (fixes the "(X earned)" count)
-- The category stats refresh (fixes progress bars)
-- The full badge list refreshes (in case any badge metadata changed)
-
-Single file change: `src/hooks/useQuiz.ts`, lines 144-145.
+### Styling
+- Outline/secondary style: border with theme primary color, transparent background, theme-colored text
+- Same width as the Rate Skills button for visual alignment
+- No pulse animation (reserved for the primary CTA)
 
