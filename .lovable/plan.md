@@ -1,21 +1,31 @@
 
 
-## Plan: Fix Copy Button UX
+## Plan: Move name overlay to bottom + fix font rendering
 
 ### Problem
-`navigator.clipboard.write()` with image blobs fails in most contexts because the async `html2canvas` rendering breaks the "user gesture" requirement browsers enforce for clipboard write access. This isn't fixable without a fundamentally different approach.
+From the uploaded screenshots:
+1. Rapper names are invisible — `html2canvas` is not rendering the Impact/Arial Black fonts in the overlay text
+2. The header title ("USERNAME's Top 5") is also invisible for the same reason
+3. The gradient overlay renders as a visible colored band but text within it doesn't appear
 
-### Solution
-Replace the current copy behavior with a **fallback strategy**:
+### Root cause
+`html2canvas` struggles with certain font-family declarations. The `Impact` font in particular may not be available in the rendering context. Additionally, `fontWeight: 800` on Impact (which only has one weight) can cause rendering to fail silently.
 
-1. **Try clipboard write** first (works in Chrome on desktop with recent user gesture)
-2. **On failure**, fall back to downloading the image automatically instead of showing an error
-3. Show a toast: *"Clipboard not supported — image downloaded instead"*
+### Changes in `src/components/profile/ShareableTopFive.tsx`
 
-### Change in `src/components/profile/ShareTopFiveModal.tsx`
+**1. Move gradient + rank + name from top to bottom of each cell**
+- Change the overlay `position: absolute` from `top: 0` to `bottom: 0`
+- Flip the gradient direction: `linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)`
+- Align items to `flex-end` so content sits at the bottom
+- Adjust padding accordingly (more padding at bottom, less at top)
 
-Update the `copy` branch inside `generateImage`:
-- Wrap the clipboard write in try/catch
-- On catch, trigger the download flow as fallback
-- Replace the error toast with a friendly info toast explaining the fallback
+**2. Fix font rendering for html2canvas**
+- Simplify font stacks: use `Arial, Helvetica, sans-serif` with `fontWeight: 900` (these are universally available and html2canvas renders them reliably)
+- Remove Impact from the stack — it's the likely culprit for silent rendering failures
+- For the position badge number, keep the same approach since numbers ARE rendering (confirming the badge's simpler styling works)
+
+**3. Header title — same font fix**
+- Apply the same simplified font to the header `h1`
+
+### No other files changed
 
