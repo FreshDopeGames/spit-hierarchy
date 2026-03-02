@@ -6,6 +6,7 @@ import { X, Star, Trophy, Users, User, Check, AlertCircle } from "lucide-react";
 import TopFiveSlot from "@/components/profile/TopFiveSlot";
 import RapperSearchOverlay from "@/components/profile/RapperSearchOverlay";
 import { useUserTopRappers } from "@/hooks/useUserTopRappers";
+import { useUsernameCheck } from "@/hooks/useUsernameCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -17,6 +18,7 @@ interface OnboardingModalProps {
 
 const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) => {
   const { topRappers, updateTopRapper, selectedRapperIds } = useUserTopRappers();
+  const { needsUsername } = useUsernameCheck();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
@@ -239,7 +241,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Button
-                  onClick={() => setCurrentStep(2)}
+                  onClick={() => setCurrentStep(needsUsername ? 2 : 3)}
                   style={{
                     backgroundColor: 'hsl(var(--theme-primary))',
                     color: 'hsl(var(--theme-textLight))'
