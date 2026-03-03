@@ -153,6 +153,7 @@ const VoteModal = ({ rapper, isOpen, onClose, selectedCategory }: VoteModalProps
       }
       
       queryClient.invalidateQueries({ queryKey: ["rapper-category-ratings", rapper.id] });
+      queryClient.invalidateQueries({ queryKey: ["rapper-rating-count", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["existing-votes"] });
       queryClient.invalidateQueries({ queryKey: ["rapper"] });
       onClose();
