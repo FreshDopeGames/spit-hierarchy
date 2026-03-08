@@ -3616,6 +3616,10 @@ export type Database = {
           tracks: Json
         }[]
       }
+      get_all_users_paginated: {
+        Args: { page_number?: number; page_size?: number; search_term?: string }
+        Returns: Json
+      }
       get_campaign_performance: {
         Args: { end_date?: string; start_date?: string }
         Returns: {
@@ -4096,6 +4100,10 @@ export type Database = {
           score: number
           slug: string
         }[]
+      }
+      set_user_role: {
+        Args: { new_role: string; target_user_id: string }
+        Returns: boolean
       }
       submit_quiz_answer: {
         Args: {
