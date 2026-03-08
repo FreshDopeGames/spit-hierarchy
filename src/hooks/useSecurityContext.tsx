@@ -6,6 +6,7 @@ import { supabase } from '@/integrations/supabase/client';
 interface SecurityContextType {
   isAdmin: boolean;
   isModerator: boolean;
+  isStaffWriter: boolean;
   canManageBlog: boolean;
   isLoading: boolean;
   checkRateLimit: (actionType: string, maxRequests?: number, windowSeconds?: number) => Promise<boolean>;
@@ -14,6 +15,7 @@ interface SecurityContextType {
 const SecurityContext = createContext<SecurityContextType>({
   isAdmin: false,
   isModerator: false,
+  isStaffWriter: false,
   canManageBlog: false,
   isLoading: true,
   checkRateLimit: async () => false,
@@ -35,6 +37,7 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
   const { user, isAuthenticated } = useSecureAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isModerator, setIsModerator] = useState(false);
+  const [isStaffWriter, setIsStaffWriter] = useState(false);
   const [canManageBlog, setCanManageBlog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -43,27 +46,29 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
       if (!isAuthenticated || !user) {
         setIsAdmin(false);
         setIsModerator(false);
+        setIsStaffWriter(false);
         setCanManageBlog(false);
         setIsLoading(false);
         return;
       }
 
       try {
-        // Check admin status
         const { data: adminCheck } = await supabase.rpc('is_admin');
         setIsAdmin(adminCheck || false);
 
-        // Check moderator status
         const { data: moderatorCheck } = await supabase.rpc('is_moderator_or_admin');
         setIsModerator(moderatorCheck || false);
 
-        // Check blog management permissions
         const { data: blogCheck } = await supabase.rpc('can_manage_blog_content');
         setCanManageBlog(blogCheck || false);
+
+        // Staff writer = can manage blog but is not admin
+        setIsStaffWriter((blogCheck || false) && !(adminCheck || false));
       } catch (error) {
         console.error('Error checking permissions:', error);
         setIsAdmin(false);
         setIsModerator(false);
+        setIsStaffWriter(false);
         setCanManageBlog(false);
       } finally {
         setIsLoading(false);
@@ -104,6 +109,7 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
       value={{
         isAdmin,
         isModerator,
+        isStaffWriter,
         canManageBlog,
         isLoading,
         checkRateLimit,
