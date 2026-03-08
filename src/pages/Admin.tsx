@@ -19,106 +19,86 @@ import { AnnouncementManagement } from "@/components/admin/AnnouncementManagemen
 import QuizManagement from "@/components/admin/QuizManagement";
 import AcquisitionAnalytics from "@/components/admin/AcquisitionAnalytics";
 import BioBulkPopulation from "@/components/admin/BioBulkPopulation";
+import AdminUserManagement from "@/components/admin/AdminUserManagement";
+
+const ALL_TABS = [
+  { value: "rappers", label: "Rappers", roles: ["admin"] },
+  { value: "rankings", label: "Rankings", roles: ["admin", "staff_writer"] },
+  { value: "blog", label: "Blog", roles: ["admin", "staff_writer"] },
+  { value: "polls", label: "Polls", roles: ["admin", "staff_writer"] },
+  { value: "quizzes", label: "Quizzes", roles: ["admin", "staff_writer"] },
+  { value: "vs-matches", label: "VS Matches", roles: ["admin"] },
+  { value: "achievements", label: "Achievements", roles: ["admin"] },
+  { value: "suggestions", label: "Suggestions", roles: ["admin"] },
+  { value: "headers", label: "Headers", roles: ["admin"] },
+  { value: "theme", label: "Theme", roles: ["admin"] },
+  { value: "data", label: "Data", roles: ["admin"] },
+  { value: "announcements", label: "Announcements", roles: ["admin"] },
+  { value: "acquisition", label: "Acquisition", roles: ["admin"] },
+  { value: "bios", label: "Bios", roles: ["admin"] },
+  { value: "users", label: "Users", roles: ["admin"] },
+];
 
 const Admin = () => {
-  const {
-    user,
-    isAuthenticated
-  } = useSecureAuth();
-  const {
-    isAdmin,
-    isLoading
-  } = useSecurityContext();
+  const { isAuthenticated } = useSecureAuth();
+  const { isAdmin, isModerator, isStaffWriter, canManageBlog, isLoading } = useSecurityContext();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [activeTab, setActiveTab] = useState("rappers");
-  const tabOptions = [{
-    value: "rappers",
-    label: "Rappers"
-  }, {
-    value: "rankings",
-    label: "Rankings"
-  }, {
-    value: "blog",
-    label: "Blog"
-  }, {
-    value: "polls",
-    label: "Polls"
-  }, {
-    value: "quizzes",
-    label: "Quizzes"
-  }, {
-    value: "vs-matches",
-    label: "VS Matches"
-  }, {
-    value: "achievements",
-    label: "Achievements"
-  }, {
-    value: "suggestions",
-    label: "Suggestions"
-  }, {
-    value: "headers",
-    label: "Headers"
-  }, {
-    value: "theme",
-    label: "Theme"
-  }, {
-    value: "data",
-    label: "Data"
-  }, {
-    value: "announcements",
-    label: "Announcements"
-  }, {
-    value: "acquisition",
-    label: "Acquisition"
-  }, {
-    value: "bios",
-    label: "Bios"
-  }];
+
+  // Determine which tabs to show based on role
+  const getUserRole = () => {
+    if (isAdmin) return "admin";
+    if (isStaffWriter || canManageBlog) return "staff_writer";
+    if (isModerator) return "moderator";
+    return null;
+  };
+
+  const userRole = getUserRole();
+  const tabOptions = ALL_TABS.filter((tab) => tab.roles.includes(userRole || ""));
+  const [activeTab, setActiveTab] = useState(tabOptions[0]?.value || "rappers");
+
   if (isLoading) {
-    return <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
+    return (
+      <div className="min-h-screen bg-[hsl(var(--theme-background))] flex items-center justify-center">
         <div className="text-[hsl(var(--theme-primary))] text-xl font-[var(--theme-font-heading)] animate-pulse">Loading...</div>
-      </div>;
+      </div>
+    );
   }
-  if (!isAuthenticated || !isAdmin) {
+
+  // Allow admin, staff writer, or moderator
+  if (!isAuthenticated || !userRole) {
     return <Navigate to="/auth" replace />;
   }
+
   const renderTabContent = () => {
     switch (activeTab) {
-      case "rappers":
-        return <AdminRapperManagement />;
-      case "rankings":
-        return <AdminRankingsManagement />;
-      case "blog":
-        return <BlogManagement />;
-      case "polls":
-        return <PollManagement />;
-      case "quizzes":
-        return <QuizManagement />;
-      case "vs-matches":
-        return <AdminVSMatchManagement />;
-      case "achievements":
-        return <AdminAchievementManagement />;
-      case "suggestions":
-        return <AdminRapperSuggestions />;
-      case "headers":
-        return <SectionHeaderManagement />;
-      case "theme":
-        return <ThemeManagement />;
-      case "data":
-        return <AdminDataManagement />;
-      case "announcements":
-        return <AnnouncementManagement />;
-      case "acquisition":
-        return <AcquisitionAnalytics />;
-      case "bios":
-        return <BioBulkPopulation />;
-      default:
-        return <AdminRapperManagement />;
+      case "rappers": return <AdminRapperManagement />;
+      case "rankings": return <AdminRankingsManagement />;
+      case "blog": return <BlogManagement />;
+      case "polls": return <PollManagement />;
+      case "quizzes": return <QuizManagement />;
+      case "vs-matches": return <AdminVSMatchManagement />;
+      case "achievements": return <AdminAchievementManagement />;
+      case "suggestions": return <AdminRapperSuggestions />;
+      case "headers": return <SectionHeaderManagement />;
+      case "theme": return <ThemeManagement />;
+      case "data": return <AdminDataManagement />;
+      case "announcements": return <AnnouncementManagement />;
+      case "acquisition": return <AcquisitionAnalytics />;
+      case "bios": return <BioBulkPopulation />;
+      case "users": return <AdminUserManagement />;
+      default: return <AdminRapperManagement />;
     }
   };
-  return <div className="min-h-screen bg-[hsl(var(--theme-background))]">
+
+  // Split tabs into rows for desktop
+  const midpoint = Math.ceil(tabOptions.length / 2);
+  const row1 = tabOptions.slice(0, midpoint);
+  const row2 = tabOptions.slice(midpoint);
+
+  return (
+    <div className="min-h-screen bg-[hsl(var(--theme-background))]">
       <HeaderNavigation isScrolled={isScrolled} />
-      
+
       <main className="max-w-7xl mx-auto px-4 pb-4 sm:px-6 sm:pb-6 pt-40 py-[80px]">
         <h1 className="text-2xl sm:text-4xl font-bold text-[hsl(var(--theme-primary))] mb-6 sm:mb-8 font-[var(--theme-font-heading)]">
           Admin Dashboard
@@ -131,41 +111,43 @@ const Admin = () => {
               <ThemedSelectValue />
             </ThemedSelectTrigger>
             <ThemedSelectContent>
-              {tabOptions.map(option => <ThemedSelectItem key={option.value} value={option.value}>
+              {tabOptions.map((option) => (
+                <ThemedSelectItem key={option.value} value={option.value}>
                   {option.label}
-                </ThemedSelectItem>)}
+                </ThemedSelectItem>
+              ))}
             </ThemedSelectContent>
           </ThemedSelect>
         </div>
 
-        {/* Desktop Tabs Navigation - Two Rows */}
+        {/* Desktop Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <div className="hidden lg:flex flex-col gap-2">
-            {/* Row 1: First 7 tabs */}
-            <ThemedTabsList className="w-full grid grid-cols-7 gap-1 h-auto p-2">
-              {tabOptions.slice(0, 7).map(option => (
+            <ThemedTabsList className={`w-full grid grid-cols-${row1.length} gap-1 h-auto p-2`}>
+              {row1.map((option) => (
                 <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                   {option.label}
                 </ThemedTabsTrigger>
               ))}
             </ThemedTabsList>
-            
-            {/* Row 2: Remaining 6 tabs */}
-            <ThemedTabsList className="w-full grid grid-cols-6 gap-1 h-auto p-2">
-              {tabOptions.slice(7).map(option => (
-                <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
-                  {option.label}
-                </ThemedTabsTrigger>
-              ))}
-            </ThemedTabsList>
+            {row2.length > 0 && (
+              <ThemedTabsList className={`w-full grid grid-cols-${row2.length} gap-1 h-auto p-2`}>
+                {row2.map((option) => (
+                  <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
+                    {option.label}
+                  </ThemedTabsTrigger>
+                ))}
+              </ThemedTabsList>
+            )}
           </div>
 
-        {/* Tab Content */}
-        <div className="bg-[hsl(var(--theme-surface))] p-3 sm:p-6 rounded-lg border border-[hsl(var(--theme-primary))] shadow-lg">
-          {renderTabContent()}
-        </div>
+          <div className="bg-[hsl(var(--theme-surface))] p-3 sm:p-6 rounded-lg border border-[hsl(var(--theme-primary))] shadow-lg">
+            {renderTabContent()}
+          </div>
         </ThemedTabs>
       </main>
-    </div>;
+    </div>
+  );
 };
+
 export default Admin;
