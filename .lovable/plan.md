@@ -1,31 +1,74 @@
 
 
-## Plan: Move name overlay to bottom + fix font rendering
+## Admin User Management + Moderator Role + Staff Writer Polls Access
 
-### Problem
-From the uploaded screenshots:
-1. Rapper names are invisible — `html2canvas` is not rendering the Impact/Arial Black fonts in the overlay text
-2. The header title ("USERNAME's Top 5") is also invisible for the same reason
-3. The gradient overlay renders as a visible colored band but text within it doesn't appear
+### Summary
+Add a **Users** tab to the admin panel for managing user roles. Introduce a **Moderator** role for comment deletion. Ensure **Staff Writers** (`blog_editor`) can also manage polls.
 
-### Root cause
-`html2canvas` struggles with certain font-family declarations. The `Impact` font in particular may not be available in the rendering context. Additionally, `fontWeight: 800` on Impact (which only has one weight) can cause rendering to fail silently.
+### Role Mapping (UI Label → DB Role)
+- **Regular User** → no entry in `user_roles`
+- **Staff Writer** → `blog_editor` (access: Blogs, Rankings, Quizzes, Polls)
+- **Moderator** → `moderator` (access: delete comments, manage moderation flags)
+- **Admin** → `admin` (full access)
 
-### Changes in `src/components/profile/ShareableTopFive.tsx`
+### Database Changes
 
-**1. Move gradient + rank + name from top to bottom of each cell**
-- Change the overlay `position: absolute` from `top: 0` to `bottom: 0`
-- Flip the gradient direction: `linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)`
-- Align items to `flex-end` so content sits at the bottom
-- Adjust padding accordingly (more padding at bottom, less at top)
+**1. Create `get_all_users_paginated` RPC** (security definer, admin-only)
+- Joins `auth.users` with `profiles` and `user_roles`
+- Accepts `page_number`, `page_size` (default 50), `search_term`
+- Returns: id, email, username, avatar_url, role, created_at, total_count
 
-**2. Fix font rendering for html2canvas**
-- Simplify font stacks: use `Arial, Helvetica, sans-serif` with `fontWeight: 900` (these are universally available and html2canvas renders them reliably)
-- Remove Impact from the stack — it's the likely culprit for silent rendering failures
-- For the position badge number, keep the same approach since numbers ARE rendering (confirming the badge's simpler styling works)
+**2. Create `set_user_role` RPC** (security definer, admin-only)
+- Accepts `target_user_id` and `new_role` (text: 'user', 'staff_writer', 'moderator', 'admin')
+- Maps 'staff_writer' → inserts `blog_editor` role
+- Maps 'moderator' → inserts `moderator` role
+- Maps 'admin' → inserts `admin` role
+- Maps 'user' → deletes all roles for that user
+- Prevents removing your own admin role
 
-**3. Header title — same font fix**
-- Apply the same simplified font to the header `h1`
+**3. Update `can_manage_blog_content()` function** — already includes `blog_editor`, no change needed.
 
-### No other files changed
+**4. Add polls RLS policy for `blog_editor`** — Currently polls are admin-only. Add a new policy allowing `blog_editor` role to manage polls and poll_options:
+```sql
+CREATE POLICY "Staff writers can manage polls"
+ON public.polls FOR ALL
+USING (can_manage_blog_content())
+WITH CHECK (can_manage_blog_content());
+
+CREATE POLICY "Staff writers can manage poll options"
+ON public.poll_options FOR ALL
+USING (can_manage_blog_content())
+WITH CHECK (can_manage_blog_content());
+```
+
+**5. Moderator comment deletion** — The existing RLS policy `"Admins can delete any comment"` on `comments` only allows admins. Add:
+```sql
+CREATE POLICY "Moderators can delete comments"
+ON public.comments FOR DELETE
+USING (is_moderator_or_admin());
+```
+
+### Frontend Changes
+
+**1. New component: `src/components/admin/AdminUserManagement.tsx`**
+- Paginated table (50 per page) with columns: Username, Email, Role, Joined
+- Search input to filter by username/email
+- Role dropdown per row: Regular User / Staff Writer / Moderator / Admin
+- Confirmation dialog before role changes
+- Prev/Next pagination controls
+
+**2. Update `src/pages/Admin.tsx`**
+- Add "Users" tab to `tabOptions`
+- Add case in `renderTabContent()` switch
+- Adjust grid columns for the extra tab (8+7 split)
+
+**3. Update `src/hooks/useSecurityContext.tsx`**
+- Add `isStaffWriter` boolean derived from `canManageBlog` check
+- Used to conditionally show a limited set of admin tabs for staff writers
+
+**4. Update Admin page access**
+- Allow staff writers (`blog_editor`) and moderators to access the admin page
+- Staff writers see only: Blog, Rankings, Quizzes, Polls tabs
+- Moderators see only: a Comments/Moderation tab (existing moderation features)
+- Admins see all tabs including Users
 
