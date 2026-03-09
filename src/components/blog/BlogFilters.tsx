@@ -92,9 +92,9 @@ const BlogFilters = ({
                 <SelectValue placeholder="Select a tag" />
               </SelectTrigger>
               <SelectContent className="bg-black/95 backdrop-blur-sm border-[var(--theme-border)] z-50">
-                <SelectItem value="all" className="text-[var(--theme-text)]">All Tags</SelectItem>
+                <SelectItem value="all" className="text-white">All Tags</SelectItem>
                 {tags.map(tag => (
-                  <SelectItem key={tag.id} value={tag.slug} className="text-[var(--theme-text)]">
+                  <SelectItem key={tag.id} value={tag.slug} className="text-white">
                     {tag.name}
                   </SelectItem>
                 ))}
