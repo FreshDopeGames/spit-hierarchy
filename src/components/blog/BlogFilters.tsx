@@ -73,9 +73,9 @@ const BlogFilters = ({
               <SelectValue placeholder="Select a category" />
             </SelectTrigger>
             <SelectContent className="bg-black/95 backdrop-blur-sm border-[var(--theme-border)] z-50">
-              <SelectItem value="all" className="text-[var(--theme-text)]">All Posts</SelectItem>
+              <SelectItem value="all" className="text-white">All Posts</SelectItem>
               {categories?.map(category => (
-                <SelectItem key={category.id} value={category.id} className="text-[var(--theme-text)]">
+                <SelectItem key={category.id} value={category.id} className="text-white">
                   {category.name}
                 </SelectItem>
               ))}
