@@ -151,7 +151,12 @@ const AdminUserManagement = () => {
                   <TableCell className="text-[hsl(var(--theme-text))] font-medium">
                     <div className="flex items-center gap-2">
                       {user.avatar_url && (
-                        <img src={user.avatar_url} alt="" className="w-6 h-6 rounded-full object-cover" />
+                        <img
+                          src={user.avatar_url}
+                          alt=""
+                          className="w-6 h-6 rounded-full object-cover"
+                          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+                        />
                       )}
                       {user.username}
                     </div>
