@@ -13,6 +13,7 @@ import ProfileStats from "@/components/profile/ProfileStats";
 import ProfileAchievements from "@/components/profile/ProfileAchievements";
 import VoteNotesSection from "@/components/profile/VoteNotesSection";
 import CypherJournalSection from "@/components/profile/CypherJournalSection";
+import MemberJournalSection from "@/components/profile/MemberJournalSection";
 import VotingHistorySection from "@/components/profile/VotingHistorySection";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
