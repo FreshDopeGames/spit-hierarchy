@@ -701,6 +701,45 @@ export type Database = {
           },
         ]
       }
+      member_journal_entries: {
+        Row: {
+          content: string
+          created_at: string
+          excerpt: string | null
+          id: string
+          is_public: boolean
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_public?: boolean
+          slug: string
+          status?: string
+          title: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          excerpt?: string | null
+          id?: string
+          is_public?: boolean
+          slug?: string
+          status?: string
+          title?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       member_stats: {
         Row: {
           about_visits: number | null
