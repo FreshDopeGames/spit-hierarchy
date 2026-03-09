@@ -246,6 +246,9 @@ const UserProfile = () => {
 
                 <VoteNotesSection voteNotes={voteNotes || []} />
 
+                {/* Member Hip-Hop Journal */}
+                <MemberJournalSection memberStatus={memberStats?.status} />
+
                 {/* Cypher Journal */}
                 <div className="mt-6 sm:mt-8">
                   <CypherJournalSection userId={user.id} />
