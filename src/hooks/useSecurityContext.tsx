@@ -43,6 +43,7 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
 
   useEffect(() => {
     const checkPermissions = async () => {
+      setIsLoading(true);
       if (!isAuthenticated || !user) {
         setIsAdmin(false);
         setIsModerator(false);
