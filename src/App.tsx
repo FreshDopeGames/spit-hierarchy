@@ -64,6 +64,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
           <Route path="/blog/:slug" element={<BlogDetail />} />
+          <Route path="/journal/:username/:slug" element={<JournalEntryDetail />} />
           <Route path="/rappers" element={<AllRappersPage />} />
           <Route path="/all-rappers" element={<AllRappersPage />} />
           <Route path="/rapper/:id" element={<RapperDetail />} />
