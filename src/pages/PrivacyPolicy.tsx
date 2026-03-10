@@ -40,7 +40,7 @@ const PrivacyPolicy = () => {
             <ThemedCardContent className="p-8 space-y-8">
               
               <div className="text-rap-smoke text-sm">
-                Last updated: January 2025
+                Last updated: March 2025
               </div>
 
               <section>
@@ -91,7 +91,74 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">4. Data Security</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">4. User-Generated Content & Personal Information</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    Spit Hierarchy allows users to create and share content including journal entries, comments, profile information, and other 
+                    user-generated content ("UGC"). We strongly advise all users against disclosing personally identifiable information ("PII") 
+                    in any UGC on the platform.
+                  </p>
+                  <p><strong>You should never share the following in any UGC:</strong></p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Your real name or full legal name</li>
+                    <li>Age, date of birth, or year of birth</li>
+                    <li>Sex, gender identity, or sexual orientation</li>
+                    <li>Physical address, city of residence, or specific location details</li>
+                    <li>Phone number, email address, or other contact information</li>
+                    <li>Social Security number, state ID number, driver's license number, or passport number</li>
+                    <li>Financial information including bank account numbers, credit card numbers, or income details</li>
+                    <li>Medical or health information</li>
+                    <li>School, workplace, or employer details</li>
+                    <li>Any other information that could be used to identify, locate, or contact you</li>
+                  </ul>
+                  <p>
+                    <strong>Content Visibility:</strong> UGC that is marked as public (such as public journal entries or comments) may be visible 
+                    to all platform users and may be indexed by third-party search engines. Once information is shared publicly, it may be 
+                    difficult or impossible to fully remove from the internet.
+                  </p>
+                  <p>
+                    <strong>Right to Remove PII:</strong> Fresh Dope Biz LLC reserves the right to remove, edit, or unpublish any UGC that 
+                    contains personally identifiable information, at our sole discretion and without prior notice. This action is taken to 
+                    protect users and maintain the safety of the community, and does not constitute censorship or editorial control over 
+                    non-PII content.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">5. Assumption of Risk</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    By using Spit Hierarchy and creating or sharing any user-generated content, you acknowledge and agree that you do so 
+                    entirely at your own risk. You are solely responsible for any information you choose to disclose through the platform, 
+                    whether in journal entries, comments, profile data, or any other form of UGC.
+                  </p>
+                  <p>
+                    <strong>Fresh Dope Biz LLC shall not be held liable for any harm, damage, loss, or consequence — whether online or 
+                    offline — that results from your decision to share personal information through the platform.</strong> This includes, 
+                    but is not limited to:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Identity theft or fraudulent use of your personal data</li>
+                    <li>Harassment, stalking, or unwanted contact from other users or third parties</li>
+                    <li>Financial loss or damage resulting from shared financial information</li>
+                    <li>Physical harm or threats arising from disclosed location or identity details</li>
+                    <li>Emotional distress, reputational harm, or social consequences</li>
+                    <li>Any interactions — online or offline — that result from information shared on the platform</li>
+                  </ul>
+                  <p>
+                    You voluntarily assume all risks associated with sharing any personal information on Spit Hierarchy. This assumption 
+                    of risk applies regardless of whether the platform's moderation systems detect or remove the content in question.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">6. Data Security</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   We implement appropriate security measures to protect your personal information against unauthorized access, 
                   alteration, disclosure, or destruction. This includes encryption, secure servers, and regular security assessments.
@@ -101,7 +168,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">5. Cookies and Tracking</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">7. Cookies and Tracking</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>We use cookies and similar technologies to:</p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
@@ -124,7 +191,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">6. Third-Party Services</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Third-Party Services</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>Our platform integrates with third-party services that process data on our behalf:</p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
@@ -147,7 +214,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">7. Your Rights</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. Your Rights</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p><strong>All Users:</strong></p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
@@ -187,7 +254,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Children's Privacy</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Children's Privacy</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   Our platform is not intended for children under 13. We do not knowingly collect personal information from children under 13. 
                   If we become aware of such collection, we will take steps to delete the information.
@@ -197,7 +264,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. Changes to Privacy Policy</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">11. Changes to Privacy Policy</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   We may update this Privacy Policy periodically. We will notify users of significant changes via email or platform notification. 
                   Your continued use constitutes acceptance of the updated policy.
@@ -207,7 +274,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Contact Us</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">12. Contact Us</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>
                     For questions about this Privacy Policy, to exercise your privacy rights, or for general data privacy inquiries, 

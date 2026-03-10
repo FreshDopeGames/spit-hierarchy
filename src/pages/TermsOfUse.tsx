@@ -40,7 +40,7 @@ const TermsOfUse = () => {
             <ThemedCardContent className="p-8 space-y-8">
               
               <div className="text-rap-smoke text-sm">
-                Last updated: January 2025
+                Last updated: March 2025
               </div>
 
               <section>
@@ -115,7 +115,106 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">6. Account Responsibilities</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">6. User-Generated Content</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    Spit Hierarchy allows users to create and share user-generated content ("UGC"), including but not limited to journal entries, 
+                    comments, votes with notes, profile information, and any other content submitted to the platform.
+                  </p>
+                  <p>
+                    <strong>WARNING — Do Not Share Personal Information:</strong> We strongly advise against disclosing any personally 
+                    identifiable information ("PII") in your UGC. This includes, but is not limited to:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Your real name, full legal name, or family members' names</li>
+                    <li>Age, date of birth, or year of birth</li>
+                    <li>Sex, gender identity, or sexual orientation</li>
+                    <li>Physical address, city of residence, or specific location details</li>
+                    <li>Phone number, email address, or other direct contact information</li>
+                    <li>Social Security number, state ID number, driver's license number, or passport number</li>
+                    <li>Financial information such as bank accounts, credit card numbers, or income</li>
+                    <li>Medical or health information</li>
+                    <li>School, workplace, or employer information</li>
+                    <li>Photographs of yourself or others that reveal identity or location</li>
+                    <li>Any other data that could be used to identify, locate, or contact you or others</li>
+                  </ul>
+                  <p>
+                    <strong>Right to Remove Content:</strong> Fresh Dope Biz LLC reserves the right to remove, edit, or unpublish any UGC 
+                    that contains personally identifiable information, at our sole discretion and without prior notice. This right extends to 
+                    any content we deem may put a user or third party at risk, regardless of whether the content violates other platform rules.
+                  </p>
+                  <p>
+                    <strong>Content License:</strong> By submitting UGC to Spit Hierarchy, you grant Fresh Dope Biz LLC a non-exclusive, 
+                    royalty-free, worldwide license to display, distribute, moderate, and remove your content as necessary to operate and 
+                    maintain the platform. You retain ownership of your original content, but acknowledge our right to manage it in accordance 
+                    with these Terms.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">7. Assumption of Risk & Liability Waiver</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    <strong>BY USING SPIT HIERARCHY, YOU ACKNOWLEDGE AND AGREE THAT ANY INFORMATION YOU SHARE THROUGH THE PLATFORM IS 
+                    SHARED VOLUNTARILY AND ENTIRELY AT YOUR OWN RISK.</strong>
+                  </p>
+                  <p>
+                    Fresh Dope Biz LLC, its officers, directors, employees, agents, and affiliates shall not be held liable for any harm, 
+                    damage, loss, claim, or consequence — whether direct, indirect, incidental, special, consequential, or punitive — 
+                    arising from or related to:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Identity theft, fraud, or misuse of personal data shared through UGC</li>
+                    <li>Harassment, stalking, threats, or unwanted contact from other users or third parties</li>
+                    <li>Physical harm, assault, or any in-person encounters resulting from information disclosed on the platform</li>
+                    <li>Financial loss or damage resulting from shared financial or employment information</li>
+                    <li>Emotional distress, reputational harm, or social consequences</li>
+                    <li>Any online or offline interactions, communications, or relationships that originate from or are facilitated by the platform</li>
+                    <li>Third-party misuse of publicly available UGC, including scraping or indexing by search engines</li>
+                  </ul>
+                  <p>
+                    You assume full and sole responsibility for evaluating the risks associated with sharing any information on the platform. 
+                    This assumption of risk applies regardless of whether Fresh Dope Biz LLC's moderation systems detect, flag, or remove 
+                    the content in question. The platform is provided on an "as-is" and "as-available" basis without warranties of any kind.
+                  </p>
+                  <p>
+                    This service is provided as a community platform for hip-hop culture discussion and ranking. It is not intended, designed, 
+                    or authorized to be used as a vehicle for sharing sensitive personal data, and any such use constitutes a misuse of the service.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Prohibited Uses</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    Spit Hierarchy is provided as a service for the enjoyment and engagement of the hip-hop community. 
+                    The platform is not intended or designed to be abused. The following uses are strictly prohibited:
+                  </p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Using the platform to share, solicit, or collect sensitive personal data from other users</li>
+                    <li>Using the platform as a communication tool for illegal activity, including but not limited to threats, extortion, or trafficking</li>
+                    <li>Doxxing or publishing another person's private information without their consent</li>
+                    <li>Impersonating another person or creating fraudulent accounts</li>
+                    <li>Using automated tools, bots, or scripts to scrape user content or manipulate platform features</li>
+                    <li>Any activity that violates applicable local, state, national, or international law</li>
+                  </ul>
+                  <p>
+                    Violation of these prohibited uses constitutes grounds for immediate account suspension or permanent termination, 
+                    at the sole discretion of Fresh Dope Biz LLC, without prior notice or refund of any kind.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. Account Responsibilities</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   Users are responsible for maintaining the security of their accounts and all activities that occur under their account. 
                   Fresh Dope Biz LLC reserves the right to suspend or terminate accounts that violate these terms.
@@ -125,7 +224,7 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">7. Limitation of Liability</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Limitation of Liability</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   Fresh Dope Biz LLC shall not be liable for any indirect, incidental, special, consequential, or punitive damages 
                   resulting from your use of the platform. Rankings and content are provided "as is" without warranties.
@@ -135,7 +234,7 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Push Notifications & Browser Permissions</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">11. Push Notifications & Browser Permissions</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>
                     Spit Hierarchy may request permission to send push notifications to your device. By granting notification permissions, you consent to receive:
@@ -159,7 +258,7 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. App Installation & Home Screen Access</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">12. App Installation & Home Screen Access</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>
                     Spit Hierarchy can be installed as a Progressive Web App (PWA) on your device. By installing the app:
@@ -181,7 +280,7 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Changes to Terms</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">13. Changes to Terms</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   We reserve the right to modify these terms at any time. Users will be notified of significant changes, 
                   and continued use of the platform constitutes acceptance of modified terms.
@@ -191,7 +290,7 @@ const TermsOfUse = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">11. Contact Information</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">14. Contact Information</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   For questions about these Terms of Use, please contact Fresh Dope Biz LLC through our platform's support channels.
                 </p>
