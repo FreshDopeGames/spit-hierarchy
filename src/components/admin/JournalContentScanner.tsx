@@ -125,16 +125,17 @@ const JournalContentScanner = () => {
 
   return (
     <Card className="border-border bg-card">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Shield className="w-5 h-5 text-primary" />
-          <CardTitle className="text-lg">Journal Content Scanner</CardTitle>
+      <CardHeader className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div className="flex items-center gap-2 flex-1 min-w-0">
+          <Shield className="w-5 h-5 text-primary flex-shrink-0" />
+          <CardTitle className="text-base sm:text-lg">Journal Content Scanner</CardTitle>
         </div>
         <Button
           onClick={handleScan}
           disabled={isScanning}
           variant="outline"
-          className="border-primary/50 text-primary hover:bg-primary/10"
+          className="border-primary/50 text-primary hover:bg-primary/10 w-full sm:w-auto text-sm"
+          size="sm"
         >
           {isScanning ? (
             <Loader2 className="w-4 h-4 mr-2 animate-spin" />
