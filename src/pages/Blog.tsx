@@ -10,6 +10,7 @@ import BlogLoadingState from "@/components/blog/BlogLoadingState";
 import BlogEmptyState from "@/components/blog/BlogEmptyState";
 import BlogLoadMoreButton from "@/components/blog/BlogLoadMoreButton";
 import BackToTopButton from "@/components/BackToTopButton";
+import MemberJournalsSection from "@/components/blog/MemberJournalsSection";
 import Footer from "@/components/Footer";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
 import SEOHead from "@/components/seo/SEOHead";
@@ -212,6 +213,9 @@ const Blog = () => {
             onClearFilters={clearFilters}
           />
         )}
+
+        {/* Member Journals Section */}
+        <MemberJournalsSection />
       </main>
 
       {/* Back to Top Button - positioned for pages without CommentBubble */}

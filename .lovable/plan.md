@@ -1,58 +1,31 @@
 
 
-## Plan: Admin/Mod Flagging + Member Journals on Blog Page
+## Plan: Move name overlay to bottom + fix font rendering
 
-### 1. Database Changes
+### Problem
+From the uploaded screenshots:
+1. Rapper names are invisible — `html2canvas` is not rendering the Impact/Arial Black fonts in the overlay text
+2. The header title ("USERNAME's Top 5") is also invisible for the same reason
+3. The gradient overlay renders as a visible colored band but text within it doesn't appear
 
-**Add `is_flagged` column to `member_journal_entries`**:
-- `is_flagged BOOLEAN NOT NULL DEFAULT false` — when flagged by admin/mod, entry becomes unpublished
-- `flagged_by UUID` — references the moderator who flagged it
-- `flagged_at TIMESTAMPTZ` — when it was flagged
-- `flag_reason TEXT` — reason for flagging
+### Root cause
+`html2canvas` struggles with certain font-family declarations. The `Impact` font in particular may not be available in the rendering context. Additionally, `fontWeight: 800` on Impact (which only has one weight) can cause rendering to fail silently.
 
-**New RLS policies**:
-- Allow admins/moderators to UPDATE `member_journal_entries` (specifically `is_flagged`, `flagged_by`, `flagged_at`, `flag_reason`, and set `status` to `'draft'`)
+### Changes in `src/components/profile/ShareableTopFive.tsx`
 
-### 2. Admin/Mod Flagging Capability
+**1. Move gradient + rank + name from top to bottom of each cell**
+- Change the overlay `position: absolute` from `top: 0` to `bottom: 0`
+- Flip the gradient direction: `linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)`
+- Align items to `flex-end` so content sits at the bottom
+- Adjust padding accordingly (more padding at bottom, less at top)
 
-**Create `useModerationJournal` hook**:
-- Mutation to flag a journal entry: sets `is_flagged = true`, `status = 'draft'`, records moderator info
-- Mutation to unflag/restore an entry
+**2. Fix font rendering for html2canvas**
+- Simplify font stacks: use `Arial, Helvetica, sans-serif` with `fontWeight: 900` (these are universally available and html2canvas renders them reliably)
+- Remove Impact from the stack — it's the likely culprit for silent rendering failures
+- For the position badge number, keep the same approach since numbers ARE rendering (confirming the badge's simpler styling works)
 
-**Update public entry visibility**:
-- Modify the existing RLS "Public can view published public entries" policy to also require `is_flagged = false`
+**3. Header title — same font fix**
+- Apply the same simplified font to the header `h1`
 
-### 3. Member Journals on the Blog Page
-
-**Add a "Member Journals" section to `src/pages/Blog.tsx`**:
-- Below the editorial blog posts grid, add a section similar to how Community Rankings appear on the Rankings page
-- Query `member_journal_entries` where `is_public = true`, `status = 'published'`, `is_flagged = false`
-- Join with `profiles` to get author username/avatar
-- Display as cards in a grid with title, excerpt, author, date
-- Link each card to a dedicated journal entry detail page
-
-**Create `MemberJournalCard` component**:
-- Styled consistently with `BlogPostGrid` cards but distinguished with a "Member Journal" badge
-- Shows author name, date, excerpt
-
-**Create journal entry detail page** (`/journal/:username/:slug`):
-- Renders the full journal entry content
-- Shows author info, date, public/private status
-- If user is admin/mod, show a "Flag as Inappropriate" button
-
-### 4. Route Addition
-
-- Add route `/journal/:username/:slug` for individual journal entry viewing
-
-### 5. Flag UI for Admins/Mods
-
-- On the journal detail page, admins/mods see a flag button
-- Clicking opens a dialog to enter a reason, then calls the flag mutation
-- Flagged entries revert to draft status and become invisible publicly
-
-### Technical Notes
-
-- The RLS policy update ensures flagged entries are excluded from public reads at the database level
-- The moderator UPDATE policy will use the existing `is_moderator_or_admin()` security definer function
-- Member journal cards on the blog page will use a separate query with its own pagination
+### No other files changed
 
