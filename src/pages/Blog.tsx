@@ -212,6 +212,9 @@ const Blog = () => {
             onClearFilters={clearFilters}
           />
         )}
+
+        {/* Member Journals Section */}
+        <MemberJournalsSection />
       </main>
 
       {/* Back to Top Button - positioned for pages without CommentBubble */}
