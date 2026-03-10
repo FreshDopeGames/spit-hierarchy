@@ -40,7 +40,7 @@ const TermsOfUse = () => {
             <ThemedCardContent className="p-8 space-y-8">
               
               <div className="text-rap-smoke text-sm">
-                Last updated: March 2025
+                Last updated: March 2026
               </div>
 
               <section>
