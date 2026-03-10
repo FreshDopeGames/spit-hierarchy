@@ -706,7 +706,11 @@ export type Database = {
           content: string
           created_at: string
           excerpt: string | null
+          flag_reason: string | null
+          flagged_at: string | null
+          flagged_by: string | null
           id: string
+          is_flagged: boolean
           is_public: boolean
           slug: string
           status: string
@@ -718,7 +722,11 @@ export type Database = {
           content: string
           created_at?: string
           excerpt?: string | null
+          flag_reason?: string | null
+          flagged_at?: string | null
+          flagged_by?: string | null
           id?: string
+          is_flagged?: boolean
           is_public?: boolean
           slug: string
           status?: string
@@ -730,7 +738,11 @@ export type Database = {
           content?: string
           created_at?: string
           excerpt?: string | null
+          flag_reason?: string | null
+          flagged_at?: string | null
+          flagged_by?: string | null
           id?: string
+          is_flagged?: boolean
           is_public?: boolean
           slug?: string
           status?: string
