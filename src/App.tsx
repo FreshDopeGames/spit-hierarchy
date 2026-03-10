@@ -32,6 +32,7 @@ import NotFound from "./pages/NotFound";
 import Notifications from "./pages/Notifications";
 import Quiz from "./pages/Quiz";
 import Contact from "./pages/Contact";
+import JournalEntryDetail from "./pages/JournalEntryDetail";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { CookieSettingsLink } from "@/components/CookieSettingsLink";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
