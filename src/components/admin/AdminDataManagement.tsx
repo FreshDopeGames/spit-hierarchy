@@ -8,6 +8,7 @@ import AlbumTracksBulkFetch from "./AlbumTracksBulkFetch";
 import WeeklyBlogGenerator from "./WeeklyBlogGenerator";
 import CollaborationTools from "./CollaborationTools";
 import FlaggedMixtapesReview from "./FlaggedMixtapesReview";
+import JournalContentScanner from "./JournalContentScanner";
 
 const AdminDataManagement = () => {
   return (
