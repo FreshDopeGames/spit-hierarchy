@@ -1,31 +1,41 @@
 
 
-## Plan: Move name overlay to bottom + fix font rendering
+## Plan: Update Privacy Policy & Terms of Use for UGC and PII Protections
 
-### Problem
-From the uploaded screenshots:
-1. Rapper names are invisible — `html2canvas` is not rendering the Impact/Arial Black fonts in the overlay text
-2. The header title ("USERNAME's Top 5") is also invisible for the same reason
-3. The gradient overlay renders as a visible colored band but text within it doesn't appear
+### Changes to Privacy Policy (`src/pages/PrivacyPolicy.tsx`)
 
-### Root cause
-`html2canvas` struggles with certain font-family declarations. The `Impact` font in particular may not be available in the rendering context. Additionally, `fontWeight: 800` on Impact (which only has one weight) can cause rendering to fail silently.
+**Add new section "User-Generated Content & Personal Information"** (after section 3, before Data Security):
+- Advise users strongly against sharing PII (real name, age, sex, location, phone number, SSN, state ID, etc.) in journal entries or any UGC
+- State that the platform reserves the right to remove UGC containing PII without prior notice
+- Note that publicly visible UGC may be indexed by search engines
 
-### Changes in `src/components/profile/ShareableTopFive.tsx`
+**Add new section "Assumption of Risk"** (after the UGC section):
+- Users acknowledge they voluntarily share information at their own risk
+- Fresh Dope Biz LLC is not liable for any harm (online or offline) resulting from users sharing PII through UGC
 
-**1. Move gradient + rank + name from top to bottom of each cell**
-- Change the overlay `position: absolute` from `top: 0` to `bottom: 0`
-- Flip the gradient direction: `linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)`
-- Align items to `flex-end` so content sits at the bottom
-- Adjust padding accordingly (more padding at bottom, less at top)
+Renumber subsequent sections accordingly. Update "Last updated" to March 2025.
 
-**2. Fix font rendering for html2canvas**
-- Simplify font stacks: use `Arial, Helvetica, sans-serif` with `fontWeight: 900` (these are universally available and html2canvas renders them reliably)
-- Remove Impact from the stack — it's the likely culprit for silent rendering failures
-- For the position badge number, keep the same approach since numbers ARE rendering (confirming the badge's simpler styling works)
+### Changes to Terms of Use (`src/pages/TermsOfUse.tsx`)
 
-**3. Header title — same font fix**
-- Apply the same simplified font to the header `h1`
+**Add new section "User-Generated Content"** (after section 5 Content Guidelines):
+- Define UGC scope (journal entries, comments, votes, profile content)
+- Explicitly warn against sharing PII with a detailed list of examples
+- State platform's right to remove PII-containing content without notice
+- Users grant the platform a license to display, moderate, and remove their UGC
 
-### No other files changed
+**Add new section "Assumption of Risk & Liability Waiver"** (after UGC section):
+- Broad liability waiver: Fresh Dope Biz LLC not responsible for any harm (online or offline) including identity theft, harassment, stalking, financial loss, or any other consequence from sharing PII
+- Users assume full responsibility for information they voluntarily disclose
+- Platform provided "as-is" and not designed to be abused
+
+**Add new section "Prohibited Uses"** (after liability section):
+- Platform not intended for sharing sensitive personal data
+- Not designed for use as a communication tool for illegal activity
+- Any abuse of the service is grounds for termination
+
+Renumber subsequent sections accordingly. Update "Last updated" to March 2025.
+
+### Sections affected (renumbering)
+- **Privacy Policy**: Insert 2 new sections → sections 4-10 become 6-12
+- **Terms of Use**: Insert 3 new sections → sections 6-11 become 9-14
 
