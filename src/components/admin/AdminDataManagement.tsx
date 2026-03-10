@@ -21,6 +21,7 @@ const AdminDataManagement = () => {
       
       <div className="space-y-8">
         <FlaggedMixtapesReview />
+        <JournalContentScanner />
         <WeeklyBlogGenerator />
         <MusicBrainzBulkPopulation />
         <SocialMediaBulkUpdate />
