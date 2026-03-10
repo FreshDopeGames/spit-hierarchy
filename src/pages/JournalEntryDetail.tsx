@@ -29,8 +29,8 @@ const JournalEntryDetail = () => {
   const { data: userRoles } = useQuery({
     queryKey: ["user-roles", user?.id],
     queryFn: async () => {
-      const { data } = await supabase
-        .from("user_roles" as any)
+      const { data } = await (supabase as any)
+        .from("user_roles")
         .select("role")
         .eq("user_id", user!.id);
       return (data || []) as Array<{ role: string }>;
