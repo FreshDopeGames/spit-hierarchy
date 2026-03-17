@@ -171,6 +171,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
               value={overallPercentage} 
               size={typeof window !== 'undefined' && window.innerWidth >= 1024 ? 140 : window.innerWidth >= 768 ? 120 : 100}
               strokeWidth={12}
+              showNA={attributesWithVotes.length === 0}
             />
           </div>
           
