@@ -54,7 +54,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
   const [albumsPage, setAlbumsPage] = useState(1);
   const [mixtapesPage, setMixtapesPage] = useState(1);
   const [sortOrder, setSortOrder] = useState<DiscographySortOrder>(() => getDiscographySortOrder());
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 12;
 
   const handleSortChange = (value: DiscographySortOrder) => {
     setSortOrder(value);
@@ -290,13 +290,13 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
           </TabsList>
 
           <TabsContent value="albums" className="mt-6 sm:mt-4">
-            <div className="space-y-4 sm:space-y-3">
-              {albums.length === 0 ? (
-                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
-                  No albums found in discography
-                </div>
-              ) : (
-                paginatedAlbums.map((item) => {
+            {albums.length === 0 ? (
+              <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">
+                No albums found in discography
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {paginatedAlbums.map((item) => {
                   const releaseYear = item.album?.release_date
                     ? new Date(item.album.release_date).getFullYear()
                     : undefined;
@@ -314,90 +314,96 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   return (
                     <div
                       key={item.id}
-                      className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors"
+                      className="flex flex-col items-center p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors"
                     >
-                      {item.album?.slug ? (
-                        <Link
-                          to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
-                          className="flex-shrink-0"
-                        >
+                      {/* Cover Art */}
+                      <div className="w-full mb-3">
+                        {item.album?.slug ? (
+                          <Link
+                            to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                          >
+                            <AlbumCoverImage
+                              coverUrl={item.album?.cover_art_url}
+                              cachedCoverUrl={(item.album as any)?.cached_cover_url}
+                              title={item.album?.title || "Album"}
+                              releaseType="album"
+                              placeholderColors={placeholder.style}
+                              size="md"
+                            />
+                          </Link>
+                        ) : (
                           <AlbumCoverImage
                             coverUrl={item.album?.cover_art_url}
                             cachedCoverUrl={(item.album as any)?.cached_cover_url}
                             title={item.album?.title || "Album"}
                             releaseType="album"
                             placeholderColors={placeholder.style}
+                            size="md"
                           />
-                        </Link>
-                      ) : (
-                        <AlbumCoverImage
-                          coverUrl={item.album?.cover_art_url}
-                          cachedCoverUrl={(item.album as any)?.cached_cover_url}
-                          title={item.album?.title || "Album"}
-                          releaseType="album"
-                          placeholderColors={placeholder.style}
-                        />
-                      )}
-                      <div className="flex-1 min-w-0">
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <div className="text-center w-full">
                         {item.album?.slug ? (
                           <Link
                             to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
-                            className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
+                            className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] line-clamp-2 hover:text-primary transition-colors text-sm"
                           >
                             {item.album?.title}
                           </Link>
                         ) : (
-                          <span 
-                            className="font-semibold text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] truncate block opacity-70 cursor-not-allowed" 
-                            title="Album details coming soon"
-                          >
+                          <span className="font-semibold text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] line-clamp-2 opacity-70 cursor-not-allowed text-sm">
                             {item.album?.title}
                           </span>
                         )}
-                        <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {formatDate(item.album?.release_date)}
-                          </div>
-                          {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
-                          {item.album?.label && (
-                            <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>
-                          )}
-                        </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start"
-                            onClick={() => window.open(externalLinks.spotify, "_blank")}
-                          >
-                            <PlayCircle className="w-3 h-3 mr-1" />
-                            Spotify
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start"
-                            onClick={() => window.open(externalLinks.appleMusic, "_blank")}
-                          >
-                            <ExternalLink className="w-3 h-3 mr-1" />
-                            Apple Music
-                          </Button>
-                        </div>
                       </div>
+
+                      {/* Date & Tracks */}
+                      <div className="flex items-center gap-2 text-xs text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] mt-1">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(item.album?.release_date)}
+                        </div>
+                        {item.album?.track_count && <span>· {item.album.track_count} tracks</span>}
+                      </div>
+
+                      {/* Role Badge */}
                       {item.role !== "primary" && (
                         <Badge
                           variant="outline"
-                          className="text-xs border-[hsl(var(--theme-secondary))]/50 text-[hsl(var(--theme-secondary))]"
+                          className="text-xs border-[hsl(var(--theme-secondary))]/50 text-[hsl(var(--theme-secondary))] mt-1"
                         >
                           {item.role}
                         </Badge>
                       )}
+
+                      {/* Streaming Buttons */}
+                      <div className="flex items-center justify-center gap-2 mt-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))]"
+                          onClick={() => window.open(externalLinks.spotify, "_blank")}
+                        >
+                          <PlayCircle className="w-3 h-3 mr-1" />
+                          Spotify
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))]"
+                          onClick={() => window.open(externalLinks.appleMusic, "_blank")}
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Apple Music
+                        </Button>
+                      </div>
                     </div>
                   );
-                })
-              )}
-            </div>
+                })}
+              </div>
+            )}
 
             {/* Albums Pagination */}
             {totalAlbumsPages > 1 && (
@@ -458,13 +464,13 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
           </TabsContent>
 
           <TabsContent value="mixtapes" className="mt-6 sm:mt-4">
-            <div className="space-y-4 sm:space-y-3">
-              {mixtapes.length === 0 ? (
-                <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
-                  No mixtapes found in discography
-                </div>
-              ) : (
-                paginatedMixtapes.map((item) => {
+            {mixtapes.length === 0 ? (
+              <div className="text-center py-12 sm:py-8 px-4 sm:px-0 text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
+                No mixtapes found in discography
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {paginatedMixtapes.map((item) => {
                   const releaseYear = item.album?.release_date
                     ? new Date(item.album.release_date).getFullYear()
                     : undefined;
@@ -475,109 +481,114 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
                   });
                   const searchLinks = generateExternalAlbumLinks(item.album?.title || "", rapperName, "mixtape");
                   const directLinks = (item.album as any)?.external_cover_links || {};
-                  // For mixtapes, only show links if we have direct links from MusicBrainz
                   const hasDirectSpotify = directLinks.spotify;
                   const hasDirectApple = directLinks.apple_music;
                   return (
                     <div
                       key={item.id}
-                      className="flex gap-3 sm:gap-4 p-4 sm:p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors"
+                      className="flex flex-col items-center p-3 bg-[hsl(var(--theme-backgroundLight))]/50 rounded-lg hover:bg-[hsl(var(--theme-backgroundLight))] transition-colors"
                     >
-                      {item.album?.slug ? (
-                        <Link
-                          to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
-                          className="flex-shrink-0"
-                        >
+                      {/* Cover Art */}
+                      <div className="w-full mb-3">
+                        {item.album?.slug ? (
+                          <Link
+                            to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
+                          >
+                            <AlbumCoverImage
+                              coverUrl={item.album?.cover_art_url}
+                              cachedCoverUrl={(item.album as any)?.cached_cover_url}
+                              title={item.album?.title || "Mixtape"}
+                              releaseType="mixtape"
+                              placeholderColors={placeholder.style}
+                              size="md"
+                            />
+                          </Link>
+                        ) : (
                           <AlbumCoverImage
                             coverUrl={item.album?.cover_art_url}
                             cachedCoverUrl={(item.album as any)?.cached_cover_url}
                             title={item.album?.title || "Mixtape"}
                             releaseType="mixtape"
                             placeholderColors={placeholder.style}
+                            size="md"
                           />
-                        </Link>
-                      ) : (
-                        <AlbumCoverImage
-                          coverUrl={item.album?.cover_art_url}
-                          cachedCoverUrl={(item.album as any)?.cached_cover_url}
-                          title={item.album?.title || "Mixtape"}
-                          releaseType="mixtape"
-                          placeholderColors={placeholder.style}
-                        />
-                      )}
-                      <div className="flex-1 min-w-0">
+                        )}
+                      </div>
+
+                      {/* Title */}
+                      <div className="text-center w-full">
                         {item.album?.slug ? (
                           <Link
                             to={`/rapper/${rapperSlug}/${item.album.slug}${scrollPos ? `?scrollPos=${scrollPos}` : ''}`}
-                            className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] truncate block hover:text-primary transition-colors"
+                            className="font-semibold text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] line-clamp-2 hover:text-primary transition-colors text-sm"
                           >
                             {item.album?.title}
                           </Link>
                         ) : (
-                          <span 
-                            className="font-semibold text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] truncate block opacity-70 cursor-not-allowed" 
-                            title="Album details coming soon"
-                          >
+                          <span className="font-semibold text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] line-clamp-2 opacity-70 cursor-not-allowed text-sm">
                             {item.album?.title}
                           </span>
                         )}
-                        <div className="flex items-center gap-3 text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
-                          <div className="flex items-center gap-1">
-                            <Calendar className="w-3 h-3" />
-                            {formatDate(item.album?.release_date)}
-                          </div>
-                          {item.album?.track_count && <span>{item.album.track_count} tracks</span>}
-                          {item.album?.label && (
-                            <span className="text-[hsl(var(--theme-primary))]">{item.album.label.name}</span>
-                          )}
-                        </div>
-                        <div className="flex flex-col sm:flex-row sm:items-center gap-2 mt-2">
-                          {hasDirectSpotify && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start"
-                              onClick={() => window.open(directLinks.spotify, "_blank")}
-                            >
-                              <PlayCircle className="w-3 h-3 mr-1" />
-                              Spotify
-                            </Button>
-                          )}
-                          {hasDirectApple && (
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start"
-                              onClick={() => window.open(directLinks.apple_music, "_blank")}
-                            >
-                              <ExternalLink className="w-3 h-3 mr-1" />
-                              Apple Music
-                            </Button>
-                          )}
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))] justify-start"
-                            onClick={() => window.open(searchLinks.genius, "_blank")}
-                          >
-                            <ExternalLink className="w-3 h-3 mr-1" />
-                            Genius
-                          </Button>
-                        </div>
                       </div>
+
+                      {/* Date & Tracks */}
+                      <div className="flex items-center gap-2 text-xs text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)] mt-1">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          {formatDate(item.album?.release_date)}
+                        </div>
+                        {item.album?.track_count && <span>· {item.album.track_count} tracks</span>}
+                      </div>
+
+                      {/* Role Badge */}
                       {item.role !== "primary" && (
                         <Badge
                           variant="outline"
-                          className="text-xs border-[hsl(var(--theme-secondary))]/50 text-[hsl(var(--theme-secondary))]"
+                          className="text-xs border-[hsl(var(--theme-secondary))]/50 text-[hsl(var(--theme-secondary))] mt-1"
                         >
                           {item.role}
                         </Badge>
                       )}
+
+                      {/* Streaming Buttons */}
+                      <div className="flex items-center justify-center gap-2 mt-2">
+                        {hasDirectSpotify && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))]"
+                            onClick={() => window.open(directLinks.spotify, "_blank")}
+                          >
+                            <PlayCircle className="w-3 h-3 mr-1" />
+                            Spotify
+                          </Button>
+                        )}
+                        {hasDirectApple && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))]"
+                            onClick={() => window.open(directLinks.apple_music, "_blank")}
+                          >
+                            <ExternalLink className="w-3 h-3 mr-1" />
+                            Apple Music
+                          </Button>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-7 px-2 text-xs text-[hsl(var(--theme-text))] hover:text-[hsl(var(--theme-text))]"
+                          onClick={() => window.open(searchLinks.genius, "_blank")}
+                        >
+                          <ExternalLink className="w-3 h-3 mr-1" />
+                          Genius
+                        </Button>
+                      </div>
                     </div>
                   );
-                })
-              )}
-            </div>
+                })}
+              </div>
+            )}
 
             {/* Mixtapes Pagination */}
             {totalMixtapesPages > 1 && (
