@@ -54,7 +54,7 @@ const RapperDiscography = ({ rapperId, rapperName = "Unknown Artist", rapperSlug
   const [albumsPage, setAlbumsPage] = useState(1);
   const [mixtapesPage, setMixtapesPage] = useState(1);
   const [sortOrder, setSortOrder] = useState<DiscographySortOrder>(() => getDiscographySortOrder());
-  const ITEMS_PER_PAGE = 10;
+  const ITEMS_PER_PAGE = 12;
 
   const handleSortChange = (value: DiscographySortOrder) => {
     setSortOrder(value);

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Disc3, Music } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface AlbumCoverImageProps {
   coverUrl?: string | null;
@@ -11,14 +12,28 @@ interface AlbumCoverImageProps {
     primary: string;
     textColor: string;
   };
+  size?: 'sm' | 'md' | 'lg';
 }
+
+const sizeClasses = {
+  sm: 'w-12 h-12',
+  md: 'w-full aspect-square',
+  lg: 'w-full aspect-square',
+};
+
+const iconSizeClasses = {
+  sm: 'w-6 h-6',
+  md: 'w-12 h-12',
+  lg: 'w-16 h-16',
+};
 
 export const AlbumCoverImage = ({ 
   coverUrl, 
   cachedCoverUrl,
   title, 
   releaseType,
-  placeholderColors 
+  placeholderColors,
+  size = 'sm',
 }: AlbumCoverImageProps) => {
   const [imageError, setImageError] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
@@ -26,21 +41,20 @@ export const AlbumCoverImage = ({
   const Icon = releaseType === 'album' ? Disc3 : Music;
   const iconColor = releaseType === 'album' ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-secondary))';
 
-  // Prioritize cached Supabase URL, fallback to Cover Art Archive URL
   const imageUrl = cachedCoverUrl || coverUrl;
-
-  // Show placeholder if no URL, error, or still loading
   const showPlaceholder = !imageUrl || imageError || !imageLoaded;
 
   return (
     <div 
-      className="w-12 h-12 rounded flex items-center justify-center relative overflow-hidden"
+      className={cn(
+        "rounded flex items-center justify-center relative overflow-hidden",
+        sizeClasses[size]
+      )}
       style={{
         backgroundColor: placeholderColors.bgColor,
         background: `linear-gradient(135deg, ${placeholderColors.bgColor}, ${placeholderColors.primary})`
       }}
     >
-      {/* Cover Art Image */}
       {imageUrl && !imageError && (
         <img
           src={imageUrl}
@@ -54,11 +68,10 @@ export const AlbumCoverImage = ({
         />
       )}
       
-      {/* Placeholder Icon (shown when loading, error, or no cover art) */}
       {showPlaceholder && (
         <>
           <Icon 
-            className="w-6 h-6 relative z-10" 
+            className={cn("relative z-10", iconSizeClasses[size])}
             style={{ color: iconColor }}
           />
           <div 
