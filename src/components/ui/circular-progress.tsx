@@ -6,6 +6,7 @@ interface CircularProgressProps {
   size?: number; // diameter in pixels
   strokeWidth?: number;
   className?: string;
+  showNA?: boolean;
 }
 
 const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>(
