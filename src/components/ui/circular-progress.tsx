@@ -53,9 +53,9 @@ const CircularProgress = React.forwardRef<HTMLDivElement, CircularProgressProps>
         <div className="absolute inset-0 flex items-center justify-center">
           <div className="text-center">
             <div className="text-3xl md:text-4xl font-bold text-[var(--theme-text)] font-[var(--theme-fontPrimary)]">
-              {Math.round(value)}
+              {showNA ? "N/A" : Math.round(value)}
             </div>
-            <div className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">/100</div>
+            {!showNA && <div className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">/100</div>}
           </div>
         </div>
       </div>
