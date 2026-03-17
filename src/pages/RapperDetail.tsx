@@ -201,6 +201,11 @@ const RapperDetail = () => {
           {/* Enhanced Bio Section with more content */}
           <RapperBio rapper={rapper} />
 
+          {/* Attribute Stats - Sports-style performance stats */}
+          <div className="mb-8">
+            <RapperAttributeStats rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
+          </div>
+
           {/* Career Overview - New sports-card style stats */}
           <div className="mb-8">
             <CareerStatsCard rapperId={rapper.id} isRefreshing={refreshDiscography.isPending} />
@@ -209,17 +214,7 @@ const RapperDetail = () => {
           {/* Ad placement between content sections */}
           <ContentAdUnit size="medium" />
 
-          {/* Attribute Stats - Sports-style performance stats */}
-          <div className="mb-8">
-            <RapperAttributeStats rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
-          </div>
-
-          {/* Community Stats */}
-          <div className="mb-8">
-            <RapperStats rapper={rapper} />
-          </div>
-
-          {/* Discography Section - MusicBrainz integration - Moved to bottom */}
+          {/* Discography Section - MusicBrainz integration */}
           <div className="mb-8">
             <RapperDiscography 
               rapperId={rapper.id} 
@@ -227,6 +222,11 @@ const RapperDetail = () => {
               rapperSlug={rapper.slug}
               scrollPos={searchParams.get('scrollPos') || undefined}
             />
+          </div>
+
+          {/* Community Stats */}
+          <div className="mb-8">
+            <RapperStats rapper={rapper} />
           </div>
 
           {/* Similar Rappers Section */}
