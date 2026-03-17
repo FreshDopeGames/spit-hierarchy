@@ -365,7 +365,7 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
                           <div className="bg-[hsl(var(--theme-surface))] border border-[hsl(var(--theme-accent))]/30 rounded-lg p-3 shadow-lg">
                             <div className="flex flex-col gap-1">
                               <span className="text-sm font-semibold text-[var(--theme-text)] font-[var(--theme-fontSecondary)]">{data.skill}</span>
-                              <span className="text-lg font-bold text-[var(--theme-accent)] font-[var(--theme-fontPrimary)]">{data.rating}/100</span>
+                              <span className="text-lg font-bold text-[var(--theme-accent)] font-[var(--theme-fontPrimary)]">{data.votes > 0 ? `${data.rating}/100` : 'N/A'}</span>
                               <span className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)]">
                                 {data.votes} votes
                               </span>
