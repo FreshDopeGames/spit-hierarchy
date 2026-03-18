@@ -129,7 +129,7 @@ const Admin = () => {
         {/* Desktop Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <div className="hidden lg:flex flex-col gap-2">
-            <ThemedTabsList className={`w-full grid grid-cols-${row1.length} gap-1 h-auto p-2`}>
+            <ThemedTabsList className={`w-full grid ${gridColsMap[row1.length] || "grid-cols-8"} gap-1 h-auto p-2`}>
               {row1.map((option) =>
               <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                   {option.label}
@@ -137,7 +137,7 @@ const Admin = () => {
               )}
             </ThemedTabsList>
             {row2.length > 0 &&
-            <ThemedTabsList className={`w-full grid grid-cols-${row2.length} gap-1 h-auto p-2`}>
+            <ThemedTabsList className={`w-full grid ${gridColsMap[row2.length] || "grid-cols-7"} gap-1 h-auto p-2`}>
                 {row2.map((option) =>
               <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                     {option.label}
