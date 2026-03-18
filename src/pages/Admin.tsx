@@ -95,6 +95,12 @@ const Admin = () => {
   const row1 = tabOptions.slice(0, midpoint);
   const row2 = tabOptions.slice(midpoint);
 
+  const gridColsMap: Record<number, string> = {
+    1: "grid-cols-1", 2: "grid-cols-2", 3: "grid-cols-3", 4: "grid-cols-4",
+    5: "grid-cols-5", 6: "grid-cols-6", 7: "grid-cols-7", 8: "grid-cols-8",
+    9: "grid-cols-9", 10: "grid-cols-10",
+  };
+
   return (
     <div className="min-h-screen bg-[hsl(var(--theme-background))]">
       <HeaderNavigation isScrolled={isScrolled} />
@@ -123,7 +129,7 @@ const Admin = () => {
         {/* Desktop Tabs Navigation */}
         <ThemedTabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <div className="hidden lg:flex flex-col gap-2">
-            <ThemedTabsList className={`w-full grid grid-cols-${row1.length} gap-1 h-auto p-2`}>
+            <ThemedTabsList className={`w-full grid ${gridColsMap[row1.length] || "grid-cols-8"} gap-1 h-auto p-2`}>
               {row1.map((option) =>
               <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                   {option.label}
@@ -131,7 +137,7 @@ const Admin = () => {
               )}
             </ThemedTabsList>
             {row2.length > 0 &&
-            <ThemedTabsList className={`w-full grid grid-cols-${row2.length} gap-1 h-auto p-2`}>
+            <ThemedTabsList className={`w-full grid ${gridColsMap[row2.length] || "grid-cols-7"} gap-1 h-auto p-2`}>
                 {row2.map((option) =>
               <ThemedTabsTrigger key={option.value} value={option.value} className="text-xs xl:text-sm py-3 font-bold">
                     {option.label}

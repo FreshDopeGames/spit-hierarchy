@@ -1,26 +1,31 @@
 
 
-## Diagnosis
+## Plan: Move name overlay to bottom + fix font rendering
 
-### Issue 1: Tabs rendering in a single column on desktop
-The Admin page uses **dynamic Tailwind classes** like `` grid-cols-${row1.length} `` (line 126, 133). Tailwind purges classes that aren't statically present in source code at build time. So `grid-cols-8`, `grid-cols-7`, etc. are never generated — the grid falls back to `grid-cols-1`, stacking all tabs vertically.
+### Problem
+From the uploaded screenshots:
+1. Rapper names are invisible — `html2canvas` is not rendering the Impact/Arial Black fonts in the overlay text
+2. The header title ("USERNAME's Top 5") is also invisible for the same reason
+3. The gradient overlay renders as a visible colored band but text within it doesn't appear
 
-The safelist in `tailwind.config` is empty, so nothing rescues these classes.
+### Root cause
+`html2canvas` struggles with certain font-family declarations. The `Impact` font in particular may not be available in the rendering context. Additionally, `fontWeight: 800` on Impact (which only has one weight) can cause rendering to fail silently.
 
-### Issue 2: "Users" tab missing
-The `Users` tab is defined with `roles: ["admin"]` and will only appear if `useSecurityContext().isAdmin` is `true`. Since the tab layout is broken (all tabs in one column), it's possible the Users tab is simply scrolled out of view. However, if `is_admin` RPC is returning false for your session, the tab genuinely won't render. The most likely cause is the layout issue making it hard to find.
+### Changes in `src/components/profile/ShareableTopFive.tsx`
 
-## Plan
+**1. Move gradient + rank + name from top to bottom of each cell**
+- Change the overlay `position: absolute` from `top: 0` to `bottom: 0`
+- Flip the gradient direction: `linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)`
+- Align items to `flex-end` so content sits at the bottom
+- Adjust padding accordingly (more padding at bottom, less at top)
 
-### Fix 1: Replace dynamic grid classes with static ones
-In `src/pages/Admin.tsx`, replace the dynamic `grid-cols-${row1.length}` template literals with a helper that maps to static, full Tailwind class strings. For example:
+**2. Fix font rendering for html2canvas**
+- Simplify font stacks: use `Arial, Helvetica, sans-serif` with `fontWeight: 900` (these are universally available and html2canvas renders them reliably)
+- Remove Impact from the stack — it's the likely culprit for silent rendering failures
+- For the position badge number, keep the same approach since numbers ARE rendering (confirming the badge's simpler styling works)
 
-- Use a lookup object or conditional that outputs literal strings like `"grid-cols-8"`, `"grid-cols-7"`, etc.
-- Alternatively, hardcode two rows with fixed column counts (e.g., row 1 = 8 tabs → `grid-cols-8`, row 2 = 7 tabs → `grid-cols-7`).
-- Simplest approach: add all needed `grid-cols-*` values to the Tailwind safelist, but the cleaner fix is using static class names.
+**3. Header title — same font fix**
+- Apply the same simplified font to the header `h1`
 
-### Fix 2: Verify Users tab visibility
-After fixing the grid layout, the Users tab should appear for admin users. No code change needed for this — it's a consequence of the broken grid making tabs invisible or hard to find.
-
-**Files to modify:** `src/pages/Admin.tsx` (replace 2 dynamic class interpolations with static class mappings).
+### No other files changed
 
