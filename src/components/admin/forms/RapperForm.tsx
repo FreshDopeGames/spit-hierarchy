@@ -87,6 +87,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         tags: [],
         musicbrainz_id: rapper.musicbrainz_id || "",
         top_quote: (rapper as any).top_quote || "",
+        top_quote_song: (rapper as any).top_quote_song || "",
       });
     } else {
       setFormData({
