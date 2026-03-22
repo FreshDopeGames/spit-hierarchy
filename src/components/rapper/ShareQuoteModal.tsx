@@ -143,6 +143,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
                   lineHeight: 1.5,
                   margin: "0 0 16px 0",
                   fontWeight: "bold",
+                  whiteSpace: "pre-line",
                 }}
               >
                 "{quote}"
