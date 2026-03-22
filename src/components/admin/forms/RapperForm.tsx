@@ -393,6 +393,21 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       </div>
 
       <div>
+        <Label htmlFor="top_quote_song" className="text-[var(--theme-primary)]">Quote Song Title</Label>
+        <Input
+          id="top_quote_song"
+          type="text"
+          value={formData.top_quote_song}
+          onChange={(e) => handleInputChange("top_quote_song", e.target.value)}
+          className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
+          placeholder='e.g., "Control"'
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          The song this quote is from (displayed alongside the quote)
+        </p>
+      </div>
+
+      <div>
         <Label htmlFor="musicbrainz_id" className="text-[var(--theme-primary)]">MusicBrainz ID (Optional)</Label>
         <Input
           id="musicbrainz_id"
