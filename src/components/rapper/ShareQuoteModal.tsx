@@ -13,6 +13,7 @@ interface ShareQuoteModalProps {
   quote: string;
   rapperName: string;
   rapperId: string;
+  songTitle?: string;
 }
 
 const FORMATS = {
@@ -28,6 +29,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
   quote,
   rapperName,
   rapperId,
+  songTitle,
 }) => {
   const [format, setFormat] = useState<FormatKey>("square");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -152,9 +154,10 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
           fontSize: nameFont,
           fontWeight: "bold",
           margin: "0 0 32px 0",
+          textAlign: "center",
         }}
       >
-        — {rapperName}
+        — {rapperName}{songTitle && `, "${songTitle}"`}
       </p>
 
       <p style={{ color: "#666", fontSize: 28, margin: 0 }}>

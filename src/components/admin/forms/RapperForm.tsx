@@ -44,6 +44,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     tags: [],
     musicbrainz_id: "",
     top_quote: "",
+    top_quote_song: "",
   });
 
   // Fetch existing tags for this rapper
@@ -86,6 +87,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         tags: [],
         musicbrainz_id: rapper.musicbrainz_id || "",
         top_quote: (rapper as any).top_quote || "",
+        top_quote_song: (rapper as any).top_quote_song || "",
       });
     } else {
       setFormData({
@@ -108,6 +110,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         tags: [],
         musicbrainz_id: "",
         top_quote: "",
+        top_quote_song: "",
       });
     }
   }, [rapper]);
@@ -179,6 +182,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         aliases: formData.aliases,
         musicbrainz_id: formData.musicbrainz_id.trim() || null,
         top_quote: formData.top_quote.trim() || null,
+        top_quote_song: formData.top_quote_song.trim() || null,
         slug,
       };
 
@@ -385,6 +389,21 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         />
         <p className="text-xs text-muted-foreground mt-1">
           {formData.top_quote.length}/300 characters — A memorable bar or quote from this rapper
+        </p>
+      </div>
+
+      <div>
+        <Label htmlFor="top_quote_song" className="text-[var(--theme-primary)]">Quote Song Title</Label>
+        <Input
+          id="top_quote_song"
+          type="text"
+          value={formData.top_quote_song}
+          onChange={(e) => handleInputChange("top_quote_song", e.target.value)}
+          className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)]"
+          placeholder='e.g., "Control"'
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          The song this quote is from (displayed alongside the quote)
         </p>
       </div>
 

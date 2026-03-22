@@ -2220,6 +2220,7 @@ export type Database = {
           slug: string
           spotify_id: string | null
           top_quote: string | null
+          top_quote_song: string | null
           total_votes: number | null
           updated_at: string
           verified: boolean | null
@@ -2251,6 +2252,7 @@ export type Database = {
           slug: string
           spotify_id?: string | null
           top_quote?: string | null
+          top_quote_song?: string | null
           total_votes?: number | null
           updated_at?: string
           verified?: boolean | null
@@ -2282,6 +2284,7 @@ export type Database = {
           slug?: string
           spotify_id?: string | null
           top_quote?: string | null
+          top_quote_song?: string | null
           total_votes?: number | null
           updated_at?: string
           verified?: boolean | null

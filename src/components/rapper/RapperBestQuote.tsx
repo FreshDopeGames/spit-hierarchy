@@ -8,9 +8,10 @@ interface RapperBestQuoteProps {
   topQuote: string;
   rapperName: string;
   rapperId: string;
+  songTitle?: string;
 }
 
-const RapperBestQuote = ({ topQuote, rapperName, rapperId }: RapperBestQuoteProps) => {
+const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBestQuoteProps) => {
   const [showShare, setShowShare] = useState(false);
 
   if (!topQuote) return null;
@@ -39,7 +40,7 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId }: RapperBestQuoteProp
               "{topQuote}"
             </p>
             <p className="mt-3 text-sm font-[var(--theme-font-heading)] text-[hsl(var(--theme-textMuted))] text-right">
-              — {rapperName}
+              — {rapperName}{songTitle && `, "${songTitle}"`}
             </p>
           </div>
         </ThemedCardContent>
@@ -51,6 +52,7 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId }: RapperBestQuoteProp
         quote={topQuote}
         rapperName={rapperName}
         rapperId={rapperId}
+        songTitle={songTitle}
       />
     </div>
   );
