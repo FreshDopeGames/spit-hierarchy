@@ -182,6 +182,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         aliases: formData.aliases,
         musicbrainz_id: formData.musicbrainz_id.trim() || null,
         top_quote: formData.top_quote.trim() || null,
+        top_quote_song: formData.top_quote_song.trim() || null,
         slug,
       };
 
