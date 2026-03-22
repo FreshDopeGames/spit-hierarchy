@@ -13,6 +13,7 @@ interface ShareQuoteModalProps {
   quote: string;
   rapperName: string;
   rapperId: string;
+  songTitle?: string;
 }
 
 const FORMATS = {
