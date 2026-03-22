@@ -157,7 +157,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         — {rapperName}
       </p>
 
-      <p style={{ color: "#666", fontSize: 14, margin: 0 }}>
+      <p style={{ color: "#666", fontSize: 28, margin: 0 }}>
         spithierarchy.com
       </p>
     </div>
