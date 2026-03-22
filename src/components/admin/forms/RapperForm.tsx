@@ -374,6 +374,21 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       </div>
 
       <div>
+        <Label htmlFor="top_quote" className="text-[var(--theme-primary)]">Top Quote (max 300 chars)</Label>
+        <Textarea
+          id="top_quote"
+          value={formData.top_quote}
+          onChange={(e) => handleInputChange("top_quote", e.target.value)}
+          className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 text-[var(--theme-text)] min-h-[80px]"
+          placeholder='e.g., "It was all a dream, I used to read Word Up magazine..."'
+          maxLength={300}
+        />
+        <p className="text-xs text-muted-foreground mt-1">
+          {formData.top_quote.length}/300 characters — A memorable bar or quote from this rapper
+        </p>
+      </div>
+
+      <div>
         <Label htmlFor="musicbrainz_id" className="text-[var(--theme-primary)]">MusicBrainz ID (Optional)</Label>
         <Input
           id="musicbrainz_id"

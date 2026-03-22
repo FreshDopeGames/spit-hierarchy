@@ -199,6 +199,9 @@ const RapperDetail = () => {
           {/* Rapper Header */}
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
+          {/* Best Quote */}
+          <RapperBestQuote topQuote={(rapper as any).top_quote} rapperName={rapper.name} />
+
           {/* Enhanced Bio Section with more content */}
           <RapperBio rapper={rapper} />
 
