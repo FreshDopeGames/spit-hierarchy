@@ -29,6 +29,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
   quote,
   rapperName,
   rapperId,
+  songTitle,
 }) => {
   const [format, setFormat] = useState<FormatKey>("square");
   const [isGenerating, setIsGenerating] = useState(false);
