@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useMemo } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ThemedButton } from "@/components/ui/themed-button";
+import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import html2canvas from "html2canvas";
 import { Download, Copy, Loader2, Quote } from "lucide-react";
@@ -14,6 +15,13 @@ interface ShareQuoteModalProps {
   rapperId: string;
 }
 
+const FORMATS = {
+  square: { w: 1080, h: 1080, label: "Square", sub: "Post", avatar: 160, font: 36, nameFont: 24 },
+  portrait: { w: 1080, h: 1920, label: "Portrait", sub: "Story", avatar: 200, font: 40, nameFont: 28 },
+} as const;
+
+type FormatKey = keyof typeof FORMATS;
+
 const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
   isOpen,
   onClose,
@@ -21,9 +29,17 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
   rapperName,
   rapperId,
 }) => {
+  const [format, setFormat] = useState<FormatKey>("square");
   const [isGenerating, setIsGenerating] = useState(false);
   const exportRef = useRef<HTMLDivElement>(null);
   const { data: avatarUrl } = useRapperImage(rapperId, "xlarge");
+
+  const { w, h, avatar, font, nameFont } = FORMATS[format];
+
+  const maxPreviewWidth = format === "portrait" ? 280 : 320;
+  const scale = useMemo(() => Math.min(maxPreviewWidth / w, 1), [w, maxPreviewWidth]);
+  const previewW = w * scale;
+  const previewH = h * scale;
 
   const generateImage = async (action: "download" | "copy") => {
     if (!exportRef.current) return;
@@ -39,9 +55,11 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         logging: false,
       });
 
+      const filename = `${rapperName.replace(/\s+/g, "-").toLowerCase()}-quote-${format}.png`;
+
       if (action === "download") {
         const link = document.createElement("a");
-        link.download = `${rapperName.replace(/\s+/g, "-").toLowerCase()}-quote.png`;
+        link.download = filename;
         link.href = canvas.toDataURL("image/png");
         link.click();
         toast.success("Image downloaded!");
@@ -56,10 +74,9 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
             ]);
             toast.success("Copied to clipboard!");
           } catch {
-            // Fallback: download instead
             const url = URL.createObjectURL(blob);
             const link = document.createElement("a");
-            link.download = `${rapperName.replace(/\s+/g, "-").toLowerCase()}-quote.png`;
+            link.download = filename;
             link.href = url;
             link.click();
             URL.revokeObjectURL(url);
@@ -75,104 +92,135 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
     }
   };
 
+  const renderCard = () => (
+    <div
+      style={{
+        width: w,
+        height: h,
+        padding: 60,
+        background: "#000",
+        border: "4px solid",
+        borderColor: "hsl(var(--theme-primary))",
+        borderRadius: 12,
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "sans-serif",
+        boxSizing: "border-box",
+      }}
+    >
+      {avatarUrl && (
+        <img
+          src={avatarUrl}
+          alt={rapperName}
+          crossOrigin="anonymous"
+          style={{
+            width: avatar,
+            height: avatar,
+            borderRadius: 24,
+            objectFit: "cover",
+            marginBottom: 32,
+            border: "3px solid hsl(var(--theme-primary))",
+          }}
+        />
+      )}
+
+      <Quote
+        size={40}
+        style={{ color: "hsl(var(--theme-primary))", marginBottom: 16 }}
+      />
+
+      <p
+        style={{
+          color: "#fff",
+          fontSize: font,
+          fontStyle: "italic",
+          textAlign: "center",
+          lineHeight: 1.5,
+          margin: "0 0 24px 0",
+          fontWeight: "bold",
+          whiteSpace: "pre-line",
+        }}
+      >
+        "{quote}"
+      </p>
+
+      <p
+        style={{
+          color: "hsl(var(--theme-primary))",
+          fontSize: nameFont,
+          fontWeight: "bold",
+          margin: "0 0 32px 0",
+        }}
+      >
+        — {rapperName}
+      </p>
+
+      <p style={{ color: "#666", fontSize: 14, margin: 0 }}>
+        spithierarchy.com
+      </p>
+    </div>
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="max-w-md bg-[hsl(var(--theme-surface))] border-[hsl(var(--theme-border))]">
+      <DialogContent className="max-w-md bg-[hsl(var(--theme-surface))] border-[hsl(var(--theme-border))] max-h-[95vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="text-[hsl(var(--theme-text))] font-[var(--theme-font-heading)]">
             Share Quote
           </DialogTitle>
         </DialogHeader>
 
+        {/* Format Selection */}
+        <div className="flex justify-center gap-2">
+          {(Object.entries(FORMATS) as [FormatKey, typeof FORMATS[FormatKey]][]).map(([key, { label, sub }]) => (
+            <Badge
+              key={key}
+              variant={format === key ? "default" : "outline"}
+              className="cursor-pointer text-xs px-3 py-2 text-center"
+              onClick={() => setFormat(key)}
+            >
+              {label}
+              <span className="hidden sm:inline"> — {sub}</span>
+            </Badge>
+          ))}
+        </div>
+
         {/* Preview */}
         <div className="flex justify-center my-4">
           <div
-            style={{
-              width: 320,
-              height: "auto",
-              overflow: "hidden",
-            }}
+            className="border border-[hsl(var(--theme-border))] rounded-lg overflow-hidden"
+            style={{ width: previewW, height: previewH }}
           >
             <div
-              ref={exportRef}
               style={{
-                width: 600,
-                transform: `scale(${320 / 600})`,
+                width: w,
+                height: h,
+                transform: `scale(${scale})`,
                 transformOrigin: "top left",
-                padding: 40,
-                background: "#000",
-                border: "4px solid",
-                borderColor: "hsl(var(--theme-primary))",
-                borderRadius: 12,
-                display: "flex",
-                flexDirection: "column",
-                alignItems: "center",
-                fontFamily: "sans-serif",
               }}
             >
-              {/* Avatar */}
-              {avatarUrl && (
-                <img
-                  src={avatarUrl}
-                  alt={rapperName}
-                  crossOrigin="anonymous"
-                  style={{
-                    width: 120,
-                    height: 120,
-                    borderRadius: 16,
-                    objectFit: "cover",
-                    marginBottom: 24,
-                    border: "3px solid hsl(var(--theme-primary))",
-                  }}
-                />
-              )}
-
-              {/* Quote icon */}
-              <Quote
-                size={32}
-                style={{ color: "hsl(var(--theme-primary))", marginBottom: 12 }}
-              />
-
-              {/* Quote text */}
-              <p
-                style={{
-                  color: "#fff",
-                  fontSize: 24,
-                  fontStyle: "italic",
-                  textAlign: "center",
-                  lineHeight: 1.5,
-                  margin: "0 0 16px 0",
-                  fontWeight: "bold",
-                  whiteSpace: "pre-line",
-                }}
-              >
-                "{quote}"
-              </p>
-
-              {/* Attribution */}
-              <p
-                style={{
-                  color: "hsl(var(--theme-primary))",
-                  fontSize: 18,
-                  fontWeight: "bold",
-                  margin: "0 0 24px 0",
-                }}
-              >
-                — {rapperName}
-              </p>
-
-              {/* Watermark */}
-              <p
-                style={{
-                  color: "#666",
-                  fontSize: 12,
-                  margin: 0,
-                }}
-              >
-                spithierarchy.com
-              </p>
+              {renderCard()}
             </div>
           </div>
+        </div>
+
+        {/* Hidden full-size export target */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: "fixed",
+            left: 0,
+            top: 0,
+            width: w,
+            height: h,
+            pointerEvents: "none",
+            opacity: 0,
+            zIndex: -9999,
+          }}
+        >
+          <div ref={exportRef}>{renderCard()}</div>
         </div>
 
         {/* Actions */}
