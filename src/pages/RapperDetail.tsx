@@ -18,6 +18,7 @@ import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import CareerStatsCard from "@/components/rapper/CareerStatsCard";
 import RapperDiscography from "@/components/rapper/RapperDiscography";
 import { RapperAliases } from "@/components/rapper/RapperAliases";
+import RapperBestQuote from "@/components/rapper/RapperBestQuote";
 import SimilarRappersCard from "@/components/rapper/SimilarRappersCard";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
