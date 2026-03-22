@@ -11,7 +11,7 @@ interface RapperBestQuoteProps {
   songTitle?: string;
 }
 
-const RapperBestQuote = ({ topQuote, rapperName, rapperId }: RapperBestQuoteProps) => {
+const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBestQuoteProps) => {
   const [showShare, setShowShare] = useState(false);
 
   if (!topQuote) return null;
