@@ -52,6 +52,7 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
         quote={topQuote}
         rapperName={rapperName}
         rapperId={rapperId}
+        songTitle={songTitle}
       />
     </div>
   );
