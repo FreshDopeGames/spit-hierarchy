@@ -2219,6 +2219,7 @@ export type Database = {
           real_name: string | null
           slug: string
           spotify_id: string | null
+          top_quote: string | null
           total_votes: number | null
           updated_at: string
           verified: boolean | null
@@ -2249,6 +2250,7 @@ export type Database = {
           real_name?: string | null
           slug: string
           spotify_id?: string | null
+          top_quote?: string | null
           total_votes?: number | null
           updated_at?: string
           verified?: boolean | null
@@ -2279,6 +2281,7 @@ export type Database = {
           real_name?: string | null
           slug?: string
           spotify_id?: string | null
+          top_quote?: string | null
           total_votes?: number | null
           updated_at?: string
           verified?: boolean | null

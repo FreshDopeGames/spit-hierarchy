@@ -18,6 +18,7 @@ import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import CareerStatsCard from "@/components/rapper/CareerStatsCard";
 import RapperDiscography from "@/components/rapper/RapperDiscography";
 import { RapperAliases } from "@/components/rapper/RapperAliases";
+import RapperBestQuote from "@/components/rapper/RapperBestQuote";
 import SimilarRappersCard from "@/components/rapper/SimilarRappersCard";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
@@ -197,6 +198,9 @@ const RapperDetail = () => {
 
           {/* Rapper Header */}
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
+
+          {/* Best Quote */}
+          <RapperBestQuote topQuote={(rapper as any).top_quote} rapperName={rapper.name} />
 
           {/* Enhanced Bio Section with more content */}
           <RapperBio rapper={rapper} />

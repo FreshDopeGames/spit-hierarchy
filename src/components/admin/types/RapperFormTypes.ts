@@ -18,4 +18,5 @@ export interface RapperFormData {
   aliases: string[];
   tags: string[];
   musicbrainz_id: string;
+  top_quote: string;
 }
