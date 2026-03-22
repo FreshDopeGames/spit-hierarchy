@@ -118,7 +118,7 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
             <SelectTrigger className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-[var(--theme-background)] border-[var(--theme-border)]">
+            <SelectContent className="bg-black border-[var(--theme-border)]">
               <SelectItem value="draft" className="text-[var(--theme-text)]">Draft</SelectItem>
               <SelectItem value="published" className="text-[var(--theme-text)]">Published</SelectItem>
               <SelectItem value="archived" className="text-[var(--theme-text)]">Archived</SelectItem>
