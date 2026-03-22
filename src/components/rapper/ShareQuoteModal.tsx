@@ -16,8 +16,8 @@ interface ShareQuoteModalProps {
 }
 
 const FORMATS = {
-  square: { w: 1080, h: 1080, label: "Square", sub: "Post", avatar: 160, font: 36, nameFont: 24 },
-  portrait: { w: 1080, h: 1920, label: "Portrait", sub: "Story", avatar: 200, font: 40, nameFont: 28 },
+  square: { w: 1080, h: 1080, label: "Square", sub: "Post", avatar: 320, font: 36, nameFont: 24 },
+  portrait: { w: 1080, h: 1920, label: "Portrait", sub: "Story", avatar: 400, font: 40, nameFont: 28 },
 } as const;
 
 type FormatKey = keyof typeof FORMATS;
@@ -157,7 +157,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         — {rapperName}
       </p>
 
-      <p style={{ color: "#666", fontSize: 14, margin: 0 }}>
+      <p style={{ color: "#666", fontSize: 28, margin: 0 }}>
         spithierarchy.com
       </p>
     </div>
