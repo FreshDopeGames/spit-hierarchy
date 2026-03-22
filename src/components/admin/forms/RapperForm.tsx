@@ -85,6 +85,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         aliases: rapper.aliases || [],
         tags: [],
         musicbrainz_id: rapper.musicbrainz_id || "",
+        top_quote: (rapper as any).top_quote || "",
       });
     } else {
       setFormData({
