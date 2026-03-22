@@ -40,7 +40,7 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
               "{topQuote}"
             </p>
             <p className="mt-3 text-sm font-[var(--theme-font-heading)] text-[hsl(var(--theme-textMuted))] text-right">
-              — {rapperName}
+              — {rapperName}{songTitle && `, "${songTitle}"`}
             </p>
           </div>
         </ThemedCardContent>
