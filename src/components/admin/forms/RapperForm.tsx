@@ -43,6 +43,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     aliases: [],
     tags: [],
     musicbrainz_id: "",
+    top_quote: "",
   });
 
   // Fetch existing tags for this rapper
