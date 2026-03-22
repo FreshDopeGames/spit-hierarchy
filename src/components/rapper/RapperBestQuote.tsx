@@ -8,6 +8,7 @@ interface RapperBestQuoteProps {
   topQuote: string;
   rapperName: string;
   rapperId: string;
+  songTitle?: string;
 }
 
 const RapperBestQuote = ({ topQuote, rapperName, rapperId }: RapperBestQuoteProps) => {
