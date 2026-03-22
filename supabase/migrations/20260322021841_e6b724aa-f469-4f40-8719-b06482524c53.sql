@@ -1,0 +1,1 @@
+ALTER TABLE public.rappers ADD COLUMN top_quote TEXT;
