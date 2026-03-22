@@ -35,7 +35,7 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId }: RapperBestQuoteProp
           </div>
           <div className="relative pl-8">
             <Quote className="absolute left-0 top-0 w-6 h-6 text-[hsl(var(--theme-primary))]/60" />
-            <p className="text-lg md:text-xl italic font-[var(--theme-font-body)] text-[hsl(var(--theme-text))] leading-relaxed">
+            <p className="text-lg md:text-xl italic font-[var(--theme-font-body)] text-[hsl(var(--theme-text))] leading-relaxed whitespace-pre-line">
               "{topQuote}"
             </p>
             <p className="mt-3 text-sm font-[var(--theme-font-heading)] text-[hsl(var(--theme-textMuted))] text-right">
