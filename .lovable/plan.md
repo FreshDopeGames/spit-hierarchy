@@ -1,34 +1,29 @@
 
 
-## Plan: Shareable Best Quote Card with Share Button
+## Plan: Square & Portrait Format Options for Share Quote Modal
 
-### 1. Update `RapperBestQuote.tsx` — Fix Card Styling + Add Share Button
+### Overview
+Add format selection (Square 1080x1080 for posts, Portrait 1080x1920 for stories) to the existing `ShareQuoteModal`, letting users pick the right size before downloading/copying.
 
-**Card styling fix**: Replace gradient background with `bg-black` and `border-[hsl(var(--theme-primary))]` (4px solid from ThemedCard base) to match the standardized card pattern.
+### Changes to `src/components/rapper/ShareQuoteModal.tsx`
 
-**Add Share button**: A small themed button (Share2 icon) in the top-right corner of the card. Clicking opens a modal to download/copy the quote as an image.
+**Add format selector**: Two toggle buttons ("Square" and "Portrait") above the preview, styled with theme colors. Default to Square.
 
-### 2. Create `ShareQuoteModal.tsx`
+**Format configurations**:
+- **Square** (1080x1080): Avatar 160px, quote font 36px, more compact vertical spacing
+- **Portrait** (1080x1920): Avatar 200px, quote font 40px, more vertical breathing room, content vertically centered
 
-A modal dialog with:
-- A hidden export ref (same pattern as `ShareTopFiveModal`) rendered at full size but visually hidden
-- The shareable card contains:
-  - Black background with primary color border
-  - Rapper's rounded-square avatar image (top, centered)
-  - Large quotation marks + the quote text in italic
-  - Rapper name attribution below
-  - Small "spithierarchy.com" watermark at bottom
-- Two action buttons: **Download** and **Copy to Clipboard**
-- Uses `html2canvas` (already a dependency) to generate the image
+**Rendering approach** (follows existing ShareTopFiveModal pattern):
+- Two hidden export refs (one per format), each rendered at full resolution off-screen (opacity 0, zIndex -9999, position absolute)
+- The visible preview scales down whichever format is selected using transform scale
+- Generate image from the hidden full-size ref for the selected format
 
-### 3. Props Flow
+**Preview scaling**: 
+- Square preview: scale 320/1080 inside a 320x320 container
+- Portrait preview: scale 280/1080 inside a ~280x497 container (to fit the dialog)
 
-`RapperDetail` passes `rapper.top_quote`, `rapper.name`, `rapper.id`, `rapper.slug` to `RapperBestQuote`.
-`RapperBestQuote` manages modal open state and passes data to `ShareQuoteModal`.
-`ShareQuoteModal` uses `useRapperImage(rapperId, 'xlarge')` to get the avatar for the export.
+**Download filename**: includes format suffix, e.g. `big-sean-quote-square.png`
 
 ### Files
-- **Modify**: `src/components/rapper/RapperBestQuote.tsx`
-- **Modify**: `src/pages/RapperDetail.tsx` (pass additional props)
-- **Create**: `src/components/rapper/ShareQuoteModal.tsx`
+- **Modify**: `src/components/rapper/ShareQuoteModal.tsx`
 
