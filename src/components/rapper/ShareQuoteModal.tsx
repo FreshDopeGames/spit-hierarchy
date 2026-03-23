@@ -94,7 +94,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
     }
   };
 
-  const renderCard = () => (
+  const renderCard = (forExport = false) => (
     <div
       style={{
         width: w,
@@ -116,7 +116,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         <img
           src={avatarUrl}
           alt={rapperName}
-          crossOrigin="anonymous"
+          {...(forExport ? { crossOrigin: "anonymous" as const } : {})}
           style={{
             width: avatar,
             height: avatar,
@@ -223,7 +223,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
             zIndex: -9999,
           }}
         >
-          <div ref={exportRef}>{renderCard()}</div>
+          <div ref={exportRef}>{renderCard(true)}</div>
         </div>
 
         {/* Actions */}
