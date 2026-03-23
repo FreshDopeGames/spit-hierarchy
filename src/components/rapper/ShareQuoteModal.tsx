@@ -116,7 +116,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         <img
           src={avatarUrl}
           alt={rapperName}
-          crossOrigin="anonymous"
+          {...(forExport ? { crossOrigin: "anonymous" as const } : {})}
           style={{
             width: avatar,
             height: avatar,
