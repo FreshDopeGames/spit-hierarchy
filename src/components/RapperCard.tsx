@@ -128,7 +128,7 @@ const RapperCard = ({
         {/* Rapper Info */}
         <div className={compact ? "space-y-1 sm:space-y-2" : "space-y-2 sm:space-y-3"}>
           <div className="flex items-start justify-between min-w-0">
-            <h3 className={`font-[var(--theme-fontPrimary)] ${compact ? "text-lg sm:text-xl" : "text-xl sm:text-2xl md:text-3xl"} leading-tight transition-colors font-extrabold text-[var(--theme-primary)] line-clamp-2 pr-2 tracking-wide uppercase`}>{rapper.name}</h3>
+            <h3 className={`font-[var(--theme-fontPrimary)] ${compact ? "text-xl sm:text-2xl" : "text-2xl sm:text-3xl md:text-4xl"} leading-[0.95] transition-colors font-extrabold text-[var(--theme-primary)] line-clamp-2 pr-2 tracking-normal sm:tracking-wide uppercase`}>{rapper.name}</h3>
             {rapper.verified && <Verified className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--theme-secondary)] flex-shrink-0" />}
           </div>
 
