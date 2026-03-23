@@ -94,7 +94,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
     }
   };
 
-  const renderCard = () => (
+  const renderCard = (forExport = false) => (
     <div
       style={{
         width: w,
