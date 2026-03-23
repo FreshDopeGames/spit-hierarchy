@@ -223,7 +223,7 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
             zIndex: -9999,
           }}
         >
-          <div ref={exportRef}>{renderCard()}</div>
+          <div ref={exportRef}>{renderCard(true)}</div>
         </div>
 
         {/* Actions */}
