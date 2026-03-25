@@ -1,28 +1,18 @@
 
 
-## Plan: Add "Top Quote Song Title" Field
+## Investigation Results
 
-### 1. Database Migration
-Add `top_quote_song` column (TEXT, nullable) to the `rappers` table.
+### Issue 1: Blu doesn't show "Rated" badge after rating
+**Root cause**: The `user-rated-rappers` query in `AllRappersGrid.tsx` is never invalidated after a vote is submitted. The `VoteModal` component invalidates `rapper-rating-count` but not `user-rated-rappers`, so the badge set is stale until a full page reload.
 
-### 2. Admin Form Updates
+**Fix**: In the `VoteModal` component's success handler, add invalidation of the `["user-rated-rappers", user.id]` query key so the badge appears immediately after rating.
 
-**`src/components/admin/types/RapperFormTypes.ts`**: Add `top_quote_song: string`.
+### Issue 2: Broken badge image in Lovable preview
+**Root cause**: The import `import RatedBadge from "@/assets/Rated_Badge_64.png"` and the file itself are both valid (the file exists and renders correctly). Since this only happens in the Lovable preview and not on the live site, this is a transient Vite HMR/build caching issue in the preview environment. A rebuild or refresh should resolve it. No code change needed for this.
 
-**`src/components/admin/forms/RapperForm.tsx`**:
-- Add `top_quote_song: ""` to initial state and rapper-load logic
-- Add an Input field labeled "Quote Song Title" directly below the Top Quote textarea
-- Include `top_quote_song` in the data sent to Supabase
+### Files to modify
+- **`src/components/VoteModal.tsx`** (or wherever the vote success handler lives): Add `queryClient.invalidateQueries({ queryKey: ["user-rated-rappers"] })` after a successful vote submission, alongside the existing `rapper-rating-count` invalidation.
 
-### 3. Display on Rapper Detail
-
-**`src/components/rapper/RapperBestQuote.tsx`**: Accept optional `songTitle` prop. If present, display it below the rapper name attribution (e.g. `— Rapper Name, "Song Title"`).
-
-**`src/components/rapper/ShareQuoteModal.tsx`**: Accept optional `songTitle` prop and include it in both square and portrait export layouts below the rapper name.
-
-**`src/pages/RapperDetail.tsx`**: Pass `top_quote_song` to `RapperBestQuote`.
-
-### Files
-- **Migration**: Add `top_quote_song` TEXT column
-- **Modify**: `RapperFormTypes.ts`, `RapperForm.tsx`, `RapperBestQuote.tsx`, `ShareQuoteModal.tsx`, `RapperDetail.tsx`
+### Summary
+One code fix (query invalidation) to ensure the Rated badge appears immediately after voting. The broken image rendering is a preview-only environment issue, not a code bug.
 
