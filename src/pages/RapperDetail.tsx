@@ -7,8 +7,11 @@ import { useRefreshDiscography } from "@/hooks/useRapperDiscography";
 import { usePageViewTracking } from "@/hooks/usePageViewTracking";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Search, Loader2, UserPlus } from "lucide-react";
 import VoteModal from "@/components/VoteModal";
+import { useRapperAutocomplete } from "@/hooks/useRapperAutocomplete";
+import { useCanSuggestRappers } from "@/hooks/useCanSuggestRappers";
+import RapperSuggestionModal from "@/components/RapperSuggestionModal";
 import CommentBubble from "@/components/CommentBubble";
 import BackToTopButton from "@/components/BackToTopButton";
 import RapperHeader from "@/components/rapper/RapperHeader";
@@ -37,6 +40,9 @@ const RapperDetail = () => {
   const { user } = useAuth();
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [selectedCategory] = useState("");
+  const [showSuggestionModal, setShowSuggestionModal] = useState(false);
+  const { searchTerm, setSearchTerm, searchResults, isSearching, hasMinLength } = useRapperAutocomplete();
+  const { canSuggest } = useCanSuggestRappers();
   const refreshDiscography = useRefreshDiscography();
 
   const handleBackToAllRappers = () => {
@@ -139,12 +145,72 @@ const RapperDetail = () => {
             <ArrowLeft className="w-4 h-4 mr-2" />
             Back To All Rappers
           </ThemedButton>
-          <ThemedCard className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[var(--theme-primary)]/20">
+          <ThemedCard className="bg-black border-4 border-[hsl(var(--theme-primary))] shadow-lg shadow-[hsl(var(--theme-primary))]/20">
             <ThemedCardContent className="p-8 text-center">
-              <h2 className="text-2xl font-[var(--theme-font-heading)] text-[var(--theme-text)] mb-4">Pharaoh Not Found</h2>
-              <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)]">This pharaoh has vanished from the dynasty.</p>
+              <h2 className="text-2xl font-[var(--theme-font-heading)] text-[hsl(var(--theme-text))] mb-4">Rapper Not Found</h2>
+              <p className="text-[hsl(var(--theme-text-muted))] font-[var(--theme-font-body)] mb-6">
+                Our rapper database is growing, but we don't have that one yet! Try a different spelling, or suggest one to the admins.
+              </p>
+
+              {/* Inline Search */}
+              <div className="max-w-md mx-auto mb-6">
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[hsl(var(--theme-text-muted))]" />
+                  {isSearching && <Loader2 className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[hsl(var(--theme-primary))] animate-spin" />}
+                  <input
+                    type="text"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    placeholder="Search for a rapper..."
+                    className="w-full h-10 pl-10 pr-10 rounded-md border border-[hsl(var(--theme-primary))]/50 bg-[hsl(var(--theme-background))] text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] placeholder:text-[hsl(var(--theme-text-muted))] focus:outline-none focus:ring-2 focus:ring-[hsl(var(--theme-primary))]"
+                  />
+                </div>
+
+                {/* Search Results */}
+                {hasMinLength && (
+                  <div className="mt-2 rounded-md border border-[hsl(var(--theme-primary))]/30 bg-black overflow-hidden max-h-60 overflow-y-auto">
+                    {searchResults.length > 0 ? (
+                      searchResults.slice(0, 8).map((result: any) => (
+                        <button
+                          key={result.id}
+                          onClick={() => navigate(`/rapper/${result.slug || result.id}`)}
+                          className="w-full flex items-center gap-3 px-4 py-2.5 hover:bg-[hsl(var(--theme-primary))]/10 transition-colors text-left"
+                        >
+                          {result.image_url ? (
+                            <img src={result.image_url} alt={result.name} className="w-8 h-8 rounded-full object-cover" />
+                          ) : (
+                            <div className="w-8 h-8 rounded-full bg-[hsl(var(--theme-primary))]/20 flex items-center justify-center">
+                              <span className="text-xs text-[hsl(var(--theme-primary))]">{result.name?.[0]}</span>
+                            </div>
+                          )}
+                          <span className="text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] text-sm">{result.name}</span>
+                        </button>
+                      ))
+                    ) : !isSearching ? (
+                      <p className="px-4 py-3 text-sm text-[hsl(var(--theme-text-muted))]">No rappers found</p>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+
+              {/* Suggest a Rapper */}
+              {canSuggest && (
+                <ThemedButton
+                  variant="outline"
+                  className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))]"
+                  onClick={() => setShowSuggestionModal(true)}
+                >
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Suggest a Rapper to Admins
+                </ThemedButton>
+              )}
             </ThemedCardContent>
           </ThemedCard>
+
+          <RapperSuggestionModal
+            open={showSuggestionModal}
+            onOpenChange={setShowSuggestionModal}
+          />
         </div>
       </div>
     );
