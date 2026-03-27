@@ -40,6 +40,9 @@ const RapperDetail = () => {
   const { user } = useAuth();
   const [showVoteModal, setShowVoteModal] = useState(false);
   const [selectedCategory] = useState("");
+  const [showSuggestionModal, setShowSuggestionModal] = useState(false);
+  const { searchTerm, setSearchTerm, searchResults, isSearching, hasMinLength } = useRapperAutocomplete();
+  const { canSuggest } = useCanSuggestRappers();
   const refreshDiscography = useRefreshDiscography();
 
   const handleBackToAllRappers = () => {
