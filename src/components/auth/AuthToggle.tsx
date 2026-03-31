@@ -27,7 +27,10 @@ const AuthToggle = ({ isLogin, onToggle }: AuthToggleProps) => {
             </div>
           </div>
 
-          <h2 className="font-ceviche text-rap-silver text-4xl font-normal pt-[10px]">
+          <h2
+            className={`font-ceviche text-rap-silver text-4xl font-normal pt-[10px] ${showWiggle ? "animate-wiggle" : ""}`}
+            onAnimationEnd={() => setShowWiggle(false)}
+          >
             First Time Here?
           </h2>
 

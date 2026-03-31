@@ -198,7 +198,8 @@ export default {
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
 				'slow-bounce': 'slow-bounce 2s ease-in-out',
-				'progress': 'progress 8s linear forwards'
+			'progress': 'progress 8s linear forwards',
+			'wiggle': 'wiggle 0.5s ease-in-out'
 			}
 		}
 	},
