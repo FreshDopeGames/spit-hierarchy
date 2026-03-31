@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Card, CardContent } from "@/components/ui/card";
 import { toast } from "sonner";
 import HeaderNavigation from "@/components/HeaderNavigation";
+import Footer from "@/components/Footer";
 import AuthHeader from "@/components/auth/AuthHeader";
 import SocialAuthButtons from "@/components/auth/SocialAuthButtons";
 import AuthForm from "@/components/auth/AuthForm";
@@ -180,6 +181,7 @@ const Auth = () => {
           </CardContent>
         </Card>
       </div>
+      <Footer />
     </div>
   );
 };
