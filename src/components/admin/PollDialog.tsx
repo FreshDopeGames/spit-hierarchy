@@ -380,6 +380,29 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
                 )}
               />
 
+              <FormField
+                control={form.control}
+                name="voting_locked"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Lock Voting
+                      </FormLabel>
+                      <FormDescription>
+                        Prevent users from changing their votes
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
             <div className="space-y-4">
               <FormLabel>Poll Options</FormLabel>
               {options.map((option, index) => (
