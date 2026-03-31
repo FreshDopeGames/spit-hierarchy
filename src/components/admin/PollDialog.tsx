@@ -73,6 +73,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
       expires_at: "",
       is_featured: false,
       allow_write_in: false,
+      voting_locked: false,
       options: ['', '']
     }
   });
