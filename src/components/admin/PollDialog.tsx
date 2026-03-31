@@ -44,6 +44,7 @@ const pollSchema = z.object({
   expires_at: z.string().optional(),
   is_featured: z.boolean(),
   allow_write_in: z.boolean().default(false),
+  voting_locked: z.boolean().default(false),
   options: z.array(z.string().min(1, "Option text is required")).min(2, "At least 2 options required")
 });
 
