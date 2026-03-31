@@ -156,6 +156,18 @@ const PollWidget = ({
             <p className="text-sm font-bold text-black text-center mt-4">
               Total votes: {results?.totalVotes || 0}
             </p>
+            {userHasVoted && !poll.voting_locked && (
+              <div className="flex justify-center mt-4">
+                <ThemedButton
+                  onClick={handleChangeVote}
+                  disabled={isDeletingVotes}
+                  variant="outline"
+                  className="px-8 py-4 text-lg font-bold border-black border-2"
+                >
+                  {isDeletingVotes ? "Removing vote..." : "Change Vote"}
+                </ThemedButton>
+              </div>
+            )}
           </div> :
       // Authenticated users - voting interface
       <div className="space-y-4">
