@@ -16,7 +16,7 @@ const AuthToggle = ({ isLogin, onToggle }: AuthToggleProps) => {
             </div>
           </div>
 
-          <h2 className="font-ceviche text-rap-silver text-4xl font-normal">
+          <h2 className="font-ceviche text-rap-silver text-4xl font-normal pt-[10px]">
             First Time Here?
           </h2>
 
