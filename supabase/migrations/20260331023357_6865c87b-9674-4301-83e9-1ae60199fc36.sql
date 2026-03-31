@@ -1,0 +1,1 @@
+DROP POLICY IF EXISTS "Public read for analytics aggregation" ON public.votes;
