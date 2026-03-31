@@ -1,20 +1,18 @@
 
 
-## Plan: Visually Separate Sign-Up CTA from Sign-In Flow
+## Plan: Add Delayed Wiggle Animation to "First Time Here?" Heading
 
-### Overview
-When in login mode, replace the current subtle outline "New to the game? Join the Culture" button with a visually distinct section featuring a header ("First Time Here?") and a prominent gradient button ("Join the Community").
+### Changes
 
-### Changes to `src/components/auth/AuthToggle.tsx`
+**`tailwind.config.ts`**: Add a `wiggle` keyframe and animation:
+- Keyframe: subtle left-right rotation (`-3deg` → `3deg` → `0deg`) over a few cycles
+- Animation class: `animate-wiggle` with a 0.5s duration
 
-When `isLogin` is true, render:
-1. A divider line (matching the "Or continue with email" divider style)
-2. A heading **"First Time Here?"** using `font-ceviche text-5xl` — matching the "Welcome Back" `CardTitle` styling in `AuthHeader.tsx`
-3. A large gradient button **"Join the Community"** using the same `bg-gradient-to-r from-[#e39516] to-[#c0720c]` gradient as the Google and Sign In buttons
-4. Keep the "Learn more" link below
-
-When `isLogin` is false (sign-up mode), show the current "Already in the crew? Sign In" button as-is (outline style).
+**`src/components/auth/AuthToggle.tsx`**:
+- Add a state (`showWiggle`) that turns true after a 1-second `setTimeout`
+- Conditionally apply the `animate-wiggle` class to the "First Time Here?" `<h2>` when `showWiggle` is true
 
 ### Files
-- **Modify**: `src/components/auth/AuthToggle.tsx`
+- **Modify**: `tailwind.config.ts` — add wiggle keyframe + animation
+- **Modify**: `src/components/auth/AuthToggle.tsx` — add delayed wiggle effect via `useState`/`useEffect`
 
