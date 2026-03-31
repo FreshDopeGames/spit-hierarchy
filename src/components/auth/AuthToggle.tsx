@@ -23,7 +23,7 @@ const AuthToggle = ({ isLogin, onToggle }: AuthToggleProps) => {
           <ThemedButton
             onClick={onToggle}
             size="lg"
-            className="w-full font-merienda font-semibold text-lg bg-gradient-to-r from-[#e39516] to-[#c0720c] hover:from-[#c0720c] hover:to-[#e39516] text-white border-0"
+            className="w-full font-merienda font-semibold text-lg bg-gradient-to-r from-[#e39516] to-[#c0720c] hover:from-[#c0720c] hover:to-[#e39516] border-0 text-primary-foreground"
           >
             Join the Community
           </ThemedButton>
