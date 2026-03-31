@@ -82,6 +82,18 @@ const PollWidget = ({
         writeInOption: finalWriteIn || undefined
       });
       setHasVoted(true);
+      setIsChangingVote(false);
+    } catch (error) {
+      // Error handled in the hook
+    }
+  };
+  const handleChangeVote = async () => {
+    try {
+      await deleteVotes(poll.id);
+      setHasVoted(false);
+      setIsChangingVote(true);
+      setSelectedOptions([]);
+      setWriteInOption('');
     } catch (error) {
       // Error handled in the hook
     }
