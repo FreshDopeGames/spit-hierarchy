@@ -143,7 +143,7 @@ const Auth = () => {
       />
       <HeaderNavigation isScrolled={isScrolled} />
 
-      <div className="pt-24 flex items-center justify-center p-4 min-h-screen">
+      <div className="flex items-center justify-center p-4 min-h-screen pt-[30px]">
         <Card className="w-full max-w-md bg-[var(--theme-element-card-bg,var(--theme-surface))] border-[var(--theme-element-card-border-color,var(--theme-border))]">
           <AuthHeader isLogin={isLogin} />
           
