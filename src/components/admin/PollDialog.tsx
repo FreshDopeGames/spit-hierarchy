@@ -94,6 +94,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
         expires_at: poll.expires_at ? poll.expires_at.split('T')[0] : "",
         is_featured: poll.is_featured,
         allow_write_in: poll.allow_write_in || false,
+        voting_locked: poll.voting_locked || false,
         options: pollOptions
       });
       setOptions(pollOptions);
