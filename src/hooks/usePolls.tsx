@@ -12,6 +12,7 @@ interface Poll {
   expires_at?: string;
   is_featured: boolean;
   allow_write_in?: boolean;
+  voting_locked?: boolean;
   created_at: string;
   poll_options: Array<{
     id: string;
