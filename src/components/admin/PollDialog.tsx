@@ -139,6 +139,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
         expires_at: data.expires_at ? new Date(data.expires_at).toISOString() : null,
         is_featured: data.is_featured,
         allow_write_in: data.allow_write_in,
+        voting_locked: data.voting_locked,
         created_by: user.id
       };
 
