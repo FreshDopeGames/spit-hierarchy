@@ -81,6 +81,7 @@ export const useFeaturedPolls = () => {
           expires_at,
           is_featured,
           allow_write_in,
+          voting_locked,
           created_at,
           poll_options (
             id,
