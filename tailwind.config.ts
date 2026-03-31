@@ -177,10 +177,17 @@ export default {
 						animationTimingFunction: 'cubic-bezier(0, 0, 0.2, 1)'
 					}
 				},
-				'progress': {
-					'0%': { width: '0%' },
-					'100%': { width: '100%' }
-				}
+			'progress': {
+				'0%': { width: '0%' },
+				'100%': { width: '100%' }
+			},
+			'wiggle': {
+				'0%, 100%': { transform: 'rotate(0deg)' },
+				'20%': { transform: 'rotate(-3deg)' },
+				'40%': { transform: 'rotate(3deg)' },
+				'60%': { transform: 'rotate(-2deg)' },
+				'80%': { transform: 'rotate(2deg)' }
+			}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
@@ -191,7 +198,8 @@ export default {
 				'pharaoh-rise': 'pharaoh-rise 1s ease-out',
 				'hieroglyph-float': 'hieroglyph-float 4s ease-in-out infinite',
 				'slow-bounce': 'slow-bounce 2s ease-in-out',
-				'progress': 'progress 8s linear forwards'
+			'progress': 'progress 8s linear forwards',
+			'wiggle': 'wiggle 0.5s ease-in-out'
 			}
 		}
 	},

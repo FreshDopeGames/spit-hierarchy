@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { ThemedButton } from "@/components/ui/themed-button";
 
 interface AuthToggleProps {
@@ -6,6 +7,16 @@ interface AuthToggleProps {
 }
 
 const AuthToggle = ({ isLogin, onToggle }: AuthToggleProps) => {
+  const [showWiggle, setShowWiggle] = useState(false);
+
+  useEffect(() => {
+    if (isLogin) {
+      const timer = setTimeout(() => setShowWiggle(true), 1000);
+      return () => clearTimeout(timer);
+    }
+    setShowWiggle(false);
+  }, [isLogin]);
+
   return (
     <div className="text-center space-y-4">
       {isLogin ? (
@@ -16,7 +27,10 @@ const AuthToggle = ({ isLogin, onToggle }: AuthToggleProps) => {
             </div>
           </div>
 
-          <h2 className="font-ceviche text-rap-silver text-4xl font-normal pt-[10px]">
+          <h2
+            className={`font-ceviche text-rap-silver text-4xl font-normal pt-[10px] ${showWiggle ? "animate-wiggle" : ""}`}
+            onAnimationEnd={() => setShowWiggle(false)}
+          >
             First Time Here?
           </h2>
 
