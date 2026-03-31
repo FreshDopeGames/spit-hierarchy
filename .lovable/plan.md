@@ -1,24 +1,20 @@
 
 
-## Plan: Replace "Pharaoh Not Found" with Rapper Not Found + Inline Search
+## Plan: Visually Separate Sign-Up CTA from Sign-In Flow
 
 ### Overview
-Replace the current "Pharaoh Not Found" card in `RapperDetail.tsx` with a user-friendly "Rapper Not Found" message, an inline search bar (reusing existing search hooks), and a "Suggest a Rapper to Admins" link.
+When in login mode, replace the current subtle outline "New to the game? Join the Culture" button with a visually distinct section featuring a header ("First Time Here?") and a prominent gradient button ("Join the Community").
 
-### Changes
+### Changes to `src/components/auth/AuthToggle.tsx`
 
-**`src/pages/RapperDetail.tsx`** (lines 142-147)
+When `isLogin` is true, render:
+1. A divider line (matching the "Or continue with email" divider style)
+2. A heading **"First Time Here?"** using `font-ceviche text-5xl` — matching the "Welcome Back" `CardTitle` styling in `AuthHeader.tsx`
+3. A large gradient button **"Join the Community"** using the same `bg-gradient-to-r from-[#e39516] to-[#c0720c]` gradient as the Google and Sign In buttons
+4. Keep the "Learn more" link below
 
-Replace the existing `ThemedCard` content with:
-- **Heading**: "Rapper Not Found"
-- **Description**: "Our rapper database is growing, but we don't have that one yet! Try a different spelling, or suggest one to the admins."
-- **Inline search bar**: Uses `useRapperAutocomplete` hook with a styled input + results dropdown (rapper avatars, names, click to navigate)
-- **"Suggest a Rapper to Admins" button**: Uses `useCanSuggestRappers` + `RapperSuggestionModal` (same pattern as `GlobalSearch.tsx` and `AllRappersEmptyState.tsx`)
-
-New imports needed: `useState`, `useRapperAutocomplete`, `useCanSuggestRappers`, `RapperSuggestionModal`, `Search`, `Music`, `Loader2` icons.
-
-The search bar will be a simplified inline version — text input with search icon, results list below showing matching rappers (avatar + name, clickable to navigate), and "No results" state with the suggest button. The suggest button also appears below the search bar by default for easy access.
+When `isLogin` is false (sign-up mode), show the current "Already in the crew? Sign In" button as-is (outline style).
 
 ### Files
-- **Modify**: `src/pages/RapperDetail.tsx`
+- **Modify**: `src/components/auth/AuthToggle.tsx`
 
