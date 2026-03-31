@@ -22,6 +22,7 @@ interface Poll {
   description?: string;
   type: 'single_choice' | 'multiple_choice';
   allow_write_in?: boolean;
+  voting_locked?: boolean;
   poll_options: PollOption[];
 }
 interface PollWidgetProps {
