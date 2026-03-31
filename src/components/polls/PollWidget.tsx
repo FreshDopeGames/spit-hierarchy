@@ -38,10 +38,13 @@ const PollWidget = ({
   } = useSecureAuth();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
+  const [isChangingVote, setIsChangingVote] = useState(false);
   const [writeInOption, setWriteInOption] = useState("");
   const {
     submitVote,
-    isSubmitting
+    isSubmitting,
+    deleteVotes,
+    isDeletingVotes
   } = usePollVoting();
   const {
     data: results
