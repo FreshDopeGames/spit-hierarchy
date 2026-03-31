@@ -44,6 +44,7 @@ const pollSchema = z.object({
   expires_at: z.string().optional(),
   is_featured: z.boolean(),
   allow_write_in: z.boolean().default(false),
+  voting_locked: z.boolean().default(false),
   options: z.array(z.string().min(1, "Option text is required")).min(2, "At least 2 options required")
 });
 
@@ -72,6 +73,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
       expires_at: "",
       is_featured: false,
       allow_write_in: false,
+      voting_locked: false,
       options: ['', '']
     }
   });
@@ -92,6 +94,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
         expires_at: poll.expires_at ? poll.expires_at.split('T')[0] : "",
         is_featured: poll.is_featured,
         allow_write_in: poll.allow_write_in || false,
+        voting_locked: poll.voting_locked || false,
         options: pollOptions
       });
       setOptions(pollOptions);
@@ -136,6 +139,7 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
         expires_at: data.expires_at ? new Date(data.expires_at).toISOString() : null,
         is_featured: data.is_featured,
         allow_write_in: data.allow_write_in,
+        voting_locked: data.voting_locked,
         created_by: user.id
       };
 
@@ -364,6 +368,29 @@ const PollDialog = ({ open, onOpenChange, poll, onSuccess }: PollDialogProps) =>
                       </FormLabel>
                       <FormDescription>
                         Let users submit their own custom options
+                      </FormDescription>
+                    </div>
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="voting_locked"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                    <div className="space-y-0.5">
+                      <FormLabel className="text-base">
+                        Lock Voting
+                      </FormLabel>
+                      <FormDescription>
+                        Prevent users from changing their votes
                       </FormDescription>
                     </div>
                     <FormControl>

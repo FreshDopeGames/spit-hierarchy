@@ -77,8 +77,31 @@ export const usePollVoting = () => {
     }
   });
 
+  const deleteVotes = useMutation({
+    mutationFn: async (pollId: string) => {
+      if (!user) throw new Error("Authentication required");
+
+      const { error } = await supabase
+        .from('poll_votes')
+        .delete()
+        .eq('poll_id', pollId)
+        .eq('user_id', user.id);
+
+      if (error) throw error;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['poll-results'] });
+      queryClient.invalidateQueries({ queryKey: ['poll-votes'] });
+    },
+    onError: () => {
+      toast.error("Failed to remove your vote. Please try again.");
+    }
+  });
+
   return {
     submitVote: submitVote.mutateAsync,
-    isSubmitting: submitVote.isPending
+    isSubmitting: submitVote.isPending,
+    deleteVotes: deleteVotes.mutateAsync,
+    isDeletingVotes: deleteVotes.isPending
   };
 };

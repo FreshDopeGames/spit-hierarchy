@@ -12,6 +12,7 @@ interface Poll {
   expires_at?: string;
   is_featured: boolean;
   allow_write_in?: boolean;
+  voting_locked?: boolean;
   created_at: string;
   poll_options: Array<{
     id: string;
@@ -37,6 +38,7 @@ export const usePolls = (placement?: string, blogPostId?: string) => {
           expires_at,
           is_featured,
           allow_write_in,
+          voting_locked,
           created_at,
           poll_options (
             id,
@@ -79,6 +81,7 @@ export const useFeaturedPolls = () => {
           expires_at,
           is_featured,
           allow_write_in,
+          voting_locked,
           created_at,
           poll_options (
             id,

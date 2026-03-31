@@ -22,6 +22,7 @@ interface Poll {
   description?: string;
   type: 'single_choice' | 'multiple_choice';
   allow_write_in?: boolean;
+  voting_locked?: boolean;
   poll_options: PollOption[];
 }
 interface PollWidgetProps {
@@ -37,10 +38,13 @@ const PollWidget = ({
   } = useSecureAuth();
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
   const [hasVoted, setHasVoted] = useState(false);
+  const [isChangingVote, setIsChangingVote] = useState(false);
   const [writeInOption, setWriteInOption] = useState("");
   const {
     submitVote,
-    isSubmitting
+    isSubmitting,
+    deleteVotes,
+    isDeletingVotes
   } = usePollVoting();
   const {
     data: results
@@ -49,7 +53,7 @@ const PollWidget = ({
     data: userVotes
   } = useUserPollVotes(poll.id);
   const userHasVoted = userVotes && userVotes.length > 0;
-  const shouldShowResults = showResults || hasVoted || userHasVoted;
+  const shouldShowResults = (showResults || hasVoted || userHasVoted) && !isChangingVote;
   const hasResults = results && results.results.length > 0 && results.totalVotes > 0;
   const handleSingleChoice = (optionId: string) => {
     setSelectedOptions([optionId]);
@@ -78,6 +82,18 @@ const PollWidget = ({
         writeInOption: finalWriteIn || undefined
       });
       setHasVoted(true);
+      setIsChangingVote(false);
+    } catch (error) {
+      // Error handled in the hook
+    }
+  };
+  const handleChangeVote = async () => {
+    try {
+      await deleteVotes(poll.id);
+      setHasVoted(false);
+      setIsChangingVote(true);
+      setSelectedOptions([]);
+      setWriteInOption('');
     } catch (error) {
       // Error handled in the hook
     }
@@ -140,6 +156,18 @@ const PollWidget = ({
             <p className="text-sm font-bold text-black text-center mt-4">
               Total votes: {results?.totalVotes || 0}
             </p>
+            {userHasVoted && !poll.voting_locked && (
+              <div className="flex justify-center mt-4">
+                <ThemedButton
+                  onClick={handleChangeVote}
+                  disabled={isDeletingVotes}
+                  variant="outline"
+                  className="px-8 py-4 text-lg font-bold border-black border-2"
+                >
+                  {isDeletingVotes ? "Removing vote..." : "Change Vote"}
+                </ThemedButton>
+              </div>
+            )}
           </div> :
       // Authenticated users - voting interface
       <div className="space-y-4">

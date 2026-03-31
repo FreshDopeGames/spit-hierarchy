@@ -1228,6 +1228,7 @@ export type Database = {
           title: string
           type: string
           updated_at: string
+          voting_locked: boolean
         }
         Insert: {
           allow_write_in?: boolean
@@ -1243,6 +1244,7 @@ export type Database = {
           title: string
           type?: string
           updated_at?: string
+          voting_locked?: boolean
         }
         Update: {
           allow_write_in?: boolean
@@ -1258,6 +1260,7 @@ export type Database = {
           title?: string
           type?: string
           updated_at?: string
+          voting_locked?: boolean
         }
         Relationships: [
           {
