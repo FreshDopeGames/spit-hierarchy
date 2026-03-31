@@ -53,7 +53,7 @@ const PollWidget = ({
     data: userVotes
   } = useUserPollVotes(poll.id);
   const userHasVoted = userVotes && userVotes.length > 0;
-  const shouldShowResults = showResults || hasVoted || userHasVoted;
+  const shouldShowResults = (showResults || hasVoted || userHasVoted) && !isChangingVote;
   const hasResults = results && results.results.length > 0 && results.totalVotes > 0;
   const handleSingleChoice = (optionId: string) => {
     setSelectedOptions([optionId]);
