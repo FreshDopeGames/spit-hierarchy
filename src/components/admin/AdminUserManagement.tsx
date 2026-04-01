@@ -271,6 +271,28 @@ const AdminUserManagement = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Delete User Confirmation Dialog */}
+      <AlertDialog open={!!pendingDelete} onOpenChange={() => setPendingDelete(null)}>
+        <AlertDialogContent className="bg-[hsl(var(--theme-surface))] border-red-500">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-400">Delete User Account</AlertDialogTitle>
+            <AlertDialogDescription className="text-[hsl(var(--theme-text))]">
+              Permanently delete <strong>{pendingDelete?.username}</strong>'s account and all their data? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteUser}
+              disabled={isDeletingUser}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isDeletingUser ? "Deleting..." : "Delete User"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };
