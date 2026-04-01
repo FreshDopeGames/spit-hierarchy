@@ -1,5 +1,6 @@
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { useMemo } from "react";
+import DOMPurify from "dompurify";
 
 interface BlogArticleContentProps {
   content: string;
