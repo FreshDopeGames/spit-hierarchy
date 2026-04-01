@@ -87,7 +87,8 @@ const UsernameEnforcementModal = () => {
     }
   };
 
-  if (!needsUsername || dismissed) return null;
+  // Don't show during first session — onboarding flow handles username creation
+  if (!needsUsername || dismissed || needsOnboarding) return null;
 
   const statusIcon = () => {
     if (isChecking) return <div className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full" />;
