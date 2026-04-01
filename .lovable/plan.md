@@ -1,68 +1,43 @@
 
 
-## Plan: Allow Users to Change Poll Votes + Admin Voting Lock
+## Plan: Fix Onboarding and Username Enforcement Bypass for New/Re-created Users
 
-### Overview
-Currently, once a user votes on a poll, their vote is permanent (no UPDATE or DELETE on `poll_votes`). We need to:
-1. Add a `voting_locked` boolean column to the `polls` table so admins can lock voting changes
-2. Allow users to delete their existing votes and re-vote (change response) when the poll is not locked
-3. Add a "Lock Voting" toggle to the admin poll editor
-4. Update the PollWidget to show a "Change Vote" button when the user has already voted and the poll isn't locked
+### Root Cause
 
-### Database Migration
+There are two race condition bugs that allow new users to bypass both the username modal and the onboarding flow:
 
-Add column to `polls` table:
-```sql
-ALTER TABLE polls ADD COLUMN voting_locked boolean NOT NULL DEFAULT false;
-```
+1. **`useUsernameCheck.ts` (line 24)**: The guard `!!profile` means that if the profile query returns `null` (profile row not yet created by the database trigger, or a brief timing gap), `needsUsername` evaluates to `false` — letting the user through.
 
-Update RLS on `poll_votes` to allow users to DELETE their own votes (currently blocked):
-```sql
-CREATE POLICY "Users can delete own votes on unlocked polls"
-ON public.poll_votes
-FOR DELETE
-TO authenticated
-USING (
-  auth.uid() = user_id
-  AND EXISTS (
-    SELECT 1 FROM polls
-    WHERE polls.id = poll_votes.poll_id
-    AND polls.voting_locked = false
-    AND polls.status = 'active'
-  )
-);
-```
+2. **`useOnboardingStatus.tsx` (line 27)**: The guard `memberStats ? ... : false` means that if `member_stats` is `null`, `needsOnboarding` is `false` — again letting the user through.
 
-### File Changes
+Both hooks have a `staleTime` of 30 seconds, so once the initial `null` result is cached, the check won't re-run for half a minute — plenty of time for the user to navigate freely.
 
-**`src/components/admin/PollDialog.tsx`**
-- Add `voting_locked` to the form schema (boolean, default false)
-- Add a "Lock Voting" Switch field in the form (next to the existing toggles), with description: "Prevent users from changing their votes"
-- Include `voting_locked` in the poll data sent to Supabase on save
-- Load `voting_locked` from existing poll when editing
+### Fix
 
-**`src/components/polls/PollWidget.tsx`**
-- Add `voting_locked` to the `Poll` interface
-- When `shouldShowResults` is true AND `userHasVoted` AND poll is NOT `voting_locked`: show a "Change Vote" button below the results
-- Clicking "Change Vote" deletes existing user votes from `poll_votes`, resets local state, and shows the voting interface again
+**`src/hooks/useUsernameCheck.ts`**
+- Change the `needsUsername` logic so a missing profile (`profile === null`) also triggers the enforcement modal:
+  ```
+  needsUsername = isAuthenticated && !isLoading && (
+    !profile ||
+    !profile.username ||
+    profile.username.trim() === '' ||
+    profile.username.includes('@')
+  );
+  ```
+- Reduce `staleTime` to `5 * 1000` (5 seconds) so if the trigger creates the profile slightly after the first query, it re-checks quickly.
 
-**`src/hooks/usePollVoting.tsx`**
-- Add a `changeVote` mutation that first deletes existing votes for the user+poll, then inserts new ones
-- Or simpler: add a `deleteVotes` function that deletes existing votes, and reuse `submitVote` for the new vote
+**`src/hooks/useOnboardingStatus.tsx`**
+- Change `needsOnboarding` so a missing `member_stats` row also triggers onboarding:
+  ```
+  needsOnboarding = !memberStats || memberStats.top_five_created === 0;
+  ```
+  (This only evaluates when there's a logged-in user and loading is complete.)
 
-**`src/components/admin/PollManagement.tsx`**
-- Include `voting_locked` in the poll query so it's passed to the dialog when editing
-
-### User Flow
-1. User votes on a poll -> sees results with "Your choice" badge + "Change Vote" button
-2. User clicks "Change Vote" -> previous votes are deleted, voting interface reappears
-3. User submits new vote -> results update
-4. Admin toggles "Lock Voting" on -> "Change Vote" button disappears, votes are permanent
+**`src/components/auth/UsernameEnforcementModal.tsx`**
+- Add a guard in `handleSave`: if the profile row doesn't exist yet, perform an `upsert` instead of just an `update`, so saving the username works even if the trigger hasn't fired yet.
 
 ### Files
-- **Migration**: Add `voting_locked` column + DELETE RLS policy on `poll_votes`
-- **Modify**: `src/components/admin/PollDialog.tsx`
-- **Modify**: `src/components/polls/PollWidget.tsx`
-- **Modify**: `src/hooks/usePollVoting.tsx`
-- **Modify**: `src/components/admin/PollManagement.tsx`
+- **Modify**: `src/hooks/useUsernameCheck.ts`
+- **Modify**: `src/hooks/useOnboardingStatus.tsx`
+- **Modify**: `src/components/auth/UsernameEnforcementModal.tsx`
 
