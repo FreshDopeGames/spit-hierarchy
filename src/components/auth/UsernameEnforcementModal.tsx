@@ -5,11 +5,13 @@ import { ThemedInput } from "@/components/ui/themed-input";
 import { Check, AlertCircle, User, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUsernameCheck } from "@/hooks/useUsernameCheck";
+import { useOnboardingStatus } from "@/hooks/useOnboardingStatus";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const UsernameEnforcementModal = () => {
   const { needsUsername } = useUsernameCheck();
+  const { needsOnboarding } = useOnboardingStatus();
   const queryClient = useQueryClient();
   const [username, setUsername] = useState("");
   const [isChecking, setIsChecking] = useState(false);
