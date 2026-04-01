@@ -8,7 +8,7 @@ import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigge
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import AdminTabHeader from "./AdminTabHeader";
-import { Users, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Search, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserRow {
