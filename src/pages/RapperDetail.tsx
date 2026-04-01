@@ -331,7 +331,9 @@ const RapperDetail = () => {
       <BackToTopButton hasCommentBubble={true} />
 
       {/* Comment Bubble - Pinned to bottom */}
-      <CommentBubble contentType="rapper" contentId={rapper.id} />
+      <Suspense fallback={null}>
+        <CommentBubble contentType="rapper" contentId={rapper.id} />
+      </Suspense>
     </>
   );
 };
