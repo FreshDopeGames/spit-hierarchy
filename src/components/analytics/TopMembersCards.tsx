@@ -486,7 +486,7 @@ const TopMembersCards = ({ timeRange = "all" }: TopMembersCardsProps) => {
             {data.map((member: any, index: number) => (
               <div key={member.id || member.user_id} className="flex items-center space-x-4">
                 <span className="text-[hsl(var(--theme-primary))] font-bold text-base w-6">{index + 1}</span>
-                {member.profiles?.username ? (
+                {member.profiles?.username && !member.profiles.username.includes('@') ? (
                   <Link to={`/user/${member.profiles.username}`}>
                     <SmallAvatar
                       avatarUrl={member.profiles?.avatar_url}
@@ -498,12 +498,12 @@ const TopMembersCards = ({ timeRange = "all" }: TopMembersCardsProps) => {
                 ) : (
                   <SmallAvatar
                     avatarUrl={member.profiles?.avatar_url}
-                    username={member.profiles?.username || "Unknown"}
+                    username={member.profiles?.username?.includes('@') ? 'Member' : (member.profiles?.username || "Unknown")}
                     size="md"
                   />
                 )}
                 <div className="flex-1 min-w-0">
-                  {member.profiles?.username ? (
+                  {member.profiles?.username && !member.profiles.username.includes('@') ? (
                     <Link
                       to={`/user/${member.profiles.username}`}
                       className="text-[hsl(var(--theme-text))] font-semibold text-base truncate hover:text-[hsl(var(--theme-primary))] transition-colors cursor-pointer block"
