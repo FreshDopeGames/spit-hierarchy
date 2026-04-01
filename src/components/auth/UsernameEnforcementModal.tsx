@@ -51,10 +51,20 @@ const UsernameEnforcementModal = () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
-      const { error } = await supabase
+      
+      // Try update first (profile likely exists from trigger)
+      const { error: updateError, count } = await supabase
         .from('profiles')
-        .upsert({ id: user.id, username: username.trim() }, { onConflict: 'id' });
-      if (error) throw error;
+        .update({ username: username.trim() })
+        .eq('id', user.id);
+      
+      if (updateError) {
+        // If update fails, try insert as fallback
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({ id: user.id, username: username.trim() });
+        if (insertError) throw insertError;
+      }
       queryClient.invalidateQueries({ queryKey: ['username-check'] });
       queryClient.invalidateQueries({ queryKey: ['own-profile'] });
       queryClient.invalidateQueries({ queryKey: ['public-profile-minimal'] });
