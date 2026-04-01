@@ -5,11 +5,13 @@ import { ThemedInput } from "@/components/ui/themed-input";
 import { Check, AlertCircle, User, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUsernameCheck } from "@/hooks/useUsernameCheck";
+import { useOnboardingStatus } from "@/hooks/useOnboardingStatus";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
 const UsernameEnforcementModal = () => {
   const { needsUsername } = useUsernameCheck();
+  const { needsOnboarding } = useOnboardingStatus();
   const queryClient = useQueryClient();
   const [username, setUsername] = useState("");
   const [isChecking, setIsChecking] = useState(false);
@@ -85,7 +87,8 @@ const UsernameEnforcementModal = () => {
     }
   };
 
-  if (!needsUsername || dismissed) return null;
+  // Don't show during first session — onboarding flow handles username creation
+  if (!needsUsername || dismissed || needsOnboarding) return null;
 
   const statusIcon = () => {
     if (isChecking) return <div className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full" />;
