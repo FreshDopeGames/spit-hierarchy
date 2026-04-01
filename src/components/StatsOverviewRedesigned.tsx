@@ -89,6 +89,7 @@ const StatsOverviewRedesigned = () => {
         .maybeSingle(),
       supabase.from("profiles")
         .select("id, username, avatar_url, created_at")
+        .not("username", "like", "%@%")
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
@@ -463,7 +464,7 @@ const StatsOverviewRedesigned = () => {
                   {getAvatarUrl(stats.members.newest.avatar_url) ? (
                     <img
                       src={getAvatarUrl(stats.members.newest.avatar_url)!}
-                      alt={stats.members.newest.username}
+                      alt={stats.members.newest.username?.includes('@') ? 'New Member' : stats.members.newest.username}
                       className="w-16 h-16 rounded-full object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
                     />
                   ) : (
@@ -472,7 +473,7 @@ const StatsOverviewRedesigned = () => {
                     </div>
                   )}
                   <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate text-center group-hover:text-[hsl(var(--theme-primary))] transition-colors">
-                    {stats.members.newest.username}
+                    {stats.members.newest.username?.includes('@') ? 'New Member' : stats.members.newest.username}
                   </p>
                   <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">
                     Joined {getTimeSince(stats.members.newest.created_at)}
