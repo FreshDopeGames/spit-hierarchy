@@ -120,6 +120,21 @@ const HomepageRankingSection = () => {
         </div>
       </section>;
   }
+  // Preload first ranking card's rapper image for faster LCP
+  useEffect(() => {
+    if (rankingsData.length > 0) {
+      const firstItem = rankingsData[0]?.items?.[0];
+      const imageUrl = firstItem?.rapper?.image_url;
+      if (imageUrl && !document.querySelector(`link[rel="preload"][href="${imageUrl}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = imageUrl;
+        document.head.appendChild(link);
+      }
+    }
+  }, [rankingsData]);
+
   if (!rankingsData || rankingsData.length === 0) {
     return null;
   }

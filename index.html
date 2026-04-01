@@ -49,10 +49,15 @@
     <link rel="preconnect" href="https://xzcmkssadekswmiqfbff.supabase.co" crossorigin>
     <link rel="dns-prefetch" href="https://xzcmkssadekswmiqfbff.supabase.co">
     
+    <!-- Preload header logo (LCP element on most pages) -->
+    <link rel="preload" as="image" href="/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png">
+    
     <!-- Font Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <!-- Async Google Fonts to avoid render-blocking -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap"></noscript>
   </head>
   <body>
     <div id="root"></div>

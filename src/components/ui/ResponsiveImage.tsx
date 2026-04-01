@@ -36,7 +36,7 @@ const ResponsiveImage = ({
   showBlurPlaceholder = true
 }: ResponsiveImageProps) => {
   const [imageError, setImageError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(priority);
 
   // Determine object-fit based on context if not explicitly provided
   const getObjectFit = () => {
