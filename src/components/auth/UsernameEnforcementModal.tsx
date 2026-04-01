@@ -67,7 +67,7 @@ const UsernameEnforcementModal = () => {
         if (insertError) throw insertError;
       }
       
-      if (upsertError) throw upsertError;
+      
 
       // Dismiss the modal immediately on success
       setDismissed(true);
