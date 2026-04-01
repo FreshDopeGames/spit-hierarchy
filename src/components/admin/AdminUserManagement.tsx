@@ -207,6 +207,16 @@ const AdminUserManagement = () => {
                   <TableCell className="text-[hsl(var(--theme-text))] hidden md:table-cell text-sm opacity-70">
                     {new Date(user.created_at).toLocaleDateString()}
                   </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPendingDelete({ userId: user.id, username: user.username })}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-950/30 h-8 w-8 p-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))
             )}
