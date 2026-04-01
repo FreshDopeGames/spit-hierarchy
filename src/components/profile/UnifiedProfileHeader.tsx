@@ -205,7 +205,7 @@ const UnifiedProfileHeader = ({
               <div className="text-2xl md:text-3xl font-bold text-[var(--theme-primary)] font-[var(--theme-font-heading)] mb-1">
                 {profile.member_stats?.total_achievements || 0}
               </div>
-              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Total Achievements</div>
+              <div className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-xs md:text-sm">Achievements</div>
             </div>
           </div>
         ) : (
