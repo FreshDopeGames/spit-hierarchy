@@ -165,7 +165,7 @@ const AdminUserManagement = () => {
               </TableRow>
             ) : users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-[hsl(var(--theme-text))] py-8">
+                <TableCell colSpan={5} className="text-center text-[hsl(var(--theme-text))] py-8">
                   No users found
                 </TableCell>
               </TableRow>
