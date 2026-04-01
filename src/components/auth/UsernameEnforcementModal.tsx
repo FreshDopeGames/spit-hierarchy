@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ThemedInput } from "@/components/ui/themed-input";
-import { Check, AlertCircle, User } from "lucide-react";
+import { Check, AlertCircle, User, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useUsernameCheck } from "@/hooks/useUsernameCheck";
 import { useQueryClient } from "@tanstack/react-query";
@@ -15,6 +15,7 @@ const UsernameEnforcementModal = () => {
   const [isChecking, setIsChecking] = useState(false);
   const [status, setStatus] = useState<'idle' | 'available' | 'taken' | 'invalid'>('idle');
   const [isSaving, setIsSaving] = useState(false);
+  const [dismissed, setDismissed] = useState(false);
 
   useEffect(() => {
     const check = async () => {
@@ -57,11 +58,16 @@ const UsernameEnforcementModal = () => {
         .upsert({ id: user.id, username: username.trim() }, { onConflict: 'id' });
       
       if (upsertError) throw upsertError;
-      await queryClient.invalidateQueries({ queryKey: ['username-check'] });
-      await queryClient.invalidateQueries({ queryKey: ['own-profile'] });
+
+      // Dismiss the modal immediately on success
+      setDismissed(true);
+      toast.success("Username saved!");
+
+      // Invalidate queries in background so the rest of the app picks up the new username
+      queryClient.invalidateQueries({ queryKey: ['username-check'] });
+      queryClient.invalidateQueries({ queryKey: ['own-profile'] });
       queryClient.invalidateQueries({ queryKey: ['public-profile-minimal'] });
       queryClient.invalidateQueries({ queryKey: ['profile-for-display'] });
-      toast.success("Username saved!");
     } catch {
       toast.error("Failed to save username. Please try again.");
     } finally {
@@ -69,7 +75,7 @@ const UsernameEnforcementModal = () => {
     }
   };
 
-  if (!needsUsername) return null;
+  if (!needsUsername || dismissed) return null;
 
   const statusIcon = () => {
     if (isChecking) return <div className="animate-spin w-5 h-5 border-2 border-current border-t-transparent rounded-full" />;
@@ -137,6 +143,7 @@ const UsernameEnforcementModal = () => {
                 className="text-center text-xl font-bold h-14 px-6"
                 style={{ fontFamily: 'var(--theme-font-heading)', fontSize: '1.25rem', fontWeight: '700' }}
                 maxLength={30}
+                disabled={isSaving}
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2">
                 {statusIcon()}
@@ -156,7 +163,12 @@ const UsernameEnforcementModal = () => {
             }}
             className="px-8 py-3 text-lg hover:opacity-90 disabled:hover:opacity-100"
           >
-            {isSaving ? "Saving..." : "Continue"}
+            {isSaving ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin" />
+                Saving...
+              </span>
+            ) : "Continue"}
           </Button>
         </div>
       </DialogContent>
