@@ -1,5 +1,6 @@
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { useMemo } from "react";
+import DOMPurify from "dompurify";
 
 interface BlogArticleContentProps {
   content: string;
@@ -62,7 +63,11 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
       return processed;
     };
 
-    return processContentAsSingleParagraph(content);
+    const processed = processContentAsSingleParagraph(content);
+    return DOMPurify.sanitize(processed, {
+      ALLOWED_TAGS: ['p', 'br', 'strong', 'em', 'a', 'span', 'ol', 'ul', 'li'],
+      ALLOWED_ATTR: ['href', 'target', 'rel', 'class'],
+    });
   }, [content]);
 
   return (
