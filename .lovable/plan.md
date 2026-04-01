@@ -1,43 +1,55 @@
 
 
-## Plan: Fix Onboarding and Username Enforcement Bypass for New/Re-created Users
+## Plan: Reduce Largest Contentful Paint (LCP) Across All Page Types
 
-### Root Cause
+### Problem
+LCP is likely bottlenecked by: (1) render-blocking Google Fonts in `<head>`, (2) no `<link rel="preload">` for hero/LCP images, (3) unnecessary `will-change` and GPU layers on every image, and (4) waterfall data fetching before any content can paint.
 
-There are two race condition bugs that allow new users to bypass both the username modal and the onboarding flow:
+### Changes
 
-1. **`useUsernameCheck.ts` (line 24)**: The guard `!!profile` means that if the profile query returns `null` (profile row not yet created by the database trigger, or a brief timing gap), `needsUsername` evaluates to `false` — letting the user through.
+**1. `index.html` — Make Google Fonts non-render-blocking**
+- Change the Google Fonts `<link>` to use the `media="print" onload="this.media='all'"` pattern so fonts load async and don't block first paint.
+- Add a `<noscript>` fallback for the original `<link>`.
 
-2. **`useOnboardingStatus.tsx` (line 27)**: The guard `memberStats ? ... : false` means that if `member_stats` is `null`, `needsOnboarding` is `false` — again letting the user through.
+**2. `index.html` — Preload the header logo (LCP element on most pages)**
+- Add `<link rel="preload" as="image" href="/lovable-uploads/logo-header.png">` since the header logo appears on every page and is above the fold.
 
-Both hooks have a `staleTime` of 30 seconds, so once the initial `null` result is cached, the check won't re-run for half a minute — plenty of time for the user to navigate freely.
+**3. `src/components/ui/EnhancedImage.tsx` — Remove excessive GPU hints**
+- Remove `will-change-transform`, `transform-gpu`, `[filter:blur(0)]`, `[backface-visibility:hidden]`, and `translate-z-0`. These force GPU compositing on every image, increasing memory and paint time. Keep only `[image-rendering:auto]` and `antialiased`.
 
-### Fix
+**4. `src/components/BlogCarousel.tsx` — Eagerly decode first carousel image**
+- Change `decoding` from `"async"` to `"sync"` for the first (priority) image in the carousel so it paints immediately when data arrives, rather than deferring decode.
 
-**`src/hooks/useUsernameCheck.ts`**
-- Change the `needsUsername` logic so a missing profile (`profile === null`) also triggers the enforcement modal:
-  ```
-  needsUsername = isAuthenticated && !isLoading && (
-    !profile ||
-    !profile.username ||
-    profile.username.trim() === '' ||
-    profile.username.includes('@')
-  );
-  ```
-- Reduce `staleTime` to `5 * 1000` (5 seconds) so if the trigger creates the profile slightly after the first query, it re-checks quickly.
+**5. `src/components/HomepageRankingSection.tsx` — Preload first ranking card image**
+- After the query resolves, inject a `<link rel="preload">` into `<head>` for the first ranking card's rapper image (the likely LCP element on homepage). Use a `useEffect` to do this.
 
-**`src/hooks/useOnboardingStatus.tsx`**
-- Change `needsOnboarding` so a missing `member_stats` row also triggers onboarding:
-  ```
-  needsOnboarding = !memberStats || memberStats.top_five_created === 0;
-  ```
-  (This only evaluates when there's a logged-in user and loading is complete.)
+**6. `src/components/RankingsSectionHeader.tsx` — Remove animate-pulse from icons**
+- The `animate-pulse` on Crown and TrendingUp icons causes continuous layout/paint work during initial load, competing with LCP. Remove it.
 
-**`src/components/auth/UsernameEnforcementModal.tsx`**
-- Add a guard in `handleSave`: if the profile row doesn't exist yet, perform an `upsert` instead of just an `update`, so saving the username works even if the trigger hasn't fired yet.
+**7. `src/components/ui/ResponsiveImage.tsx` — Skip blur placeholder for priority images**
+- When `priority={true}`, skip the blur-up animation entirely (set `isLoaded` to `true` initially) to avoid the extra composite layer and opacity transition that delays LCP.
+
+**8. `src/pages/RapperDetail.tsx` — Lazy load below-fold sections**
+- Wrap `RapperDiscography`, `SimilarRappersCard`, `RapperBestQuote`, and `CommentBubble` in lazy imports + `LazySection` to reduce initial JS bundle and speed up above-fold paint.
+
+### Technical Details
+
+| Optimization | Impact | Pages Affected |
+|---|---|---|
+| Async Google Fonts | Eliminates ~200-500ms render block | All |
+| Preload header logo | LCP candidate loads earlier | All |
+| Remove GPU hints from EnhancedImage | Less memory, faster compositing | All with images |
+| Skip blur-up for priority images | LCP paints immediately | Homepage, Rankings |
+| Preload first ranking image | LCP resource discovered earlier | Homepage |
+| Remove animate-pulse icons | Less paint work during load | Homepage |
+| Lazy load RapperDetail sections | Smaller initial JS, faster FCP | Rapper pages |
 
 ### Files
-- **Modify**: `src/hooks/useUsernameCheck.ts`
-- **Modify**: `src/hooks/useOnboardingStatus.tsx`
-- **Modify**: `src/components/auth/UsernameEnforcementModal.tsx`
+- **Modify**: `index.html`
+- **Modify**: `src/components/ui/EnhancedImage.tsx`
+- **Modify**: `src/components/ui/ResponsiveImage.tsx`
+- **Modify**: `src/components/HomepageRankingSection.tsx`
+- **Modify**: `src/components/RankingsSectionHeader.tsx`
+- **Modify**: `src/components/BlogCarousel.tsx`
+- **Modify**: `src/pages/RapperDetail.tsx`
 
