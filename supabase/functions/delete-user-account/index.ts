@@ -61,21 +61,41 @@ serve(async (req) => {
     // Delete user data from public tables (cascading from auth.users deletion handles FK refs,
     // but we clean up tables without FK constraints)
     const tablesToClean = [
-      { table: 'member_stats', column: 'id' },
-      { table: 'notification_preferences', column: 'user_id' },
-      { table: 'notifications', column: 'user_id' },
+      // Rankings & Top 5
+      { table: 'user_ranking_items', column: 'user_id' },
+      { table: 'user_ranking_votes', column: 'user_id' },
+      { table: 'user_ranking_views', column: 'user_id' },
+      { table: 'user_rankings', column: 'user_id' },
+      { table: 'user_top_rappers', column: 'user_id' },
+      // Voting
       { table: 'daily_vote_tracking', column: 'user_id' },
+      { table: 'ranking_votes', column: 'user_id' },
       { table: 'poll_votes', column: 'user_id' },
       { table: 'votes', column: 'user_id' },
-      { table: 'user_ranking_votes', column: 'user_id' },
-      { table: 'ranking_votes', column: 'user_id' },
-      { table: 'blog_post_likes', column: 'user_id' },
+      { table: 'vote_notes', column: 'user_id' },
+      { table: 'vs_match_votes', column: 'user_id' },
+      { table: 'track_votes', column: 'user_id' },
+      // Achievements & Quiz
+      { table: 'user_achievements', column: 'user_id' },
+      { table: 'user_quiz_attempts', column: 'user_id' },
+      { table: 'user_quiz_badges', column: 'user_id' },
+      // Social & Comments
       { table: 'comment_likes', column: 'user_id' },
       { table: 'comments', column: 'user_id' },
+      { table: 'blog_post_likes', column: 'user_id' },
+      { table: 'member_journal_entries', column: 'user_id' },
       { table: 'content_moderation_flags', column: 'user_id' },
       { table: 'rapper_suggestions', column: 'user_id' },
-      { table: 'member_journal_entries', column: 'user_id' },
+      // Notifications & Preferences
+      { table: 'notification_preferences', column: 'user_id' },
+      { table: 'notifications', column: 'user_id' },
+      // Analytics & Logs
+      { table: 'rapper_page_views', column: 'user_id' },
+      { table: 'profile_access_logs', column: 'accessor_user_id' },
       { table: 'consent_logs', column: 'user_id' },
+      { table: 'user_referrals', column: 'user_id' },
+      // Stats (uses id, not user_id)
+      { table: 'member_stats', column: 'id' },
     ];
 
     for (const { table, column } of tablesToClean) {
