@@ -159,7 +159,7 @@ const AdminUserManagement = () => {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-[hsl(var(--theme-text))] py-8">
+                <TableCell colSpan={5} className="text-center text-[hsl(var(--theme-text))] py-8">
                   Loading...
                 </TableCell>
               </TableRow>
