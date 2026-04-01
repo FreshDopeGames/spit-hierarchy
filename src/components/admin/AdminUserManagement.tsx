@@ -174,7 +174,7 @@ const AdminUserManagement = () => {
               users.map((user) => (
                 <TableRow key={user.id} className="border-[hsl(var(--theme-primary))]/30">
                   <TableCell className="text-[hsl(var(--theme-text))] font-medium">
-                    <div className="flex items-center gap-2">
+                    <Link to={`/user/${user.username}`} className="flex items-center gap-2 hover:underline hover:text-[hsl(var(--theme-primary))] transition-colors">
                       {user.avatar_url && (
                         <img
                           src={user.avatar_url}
@@ -184,7 +184,7 @@ const AdminUserManagement = () => {
                         />
                       )}
                       {user.username}
-                    </div>
+                    </Link>
                   </TableCell>
                   <TableCell className="text-[hsl(var(--theme-text))] hidden sm:table-cell text-sm opacity-80">
                     {user.email}
