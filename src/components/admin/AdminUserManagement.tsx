@@ -153,6 +153,7 @@ const AdminUserManagement = () => {
               <TableHead className="text-[hsl(var(--theme-primary))] font-bold hidden sm:table-cell">Email</TableHead>
               <TableHead className="text-[hsl(var(--theme-primary))] font-bold">Role</TableHead>
               <TableHead className="text-[hsl(var(--theme-primary))] font-bold hidden md:table-cell">Joined</TableHead>
+              <TableHead className="text-[hsl(var(--theme-primary))] font-bold w-[60px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
