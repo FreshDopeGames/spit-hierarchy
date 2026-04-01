@@ -15,6 +15,7 @@ import VoteNotesSection from "@/components/profile/VoteNotesSection";
 import CypherJournalSection from "@/components/profile/CypherJournalSection";
 import MemberJournalSection from "@/components/profile/MemberJournalSection";
 import VotingHistorySection from "@/components/profile/VotingHistorySection";
+import DeleteAccountSection from "@/components/profile/DeleteAccountSection";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
@@ -253,6 +254,9 @@ const UserProfile = () => {
                 <div className="mt-6 sm:mt-8">
                   <CypherJournalSection userId={user.id} />
                 </div>
+
+                {/* Delete Account */}
+                <DeleteAccountSection userId={user.id} username={profile?.username || ''} />
               </>
             )}
           </main>

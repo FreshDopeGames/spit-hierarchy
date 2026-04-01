@@ -8,7 +8,7 @@ import { ThemedSelect, ThemedSelectContent, ThemedSelectItem, ThemedSelectTrigge
 import { Button } from "@/components/ui/button";
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog";
 import AdminTabHeader from "./AdminTabHeader";
-import { Users, Search, ChevronLeft, ChevronRight } from "lucide-react";
+import { Users, Search, ChevronLeft, ChevronRight, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 interface UserRow {
@@ -42,6 +42,7 @@ const AdminUserManagement = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [pendingChange, setPendingChange] = useState<{ userId: string; username: string; newRole: string } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ userId: string; username: string } | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-users", page, search],
@@ -95,6 +96,28 @@ const AdminUserManagement = () => {
     setPendingChange(null);
   };
 
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
+  const confirmDeleteUser = async () => {
+    if (!pendingDelete) return;
+    setIsDeletingUser(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+      const { data, error } = await supabase.functions.invoke("delete-user-account", {
+        body: { target_user_id: pendingDelete.userId },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success(`User ${pendingDelete.username} has been deleted`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete user");
+    } finally {
+      setIsDeletingUser(false);
+      setPendingDelete(null);
+    }
+  };
+
   return (
     <div>
       <AdminTabHeader title="User Management" icon={Users} description="Manage user roles and permissions" />
@@ -130,18 +153,19 @@ const AdminUserManagement = () => {
               <TableHead className="text-[hsl(var(--theme-primary))] font-bold hidden sm:table-cell">Email</TableHead>
               <TableHead className="text-[hsl(var(--theme-primary))] font-bold">Role</TableHead>
               <TableHead className="text-[hsl(var(--theme-primary))] font-bold hidden md:table-cell">Joined</TableHead>
+              <TableHead className="text-[hsl(var(--theme-primary))] font-bold w-[60px]"></TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-[hsl(var(--theme-text))] py-8">
+                <TableCell colSpan={5} className="text-center text-[hsl(var(--theme-text))] py-8">
                   Loading...
                 </TableCell>
               </TableRow>
             ) : users.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-[hsl(var(--theme-text))] py-8">
+                <TableCell colSpan={5} className="text-center text-[hsl(var(--theme-text))] py-8">
                   No users found
                 </TableCell>
               </TableRow>
@@ -182,6 +206,16 @@ const AdminUserManagement = () => {
                   </TableCell>
                   <TableCell className="text-[hsl(var(--theme-text))] hidden md:table-cell text-sm opacity-70">
                     {new Date(user.created_at).toLocaleDateString()}
+                  </TableCell>
+                  <TableCell>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => setPendingDelete({ userId: user.id, username: user.username })}
+                      className="text-red-400 hover:text-red-300 hover:bg-red-950/30 h-8 w-8 p-0"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))
@@ -233,6 +267,28 @@ const AdminUserManagement = () => {
               className="bg-[hsl(var(--theme-primary))] text-[hsl(var(--theme-background))]"
             >
               Confirm
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Delete User Confirmation Dialog */}
+      <AlertDialog open={!!pendingDelete} onOpenChange={() => setPendingDelete(null)}>
+        <AlertDialogContent className="bg-[hsl(var(--theme-surface))] border-red-500">
+          <AlertDialogHeader>
+            <AlertDialogTitle className="text-red-400">Delete User Account</AlertDialogTitle>
+            <AlertDialogDescription className="text-[hsl(var(--theme-text))]">
+              Permanently delete <strong>{pendingDelete?.username}</strong>'s account and all their data? This cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-text))]">Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={confirmDeleteUser}
+              disabled={isDeletingUser}
+              className="bg-red-600 hover:bg-red-700 text-white"
+            >
+              {isDeletingUser ? "Deleting..." : "Delete User"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
