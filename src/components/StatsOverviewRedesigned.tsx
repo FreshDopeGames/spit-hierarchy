@@ -89,6 +89,7 @@ const StatsOverviewRedesigned = () => {
         .maybeSingle(),
       supabase.from("profiles")
         .select("id, username, avatar_url, created_at")
+        .not("username", "like", "%@%")
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
