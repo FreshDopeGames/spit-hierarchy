@@ -66,6 +66,8 @@ serve(async (req) => {
       { table: 'notifications', column: 'user_id' },
       { table: 'daily_vote_tracking', column: 'user_id' },
       { table: 'poll_votes', column: 'user_id' },
+      { table: 'votes', column: 'user_id' },
+      { table: 'user_ranking_votes', column: 'user_id' },
       { table: 'ranking_votes', column: 'user_id' },
       { table: 'blog_post_likes', column: 'user_id' },
       { table: 'comment_likes', column: 'user_id' },
