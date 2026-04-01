@@ -53,11 +53,21 @@ const UsernameEnforcementModal = () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) throw new Error('Not authenticated');
       
-      const { error: upsertError } = await supabase
+      // Try update first (profile likely exists from trigger), fall back to upsert
+      const { error: updateError } = await supabase
         .from('profiles')
-        .upsert({ id: user.id, username: username.trim() }, { onConflict: 'id' });
+        .update({ username: username.trim() })
+        .eq('id', user.id);
       
-      if (upsertError) throw upsertError;
+      if (updateError) {
+        // If update fails (no row yet), try insert
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({ id: user.id, username: username.trim() });
+        if (insertError) throw insertError;
+      }
+      
+      
 
       // Dismiss the modal immediately on success
       setDismissed(true);
