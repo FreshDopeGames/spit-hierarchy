@@ -96,6 +96,28 @@ const AdminUserManagement = () => {
     setPendingChange(null);
   };
 
+  const [isDeletingUser, setIsDeletingUser] = useState(false);
+  const confirmDeleteUser = async () => {
+    if (!pendingDelete) return;
+    setIsDeletingUser(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("Not authenticated");
+      const { data, error } = await supabase.functions.invoke("delete-user-account", {
+        body: { target_user_id: pendingDelete.userId },
+      });
+      if (error) throw error;
+      if (data?.error) throw new Error(data.error);
+      queryClient.invalidateQueries({ queryKey: ["admin-users"] });
+      toast.success(`User ${pendingDelete.username} has been deleted`);
+    } catch (err: any) {
+      toast.error(err.message || "Failed to delete user");
+    } finally {
+      setIsDeletingUser(false);
+      setPendingDelete(null);
+    }
+  };
+
   return (
     <div>
       <AdminTabHeader title="User Management" icon={Users} description="Manage user roles and permissions" />
