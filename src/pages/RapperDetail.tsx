@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, lazy, Suspense } from "react";
 import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
@@ -12,22 +12,24 @@ import VoteModal from "@/components/VoteModal";
 import { useRapperAutocomplete } from "@/hooks/useRapperAutocomplete";
 import { useCanSuggestRappers } from "@/hooks/useCanSuggestRappers";
 import RapperSuggestionModal from "@/components/RapperSuggestionModal";
-import CommentBubble from "@/components/CommentBubble";
 import BackToTopButton from "@/components/BackToTopButton";
 import RapperHeader from "@/components/rapper/RapperHeader";
 import RapperBio from "@/components/rapper/RapperBio";
 import RapperStats from "@/components/rapper/RapperStats";
 import RapperAttributeStats from "@/components/rapper/RapperAttributeStats";
 import CareerStatsCard from "@/components/rapper/CareerStatsCard";
-import RapperDiscography from "@/components/rapper/RapperDiscography";
 import { RapperAliases } from "@/components/rapper/RapperAliases";
-import RapperBestQuote from "@/components/rapper/RapperBestQuote";
-import SimilarRappersCard from "@/components/rapper/SimilarRappersCard";
 import HeaderNavigation from "@/components/HeaderNavigation";
 import SEOHead from "@/components/seo/SEOHead";
 import ContentAdUnit from "@/components/ads/ContentAdUnit";
 import Footer from "@/components/Footer";
 import { Tables } from "@/integrations/supabase/types";
+
+// Lazy load below-fold components
+const RapperDiscography = lazy(() => import("@/components/rapper/RapperDiscography"));
+const RapperBestQuote = lazy(() => import("@/components/rapper/RapperBestQuote"));
+const SimilarRappersCard = lazy(() => import("@/components/rapper/SimilarRappersCard"));
+const CommentBubble = lazy(() => import("@/components/CommentBubble"));
 
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
