@@ -42,6 +42,7 @@ const AdminUserManagement = () => {
   const [search, setSearch] = useState("");
   const [searchInput, setSearchInput] = useState("");
   const [pendingChange, setPendingChange] = useState<{ userId: string; username: string; newRole: string } | null>(null);
+  const [pendingDelete, setPendingDelete] = useState<{ userId: string; username: string } | null>(null);
 
   const { data, isLoading } = useQuery({
     queryKey: ["admin-users", page, search],
