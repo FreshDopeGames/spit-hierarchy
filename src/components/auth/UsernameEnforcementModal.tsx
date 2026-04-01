@@ -53,8 +53,7 @@ const UsernameEnforcementModal = () => {
       if (!user) throw new Error('Not authenticated');
       const { error } = await supabase
         .from('profiles')
-        .update({ username: username.trim() })
-        .eq('id', user.id);
+        .upsert({ id: user.id, username: username.trim() }, { onConflict: 'id' });
       if (error) throw error;
       queryClient.invalidateQueries({ queryKey: ['username-check'] });
       queryClient.invalidateQueries({ queryKey: ['own-profile'] });

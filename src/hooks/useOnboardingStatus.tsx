@@ -22,7 +22,7 @@ export const useOnboardingStatus = () => {
     enabled: !!user
   });
 
-  const needsOnboarding = memberStats ? memberStats.top_five_created === 0 : false;
+  const needsOnboarding = !!user && !isLoading && (!memberStats || memberStats.top_five_created === 0);
   
   return {
     needsOnboarding,
