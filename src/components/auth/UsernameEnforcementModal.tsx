@@ -65,8 +65,8 @@ const UsernameEnforcementModal = () => {
           .insert({ id: user.id, username: username.trim() });
         if (insertError) throw insertError;
       }
-      queryClient.invalidateQueries({ queryKey: ['username-check'] });
-      queryClient.invalidateQueries({ queryKey: ['own-profile'] });
+      await queryClient.invalidateQueries({ queryKey: ['username-check'] });
+      await queryClient.invalidateQueries({ queryKey: ['own-profile'] });
       queryClient.invalidateQueries({ queryKey: ['public-profile-minimal'] });
       queryClient.invalidateQueries({ queryKey: ['profile-for-display'] });
       toast.success("Username saved!");
