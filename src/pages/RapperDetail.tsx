@@ -268,7 +268,9 @@ const RapperDetail = () => {
           <RapperHeader rapper={rapper} onVoteClick={() => setShowVoteModal(true)} />
 
           {/* Best Quote */}
-          <RapperBestQuote topQuote={(rapper as any).top_quote} rapperName={rapper.name} rapperId={rapper.id} songTitle={(rapper as any).top_quote_song} />
+          <Suspense fallback={null}>
+            <RapperBestQuote topQuote={(rapper as any).top_quote} rapperName={rapper.name} rapperId={rapper.id} songTitle={(rapper as any).top_quote_song} />
+          </Suspense>
 
           {/* Enhanced Bio Section with more content */}
           <RapperBio rapper={rapper} />
@@ -287,14 +289,16 @@ const RapperDetail = () => {
           <ContentAdUnit size="medium" />
 
           {/* Discography Section - MusicBrainz integration */}
-          <div className="mb-8">
-            <RapperDiscography 
-              rapperId={rapper.id} 
-              rapperName={rapper.name}
-              rapperSlug={rapper.slug}
-              scrollPos={searchParams.get('scrollPos') || undefined}
-            />
-          </div>
+          <Suspense fallback={<div className="mb-8 h-48 rounded-xl bg-[var(--theme-surface)]/20 animate-pulse" />}>
+            <div className="mb-8">
+              <RapperDiscography 
+                rapperId={rapper.id} 
+                rapperName={rapper.name}
+                rapperSlug={rapper.slug}
+                scrollPos={searchParams.get('scrollPos') || undefined}
+              />
+            </div>
+          </Suspense>
 
           {/* Community Stats */}
           <div className="mb-8">
@@ -302,9 +306,11 @@ const RapperDetail = () => {
           </div>
 
           {/* Similar Rappers Section */}
-          <div className="mb-8">
-            <SimilarRappersCard rapperId={rapper.id} />
-          </div>
+          <Suspense fallback={null}>
+            <div className="mb-8">
+              <SimilarRappersCard rapperId={rapper.id} />
+            </div>
+          </Suspense>
         </div>
       </main>
 
