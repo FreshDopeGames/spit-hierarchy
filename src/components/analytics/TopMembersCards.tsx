@@ -391,7 +391,8 @@ const TopMembersCards = ({ timeRange = "all" }: TopMembersCardsProps) => {
       // All-time stats - count from user_achievements table
       const { data: achievementCounts, error: achievementsError } = await supabase
         .from("user_achievements")
-        .select("user_id");
+        .select("user_id")
+        .not("earned_at", "is", null);
 
       if (achievementsError) {
         console.error("Error fetching achievement counts:", achievementsError);

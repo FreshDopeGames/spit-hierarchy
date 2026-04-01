@@ -68,7 +68,7 @@ const ProfileStats = ({ memberStats, publicStats }: ProfileStatsProps) => {
             {publicStats?.total_achievements || 0}
           </div>
           <div className="text-xs sm:text-sm text-[hsl(var(--theme-textMuted))] font-[var(--theme-font-body)]">
-            Total Achievements
+            Achievements
           </div>
         </div>
 
