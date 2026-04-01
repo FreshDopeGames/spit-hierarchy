@@ -23,21 +23,10 @@ const EnhancedImage: React.FC<EnhancedImageProps> = ({
   onLoad,
   ...props
 }) => {
-  // Enhanced CSS classes for optimal image rendering
   const imageClasses = cn(
-    // Base image styling
     "w-full h-full object-cover object-top",
-    // Better image rendering - smooth at all sizes
     "[image-rendering:auto]",
-    "[image-rendering:-webkit-optimize-contrast]", 
     "antialiased",
-    // Hardware acceleration
-    "transform-gpu",
-    "will-change-transform",
-    // Anti-aliasing and smoothing
-    "[filter:blur(0)]",
-    "[backface-visibility:hidden]",
-    "translate-z-0",
     className
   );
 
@@ -48,7 +37,7 @@ const EnhancedImage: React.FC<EnhancedImageProps> = ({
         alt={alt}
         className={imageClasses}
         loading={priority ? "eager" : "lazy"}
-        decoding="async"
+        decoding={priority ? "sync" : "async"}
         fetchPriority={priority ? "high" : "auto"}
         onError={onError}
         onLoad={onLoad}

@@ -36,7 +36,7 @@ const ResponsiveImage = ({
   showBlurPlaceholder = true
 }: ResponsiveImageProps) => {
   const [imageError, setImageError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded, setIsLoaded] = useState(priority);
 
   // Determine object-fit based on context if not explicitly provided
   const getObjectFit = () => {
@@ -90,6 +90,7 @@ const ResponsiveImage = ({
           className={cn(objectFitClass, 'w-full h-full', isLoaded ? 'opacity-100' : 'opacity-0')}
           style={{ ...placeholderStyles, ...transitionStyles, transition: 'opacity 0.3s ease-out' }}
           loading={priority ? 'eager' : loading}
+          decoding={priority ? 'sync' : 'async'}
           fetchPriority={priority ? 'high' : undefined}
           onError={handleError}
           onLoad={handleLoad}
