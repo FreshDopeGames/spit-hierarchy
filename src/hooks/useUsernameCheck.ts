@@ -18,10 +18,11 @@ export const useUsernameCheck = () => {
       return data;
     },
     enabled: !!user?.id && isAuthenticated,
-    staleTime: 30 * 1000,
+    staleTime: 5 * 1000,
   });
 
-  const needsUsername = isAuthenticated && !isLoading && !!profile && (
+  const needsUsername = isAuthenticated && !isLoading && (
+    !profile ||
     !profile.username ||
     profile.username.trim() === '' ||
     profile.username.includes('@')
