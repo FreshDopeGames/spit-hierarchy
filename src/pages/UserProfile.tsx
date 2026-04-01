@@ -253,6 +253,9 @@ const UserProfile = () => {
                 <div className="mt-6 sm:mt-8">
                   <CypherJournalSection userId={user.id} />
                 </div>
+
+                {/* Delete Account */}
+                <DeleteAccountSection userId={user.id} username={profile?.username || ''} />
               </>
             )}
           </main>
