@@ -1,0 +1,1 @@
+UPDATE achievements SET points = 250, updated_at = now() WHERE id = 'd6785a18-cd33-420f-8168-b47b74ac8ac2';
