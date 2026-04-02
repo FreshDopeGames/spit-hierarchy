@@ -90,12 +90,30 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     
     setIsUpdatingProfile(true);
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ username: username.trim() })
-        .eq('id', (await supabase.auth.getUser()).data.user?.id);
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      if (!userId) throw new Error("Not authenticated");
 
-      if (error) throw error;
+      // Try update first
+      const { data: updateData, error: updateError } = await supabase
+        .from('profiles')
+        .update({ username: username.trim(), username_last_changed_at: new Date().toISOString() })
+        .eq('id', userId)
+        .select('id')
+        .maybeSingle();
+
+      if (updateError) throw updateError;
+
+      // If update matched no rows, insert instead
+      if (!updateData) {
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({ id: userId, username: username.trim(), username_last_changed_at: new Date().toISOString() });
+        if (insertError) throw insertError;
+      }
+
+      // Invalidate queries so sidebar/header update immediately
+      await queryClient.invalidateQueries({ queryKey: ['username-check'] });
+      await queryClient.invalidateQueries({ queryKey: ['own-profile'] });
       
       setCurrentStep(3); // Move to Top 5 step
     } catch (error) {
