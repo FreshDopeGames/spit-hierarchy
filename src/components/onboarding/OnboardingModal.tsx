@@ -3,9 +3,6 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Button } from "@/components/ui/button";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { X, Star, Trophy, Users, User, Check, AlertCircle } from "lucide-react";
-import TopFiveSlot from "@/components/profile/TopFiveSlot";
-import RapperSearchOverlay from "@/components/profile/RapperSearchOverlay";
-import { useUserTopRappers } from "@/hooks/useUserTopRappers";
 import { useUsernameCheck } from "@/hooks/useUsernameCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
@@ -18,34 +15,14 @@ interface OnboardingModalProps {
 }
 
 const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) => {
-  const { topRappers, updateTopRapper, selectedRapperIds } = useUserTopRappers();
   const { needsUsername } = useUsernameCheck();
   const queryClient = useQueryClient();
-  const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
   const [username, setUsername] = useState("");
   const [isCheckingUsername, setIsCheckingUsername] = useState(false);
   const [usernameStatus, setUsernameStatus] = useState<'idle' | 'available' | 'taken' | 'invalid'>('idle');
-  const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
-
-  const handleSlotClick = (position: number) => {
-    setSelectedPosition(position);
-    setIsSearchOpen(true);
-  };
-
-  const handleRapperSelect = (rapperId: string) => {
-    if (selectedPosition !== null) {
-      updateTopRapper({ position: selectedPosition, rapperId });
-      setIsSearchOpen(false);
-      setSelectedPosition(null);
-    }
-  };
-
-  const handleCloseSearch = () => {
-    setIsSearchOpen(false);
-    setSelectedPosition(null);
-  };
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rapperNames, setRapperNames] = useState<string[]>(["", "", "", "", ""]);
 
   // Username validation
   useEffect(() => {
@@ -55,7 +32,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
         return;
       }
 
-      // Basic validation
       const usernameRegex = /^[a-zA-Z0-9_-]+$/;
       if (!usernameRegex.test(username) || username.length > 30) {
         setUsernameStatus('invalid');
@@ -71,7 +47,6 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
           .maybeSingle();
 
         if (error) throw error;
-        
         setUsernameStatus(data ? 'taken' : 'available');
       } catch (error) {
         console.error('Error checking username:', error);
@@ -85,67 +60,52 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     return () => clearTimeout(timeoutId);
   }, [username]);
 
-  const handleUsernameNext = async () => {
-    if (usernameStatus !== 'available') return;
-    
-    setIsUpdatingProfile(true);
-    try {
-      const userId = (await supabase.auth.getUser()).data.user?.id;
-      if (!userId) throw new Error("Not authenticated");
-
-      // Try update first
-      const { data: updateData, error: updateError } = await supabase
-        .from('profiles')
-        .update({ username: username.trim(), username_last_changed_at: new Date().toISOString() })
-        .eq('id', userId)
-        .select('id')
-        .maybeSingle();
-
-      if (updateError) throw updateError;
-
-      // If update matched no rows, insert instead
-      if (!updateData) {
-        const { error: insertError } = await supabase
-          .from('profiles')
-          .insert({ id: userId, username: username.trim(), username_last_changed_at: new Date().toISOString() });
-        if (insertError) throw insertError;
-      }
-
-      // Invalidate queries so sidebar/header update immediately
-      await queryClient.invalidateQueries({ queryKey: ['username-check'] });
-      await queryClient.invalidateQueries({ queryKey: ['own-profile'] });
-      
-      setCurrentStep(3); // Move to Top 5 step
-    } catch (error) {
-      console.error('Error updating username:', error);
-      toast.error('Failed to save username. Please try again.');
-    } finally {
-      setIsUpdatingProfile(false);
-    }
+  const updateRapperName = (index: number, value: string) => {
+    setRapperNames(prev => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
   };
 
-  const handleComplete = () => {
-    onComplete();
-    onClose();
+  const filledNames = rapperNames.filter(n => n.trim().length > 0).length;
+  const canComplete = filledNames > 0;
+
+  const handleComplete = async () => {
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.rpc('complete_onboarding', {
+        p_username: username.trim(),
+        p_rapper_names: rapperNames,
+      });
+
+      if (error) throw error;
+
+      // Invalidate all relevant queries
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ['username-check'] }),
+        queryClient.invalidateQueries({ queryKey: ['own-profile'] }),
+        queryClient.invalidateQueries({ queryKey: ['onboarding-status'] }),
+        queryClient.invalidateQueries({ queryKey: ['user-top-rappers'] }),
+        queryClient.invalidateQueries({ queryKey: ['member-stats'] }),
+      ]);
+
+      toast.success("Welcome to Spit Hierarchy! 🎤");
+      onComplete();
+      onClose();
+    } catch (error: any) {
+      console.error('Onboarding error:', error);
+      toast.error(error.message || 'Something went wrong. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleSkip = () => {
     onClose();
   };
 
-  // Create array of 5 positions with current data
-  const slots = Array.from({ length: 5 }, (_, index) => {
-    const position = index + 1;
-    const existingRapper = topRappers.find(item => item.position === position);
-    return {
-      position,
-      rapper: existingRapper?.rappers || null,
-    };
-  });
-
-  const filledSlots = slots.filter(slot => slot.rapper !== null).length;
-  const canComplete = filledSlots > 0;
-
+  // Step 1: Welcome
   if (currentStep === 1) {
     return (
       <Dialog open={isOpen} onOpenChange={() => {}}>
@@ -204,16 +164,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                   >
                     <Star className="w-6 h-6" style={{ color: 'hsl(var(--theme-textLight))' }} />
                   </div>
-                  <h3 
-                    className="font-semibold mb-2"
-                    style={{ color: 'hsl(var(--theme-text))' }}
-                  >
+                  <h3 className="font-semibold mb-2" style={{ color: 'hsl(var(--theme-text))' }}>
                     Personalized Rankings
                   </h3>
-                  <p 
-                    className="text-sm"
-                    style={{ color: 'hsl(var(--theme-textMuted))' }}
-                  >
+                  <p className="text-sm" style={{ color: 'hsl(var(--theme-textMuted))' }}>
                     See how your favorites rank against the community
                   </p>
                 </div>
@@ -224,16 +178,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                   >
                     <Users className="w-6 h-6" style={{ color: 'hsl(var(--theme-textLight))' }} />
                   </div>
-                  <h3 
-                    className="font-semibold mb-2"
-                    style={{ color: 'hsl(var(--theme-text))' }}
-                  >
+                  <h3 className="font-semibold mb-2" style={{ color: 'hsl(var(--theme-text))' }}>
                     Community Connection
                   </h3>
-                  <p 
-                    className="text-sm"
-                    style={{ color: 'hsl(var(--theme-textMuted))' }}
-                  >
+                  <p className="text-sm" style={{ color: 'hsl(var(--theme-textMuted))' }}>
                     Find users with similar taste in hip-hop
                   </p>
                 </div>
@@ -244,16 +192,10 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                   >
                     <Trophy className="w-6 h-6" style={{ color: 'hsl(var(--theme-textLight))' }} />
                   </div>
-                  <h3 
-                    className="font-semibold mb-2"
-                    style={{ color: 'hsl(var(--theme-text))' }}
-                  >
+                  <h3 className="font-semibold mb-2" style={{ color: 'hsl(var(--theme-text))' }}>
                     Better Recommendations
                   </h3>
-                  <p 
-                    className="text-sm"
-                    style={{ color: 'hsl(var(--theme-textMuted))' }}
-                  >
+                  <p className="text-sm" style={{ color: 'hsl(var(--theme-textMuted))' }}>
                     Discover new artists based on your preferences
                   </p>
                 </div>
@@ -373,31 +315,25 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
                     {getUsernameStatusIcon()}
                   </div>
                 </div>
-                <p 
-                  className="text-sm mb-2"
-                  style={{ color: getUsernameStatusColor() }}
-                >
+                <p className="text-sm mb-2" style={{ color: getUsernameStatusColor() }}>
                   {getUsernameStatusMessage()}
                 </p>
-                <p 
-                  className="text-xs"
-                  style={{ color: 'hsl(var(--theme-textMuted))' }}
-                >
+                <p className="text-xs" style={{ color: 'hsl(var(--theme-textMuted))' }}>
                   This will be your public display name on Spit Hierarchy
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
                 <Button
-                  onClick={handleUsernameNext}
-                  disabled={usernameStatus !== 'available' || isUpdatingProfile}
+                  onClick={() => setCurrentStep(3)}
+                  disabled={usernameStatus !== 'available'}
                   style={{
                     backgroundColor: usernameStatus === 'available' ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-surfaceSecondary))',
                     color: usernameStatus === 'available' ? 'hsl(var(--theme-textLight))' : 'hsl(var(--theme-textMuted))'
                   }}
                   className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:opacity-90 disabled:hover:opacity-100"
                 >
-                  {isUpdatingProfile ? "Saving..." : "Continue"}
+                  Continue
                 </Button>
                 <Button
                   onClick={() => setCurrentStep(1)}
@@ -418,130 +354,110 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     );
   }
 
-  // Step 3: Top 5 Selection
+  // Step 3: Top 5 — Simple text inputs
   return (
-    <>
-      <Dialog open={isOpen && !isSearchOpen} onOpenChange={() => {}}>
-        <DialogContent 
-          className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0 [&>button]:hidden"
-          style={{
-            backgroundColor: 'hsl(var(--theme-surface))',
-            border: '2px solid hsl(var(--theme-primary))',
-            borderRadius: '12px'
-          }}
-        >
-          <div className="relative">
-            <button
-              onClick={handleSkip}
-              className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-black/20"
+    <Dialog open={isOpen} onOpenChange={() => {}}>
+      <DialogContent 
+        className="max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto p-0 gap-0 [&>button]:hidden"
+        style={{
+          backgroundColor: 'hsl(var(--theme-surface))',
+          border: '2px solid hsl(var(--theme-primary))',
+          borderRadius: '12px'
+        }}
+      >
+        <div className="relative">
+          <button
+            onClick={handleSkip}
+            className="absolute top-4 right-4 z-10 p-2 rounded-full transition-colors hover:bg-black/20"
+            style={{ color: 'hsl(var(--theme-textMuted))' }}
+          >
+            <X className="w-5 h-5" />
+          </button>
+
+          <div className="p-4 sm:p-6 md:p-8">
+            <DialogHeader className="mb-6">
+              <DialogTitle 
+                className="text-xl sm:text-2xl text-center"
+                style={{ 
+                  color: 'hsl(var(--theme-text))',
+                  fontFamily: 'var(--theme-font-heading)'
+                }}
+              >
+                Your Top 5 Rappers
+              </DialogTitle>
+              <p 
+                className="text-center mt-2"
+                style={{ color: 'hsl(var(--theme-textMuted))' }}
+              >
+                Type the names of your favorite rappers. We'll match them to our database.
+              </p>
+              <p 
+                className="text-center text-sm mt-2 font-medium"
+                style={{ color: 'hsl(var(--theme-primary))' }}
+              >
+                {filledNames}/5 entered
+              </p>
+            </DialogHeader>
+
+            <div className="space-y-3 mb-6 max-w-md mx-auto">
+              {[1, 2, 3, 4, 5].map((pos, index) => (
+                <div key={pos} className="flex items-center gap-3">
+                  <span 
+                    className="text-lg font-bold w-8 text-center flex-shrink-0"
+                    style={{ 
+                      color: 'hsl(var(--theme-primary))',
+                      fontFamily: 'var(--theme-font-heading)'
+                    }}
+                  >
+                    #{pos}
+                  </span>
+                  <ThemedInput
+                    type="text"
+                    value={rapperNames[index]}
+                    onChange={(e) => updateRapperName(index, e.target.value)}
+                    placeholder={`Rapper #${pos}`}
+                    className="flex-1"
+                  />
+                </div>
+              ))}
+            </div>
+
+            <p 
+              className="text-center text-xs mb-4"
               style={{ color: 'hsl(var(--theme-textMuted))' }}
             >
-              <X className="w-5 h-5" />
-            </button>
+              Names that don't match a rapper in our database will be skipped. You can update your Top 5 anytime from your profile.
+            </p>
 
-            <div className="p-3 sm:p-4 md:p-6">
-              <DialogHeader className="mb-6">
-                <DialogTitle 
-                  className="text-xl sm:text-2xl text-center"
-                  style={{ 
-                    color: 'hsl(var(--theme-text))',
-                    fontFamily: 'var(--theme-font-heading)'
-                  }}
-                >
-                  Select Your Top 5 Rappers
-                </DialogTitle>
-                <p 
-                  className="text-center mt-2"
-                  style={{ color: 'hsl(var(--theme-textMuted))' }}
-                >
-                  Choose your favorite rappers to personalize your experience. You can always change these later.
-                </p>
-                <p 
-                  className="text-center text-sm mt-2 font-medium"
-                  style={{ color: 'hsl(var(--theme-primary))' }}
-                >
-                  {filledSlots}/5 selected
-                </p>
-              </DialogHeader>
-
-              {/* Top 5 Selection Grid */}
-              <div className="mb-6">
-                {/* Desktop Layout */}
-                <div className="hidden lg:block">
-                  <div className="grid grid-cols-2 gap-4 mb-4">
-                    {slots.slice(0, 2).map((slot) => (
-                      <TopFiveSlot
-                        key={slot.position}
-                        position={slot.position}
-                        rapper={slot.rapper}
-                        onEditClick={() => handleSlotClick(slot.position)}
-                      />
-                    ))}
-                  </div>
-                  <div className="grid grid-cols-3 gap-4">
-                    {slots.slice(2, 5).map((slot) => (
-                      <TopFiveSlot
-                        key={slot.position}
-                        position={slot.position}
-                        rapper={slot.rapper}
-                        onEditClick={() => handleSlotClick(slot.position)}
-                      />
-                    ))}
-                  </div>
-                </div>
-
-                {/* Mobile Layout */}
-                <div className="block lg:hidden">
-                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3 sm:gap-4">
-                    {slots.map((slot) => (
-                      <TopFiveSlot
-                        key={slot.position}
-                        position={slot.position}
-                        rapper={slot.rapper}
-                        onEditClick={() => handleSlotClick(slot.position)}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
-                <Button
-                  onClick={handleComplete}
-                  disabled={!canComplete}
-                  style={{
-                    backgroundColor: canComplete ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-surfaceSecondary))',
-                    color: canComplete ? 'hsl(var(--theme-textLight))' : 'hsl(var(--theme-textMuted))'
-                  }}
-                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:opacity-90 disabled:hover:opacity-100"
-                >
-                  Complete Setup
-                </Button>
-                <Button
-                  onClick={() => setCurrentStep(2)}
-                  variant="outline"
-                  style={{
-                    borderColor: 'hsl(var(--theme-border))',
-                    color: 'hsl(var(--theme-textMuted))'
-                  }}
-                  className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:bg-black/5"
-                >
-                  Back
-                </Button>
-              </div>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center">
+              <Button
+                onClick={handleComplete}
+                disabled={!canComplete || isSubmitting}
+                style={{
+                  backgroundColor: canComplete ? 'hsl(var(--theme-primary))' : 'hsl(var(--theme-surfaceSecondary))',
+                  color: canComplete ? 'hsl(var(--theme-textLight))' : 'hsl(var(--theme-textMuted))'
+                }}
+                className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:opacity-90 disabled:hover:opacity-100"
+              >
+                {isSubmitting ? "Saving..." : "Complete Setup"}
+              </Button>
+              <Button
+                onClick={() => setCurrentStep(2)}
+                variant="outline"
+                disabled={isSubmitting}
+                style={{
+                  borderColor: 'hsl(var(--theme-border))',
+                  color: 'hsl(var(--theme-textMuted))'
+                }}
+                className="px-4 py-2 sm:px-8 sm:py-3 text-base sm:text-lg hover:bg-black/5"
+              >
+                Back
+              </Button>
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-
-      <RapperSearchOverlay
-        isOpen={isSearchOpen}
-        onClose={handleCloseSearch}
-        onSelectRapper={handleRapperSelect}
-        excludeIds={selectedRapperIds}
-        position={selectedPosition || 1}
-      />
-    </>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 };
 

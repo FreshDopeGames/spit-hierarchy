@@ -3616,6 +3616,10 @@ export type Database = {
       }
       cleanup_old_fetch_progress: { Args: never; Returns: undefined }
       cleanup_old_page_views: { Args: never; Returns: undefined }
+      complete_onboarding: {
+        Args: { p_rapper_names: string[]; p_username: string }
+        Returns: undefined
+      }
       create_daily_ranking_snapshot: { Args: never; Returns: undefined }
       create_notification: {
         Args: {
