@@ -1,55 +1,123 @@
 
 
-## Plan: Reduce Largest Contentful Paint (LCP) Across All Page Types
+## Plan: Fix Onboarding — Atomic Server-Side Function + Simple Text Inputs
 
-### Problem
-LCP is likely bottlenecked by: (1) render-blocking Google Fonts in `<head>`, (2) no `<link rel="preload">` for hero/LCP images, (3) unnecessary `will-change` and GPU layers on every image, and (4) waterfall data fetching before any content can paint.
+### Root Cause Analysis
+
+Three separate failures are cascading during onboarding:
+
+1. **Username save fails** — Multiple RLS errors on `profiles` table. The update-then-insert fallback works in theory, but timing issues with the auth trigger that creates profile rows cause conflicts.
+
+2. **Top 5 save fails** — The client-side insert into `user_top_rappers` triggers `update_member_stats_on_top_five`, which calls `check_and_award_achievements`, which inserts into `user_achievements`. The `user_achievements` table has **no INSERT RLS policy** — only a SELECT policy. Even though the trigger functions are `SECURITY DEFINER`, the FK constraint check against `auth.users` can still fail in edge cases.
+
+3. **Nested Dialog focus trap** — The rapper search overlay (a Radix Dialog inside a Radix Dialog) has persistent focus/interaction issues that we've tried to fix multiple times but keeps breaking on the live site.
+
+### Solution: Bypass All Client-Side Complexity
+
+Create a single `SECURITY DEFINER` database function `complete_onboarding` that atomically handles username + top 5 in one call. Replace the search overlay with simple text inputs where users just type rapper names. The function matches names to existing rappers server-side.
 
 ### Changes
 
-**1. `index.html` — Make Google Fonts non-render-blocking**
-- Change the Google Fonts `<link>` to use the `media="print" onload="this.media='all'"` pattern so fonts load async and don't block first paint.
-- Add a `<noscript>` fallback for the original `<link>`.
+**1. Migration: Create `complete_onboarding` RPC**
 
-**2. `index.html` — Preload the header logo (LCP element on most pages)**
-- Add `<link rel="preload" as="image" href="/lovable-uploads/logo-header.png">` since the header logo appears on every page and is above the fold.
+```sql
+create or replace function public.complete_onboarding(
+  p_username text,
+  p_rapper_names text[]
+) returns void
+language plpgsql
+security definer
+set search_path = public
+as $$
+declare
+  v_user_id uuid := auth.uid();
+  v_rapper_id uuid;
+  v_position int := 0;
+begin
+  if v_user_id is null then
+    raise exception 'Not authenticated';
+  end if;
 
-**3. `src/components/ui/EnhancedImage.tsx` — Remove excessive GPU hints**
-- Remove `will-change-transform`, `transform-gpu`, `[filter:blur(0)]`, `[backface-visibility:hidden]`, and `translate-z-0`. These force GPU compositing on every image, increasing memory and paint time. Keep only `[image-rendering:auto]` and `antialiased`.
+  -- Upsert profile with username
+  insert into profiles (id, username, username_last_changed_at)
+  values (v_user_id, p_username, now())
+  on conflict (id) do update
+    set username = excluded.username,
+        username_last_changed_at = excluded.username_last_changed_at;
 
-**4. `src/components/BlogCarousel.tsx` — Eagerly decode first carousel image**
-- Change `decoding` from `"async"` to `"sync"` for the first (priority) image in the carousel so it paints immediately when data arrives, rather than deferring decode.
+  -- Clear existing top 5
+  delete from user_top_rappers where user_id = v_user_id;
 
-**5. `src/components/HomepageRankingSection.tsx` — Preload first ranking card image**
-- After the query resolves, inject a `<link rel="preload">` into `<head>` for the first ranking card's rapper image (the likely LCP element on homepage). Use a `useEffect` to do this.
+  -- Insert top 5 by matching rapper names (case-insensitive)
+  foreach v_rapper_id in array (
+    select array_agg(sub.id) from (
+      select r.id
+      from unnest(p_rapper_names) with ordinality as t(name, ord)
+      left join rappers r on lower(r.name) = lower(trim(t.name))
+      where r.id is not null
+      order by t.ord
+    ) sub
+  )
+  loop
+    -- handled below
+  end loop;
 
-**6. `src/components/RankingsSectionHeader.tsx` — Remove animate-pulse from icons**
-- The `animate-pulse` on Crown and TrendingUp icons causes continuous layout/paint work during initial load, competing with LCP. Remove it.
+  -- Simpler approach: iterate rapper names
+  for i in 1..array_length(p_rapper_names, 1) loop
+    if p_rapper_names[i] is not null and trim(p_rapper_names[i]) != '' then
+      select id into v_rapper_id
+      from rappers
+      where lower(name) = lower(trim(p_rapper_names[i]))
+      limit 1;
 
-**7. `src/components/ui/ResponsiveImage.tsx` — Skip blur placeholder for priority images**
-- When `priority={true}`, skip the blur-up animation entirely (set `isLoaded` to `true` initially) to avoid the extra composite layer and opacity transition that delays LCP.
+      if v_rapper_id is not null then
+        v_position := v_position + 1;
+        insert into user_top_rappers (user_id, position, rapper_id)
+        values (v_user_id, v_position, v_rapper_id);
+      end if;
+    end if;
+  end loop;
 
-**8. `src/pages/RapperDetail.tsx` — Lazy load below-fold sections**
-- Wrap `RapperDiscography`, `SimilarRappersCard`, `RapperBestQuote`, and `CommentBubble` in lazy imports + `LazySection` to reduce initial JS bundle and speed up above-fold paint.
+  -- Update member_stats
+  insert into member_stats (id, top_five_created, updated_at)
+  values (v_user_id, 1, now())
+  on conflict (id) do update
+    set top_five_created = greatest(member_stats.top_five_created, 1),
+        updated_at = now();
+end;
+$$;
+```
+
+This runs as the DB owner, bypassing all RLS and avoiding trigger cascade issues.
+
+**2. `src/components/onboarding/OnboardingModal.tsx` — Replace search overlay with text inputs**
+
+- Remove `RapperSearchOverlay` and `useUserTopRappers` imports
+- Step 3 becomes 5 simple text `<input>` fields where users type rapper names
+- On "Complete", call `supabase.rpc('complete_onboarding', { p_username, p_rapper_names })` as a single atomic operation
+- Username step (step 2) and Top 5 step (step 3) both collect data locally; the RPC saves everything at once on final submit
+- No more nested dialogs, no more multi-step DB writes
+
+**3. Add INSERT policy on `user_achievements` (safety net)**
+
+Add an RLS policy so the trigger functions don't fail even when called outside the onboarding RPC:
+
+```sql
+create policy "System can insert achievements"
+  on user_achievements for insert
+  with check (auth.uid() = user_id);
+```
 
 ### Technical Details
 
-| Optimization | Impact | Pages Affected |
-|---|---|---|
-| Async Google Fonts | Eliminates ~200-500ms render block | All |
-| Preload header logo | LCP candidate loads earlier | All |
-| Remove GPU hints from EnhancedImage | Less memory, faster compositing | All with images |
-| Skip blur-up for priority images | LCP paints immediately | Homepage, Rankings |
-| Preload first ranking image | LCP resource discovered earlier | Homepage |
-| Remove animate-pulse icons | Less paint work during load | Homepage |
-| Lazy load RapperDetail sections | Smaller initial JS, faster FCP | Rapper pages |
+| Change | Why | Impact |
+|--------|-----|--------|
+| Single `complete_onboarding` RPC | Atomic, bypasses RLS/trigger cascade | Eliminates all onboarding DB errors |
+| Text inputs instead of search overlay | No nested dialog focus trap issues | Reliable on all devices |
+| Case-insensitive name matching | Users type "kendrick lamar", matches DB | Tolerant of capitalization |
+| `user_achievements` INSERT policy | Safety net for trigger cascade | Fixes non-onboarding achievement errors |
 
 ### Files
-- **Modify**: `index.html`
-- **Modify**: `src/components/ui/EnhancedImage.tsx`
-- **Modify**: `src/components/ui/ResponsiveImage.tsx`
-- **Modify**: `src/components/HomepageRankingSection.tsx`
-- **Modify**: `src/components/RankingsSectionHeader.tsx`
-- **Modify**: `src/components/BlogCarousel.tsx`
-- **Modify**: `src/pages/RapperDetail.tsx`
+- **Create**: Migration SQL (RPC + RLS policy)
+- **Modify**: `src/components/onboarding/OnboardingModal.tsx`
 
