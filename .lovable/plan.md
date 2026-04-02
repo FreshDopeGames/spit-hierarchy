@@ -1,123 +1,106 @@
 
 
-## Plan: Fix Onboarding — Atomic Server-Side Function + Simple Text Inputs
+## Plan: Simplify Onboarding to Username-Only + Top 5 Guide Overlay on Profile
 
-### Root Cause Analysis
+### What Changed
 
-Three separate failures are cascading during onboarding:
-
-1. **Username save fails** — Multiple RLS errors on `profiles` table. The update-then-insert fallback works in theory, but timing issues with the auth trigger that creates profile rows cause conflicts.
-
-2. **Top 5 save fails** — The client-side insert into `user_top_rappers` triggers `update_member_stats_on_top_five`, which calls `check_and_award_achievements`, which inserts into `user_achievements`. The `user_achievements` table has **no INSERT RLS policy** — only a SELECT policy. Even though the trigger functions are `SECURITY DEFINER`, the FK constraint check against `auth.users` can still fail in edge cases.
-
-3. **Nested Dialog focus trap** — The rapper search overlay (a Radix Dialog inside a Radix Dialog) has persistent focus/interaction issues that we've tried to fix multiple times but keeps breaking on the live site.
-
-### Solution: Bypass All Client-Side Complexity
-
-Create a single `SECURITY DEFINER` database function `complete_onboarding` that atomically handles username + top 5 in one call. Replace the search overlay with simple text inputs where users just type rapper names. The function matches names to existing rappers server-side.
+The current onboarding has 3 steps (Welcome → Username → Top 5 text inputs). The Top 5 step keeps failing because inserting into `user_top_rappers` triggers `check_and_award_achievements`, which hits FK constraint errors on `user_achievements`. Rather than patching the cascade again, we remove the Top 5 step from onboarding entirely and guide users to use the existing My Top 5 card on their profile page.
 
 ### Changes
 
-**1. Migration: Create `complete_onboarding` RPC**
+**1. Simplify `OnboardingModal.tsx` — Remove Step 3 (Top 5)**
+
+- Remove the Top 5 text input step entirely
+- Remove `rapperNames` state and `complete_onboarding` RPC call
+- On "Continue" from username step: save username directly (upsert via simple query or a new lightweight RPC), then call `onComplete` with a signal to navigate to profile
+- The `complete_onboarding` RPC can remain in the DB but won't be called from onboarding anymore
+
+**2. Update `OnboardingProvider.tsx` — Navigate to profile + show guide**
+
+- Import `useNavigate` from react-router-dom
+- On `completeOnboarding`: navigate to `/profile`, then set a flag (e.g., `localStorage` item `show-top5-guide`) to trigger the guide overlay
+- Add a new state `showTop5Guide` that gets picked up after navigation
+
+**3. Copy the uploaded image to `src/assets/top5-guide.png`**
+
+**4. Create `TopFiveGuideOverlay.tsx`**
+
+A simple Dialog overlay shown on the profile page:
+- Title: "Select Your Top 5"
+- The uploaded reference image displayed
+- Description: "Now it's time to pick your Top 5 rappers. You can change this anytime, and other users will be able to see this when they visit your profile."
+- OK button that dismisses the overlay
+- Reads and clears the `show-top5-guide` localStorage flag
+
+**5. Add `TopFiveGuideOverlay` to the Profile page**
+
+- Import and render it in the profile page component
+- On mount, check for `show-top5-guide` flag; if present, scroll to the My Top 5 section and show the overlay
+- Add an `id="my-top-5"` to the `MyTopFiveSection` container div for scroll targeting
+
+**6. Fix the My Top 5 card — Database migration**
+
+The `user_top_rappers` inserts from the profile page trigger `update_member_stats_on_top_five` → `check_and_award_achievements` → inserts into `user_achievements` with FK to `auth.users`. This cascade fails. Fix:
+
+- Update `update_member_stats_on_top_five` to wrap the `check_and_award_achievements` call in an exception handler so it doesn't abort the entire transaction
+- OR simpler: update `complete_onboarding` to also handle stats directly and disable the achievement check during top 5 inserts
+
+The cleanest fix: modify the trigger to catch and log errors from the achievement check instead of letting them abort:
 
 ```sql
-create or replace function public.complete_onboarding(
-  p_username text,
-  p_rapper_names text[]
-) returns void
-language plpgsql
-security definer
-set search_path = public
-as $$
-declare
-  v_user_id uuid := auth.uid();
-  v_rapper_id uuid;
-  v_position int := 0;
-begin
-  if v_user_id is null then
-    raise exception 'Not authenticated';
-  end if;
+CREATE OR REPLACE FUNCTION update_member_stats_on_top_five()
+RETURNS trigger SECURITY DEFINER AS $$
+BEGIN
+  INSERT INTO public.member_stats (id, top_five_created, updated_at)
+  VALUES (NEW.user_id, 1, NOW())
+  ON CONFLICT (id) 
+  DO UPDATE SET 
+    top_five_created = GREATEST(public.member_stats.top_five_created, 1),
+    updated_at = NOW();
+  
+  BEGIN
+    PERFORM public.check_and_award_achievements(NEW.user_id);
+  EXCEPTION WHEN OTHERS THEN
+    RAISE WARNING 'Achievement check failed for user %: %', NEW.user_id, SQLERRM;
+  END;
+  
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+```
 
-  -- Upsert profile with username
-  insert into profiles (id, username, username_last_changed_at)
-  values (v_user_id, p_username, now())
-  on conflict (id) do update
-    set username = excluded.username,
-        username_last_changed_at = excluded.username_last_changed_at;
+**7. Save username via simple upsert (no RPC needed)**
 
-  -- Clear existing top 5
-  delete from user_top_rappers where user_id = v_user_id;
+The onboarding will just save the username and update `member_stats.top_five_created` to mark onboarding as "seen" (even though Top 5 isn't filled yet). A small new RPC `save_onboarding_username` handles this atomically:
 
-  -- Insert top 5 by matching rapper names (case-insensitive)
-  foreach v_rapper_id in array (
-    select array_agg(sub.id) from (
-      select r.id
-      from unnest(p_rapper_names) with ordinality as t(name, ord)
-      left join rappers r on lower(r.name) = lower(trim(t.name))
-      where r.id is not null
-      order by t.ord
-    ) sub
-  )
-  loop
-    -- handled below
-  end loop;
+```sql
+CREATE OR REPLACE FUNCTION public.save_onboarding_username(p_username text)
+RETURNS void SECURITY DEFINER AS $$
+BEGIN
+  INSERT INTO profiles (id, username, username_last_changed_at)
+  VALUES (auth.uid(), p_username, now())
+  ON CONFLICT (id) DO UPDATE
+    SET username = EXCLUDED.username,
+        username_last_changed_at = EXCLUDED.username_last_changed_at;
 
-  -- Simpler approach: iterate rapper names
-  for i in 1..array_length(p_rapper_names, 1) loop
-    if p_rapper_names[i] is not null and trim(p_rapper_names[i]) != '' then
-      select id into v_rapper_id
-      from rappers
-      where lower(name) = lower(trim(p_rapper_names[i]))
-      limit 1;
-
-      if v_rapper_id is not null then
-        v_position := v_position + 1;
-        insert into user_top_rappers (user_id, position, rapper_id)
-        values (v_user_id, v_position, v_rapper_id);
-      end if;
-    end if;
-  end loop;
-
-  -- Update member_stats
-  insert into member_stats (id, top_five_created, updated_at)
-  values (v_user_id, 1, now())
-  on conflict (id) do update
-    set top_five_created = greatest(member_stats.top_five_created, 1),
+  INSERT INTO member_stats (id, top_five_created, updated_at)
+  VALUES (auth.uid(), 1, now())
+  ON CONFLICT (id) DO UPDATE
+    SET top_five_created = GREATEST(member_stats.top_five_created, 1),
         updated_at = now();
-end;
-$$;
+END;
+$$ LANGUAGE plpgsql;
 ```
-
-This runs as the DB owner, bypassing all RLS and avoiding trigger cascade issues.
-
-**2. `src/components/onboarding/OnboardingModal.tsx` — Replace search overlay with text inputs**
-
-- Remove `RapperSearchOverlay` and `useUserTopRappers` imports
-- Step 3 becomes 5 simple text `<input>` fields where users type rapper names
-- On "Complete", call `supabase.rpc('complete_onboarding', { p_username, p_rapper_names })` as a single atomic operation
-- Username step (step 2) and Top 5 step (step 3) both collect data locally; the RPC saves everything at once on final submit
-- No more nested dialogs, no more multi-step DB writes
-
-**3. Add INSERT policy on `user_achievements` (safety net)**
-
-Add an RLS policy so the trigger functions don't fail even when called outside the onboarding RPC:
-
-```sql
-create policy "System can insert achievements"
-  on user_achievements for insert
-  with check (auth.uid() = user_id);
-```
-
-### Technical Details
-
-| Change | Why | Impact |
-|--------|-----|--------|
-| Single `complete_onboarding` RPC | Atomic, bypasses RLS/trigger cascade | Eliminates all onboarding DB errors |
-| Text inputs instead of search overlay | No nested dialog focus trap issues | Reliable on all devices |
-| Case-insensitive name matching | Users type "kendrick lamar", matches DB | Tolerant of capitalization |
-| `user_achievements` INSERT policy | Safety net for trigger cascade | Fixes non-onboarding achievement errors |
 
 ### Files
-- **Create**: Migration SQL (RPC + RLS policy)
-- **Modify**: `src/components/onboarding/OnboardingModal.tsx`
+
+| File | Action |
+|------|--------|
+| `src/assets/top5-guide.png` | Create (copy from upload) |
+| `src/components/onboarding/OnboardingModal.tsx` | Modify — remove step 3, save username via RPC, signal navigation |
+| `src/components/onboarding/OnboardingProvider.tsx` | Modify — navigate to `/profile` on complete, set guide flag |
+| `src/components/profile/TopFiveGuideOverlay.tsx` | Create — image overlay with title/description/OK |
+| `src/components/profile/MyTopFiveSection.tsx` | Modify — add `id="my-top-5"` to container |
+| Profile page component | Modify — render `TopFiveGuideOverlay`, handle scroll + flag |
+| Migration SQL | Create — `save_onboarding_username` RPC + fix trigger error handling |
 
