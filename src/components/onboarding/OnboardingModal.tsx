@@ -314,7 +314,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     return (
       <Dialog open={isOpen} onOpenChange={() => {}}>
         <DialogContent 
-          className="max-w-[95vw] sm:max-w-2xl p-0 gap-0 overflow-hidden"
+          className="max-w-[95vw] sm:max-w-2xl p-0 gap-0 overflow-hidden [&>button]:hidden"
           style={{
             backgroundColor: 'hsl(var(--theme-surface))',
             border: '2px solid hsl(var(--theme-primary))',
