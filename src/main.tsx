@@ -11,7 +11,7 @@ import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
-import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
+
 import UsernameEnforcementModal from "@/components/auth/UsernameEnforcementModal";
 import ActivityToastProvider from "@/components/ActivityToastProvider";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
@@ -54,11 +54,9 @@ createRoot(document.getElementById("root")!).render(
                   <AchievementProvider>
                     <ErrorBoundary>
                       <UsernameEnforcementModal />
-                      <OnboardingProvider>
-                        <ActivityToastProvider />
-                        <App />
-                        <Toaster />
-                      </OnboardingProvider>
+                      <ActivityToastProvider />
+                      <App />
+                      <Toaster />
                     </ErrorBoundary>
                   </AchievementProvider>
                 </TooltipProvider>
