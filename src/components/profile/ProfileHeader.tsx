@@ -45,11 +45,11 @@ const ProfileHeader = ({
         </div>
         
         <div className="flex-1 text-center lg:text-left w-full">
-          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-10 min-w-0">
+          <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-4 min-w-0 w-full">
             {/* User Info Section */}
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 overflow-hidden">
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-2 min-w-0">
-                <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold break-all text-yellow-600 min-w-0 truncate max-w-full">
+                <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-yellow-600 min-w-0 truncate">
                   {profile?.username || profile?.full_name || "User"}
                 </h2>
                 <TooltipProvider>
