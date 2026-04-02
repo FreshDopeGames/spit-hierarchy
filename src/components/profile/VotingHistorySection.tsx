@@ -42,7 +42,7 @@ const VotingHistorySection = () => {
       </CardHeader>
       <CardContent>
         <ThemedTabs defaultValue="rankings" className="w-full">
-          <ThemedTabsList className="grid w-full grid-cols-2 mb-4">
+          <ThemedTabsList className="grid w-full grid-cols-2 mb-[15px]">
             <ThemedTabsTrigger value="rankings" className="text-xs sm:text-sm">
               <List className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
               Ranking Votes
