@@ -215,6 +215,7 @@ const UserProfile = () => {
                 <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
                 
                 <MyTopFiveSection />
+                <TopFiveGuideOverlay />
 
                 {/* Show onboarding trigger if user has no top 5 */}
                 {memberStats?.top_five_created === 0 && (
