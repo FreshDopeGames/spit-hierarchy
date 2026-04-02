@@ -10,8 +10,7 @@ const ThemedTabsList = React.forwardRef<
   ({ className, ...props }, ref) =>
   <TabsPrimitive.List
     ref={ref}
-    className={cn("inline-flex h-10 items-center justify-center rounded-[var(--theme-element-tabs-border-radius,var(--theme-radius-md))] bg-[hsl(var(--theme-element-tabs-bg,var(--theme-surface)))] p-1 text-[hsl(var(--theme-element-tabs-color,var(--theme-textMuted)))] border-[hsl(var(--theme-element-tabs-border-color,var(--theme-border)))] bg-theme-black border-2 border-primary px-[4px] mx-0 my-[2px]",
-
+    className={cn("inline-flex h-10 items-center justify-center rounded-[var(--theme-element-tabs-border-radius,var(--theme-radius-md))] p-1 text-[hsl(var(--theme-element-tabs-color,var(--theme-textMuted)))] bg-theme-black border-2 border-primary px-[4px] mx-0 py-0 my-[4px] pb-[40px]",
     className
     )}
     {...props} />
