@@ -49,6 +49,7 @@ function App() {
   return (
     <AppInitializer>
       <BrowserRouter>
+        <OnboardingProvider>
         <AppHooksWrapper>
           <ScrollToTop />
           <EmailConfirmationHandler />
@@ -119,6 +120,7 @@ function App() {
           <Route path="*" element={<NotFound />} />
         </Routes>
         </AppHooksWrapper>
+        </OnboardingProvider>
       </BrowserRouter>
     </AppInitializer>
   );
