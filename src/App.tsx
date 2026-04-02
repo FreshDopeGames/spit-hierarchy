@@ -3,6 +3,7 @@ import AuthGuard from "@/components/AuthGuard";
 import AppInitializer from "@/components/AppInitializer";
 import EmailConfirmationHandler from "@/components/auth/EmailConfirmationHandler";
 import ScrollToTop from "@/components/ScrollToTop";
+import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
 import { useUTMCapture } from "@/hooks/useUTMCapture";
 import { useSessionTracking } from "@/hooks/useSessionTracking";
 import Index from "./pages/Index";

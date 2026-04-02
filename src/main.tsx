@@ -54,11 +54,9 @@ createRoot(document.getElementById("root")!).render(
                   <AchievementProvider>
                     <ErrorBoundary>
                       <UsernameEnforcementModal />
-                      <OnboardingProvider>
-                        <ActivityToastProvider />
-                        <App />
-                        <Toaster />
-                      </OnboardingProvider>
+                      <ActivityToastProvider />
+                      <App />
+                      <Toaster />
                     </ErrorBoundary>
                   </AchievementProvider>
                 </TooltipProvider>
