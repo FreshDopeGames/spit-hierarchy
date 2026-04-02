@@ -4,6 +4,22 @@
 @tailwind components;
 @tailwind utilities;
 
+/* PWA fullscreen: extend content behind status bar on iOS */
+html {
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+  background-color: hsl(0 0% 5%);
+}
+
+@media all and (display-mode: fullscreen), all and (display-mode: standalone) {
+  html, body {
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+  }
+}
+
 @layer base {
   :root {
     /* Enhanced theme variables - using HSL format */
