@@ -9,6 +9,7 @@ import { useUserTopRappers } from "@/hooks/useUserTopRappers";
 import { useUsernameCheck } from "@/hooks/useUsernameCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface OnboardingModalProps {
   isOpen: boolean;
@@ -19,6 +20,7 @@ interface OnboardingModalProps {
 const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) => {
   const { topRappers, updateTopRapper, selectedRapperIds } = useUserTopRappers();
   const { needsUsername } = useUsernameCheck();
+  const queryClient = useQueryClient();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
@@ -88,12 +90,30 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     
     setIsUpdatingProfile(true);
     try {
-      const { error } = await supabase
-        .from('profiles')
-        .update({ username: username.trim() })
-        .eq('id', (await supabase.auth.getUser()).data.user?.id);
+      const userId = (await supabase.auth.getUser()).data.user?.id;
+      if (!userId) throw new Error("Not authenticated");
 
-      if (error) throw error;
+      // Try update first
+      const { data: updateData, error: updateError } = await supabase
+        .from('profiles')
+        .update({ username: username.trim(), username_last_changed_at: new Date().toISOString() })
+        .eq('id', userId)
+        .select('id')
+        .maybeSingle();
+
+      if (updateError) throw updateError;
+
+      // If update matched no rows, insert instead
+      if (!updateData) {
+        const { error: insertError } = await supabase
+          .from('profiles')
+          .insert({ id: userId, username: username.trim(), username_last_changed_at: new Date().toISOString() });
+        if (insertError) throw insertError;
+      }
+
+      // Invalidate queries so sidebar/header update immediately
+      await queryClient.invalidateQueries({ queryKey: ['username-check'] });
+      await queryClient.invalidateQueries({ queryKey: ['own-profile'] });
       
       setCurrentStep(3); // Move to Top 5 step
     } catch (error) {
@@ -294,7 +314,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     return (
       <Dialog open={isOpen} onOpenChange={() => {}}>
         <DialogContent 
-          className="max-w-[95vw] sm:max-w-2xl p-0 gap-0 overflow-hidden"
+          className="max-w-[95vw] sm:max-w-2xl p-0 gap-0 overflow-hidden [&>button]:hidden"
           style={{
             backgroundColor: 'hsl(var(--theme-surface))',
             border: '2px solid hsl(var(--theme-primary))',
@@ -403,7 +423,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     <>
       <Dialog open={isOpen && !isSearchOpen} onOpenChange={() => {}}>
         <DialogContent 
-          className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0"
+          className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0 [&>button]:hidden"
           style={{
             backgroundColor: 'hsl(var(--theme-surface))',
             border: '2px solid hsl(var(--theme-primary))',
