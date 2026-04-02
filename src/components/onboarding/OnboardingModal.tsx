@@ -401,7 +401,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
   // Step 3: Top 5 Selection
   return (
     <>
-      <Dialog open={isOpen} onOpenChange={() => {}}>
+      <Dialog open={isOpen && !isSearchOpen} onOpenChange={() => {}}>
         <DialogContent 
           className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0"
           style={{
