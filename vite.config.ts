@@ -22,7 +22,7 @@ export default defineConfig(({ mode }) => ({
         description: 'Vote on your favorite rappers, discover new artists, and explore comprehensive hip-hop culture content.',
         theme_color: '#000000',
         background_color: '#000000',
-        display: 'standalone',
+        display: 'fullscreen',
         orientation: 'portrait-primary',
         scope: '/',
         start_url: '/',
