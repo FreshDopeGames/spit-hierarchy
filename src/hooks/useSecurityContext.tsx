@@ -53,27 +53,26 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
         return;
       }
 
-      try {
-        const { data: adminCheck } = await supabase.rpc('is_admin');
-        setIsAdmin(adminCheck || false);
+      // Run all RPC checks in parallel so one failure doesn't wipe others
+      const [adminResult, moderatorResult, blogResult] = await Promise.allSettled([
+        supabase.rpc('is_admin'),
+        supabase.rpc('is_moderator_or_admin'),
+        supabase.rpc('can_manage_blog_content'),
+      ]);
 
-        const { data: moderatorCheck } = await supabase.rpc('is_moderator_or_admin');
-        setIsModerator(moderatorCheck || false);
+      const adminCheck = adminResult.status === 'fulfilled' ? (adminResult.value.data || false) : false;
+      const moderatorCheck = moderatorResult.status === 'fulfilled' ? (moderatorResult.value.data || false) : false;
+      const blogCheck = blogResult.status === 'fulfilled' ? (blogResult.value.data || false) : false;
 
-        const { data: blogCheck } = await supabase.rpc('can_manage_blog_content');
-        setCanManageBlog(blogCheck || false);
+      if (adminResult.status === 'rejected') console.error('Admin check failed:', adminResult.reason);
+      if (moderatorResult.status === 'rejected') console.error('Moderator check failed:', moderatorResult.reason);
+      if (blogResult.status === 'rejected') console.error('Blog check failed:', blogResult.reason);
 
-        // Staff writer = can manage blog but is not admin
-        setIsStaffWriter((blogCheck || false) && !(adminCheck || false));
-      } catch (error) {
-        console.error('Error checking permissions:', error);
-        setIsAdmin(false);
-        setIsModerator(false);
-        setIsStaffWriter(false);
-        setCanManageBlog(false);
-      } finally {
-        setIsLoading(false);
-      }
+      setIsAdmin(adminCheck);
+      setIsModerator(moderatorCheck);
+      setCanManageBlog(blogCheck);
+      setIsStaffWriter(blogCheck && !adminCheck);
+      setIsLoading(false);
     };
 
     checkPermissions();
