@@ -9,6 +9,7 @@ import { useUserTopRappers } from "@/hooks/useUserTopRappers";
 import { useUsernameCheck } from "@/hooks/useUsernameCheck";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface OnboardingModalProps {
   isOpen: boolean;
