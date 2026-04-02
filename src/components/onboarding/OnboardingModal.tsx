@@ -423,7 +423,7 @@ const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) 
     <>
       <Dialog open={isOpen && !isSearchOpen} onOpenChange={() => {}}>
         <DialogContent 
-          className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0"
+          className="max-w-[95vw] sm:max-w-4xl max-h-[90vh] overflow-y-auto p-0 gap-0 [&>button]:hidden"
           style={{
             backgroundColor: 'hsl(var(--theme-surface))',
             border: '2px solid hsl(var(--theme-primary))',
