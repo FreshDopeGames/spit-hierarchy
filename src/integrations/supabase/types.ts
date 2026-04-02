@@ -4138,6 +4138,10 @@ export type Database = {
       }
       refresh_rapper_collaborations: { Args: never; Returns: number }
       reset_all_voting_data: { Args: never; Returns: Json }
+      save_onboarding_username: {
+        Args: { p_username: string }
+        Returns: undefined
+      }
       search_profiles_admin: {
         Args: { search_term?: string }
         Returns: {

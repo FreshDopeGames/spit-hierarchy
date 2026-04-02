@@ -16,6 +16,7 @@ import CypherJournalSection from "@/components/profile/CypherJournalSection";
 import MemberJournalSection from "@/components/profile/MemberJournalSection";
 import VotingHistorySection from "@/components/profile/VotingHistorySection";
 import DeleteAccountSection from "@/components/profile/DeleteAccountSection";
+import TopFiveGuideOverlay from "@/components/profile/TopFiveGuideOverlay";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 import { useOnboarding } from "@/components/onboarding/OnboardingProvider";
 import { useProfileAccessTracking } from "@/hooks/useProfileAccessTracking";
@@ -214,6 +215,7 @@ const UserProfile = () => {
                 <ProfileHeader user={user} profile={profile} memberStats={memberStats} />
                 
                 <MyTopFiveSection />
+                <TopFiveGuideOverlay />
 
                 {/* Show onboarding trigger if user has no top 5 */}
                 {memberStats?.top_five_created === 0 && (
