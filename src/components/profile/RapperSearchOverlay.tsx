@@ -34,7 +34,7 @@ const RapperSearchOverlay = ({
   return (
     <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
       <DialogContent 
-        className="max-w-[90vw] sm:max-w-md"
+        className="max-w-[90vw] sm:max-w-md [&>button]:hidden"
         style={{
           backgroundColor: 'hsl(var(--theme-surface))',
           borderColor: 'hsl(var(--theme-border))'
