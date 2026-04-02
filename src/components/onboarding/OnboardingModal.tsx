@@ -20,6 +20,7 @@ interface OnboardingModalProps {
 const OnboardingModal = ({ isOpen, onClose, onComplete }: OnboardingModalProps) => {
   const { topRappers, updateTopRapper, selectedRapperIds } = useUserTopRappers();
   const { needsUsername } = useUsernameCheck();
+  const queryClient = useQueryClient();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
   const [currentStep, setCurrentStep] = useState(1);
