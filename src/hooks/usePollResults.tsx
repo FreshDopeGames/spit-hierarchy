@@ -17,7 +17,7 @@ export const usePollResults = (pollId: string) => {
   return useQuery({
     queryKey: ['poll-results', pollId],
     queryFn: async () => {
-      // Fetch aggregated vote counts from the poll_results view (no RLS restriction)
+      // Fetch aggregated vote counts and option text in parallel
       const [resultsResponse, optionsResponse] = await Promise.all([
         supabase
           .from('poll_results')
@@ -25,27 +25,32 @@ export const usePollResults = (pollId: string) => {
           .eq('poll_id', pollId),
         supabase
           .from('poll_options')
-          .select('id, option_text')
+          .select('id, option_text, option_order')
           .eq('poll_id', pollId)
+          .order('option_order', { ascending: true })
       ]);
 
       if (resultsResponse.error) throw resultsResponse.error;
       if (optionsResponse.error) throw optionsResponse.error;
 
-      // Build option text lookup
-      const optionTextMap = new Map(
-        optionsResponse.data.map(opt => [opt.id, opt.option_text])
+      // Build vote count lookup from the view
+      const voteCountMap = new Map(
+        resultsResponse.data.map(r => [r.option_id, Number(r.vote_count) || 0])
       );
 
       // Calculate total votes
       const totalVotes = resultsResponse.data.reduce((sum, r) => sum + (Number(r.vote_count) || 0), 0);
 
-      const results: PollResult[] = resultsResponse.data.map(r => ({
-        optionId: r.option_id!,
-        optionText: optionTextMap.get(r.option_id!) || '',
-        voteCount: Number(r.vote_count) || 0,
-        percentage: totalVotes > 0 ? Math.round(((Number(r.vote_count) || 0) / totalVotes) * 100) : 0
-      }));
+      // Build results from all options (sorted by option_order), showing all with their tallies
+      const results: PollResult[] = optionsResponse.data.map(opt => {
+        const voteCount = voteCountMap.get(opt.id) || 0;
+        return {
+          optionId: opt.id,
+          optionText: opt.option_text,
+          voteCount,
+          percentage: totalVotes > 0 ? Math.round((voteCount / totalVotes) * 100) : 0
+        };
+      });
 
       return { results, totalVotes };
     },

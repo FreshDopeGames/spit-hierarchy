@@ -1205,6 +1205,13 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "poll_votes_option_id_fkey"
+            columns: ["option_id"]
+            isOneToOne: false
+            referencedRelation: "poll_results"
+            referencedColumns: ["option_id"]
+          },
+          {
             foreignKeyName: "poll_votes_poll_id_fkey"
             columns: ["poll_id"]
             isOneToOne: false
@@ -3342,14 +3349,7 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "poll_votes_option_id_fkey"
-            columns: ["option_id"]
-            isOneToOne: false
-            referencedRelation: "poll_options"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "poll_votes_poll_id_fkey"
+            foreignKeyName: "poll_options_poll_id_fkey"
             columns: ["poll_id"]
             isOneToOne: false
             referencedRelation: "polls"
