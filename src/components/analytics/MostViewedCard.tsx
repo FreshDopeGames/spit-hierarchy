@@ -35,7 +35,7 @@ const MostViewedCard = () => {
           </ThemedCardTitle>
           <p className="text-xs text-[hsl(var(--theme-textMuted))]">Last 7 days</p>
         </ThemedCardHeader>
-        <ThemesCardContent>
+        <ThemedCardContent>
           <p className="text-[hsl(var(--theme-textMuted))] text-sm">No page views recorded yet.</p>
         </ThemedCardContent>
       </ThemedCard>
