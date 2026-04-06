@@ -10,7 +10,7 @@ const MostViewedCard = () => {
 
   if (isLoading) {
     return (
-      <ThemedCard variant="dark" className="border-[hsl(var(--theme-primary))]/30">
+      <ThemedCard variant="dark" className="border-[hsl(var(--theme-primary))]/30 border-primary">
         <ThemedCardHeader>
           <ThemedCardTitle className="flex items-center gap-2 font-mogra">
             <Eye className="h-5 w-5 text-[hsl(var(--theme-primary))]" />
@@ -27,7 +27,7 @@ const MostViewedCard = () => {
 
   if (!rappers || rappers.length === 0) {
     return (
-      <ThemedCard variant="dark" className="border-[hsl(var(--theme-primary))]/30">
+      <ThemedCard variant="dark" className="border-[hsl(var(--theme-primary))]/30 border-primary">
         <ThemedCardHeader>
           <ThemedCardTitle className="flex items-center gap-2 font-mogra">
             <Eye className="h-5 w-5 text-[hsl(var(--theme-primary))]" />
@@ -45,7 +45,7 @@ const MostViewedCard = () => {
   const [first, second, ...rest] = rappers;
 
   return (
-    <ThemedCard variant="dark" className="border-[hsl(var(--theme-primary))]/30">
+    <ThemedCard variant="dark" className="border-[hsl(var(--theme-primary))]/30 border-primary">
       <ThemedCardHeader>
         <ThemedCardTitle className="flex items-center gap-2 font-mogra">
           <Eye className="h-5 w-5 text-[hsl(var(--theme-primary))]" />
