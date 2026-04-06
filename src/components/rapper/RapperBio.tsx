@@ -22,7 +22,7 @@ const RapperBio = ({ rapper }: RapperBioProps) => {
     .filter(p => p.length > 0);
 
   return (
-    <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]/30 rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20 mb-8">
+    <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-lg shadow-lg shadow-[hsl(var(--theme-primary))]/20 mb-8">
       <CardContent className="p-8">
         <h2 className="text-2xl font-bold text-[hsl(var(--theme-primary))] mb-4 font-[var(--theme-font-heading)]">
           About
