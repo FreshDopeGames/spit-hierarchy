@@ -95,7 +95,7 @@ const TopRappersByCategoryCard = () => {
                       <Link 
                         key={rapper.rapper_id} 
                         to={`/rapper/${rapper.slug || rapper.rapper_id}`}
-                        className="block bg-gray-800 border border-rap-gold/20 rounded-lg p-3 hover:border-rap-gold/50 hover:bg-gray-700/50 transition-all duration-200 cursor-pointer group"
+                        className="block border border-rap-gold/20 rounded-lg p-3 hover:border-rap-gold/50 transition-all duration-200 cursor-pointer group bg-[sidebar-accent-foreground] bg-primary-foreground"
                         onClick={() => window.scrollTo(0, 0)}
                       >
                         <div className="flex items-center gap-3">
