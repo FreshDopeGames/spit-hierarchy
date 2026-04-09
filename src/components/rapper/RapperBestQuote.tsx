@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Quote, Share2 } from "lucide-react";
+import { Quote, Share2, MessageCircle } from "lucide-react";
 import { ThemedCard, ThemedCardContent } from "@/components/ui/themed-card";
 import { ThemedButton } from "@/components/ui/themed-button";
+import { ThemedSeparator } from "@/components/ui/themed-separator";
 import ShareQuoteModal from "./ShareQuoteModal";
 
 interface RapperBestQuoteProps {
@@ -15,6 +16,11 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
   const [showShare, setShowShare] = useState(false);
 
   if (!topQuote) return null;
+
+  const handleOpenComments = () => {
+    const trigger = document.querySelector('[data-comment-trigger]') as HTMLButtonElement | null;
+    if (trigger) trigger.click();
+  };
 
   return (
     <div className="mb-8">
@@ -45,6 +51,23 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
           </div>
         </ThemedCardContent>
       </ThemedCard>
+
+      {/* Favorite Bars CTA */}
+      <div className="flex flex-col items-center mt-6">
+        <ThemedSeparator className="w-1/2 mb-5" />
+        <p className="text-center text-sm font-[var(--theme-font-body)] text-[hsl(var(--theme-textMuted))] mb-4">
+          Let <span className="text-[hsl(var(--theme-primary))] font-semibold">{rapperName}</span> know your favorite bars in the Comments Section!
+        </p>
+        <ThemedButton
+          variant="outline"
+          size="sm"
+          className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/10"
+          onClick={handleOpenComments}
+        >
+          <MessageCircle className="w-4 h-4 mr-2" />
+          Drop Your Bars
+        </ThemedButton>
+      </div>
 
       <ShareQuoteModal
         isOpen={showShare}
