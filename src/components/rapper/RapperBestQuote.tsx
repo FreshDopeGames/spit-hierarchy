@@ -59,6 +59,7 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
             <ThemedButton
               variant="default"
               size="sm"
+              className="text-black"
               onClick={handleOpenComments}
             >
               <MessageCircle className="w-4 h-4 mr-2" />
