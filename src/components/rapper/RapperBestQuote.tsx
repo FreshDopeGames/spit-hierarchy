@@ -27,9 +27,9 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
       <ThemedCard className="relative overflow-hidden bg-black border-[hsl(var(--theme-primary))]">
         <ThemedCardContent className="p-6 pt-6">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-sm font-[var(--theme-font-heading)] text-[hsl(var(--theme-primary))] uppercase tracking-widest">
+            <h2 className="text-2xl font-bold font-[var(--theme-font-heading)] text-[hsl(var(--theme-primary))]">
               Best Quote
-            </h3>
+            </h2>
             <ThemedButton
               variant="outline"
               size="sm"
@@ -49,25 +49,25 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
               — {rapperName}{songTitle && `, "${songTitle}"`}
             </p>
           </div>
+
+          {/* Favorite Bars CTA */}
+          <div className="flex flex-col items-center mt-6">
+            <ThemedSeparator className="w-1/2 mb-5" />
+            <p className="text-center text-sm font-[var(--theme-font-body)] text-[hsl(var(--theme-textMuted))] mb-4">
+              Let <span className="text-[hsl(var(--theme-primary))] font-semibold">{rapperName}</span> know your favorite bars in the Comments Section!
+            </p>
+            <ThemedButton
+              variant="outline"
+              size="sm"
+              className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/10"
+              onClick={handleOpenComments}
+            >
+              <MessageCircle className="w-4 h-4 mr-2" />
+              Drop Your Bars
+            </ThemedButton>
+          </div>
         </ThemedCardContent>
       </ThemedCard>
-
-      {/* Favorite Bars CTA */}
-      <div className="flex flex-col items-center mt-6">
-        <ThemedSeparator className="w-1/2 mb-5" />
-        <p className="text-center text-sm font-[var(--theme-font-body)] text-[hsl(var(--theme-textMuted))] mb-4">
-          Let <span className="text-[hsl(var(--theme-primary))] font-semibold">{rapperName}</span> know your favorite bars in the Comments Section!
-        </p>
-        <ThemedButton
-          variant="outline"
-          size="sm"
-          className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/10"
-          onClick={handleOpenComments}
-        >
-          <MessageCircle className="w-4 h-4 mr-2" />
-          Drop Your Bars
-        </ThemedButton>
-      </div>
 
       <ShareQuoteModal
         isOpen={showShare}
