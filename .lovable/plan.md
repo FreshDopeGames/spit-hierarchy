@@ -1,32 +1,34 @@
 
 
-## Plan: Add "Most Viewed" Card to Rapper Statistics Analytics
+## Plan: Add "Favorite Bars" CTA Below Best Quote
 
 ### What it does
-Adds a new card directly under the "Rapper Statistics" heading that shows the rapper with the most page views in the last 7 days, along with a top-5 list of most-viewed rappers. Data comes from the existing `rapper_page_views` table.
+Adds a styled subsection beneath each rapper's Best Quote card, separated by a themed divider. It displays a message like *"Let Kendrick Lamar know your favorite bars in the Comments Section!"* with a button that programmatically opens the floating CommentBubble.
 
 ### Files
 
-1. **Create `src/hooks/useMostViewedRappers.ts`**
-   - React Query hook that queries `rapper_page_views` joined with `rappers`
-   - Filters to last 7 days, groups by rapper, orders by count descending, limits to 5
-   - Uses two Supabase queries: one RPC or raw query to get rapper_id + count from `rapper_page_views`, then fetches rapper details
+1. **Modify `src/components/rapper/RapperBestQuote.tsx`**
+   - Add a `ThemedSeparator` below the quote card (medium width, centered)
+   - Below the separator, render a text block: `"Let {rapperName} know your favorite bars in the Comments Section!"`
+   - Add a themed button with a `MessageCircle` icon labeled "Drop Your Bars"
+   - Button `onClick` finds the collapsed CommentBubble button in the DOM (`document.querySelector('.fixed.bottom-6.right-6 button')`) and programmatically clicks it to expand the comment panel
+   - Wrap the whole subsection in the existing `mb-8` container
 
-2. **Create `src/components/analytics/MostViewedCard.tsx`**
-   - Themed card matching existing pattern (black bg, gold/30 border, mogra font title)
-   - Eye icon + "Most Viewed" title
-   - Hero section: shows #1 rapper with avatar image, name (linked to their page), and view count
-   - Below: numbered list of #2–#5 with smaller avatars, names, and view counts
-   - Loading skeleton matching existing card patterns
-   - "Last 7 days" subtitle text
+2. **Modify `src/components/CommentBubble.tsx`** (minor)
+   - Add a `data-comment-trigger` attribute to the collapsed bubble's `ThemedButton` so the CTA can target it reliably instead of using fragile CSS selectors
 
-3. **Modify `src/components/analytics/RapperStatsAnalytics.tsx`**
-   - Import and render `MostViewedCard` as a full-width card right after the h3 heading, before the Albums/Cities grid
+### Visual layout
+```text
+┌─────────────────────────────────┐
+│  Best Quote card (existing)     │
+└─────────────────────────────────┘
+         ─────────────  (divider, ~50% width, centered)
+  "Let [name] know your favorite
+   bars in the Comments Section!"
+       [ 💬 Drop Your Bars ]
+```
 
-### Technical approach
-Since Supabase doesn't support aggregate queries directly via the JS client on `rapper_page_views`, the hook will:
-- Query `rapper_page_views` filtered by `viewed_at >= 7 days ago`
-- Group client-side by `rapper_id` and count occurrences
-- Fetch rapper details for the top 5 IDs
-- Cache with React Query (stale time ~5 minutes)
+### Technical notes
+- No new files needed — all changes fit in existing components
+- The button click approach reuses the existing CommentBubble expand logic without needing to lift state or create a global event system
 
