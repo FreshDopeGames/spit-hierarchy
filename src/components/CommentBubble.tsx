@@ -72,6 +72,7 @@ const CommentBubble = ({ contentType, contentId }: CommentBubbleProps) => {
       {!isExpanded && (
         <div className="fixed bottom-6 right-6 z-50">
           <ThemedButton
+            data-comment-trigger
             onClick={() => setIsExpanded(true)}
             className={`rounded-full h-14 px-4 shadow-lg shadow-[hsl(var(--theme-primary))]/30 transition-transform duration-300 ${
               shouldAnimate ? 'animate-slow-bounce' : ''
