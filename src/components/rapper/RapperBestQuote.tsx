@@ -52,14 +52,13 @@ const RapperBestQuote = ({ topQuote, rapperName, rapperId, songTitle }: RapperBe
 
           {/* Favorite Bars CTA */}
           <div className="flex flex-col items-center mt-6">
-            <ThemedSeparator className="w-1/2 mb-5" />
+            <div className="w-[70%] h-[2px] bg-[hsl(var(--theme-primary))] mb-5" />
             <p className="text-center text-sm font-[var(--theme-font-body)] text-[hsl(var(--theme-textMuted))] mb-4">
               Let <span className="text-[hsl(var(--theme-primary))] font-semibold">{rapperName}</span> know your favorite bars in the Comments Section!
             </p>
             <ThemedButton
-              variant="outline"
+              variant="default"
               size="sm"
-              className="border-[hsl(var(--theme-primary))]/50 text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))]/10"
               onClick={handleOpenComments}
             >
               <MessageCircle className="w-4 h-4 mr-2" />
