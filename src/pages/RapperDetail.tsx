@@ -253,7 +253,7 @@ const RapperDetail = () => {
       <main className="min-h-screen bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-background))] relative">
         <HeaderNavigation isScrolled={false} />
         
-        <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28 pb-8">
+        <div className="relative z-10 max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28 pb-8">
           {/* Back Button - Now properly preserves navigation state */}
           <ThemedButton 
             variant="default" 
