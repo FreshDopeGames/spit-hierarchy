@@ -47,7 +47,7 @@ const PublicUserProfile = () => {
       />
       <HeaderNavigation isScrolled={false} />
       
-      <div className="max-w-6xl mx-auto pt-20 px-4 pb-8">
+      <div className="max-w-4xl mx-auto pt-20 px-4 pb-8">
         <PublicProfileHeader profile={profile} rankingsCount={rankings.length} />
         <PublicTopFiveSection userId={profile.id} username={profile.username} />
         <PublicProfileRankings profile={profile} rankings={rankings} />
