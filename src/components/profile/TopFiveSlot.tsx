@@ -1,8 +1,10 @@
 
 import React from "react";
 import { Link } from "react-router-dom";
-import { Music, Pencil } from "lucide-react";
+import { Music, Pencil, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 interface TopFiveSlotProps {
   position: number;
@@ -16,6 +18,25 @@ interface TopFiveSlotProps {
 }
 
 const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({
+    id: position,
+    disabled: !rapper,
+  });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+    zIndex: isDragging ? 50 : undefined,
+  };
+
   const handleEditClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -24,6 +45,8 @@ const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
 
   return (
     <div
+      ref={setNodeRef}
+      style={style}
       className="border-2 border-[hsl(var(--theme-primary))]/20 rounded-lg p-3 relative bg-[hsl(var(--theme-surfaceSecondary))]"
     >
       {/* Position number in top left */}
@@ -38,6 +61,18 @@ const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
       >
         #{position}
       </div>
+
+      {/* Drag handle - top right, only on filled slots */}
+      {rapper && (
+        <button
+          {...attributes}
+          {...listeners}
+          className="absolute top-2 sm:top-3 right-2 sm:right-3 z-10 cursor-grab active:cursor-grabbing p-1 rounded text-[hsl(var(--theme-textMuted))] hover:text-[hsl(var(--theme-primary))] transition-colors touch-none"
+          aria-label="Drag to reorder"
+        >
+          <GripVertical className="w-5 h-5" />
+        </button>
+      )}
       
       <div className="flex flex-col items-center space-y-4">
         {rapper ? (
