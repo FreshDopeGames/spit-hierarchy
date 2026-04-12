@@ -42,7 +42,7 @@ const HeaderNavigation = ({
           </Link>
 
           {/* Right: Search Icon + Notifications + User Menu */}
-          <div className="flex items-center gap-1 sm:gap-3">
+          <div className="flex items-center gap-1 sm:gap-3 min-w-[100px] justify-end">
             {/* Fullscreen Toggle (mobile/tablet only) */}
             <FullscreenToggle showOnlyOnMobile={true} />
             

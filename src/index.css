@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap');
+/* Fonts loaded async via index.html <link> — no @import needed */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

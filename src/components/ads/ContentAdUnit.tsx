@@ -26,15 +26,24 @@ const ContentAdUnit = ({ className = '', size = 'medium' }: ContentAdUnitProps) 
     }
   };
 
-  // Don't render anything if ad failed to load
-  if (!showAd) {
-    return null;
-  }
+  const minHeights = {
+    small: '90px',
+    medium: '120px',
+    large: '250px'
+  };
 
   return (
-    <div className={`my-8 flex justify-center transition-all duration-300 ${
-      adLoaded ? 'opacity-100' : 'opacity-50'
-    } ${className}`}>
+    <div 
+      className={`my-8 flex justify-center transition-all duration-500 ${className}`}
+      style={{ 
+        contain: 'layout',
+        minHeight: showAd ? minHeights[size] : '0px',
+        opacity: !showAd ? 0 : adLoaded ? 1 : 0.5,
+        overflow: 'hidden',
+        maxHeight: !showAd ? '0px' : undefined,
+        margin: !showAd ? '0' : undefined,
+      }}
+    >
       <div className="max-w-full">
         <AdAnnouncement visible={adLoaded} />
         <AdSenseUnit
