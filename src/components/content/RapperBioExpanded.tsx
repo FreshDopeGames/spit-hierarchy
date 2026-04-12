@@ -1,7 +1,6 @@
 import { ThemedCard as Card, ThemedCardContent as CardContent, ThemedCardHeader as CardHeader, ThemedCardTitle as CardTitle } from "@/components/ui/themed-card";
 import { Badge } from "@/components/ui/badge";
 import { Tables } from "@/integrations/supabase/types";
-import ContentAdUnit from "@/components/ads/ContentAdUnit";
 type Rapper = Tables<"rappers">;
 interface RapperBioExpandedProps {
   rapper: Rapper;
@@ -9,18 +8,6 @@ interface RapperBioExpandedProps {
 const RapperBioExpanded = ({
   rapper
 }: RapperBioExpandedProps) => {
-  // Generate expanded content based on available rapper data
-  const generateCareerHighlights = () => {
-    if (!rapper.bio) return null;
-    return ["Known for innovative lyricism and unique flow patterns", "Influential figure in the hip-hop community", "Recognized for contributions to rap culture and music", "Respected by peers and fans alike for artistic integrity"];
-  };
-  const generateCulturalImpact = () => {
-    const impacts = ["Pioneering artist who helped shape modern hip-hop", "Influential voice in contemporary rap music", "Artist whose work resonates across generations", "Key figure in the evolution of hip-hop culture"];
-    return impacts.slice(0, 2); // Show 2 impact points
-  };
-  const careerHighlights = generateCareerHighlights();
-  const culturalImpact = generateCulturalImpact();
-  if (!rapper.bio && !careerHighlights) return null;
   if (!rapper.bio) return null;
   return <div className="space-y-8">
       <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] px-0 my-[30px]">
@@ -31,12 +18,8 @@ const RapperBioExpanded = ({
           <p className="leading-relaxed font-merienda text-rap-platinum text-lg">
             {rapper.bio}
           </p>
-          
         </CardContent>
       </Card>
-
-      {/* Ad Unit */}
-      <ContentAdUnit size="medium" />
     </div>;
 };
 export default RapperBioExpanded;
