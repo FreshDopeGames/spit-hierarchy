@@ -120,35 +120,32 @@ export const useRankingData = (rankingId: string) => {
         voteCounts[vote.rapper_id] = vote.total_vote_weight || 0;
       });
 
-      // Get position deltas and enhance with vote data
-      const itemsWithVotesAndDeltas = await Promise.all(
-        (items || []).map(async (item) => {
-          const { data: deltaResult } = await supabase.rpc("get_position_delta", {
-            p_ranking_id: rankingId,
-            p_rapper_id: item.rapper?.id
-          });
-
-          const ranking_votes = voteCounts[item.rapper?.id] || 0;
-
-          return {
-            ...item,
-            position_delta: deltaResult || 0,
-            ranking_votes,
-            dynamic_position: item.position, // Use the database position directly
-            visual_rank: null // Will be calculated below
-          } as RankingItemWithDelta;
-        })
-      );
+      // Enhance items with vote data (no per-item RPC calls needed)
+      const itemsWithVotes = (items || []).map((item) => {
+        const ranking_votes = voteCounts[item.rapper?.id] || 0;
+        return {
+          ...item,
+          position_delta: 0, // Will be calculated after sorting
+          ranking_votes,
+          dynamic_position: item.position,
+          visual_rank: null,
+        } as RankingItemWithDelta;
+      });
 
       // Sort items by votes first, then calculate visual ranks
-      const sortedItems = sortItemsByVotes(itemsWithVotesAndDeltas);
+      const sortedItems = sortItemsByVotes(itemsWithVotes);
       const itemsWithVisualRanks = calculateVisualRanks(sortedItems);
 
-      // Add display_index based on the sorted order (by votes)
-      const itemsWithDisplayIndex = itemsWithVisualRanks.map((item, index) => ({
-        ...item,
-        display_index: index + 1 // 1-based display order for premium styling
-      }));
+      // Add display_index and calculate real-time position_delta
+      const itemsWithDisplayIndex = itemsWithVisualRanks.map((item, index) => {
+        const displayIndex = index + 1;
+        return {
+          ...item,
+          display_index: displayIndex,
+          // Positive position = moved down, negative = moved up
+          position_delta: item.position - displayIndex,
+        };
+      });
 
       return itemsWithDisplayIndex;
     },
