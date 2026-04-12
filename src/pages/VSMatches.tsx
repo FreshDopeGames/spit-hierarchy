@@ -148,7 +148,7 @@ const VSMatches = () => {
                       </div>
 
                       {/* Vote distribution - centered with advantage bar */}
-                      {match.total_votes > 0 && <div className="relative w-full h-3 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden border-2 border-black">
+                      {match.total_votes > 0 && <div className="relative w-full h-6 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden border-2 border-black">
                           {/* Tug-of-war: green bars grow from center outward, gray = unfilled */}
                           <div className="absolute inset-0 flex">
                             {/* Left half - rapper 1 */}
