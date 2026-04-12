@@ -285,8 +285,6 @@ const RapperDetail = () => {
             <CareerStatsCard rapperId={rapper.id} isRefreshing={refreshDiscography.isPending} />
           </div>
 
-          {/* Ad placement between content sections */}
-          <ContentAdUnit size="medium" />
 
           {/* Discography Section - MusicBrainz integration */}
           <Suspense fallback={<div className="mb-8 h-48 rounded-xl bg-[var(--theme-surface)]/20 animate-pulse" />}>

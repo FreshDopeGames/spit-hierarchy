@@ -79,8 +79,6 @@ const BlogDetailContent = ({
         {/* Rappers mentioned in this post */}
         <MentionedRappersCarousel content={blogPost.content} />
 
-        {/* Strategic ad placement in content */}
-        <ContentAdUnit size="medium" />
 
         <BlogEngagementActions
           likes={likesCount}
@@ -95,8 +93,6 @@ const BlogDetailContent = ({
         {/* Polls section */}
         <BlogPoll blogPostId={blogPost.id} />
 
-        {/* Another ad placement */}
-        <ContentAdUnit size="large" />
 
         {/* Sidebar content moved below */}
         <BlogSidebar relatedPosts={transformedRelatedPosts} showSignUp={!user} />

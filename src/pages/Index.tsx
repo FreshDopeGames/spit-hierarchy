@@ -82,8 +82,6 @@ const Index = () => {
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
 
-            {/* Strategic Ad Placement */}
-            <ContentAdUnit size="large" />
 
             {/* Lazy-loaded Stats Overview (below fold) */}
             <LazySection fallback={<SectionPlaceholder />} minHeight="400px">
@@ -99,8 +97,6 @@ const Index = () => {
               </Suspense>
             </LazySection>
 
-            {/* Ad after polls */}
-            <ContentAdUnit size="medium" />
 
             {/* Lazy-loaded Guest user call-to-action (below fold) */}
             <LazySection fallback={<SectionPlaceholder />} minHeight="200px">
