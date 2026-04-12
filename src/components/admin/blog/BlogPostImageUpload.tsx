@@ -113,7 +113,7 @@ const BlogPostImageUpload = ({ imageUrl, onImageChange, label = "Featured Image"
 
   return (
     <div className="space-y-2">
-      <Label className="text-gray-900 text-sm sm:text-base">{label}</Label>
+      <Label className="text-white text-sm sm:text-base">{label}</Label>
       
       {displayImage ? (
         <div className="relative">
