@@ -26,12 +26,12 @@ interface ZodiacCount {
   element: string;
 }
 
-// Element color palette - consistent colors for each element
+// Element color palette - consistent colors for each element (ordered: Fire, Earth, Air, Water)
 const ELEMENT_COLORS: Record<string, { primary: string; secondary: string }> = {
   Fire: { primary: '#8B0000', secondary: '#A52A2A' },   // Blood Red - Aries, Leo, Sagittarius
-  Water: { primary: '#1034A9', secondary: '#1E3A8A' },  // Egyptian Blue - Cancer, Scorpio, Pisces
+  Earth: { primary: '#228B22', secondary: '#2E8B57' },   // Grass Green - Taurus, Virgo, Capricorn
   Air: { primary: '#F5F5F5', secondary: '#E8E8E8' },    // Off-White - Gemini, Libra, Aquarius
-  Earth: { primary: '#228B22', secondary: '#2E8B57' }   // Grass Green - Taurus, Virgo, Capricorn
+  Water: { primary: '#1034A9', secondary: '#1E3A8A' }  // Egyptian Blue - Cancer, Scorpio, Pisces
 };
 
 // Shuffle array using Fisher-Yates algorithm
