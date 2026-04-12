@@ -56,10 +56,14 @@ const BlogPostDialog = ({
   // Save/Update post mutation
   const savePostMutation = useMutation({
     mutationFn: async (data: BlogPostFormData) => {
+      const publishedAt = data.status === 'published'
+        ? (data.published_at || new Date().toISOString())
+        : null;
+
       const postData = {
         ...data,
         author_id: user?.id,
-        published_at: data.status === 'published' ? new Date().toISOString() : null
+        published_at: publishedAt
       };
 
       if (post) {

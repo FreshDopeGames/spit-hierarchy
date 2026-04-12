@@ -11,6 +11,7 @@ export interface BlogPostFormData {
   category_id: string;
   status: string;
   featured: boolean;
+  published_at: string;
 }
 
 export const createEmptyFormData = (): BlogPostFormData => ({
@@ -24,7 +25,8 @@ export const createEmptyFormData = (): BlogPostFormData => ({
   video_url: '',
   category_id: '',
   status: 'draft',
-  featured: false
+  featured: false,
+  published_at: ''
 });
 
 export const createFormDataFromPost = (post: any): BlogPostFormData => ({
@@ -38,7 +40,8 @@ export const createFormDataFromPost = (post: any): BlogPostFormData => ({
   video_url: post.video_url || '',
   category_id: post.category_id || '',
   status: post.status || 'draft',
-  featured: post.featured || false
+  featured: post.featured || false,
+  published_at: post.published_at || ''
 });
 
 export const generateSlug = (title: string): string => {
