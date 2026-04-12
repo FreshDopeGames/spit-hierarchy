@@ -47,15 +47,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Clean up excessive line breaks
         .replace(/(<br>\s*){4,}/g, "<br><br><br>")
 
-        // Wrap paragraphs that follow list items in an explanation span for consistent indentation
-        // Match list item, then any content until the next list item, heading, or end
-        .replace(
-          /(<span class="list-item">.*?<\/span>)(<br>)+([\s\S]*?)(?=<span class="list-item">|<span class="heading">|$)/g,
-          (match, listItem, br, explanation) => {
-            if (!explanation.trim()) return listItem + '<br>';
-            return `${listItem}<br><span class="list-explanation">${explanation.trim()}</span>`;
-          }
-        )
+        // No post-list indentation wrapping — content after lists returns to normal indentation
 
         // Clean up any remaining whitespace issues
         .trim();
