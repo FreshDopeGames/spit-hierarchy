@@ -1,38 +1,27 @@
 
 
-## Add Notification Dropdown with Activity Feed
+## Fix VS Vote Distribution Bar for Ties
 
-**Goal**: Convert the notification bell from a simple link into a dropdown that shows the latest 10 notifications — combining both database notifications (admin/system) and real-time activity toasts (votes from other users) — so users can review recent activity without navigating away.
+**Problem**: The current "advantage from center" bar math breaks on ties. When votes are equal (e.g., 1v1), the formula `(rapper_2_votes / total_votes) * 50` = 25%, creating a bar from 25%–50% that falsely shows rapper 1 winning.
 
-### Approach
+**Solution**: Replace the single green "advantage" bar with a proper tug-of-war split bar — two colored halves (one per rapper) that fill proportionally. The gold center divider stays as the 50/50 reference line.
 
-**Two-source merge**: Database notifications already exist in the `notifications` table. Activity toasts (from `ActivityToastProvider`) are ephemeral — they show and disappear. To persist them in the dropdown, we have two options:
+### Visual Behavior
+- **Tie (1v1)**: Each rapper's color fills exactly half. Divider sits at center — balanced.
+- **Advantage (3v1)**: Left rapper's color fills 75%, right fills 25%. Divider still marks center to show how far past 50/50 the leader has pulled.
+- **Zero votes**: Bar hidden (existing behavior).
 
-1. **Client-side buffer** — Keep a rolling in-memory array of the last N activity events captured by `ActivityToastProvider`, merge with DB notifications, show latest 10 in dropdown. Simple, no schema changes, but activity items are lost on page refresh.
+### Files to Edit
 
-2. **Write activity to `notifications` table** — When `ActivityToastProvider` fires, also insert a row into `notifications`. The dropdown just queries DB notifications (latest 10). Activity persists across refreshes and is visible on the full Notifications page too.
+1. **`src/pages/VSMatches.tsx`** (lines 150–160) — Replace the single green advantage bar with two bars:
+   - Left bar: rapper 1's share (`rapper_1_votes / total_votes * 100%` width), colored e.g. green.
+   - Right bar: fills remainder, colored e.g. amber/orange.
+   - Gold center divider stays as the 50% reference.
 
-**Recommendation**: Option 2. It's cleaner — one source of truth, notifications persist, and the dropdown just reads from the existing hook. The `notifications` table already supports different `type` values.
+2. **`src/pages/VSMatchDetail.tsx`** (lines 324–344) — Same change for the detail page's larger distribution bar.
 
-### Changes
-
-1. **`src/components/ActivityToastProvider.tsx`**
-   - After showing each toast, insert a notification row into `notifications` table with `type: 'ranking_vote'` or `type: 'skill_vote'`, the formatted message, and `user_id` set to the current user.
-   - Skip insert if user is not authenticated (activity toasts for anonymous users stay ephemeral).
-
-2. **`src/components/NotificationBell.tsx`** — Replace the `<Link>` with a `Popover` (from shadcn):
-   - Trigger: the existing bell icon with badge.
-   - Content: a dropdown panel (~320px wide) showing:
-     - Header row: "Notifications" title + "Mark all read" button.
-     - Scrollable list of the latest 10 notifications (sliced from existing `useNotifications` hook data).
-     - Each item: icon, title, time ago, unread dot. Clicking marks as read and navigates if `link_url` exists.
-     - Footer: "View all" link to `/notifications`.
-
-3. **`src/hooks/useNotifications.tsx`** — No changes needed. Already fetches latest 50, the dropdown just takes the first 10.
-
-### Technical Detail
-
-- The `notifications` table INSERT policy allows anyone (`WITH CHECK: true`), so the client can insert activity notifications for the current user.
-- Activity notifications will use types `ranking_vote` and `skill_vote`, which `NotificationCard` already has icons for.
-- To avoid duplicate activity notifications (e.g., if multiple tabs are open), we can add a simple dedup check: skip insert if a notification with the same title exists within the last 30 seconds.
+### Colors
+- Rapper 1 side: `bg-green-600`
+- Rapper 2 side: `bg-amber-600`
+- Center reference line: `bg-yellow-500` (unchanged)
 
