@@ -15,7 +15,7 @@ const OfficialRankingHeader = ({ title, description, category }: OfficialRanking
       </h1>
       
       <div className="flex flex-wrap gap-2 mb-4">
-        <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 font-kaushan">
+        <Badge variant="secondary" className="bg-rap-burgundy/20 text-rap-platinum border-rap-burgundy/30 font-kaushan uppercase">
           {category}
         </Badge>
       </div>
