@@ -9,7 +9,10 @@ const HomepagePoll = () => {
   const {
     theme
   } = useEnhancedTheme();
-  if (isLoading || !polls || polls.length === 0) {
+  if (isLoading) {
+    return <div className="min-h-[300px]" />;
+  }
+  if (!polls || polls.length === 0) {
     return null;
   }
   return <section className="px-6 py-[40px]">

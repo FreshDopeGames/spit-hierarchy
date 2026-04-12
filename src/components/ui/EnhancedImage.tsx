@@ -8,6 +8,7 @@ interface EnhancedImageProps extends React.ImgHTMLAttributes<HTMLImageElement> {
   containerClassName?: string;
   priority?: boolean;
   size?: 'thumb' | 'medium' | 'large' | 'xlarge';
+  aspectRatio?: string;
   onError?: (e: React.SyntheticEvent<HTMLImageElement>) => void;
   onLoad?: () => void;
 }
@@ -19,6 +20,7 @@ const EnhancedImage: React.FC<EnhancedImageProps> = ({
   containerClassName,
   priority = false,
   size = 'medium',
+  aspectRatio,
   onError,
   onLoad,
   ...props
@@ -31,7 +33,7 @@ const EnhancedImage: React.FC<EnhancedImageProps> = ({
   );
 
   return (
-    <div className={cn("overflow-hidden", containerClassName)}>
+    <div className={cn("overflow-hidden", containerClassName)} style={aspectRatio ? { aspectRatio } : undefined}>
       <img 
         src={src}
         alt={alt}

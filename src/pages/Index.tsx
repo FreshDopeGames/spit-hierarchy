@@ -86,14 +86,14 @@ const Index = () => {
             <ContentAdUnit size="large" />
 
             {/* Lazy-loaded Stats Overview (below fold) */}
-            <LazySection fallback={<SectionPlaceholder />}>
+            <LazySection fallback={<SectionPlaceholder />} minHeight="400px">
               <Suspense fallback={<SectionPlaceholder />}>
                 <StatsOverview />
               </Suspense>
             </LazySection>
 
             {/* Lazy-loaded Community Polls (below fold) */}
-            <LazySection fallback={<SectionPlaceholder />}>
+            <LazySection fallback={<SectionPlaceholder />} minHeight="300px">
               <Suspense fallback={<SectionPlaceholder />}>
                 <HomepagePoll />
               </Suspense>
@@ -103,7 +103,7 @@ const Index = () => {
             <ContentAdUnit size="medium" />
 
             {/* Lazy-loaded Guest user call-to-action (below fold) */}
-            <LazySection fallback={<SectionPlaceholder />}>
+            <LazySection fallback={<SectionPlaceholder />} minHeight="200px">
               <Suspense fallback={<SectionPlaceholder />}>
                 <GuestCallToAction />
               </Suspense>

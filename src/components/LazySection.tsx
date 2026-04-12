@@ -5,6 +5,7 @@ interface LazySectionProps {
   fallback?: ReactNode;
   rootMargin?: string;
   threshold?: number;
+  minHeight?: string;
 }
 
 /**
@@ -14,8 +15,9 @@ interface LazySectionProps {
 const LazySection = ({ 
   children, 
   fallback = null,
-  rootMargin = '200px', // Start loading 200px before entering viewport
-  threshold = 0.01 
+  rootMargin = '200px',
+  threshold = 0.01,
+  minHeight
 }: LazySectionProps) => {
   const [isVisible, setIsVisible] = useState(false);
   const [hasBeenVisible, setHasBeenVisible] = useState(false);
@@ -50,7 +52,7 @@ const LazySection = ({
   }, [rootMargin, threshold]);
 
   return (
-    <div ref={ref}>
+    <div ref={ref} style={minHeight && !hasBeenVisible ? { minHeight } : undefined}>
       {hasBeenVisible ? children : fallback}
     </div>
   );
