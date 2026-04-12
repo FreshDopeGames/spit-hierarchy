@@ -88,7 +88,7 @@ const GeographicFilter = ({ value, onChange }: GeographicFilterProps) => {
           
           {/* Priority US Locations - 52 items at top */}
           <ThemedSelectGroup>
-            <ThemedSelectLabel className="text-[hsl(var(--theme-primary)/0.7)]">United States</ThemedSelectLabel>
+            <ThemedSelectLabel className="text-gray-400">United States</ThemedSelectLabel>
             {PRIORITY_US_LOCATIONS.map((location) => (
               <ThemedSelectItem 
                 key={location.value} 
@@ -104,8 +104,8 @@ const GeographicFilter = ({ value, onChange }: GeographicFilterProps) => {
           
           {/* All Countries */}
           <ThemedSelectGroup>
-            <ThemedSelectLabel className="text-[hsl(var(--theme-primary)/0.7)]">All Countries</ThemedSelectLabel>
-            {COUNTRIES.map((country) => (
+            <ThemedSelectLabel className="text-gray-400">All Countries</ThemedSelectLabel>
+            {COUNTRIES.filter(c => c.value !== 'US' && c.value !== 'PR').map((country) => (
               <ThemedSelectItem 
                 key={country.value} 
                 value={country.value}
