@@ -175,7 +175,7 @@ const NavigationSidebar = ({
                   className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
                 >
                   <BookOpen className="w-4 h-4 mr-3" />
-                  Slick Talk
+                  Slick Talk Blog
                 </ThemedButton>
               </Link>
 
