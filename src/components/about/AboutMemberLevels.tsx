@@ -88,11 +88,11 @@ const AboutMemberLevels = () => {
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)]" />
-              <span><strong>+5-50 XP</strong> for unlocking achievements</span>
+              <span><strong>+10-50 XP</strong> for unlocking achievements</span>
             </li>
             <li className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-gradient-to-r from-[var(--theme-primary)] to-[var(--theme-primaryLight)]" />
-              <span><strong>+100-4,000 XP</strong> for milestone achievements</span>
+              <span><strong>+60-4,000 XP</strong> for milestone achievements</span>
             </li>
           </ul>
         </div>
