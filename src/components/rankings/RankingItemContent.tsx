@@ -28,10 +28,12 @@ const RankingItemContent = ({
   const isMobile = useIsMobile();
   const delta = item.position_delta || 0;
   
+  const trendingSize = isTopFive ? "w-6 h-6" : "w-4 h-4";
+  const trendingStroke = isTopFive ? 3 : 2;
   const getTrendingIcon = () => {
-    if (delta > 0) return <TrendingUp className="w-4 h-4 text-green-500" />;
-    if (delta < 0) return <TrendingDown className="w-4 h-4 text-red-500" />;
-    return <Minus className="w-4 h-4 text-gray-500" />;
+    if (delta > 0) return <TrendingUp className={`${trendingSize} text-green-500`} strokeWidth={trendingStroke} />;
+    if (delta < 0) return <TrendingDown className={`${trendingSize} text-red-500`} strokeWidth={trendingStroke} />;
+    return <Minus className={`${trendingSize} text-gray-500`} strokeWidth={trendingStroke} />;
   };
 
   const getTextSizes = () => {
