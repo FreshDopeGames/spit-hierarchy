@@ -189,13 +189,19 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
       let rapperId: string;
 
       if (rapper) {
-        // Update existing rapper
-        const { error } = await supabase
+        // Update existing rapper - use .select() to verify rows were actually updated
+        const { data: updatedRows, error } = await supabase
           .from("rappers")
           .update(rapperData)
-          .eq("id", rapper.id);
+          .eq("id", rapper.id)
+          .select("id");
         
         if (error) throw error;
+        
+        if (!updatedRows || updatedRows.length === 0) {
+          throw new Error("Update failed — your admin session may have expired. Please log out and log back in, then try again.");
+        }
+        
         rapperId = rapper.id;
         toast.success("Rapper updated successfully!");
       } else {
