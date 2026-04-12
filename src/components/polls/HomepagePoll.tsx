@@ -15,7 +15,7 @@ const HomepagePoll = () => {
   if (!polls || polls.length === 0) {
     return null;
   }
-  return <section className="px-6 py-[40px]">
+  return <section className="px-6 py-[40px] pt-0">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-8">
           <h2 style={{
