@@ -27,6 +27,7 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     enabled: !!user && !!isValidRankingId,
     staleTime: 2 * 60 * 1000, // 2 minutes - shorter for daily voting
     initialData: isValidRankingId && user ? getStoredVotes(rankingId, user.id) : [],
+    placeholderData: keepPreviousData, // Prevent reset during auth token refresh
   });
 
   // ENHANCED: Check if user has voted for a specific rapper TODAY in THIS ranking
