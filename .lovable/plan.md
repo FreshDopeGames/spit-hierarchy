@@ -1,46 +1,22 @@
 
 
-## Problem: React Error #310 (Hooks called conditionally)
+## Fix Duplicate "United States" and Adjust Dropdown Colors
 
-React error #310 means "Rendered fewer hooks than expected." The root cause is on **line 26-28** of `Analytics.tsx`: there is an early `return` **before** `useSearchParams`, `useState`, and `useEffect` are called. When `user` is null (e.g., during auth loading on refresh), those hooks are skipped. When `user` then becomes defined on the next render, React sees more hooks than last time and crashes.
+### Issues to Fix
+1. **Duplicate "United States"** - The country appears twice (once in `PRIORITY_US_LOCATIONS`, once in `COUNTRIES`)
+2. **Subheader color** - Group labels should be gray, not faded primary
+3. **Keep list items** as primary color (already correct)
 
-## Fix
+### Changes Needed
 
-Move all hooks (`useSearchParams`, `useState`, `useEffect`) above the early return. The conditional guest view check stays, but happens after all hooks have been called.
+**File: `src/components/analytics/GeographicFilter.tsx`**
 
-### File: `src/pages/Analytics.tsx`
+1. Filter out "United States" from the COUNTRIES render (since it's already in priority list)
+2. Change `ThemedSelectLabel` classes from `text-[hsl(var(--theme-primary)/0.7)]` to `text-gray-400`
+3. Keep `ThemedSelectItem` classes as `text-[hsl(var(--theme-primary))]`
 
-Reorder so all hooks are at the top of the component:
-
-```tsx
-const Analytics = () => {
-  const { user } = useAuth();
-  usePageVisitTracking('analytics_visits');
-  const [searchParams, setSearchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'rapper-stats');
-
-  useEffect(() => {
-    const tab = searchParams.get('tab');
-    if (tab && ['rapper-stats', 'platform', 'members', 'achievements', 'stats'].includes(tab)) {
-      setActiveTab(tab);
-    }
-  }, [searchParams]);
-
-  const handleTabChange = (value: string) => {
-    setActiveTab(value);
-    setSearchParams({ tab: value });
-  };
-
-  // Early return AFTER all hooks
-  if (!user) {
-    return <GuestAnalyticsView />;
-  }
-
-  return (
-    // ... rest unchanged
-  );
-};
-```
-
-One file changed, ~5 lines moved. No other changes needed.
+Updated code sections:
+- Line 91: Change label color to gray
+- Line 107: Change label color to gray  
+- Line 108: Filter COUNTRIES to exclude `value === "US"` and `value === "PR"` (already in priority list)
 
