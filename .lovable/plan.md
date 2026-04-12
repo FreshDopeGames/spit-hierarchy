@@ -1,35 +1,38 @@
 
 
-## Add Drag-and-Drop Reordering to My Top 5
+## Add Notification Dropdown with Activity Feed
 
-**Problem**: Users can't rearrange existing rappers in their Top 5. The edit button only lets you replace a slot with a rapper not already in the list, so swapping positions (e.g., moving #3 to #1) requires removing and re-adding.
+**Goal**: Convert the notification bell from a simple link into a dropdown that shows the latest 10 notifications — combining both database notifications (admin/system) and real-time activity toasts (votes from other users) — so users can review recent activity without navigating away.
 
-**Solution**: Add drag-and-drop support using `@dnd-kit/core` + `@dnd-kit/sortable` so users can drag filled slots to reorder them.
+### Approach
+
+**Two-source merge**: Database notifications already exist in the `notifications` table. Activity toasts (from `ActivityToastProvider`) are ephemeral — they show and disappear. To persist them in the dropdown, we have two options:
+
+1. **Client-side buffer** — Keep a rolling in-memory array of the last N activity events captured by `ActivityToastProvider`, merge with DB notifications, show latest 10 in dropdown. Simple, no schema changes, but activity items are lost on page refresh.
+
+2. **Write activity to `notifications` table** — When `ActivityToastProvider` fires, also insert a row into `notifications`. The dropdown just queries DB notifications (latest 10). Activity persists across refreshes and is visible on the full Notifications page too.
+
+**Recommendation**: Option 2. It's cleaner — one source of truth, notifications persist, and the dropdown just reads from the existing hook. The `notifications` table already supports different `type` values.
 
 ### Changes
 
-1. **Install `@dnd-kit/core` and `@dnd-kit/sortable`** — lightweight, accessible drag-and-drop library for React.
+1. **`src/components/ActivityToastProvider.tsx`**
+   - After showing each toast, insert a notification row into `notifications` table with `type: 'ranking_vote'` or `type: 'skill_vote'`, the formatted message, and `user_id` set to the current user.
+   - Skip insert if user is not authenticated (activity toasts for anonymous users stay ephemeral).
 
-2. **`src/components/profile/MyTopFiveSection.tsx`**
-   - Wrap the slot grids in `DndContext` + `SortableContext` from dnd-kit.
-   - On `onDragEnd`, when two filled slots are involved, call a new `swapPositions` mutation to swap their positions in the database.
-   - For mobile, render slots in a single sortable list. Desktop/tablet layouts will also be wrapped in sortable contexts.
+2. **`src/components/NotificationBell.tsx`** — Replace the `<Link>` with a `Popover` (from shadcn):
+   - Trigger: the existing bell icon with badge.
+   - Content: a dropdown panel (~320px wide) showing:
+     - Header row: "Notifications" title + "Mark all read" button.
+     - Scrollable list of the latest 10 notifications (sliced from existing `useNotifications` hook data).
+     - Each item: icon, title, time ago, unread dot. Clicking marks as read and navigates if `link_url` exists.
+     - Footer: "View all" link to `/notifications`.
 
-3. **`src/components/profile/TopFiveSlot.tsx`**
-   - Wrap in `useSortable` hook from dnd-kit.
-   - Add a drag handle icon (e.g., `GripVertical`) visible only on filled slots.
-   - Apply `transform` and `transition` styles from useSortable for smooth drag animation.
-   - Show visual feedback (opacity change, border highlight) while dragging.
+3. **`src/hooks/useNotifications.tsx`** — No changes needed. Already fetches latest 50, the dropdown just takes the first 10.
 
-4. **`src/hooks/useUserTopRappers.ts`**
-   - Add a `swapPositions` mutation that:
-     - Takes two positions and swaps the `rapper_id` values in the `user_top_rappers` table.
-     - Uses optimistic updates so the UI reorders instantly.
-     - Rolls back on error.
+### Technical Detail
 
-### UX Details
-- Drag handle icon appears on filled slots only (empty slots aren't draggable).
-- Dragging an empty slot is disabled.
-- On mobile, a visible grip icon makes the drag affordance clear.
-- Smooth animation via dnd-kit's built-in CSS transform transitions.
+- The `notifications` table INSERT policy allows anyone (`WITH CHECK: true`), so the client can insert activity notifications for the current user.
+- Activity notifications will use types `ranking_vote` and `skill_vote`, which `NotificationCard` already has icons for.
+- To avoid duplicate activity notifications (e.g., if multiple tabs are open), we can add a simple dedup check: skip insert if a notification with the same title exists within the last 30 seconds.
 
