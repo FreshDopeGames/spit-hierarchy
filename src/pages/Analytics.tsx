@@ -34,6 +34,10 @@ const Analytics = () => {
     setSearchParams({ tab: value });
   };
 
+  if (!user) {
+    return <GuestAnalyticsView />;
+  }
+
   return (
     <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))]">
       <SEOHead
