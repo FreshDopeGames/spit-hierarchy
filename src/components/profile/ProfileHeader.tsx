@@ -49,7 +49,13 @@ const ProfileHeader = ({
             {/* User Info Section */}
             <div className="flex-1 min-w-0 overflow-hidden">
               <div className="flex items-center justify-center lg:justify-start gap-2 mb-2 min-w-0 max-w-full">
-                <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-yellow-600 min-w-0 max-w-full truncate">
+                <h2 className={`font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] font-extrabold text-yellow-600 min-w-0 max-w-full whitespace-nowrap ${
+                  (profile?.username || profile?.full_name || "User").length > 20 
+                    ? 'text-lg sm:text-xl lg:text-2xl' 
+                    : (profile?.username || profile?.full_name || "User").length > 12 
+                      ? 'text-xl sm:text-2xl lg:text-3xl' 
+                      : 'text-2xl sm:text-3xl lg:text-4xl'
+                }`}>
                   {profile?.username || profile?.full_name || "User"}
                 </h2>
                 <TooltipProvider>
