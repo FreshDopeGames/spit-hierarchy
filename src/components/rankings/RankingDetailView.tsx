@@ -72,7 +72,7 @@ const RankingDetailView = ({ ranking, onBack }: RankingDetailViewProps) => {
         <div className="mb-8">
           <div className="flex flex-wrap gap-2 mb-4">
             {ranking.tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan">
+              <Badge key={tag} variant="secondary" className="bg-rap-burgundy/20 text-rap-burgundy border-rap-burgundy/30 font-kaushan uppercase">
                 {tag}
               </Badge>
             ))}

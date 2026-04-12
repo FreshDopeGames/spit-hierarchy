@@ -161,7 +161,7 @@ const RankingCard = ({ ranking, isUserRanking = false }: RankingCardProps) => {
                   lineHeight: "var(--theme-element-ranking_card_category_badge-line-height, 1)",
                 }}
               >
-                {ranking.isOfficial ? ranking.category : "Community"}
+                {(ranking.isOfficial ? ranking.category : "Community").toUpperCase()}
               </span>
             </div>
 
