@@ -1,65 +1,46 @@
 
 
-## Plan: Reduce Cumulative Layout Shift (CLS) Across All Pages
+## Problem: Votes Revert After Momentary Increase
 
-### Root Causes Identified
+**Root Cause**: A race condition between the optimistic update and concurrent refetches.
 
-A CLS of 0.36 is "Poor" (good is < 0.1). After auditing the codebase, here are the main contributors:
+When you vote:
+1. The optimistic update correctly increases the count in the UI cache
+2. The vote RPC fires and inserts the row into the database
+3. **But**: A real-time Supabase subscription on `ranking_votes` detects the INSERT and immediately triggers a cache invalidation + refetch
+4. This refetch can execute before the RPC transaction fully commits, pulling stale data that overwrites the optimistic update
+5. Additionally, the standard React Query pattern of **cancelling outgoing queries** before applying an optimistic update is missing — so any in-flight polling refetch (every 15 seconds) can also overwrite the optimistic data
 
-1. **Duplicate font loading** -- Google Fonts are loaded TWICE: once via `@import` in `src/index.css` (render-blocking) AND once via `<link>` in `index.html`. The CSS `@import` blocks rendering and causes text to reflow when fonts swap in.
-
-2. **Components that return `null` then expand** -- `HomepagePoll`, `BlogCarousel`, `GuestCallToAction`, `ContentAdUnit`, and `HomepageRankingSection` all render nothing (or collapse to zero height) during loading, then pop into existence, pushing everything below them down.
-
-3. **Ad units with no reserved space** -- `ContentAdUnit`/`AdSenseUnit` render with unknown height, then either expand when an ad loads or collapse to `null` when it fails, shifting all content below.
-
-4. **LazySection has no minimum height** -- The wrapper `<div ref={ref}>` reserves zero space until content loads, causing a jump.
-
-5. **Images without explicit dimensions** -- `EnhancedImage` and `LazyImage` don't enforce width/height or aspect-ratio on the `<img>` element, so the browser can't reserve space before the image loads.
-
-6. **Header auth state change** -- The header shows a "Sign In" button initially, then swaps to a user avatar+dropdown once auth loads, potentially changing the header's internal layout.
+The votes ARE saved to the database (confirmed), but the UI reverts because stale data from a racing refetch overwrites the optimistic cache entry.
 
 ---
 
-### Changes (7 files)
+## Plan
 
-**1. Remove duplicate font import from `src/index.css`** (line 2)
-- Delete `@import url('https://fonts.googleapis.com/...')` -- the same fonts are already loaded async in `index.html` with a proper `media="print" onload` pattern.
-- Add `font-display: swap` fallback system font stacks to prevent invisible text during font load (FOIT).
+### 1. Cancel outgoing queries before optimistic update
+In `src/hooks/useRankingVotes.tsx` `onMutate`, add `await queryClient.cancelQueries(...)` for the ranking data query key **before** calling `applyOptimisticUpdate`. This is the standard React Query optimistic update pattern and prevents any in-flight refetch from overwriting the optimistic data.
 
-**2. Reserve space for lazy-loaded sections in `src/pages/Index.tsx`**
-- Give each `LazySection`'s `SectionPlaceholder` a realistic `min-h` matching the content it will hold (e.g., `min-h-[400px]` for StatsOverview, `min-h-[300px]` for HomepagePoll, `min-h-[200px]` for GuestCallToAction).
+### 2. Guard real-time subscription during pending votes
+In `src/hooks/useRankingData.tsx`, track whether a vote mutation is in progress (via a ref or a query key convention) and skip the real-time invalidation callback when a vote is pending. Alternatively, add a short debounce (~2 seconds) to the real-time callback so the mutation's own `onSuccess` handler takes precedence.
 
-**3. Fix `HomepagePoll` collapsing to null in `src/components/polls/HomepagePoll.tsx`**
-- When `isLoading`, return a placeholder with `min-h-[300px]` instead of `null`.
-- When `polls.length === 0`, return a zero-height div instead of null to avoid parent container shift.
-
-**4. Fix `ContentAdUnit` layout shift in `src/components/ads/ContentAdUnit.tsx`**
-- Reserve a fixed `min-h` (e.g., 90px for medium, 250px for large) while the ad is loading.
-- When the ad fails, collapse gracefully with a CSS transition instead of snapping to `null`.
-- Use `contain: layout` on the ad container to isolate its layout impact.
-
-**5. Add `min-h` to `LazySection` wrapper in `src/components/LazySection.tsx`**
-- Accept an optional `minHeight` prop and apply it to the container div so it reserves vertical space before content loads.
-
-**6. Add aspect-ratio fallback to `EnhancedImage` in `src/components/ui/EnhancedImage.tsx`**
-- Accept optional `aspectRatio` prop (e.g., `"4/3"`, `"16/9"`).
-- Apply `aspect-ratio` CSS on the container so the browser reserves the correct space before the image downloads.
-
-**7. Stabilize header auth area in `src/components/HeaderNavigation.tsx`**
-- Give the right-side container a fixed `min-w` (e.g., `min-w-[100px]`) so the space is reserved regardless of whether the skeleton, avatar, or "Sign In" button is rendered.
+### 3. Delay the `onSuccess` refetch slightly
+In `src/hooks/ranking-votes/optimisticUpdates.ts` `invalidateRelatedQueries`, increase the initial refetch delay from immediate to ~500ms to ensure the database transaction is fully committed and visible to PostgREST before refetching.
 
 ---
 
-### Summary of expected impact
+### Technical Details
 
-| Fix | Est. CLS reduction |
-|-----|-------------------|
-| Remove duplicate font @import | -0.05 to -0.10 |
-| Reserve space for lazy sections | -0.08 to -0.12 |
-| Stabilize ad containers | -0.03 to -0.05 |
-| Image aspect-ratio reservations | -0.02 to -0.04 |
-| Header auth area stabilization | -0.01 to -0.02 |
-| **Total estimated** | **-0.19 to -0.33** |
+**File: `src/hooks/useRankingVotes.tsx`** — Add cancel queries in `onMutate`:
+```ts
+onMutate: async ({ rankingId, rapperId }) => {
+  // Cancel any outgoing refetches so they don't overwrite optimistic update
+  await queryClient.cancelQueries({ queryKey: ['ranking-data-with-deltas', rankingId] });
+  
+  const voteWeight = getVoteMultiplier();
+  // ... rest of existing code
+```
 
-Target: bring CLS from ~0.36 down to < 0.1 (Good).
+**File: `src/hooks/useRankingData.tsx`** — Debounce the real-time subscription callback to prevent it from racing with the vote mutation's optimistic update. Use a timeout that gets cleared if another event arrives within 2 seconds.
+
+**File: `src/hooks/ranking-votes/optimisticUpdates.ts`** — In `invalidateRelatedQueries`, wrap the initial invalidate+refetch in a ~500ms delay (replacing the immediate call), and keep the existing 1-second follow-up as a safety net.
 
