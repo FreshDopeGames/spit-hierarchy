@@ -1,5 +1,5 @@
 
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient, keepPreviousData } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/useAuth';
 import { useEffect } from 'react';
 import { DailyVoteRecord } from './daily-votes/types';
@@ -27,12 +27,17 @@ export const useDailyVoteStatus = (rankingId?: string) => {
     enabled: !!user && !!isValidRankingId,
     staleTime: 2 * 60 * 1000, // 2 minutes - shorter for daily voting
     initialData: isValidRankingId && user ? getStoredVotes(rankingId, user.id) : [],
+    placeholderData: keepPreviousData, // Prevent reset during auth token refresh
   });
 
   // ENHANCED: Check if user has voted for a specific rapper TODAY in THIS ranking
   const hasVotedToday = (rapperId: string): boolean => {
     if (!user || !rankingId) return false;
-    return hasVotedForRapper(dailyVotes, rapperId, rankingId, user.id);
+    // Check query cache first, then fall back to localStorage during auth transitions
+    if (hasVotedForRapper(dailyVotes, rapperId, rankingId, user.id)) return true;
+    // localStorage fallback: prevents button reset when auth token refreshes and cache is momentarily empty
+    const storedVotes = getStoredVotes(rankingId, user.id);
+    return hasVotedForRapper(storedVotes, rapperId, rankingId, user.id);
   };
 
   // ENHANCED: Add a vote to today's tracking for a SPECIFIC rapper in THIS ranking
