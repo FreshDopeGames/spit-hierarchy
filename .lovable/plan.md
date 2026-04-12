@@ -1,28 +1,25 @@
 
+## Fix: Trending Icons Are Inverted
 
-## Problem
+**Problem**: The sign convention in `RankingItemContent.tsx` is backwards relative to the delta calculation in `useRankingData.tsx`.
 
-The trending icons (up/down/neutral arrows) next to each rapper are **not reflecting real-time position changes**. Here's why:
+- `position_delta = item.position (old) - displayIndex (current)`
+- Positive delta = rapper moved UP (was at position 5, now at 1 → delta = +4)
+- Negative delta = rapper moved DOWN (was at position 1, now at 5 → delta = -4)
 
-- The `position_delta` is fetched from a database RPC (`get_position_delta`) that compares the stored `ranking_items.position` against yesterday's snapshot in `ranking_position_history`
-- Both of these are only updated by a **daily maintenance job at 3 AM UTC**
-- Meanwhile, the UI sorts items by live vote counts (`display_index`), so a rapper can visually move from #8 to #3 during the day, but the trending icon still shows "neutral" because the database position hasn't changed
+But the icon logic treats positive as "down" and negative as "up" — exactly reversed.
 
-## Fix
+**Fix in `src/components/rankings/RankingItemContent.tsx`** (lines 32-34):
 
-Calculate `position_delta` **client-side** by comparing the real-time vote-sorted position (`display_index`) against the last-known database position (`position` from the daily snapshot). This makes the arrows reflect what users actually see happening in real time.
+Swap the icon assignments:
+```tsx
+// Before (wrong):
+if (delta < 0) return <TrendingUp ...green />;
+if (delta > 0) return <TrendingDown ...red />;
 
-**Formula**: `position_delta = display_index - position`
-- Negative = moved up → TrendingUp icon
-- Positive = moved down → TrendingDown icon
-- Zero = no change → Neutral icon
+// After (correct):
+if (delta > 0) return <TrendingUp ...green />;
+if (delta < 0) return <TrendingDown ...red />;
+```
 
-## Changes
-
-### File: `src/hooks/useRankingData.tsx`
-
-1. Remove the per-item `get_position_delta` RPC call inside the `Promise.all` loop (this also eliminates N unnecessary database calls per load)
-2. After calculating `display_index`, set `position_delta = display_index - item.position` for each item
-
-The icon logic in `RankingItemContent.tsx` already correctly interprets negative delta as "moved up" and positive as "moved down", so no changes needed there.
-
+Single file, two-line change.
