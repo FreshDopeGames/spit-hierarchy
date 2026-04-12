@@ -8,7 +8,12 @@ import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
-const TopRappersByCategoryCard = () => {
+interface TopRappersByCategoryCardProps {
+  countryCode?: string | null;
+  region?: string | null;
+}
+
+const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryCardProps) => {
   const { data: topRappers, isLoading } = useTopRappersByCategory();
 
   if (isLoading) {
