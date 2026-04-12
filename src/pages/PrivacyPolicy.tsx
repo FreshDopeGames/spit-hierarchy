@@ -40,7 +40,7 @@ const PrivacyPolicy = () => {
             <ThemedCardContent className="p-8 space-y-8">
               
               <div className="text-rap-smoke text-sm">
-                Last updated: March 2026
+                Last updated: April 2026
               </div>
 
               <section>
@@ -191,18 +191,68 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. Third-Party Services</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">8. IP-Based Geolocation</h2>
+                <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
+                  <p>
+                    To provide geographic voting analytics and regional community insights, we collect approximate 
+                    geographic location data derived from your IP address.
+                  </p>
+                  <p><strong>What We Collect:</strong></p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>Approximate country of origin</li>
+                    <li>State or region (e.g., US states, Canadian provinces)</li>
+                    <li>Approximate city</li>
+                  </ul>
+                  <p><strong>How We Collect It:</strong></p>
+                  <p>
+                    When you interact with the platform while logged in, a server-side geolocation lookup is 
+                    performed using your IP address. This lookup occurs automatically and does not require any 
+                    action on your part.
+                  </p>
+                  <p><strong>What We Store:</strong></p>
+                  <p>
+                    We store only the derived location information (country, region, and city). <strong>Your raw 
+                    IP address is not stored</strong> in our location database. The geolocation lookup is performed 
+                    server-side via a third-party geolocation service, and only the resulting geographic data is retained.
+                  </p>
+                  <p><strong>Purpose:</strong></p>
+                  <ul className="list-disc list-inside space-y-2 ml-4">
+                    <li>To generate geographic voting analytics (e.g., most popular rappers by state or country)</li>
+                    <li>To provide regional community insights and trends</li>
+                    <li>To improve the relevance and accuracy of platform rankings</li>
+                  </ul>
+                  <p><strong>Legal Basis:</strong></p>
+                  <p>
+                    Under GDPR, we process this data based on our legitimate interest in providing meaningful 
+                    geographic analytics to our community. Under CCPA, this collection is disclosed in this 
+                    Privacy Policy as required.
+                  </p>
+                  <p><strong>Your Rights:</strong></p>
+                  <p>
+                    Your location data is subject to the same access, correction, and deletion rights described 
+                    in Section 10 below. You may request deletion of your stored location data at any time by 
+                    contacting us through our support channels.
+                  </p>
+                </div>
+              </section>
+
+              <Separator className="bg-rap-gold/20" />
+
+              <section>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. Third-Party Services</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>Our platform integrates with third-party services that process data on our behalf:</p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
                     <li><strong>Supabase:</strong> Database hosting, authentication services, and secure data storage</li>
                     <li><strong>Google AdSense:</strong> Advertisement delivery (Publisher ID: ca-pub-2518650700414992)</li>
+                    <li><strong>IP Geolocation Service:</strong> Server-side geographic lookup for voter analytics (IP addresses are not stored)</li>
                     <li><strong>Analytics providers:</strong> Usage tracking and insights (requires consent)</li>
                   </ul>
                   <p className="mt-4">
                     <strong>Data Retention:</strong> We retain your personal information only as long as necessary 
                     to provide our services or as required by law. Profile data is retained while your account is active. 
-                    Voting and ranking data may be retained indefinitely for historical analytics.
+                    Voting and ranking data may be retained indefinitely for historical analytics. Geographic location 
+                    data is retained while your account is active and deleted upon account deletion.
                   </p>
                   <p className="text-sm text-rap-smoke mt-2">
                     These third-party services have their own privacy policies. We recommend reviewing their policies 
@@ -214,7 +264,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">9. Your Rights</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Your Rights</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p><strong>All Users:</strong></p>
                   <ul className="list-disc list-inside space-y-2 ml-4">
@@ -222,6 +272,7 @@ const PrivacyPolicy = () => {
                     <li>Delete your account and associated data via your account settings</li>
                     <li>Opt out of non-essential communications and marketing emails</li>
                     <li>Withdraw cookie consent at any time through our Cookie Preferences tool</li>
+                    <li>Request deletion of your geographic location data</li>
                   </ul>
                   
                   <p className="mt-4"><strong>EU/EEA Residents (GDPR Rights):</strong></p>
@@ -254,7 +305,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">10. Children's Privacy</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">11. Children's Privacy</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   Our platform is not intended for children under 13. We do not knowingly collect personal information from children under 13. 
                   If we become aware of such collection, we will take steps to delete the information.
@@ -264,7 +315,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">11. Changes to Privacy Policy</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">12. Changes to Privacy Policy</h2>
                 <p className="text-rap-platinum font-merienda leading-relaxed">
                   We may update this Privacy Policy periodically. We will notify users of significant changes via email or platform notification. 
                   Your continued use constitutes acceptance of the updated policy.
@@ -274,7 +325,7 @@ const PrivacyPolicy = () => {
               <Separator className="bg-rap-gold/20" />
 
               <section>
-                <h2 className="text-2xl font-mogra text-rap-gold mb-4">12. Contact Us</h2>
+                <h2 className="text-2xl font-mogra text-rap-gold mb-4">13. Contact Us</h2>
                 <div className="space-y-4 text-rap-platinum font-merienda leading-relaxed">
                   <p>
                     For questions about this Privacy Policy, to exercise your privacy rights, or for general data privacy inquiries, 
