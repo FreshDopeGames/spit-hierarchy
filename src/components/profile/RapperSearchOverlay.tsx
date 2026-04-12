@@ -11,7 +11,7 @@ import RapperSuggestionModal from "../RapperSuggestionModal";
 interface RapperSearchOverlayProps {
   isOpen: boolean;
   onClose: () => void;
-  onSelectRapper: (rapperId: string) => void;
+  onSelectRapper: (rapperId: string, rapperData?: { id: string; name: string; image_url: string | null; slug: string }) => void;
   excludeIds: string[];
   position: number;
 }
@@ -27,8 +27,8 @@ const RapperSearchOverlay = ({
   const { canSuggest } = useCanSuggestRappers();
   const [suggestionModalOpen, setSuggestionModalOpen] = useState(false);
 
-  const handleRapperClick = (rapperId: string) => {
-    onSelectRapper(rapperId);
+  const handleRapperClick = (rapper: { id: string; name: string; image_url: string | null; slug: string }) => {
+    onSelectRapper(rapper.id, rapper);
   };
 
   return (
@@ -121,7 +121,7 @@ const RapperSearchOverlay = ({
             {searchResults.map((rapper) => (
               <div
                 key={rapper.id}
-                onClick={() => handleRapperClick(rapper.id)}
+                onClick={() => handleRapperClick({ id: rapper.id, name: rapper.name, image_url: rapper.image_url, slug: rapper.slug })}
                 className="flex items-center space-x-3 p-3 sm:p-4 border rounded-lg cursor-pointer transition-colors hover:opacity-90 min-h-[44px]"
                 style={{
                   backgroundColor: 'hsl(var(--theme-surfaceSecondary))',
