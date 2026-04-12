@@ -69,7 +69,7 @@ const AboutMemberLevels = () => {
               </div>
               <div className="flex items-center justify-center gap-1 text-[var(--theme-primary)]">
                 <Star className="w-3 h-3" />
-                <span className="text-sm font-bold">{level.multiplier} Vote Power</span>
+                <span className="text-sm font-bold text-theme-errorDark">{level.multiplier} Vote Power</span>
               </div>
             </div>
           ))}
