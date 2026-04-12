@@ -323,24 +323,13 @@ const VSMatchDetail = () => {
                   
                   {/* Distribution meter - 2x height with black border */}
                   <div className="relative w-full bg-[hsl(var(--theme-background))]/30 rounded-full h-4 border-2 border-black mb-3 overflow-hidden">
-                    {/* Gold center divider */}
+                    {/* Tug-of-war split bar */}
+                    <div className="absolute inset-0 flex">
+                      <div className="h-full bg-green-600 transition-all duration-500" style={{ width: `${(vsMatch!.rapper_1_votes / vsMatch!.total_votes) * 100}%` }} />
+                      <div className="h-full bg-amber-600 transition-all duration-500" style={{ width: `${(vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 100}%` }} />
+                    </div>
+                    {/* Gold center reference line */}
                     <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-yellow-500 z-10 -translate-x-1/2" />
-                    
-                    {/* Green advantage bar extending from center */}
-                  <div 
-                    className="absolute top-0 h-4 bg-green-600 transition-all duration-500"
-                    style={{
-                      left: vsMatch!.rapper_1_votes >= vsMatch!.rapper_2_votes 
-                        ? `${(vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 50}%`
-                        : '50%',
-                      right: vsMatch!.rapper_1_votes >= vsMatch!.rapper_2_votes
-                        ? '50%'
-                        : `${(vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 50}%`,
-                      borderRadius: vsMatch!.rapper_1_votes >= vsMatch!.rapper_2_votes
-                        ? '9999px 0 0 9999px'
-                        : '0 9999px 9999px 0'
-                    }}
-                  />
                   </div>
                   
                   {/* Rapper names and vote counts */}
