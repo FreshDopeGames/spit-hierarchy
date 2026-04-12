@@ -3096,6 +3096,39 @@ export type Database = {
           },
         ]
       }
+      voter_locations: {
+        Row: {
+          city: string | null
+          country: string | null
+          country_code: string | null
+          created_at: string
+          id: string
+          region: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          region?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          country_code?: string | null
+          created_at?: string
+          id?: string
+          region?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       votes: {
         Row: {
           category_id: string
@@ -3695,24 +3728,46 @@ export type Database = {
           source: string
         }[]
       }
-      get_category_voting_analytics: {
-        Args: never
-        Returns: {
-          average_rating: number
-          description: string
-          id: string
-          name: string
-          total_votes: number
-          unique_rappers: number
-          unique_voters: number
-        }[]
-      }
+      get_category_voting_analytics:
+        | {
+            Args: never
+            Returns: {
+              average_rating: number
+              description: string
+              id: string
+              name: string
+              total_votes: number
+              unique_rappers: number
+              unique_voters: number
+            }[]
+          }
+        | {
+            Args: { p_country_code?: string; p_region?: string }
+            Returns: {
+              average_rating: number
+              description: string
+              id: string
+              name: string
+              total_votes: number
+              unique_rappers: number
+              unique_voters: number
+            }[]
+          }
       get_daily_signups_by_source: {
         Args: { end_date?: string; start_date?: string }
         Returns: {
           signup_count: number
           signup_date: string
           source: string
+        }[]
+      }
+      get_global_voting_stats: {
+        Args: { p_country_code?: string; p_region?: string }
+        Returns: {
+          active_voters: number
+          avg_rating: number
+          rated_rappers: number
+          total_votes: number
         }[]
       }
       get_member_with_most_achievements: {
@@ -3722,6 +3777,16 @@ export type Database = {
           avatar_url: string
           id: string
           username: string
+        }[]
+      }
+      get_most_rated_rappers: {
+        Args: { p_country_code?: string; p_limit?: number; p_region?: string }
+        Returns: {
+          average_rating: number
+          id: string
+          name: string
+          rating_count: number
+          slug: string
         }[]
       }
       get_official_ranking_preview_items: {
@@ -3870,18 +3935,31 @@ export type Database = {
           username: string
         }[]
       }
-      get_public_rapper_voting_stats: {
-        Args: never
-        Returns: {
-          average_rating: number
-          id: string
-          name: string
-          total_votes: number
-          unique_voters: number
-          votes_last_30_days: number
-          votes_last_7_days: number
-        }[]
-      }
+      get_public_rapper_voting_stats:
+        | {
+            Args: never
+            Returns: {
+              average_rating: number
+              id: string
+              name: string
+              total_votes: number
+              unique_voters: number
+              votes_last_30_days: number
+              votes_last_7_days: number
+            }[]
+          }
+        | {
+            Args: { p_country_code?: string; p_region?: string }
+            Returns: {
+              average_rating: number
+              id: string
+              name: string
+              total_votes: number
+              unique_voters: number
+              votes_last_30_days: number
+              votes_last_7_days: number
+            }[]
+          }
       get_rapper_top5_count: { Args: { rapper_uuid: string }; Returns: number }
       get_rapper_top5_counts: {
         Args: never

@@ -13,6 +13,7 @@ import { AchievementProvider } from "@/components/achievements/AchievementProvid
 import ErrorBoundary from "@/components/ErrorBoundary";
 
 import UsernameEnforcementModal from "@/components/auth/UsernameEnforcementModal";
+import VoterGeolocationTracker from "@/components/VoterGeolocationTracker";
 import ActivityToastProvider from "@/components/ActivityToastProvider";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
@@ -54,6 +55,7 @@ createRoot(document.getElementById("root")!).render(
                   <AchievementProvider>
                     <ErrorBoundary>
                       <UsernameEnforcementModal />
+                      <VoterGeolocationTracker />
                       <ActivityToastProvider />
                       <App />
                       <Toaster />

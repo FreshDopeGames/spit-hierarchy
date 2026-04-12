@@ -9,9 +9,11 @@ import { Link } from "react-router-dom";
 
 interface TopMembersCardsProps {
   timeRange?: "all" | "week";
+  countryCode?: string | null;
+  region?: string | null;
 }
 
-const TopMembersCards = ({ timeRange = "all" }: TopMembersCardsProps) => {
+const TopMembersCards = ({ timeRange = "all", countryCode, region }: TopMembersCardsProps) => {
   // Top Commenters Query
   const {
     data: topCommenters,

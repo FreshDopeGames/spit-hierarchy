@@ -8,7 +8,34 @@ import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
-const TopRappersByCategoryCard = () => {
+// Extracted to file scope to prevent hook remount on every render
+const RapperAvatarItem = ({ rapperId, rapperName }: { rapperId: string; rapperName: string }) => {
+  const { data: imageUrl } = useRapperImage(rapperId, 'thumb');
+  const placeholderImage = getOptimizedPlaceholder('thumb');
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
+
+  return (
+    <img
+      src={imageToDisplay}
+      alt={rapperName}
+      className="w-full h-full object-cover rounded-lg"
+      loading="lazy"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        if (!target.src.includes(placeholderImage)) {
+          target.src = placeholderImage;
+        }
+      }}
+    />
+  );
+};
+
+interface TopRappersByCategoryCardProps {
+  countryCode?: string | null;
+  region?: string | null;
+}
+
+const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryCardProps) => {
   const { data: topRappers, isLoading } = useTopRappersByCategory();
 
   if (isLoading) {
@@ -70,27 +97,6 @@ const TopRappersByCategoryCard = () => {
                 </h4>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                   {(rappers || []).slice(0, 5).map((rapper: any, index: number) => {
-                    const RapperAvatarItem = ({ rapper }: { rapper: any }) => {
-                      const { data: imageUrl } = useRapperImage(rapper.rapper_id, 'thumb');
-                      const placeholderImage = getOptimizedPlaceholder('thumb');
-                      const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
-
-                      return (
-                        <img 
-                          src={imageToDisplay}
-                          alt={rapper.rapper_name} 
-                          className="w-full h-full object-cover rounded-lg"
-                          loading="lazy"
-                          onError={(e) => {
-                            const target = e.target as HTMLImageElement;
-                            if (!target.src.includes(placeholderImage)) {
-                              target.src = placeholderImage;
-                            }
-                          }}
-                        />
-                      );
-                    };
-
                     return (
                       <Link 
                         key={rapper.rapper_id} 
@@ -100,7 +106,7 @@ const TopRappersByCategoryCard = () => {
                       >
                         <div className="flex items-center gap-3">
                           <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
-                             <RapperAvatarItem rapper={rapper} />
+                             <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} />
                           </div>
                           
                           <div className="flex-1">
