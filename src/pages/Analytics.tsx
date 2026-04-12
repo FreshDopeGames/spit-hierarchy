@@ -18,14 +18,7 @@ import SEOHead from "@/components/seo/SEOHead";
 
 const Analytics = () => {
   const { user } = useAuth();
-
-  // Track analytics page visit for achievements
   usePageVisitTracking('analytics_visits');
-
-  // Show guest view for unauthenticated users
-  if (!user) {
-    return <GuestAnalyticsView />;
-  }
   const [searchParams, setSearchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'rapper-stats');
 
