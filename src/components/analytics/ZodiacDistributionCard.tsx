@@ -30,7 +30,7 @@ interface ZodiacCount {
 const ELEMENT_COLORS: Record<string, { primary: string; secondary: string }> = {
   Fire: { primary: '#8B0000', secondary: '#A52A2A' },   // Blood Red - Aries, Leo, Sagittarius
   Water: { primary: '#1034A9', secondary: '#1E3A8A' },  // Egyptian Blue - Cancer, Scorpio, Pisces
-  Air: { primary: '#800080', secondary: '#9932CC' },    // Deep Purple - Gemini, Libra, Aquarius
+  Air: { primary: '#F5F5F5', secondary: '#E8E8E8' },    // Off-White - Gemini, Libra, Aquarius
   Earth: { primary: '#228B22', secondary: '#2E8B57' }   // Grass Green - Taurus, Virgo, Capricorn
 };
 
