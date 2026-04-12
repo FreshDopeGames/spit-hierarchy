@@ -149,10 +149,16 @@ const VSMatches = () => {
 
                       {/* Vote distribution - centered with advantage bar */}
                       {match.total_votes > 0 && <div className="relative w-full h-3 bg-[hsl(var(--theme-background))]/30 rounded-full mb-3 overflow-hidden border-2 border-black">
-                          {/* Tug-of-war split bar */}
+                          {/* Tug-of-war: green bars grow from center outward, gray = unfilled */}
                           <div className="absolute inset-0 flex">
-                            <div className="h-full bg-green-600 transition-all duration-300" style={{ width: `${(match.rapper_1_votes / match.total_votes) * 100}%` }} />
-                            <div className="h-full bg-amber-600 transition-all duration-300" style={{ width: `${(match.rapper_2_votes / match.total_votes) * 100}%` }} />
+                            {/* Left half - rapper 1 */}
+                            <div className="w-1/2 h-full flex justify-end">
+                              <div className="h-full bg-green-600 transition-all duration-300 rounded-l-full" style={{ width: `${Math.min((match.rapper_1_votes / match.total_votes) * 200, 100)}%` }} />
+                            </div>
+                            {/* Right half - rapper 2 */}
+                            <div className="w-1/2 h-full flex justify-start">
+                              <div className="h-full bg-green-600 transition-all duration-300 rounded-r-full" style={{ width: `${Math.min((match.rapper_2_votes / match.total_votes) * 200, 100)}%` }} />
+                            </div>
                           </div>
                           {/* Gold center reference line */}
                           <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-yellow-500 z-10 -translate-x-1/2" />
