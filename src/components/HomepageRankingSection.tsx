@@ -6,7 +6,7 @@ import RankingPreviewCard from "./RankingPreviewCard";
 import { Tables } from "@/integrations/supabase/types";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import ContentAdUnit from "@/components/ads/ContentAdUnit";
+
 type OfficialRanking = Tables<"official_rankings">;
 type RankingItem = Tables<"ranking_items"> & {
   rapper: Tables<"rappers">;

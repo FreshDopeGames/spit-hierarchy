@@ -6,7 +6,7 @@ import HomepageRankingSection from "@/components/HomepageRankingSection";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SEOHead from "@/components/seo/SEOHead";
-import ContentAdUnit from "@/components/ads/ContentAdUnit";
+
 import LazySection from "@/components/LazySection";
 
 // Lazy load below-fold components for faster initial render
