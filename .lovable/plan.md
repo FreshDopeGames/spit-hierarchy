@@ -1,103 +1,46 @@
 
 
-## Plan: Geographic Voter Segmentation for Analytics
+## Problem: React Error #310 (Hooks called conditionally)
 
-### Overview
-Build the full geographic infrastructure (database table, edge function for IP geolocation, client hook) and add geographic filter dropdowns across all relevant analytics cards on the Platform, Rapper Stats, and Members tabs.
+React error #310 means "Rendered fewer hooks than expected." The root cause is on **line 26-28** of `Analytics.tsx`: there is an early `return` **before** `useSearchParams`, `useState`, and `useEffect` are called. When `user` is null (e.g., during auth loading on refresh), those hooks are skipped. When `user` then becomes defined on the next render, React sees more hooks than last time and crashes.
 
-### Part 1: Database Infrastructure
+## Fix
 
-**A. Create `voter_locations` table** (migration)
-- Columns: `id` (uuid PK), `user_id` (uuid, unique, references auth.users), `country` (text), `country_code` (text), `region` (text — US state or province), `city` (text), `created_at`, `updated_at`
-- RLS: authenticated users can SELECT all rows (needed for aggregation joins), users can INSERT/UPDATE their own row only
+Move all hooks (`useSearchParams`, `useState`, `useEffect`) above the early return. The conditional guest view check stays, but happens after all hooks have been called.
 
-**B. Create/update server-side RPC functions** (migration)
-- `get_global_voting_stats(p_country_code text DEFAULT NULL, p_region text DEFAULT NULL)` — replaces current broken client-side aggregation in GlobalStatsCards; returns total_votes, active_voters, rated_rappers, avg_rating filtered by optional geo params
-- `get_most_rated_rappers(p_country_code text DEFAULT NULL, p_region text DEFAULT NULL)` — replaces client-side aggregation in MostRatedRappersCard
-- Update `get_category_voting_analytics` to accept optional `p_country_code`/`p_region` params
-- Update `get_public_rapper_voting_stats` to accept optional `p_country_code`/`p_region` params
-- All functions join `votes.user_id` to `voter_locations.user_id` when filters are provided
+### File: `src/pages/Analytics.tsx`
 
-### Part 2: Edge Function for IP Geolocation
+Reorder so all hooks are at the top of the component:
 
-**C. Create `geolocate-voter` edge function**
-- Called once per user (when no `voter_locations` record exists)
-- Uses free `ip-api.com` JSON endpoint (no key needed) to detect country, region, city from the request IP
-- Upserts into `voter_locations` using the service role key
-- Returns the detected location to the client
+```tsx
+const Analytics = () => {
+  const { user } = useAuth();
+  usePageVisitTracking('analytics_visits');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [activeTab, setActiveTab] = useState(searchParams.get('tab') || 'rapper-stats');
 
-### Part 3: Client-Side Hook
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab && ['rapper-stats', 'platform', 'members', 'achievements', 'stats'].includes(tab)) {
+      setActiveTab(tab);
+    }
+  }, [searchParams]);
 
-**D. Create `src/hooks/useVoterGeolocation.ts`**
-- On mount (for authenticated users), checks if user has a `voter_locations` record
-- If not, calls the `geolocate-voter` edge function
-- Caches result so it runs once per session
-- Silent — no UI indication to the user
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    setSearchParams({ tab: value });
+  };
 
-### Part 4: Geographic Filter Component + Data
+  // Early return AFTER all hooks
+  if (!user) {
+    return <GuestAnalyticsView />;
+  }
 
-**E. Create `src/utils/geographicData.ts`**
-- Export `US_STATES` array (50 states + DC with name/code)
-- Export `COUNTRIES` array (~195 countries with name/country_code)
-- Both sorted alphabetically
+  return (
+    // ... rest unchanged
+  );
+};
+```
 
-**F. Create `src/components/analytics/GeographicFilter.tsx`**
-- Reusable dropdown component using ThemedSelect
-- Two modes: Country selector and Region selector (shown only when US is selected)
-- Options: "All Locations" (default), "United States", then all countries alphabetically; when US selected, a second dropdown shows 50 states + DC
-- Emits `{ countryCode: string | null, region: string | null }`
-
-### Part 5: Integrate Filters into Analytics Tabs
-
-**G. Platform tab (`VotingAnalytics.tsx`)**
-- Add GeographicFilter at the top
-- Pass `countryCode`/`region` state down to GlobalStatsCards, CategoryPerformanceCard, TopVotedRappersCard, MostRatedRappersCard
-- Each card passes the filter params to its RPC call and includes them in the query key
-
-**H. Rapper Stats tab (`RapperStatsAnalytics.tsx`)**
-- Add GeographicFilter at the top
-- Pass filters to TopRappersByCategoryCard (updates the votes query per category)
-
-**I. Members tab (`MemberAnalytics.tsx`)**
-- Add GeographicFilter alongside existing time range buttons
-- Pass filters to TopMembersCards
-
-### Part 6: Fix Existing Bugs (from earlier assessment)
-
-**J. Fix TopRappersByCategoryCard**
-- Extract `RapperAvatarItem` out of the `.map()` render loop to file scope to prevent hook remounts
-
-**K. Fix GlobalStatsCards**
-- Replace 3 separate client-side fetches with the new `get_global_voting_stats` RPC
-
-**L. Fix MostRatedRappersCard**
-- Replace client-side vote aggregation with the new `get_most_rated_rappers` RPC
-
-### Files to create/modify
-
-| File | Action |
-|------|--------|
-| Migration: `voter_locations` table + RLS | Create |
-| Migration: new/updated RPC functions | Create |
-| `supabase/functions/geolocate-voter/index.ts` | Create |
-| `src/hooks/useVoterGeolocation.ts` | Create |
-| `src/utils/geographicData.ts` | Create |
-| `src/components/analytics/GeographicFilter.tsx` | Create |
-| `src/components/analytics/VotingAnalytics.tsx` | Modify — add geo filter, pass to children |
-| `src/components/analytics/GlobalStatsCards.tsx` | Modify — use RPC with geo params |
-| `src/components/analytics/CategoryPerformanceCard.tsx` | Modify — accept geo params |
-| `src/components/analytics/TopVotedRappersCard.tsx` | Modify — accept geo params |
-| `src/components/analytics/MostRatedRappersCard.tsx` | Modify — use RPC with geo params |
-| `src/components/analytics/RapperStatsAnalytics.tsx` | Modify — add geo filter |
-| `src/components/analytics/TopRappersByCategoryCard.tsx` | Modify — extract component, accept geo params |
-| `src/components/analytics/MemberAnalytics.tsx` | Modify — add geo filter |
-| `src/components/analytics/TopMembersCards.tsx` | Modify — accept geo params |
-| `src/App.tsx` or layout component | Modify — integrate `useVoterGeolocation` hook |
-
-### Technical notes
-- Geographic data is stored per-user (not per-vote) to keep the table small; joins happen via `user_id`
-- The edge function runs server-side so raw IPs are never exposed to the client
-- ip-api.com has a 45 req/min rate limit on the free tier — fine since we only call once per new user
-- All existing votes automatically gain geographic context once the voter's location is recorded
-- Filter defaults to "All Locations" so no change in default behavior
+One file changed, ~5 lines moved. No other changes needed.
 
