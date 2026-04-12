@@ -14,12 +14,14 @@ import {
   useSensor,
   useSensors,
   DragEndEvent,
+  DragStartEvent,
+  DragOverlay,
 } from "@dnd-kit/core";
 import {
   SortableContext,
   rectSortingStrategy,
-  verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
+import { Music } from "lucide-react";
 
 const MyTopFiveSection = () => {
   const {
@@ -33,6 +35,7 @@ const MyTopFiveSection = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [selectedPosition, setSelectedPosition] = useState<number | null>(null);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   const pointerSensor = useSensor(PointerSensor, {
     activationConstraint: { distance: 8 },
@@ -60,20 +63,28 @@ const MyTopFiveSection = () => {
     setSelectedPosition(null);
   };
 
+  const handleDragStart = (event: DragStartEvent) => {
+    setActiveId(event.active.id as number);
+  };
+
   const handleDragEnd = (event: DragEndEvent) => {
+    setActiveId(null);
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
     const posA = active.id as number;
     const posB = over.id as number;
 
-    // Only swap if both positions have rappers
     const hasA = topRappers.some(item => item.position === posA);
     const hasB = topRappers.some(item => item.position === posB);
 
     if (hasA && hasB) {
       swapPositions({ posA, posB });
     }
+  };
+
+  const handleDragCancel = () => {
+    setActiveId(null);
   };
 
   // Create array of 5 positions with current data
@@ -87,6 +98,7 @@ const MyTopFiveSection = () => {
   });
 
   const sortableIds = slots.map(s => s.position);
+  const activeSlot = activeId ? slots.find(s => s.position === activeId) : null;
 
   if (isLoading) {
     return (
@@ -121,83 +133,65 @@ const MyTopFiveSection = () => {
           </Button>
         </div>
 
-        <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
-          {/* Desktop Layout */}
-          <div className="hidden lg:block">
-            <SortableContext items={sortableIds.slice(0, 2)} strategy={rectSortingStrategy}>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                {slots.slice(0, 2).map(slot => (
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
+          onDragEnd={handleDragEnd}
+          onDragCancel={handleDragCancel}
+        >
+          <SortableContext items={sortableIds} strategy={rectSortingStrategy}>
+            {/* 
+              Single grid for all 5 slots. 
+              Mobile: 1 col, Tablet: 2 col (pos 1 spans full), Desktop: 6-col grid with custom spans.
+            */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-4">
+              {slots.map(slot => (
+                <div
+                  key={slot.position}
+                  className={
+                    slot.position <= 2
+                      ? "sm:col-span-1 lg:col-span-3" + (slot.position === 1 ? " sm:col-span-2 lg:col-span-3" : "")
+                      : "sm:col-span-1 lg:col-span-2"
+                  }
+                >
                   <TopFiveSlot
-                    key={slot.position}
                     position={slot.position}
                     rapper={slot.rapper}
                     onEditClick={() => handleSlotClick(slot.position)}
                   />
-                ))}
-              </div>
-            </SortableContext>
-            <SortableContext items={sortableIds.slice(2, 5)} strategy={rectSortingStrategy}>
-              <div className="grid grid-cols-3 gap-4">
-                {slots.slice(2, 5).map(slot => (
-                  <TopFiveSlot
-                    key={slot.position}
-                    position={slot.position}
-                    rapper={slot.rapper}
-                    onEditClick={() => handleSlotClick(slot.position)}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </div>
+                </div>
+              ))}
+            </div>
+          </SortableContext>
 
-          {/* Tablet Layout */}
-          <div className="hidden sm:block lg:hidden">
-            <SortableContext items={sortableIds} strategy={rectSortingStrategy}>
-              <div className="grid grid-cols-1 gap-4 mb-4">
-                <TopFiveSlot
-                  position={slots[0].position}
-                  rapper={slots[0].rapper}
-                  onEditClick={() => handleSlotClick(slots[0].position)}
-                />
+          <DragOverlay>
+            {activeSlot ? (
+              <div className="border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 bg-[hsl(var(--theme-surfaceSecondary))] shadow-2xl shadow-[hsl(var(--theme-primary))]/40 opacity-90 rotate-2 scale-105">
+                <div className="flex flex-col items-center space-y-2">
+                  <div className="w-full max-w-60 h-32 sm:h-40 rounded-lg overflow-hidden border border-[hsl(var(--theme-primary))]/20 bg-[hsl(var(--theme-surface))]">
+                    {activeSlot.rapper?.image_url ? (
+                      <img
+                        src={activeSlot.rapper.image_url}
+                        alt={activeSlot.rapper.name}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center">
+                        <Music className="w-12 h-12" style={{ color: 'hsl(var(--theme-textMuted))' }} />
+                      </div>
+                    )}
+                  </div>
+                  <div
+                    className="text-sm sm:text-lg font-bold text-center"
+                    style={{ color: 'hsl(var(--theme-text))', fontFamily: 'var(--theme-font-body)' }}
+                  >
+                    {activeSlot.rapper?.name}
+                  </div>
+                </div>
               </div>
-              <div className="grid grid-cols-2 gap-4 mb-4">
-                {slots.slice(1, 3).map(slot => (
-                  <TopFiveSlot
-                    key={slot.position}
-                    position={slot.position}
-                    rapper={slot.rapper}
-                    onEditClick={() => handleSlotClick(slot.position)}
-                  />
-                ))}
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                {slots.slice(3, 5).map(slot => (
-                  <TopFiveSlot
-                    key={slot.position}
-                    position={slot.position}
-                    rapper={slot.rapper}
-                    onEditClick={() => handleSlotClick(slot.position)}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </div>
-
-          {/* Mobile Layout */}
-          <div className="block sm:hidden">
-            <SortableContext items={sortableIds} strategy={verticalListSortingStrategy}>
-              <div className="grid grid-cols-1 gap-4">
-                {slots.map(slot => (
-                  <TopFiveSlot
-                    key={slot.position}
-                    position={slot.position}
-                    rapper={slot.rapper}
-                    onEditClick={() => handleSlotClick(slot.position)}
-                  />
-                ))}
-              </div>
-            </SortableContext>
-          </div>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       </div>
 
