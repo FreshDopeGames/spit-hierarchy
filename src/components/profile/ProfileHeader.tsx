@@ -48,8 +48,8 @@ const ProfileHeader = ({
           <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6 lg:gap-4 min-w-0 w-full">
             {/* User Info Section */}
             <div className="flex-1 min-w-0 overflow-hidden">
-              <div className="flex items-center justify-center lg:justify-start gap-2 mb-2 min-w-0">
-                <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-yellow-600 min-w-0 truncate">
+              <div className="flex items-center justify-center lg:justify-start gap-2 mb-2 min-w-0 max-w-full">
+                <h2 className="font-[var(--theme-fontSecondary)] text-[var(--theme-primary)] text-2xl sm:text-3xl lg:text-4xl font-extrabold text-yellow-600 min-w-0 max-w-full truncate">
                   {profile?.username || profile?.full_name || "User"}
                 </h2>
                 <TooltipProvider>
@@ -88,7 +88,7 @@ const ProfileHeader = ({
             </div>
 
             {/* Member Status Section */}
-            {memberStats && <div className="flex-shrink-0 text-center lg:text-right lg:min-w-72">
+            {memberStats && <div className="flex-shrink-0 text-center lg:text-right lg:w-72">
                 <div className="flex items-center justify-center lg:justify-end mb-2">
                   <Crown className="w-5 h-5 sm:w-6 sm:h-6 text-[var(--theme-primary)] mr-2" />
                   <h3 className="text-sm sm:text-base font-bold text-[var(--theme-primary)] font-[var(--theme-fontSecondary)] text-yellow-600">
