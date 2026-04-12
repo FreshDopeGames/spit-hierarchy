@@ -13,8 +13,12 @@ const AboutEditorInChief = () => {
       </ThemedCardHeader>
       <ThemedCardContent>
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-lg border-2 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20 flex-shrink-0 bg-[hsl(var(--theme-surface))] flex items-center justify-center">
-            <User className="w-16 h-16 text-[hsl(var(--theme-primary))]/40" />
+          <div className="w-48 h-48 sm:w-56 sm:h-56 rounded-lg border-2 border-[hsl(var(--theme-primary))]/30 shadow-lg shadow-[hsl(var(--theme-primary))]/20 flex-shrink-0 overflow-hidden">
+            <img 
+              src="/images/ural-garrett.jpg" 
+              alt="Ural Garrett" 
+              className="w-full h-full object-cover"
+            />
           </div>
           <div className="text-center sm:text-left">
             <h3 className="font-[var(--theme-font-heading)] text-[hsl(var(--theme-textLight))] text-xl mb-3">
