@@ -47,15 +47,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Clean up excessive line breaks
         .replace(/(<br>\s*){4,}/g, "<br><br><br>")
 
-        // Wrap paragraphs that follow list items in an explanation span for consistent indentation
-        // Match list item, then any content until the next list item, heading, or end
-        .replace(
-          /(<span class="list-item">.*?<\/span>)(<br>)+([\s\S]*?)(?=<span class="list-item">|<span class="heading">|$)/g,
-          (match, listItem, br, explanation) => {
-            if (!explanation.trim()) return listItem + '<br>';
-            return `${listItem}<br><span class="list-explanation">${explanation.trim()}</span>`;
-          }
-        )
+        // No post-list indentation wrapping — content after lists returns to normal indentation
 
         // Clean up any remaining whitespace issues
         .trim();
@@ -81,8 +73,7 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
             [&_br]:block [&_br]:my-0
             [&_a]:font-bold [&_a]:text-[hsl(var(--theme-primary))] [&_a]:underline [&_a]:underline-offset-2 [&_a]:hover:opacity-80 [&_a]:transition-opacity
             [&_.heading]:block [&_.heading]:text-xl [&_.heading]:font-bold [&_.heading]:mt-6 [&_.heading]:mb-2
-            [&_.list-item]:block [&_.list-item]:mt-4 [&_.list-item]:mb-0 [&_.list-item]:pl-6 [&_.list-item]:-indent-4
-            [&_.list-explanation]:block [&_.list-explanation]:pl-6 [&_.list-explanation]:mt-1 [&_.list-explanation]:mb-3"
+            [&_.list-item]:block [&_.list-item]:mt-4 [&_.list-item]:mb-0 [&_.list-item]:pl-6 [&_.list-item]:-indent-4"
             dangerouslySetInnerHTML={{ __html: processedContent }}
           />
         </div>
