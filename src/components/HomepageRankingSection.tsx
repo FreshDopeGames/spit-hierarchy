@@ -148,10 +148,8 @@ const HomepageRankingSection = () => {
           Discover the top rapper rankings voted by the community
         </p>
       </div>
-      
-      {/* Strategic ad placement for monetization - visible on first page load */}
-      <ContentAdUnit size="medium" className="mb-8" />
-      
+
+
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
         {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} totalRappers={ranking.totalRappers} priority={index === 0} />)}
       </div>
