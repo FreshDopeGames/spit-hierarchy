@@ -1,25 +1,30 @@
 
-## Fix: Trending Icons Are Inverted
 
-**Problem**: The sign convention in `RankingItemContent.tsx` is backwards relative to the delta calculation in `useRankingData.tsx`.
+## Fix: Vote Buttons Reset After Idling
 
-- `position_delta = item.position (old) - displayIndex (current)`
-- Positive delta = rapper moved UP (was at position 5, now at 1 → delta = +4)
-- Negative delta = rapper moved DOWN (was at position 1, now at 5 → delta = -4)
+### Root Cause
 
-But the icon logic treats positive as "down" and negative as "up" — exactly reversed.
+The query key in `useDailyVoteStatus` includes `user?.id`:
 
-**Fix in `src/components/rankings/RankingItemContent.tsx`** (lines 32-34):
-
-Swap the icon assignments:
-```tsx
-// Before (wrong):
-if (delta < 0) return <TrendingUp ...green />;
-if (delta > 0) return <TrendingDown ...red />;
-
-// After (correct):
-if (delta > 0) return <TrendingUp ...green />;
-if (delta < 0) return <TrendingDown ...red />;
+```text
+queryKey: ['daily-votes', user?.id, getTodayKey(), rankingId]
 ```
 
-Single file, two-line change.
+When the Supabase auth token refreshes after an idle period, `user` can momentarily become `null` during the `TOKEN_REFRESHED` auth state change. This shifts the query key to `['daily-votes', undefined, ...]`, which is a completely different cache entry with no data. The `dailyVotes` array falls back to `[]`, and every button appears un-voted.
+
+Once the auth refresh completes, the key reverts to the correct one, a refetch returns the real votes, and all buttons snap back to green -- exactly what you observed.
+
+### Fix (1 file)
+
+**`src/hooks/useDailyVoteStatus.tsx`**
+
+1. Make `hasVotedToday` also check localStorage as a fallback, so even if the react-query cache is momentarily empty (due to a key change), the button still shows the correct voted state.
+2. Add `placeholderData: keepPreviousData` to the query so that when the key changes during token refresh, react-query continues displaying the previous data instead of resetting to `[]`.
+
+These two changes together eliminate the flash of "available" vote buttons during auth token refreshes.
+
+### Technical Detail
+
+- `keepPreviousData` is imported from `@tanstack/react-query` and tells the query to keep showing data from the previous query key while the new key's data is loading.
+- The localStorage fallback in `hasVotedToday` acts as a second safety net: even if query data is empty for any reason, the locally persisted vote records are checked.
+
