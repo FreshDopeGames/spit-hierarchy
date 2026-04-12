@@ -20,8 +20,8 @@ const AboutEditorInChief = () => {
             <h3 className="font-[var(--theme-font-heading)] text-[hsl(var(--theme-textLight))] text-xl mb-3">
               Ural Garrett
             </h3>
-            <p className="text-[hsl(var(--theme-text))] font-[var(--theme-font-body)] italic">
-              Bio coming soon.
+<p className="text-[hsl(var(--theme-text))] font-[var(--theme-font-body)]">
+              Ural Garrett is an Inglewood-born journalist and content curator whose career has been deeply rooted in Hip Hop culture. A Southern University graduate, he has built an impressive byline across outlets including HipHopDX, Complex, MTV, BET, CNN, and The Hollywood Reporter, cementing himself as a voice in music journalism.
             </p>
           </div>
         </div>
