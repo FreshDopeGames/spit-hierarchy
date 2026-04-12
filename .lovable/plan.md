@@ -1,34 +1,20 @@
 
 
-## Plan: Add "Favorite Bars" CTA Below Best Quote
+## Plan: Add IP-Based Geolocation Disclosure to Privacy Policy
 
-### What it does
-Adds a styled subsection beneath each rapper's Best Quote card, separated by a themed divider. It displays a message like *"Let Kendrick Lamar know your favorite bars in the Comments Section!"* with a button that programmatically opens the floating CommentBubble.
+### What changes
+Add a new section to the Privacy Policy (as section 8, bumping current 8-12 to 9-13) disclosing IP-based geolocation data collection for voter analytics, covering:
 
-### Files
+- **What we collect**: Approximate geographic location (country, state/region, city) derived from your IP address
+- **How we collect it**: Automatically via a server-side geolocation lookup when you interact with the platform while logged in
+- **Why**: To provide geographic voting analytics and regional community insights
+- **What we store**: Only the derived location (country, region, city) — not the IP address itself
+- **Legal basis**: Legitimate interest (GDPR) / disclosed in this policy (CCPA)
+- **Your rights**: Location data is subject to the same access, deletion, and correction rights listed in Section 9 (renumbered)
+- **Opt-out**: Users can request deletion of their location data via support channels
 
-1. **Modify `src/components/rapper/RapperBestQuote.tsx`**
-   - Add a `ThemedSeparator` below the quote card (medium width, centered)
-   - Below the separator, render a text block: `"Let {rapperName} know your favorite bars in the Comments Section!"`
-   - Add a themed button with a `MessageCircle` icon labeled "Drop Your Bars"
-   - Button `onClick` finds the collapsed CommentBubble button in the DOM (`document.querySelector('.fixed.bottom-6.right-6 button')`) and programmatically clicks it to expand the comment panel
-   - Wrap the whole subsection in the existing `mb-8` container
+Also update the "Last updated" date to April 2026.
 
-2. **Modify `src/components/CommentBubble.tsx`** (minor)
-   - Add a `data-comment-trigger` attribute to the collapsed bubble's `ThemedButton` so the CTA can target it reliably instead of using fragile CSS selectors
-
-### Visual layout
-```text
-┌─────────────────────────────────┐
-│  Best Quote card (existing)     │
-└─────────────────────────────────┘
-         ─────────────  (divider, ~50% width, centered)
-  "Let [name] know your favorite
-   bars in the Comments Section!"
-       [ 💬 Drop Your Bars ]
-```
-
-### Technical notes
-- No new files needed — all changes fit in existing components
-- The button click approach reuses the existing CommentBubble expand logic without needing to lift state or create a global event system
+### File modified
+- `src/pages/PrivacyPolicy.tsx` — insert new section, renumber subsequent sections, update date
 
