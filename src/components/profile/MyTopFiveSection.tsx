@@ -23,11 +23,12 @@ const MyTopFiveSection = () => {
     setSelectedPosition(position);
     setIsSearchOpen(true);
   };
-  const handleRapperSelect = (rapperId: string) => {
+  const handleRapperSelect = (rapperId: string, rapperData?: { id: string; name: string; image_url: string | null; slug: string }) => {
     if (selectedPosition !== null) {
       updateTopRapper({
         position: selectedPosition,
-        rapperId
+        rapperId,
+        rapperData
       });
       setIsSearchOpen(false);
       setSelectedPosition(null);
