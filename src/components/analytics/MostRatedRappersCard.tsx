@@ -5,59 +5,27 @@ import { Star } from "lucide-react";
 import RapperAvatar from "@/components/RapperAvatar";
 import { useRapperImages } from "@/hooks/useImageStyle";
 
-const MostRatedRappersCard = () => {
-  const {
-    data: topRatedRappers,
-    isLoading
-  } = useQuery({
-    queryKey: ["most-rated-rappers"],
+interface MostRatedRappersCardProps {
+  countryCode?: string | null;
+  region?: string | null;
+}
+
+const MostRatedRappersCard = ({ countryCode, region }: MostRatedRappersCardProps) => {
+  const { data: topRatedRappers, isLoading } = useQuery({
+    queryKey: ["most-rated-rappers", countryCode, region],
     queryFn: async () => {
-      const { data, error } = await supabase
-        .from("votes")
-        .select(`
-          rapper_id,
-          rating,
-          rappers (
-            id,
-            name,
-            slug
-          )
-        `)
-        .not("rating", "is", null)
-        .gt("rating", 0);
-
+      const { data, error } = await supabase.rpc("get_most_rated_rappers", {
+        p_country_code: countryCode || null,
+        p_region: region || null,
+        p_limit: 5,
+      });
       if (error) throw error;
-
-      // Group by rapper and calculate stats
-      const rapperStats = data?.reduce((acc: any, vote: any) => {
-        const rapperId = vote.rapper_id;
-        if (!acc[rapperId]) {
-          acc[rapperId] = {
-            id: vote.rappers.id,
-            name: vote.rappers.name,
-            slug: vote.rappers.slug,
-            ratings: [],
-          };
-        }
-        acc[rapperId].ratings.push(vote.rating);
-        return acc;
-      }, {});
-
-      // Calculate averages and sort
-      const rapperArray = Object.values(rapperStats || {}).map((rapper: any) => ({
-        ...rapper,
-        rating_count: rapper.ratings.length,
-        average_rating: (rapper.ratings.reduce((sum: number, r: number) => sum + r, 0) / rapper.ratings.length).toFixed(1),
-      }));
-
-      return rapperArray
-        .sort((a: any, b: any) => b.rating_count - a.rating_count)
-        .slice(0, 5);
-    }
+      return data || [];
+    },
   });
 
   const rapperIds = topRatedRappers?.map((r: any) => r.id) || [];
-  const { data: rapperImages } = useRapperImages(rapperIds, 'medium');
+  const { data: rapperImages } = useRapperImages(rapperIds, "medium");
 
   if (isLoading) {
     return (
@@ -87,7 +55,7 @@ const MostRatedRappersCard = () => {
                 <div className="w-8 h-8 bg-[var(--theme-primary)] rounded-full flex items-center justify-center text-black font-bold text-sm font-[var(--theme-font-heading)]">
                   #{index + 1}
                 </div>
-                <RapperAvatar 
+                <RapperAvatar
                   rapper={rapper}
                   size="md"
                   imageUrl={rapperImages?.[rapper.id]}

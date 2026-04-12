@@ -5,33 +5,42 @@ import { Badge } from "@/components/ui/badge";
 import { Users } from "lucide-react";
 import RapperAvatar from "@/components/RapperAvatar";
 import { useRapperImages } from "@/hooks/useImageStyle";
-const TopVotedRappersCard = () => {
-  const {
-    data: topRappers,
-    isLoading
-  } = useQuery({
-    queryKey: ["top-voted-rappers"],
+
+interface TopVotedRappersCardProps {
+  countryCode?: string | null;
+  region?: string | null;
+}
+
+const TopVotedRappersCard = ({ countryCode, region }: TopVotedRappersCardProps) => {
+  const { data: topRappers, isLoading } = useQuery({
+    queryKey: ["top-voted-rappers", countryCode, region],
     queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.rpc("get_public_rapper_voting_stats");
+      const { data, error } = await supabase.rpc("get_public_rapper_voting_stats", {
+        p_country_code: countryCode || null,
+        p_region: region || null,
+      });
       if (error) throw error;
       return data?.slice(0, 5) || [];
-    }
+    },
   });
 
   const rapperIds = topRappers?.map((r: any) => r.id) || [];
-  const { data: rapperImages } = useRapperImages(rapperIds, 'medium');
+  const { data: rapperImages } = useRapperImages(rapperIds, "medium");
+
   if (isLoading) {
-    return <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20 animate-pulse border-2 border-[var(--theme-primary)]">
+    return (
+      <Card className="bg-[var(--theme-surface)] border-[var(--theme-primary)]/30 shadow-lg shadow-[var(--theme-primary)]/20 animate-pulse border-2 border-[var(--theme-primary)]">
         <CardContent className="p-6">
           <div className="h-32 bg-[var(--theme-background)] rounded"></div>
         </CardContent>
-      </Card>;
+      </Card>
+    );
   }
+
   if (!topRappers || topRappers.length === 0) return null;
-  return <Card className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-2 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
+
+  return (
+    <Card className="bg-[var(--theme-surface)] border-[hsl(var(--theme-primary))] border-2 shadow-lg shadow-[var(--theme-primary)]/20 bg-black">
       <CardHeader>
         <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 font-extrabold text-3xl">
           <Users className="w-5 h-5" />
@@ -40,12 +49,13 @@ const TopVotedRappersCard = () => {
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {topRappers.map((rapper: any, index: number) => <div key={rapper.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg">
+          {topRappers.map((rapper: any, index: number) => (
+            <div key={rapper.id} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-[var(--theme-background)] border border-[var(--theme-primary)]/20 rounded-lg">
               <div className="flex items-center gap-3">
                 <div className="w-8 h-8 bg-[var(--theme-primary)] rounded-full flex items-center justify-center text-black font-bold text-sm font-[var(--theme-font-heading)]">
                   #{index + 1}
                 </div>
-                <RapperAvatar 
+                <RapperAvatar
                   rapper={rapper}
                   size="md"
                   imageUrl={rapperImages?.[rapper.id]}
@@ -60,9 +70,12 @@ const TopVotedRappersCard = () => {
                 <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)] text-2xl">{rapper.total_votes}</p>
                 <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Total Votes</p>
               </div>
-            </div>)}
+            </div>
+          ))}
         </div>
       </CardContent>
-    </Card>;
+    </Card>
+  );
 };
+
 export default TopVotedRappersCard;
