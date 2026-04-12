@@ -8,6 +8,28 @@ import { useRapperImage } from "@/hooks/useImageStyle";
 import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
+// Extracted to file scope to prevent hook remount on every render
+const RapperAvatarItem = ({ rapperId, rapperName }: { rapperId: string; rapperName: string }) => {
+  const { data: imageUrl } = useRapperImage(rapperId, 'thumb');
+  const placeholderImage = getOptimizedPlaceholder('thumb');
+  const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
+
+  return (
+    <img
+      src={imageToDisplay}
+      alt={rapperName}
+      className="w-full h-full object-cover rounded-lg"
+      loading="lazy"
+      onError={(e) => {
+        const target = e.target as HTMLImageElement;
+        if (!target.src.includes(placeholderImage)) {
+          target.src = placeholderImage;
+        }
+      }}
+    />
+  );
+};
+
 interface TopRappersByCategoryCardProps {
   countryCode?: string | null;
   region?: string | null;
