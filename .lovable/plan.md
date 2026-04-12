@@ -1,46 +1,28 @@
 
 
-## Problem: Votes Revert After Momentary Increase
+## Problem
 
-**Root Cause**: A race condition between the optimistic update and concurrent refetches.
+The trending icons (up/down/neutral arrows) next to each rapper are **not reflecting real-time position changes**. Here's why:
 
-When you vote:
-1. The optimistic update correctly increases the count in the UI cache
-2. The vote RPC fires and inserts the row into the database
-3. **But**: A real-time Supabase subscription on `ranking_votes` detects the INSERT and immediately triggers a cache invalidation + refetch
-4. This refetch can execute before the RPC transaction fully commits, pulling stale data that overwrites the optimistic update
-5. Additionally, the standard React Query pattern of **cancelling outgoing queries** before applying an optimistic update is missing — so any in-flight polling refetch (every 15 seconds) can also overwrite the optimistic data
+- The `position_delta` is fetched from a database RPC (`get_position_delta`) that compares the stored `ranking_items.position` against yesterday's snapshot in `ranking_position_history`
+- Both of these are only updated by a **daily maintenance job at 3 AM UTC**
+- Meanwhile, the UI sorts items by live vote counts (`display_index`), so a rapper can visually move from #8 to #3 during the day, but the trending icon still shows "neutral" because the database position hasn't changed
 
-The votes ARE saved to the database (confirmed), but the UI reverts because stale data from a racing refetch overwrites the optimistic cache entry.
+## Fix
 
----
+Calculate `position_delta` **client-side** by comparing the real-time vote-sorted position (`display_index`) against the last-known database position (`position` from the daily snapshot). This makes the arrows reflect what users actually see happening in real time.
 
-## Plan
+**Formula**: `position_delta = display_index - position`
+- Negative = moved up → TrendingUp icon
+- Positive = moved down → TrendingDown icon
+- Zero = no change → Neutral icon
 
-### 1. Cancel outgoing queries before optimistic update
-In `src/hooks/useRankingVotes.tsx` `onMutate`, add `await queryClient.cancelQueries(...)` for the ranking data query key **before** calling `applyOptimisticUpdate`. This is the standard React Query optimistic update pattern and prevents any in-flight refetch from overwriting the optimistic data.
+## Changes
 
-### 2. Guard real-time subscription during pending votes
-In `src/hooks/useRankingData.tsx`, track whether a vote mutation is in progress (via a ref or a query key convention) and skip the real-time invalidation callback when a vote is pending. Alternatively, add a short debounce (~2 seconds) to the real-time callback so the mutation's own `onSuccess` handler takes precedence.
+### File: `src/hooks/useRankingData.tsx`
 
-### 3. Delay the `onSuccess` refetch slightly
-In `src/hooks/ranking-votes/optimisticUpdates.ts` `invalidateRelatedQueries`, increase the initial refetch delay from immediate to ~500ms to ensure the database transaction is fully committed and visible to PostgREST before refetching.
+1. Remove the per-item `get_position_delta` RPC call inside the `Promise.all` loop (this also eliminates N unnecessary database calls per load)
+2. After calculating `display_index`, set `position_delta = display_index - item.position` for each item
 
----
-
-### Technical Details
-
-**File: `src/hooks/useRankingVotes.tsx`** — Add cancel queries in `onMutate`:
-```ts
-onMutate: async ({ rankingId, rapperId }) => {
-  // Cancel any outgoing refetches so they don't overwrite optimistic update
-  await queryClient.cancelQueries({ queryKey: ['ranking-data-with-deltas', rankingId] });
-  
-  const voteWeight = getVoteMultiplier();
-  // ... rest of existing code
-```
-
-**File: `src/hooks/useRankingData.tsx`** — Debounce the real-time subscription callback to prevent it from racing with the vote mutation's optimistic update. Use a timeout that gets cleared if another event arrives within 2 seconds.
-
-**File: `src/hooks/ranking-votes/optimisticUpdates.ts`** — In `invalidateRelatedQueries`, wrap the initial invalidate+refetch in a ~500ms delay (replacing the immediate call), and keep the existing 1-second follow-up as a safety net.
+The icon logic in `RankingItemContent.tsx` already correctly interprets negative delta as "moved up" and positive as "moved down", so no changes needed there.
 
