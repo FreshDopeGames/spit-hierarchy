@@ -122,17 +122,17 @@ export const getZodiacDateRange = (signName: string): string => {
 // Helper function to get all zodiac signs information
 export const getAllZodiacSigns = () => {
   return [
-    { name: 'Aries', symbol: '♈', element: 'Fire', dates: 'Mar 21 - Apr 19', color: 'bg-red-700' },
-    { name: 'Taurus', symbol: '♉', element: 'Earth', dates: 'Apr 20 - May 20', color: 'bg-emerald-700' },
-    { name: 'Gemini', symbol: '♊', element: 'Air', dates: 'May 21 - Jun 20', color: 'bg-yellow-600' },
-    { name: 'Cancer', symbol: '♋', element: 'Water', dates: 'Jun 21 - Jul 22', color: 'bg-blue-700' },
-    { name: 'Leo', symbol: '♌', element: 'Fire', dates: 'Jul 23 - Aug 22', color: 'bg-orange-700' },
-    { name: 'Virgo', symbol: '♍', element: 'Earth', dates: 'Aug 23 - Sep 22', color: 'bg-emerald-800' },
-    { name: 'Libra', symbol: '♎', element: 'Air', dates: 'Sep 23 - Oct 22', color: 'bg-pink-700' },
-    { name: 'Scorpio', symbol: '♏', element: 'Water', dates: 'Oct 23 - Nov 21', color: 'bg-purple-800' },
-    { name: 'Sagittarius', symbol: '♐', element: 'Fire', dates: 'Nov 22 - Dec 21', color: 'bg-indigo-700' },
-    { name: 'Capricorn', symbol: '♑', element: 'Earth', dates: 'Dec 22 - Jan 19', color: 'bg-gray-700' },
-    { name: 'Aquarius', symbol: '♒', element: 'Air', dates: 'Jan 20 - Feb 18', color: 'bg-cyan-700' },
-    { name: 'Pisces', symbol: '♓', element: 'Water', dates: 'Feb 19 - Mar 20', color: 'bg-teal-700' }
+    { name: 'Aries', symbol: '♈', element: 'Fire', dates: 'Mar 21 - Apr 19', color: 'bg-[#8B0000]' },
+    { name: 'Taurus', symbol: '♉', element: 'Earth', dates: 'Apr 20 - May 20', color: 'bg-[#228B22]' },
+    { name: 'Gemini', symbol: '♊', element: 'Air', dates: 'May 21 - Jun 20', color: 'bg-[#800080]' },
+    { name: 'Cancer', symbol: '♋', element: 'Water', dates: 'Jun 21 - Jul 22', color: 'bg-[#1034A9]' },
+    { name: 'Leo', symbol: '♌', element: 'Fire', dates: 'Jul 23 - Aug 22', color: 'bg-[#8B0000]' },
+    { name: 'Virgo', symbol: '♍', element: 'Earth', dates: 'Aug 23 - Sep 22', color: 'bg-[#228B22]' },
+    { name: 'Libra', symbol: '♎', element: 'Air', dates: 'Sep 23 - Oct 22', color: 'bg-[#800080]' },
+    { name: 'Scorpio', symbol: '♏', element: 'Water', dates: 'Oct 23 - Nov 21', color: 'bg-[#1034A9]' },
+    { name: 'Sagittarius', symbol: '♐', element: 'Fire', dates: 'Nov 22 - Dec 21', color: 'bg-[#8B0000]' },
+    { name: 'Capricorn', symbol: '♑', element: 'Earth', dates: 'Dec 22 - Jan 19', color: 'bg-[#228B22]' },
+    { name: 'Aquarius', symbol: '♒', element: 'Air', dates: 'Jan 20 - Feb 18', color: 'bg-[#800080]' },
+    { name: 'Pisces', symbol: '♓', element: 'Water', dates: 'Feb 19 - Mar 20', color: 'bg-[#1034A9]' }
   ];
 };
