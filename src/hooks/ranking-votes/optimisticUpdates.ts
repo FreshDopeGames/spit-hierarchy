@@ -102,24 +102,24 @@ export const invalidateRelatedQueries = (
     exact: true // Only invalidate exact match, not partial matches
   });
   
-  // Only invalidate ranking data for THIS specific ranking, then force refetch
-  queryClient.invalidateQueries({ 
-    queryKey: ['ranking-data-with-deltas', rankingId],
-    exact: true
-  });
-  queryClient.refetchQueries({ 
-    queryKey: ['ranking-data-with-deltas', rankingId],
-    exact: true
-  });
-
-  // IMPORTANT: Since we now rely on database-maintained positions,
-  // we should trigger a position recalculation after votes
-  // This will be handled by the daily maintenance, but for immediate updates
-  // we can invalidate after a short delay to let the database triggers process
+  // Delay the ranking data refetch to ensure DB transaction is fully committed
+  // This prevents stale reads that would overwrite the optimistic update
   setTimeout(() => {
     queryClient.invalidateQueries({ 
       queryKey: ['ranking-data-with-deltas', rankingId],
       exact: true
     });
-  }, 1000); // 1 second delay
+    queryClient.refetchQueries({ 
+      queryKey: ['ranking-data-with-deltas', rankingId],
+      exact: true
+    });
+  }, 500);
+
+  // Safety net: second refetch to catch any delayed DB propagation
+  setTimeout(() => {
+    queryClient.invalidateQueries({ 
+      queryKey: ['ranking-data-with-deltas', rankingId],
+      exact: true
+    });
+  }, 1500);
 };

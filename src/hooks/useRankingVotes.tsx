@@ -31,6 +31,9 @@ export const useRankingVotes = () => {
       return await submitVote(rankingId, rapperId, user, voteWeight, currentStatus);
     },
     onMutate: async ({ rankingId, rapperId }) => {
+      // Cancel any outgoing refetches so they don't overwrite optimistic update
+      await queryClient.cancelQueries({ queryKey: ['ranking-data-with-deltas', rankingId] });
+      
       const voteWeight = getVoteMultiplier();
       
       // Show loading toast

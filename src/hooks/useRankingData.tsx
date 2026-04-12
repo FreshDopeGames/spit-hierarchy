@@ -159,8 +159,22 @@ export const useRankingData = (rankingId: string) => {
   });
 
   // Set up real-time subscription for ranking_votes table updates
+  // Debounce to prevent race conditions with optimistic updates during voting
+  const realtimeDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  
   useEffect(() => {
     if (!rankingId || !query.data) return;
+
+    const debouncedInvalidate = () => {
+      // Clear any pending debounce
+      if (realtimeDebounceRef.current) {
+        clearTimeout(realtimeDebounceRef.current);
+      }
+      // Delay invalidation by 2s to let optimistic updates settle
+      realtimeDebounceRef.current = setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["ranking-data-with-deltas", rankingId] });
+      }, 2000);
+    };
 
     // Create a channel for real-time updates
     channelRef.current = supabase
@@ -175,8 +189,7 @@ export const useRankingData = (rankingId: string) => {
         },
         (payload) => {
           console.log('Real-time ranking vote update received:', payload);
-          // Invalidate and refetch to get updated ordering
-          queryClient.invalidateQueries({ queryKey: ["ranking-data-with-deltas", rankingId] });
+          debouncedInvalidate();
         }
       )
       .on(
@@ -189,14 +202,16 @@ export const useRankingData = (rankingId: string) => {
         },
         (payload) => {
           console.log('Real-time ranking items update received:', payload);
-          // Invalidate and refetch when positions are updated
-          queryClient.invalidateQueries({ queryKey: ["ranking-data-with-deltas", rankingId] });
+          debouncedInvalidate();
         }
       )
       .subscribe();
 
     // Cleanup subscription on unmount or dependency change
     return () => {
+      if (realtimeDebounceRef.current) {
+        clearTimeout(realtimeDebounceRef.current);
+      }
       if (channelRef.current) {
         supabase.removeChannel(channelRef.current);
         channelRef.current = null;
