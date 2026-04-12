@@ -37,9 +37,11 @@ export const useUserTopRappers = () => {
     mutationFn: async ({
       position,
       rapperId,
+      rapperData,
     }: {
       position: number;
       rapperId: string;
+      rapperData?: { id: string; name: string; image_url: string | null; slug: string };
     }) => {
       if (!user) throw new Error("User not authenticated");
 
@@ -64,15 +66,30 @@ export const useUserTopRappers = () => {
       if (error) throw error;
       return data;
     },
+    onMutate: async ({ position, rapperId, rapperData }) => {
+      await queryClient.cancelQueries({ queryKey: ["user-top-rappers", user?.id] });
+      const previous = queryClient.getQueryData(["user-top-rappers", user?.id]);
+
+      if (rapperData) {
+        queryClient.setQueryData(["user-top-rappers", user?.id], (old: any[] | undefined) => {
+          const filtered = (old || []).filter((item: any) => item.position !== position);
+          return [...filtered, { position, rapper_id: rapperId, rappers: rapperData }];
+        });
+      }
+
+      return { previous };
+    },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
-      // Invalidate the specific rapper's detail page to update the Top 5 count
       if (data?.rapper_id) {
         queryClient.invalidateQueries({ queryKey: ["rapper", data.rapper_id] });
       }
       toast.success("Top 5 updated successfully!");
     },
-    onError: (error: any) => {
+    onError: (error: any, _vars, context) => {
+      if (context?.previous) {
+        queryClient.setQueryData(["user-top-rappers", user?.id], context.previous);
+      }
       console.error("Error updating top rapper:", error);
       toast.error("Failed to update your top 5");
     },
