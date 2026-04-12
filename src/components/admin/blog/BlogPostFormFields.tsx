@@ -133,6 +133,40 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
         </div>
       </div>
 
+      <div className="space-y-2">
+        <Label className="text-[var(--theme-text)] text-sm sm:text-base font-[var(--theme-font-body)]">Published Date</Label>
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button
+              variant="outline"
+              className={cn(
+                "w-full justify-start text-left font-normal bg-[var(--theme-background)] border-[var(--theme-border)] h-11 sm:h-10",
+                !formData.published_at && "text-muted-foreground"
+              )}
+            >
+              <CalendarIcon className="mr-2 h-4 w-4" />
+              {formData.published_at
+                ? format(new Date(formData.published_at), "PPP")
+                : <span>Defaults to today when published</span>}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent className="w-auto p-0 bg-black border-[var(--theme-border)]" align="start">
+            <Calendar
+              mode="single"
+              selected={formData.published_at ? new Date(formData.published_at) : undefined}
+              onSelect={(date) =>
+                setFormData(prev => ({
+                  ...prev,
+                  published_at: date ? date.toISOString() : ''
+                }))
+              }
+              initialFocus
+              className={cn("p-3 pointer-events-auto")}
+            />
+          </PopoverContent>
+        </Popover>
+      </div>
+
       <BlogPostImageUpload
         imageUrl={formData.featured_image_url}
         onImageChange={(url) => setFormData(prev => ({ ...prev, featured_image_url: url }))}
