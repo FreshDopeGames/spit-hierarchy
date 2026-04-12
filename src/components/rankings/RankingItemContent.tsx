@@ -29,8 +29,8 @@ const RankingItemContent = ({
   const delta = item.position_delta || 0;
   
   const getTrendingIcon = () => {
-    if (delta < 0) return <TrendingUp className="w-4 h-4 text-green-500" />;
-    if (delta > 0) return <TrendingDown className="w-4 h-4 text-red-500" />;
+    if (delta > 0) return <TrendingUp className="w-4 h-4 text-green-500" />;
+    if (delta < 0) return <TrendingDown className="w-4 h-4 text-red-500" />;
     return <Minus className="w-4 h-4 text-gray-500" />;
   };
 
