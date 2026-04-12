@@ -211,7 +211,7 @@ const ZodiacDistributionCard = () => {
         </div>
 
         {/* Bar Chart - Taller for all 12 signs */}
-        <div className="h-[400px] sm:h-[500px] -mx-2 sm:mx-0">
+        <div className="h-[400px] sm:h-[500px] -mx-1 sm:mx-0">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={zodiacCounts}
