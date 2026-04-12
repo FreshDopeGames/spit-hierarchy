@@ -327,11 +327,11 @@ const VSMatchDetail = () => {
                     <div className="absolute inset-0 flex">
                       {/* Left half - rapper 1 */}
                       <div className="w-1/2 h-full flex justify-end">
-                        <div className="h-full bg-green-600 transition-all duration-500 rounded-l-full" style={{ width: `${Math.min((vsMatch!.rapper_1_votes / vsMatch!.total_votes) * 200, 100)}%` }} />
+                        <div className="h-full bg-green-600 transition-all duration-500 rounded-l-full" style={{ width: `${(vsMatch!.rapper_1_votes / vsMatch!.total_votes) * 100}%` }} />
                       </div>
                       {/* Right half - rapper 2 */}
                       <div className="w-1/2 h-full flex justify-start">
-                        <div className="h-full bg-green-600 transition-all duration-500 rounded-r-full" style={{ width: `${Math.min((vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 200, 100)}%` }} />
+                        <div className="h-full bg-green-600 transition-all duration-500 rounded-r-full" style={{ width: `${(vsMatch!.rapper_2_votes / vsMatch!.total_votes) * 100}%` }} />
                       </div>
                     </div>
                     {/* Gold center reference line */}
