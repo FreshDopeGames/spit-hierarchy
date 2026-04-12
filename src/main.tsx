@@ -55,6 +55,7 @@ createRoot(document.getElementById("root")!).render(
                   <AchievementProvider>
                     <ErrorBoundary>
                       <UsernameEnforcementModal />
+                      <VoterGeolocationTracker />
                       <ActivityToastProvider />
                       <App />
                       <Toaster />
