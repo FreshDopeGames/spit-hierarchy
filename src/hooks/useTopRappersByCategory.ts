@@ -80,9 +80,8 @@ export const useTopRappersByCategory = () => {
               rapperStats[rapperId].vote_count += 1;
             });
 
-            // Calculate averages and sort (require at least 1 vote)
-            const topRappers = Object.values(rapperStats)
-              .filter(rapper => rapper.vote_count >= 1)
+            // Calculate averages and sort with progressive minimum threshold (3, then 2, then 1)
+            const allRappers = Object.values(rapperStats)
               .map(rapper => ({
                 rapper_id: rapper.rapper_id,
                 rapper_name: rapper.rapper_name,
@@ -90,8 +89,16 @@ export const useTopRappersByCategory = () => {
                 average_rating: rapper.total_rating / rapper.vote_count,
                 vote_count: rapper.vote_count
               }))
-              .sort((a, b) => b.average_rating - a.average_rating)
-              .slice(0, 5);
+              .sort((a, b) => b.average_rating - a.average_rating);
+
+            // Try threshold 3 first, fall back to 2, then 1
+            let topRappers = allRappers.filter(r => r.vote_count >= 3).slice(0, 5);
+            if (topRappers.length === 0) {
+              topRappers = allRappers.filter(r => r.vote_count >= 2).slice(0, 5);
+            }
+            if (topRappers.length === 0) {
+              topRappers = allRappers.filter(r => r.vote_count >= 1).slice(0, 5);
+            }
 
             console.log(`Top rappers for ${category.name}:`, topRappers);
 
