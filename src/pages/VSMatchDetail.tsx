@@ -322,7 +322,7 @@ const VSMatchDetail = () => {
                   </h3>
                   
                   {/* Distribution meter - 2x height with black border */}
-                  <div className="relative w-full bg-[hsl(var(--theme-background))]/30 rounded-full h-4 border-2 border-black mb-3 overflow-hidden">
+                  <div className="relative w-full bg-[hsl(var(--theme-background))]/30 rounded-full h-8 border-2 border-black mb-3 overflow-hidden">
                     {/* Tug-of-war: green bars grow from center outward, gray = unfilled */}
                     <div className="absolute inset-0 flex">
                       {/* Left half - rapper 1 */}
