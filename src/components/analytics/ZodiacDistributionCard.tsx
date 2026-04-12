@@ -211,20 +211,20 @@ const ZodiacDistributionCard = () => {
         </div>
 
         {/* Bar Chart - Taller for all 12 signs */}
-        <div className="h-[400px] sm:h-[500px]">
+        <div className="h-[400px] sm:h-[500px] -mx-2 sm:mx-0">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart
               data={zodiacCounts}
               layout="vertical"
-              margin={{ top: 5, right: 20, left: 60, bottom: 5 }}
+              margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
             >
               <XAxis type="number" stroke="#888888" fontSize={12} />
               <YAxis
                 type="category"
                 dataKey="name"
                 stroke="#888888"
-                fontSize={11}
-                width={55}
+                fontSize={10}
+                width={45}
                 tickFormatter={(value) => {
                   const sign = zodiacCounts.find((s) => s.name === value);
                   return sign ? `${sign.symbol} ${value}` : value;
