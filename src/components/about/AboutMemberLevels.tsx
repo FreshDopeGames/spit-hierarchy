@@ -56,23 +56,26 @@ const AboutMemberLevels = () => {
 
         {/* Level Details */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 mt-6">
-          {levels.map((level) => (
-            <div
-              key={level.name}
-              className="bg-[hsl(var(--theme-surface))] border border-[hsl(var(--theme-primary))]/20 rounded-lg p-3 text-center"
-            >
-              <div className={`font-[var(--theme-font-heading)] font-bold ${level.textColor} mb-1`}>
-                {level.name}
+          {levels.map((level) => {
+            const isDiamond = level.name === 'Diamond';
+            return (
+              <div
+                key={level.name}
+                className={`bg-[hsl(var(--theme-surface))] border border-[hsl(var(--theme-primary))]/20 rounded-lg p-3 text-center ${isDiamond ? 'sm:col-span-2 lg:col-span-1' : ''}`}
+              >
+                <div className={`font-[var(--theme-font-heading)] font-bold ${level.textColor} ${isDiamond ? 'sm:text-xl lg:text-base' : ''} mb-1`}>
+                  {level.name}
+                </div>
+                <div className={`text-[var(--theme-textMuted)] font-[var(--theme-font-body)] ${isDiamond ? 'sm:text-lg lg:text-xs' : 'text-xs'} mb-2`}>
+                  {level.maxXP ? `${level.minXP.toLocaleString()} - ${level.maxXP.toLocaleString()}` : `${level.minXP.toLocaleString()}+`} XP
+                </div>
+                <div className="flex items-center justify-center gap-1 text-[var(--theme-primary)]">
+                  <Star className={`${isDiamond ? 'sm:w-4 sm:h-4 lg:w-3 lg:h-3' : 'w-3 h-3'}`} />
+                  <span className={`font-bold ${isDiamond ? 'text-[15px] sm:text-[19px] lg:text-[15px] text-theme-errorDark' : 'text-sm'}`}>{level.multiplier} Vote Power</span>
+                </div>
               </div>
-              <div className="text-xs text-[var(--theme-textMuted)] font-[var(--theme-font-body)] mb-2">
-                {level.maxXP ? `${level.minXP.toLocaleString()} - ${level.maxXP.toLocaleString()}` : `${level.minXP.toLocaleString()}+`} XP
-              </div>
-              <div className="flex items-center justify-center gap-1 text-[var(--theme-primary)]">
-                <Star className="w-3 h-3" />
-                <span className={`font-bold ${level.name === 'Diamond' ? 'text-[15px] text-theme-errorDark' : 'text-sm'}`}>{level.multiplier} Vote Power</span>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
 
         {/* How to Earn XP */}
