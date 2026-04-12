@@ -3,7 +3,7 @@ import BlogArticleContent from "@/components/blog/BlogArticleContent";
 import BlogEngagementActions from "@/components/blog/BlogEngagementActions";
 import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogPoll from "@/components/polls/BlogPoll";
-import ContentAdUnit from "@/components/ads/ContentAdUnit";
+
 import MentionedRappersCarousel from "@/components/blog/MentionedRappersCarousel";
 import { useBlogPostLikes } from "@/hooks/useBlogPostLikes";
 
@@ -79,8 +79,6 @@ const BlogDetailContent = ({
         {/* Rappers mentioned in this post */}
         <MentionedRappersCarousel content={blogPost.content} />
 
-        {/* Strategic ad placement in content */}
-        <ContentAdUnit size="medium" />
 
         <BlogEngagementActions
           likes={likesCount}
@@ -95,8 +93,6 @@ const BlogDetailContent = ({
         {/* Polls section */}
         <BlogPoll blogPostId={blogPost.id} />
 
-        {/* Another ad placement */}
-        <ContentAdUnit size="large" />
 
         {/* Sidebar content moved below */}
         <BlogSidebar relatedPosts={transformedRelatedPosts} showSignUp={!user} />
