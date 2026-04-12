@@ -14,8 +14,8 @@ const RapperStatsAnalytics = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl">
+      <div className="flex flex-col gap-4">
+        <h3 className="font-ceviche text-primary mb-3 sm:mb-4 text-4xl sm:text-6xl break-words max-w-full leading-tight">
           Rapper Statistics
         </h3>
         <GeographicFilter value={geoFilter} onChange={setGeoFilter} />
