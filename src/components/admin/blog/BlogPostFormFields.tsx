@@ -14,7 +14,6 @@ import RichTextEditor from "../RichTextEditor";
 import BlogPostImageUpload from "./BlogPostImageUpload";
 import { BlogPostFormData, generateSlug } from "./BlogPostFormData";
 import { sanitizeAdminContent, sanitizeAdminInput } from "@/utils/securityUtils";
-import { sanitizeAdminContent, sanitizeAdminInput } from "@/utils/securityUtils";
 
 interface BlogPostFormFieldsProps {
   formData: BlogPostFormData;
