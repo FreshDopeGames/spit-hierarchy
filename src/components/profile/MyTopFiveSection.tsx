@@ -29,7 +29,8 @@ const MyTopFiveSection = () => {
     isLoading,
     updateTopRapper,
     swapPositions,
-    selectedRapperIds
+    selectedRapperIds,
+    isUpdating,
   } = useUserTopRappers();
   const { userProfile } = useUserProfile();
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -64,11 +65,15 @@ const MyTopFiveSection = () => {
   };
 
   const handleDragStart = (event: DragStartEvent) => {
+    if (isUpdating) return;
     setActiveId(event.active.id as number);
   };
 
   const handleDragEnd = (event: DragEndEvent) => {
     setActiveId(null);
+
+    if (isUpdating) return;
+
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -159,6 +164,7 @@ const MyTopFiveSection = () => {
                     position={slot.position}
                     rapper={slot.rapper}
                     onEditClick={() => handleSlotClick(slot.position)}
+                    disabled={isUpdating}
                   />
                 </div>
               ))}
