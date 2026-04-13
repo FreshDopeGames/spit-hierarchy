@@ -59,7 +59,7 @@ const TopFiveSlot = ({ position, rapper, onEditClick, disabled = false }: TopFiv
         <div
           {...attributes}
           {...listeners}
-          className={`flex items-center justify-center w-full py-1.5 touch-none rounded-t-md transition-colors ${
+          className={`flex items-center justify-center w-full py-1.5 touch-none rounded-t-md transition-colors relative z-20 ${
             disabled
               ? "cursor-not-allowed opacity-50"
               : "cursor-grab active:cursor-grabbing hover:bg-[hsl(var(--theme-primary))]/10"
