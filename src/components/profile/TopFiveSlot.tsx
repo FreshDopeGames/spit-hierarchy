@@ -15,9 +15,10 @@ interface TopFiveSlotProps {
     slug?: string | null;
   } | null;
   onEditClick: () => void;
+  disabled?: boolean;
 }
 
-const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
+const TopFiveSlot = ({ position, rapper, onEditClick, disabled = false }: TopFiveSlotProps) => {
   const {
     attributes,
     listeners,
@@ -27,7 +28,7 @@ const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
     isDragging,
   } = useSortable({
     id: position,
-    disabled: !rapper,
+    disabled: !rapper || disabled,
   });
 
   const style = {
@@ -58,7 +59,11 @@ const TopFiveSlot = ({ position, rapper, onEditClick }: TopFiveSlotProps) => {
         <div
           {...attributes}
           {...listeners}
-          className="flex items-center justify-center w-full py-1.5 cursor-grab active:cursor-grabbing touch-none rounded-t-md hover:bg-[hsl(var(--theme-primary))]/10 transition-colors"
+          className={`flex items-center justify-center w-full py-1.5 touch-none rounded-t-md transition-colors ${
+            disabled
+              ? "cursor-not-allowed opacity-50"
+              : "cursor-grab active:cursor-grabbing hover:bg-[hsl(var(--theme-primary))]/10"
+          }`}
         >
           <GripHorizontal className="w-5 h-5 text-[hsl(var(--theme-textMuted))]" />
         </div>

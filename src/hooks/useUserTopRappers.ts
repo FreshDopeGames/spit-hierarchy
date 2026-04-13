@@ -129,79 +129,111 @@ export const useUserTopRappers = () => {
     mutationFn: async ({ posA, posB }: { posA: number; posB: number }) => {
       if (!user) throw new Error("User not authenticated");
 
-      // Get both entries
       const { data: entries, error: fetchErr } = await supabase
         .from("user_top_rappers")
-        .select("position, rapper_id")
+        .select("id, position, rapper_id")
         .eq("user_id", user.id)
         .in("position", [posA, posB]);
 
       if (fetchErr) throw fetchErr;
 
-      const entryA = entries?.find(e => e.position === posA);
-      const entryB = entries?.find(e => e.position === posB);
+      const entryA = entries?.find((entry) => entry.position === posA);
+      const entryB = entries?.find((entry) => entry.position === posB);
 
       if (!entryA || !entryB) throw new Error("Both positions must have rappers");
 
-      // Use a temporary position to avoid unique constraint violations during swap
-      // Step 1: Move A to temp position (999)
-      const { error: err1 } = await supabase
+      const { data: deletedA, error: deleteErr } = await supabase
         .from("user_top_rappers")
-        .update({ position: 999 })
+        .delete()
+        .eq("id", entryA.id)
         .eq("user_id", user.id)
-        .eq("position", posA);
-      if (err1) throw err1;
+        .select("id")
+        .maybeSingle();
 
-      // Step 2: Move B to A's position
-      const { error: err2 } = await supabase
+      if (deleteErr || !deletedA) {
+        throw deleteErr ?? new Error("Failed to reserve the original slot for swapping");
+      }
+
+      const { data: movedB, error: updateErr } = await supabase
         .from("user_top_rappers")
         .update({ position: posA })
+        .eq("id", entryB.id)
         .eq("user_id", user.id)
-        .eq("position", posB);
-      if (err2) throw err2;
+        .select("id")
+        .maybeSingle();
 
-      // Step 3: Move temp (A) to B's position
-      const { error: err3 } = await supabase
+      if (updateErr || !movedB) {
+        await supabase.from("user_top_rappers").insert({
+          user_id: user.id,
+          position: posA,
+          rapper_id: entryA.rapper_id,
+        });
+
+        throw updateErr ?? new Error("Failed to move the second rapper into place");
+      }
+
+      const { data: insertedA, error: insertErr } = await supabase
         .from("user_top_rappers")
-        .update({ position: posB })
-        .eq("user_id", user.id)
-        .eq("position", 999);
-      if (err3) throw err3;
+        .insert({
+          user_id: user.id,
+          position: posB,
+          rapper_id: entryA.rapper_id,
+        })
+        .select("id")
+        .maybeSingle();
+
+      if (insertErr || !insertedA) {
+        await supabase
+          .from("user_top_rappers")
+          .update({ position: posB })
+          .eq("id", entryB.id)
+          .eq("user_id", user.id);
+
+        await supabase.from("user_top_rappers").insert({
+          user_id: user.id,
+          position: posA,
+          rapper_id: entryA.rapper_id,
+        });
+
+        throw insertErr ?? new Error("Failed to complete the top 5 swap");
+      }
     },
     onMutate: async ({ posA, posB }) => {
-      // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await queryClient.cancelQueries({ queryKey: ["user-top-rappers", user?.id] });
       const previous = queryClient.getQueryData(["user-top-rappers", user?.id]);
 
       queryClient.setQueryData(["user-top-rappers", user?.id], (old: any[] | undefined) => {
         if (!old) return old;
+
         const copy = old.map((item: any) => ({ ...item }));
-        const itemA = copy.find((i: any) => i.position === posA);
-        const itemB = copy.find((i: any) => i.position === posB);
+        const itemA = copy.find((item: any) => item.position === posA);
+        const itemB = copy.find((item: any) => item.position === posB);
+
         if (itemA && itemB) {
-          const tmpRapperId = itemA.rapper_id;
-          const tmpRappers = itemA.rappers;
-          itemA.rapper_id = itemB.rapper_id;
-          itemA.rappers = itemB.rappers;
-          itemB.rapper_id = tmpRapperId;
-          itemB.rappers = tmpRappers;
+          itemA.position = posB;
+          itemB.position = posA;
         }
-        return copy;
+
+        return copy.sort((a: any, b: any) => a.position - b.position);
       });
 
       return { previous };
     },
     onSuccess: () => {
-      // Delay refetch slightly to ensure DB is fully consistent
       setTimeout(() => {
         queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
-      }, 300);
+      }, 200);
       toast.success("Top 5 reordered!");
     },
     onError: (error: any, _vars, context) => {
       if (context?.previous) {
         queryClient.setQueryData(["user-top-rappers", user?.id], context.previous);
       }
+
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
+      }, 200);
+
       console.error("Error swapping positions:", error);
       toast.error("Failed to reorder your top 5");
     },
