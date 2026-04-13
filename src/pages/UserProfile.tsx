@@ -186,13 +186,13 @@ const UserProfile = () => {
         description="View and manage your Spit Hierarchy profile, rankings, achievements, and voting history."
         robots="noindex, nofollow"
       />
-      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda">
+      <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon relative font-merienda overflow-x-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon/80 via-rap-carbon-light/80 to-rap-carbon/80 z-0"></div>
         
         <div className="relative z-10 flex flex-col min-h-screen">
           <HeaderNavigation isScrolled={false} />
 
-          <main className="flex-1 max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28 pb-8">
+          <main className="flex-1 w-full max-w-4xl mx-auto p-3 sm:p-6 pt-24 sm:pt-28 pb-8 overflow-x-hidden">
             {isCoreLoading ? (
               // Show skeleton while core profile data loads
               <>
