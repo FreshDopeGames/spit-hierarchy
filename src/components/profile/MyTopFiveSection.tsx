@@ -171,7 +171,7 @@ const MyTopFiveSection = () => {
             </div>
           </SortableContext>
 
-          <DragOverlay>
+          <DragOverlay dropAnimation={null}>
             {activeSlot ? (
               <div className="border-2 border-[hsl(var(--theme-primary))] rounded-lg p-3 bg-[hsl(var(--theme-surfaceSecondary))] shadow-2xl shadow-[hsl(var(--theme-primary))]/40 opacity-90 rotate-2 scale-105">
                 <div className="flex flex-col items-center space-y-2">
