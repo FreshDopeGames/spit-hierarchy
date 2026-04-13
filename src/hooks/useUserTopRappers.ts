@@ -143,23 +143,33 @@ export const useUserTopRappers = () => {
 
       if (!entryA || !entryB) throw new Error("Both positions must have rappers");
 
-      // Delete both, then re-insert swapped
-      await supabase
+      // Use a temporary position to avoid unique constraint violations during swap
+      // Step 1: Move A to temp position (999)
+      const { error: err1 } = await supabase
         .from("user_top_rappers")
-        .delete()
+        .update({ position: 999 })
         .eq("user_id", user.id)
-        .in("position", [posA, posB]);
+        .eq("position", posA);
+      if (err1) throw err1;
 
-      const { error: insertErr } = await supabase
+      // Step 2: Move B to A's position
+      const { error: err2 } = await supabase
         .from("user_top_rappers")
-        .insert([
-          { user_id: user.id, position: posA, rapper_id: entryB.rapper_id },
-          { user_id: user.id, position: posB, rapper_id: entryA.rapper_id },
-        ]);
+        .update({ position: posA })
+        .eq("user_id", user.id)
+        .eq("position", posB);
+      if (err2) throw err2;
 
-      if (insertErr) throw insertErr;
+      // Step 3: Move temp (A) to B's position
+      const { error: err3 } = await supabase
+        .from("user_top_rappers")
+        .update({ position: posB })
+        .eq("user_id", user.id)
+        .eq("position", 999);
+      if (err3) throw err3;
     },
     onMutate: async ({ posA, posB }) => {
+      // Cancel any outgoing refetches so they don't overwrite our optimistic update
       await queryClient.cancelQueries({ queryKey: ["user-top-rappers", user?.id] });
       const previous = queryClient.getQueryData(["user-top-rappers", user?.id]);
 
@@ -182,7 +192,10 @@ export const useUserTopRappers = () => {
       return { previous };
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
+      // Delay refetch slightly to ensure DB is fully consistent
+      setTimeout(() => {
+        queryClient.invalidateQueries({ queryKey: ["user-top-rappers", user?.id] });
+      }, 300);
       toast.success("Top 5 reordered!");
     },
     onError: (error: any, _vars, context) => {
