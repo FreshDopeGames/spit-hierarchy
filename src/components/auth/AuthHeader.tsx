@@ -11,7 +11,7 @@ const AuthHeader = ({ isLogin }: AuthHeaderProps) => {
       <div className="flex items-center justify-center space-x-2 mb-4">
         <div className="w-8 h-8 rounded-lg flex items-center justify-center">
           <img 
-            src="/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png" 
+            src="/lovable-uploads/Logo_Square_02.png" 
             alt="Spit Hierarchy Logo" 
             className="w-8 h-8 object-contain"
           />

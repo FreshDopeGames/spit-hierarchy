@@ -29,13 +29,13 @@ export default defineConfig(({ mode }) => ({
         categories: ['music', 'entertainment', 'social'],
         icons: [
           {
-            src: '/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png',
+            src: '/lovable-uploads/Logo_Square_02.png',
             sizes: '192x192',
             type: 'image/png',
             purpose: 'any'
           },
           {
-            src: '/lovable-uploads/49d79e00-3ea3-454a-a173-8770856c02ac.png',
+            src: '/lovable-uploads/Logo_Square_02.png',
             sizes: '512x512',
             type: 'image/png',
             purpose: 'any maskable'
