@@ -761,7 +761,9 @@ export type Database = {
           consecutive_voting_days: number | null
           created_at: string | null
           cypher_visits: number | null
+          daily_sessions_count: number | null
           id: string
+          last_session_date: string | null
           last_vote_date: string | null
           profile_views_count: number | null
           quiz_best_streak: number | null
@@ -789,7 +791,9 @@ export type Database = {
           consecutive_voting_days?: number | null
           created_at?: string | null
           cypher_visits?: number | null
+          daily_sessions_count?: number | null
           id: string
+          last_session_date?: string | null
           last_vote_date?: string | null
           profile_views_count?: number | null
           quiz_best_streak?: number | null
@@ -817,7 +821,9 @@ export type Database = {
           consecutive_voting_days?: number | null
           created_at?: string | null
           cypher_visits?: number | null
+          daily_sessions_count?: number | null
           id?: string
+          last_session_date?: string | null
           last_vote_date?: string | null
           profile_views_count?: number | null
           quiz_best_streak?: number | null
