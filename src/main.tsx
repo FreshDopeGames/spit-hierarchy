@@ -10,10 +10,8 @@ import { EnhancedThemeProvider } from "@/hooks/useEnhancedTheme";
 import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
-import ErrorBoundary from "@/components/ErrorBoundary";
 
-import UsernameEnforcementModal from "@/components/auth/UsernameEnforcementModal";
-import VoterGeolocationTracker from "@/components/VoterGeolocationTracker";
+import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import ActivityToastProvider from "@/components/ActivityToastProvider";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
