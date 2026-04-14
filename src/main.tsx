@@ -10,14 +10,11 @@ import { EnhancedThemeProvider } from "@/hooks/useEnhancedTheme";
 import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
-
-import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
-import ActivityToastProvider from "@/components/ActivityToastProvider";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
-
 
 // Optimized QueryClient configuration with better performance settings
 const queryClient = new QueryClient({
@@ -52,9 +49,6 @@ createRoot(document.getElementById("root")!).render(
                 <TooltipProvider>
                   <AchievementProvider>
                     <ErrorBoundary>
-                      <UsernameEnforcementModal />
-                      <VoterGeolocationTracker />
-                      <ActivityToastProvider />
                       <App />
                       <Toaster />
                     </ErrorBoundary>
