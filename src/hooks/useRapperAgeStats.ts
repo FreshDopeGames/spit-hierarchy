@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useOptimizedQuery } from "./useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
 
 interface GenerationBreakdown {
@@ -14,8 +14,9 @@ interface RapperAgeStats {
 }
 
 export const useRapperAgeStats = () => {
-  return useQuery({
+  return useOptimizedQuery({
     queryKey: ["rapper-age-stats"],
+    priority: 'low',
     queryFn: async (): Promise<RapperAgeStats> => {
       const { data, error } = await supabase
         .from("rappers")

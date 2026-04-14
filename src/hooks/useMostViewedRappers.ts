@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useOptimizedQuery } from "./useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
 
 export interface MostViewedRapper {
@@ -10,8 +10,9 @@ export interface MostViewedRapper {
 }
 
 export const useMostViewedRappers = (limit = 5) => {
-  return useQuery({
+  return useOptimizedQuery({
     queryKey: ["most-viewed-rappers", limit],
+    priority: 'low',
     queryFn: async (): Promise<MostViewedRapper[]> => {
       const sevenDaysAgo = new Date();
       sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);

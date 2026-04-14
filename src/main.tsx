@@ -11,15 +11,10 @@ import { SecureAuthProvider } from "@/hooks/useSecureAuth";
 import { SecurityProvider } from "@/hooks/useSecurityContext";
 import { AchievementProvider } from "@/components/achievements/AchievementProvider";
 import ErrorBoundary from "@/components/ErrorBoundary";
-
-import UsernameEnforcementModal from "@/components/auth/UsernameEnforcementModal";
-import VoterGeolocationTracker from "@/components/VoterGeolocationTracker";
-import ActivityToastProvider from "@/components/ActivityToastProvider";
 import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
-import "leaflet/dist/leaflet.css";
 
 // Optimized QueryClient configuration with better performance settings
 const queryClient = new QueryClient({
@@ -54,9 +49,6 @@ createRoot(document.getElementById("root")!).render(
                 <TooltipProvider>
                   <AchievementProvider>
                     <ErrorBoundary>
-                      <UsernameEnforcementModal />
-                      <VoterGeolocationTracker />
-                      <ActivityToastProvider />
                       <App />
                       <Toaster />
                     </ErrorBoundary>
