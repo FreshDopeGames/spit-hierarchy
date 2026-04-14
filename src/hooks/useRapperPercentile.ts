@@ -1,10 +1,11 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useOptimizedQuery } from "./useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
 
 export const useRapperPercentile = (rapperId: string) => {
-  return useQuery({
+  return useOptimizedQuery({
     queryKey: ["rapper-percentile", rapperId],
+    priority: 'low',
     queryFn: async () => {
       const { data, error } = await supabase
         .rpc("calculate_rapper_percentile", { rapper_uuid: rapperId });

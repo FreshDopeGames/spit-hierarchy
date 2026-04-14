@@ -1,10 +1,11 @@
 
-import { useQuery } from "@tanstack/react-query";
+import { useOptimizedQuery } from "./useOptimizedQuery";
 import { supabase } from "@/integrations/supabase/client";
 
 export const useTopRappersByCategory = () => {
-  return useQuery({
+  return useOptimizedQuery({
     queryKey: ["top-rappers-by-category"],
+    priority: 'low',
     queryFn: async () => {
       try {
         console.log('Fetching voting categories...');
