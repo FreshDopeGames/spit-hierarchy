@@ -121,7 +121,7 @@ export const NotificationBell = () => {
               ))}
             </div>
           )}
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         <div className="border-t px-4 py-2">
