@@ -52,8 +52,11 @@ export default defineConfig(({ mode }) => ({
         ]
       },
       workbox: {
+        // Bump suffix to invalidate all user caches (v2 = 2026-04-16)
+        cacheId: 'spit-hierarchy-v2',
         globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
         globIgnores: ['lovable-uploads/**/*'],
+        cleanupOutdatedCaches: true,
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         runtimeCaching: [
           {
