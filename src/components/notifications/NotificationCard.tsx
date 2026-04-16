@@ -79,7 +79,9 @@ export const NotificationCard = ({ notification, onMarkAsRead, onDelete }: Notif
     </Card>
   );
 
-  return notification.link_url ? (
+  const isOtherUserNotification = notification.type === 'ranking_vote' || notification.type === 'skill_vote';
+
+  return notification.link_url && !isOtherUserNotification ? (
     <Link 
       to={notification.link_url} 
       onClick={() => !notification.is_read && onMarkAsRead()}

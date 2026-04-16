@@ -5,7 +5,7 @@ import { useNotifications } from '@/hooks/useNotifications';
 import { Link, useNavigate } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 
 const getNotificationIcon = (type: string) => {
@@ -23,14 +23,31 @@ export const NotificationBell = () => {
   const { notifications, unreadCount, markAsRead, markAllAsRead } = useNotifications();
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
+  const autoReadTimer = useRef<ReturnType<typeof setTimeout>>();
 
   const latest10 = notifications?.slice(0, 10) || [];
+
+  const isOtherUserNotification = (type: string) =>
+    type === 'ranking_vote' || type === 'skill_vote';
+
+  // Auto-mark visible notifications as read after popover opens
+  useEffect(() => {
+    if (open && unreadCount > 0) {
+      autoReadTimer.current = setTimeout(() => {
+        markAllAsRead.mutate();
+      }, 1000);
+    }
+    return () => {
+      if (autoReadTimer.current) clearTimeout(autoReadTimer.current);
+    };
+  }, [open]);
 
   const handleItemClick = (notification: typeof latest10[0]) => {
     if (!notification.is_read) {
       markAsRead.mutate(notification.id);
     }
-    if (notification.link_url) {
+    // Don't navigate for other-user vote notifications
+    if (notification.link_url && !isOtherUserNotification(notification.type)) {
       setOpen(false);
       navigate(notification.link_url);
     }
