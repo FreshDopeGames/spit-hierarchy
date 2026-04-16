@@ -6,20 +6,6 @@ import { useMemo } from "react";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from "recharts";
 
-interface RapperData {
-  id: string;
-  name: string;
-  slug: string;
-  average_rating: number;
-  image_url?: string;
-  total_votes?: number;
-}
-
-interface TaggedRapperData extends RapperData {
-  tag_name: string;
-  tag_color: string;
-}
-
 interface RankingData {
   id: string;
   title: string;
