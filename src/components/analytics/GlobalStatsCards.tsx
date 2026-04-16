@@ -24,7 +24,7 @@ const GlobalStatsCards = ({ countryCode, region }: GlobalStatsCardsProps) => {
   if (!globalStats) return null;
 
   const statCards = [
-    { icon: Vote, label: "Total Votes", value: globalStats.total_votes, color: "from-[var(--theme-primaryDark)] to-[var(--theme-accent)]" },
+    { icon: Vote, label: "Total Ratings", value: globalStats.total_votes, color: "from-[var(--theme-primaryDark)] to-[var(--theme-accent)]" },
     { icon: Users, label: "Active Voters", value: globalStats.active_voters, color: "from-[var(--theme-accent)] to-[var(--theme-primary)]" },
     { icon: Award, label: "Rated Rappers", value: globalStats.rated_rappers, color: "from-[var(--theme-primary)] to-[var(--theme-secondary)]" },
     { icon: Star, label: "Avg Rating", value: Number(globalStats.avg_rating).toFixed(1), color: "from-[var(--theme-secondary)] to-[var(--theme-primaryLight)]" },

@@ -44,7 +44,7 @@ const TopVotedRappersCard = ({ countryCode, region }: TopVotedRappersCardProps) 
       <CardHeader>
         <CardTitle className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] flex items-center gap-2 font-extrabold text-3xl">
           <Users className="w-5 h-5" />
-          Most Voted Rappers
+          Most Rated Rappers
         </CardTitle>
       </CardHeader>
       <CardContent>
