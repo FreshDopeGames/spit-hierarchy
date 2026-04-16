@@ -259,6 +259,7 @@ const StatsOverviewRedesigned = () => {
                     outerRadius={70}
                     paddingAngle={3}
                     dataKey="value"
+                    nameKey="name"
                     stroke="none"
                   >
                     {stats.rappers.decadeBreakdown.map((entry) => (
@@ -272,8 +273,10 @@ const StatsOverviewRedesigned = () => {
                       borderRadius: '8px',
                       color: '#fff',
                       fontSize: '12px',
+                      padding: '6px 10px',
                     }}
                     formatter={(value: number, name: string) => [`${value} rappers`, name]}
+                    labelFormatter={() => ''}
                   />
                 </PieChart>
               </ResponsiveContainer>
