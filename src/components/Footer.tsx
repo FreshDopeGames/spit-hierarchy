@@ -235,7 +235,7 @@ const Footer = () => {
 
         <div className="border-t border-[hsl(var(--theme-primary))] mt-8 pt-8 text-center">
           <p className="text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] text-sm">
-            v{APP_VERSION} • © 2025 Fresh Dope Biz LLC • All rights reserved. • Keep the culture alive. Not a lie.
+            © 2025 Fresh Dope Biz LLC • All rights reserved. • Keep the culture alive. Not a lie.
           </p>
         </div>
       </div>
