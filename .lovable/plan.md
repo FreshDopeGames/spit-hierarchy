@@ -1,34 +1,30 @@
 
-# Replace Rappers Card with Decade Pie Chart
 
-## Summary
-Replace the current Rappers stat card (which shows top-rated rapper callouts) with a pie chart showing rappers by career origin decade, using `career_start_year` from the `rappers` table. Recharts is already installed.
+# Populate Missing Career Start Years via Discography Fetches
 
-## Data
-Database has 282 rappers with `career_start_year`: 70s (2), 80s (18), 90s (92), 2000s (68), 2010s (91), 2020s (10). One unknown will be excluded.
+## Steps
 
-## Changes
+### 1. Fix Slick Rick's career_start_year
+Update from 1965 (birth year) to 1985 using the Supabase insert tool.
 
-**File: `src/components/StatsOverviewRedesigned.tsx`**
+### 2. Fetch discographies in 4 batches of 5
+Use the `fetch-rapper-discography` edge function for each rapper individually, with delays between calls to respect MusicBrainz rate limits. Batches:
 
-1. **Update `fetchStats`**: Replace the top-rated rapper queries with a single query:
-   ```ts
-   supabase.from("rappers").select("career_start_year").not("career_start_year", "is", null)
-   ```
-   Process into decade counts client-side. Remove `topOverallList`, `topTaggedList`, `tagInfo` from the return shape. Remove the tagged rapper dependent query (Phase 3) and all the `sessionStorage` memoization logic for random rapper picks.
+- **Batch 1**: GZA, Slim Thug, Slum Village, Soulja Boy, Souls of Mischief
+- **Batch 2**: Styles P, Three 6 Mafia, Tierra Whack, UGK, Vic Mensa
+- **Batch 3**: Webbie, Westside Boogie, Xzibit, Young M.A, Samara Cyn (re-fetch, has 0 albums)
+- **Batch 4**: Slick Rick, Dizaster, Murda Mook
 
-2. **Add Recharts imports**: `PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip`
+### 3. Derive career_start_year from earliest release
+After discographies are fetched, query the earliest `release_date` from each rapper's albums and update `career_start_year` accordingly.
 
-3. **Define decade colors** (vibrant):
-   - 70s: `#FF6B35` (orange)
-   - 80s: `#E91E63` (hot pink)
-   - 90s: `#9C27B0` (purple)
-   - 2000s: `#2196F3` (blue)
-   - 2010s: `#00BCD4` (cyan)
-   - 2020s: `#4CAF50` (green)
+### 4. Handle battle rappers
+For Dizaster and Murda Mook — if MusicBrainz returns no albums, I will research their battle league debut years and set career_start_year manually:
+- **Dizaster**: debuted in Grind Time ~2008, then KOTD/URL
+- **Murda Mook**: debuted in Smack DVD era ~2003
 
-4. **Replace Rappers card JSX** (lines 313-386): Keep the card header (Music2 icon, "Rappers" title, total count). Replace the rapper avatar grid with a `ResponsiveContainer` wrapping a `PieChart` with a bottom-positioned `Legend`. The legend will use a horizontal layout that wraps naturally on mobile.
+### Technical detail
+- Each `fetch-rapper-discography` call will be invoked via `supabase--curl_edge_functions`
+- ~1.5s spacing between calls (handled by the edge function's internal rate limiting)
+- Career start year updates via `supabase insert tool` with UPDATE statements
 
-5. **Remove unused code**: The `topOverallRapper`/`topTaggedRapper` memos, `useEffect` for sessionStorage, `topOverallKey`/`topTaggedKeyBase` variables, `TaggedRapperData` interface, and the random tag query.
-
-No database changes needed. Purely a frontend UI swap.
