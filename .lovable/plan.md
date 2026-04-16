@@ -1,30 +1,36 @@
 
 
-# Populate Missing Career Start Years via Discography Fetches
+# Auto-Read Notifications on View + Fix Other-User Notification Links
 
-## Steps
+## Two issues to fix
 
-### 1. Fix Slick Rick's career_start_year
-Update from 1965 (birth year) to 1985 using the Supabase insert tool.
+### 1. Auto-mark notifications as read when the popover opens
+Currently, notifications stay unread until explicitly clicked. The user wants viewing them in the dropdown to be sufficient to dismiss the unread indicator.
 
-### 2. Fetch discographies in 4 batches of 5
-Use the `fetch-rapper-discography` edge function for each rapper individually, with delays between calls to respect MusicBrainz rate limits. Batches:
+**Approach**: When the popover opens and there are unread notifications visible in the latest 10, batch-mark them as read after a short delay (~1 second) so the user has time to register the visual state before it changes. Use a `useEffect` tied to the `open` state.
 
-- **Batch 1**: GZA, Slim Thug, Slum Village, Soulja Boy, Souls of Mischief
-- **Batch 2**: Styles P, Three 6 Mafia, Tierra Whack, UGK, Vic Mensa
-- **Batch 3**: Webbie, Westside Boogie, Xzibit, Young M.A, Samara Cyn (re-fetch, has 0 albums)
-- **Batch 4**: Slick Rick, Dizaster, Murda Mook
+**File**: `src/components/NotificationBell.tsx`
+- Add a `useEffect` that watches `open` — when it becomes `true`, wait ~1s then call `markAllAsRead.mutate()` for the visible unread notifications (or use individual `markAsRead` calls for just the visible 10).
+- Simpler approach: just call `markAllAsRead` since the user wants viewing to equal dismissal.
 
-### 3. Derive career_start_year from earliest release
-After discographies are fetched, query the earliest `release_date` from each rapper's albums and update `career_start_year` accordingly.
+### 2. Disable navigation for "other user" notifications
+Notifications like "AhmadTC just voted for UGK in Best Groups!" describe another user's action. These currently link to `/rankings/best-groups` which 404s (correct route would be `/rankings/official/best-groups`).
 
-### 4. Handle battle rappers
-For Dizaster and Murda Mook — if MusicBrainz returns no albums, I will research their battle league debut years and set career_start_year manually:
-- **Dizaster**: debuted in Grind Time ~2008, then KOTD/URL
-- **Murda Mook**: debuted in Smack DVD era ~2003
+**Approach**: Rather than fixing the link (since the user says these shouldn't be clickable at all), strip the navigation behavior for vote-type notifications about other users. Specifically:
+- In `NotificationBell.tsx`: for `ranking_vote` and `skill_vote` type notifications, do not navigate on click.
+- In `NotificationCard.tsx` (full page): same treatment — render as non-link.
+- Additionally, fix the DB function or trigger that generates these notifications to either stop creating them or store corrected `link_url` values going forward. The user may want to stop receiving notifications about *other* users' votes entirely.
 
-### Technical detail
-- Each `fetch-rapper-discography` call will be invoked via `supabase--curl_edge_functions`
-- ~1.5s spacing between calls (handled by the edge function's internal rate limiting)
-- Career start year updates via `supabase insert tool` with UPDATE statements
+**Clarification needed**: Should we stop generating vote notifications about other users entirely, or just make them non-clickable?
+
+## Technical changes
+
+| File | Change |
+|------|--------|
+| `src/components/NotificationBell.tsx` | Add `useEffect` to auto-mark visible notifications as read ~1s after popover opens. Remove navigation for `ranking_vote`/`skill_vote` types. |
+| `src/components/notifications/NotificationCard.tsx` | Skip wrapping in `<Link>` for vote-type notifications about other users. |
+| `src/hooks/useNotifications.tsx` | Add a `markVisibleAsRead` mutation that marks specific IDs as read in batch (optional — could reuse `markAllAsRead`). |
+
+## Open question
+Should notifications about other users' votes (e.g., "AhmadTC just voted for UGK") stop being generated entirely, or just be kept as non-clickable informational items?
 
