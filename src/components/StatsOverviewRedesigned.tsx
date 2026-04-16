@@ -6,6 +6,15 @@ import { useMemo } from "react";
 import AnalyticsButton from "@/components/AnalyticsButton";
 import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from "recharts";
 
+const DECADE_COLORS: Record<string, string> = {
+  '1970s': '#FF6B35',
+  '1980s': '#E91E63',
+  '1990s': '#9C27B0',
+  '2000s': '#2196F3',
+  '2010s': '#00BCD4',
+  '2020s': '#4CAF50',
+};
+
 interface RankingData {
   id: string;
   title: string;
