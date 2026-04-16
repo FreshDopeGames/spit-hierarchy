@@ -23,6 +23,23 @@ interface RankingPreviewCardProps {
 }
 
 const RankingPreviewCard = ({ ranking, items, totalVotes = 0, totalRappers = 0, priority = false }: RankingPreviewCardProps) => {
+  // Preload all mosaic images when this card is priority
+  React.useEffect(() => {
+    if (!priority) return;
+    const urls = items
+      .slice(0, 5)
+      .map(i => i.rapper?.image_url)
+      .filter(Boolean) as string[];
+    urls.forEach(url => {
+      if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'image';
+        link.href = url;
+        document.head.appendChild(link);
+      }
+    });
+  }, [priority, items]);
   // Get the top 5 rappers for the mosaic
   const topFiveRappers = items.slice(0, 5);
   
@@ -67,7 +84,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0, totalRappers = 0, 
                   src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={item.rapper.name}
                   size="thumb"
-                  priority={priority && index === 0}
+                  priority={priority}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = getOptimizedPlaceholder('thumb');
@@ -108,7 +125,7 @@ const RankingPreviewCard = ({ ranking, items, totalVotes = 0, totalRappers = 0, 
                   src={item.rapper.image_url || getOptimizedPlaceholder('thumb')}
                   alt={item.rapper.name}
                   size="thumb"
-                  priority={priority && index === 0}
+                  priority={priority}
                   onError={(e) => {
                     const target = e.target as HTMLImageElement;
                     target.src = getOptimizedPlaceholder('thumb');

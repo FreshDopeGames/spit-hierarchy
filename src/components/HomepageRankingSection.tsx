@@ -100,18 +100,23 @@ const HomepageRankingSection = () => {
     refetchOnWindowFocus: false
   });
 
-  // Preload first ranking card's rapper image for faster LCP
+  // Preload all ranking card rapper images for faster rendering
   useEffect(() => {
     if (rankingsData.length > 0) {
-      const firstItem = rankingsData[0]?.items?.[0];
-      const imageUrl = firstItem?.rapper?.image_url;
-      if (imageUrl && !document.querySelector(`link[rel="preload"][href="${imageUrl}"]`)) {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'image';
-        link.href = imageUrl;
-        document.head.appendChild(link);
-      }
+      const imageUrls = rankingsData
+        .flatMap(r => r.items?.slice(0, 5) || [])
+        .map(item => item?.rapper?.image_url)
+        .filter(Boolean) as string[];
+      
+      imageUrls.forEach(url => {
+        if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
+          const link = document.createElement('link');
+          link.rel = 'preload';
+          link.as = 'image';
+          link.href = url;
+          document.head.appendChild(link);
+        }
+      });
     }
   }, [rankingsData]);
 
@@ -151,7 +156,7 @@ const HomepageRankingSection = () => {
 
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8">
-        {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} totalRappers={ranking.totalRappers} priority={index === 0} />)}
+        {rankingsData.map((ranking, index) => <RankingPreviewCard key={ranking.id} ranking={ranking} items={ranking.items} totalVotes={ranking.totalVotes} totalRappers={ranking.totalRappers} priority={index < 2} />)}
       </div>
       
       {/* All Rankings Button - Centered */}
