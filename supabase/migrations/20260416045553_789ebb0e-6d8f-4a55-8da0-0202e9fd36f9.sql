@@ -1,0 +1,1 @@
+UPDATE rappers SET career_start_year = 1985 WHERE id = '1b67296c-a686-4b90-a425-e011516dd4a2';
