@@ -68,7 +68,7 @@ const TopVotedRappersCard = ({ countryCode, region }: TopVotedRappersCardProps) 
               </div>
               <div className="text-center sm:text-right w-full sm:w-auto">
                 <p className="text-[var(--theme-text)] font-bold font-[var(--theme-font-heading)] text-2xl">{rapper.total_votes}</p>
-                <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Total Votes</p>
+                <p className="text-[var(--theme-textMuted)] font-[var(--theme-font-body)] text-base">Total Ratings</p>
               </div>
             </div>
           ))}
