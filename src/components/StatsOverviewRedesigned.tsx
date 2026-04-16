@@ -2,8 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { Music2, Vote, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+import { useMemo } from "react";
 import AnalyticsButton from "@/components/AnalyticsButton";
+import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from "recharts";
 
 interface RapperData {
   id: string;
