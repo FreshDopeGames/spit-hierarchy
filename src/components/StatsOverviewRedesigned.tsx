@@ -139,9 +139,7 @@ const StatsOverviewRedesigned = () => {
     return {
       rappers: {
         total: rappersCount.count || 0,
-        topOverallList: topRappersResult.data || [],
-        topTaggedList: topTaggedRapper || [],
-        tagInfo: randomTag,
+        decadeBreakdown,
       },
       rankings: {
         total: rankingVotesCount.count || 0,
