@@ -268,7 +268,6 @@ const StatsOverviewRedesigned = () => {
                     ))}
                   </Pie>
                 </PieChart>
-                </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mt-2">
                 {stats.rappers.decadeBreakdown.map((entry) => (
