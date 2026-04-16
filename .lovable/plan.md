@@ -1,48 +1,67 @@
 
 
-# Top 5 Performance Optimizations for Spit Hierarchy
+# Rename "Votes" vs "Ratings" Terminology Across the Site
 
-## 1. Code-split all page routes with React.lazy
+## Terminology Rules
 
-**Impact: High (reduces initial JS bundle ~40-60%)**
+- **"Ratings" / "Skill Ratings"**: Individual rapper skill ratings (from the `votes` table — the 1-10 scale per category like Flow, Lyricism, etc.)
+- **"Votes"**: Ranking votes, VS Match votes, Poll votes — any binary choice or ranked selection
 
-Currently, all 20+ page components are eagerly imported in `App.tsx`. Only `Index.tsx` and `RapperDetail.tsx` use `lazy()` internally for below-fold sections. Every page (Admin, Blog, Quiz, Analytics, etc.) ships in the main bundle even if the user never visits them.
+## Files and Changes
 
-**Change:** Wrap every `Route` element's page import with `React.lazy()` and a `Suspense` fallback in `App.tsx`. This is the single highest-impact optimization available.
+### 1. `src/components/rapper/RapperAttributeStats.tsx`
+The skill rating radar chart currently says "X votes" under each skill. Change to "X ratings":
+- Line 283: `{data.votes} votes` → `{data.votes} ratings`
+- Line 370: `{data.votes} votes` → `{data.votes} ratings`
 
-## 2. Remove global Leaflet CSS import from main.tsx
+### 2. `src/components/rapper/RapperHeader.tsx`
+The badge on rapper profiles shows `{rapper.total_votes || 0} votes`. Since `rapper.total_votes` counts skill ratings from the `votes` table:
+- Line 148: `{rapper.total_votes || 0} votes` → `{rapper.total_votes || 0} ratings`
 
-**Impact: Medium (eliminates ~30KB of render-blocking CSS from every page)**
+### 3. `src/components/StatsOverview.tsx`
+- Line 133: `label: "Total Votes"` → `label: "Total Ratings"` (this counts the `votes` table which is skill ratings)
+- Line 138: `label: "Top Voter"` stays as-is (this is from `member_stats.total_votes` which is combined activity — keep as "Top Voter")
+- Line 143: `label: "Top Rated"` stays as-is (already correct terminology)
 
-`import "leaflet/dist/leaflet.css"` is loaded in `main.tsx` for every user on every page, but Leaflet maps only appear on 2 analytics sub-components (`CityMap.tsx`, `VoterActivityMap.tsx`). Those files already import the CSS themselves.
+### 4. `src/components/analytics/TopVotedRappersCard.tsx`
+This card shows rappers by total skill ratings received. Change:
+- Line 71: `Total Votes` → `Total Ratings`
+- Also update the card title if it says "Top Voted Rappers" → "Top Rated Rappers"
 
-**Change:** Remove the `import "leaflet/dist/leaflet.css"` line from `main.tsx`. The two map components already handle their own import.
+### 5. `src/components/analytics/GlobalStatsCards.tsx`
+- Line 27: `label: "Total Votes"` → `label: "Total Ratings"` (this is from the `votes` table = skill ratings)
 
-## 3. Defer non-critical global components (VoterGeolocationTracker, ActivityToastProvider)
+### 6. `src/components/analytics/UserVotingDashboard.tsx`
+- Line 31: `Total Votes` → `Total Ratings` (shows `memberStats.total_votes` which tracks skill rating activity)
 
-**Impact: Medium (faster time-to-interactive)**
+### 7. `src/components/ActivityToastProvider.tsx`
+Already correct:
+- Line 88: "just voted for ... in [ranking]" — correct (ranking vote)
+- Line 144: "just rated [rapper]'s [skill]" — correct (skill rating)
 
-`VoterGeolocationTracker` and `ActivityToastProvider` render on every page load and run Supabase queries / subscriptions immediately — even for unauthenticated users. `UsernameEnforcementModal` also mounts globally.
+### 8. `src/components/profile/UnifiedProfileHeader.tsx`
+- Line 218: `Total Votes Cast` — this is `member_stats.total_votes` which combines all activity. Consider renaming to `Total Activity` or keeping as-is since it's a combined stat on the self-profile view.
+- Line 176: `Rappers Rated` stays as-is (already correct)
+- Line 202: `VS Match Votes` stays as-is (already correct)
 
-**Change:** Wrap these three components in a single lazy-loaded wrapper that only mounts after the app is interactive (e.g., via `requestIdleCallback` or a short delay), and gate them behind `user` being present so they don't fire queries for logged-out visitors.
+### 9. `src/components/profile/ProfileStats.tsx`
+- Line 44: `Rappers Rated` stays as-is (already correct)
+- Line 67: `VS Match Votes` stays as-is (already correct)
 
-## 4. Add Supabase query result deduplication via queryKey consistency
+### 10. `src/components/RapperCard.tsx`
+- Line 193: `Votes` label under the Vote icon on rapper cards. Since this shows `rapper.total_votes` (skill ratings), change to `Ratings`
 
-**Impact: Medium (reduces redundant network requests)**
+### 11. `src/components/analytics/TopMembersCards.tsx`
+- Line 535: `title="Top Voters"` — keep as-is (these are users ranked by combined activity)
+- Line 540: `metricLabel="votes"` — keep as-is (combined metric)
 
-With 43 hook files making `useQuery` calls, many share overlapping data (e.g., rapper details fetched by ID in multiple contexts). The `useOptimizedQuery` hook exists but is never actually used — all hooks call `useQuery` directly, bypassing its network-aware and priority-based optimizations.
+### 12. `src/components/admin/forms/AchievementFormFields.tsx`
+- Line 30: `{ value: "total_votes", label: "Total Votes" }` → `label: "Total Ratings"` (this threshold is for the `votes` table activity)
 
-**Change:** Audit the top 5-10 most frequently called hooks and either (a) adopt `useOptimizedQuery` for low-priority/background queries, or (b) consolidate duplicate queryKeys so React Query's built-in dedup prevents redundant fetches. No new dependencies needed.
+### 13. `src/components/StatsOverviewRedesigned.tsx`
+- Line 390: `Total Votes` heading → `Total Ratings`
+- Line 435: `votes • Top Voter` — keep "Top Voter" but change "votes" to "ratings" if this refers to skill ratings
 
-## 5. Remove the no-op AppInitializer component
-
-**Impact: Low (cleaner boot path, removes unnecessary DOM work)**
-
-`AppInitializer` runs on every page load but does nothing useful at runtime — it logs security headers to the console (which can't actually set HTTP headers from client JS) and adds meta tags that are already in `index.html`. It adds an extra React component layer and useEffect for zero benefit.
-
-**Change:** Delete `AppInitializer.tsx` and remove it from `App.tsx`. Move the dev-only perf logging to `performanceCleanup.ts` if desired.
-
----
-
-**None of these changes touch authentication, RLS policies, database access patterns, or any security-related code.** They are purely frontend load-time and runtime optimizations.
+### Summary
+~12 label changes across ~10 files. No database columns, API calls, or logic changes — purely UI text renaming.
 
