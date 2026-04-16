@@ -174,59 +174,6 @@ const StatsOverviewRedesigned = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Stable random selection per day using sessionStorage
-  const todayKey = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const topOverallKey = useMemo(() => `statsCard_topOverall_${todayKey}`, [todayKey]);
-  const topTaggedKeyBase = useMemo(
-    () => stats?.rappers.tagInfo?.id ? `statsCard_topTagged_${stats.rappers.tagInfo.id}_${todayKey}` : null,
-    [stats?.rappers.tagInfo?.id, todayKey]
-  );
-
-  // Stable overall pick
-  const topOverallRapper = useMemo(() => {
-    const list = stats?.rappers.topOverallList || [];
-    if (list.length === 0) return null;
-    try {
-      const savedId = sessionStorage.getItem(topOverallKey);
-      const saved = savedId ? list.find(r => r.id === savedId) : null;
-      return saved || list[Math.floor(Math.random() * list.length)];
-    } catch {
-      return list[Math.floor(Math.random() * list.length)];
-    }
-  }, [topOverallKey, stats?.rappers.topOverallList?.map(r => r.id).join(",")]);
-
-  useEffect(() => {
-    if (topOverallRapper) {
-      try { sessionStorage.setItem(topOverallKey, topOverallRapper.id); } catch {}
-    }
-  }, [topOverallRapper, topOverallKey]);
-
-  // Stable tagged pick
-  const baseTaggedPick = useMemo(() => {
-    const list = stats?.rappers.topTaggedList || [];
-    if (list.length === 0) return null;
-    if (!topTaggedKeyBase) return list[Math.floor(Math.random() * list.length)];
-    try {
-      const savedId = sessionStorage.getItem(topTaggedKeyBase);
-      const saved = savedId ? list.find(r => r.id === savedId) : null;
-      return saved || list[Math.floor(Math.random() * list.length)];
-    } catch {
-      return list[Math.floor(Math.random() * list.length)];
-    }
-  }, [
-    topTaggedKeyBase,
-    stats?.rappers.topTaggedList?.map(r => r.id).join(","),
-  ]);
-
-  useEffect(() => {
-    if (baseTaggedPick && topTaggedKeyBase) {
-      try { sessionStorage.setItem(topTaggedKeyBase, baseTaggedPick.id); } catch {}
-    }
-  }, [baseTaggedPick, topTaggedKeyBase]);
-
-  const topTaggedRapper = baseTaggedPick && stats?.rappers.tagInfo
-    ? { ...baseTaggedPick, tag_name: stats.rappers.tagInfo.name, tag_color: stats.rappers.tagInfo.color }
-    : null;
 
   if (isLoading) {
     return (
