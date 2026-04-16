@@ -226,7 +226,7 @@ const StatsOverviewRedesigned = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Rappers Card */}
         <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryLight))] flex items-center justify-center shadow-lg">
               <Music2 className="w-6 h-6 text-black" />
             </div>
@@ -234,70 +234,55 @@ const StatsOverviewRedesigned = () => {
               Rappers
             </h3>
           </div>
-
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6 text-center">
+          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-2 text-center">
             {stats?.rappers.total || 0}
           </div>
-
-          <div className="grid grid-cols-2 gap-4 mt-auto">
-            {topOverallRapper && (
-              <Link to={`/rapper/${topOverallRapper.slug}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {topOverallRapper.image_url ? (
-                    <img
-                      src={topOverallRapper.image_url}
-                      alt={topOverallRapper.name}
-                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
+          <p className="text-sm text-[hsl(var(--theme-textMuted))] text-center mb-4 font-medium">By Career Origin Decade</p>
+          {stats?.rappers.decadeBreakdown && stats.rappers.decadeBreakdown.length > 0 && (
+            <div className="flex-1 min-h-0">
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={stats.rappers.decadeBreakdown}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={70}
+                    paddingAngle={3}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {stats.rappers.decadeBreakdown.map((entry) => (
+                      <Cell key={entry.name} fill={DECADE_COLORS[entry.name] || '#6B7280'} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#000',
+                      border: '1px solid hsl(var(--theme-primary))',
+                      borderRadius: '8px',
+                      color: '#fff',
+                      fontSize: '12px',
+                    }}
+                    formatter={(value: number, name: string) => [`${value} rappers`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mt-2">
+                {stats.rappers.decadeBreakdown.map((entry) => (
+                  <div key={entry.name} className="flex items-center gap-1.5">
+                    <div
+                      className="w-2.5 h-2.5 rounded-sm shrink-0"
+                      style={{ backgroundColor: DECADE_COLORS[entry.name] || '#6B7280' }}
                     />
-                  ) : (
-                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
-                      <Music2 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
-                    </div>
-                  )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
-                    {topOverallRapper.name}
-                  </p>
-                  <div className="flex items-center gap-1 mt-1 justify-center">
-                    <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
-                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {topOverallRapper.average_rating.toFixed(1)}
+                    <span className="text-xs text-[hsl(var(--theme-text))]">
+                      {entry.name} ({entry.value})
                     </span>
                   </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Top Overall</p>
-                </div>
-              </Link>
-            )}
-
-            {topTaggedRapper && (
-              <Link to={`/rapper/${topTaggedRapper.slug}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {topTaggedRapper.image_url ? (
-                    <img
-                      src={topTaggedRapper.image_url}
-                      alt={topTaggedRapper.name}
-                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
-                      <Music2 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
-                    </div>
-                  )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
-                    {topTaggedRapper.name}
-                  </p>
-                  <div className="flex items-center gap-1 mt-1 justify-center">
-                    <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
-                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {topTaggedRapper.average_rating.toFixed(1)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 truncate text-center">
-                    Top {topTaggedRapper.tag_name}
-                  </p>
-                </div>
-              </Link>
-            )}
-          </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Rankings Card */}
