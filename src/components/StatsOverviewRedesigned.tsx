@@ -57,8 +57,7 @@ const StatsOverviewRedesigned = () => {
 
     // PHASE 2: Secondary data (parallel)
     const [
-      topRappersResult,
-      allTagsResult,
+      careerDataResult,
       mostLikedPostResult,
       newestMemberResult,
       topAchieverResult,
@@ -66,11 +65,8 @@ const StatsOverviewRedesigned = () => {
       rankingVotesResult
     ] = await Promise.all([
       supabase.from("rappers")
-        .select("id, name, slug, average_rating, image_url")
-        .gt("total_votes", 10)
-        .order("average_rating", { ascending: false })
-        .limit(5),
-      supabase.from("rapper_tags").select("id, name, color"),
+        .select("career_start_year")
+        .not("career_start_year", "is", null),
       supabase.from("blog_posts")
         .select("id, title, slug, likes_count")
         .eq("status", "published")
@@ -94,29 +90,16 @@ const StatsOverviewRedesigned = () => {
         .select("ranking_id, rapper_id, official_rankings(id, title, slug), rappers(id, name, slug, image_url)")
     ]);
 
-    // PHASE 3: Dependent queries
-    const randomTag = allTagsResult.data?.[Math.floor(Math.random() * (allTagsResult.data?.length || 1))];
-    
-    const [taggedRappersResult] = await Promise.all([
-      randomTag 
-        ? supabase.from("rapper_tag_assignments")
-            .select(`rappers!inner(id, name, slug, average_rating, image_url, total_votes)`)
-            .eq("tag_id", randomTag.id)
-        : Promise.resolve({ data: null }),
-    ]);
-
-    // Process tagged rappers
-    let topTaggedRapper: RapperData[] = [];
-    if (taggedRappersResult.data) {
-      const validRappers = taggedRappersResult.data
-        .map(item => item.rappers)
-        .filter((r) => r !== null && (r.total_votes ?? 0) > 5)
-        .sort((a, b) => (b?.average_rating ?? 0) - (a?.average_rating ?? 0))
-        .slice(0, 5);
-      if (validRappers.length > 0) {
-        topTaggedRapper = validRappers;
-      }
-    }
+    // Process decade breakdown
+    const decadeCounts: Record<string, number> = {};
+    careerDataResult.data?.forEach((r) => {
+      const year = r.career_start_year as number;
+      const decade = `${Math.floor(year / 10) * 10}s`;
+      decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
+    });
+    const decadeBreakdown = Object.entries(decadeCounts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     // Process ranking votes for most active ranking
     const rankingCounts: Record<string, { ranking: any; count: number }> = {};
