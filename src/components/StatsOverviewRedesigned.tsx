@@ -4,7 +4,7 @@ import { Music2, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp } from 
 import { Link } from "react-router-dom";
 
 import AnalyticsButton from "@/components/AnalyticsButton";
-import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer } from "recharts";
 
 const DECADE_COLORS: Record<string, string> = {
   '1970s': '#FF6B35',
@@ -261,23 +261,12 @@ const StatsOverviewRedesigned = () => {
                     dataKey="value"
                     nameKey="name"
                     stroke="none"
+                    isAnimationActive={false}
                   >
                     {stats.rappers.decadeBreakdown.map((entry) => (
                       <Cell key={entry.name} fill={DECADE_COLORS[entry.name] || '#6B7280'} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#000',
-                      border: '1px solid hsl(var(--theme-primary))',
-                      borderRadius: '8px',
-                      color: '#fff',
-                      fontSize: '12px',
-                      padding: '6px 10px',
-                    }}
-                    formatter={(value: number, name: string) => [`${value} rappers`, name]}
-                    labelFormatter={() => ''}
-                  />
                 </PieChart>
               </ResponsiveContainer>
               <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mt-2">
