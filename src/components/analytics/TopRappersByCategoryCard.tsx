@@ -121,7 +121,7 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
                                 {rapper.average_rating?.toFixed(1)} avg
                               </Badge>
                               <span className="text-rap-platinum text-xs font-kaushan">
-                                {rapper.vote_count} votes
+                                {rapper.vote_count} ratings
                               </span>
                             </div>
                           </div>
