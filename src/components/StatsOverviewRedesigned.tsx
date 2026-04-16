@@ -273,8 +273,10 @@ const StatsOverviewRedesigned = () => {
                       borderRadius: '8px',
                       color: '#fff',
                       fontSize: '12px',
+                      padding: '6px 10px',
                     }}
                     formatter={(value: number, name: string) => [`${value} rappers`, name]}
+                    labelFormatter={() => ''}
                   />
                 </PieChart>
               </ResponsiveContainer>
