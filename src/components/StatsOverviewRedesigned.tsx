@@ -53,27 +53,30 @@ const StatsOverviewRedesigned = () => {
   };
 
   const fetchStats = async () => {
-    // PHASE 1: Critical counts (parallel) - These are what users see first
+    // PHASE 1: Critical counts (parallel)
     const [
       rappersCount,
       votesCount,
+      rankingVotesCount,
       membersCount,
       blogCount
     ] = await Promise.all([
       supabase.from("rappers").select("*", { count: "exact", head: true }),
       supabase.from("votes").select("*", { count: "exact", head: true }),
+      supabase.from("ranking_votes").select("*", { count: "exact", head: true }),
       supabase.rpc("get_total_member_count"),
       supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("status", "published")
     ]);
 
-    // PHASE 2: Secondary data (parallel) - Details for each card
+    // PHASE 2: Secondary data (parallel)
     const [
       topRappersResult,
       allTagsResult,
       mostLikedPostResult,
       newestMemberResult,
       topAchieverResult,
-      topVoterResult
+      mostRatedRapperResult,
+      rankingVotesResult
     ] = await Promise.all([
       supabase.from("rappers")
         .select("id, name, slug, average_rating, image_url")
@@ -94,29 +97,25 @@ const StatsOverviewRedesigned = () => {
         .limit(1)
         .maybeSingle(),
       supabase.rpc('get_member_with_most_achievements').maybeSingle(),
-      supabase.from("member_stats")
-        .select("id, total_votes")
+      supabase.from("rappers")
+        .select("id, name, slug, image_url, total_votes")
         .gt("total_votes", 0)
         .order("total_votes", { ascending: false })
         .limit(1)
-        .maybeSingle()
+        .maybeSingle(),
+      supabase.from("ranking_votes")
+        .select("ranking_id, rapper_id, official_rankings(id, title, slug), rappers(id, name, slug, image_url)")
     ]);
 
-    // PHASE 3: Dependent queries (only if needed)
+    // PHASE 3: Dependent queries
     const randomTag = allTagsResult.data?.[Math.floor(Math.random() * (allTagsResult.data?.length || 1))];
     
-    // Parallel dependent queries
-    const [taggedRappersResult, rankingVotesResult, topVoterProfileResult] = await Promise.all([
+    const [taggedRappersResult] = await Promise.all([
       randomTag 
         ? supabase.from("rapper_tag_assignments")
             .select(`rappers!inner(id, name, slug, average_rating, image_url, total_votes)`)
             .eq("tag_id", randomTag.id)
         : Promise.resolve({ data: null }),
-      supabase.from("ranking_votes")
-        .select("ranking_id, official_rankings(id, title, slug)"),
-      topVoterResult.data
-        ? supabase.rpc("get_public_profile_minimal", { profile_user_id: topVoterResult.data.id })
-        : Promise.resolve({ data: null })
     ]);
 
     // Process tagged rappers
@@ -132,30 +131,29 @@ const StatsOverviewRedesigned = () => {
       }
     }
 
-    // Process ranking votes
-    const voteCounts: Record<string, { ranking: any; count: number }> = {};
+    // Process ranking votes for most active ranking
+    const rankingCounts: Record<string, { ranking: any; count: number }> = {};
+    const rapperRankingCounts: Record<string, { rapper: any; count: number }> = {};
     rankingVotesResult.data?.forEach((vote) => {
       const ranking = vote.official_rankings;
       if (ranking && ranking.id) {
-        if (!voteCounts[ranking.id]) {
-          voteCounts[ranking.id] = { ranking, count: 0 };
+        if (!rankingCounts[ranking.id]) {
+          rankingCounts[ranking.id] = { ranking, count: 0 };
         }
-        voteCounts[ranking.id].count++;
+        rankingCounts[ranking.id].count++;
+      }
+      const rapper = vote.rappers;
+      if (rapper && rapper.id) {
+        if (!rapperRankingCounts[rapper.id]) {
+          rapperRankingCounts[rapper.id] = { rapper, count: 0 };
+        }
+        rapperRankingCounts[rapper.id].count++;
       }
     });
-    const mostActiveRanking = Object.values(voteCounts)
+    const mostActiveRanking = Object.values(rankingCounts)
       .sort((a, b) => b.count - a.count)[0] as { ranking: RankingData; count: number } | undefined;
-
-    // Process top voter profile
-    let topVoterProfile: MemberData | null = null;
-    if (topVoterResult.data && topVoterProfileResult.data?.[0]) {
-      topVoterProfile = {
-        id: topVoterResult.data.id,
-        username: topVoterProfileResult.data[0].username,
-        avatar_url: topVoterProfileResult.data[0].avatar_url,
-        stat_value: topVoterResult.data.total_votes,
-      };
-    }
+    const mostVotedInRankings = Object.values(rapperRankingCounts)
+      .sort((a, b) => b.count - a.count)[0] as { rapper: any; count: number } | undefined;
 
     // Process most achievements profile
     let mostAchievementsProfile: MemberData | null = null;
@@ -175,13 +173,20 @@ const StatsOverviewRedesigned = () => {
         topTaggedList: topTaggedRapper || [],
         tagInfo: randomTag,
       },
-      votes: {
-        total: votesCount.count || 0,
+      rankings: {
+        total: rankingVotesCount.count || 0,
         mostActiveRanking: mostActiveRanking ? {
           ...mostActiveRanking.ranking,
           vote_count: mostActiveRanking.count,
         } : null,
-        topVoter: topVoterProfile,
+        mostVotedRapper: mostVotedInRankings ? {
+          ...mostVotedInRankings.rapper,
+          vote_count: mostVotedInRankings.count,
+        } : null,
+      },
+      ratings: {
+        total: votesCount.count || 0,
+        mostRatedRapper: mostRatedRapperResult.data,
       },
       members: {
         total: membersCount.data || 0,
