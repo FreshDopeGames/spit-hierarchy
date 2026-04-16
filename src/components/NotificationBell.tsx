@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 import { formatDistanceToNow } from 'date-fns';
 import { useState, useEffect, useRef } from 'react';
-import { ScrollArea } from '@/components/ui/scroll-area';
+
 
 const getNotificationIcon = (type: string) => {
   switch (type) {
@@ -71,7 +71,7 @@ export const NotificationBell = () => {
           )}
         </button>
       </PopoverTrigger>
-      <PopoverContent align="end" className="w-80 p-0" sideOffset={8}>
+      <PopoverContent align="end" className="w-80 p-0 max-h-[80vh] flex flex-col" sideOffset={8}>
         {/* Header */}
         <div className="flex items-center justify-between px-4 py-3 border-b">
           <h3 className="font-semibold text-sm text-foreground">Notifications</h3>
@@ -89,7 +89,7 @@ export const NotificationBell = () => {
         </div>
 
         {/* Notification list */}
-        <ScrollArea className="max-h-[360px]">
+        <div className="flex-1 overflow-y-auto overscroll-contain min-h-0">
           {latest10.length === 0 ? (
             <div className="py-8 text-center">
               <Bell className="w-8 h-8 mx-auto text-muted-foreground/40 mb-2" />
@@ -121,7 +121,7 @@ export const NotificationBell = () => {
               ))}
             </div>
           )}
-        </ScrollArea>
+        </div>
 
         {/* Footer */}
         <div className="border-t px-4 py-2">
