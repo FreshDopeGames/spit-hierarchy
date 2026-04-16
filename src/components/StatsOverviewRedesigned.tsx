@@ -53,27 +53,30 @@ const StatsOverviewRedesigned = () => {
   };
 
   const fetchStats = async () => {
-    // PHASE 1: Critical counts (parallel) - These are what users see first
+    // PHASE 1: Critical counts (parallel)
     const [
       rappersCount,
       votesCount,
+      rankingVotesCount,
       membersCount,
       blogCount
     ] = await Promise.all([
       supabase.from("rappers").select("*", { count: "exact", head: true }),
       supabase.from("votes").select("*", { count: "exact", head: true }),
+      supabase.from("ranking_votes").select("*", { count: "exact", head: true }),
       supabase.rpc("get_total_member_count"),
       supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("status", "published")
     ]);
 
-    // PHASE 2: Secondary data (parallel) - Details for each card
+    // PHASE 2: Secondary data (parallel)
     const [
       topRappersResult,
       allTagsResult,
       mostLikedPostResult,
       newestMemberResult,
       topAchieverResult,
-      topVoterResult
+      mostRatedRapperResult,
+      rankingVotesResult
     ] = await Promise.all([
       supabase.from("rappers")
         .select("id, name, slug, average_rating, image_url")
@@ -94,29 +97,25 @@ const StatsOverviewRedesigned = () => {
         .limit(1)
         .maybeSingle(),
       supabase.rpc('get_member_with_most_achievements').maybeSingle(),
-      supabase.from("member_stats")
-        .select("id, total_votes")
+      supabase.from("rappers")
+        .select("id, name, slug, image_url, total_votes")
         .gt("total_votes", 0)
         .order("total_votes", { ascending: false })
         .limit(1)
-        .maybeSingle()
+        .maybeSingle(),
+      supabase.from("ranking_votes")
+        .select("ranking_id, rapper_id, official_rankings(id, title, slug), rappers(id, name, slug, image_url)")
     ]);
 
-    // PHASE 3: Dependent queries (only if needed)
+    // PHASE 3: Dependent queries
     const randomTag = allTagsResult.data?.[Math.floor(Math.random() * (allTagsResult.data?.length || 1))];
     
-    // Parallel dependent queries
-    const [taggedRappersResult, rankingVotesResult, topVoterProfileResult] = await Promise.all([
+    const [taggedRappersResult] = await Promise.all([
       randomTag 
         ? supabase.from("rapper_tag_assignments")
             .select(`rappers!inner(id, name, slug, average_rating, image_url, total_votes)`)
             .eq("tag_id", randomTag.id)
         : Promise.resolve({ data: null }),
-      supabase.from("ranking_votes")
-        .select("ranking_id, official_rankings(id, title, slug)"),
-      topVoterResult.data
-        ? supabase.rpc("get_public_profile_minimal", { profile_user_id: topVoterResult.data.id })
-        : Promise.resolve({ data: null })
     ]);
 
     // Process tagged rappers
@@ -132,30 +131,29 @@ const StatsOverviewRedesigned = () => {
       }
     }
 
-    // Process ranking votes
-    const voteCounts: Record<string, { ranking: any; count: number }> = {};
+    // Process ranking votes for most active ranking
+    const rankingCounts: Record<string, { ranking: any; count: number }> = {};
+    const rapperRankingCounts: Record<string, { rapper: any; count: number }> = {};
     rankingVotesResult.data?.forEach((vote) => {
       const ranking = vote.official_rankings;
       if (ranking && ranking.id) {
-        if (!voteCounts[ranking.id]) {
-          voteCounts[ranking.id] = { ranking, count: 0 };
+        if (!rankingCounts[ranking.id]) {
+          rankingCounts[ranking.id] = { ranking, count: 0 };
         }
-        voteCounts[ranking.id].count++;
+        rankingCounts[ranking.id].count++;
+      }
+      const rapper = vote.rappers;
+      if (rapper && rapper.id) {
+        if (!rapperRankingCounts[rapper.id]) {
+          rapperRankingCounts[rapper.id] = { rapper, count: 0 };
+        }
+        rapperRankingCounts[rapper.id].count++;
       }
     });
-    const mostActiveRanking = Object.values(voteCounts)
+    const mostActiveRanking = Object.values(rankingCounts)
       .sort((a, b) => b.count - a.count)[0] as { ranking: RankingData; count: number } | undefined;
-
-    // Process top voter profile
-    let topVoterProfile: MemberData | null = null;
-    if (topVoterResult.data && topVoterProfileResult.data?.[0]) {
-      topVoterProfile = {
-        id: topVoterResult.data.id,
-        username: topVoterProfileResult.data[0].username,
-        avatar_url: topVoterProfileResult.data[0].avatar_url,
-        stat_value: topVoterResult.data.total_votes,
-      };
-    }
+    const mostVotedInRankings = Object.values(rapperRankingCounts)
+      .sort((a, b) => b.count - a.count)[0] as { rapper: any; count: number } | undefined;
 
     // Process most achievements profile
     let mostAchievementsProfile: MemberData | null = null;
@@ -175,13 +173,20 @@ const StatsOverviewRedesigned = () => {
         topTaggedList: topTaggedRapper || [],
         tagInfo: randomTag,
       },
-      votes: {
-        total: votesCount.count || 0,
+      rankings: {
+        total: rankingVotesCount.count || 0,
         mostActiveRanking: mostActiveRanking ? {
           ...mostActiveRanking.ranking,
           vote_count: mostActiveRanking.count,
         } : null,
-        topVoter: topVoterProfile,
+        mostVotedRapper: mostVotedInRankings ? {
+          ...mostVotedInRankings.rapper,
+          vote_count: mostVotedInRankings.count,
+        } : null,
+      },
+      ratings: {
+        total: votesCount.count || 0,
+        mostRatedRapper: mostRatedRapperResult.data,
       },
       members: {
         total: membersCount.data || 0,
@@ -267,7 +272,7 @@ const StatsOverviewRedesigned = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {Array.from({ length: 4 }).map((_, i) => (
+          {Array.from({ length: 5 }).map((_, i) => (
             <div
               key={i}
               className="min-h-[300px] bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl animate-pulse"
@@ -380,59 +385,64 @@ const StatsOverviewRedesigned = () => {
           </div>
         </div>
 
-        {/* Total Votes Card */}
+        {/* Rankings Card */}
         <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-accent))] to-[hsl(var(--theme-primary))] flex items-center justify-center shadow-lg">
-              <Vote className="w-6 h-6 text-black" />
+              <Trophy className="w-6 h-6 text-black" />
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
-              Total Ratings
+              Rankings
             </h3>
           </div>
 
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6 text-center">
-            {(stats?.votes.total || 0).toLocaleString()}
+          <div className="text-center mb-6">
+            <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              {(stats?.rankings.total || 0).toLocaleString()}
+            </div>
+            <div className="text-sm text-[hsl(var(--theme-textMuted))] mt-2 font-medium">
+              Ranking Votes
+            </div>
           </div>
 
           <div className="space-y-4 mt-auto">
-            {stats?.votes.mostActiveRanking && (
-              <Link to={`/rankings/${stats.votes.mostActiveRanking.slug}`} className="block group">
+            {stats?.rankings.mostActiveRanking && (
+              <Link to={`/rankings/${stats.rankings.mostActiveRanking.slug}`} className="block group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   <div className="flex items-center gap-3 mb-2">
-                    <Trophy className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
+                    <Flame className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
                     <p className="text-sm font-bold text-[hsl(var(--theme-text))] group-hover:text-[hsl(var(--theme-primary))] transition-colors line-clamp-1">
-                      {stats.votes.mostActiveRanking.title}
+                      {stats.rankings.mostActiveRanking.title}
                     </p>
                   </div>
                   <p className="text-xs text-[hsl(var(--theme-textMuted))]">
-                    {stats.votes.mostActiveRanking.vote_count.toLocaleString()} votes • Most Active Ranking
+                    {stats.rankings.mostActiveRanking.vote_count.toLocaleString()} votes • Most Active Ranking
                   </p>
                 </div>
               </Link>
             )}
 
-            {stats?.votes.topVoter && (
-              <Link to={`/user/${stats.votes.topVoter.username}`} className="block group">
+            {stats?.rankings.mostVotedRapper && (
+              <Link to={`/rapper/${stats.rankings.mostVotedRapper.slug}`} className="block group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   <div className="flex items-center gap-3">
-                    {getAvatarUrl(stats.votes.topVoter.avatar_url) ? (
+                    {stats.rankings.mostVotedRapper.image_url ? (
                       <img
-                        src={getAvatarUrl(stats.votes.topVoter.avatar_url)!}
-                        alt={stats.votes.topVoter.username}
-                        className="w-12 h-12 rounded-full object-cover border-2 border-[hsl(var(--theme-primary))]/40"
+                        src={stats.rankings.mostVotedRapper.image_url}
+                        alt={stats.rankings.mostVotedRapper.name}
+                        className="w-12 h-12 rounded-lg object-cover border-2 border-[hsl(var(--theme-primary))]/40"
                       />
                     ) : (
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40">
-                        <Users className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
+                      <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40">
+                        <Music2 className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
                       </div>
                     )}
                     <div>
                       <p className="text-sm font-bold text-[hsl(var(--theme-text))] group-hover:text-[hsl(var(--theme-primary))] transition-colors">
-                        {stats.votes.topVoter.username}
+                        {stats.rankings.mostVotedRapper.name}
                       </p>
                       <p className="text-xs text-[hsl(var(--theme-textMuted))]">
-                        {stats.votes.topVoter.stat_value.toLocaleString()} ratings • Top Voter
+                        {stats.rankings.mostVotedRapper.vote_count.toLocaleString()} votes • Most Voted in Rankings
                       </p>
                     </div>
                   </div>
@@ -440,6 +450,55 @@ const StatsOverviewRedesigned = () => {
               </Link>
             )}
           </div>
+        </div>
+
+        {/* Skill Ratings Card */}
+        <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] flex items-center justify-center shadow-lg">
+              <Star className="w-6 h-6 text-black" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              Skill Ratings
+            </h3>
+          </div>
+
+          <div className="text-center mb-6">
+            <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              {(stats?.ratings.total || 0).toLocaleString()}
+            </div>
+            <div className="text-sm text-[hsl(var(--theme-textMuted))] mt-2 font-medium">
+              Individual Ratings
+            </div>
+          </div>
+
+          {stats?.ratings.mostRatedRapper && (
+            <Link to={`/rapper/${stats.ratings.mostRatedRapper.slug}`} className="mt-auto block group">
+              <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
+                <div className="flex items-center gap-3">
+                  {stats.ratings.mostRatedRapper.image_url ? (
+                    <img
+                      src={stats.ratings.mostRatedRapper.image_url}
+                      alt={stats.ratings.mostRatedRapper.name}
+                      className="w-12 h-12 rounded-lg object-cover border-2 border-[hsl(var(--theme-primary))]/40"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40">
+                      <Music2 className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
+                    </div>
+                  )}
+                  <div>
+                    <p className="text-sm font-bold text-[hsl(var(--theme-text))] group-hover:text-[hsl(var(--theme-primary))] transition-colors">
+                      {stats.ratings.mostRatedRapper.name}
+                    </p>
+                    <p className="text-xs text-[hsl(var(--theme-textMuted))]">
+                      {(stats.ratings.mostRatedRapper.total_votes || 0).toLocaleString()} ratings • Most Rated
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          )}
         </div>
 
         {/* Members Card */}
