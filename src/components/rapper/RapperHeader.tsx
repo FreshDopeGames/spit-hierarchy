@@ -145,7 +145,7 @@ const RapperHeader = ({
                     </span>
                   </div>
                   <Badge variant="secondary" className="bg-[hsl(var(--theme-accent))]/20 text-[hsl(var(--theme-text))] border-[hsl(var(--theme-accent))]/30 px-4 py-2 font-[var(--theme-font-body)]">
-                    {rapper.total_votes || 0} votes
+                    {rapper.total_votes || 0} ratings
                   </Badge>
                   {zodiacSign && zodiacName && (
                     <Link to={`/all-rappers?zodiac=${zodiacName}`}>

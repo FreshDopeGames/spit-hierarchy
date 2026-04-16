@@ -130,7 +130,7 @@ const StatsOverview = () => {
     color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
   }, {
     icon: Vote,
-    label: "Total Votes",
+    label: "Total Ratings",
     value: stats?.totalVotes || 0,
     color: "from-[var(--theme-primary)] to-[var(--theme-primaryLight)]"
   }, {

@@ -190,7 +190,7 @@ const RapperCard = ({
                   </span>
                 </div>
                 <div className="text-[var(--theme-textMuted)] text-xs font-[var(--theme-fontSecondary)]">
-                  Votes
+                  Ratings
                 </div>
               </div>
             </div>

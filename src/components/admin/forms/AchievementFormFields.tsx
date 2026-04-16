@@ -27,7 +27,7 @@ const ACHIEVEMENT_RARITIES = [
 ];
 
 const THRESHOLD_FIELDS = [
-  { value: "total_votes", label: "Total Votes" },
+  { value: "total_votes", label: "Total Ratings" },
   { value: "total_comments", label: "Total Comments" },
   { value: "consecutive_voting_days", label: "Consecutive Voting Days" },
   { value: "ranking_lists_created", label: "Ranking Lists Created" },

@@ -387,7 +387,7 @@ const StatsOverviewRedesigned = () => {
               <Vote className="w-6 h-6 text-black" />
             </div>
             <h3 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
-              Total Votes
+              Total Ratings
             </h3>
           </div>
 
@@ -432,7 +432,7 @@ const StatsOverviewRedesigned = () => {
                         {stats.votes.topVoter.username}
                       </p>
                       <p className="text-xs text-[hsl(var(--theme-textMuted))]">
-                        {stats.votes.topVoter.stat_value.toLocaleString()} votes • Top Voter
+                        {stats.votes.topVoter.stat_value.toLocaleString()} ratings • Top Voter
                       </p>
                     </div>
                   </div>
