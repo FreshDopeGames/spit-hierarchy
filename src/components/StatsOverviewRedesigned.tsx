@@ -262,6 +262,8 @@ const StatsOverviewRedesigned = () => {
                     nameKey="name"
                     stroke="none"
                     isAnimationActive={false}
+                    activeIndex={-1}
+                    activeShape={undefined}
                   >
                     {stats.rappers.decadeBreakdown.map((entry) => (
                       <Cell key={entry.name} fill={DECADE_COLORS[entry.name] || '#6B7280'} />
