@@ -259,6 +259,7 @@ const StatsOverviewRedesigned = () => {
                     outerRadius={70}
                     paddingAngle={3}
                     dataKey="value"
+                    nameKey="name"
                     stroke="none"
                   >
                     {stats.rappers.decadeBreakdown.map((entry) => (
