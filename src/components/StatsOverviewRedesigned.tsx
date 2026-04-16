@@ -1,23 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Music2, Vote, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp } from "lucide-react";
+import { Music2, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
-import { useMemo, useEffect } from "react";
+
 import AnalyticsButton from "@/components/AnalyticsButton";
+import { PieChart, Pie, Cell, Legend, ResponsiveContainer, Tooltip } from "recharts";
 
-interface RapperData {
-  id: string;
-  name: string;
-  slug: string;
-  average_rating: number;
-  image_url?: string;
-  total_votes?: number;
-}
-
-interface TaggedRapperData extends RapperData {
-  tag_name: string;
-  tag_color: string;
-}
+const DECADE_COLORS: Record<string, string> = {
+  '1970s': '#FF6B35',
+  '1980s': '#E91E63',
+  '1990s': '#9C27B0',
+  '2000s': '#2196F3',
+  '2010s': '#00BCD4',
+  '2020s': '#4CAF50',
+};
 
 interface RankingData {
   id: string;
@@ -70,8 +66,7 @@ const StatsOverviewRedesigned = () => {
 
     // PHASE 2: Secondary data (parallel)
     const [
-      topRappersResult,
-      allTagsResult,
+      careerDataResult,
       mostLikedPostResult,
       newestMemberResult,
       topAchieverResult,
@@ -79,11 +74,8 @@ const StatsOverviewRedesigned = () => {
       rankingVotesResult
     ] = await Promise.all([
       supabase.from("rappers")
-        .select("id, name, slug, average_rating, image_url")
-        .gt("total_votes", 10)
-        .order("average_rating", { ascending: false })
-        .limit(5),
-      supabase.from("rapper_tags").select("id, name, color"),
+        .select("career_start_year")
+        .not("career_start_year", "is", null),
       supabase.from("blog_posts")
         .select("id, title, slug, likes_count")
         .eq("status", "published")
@@ -107,29 +99,16 @@ const StatsOverviewRedesigned = () => {
         .select("ranking_id, rapper_id, official_rankings(id, title, slug), rappers(id, name, slug, image_url)")
     ]);
 
-    // PHASE 3: Dependent queries
-    const randomTag = allTagsResult.data?.[Math.floor(Math.random() * (allTagsResult.data?.length || 1))];
-    
-    const [taggedRappersResult] = await Promise.all([
-      randomTag 
-        ? supabase.from("rapper_tag_assignments")
-            .select(`rappers!inner(id, name, slug, average_rating, image_url, total_votes)`)
-            .eq("tag_id", randomTag.id)
-        : Promise.resolve({ data: null }),
-    ]);
-
-    // Process tagged rappers
-    let topTaggedRapper: RapperData[] = [];
-    if (taggedRappersResult.data) {
-      const validRappers = taggedRappersResult.data
-        .map(item => item.rappers)
-        .filter((r) => r !== null && (r.total_votes ?? 0) > 5)
-        .sort((a, b) => (b?.average_rating ?? 0) - (a?.average_rating ?? 0))
-        .slice(0, 5);
-      if (validRappers.length > 0) {
-        topTaggedRapper = validRappers;
-      }
-    }
+    // Process decade breakdown
+    const decadeCounts: Record<string, number> = {};
+    careerDataResult.data?.forEach((r) => {
+      const year = r.career_start_year as number;
+      const decade = `${Math.floor(year / 10) * 10}s`;
+      decadeCounts[decade] = (decadeCounts[decade] || 0) + 1;
+    });
+    const decadeBreakdown = Object.entries(decadeCounts)
+      .map(([name, value]) => ({ name, value }))
+      .sort((a, b) => a.name.localeCompare(b.name));
 
     // Process ranking votes for most active ranking
     const rankingCounts: Record<string, { ranking: any; count: number }> = {};
@@ -169,9 +148,7 @@ const StatsOverviewRedesigned = () => {
     return {
       rappers: {
         total: rappersCount.count || 0,
-        topOverallList: topRappersResult.data || [],
-        topTaggedList: topTaggedRapper || [],
-        tagInfo: randomTag,
+        decadeBreakdown,
       },
       rankings: {
         total: rankingVotesCount.count || 0,
@@ -206,59 +183,6 @@ const StatsOverviewRedesigned = () => {
     staleTime: 1000 * 60 * 5, // 5 minutes
   });
 
-  // Stable random selection per day using sessionStorage
-  const todayKey = useMemo(() => new Date().toISOString().slice(0, 10), []);
-  const topOverallKey = useMemo(() => `statsCard_topOverall_${todayKey}`, [todayKey]);
-  const topTaggedKeyBase = useMemo(
-    () => stats?.rappers.tagInfo?.id ? `statsCard_topTagged_${stats.rappers.tagInfo.id}_${todayKey}` : null,
-    [stats?.rappers.tagInfo?.id, todayKey]
-  );
-
-  // Stable overall pick
-  const topOverallRapper = useMemo(() => {
-    const list = stats?.rappers.topOverallList || [];
-    if (list.length === 0) return null;
-    try {
-      const savedId = sessionStorage.getItem(topOverallKey);
-      const saved = savedId ? list.find(r => r.id === savedId) : null;
-      return saved || list[Math.floor(Math.random() * list.length)];
-    } catch {
-      return list[Math.floor(Math.random() * list.length)];
-    }
-  }, [topOverallKey, stats?.rappers.topOverallList?.map(r => r.id).join(",")]);
-
-  useEffect(() => {
-    if (topOverallRapper) {
-      try { sessionStorage.setItem(topOverallKey, topOverallRapper.id); } catch {}
-    }
-  }, [topOverallRapper, topOverallKey]);
-
-  // Stable tagged pick
-  const baseTaggedPick = useMemo(() => {
-    const list = stats?.rappers.topTaggedList || [];
-    if (list.length === 0) return null;
-    if (!topTaggedKeyBase) return list[Math.floor(Math.random() * list.length)];
-    try {
-      const savedId = sessionStorage.getItem(topTaggedKeyBase);
-      const saved = savedId ? list.find(r => r.id === savedId) : null;
-      return saved || list[Math.floor(Math.random() * list.length)];
-    } catch {
-      return list[Math.floor(Math.random() * list.length)];
-    }
-  }, [
-    topTaggedKeyBase,
-    stats?.rappers.topTaggedList?.map(r => r.id).join(","),
-  ]);
-
-  useEffect(() => {
-    if (baseTaggedPick && topTaggedKeyBase) {
-      try { sessionStorage.setItem(topTaggedKeyBase, baseTaggedPick.id); } catch {}
-    }
-  }, [baseTaggedPick, topTaggedKeyBase]);
-
-  const topTaggedRapper = baseTaggedPick && stats?.rappers.tagInfo
-    ? { ...baseTaggedPick, tag_name: stats.rappers.tagInfo.name, tag_color: stats.rappers.tagInfo.color }
-    : null;
 
   if (isLoading) {
     return (
@@ -311,7 +235,7 @@ const StatsOverviewRedesigned = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Rappers Card */}
         <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex items-center gap-3 mb-4">
             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryLight))] flex items-center justify-center shadow-lg">
               <Music2 className="w-6 h-6 text-black" />
             </div>
@@ -319,70 +243,55 @@ const StatsOverviewRedesigned = () => {
               Rappers
             </h3>
           </div>
-
-          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-6 text-center">
+          <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-2 text-center">
             {stats?.rappers.total || 0}
           </div>
-
-          <div className="grid grid-cols-2 gap-4 mt-auto">
-            {topOverallRapper && (
-              <Link to={`/rapper/${topOverallRapper.slug}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {topOverallRapper.image_url ? (
-                    <img
-                      src={topOverallRapper.image_url}
-                      alt={topOverallRapper.name}
-                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
+          <p className="text-sm text-[hsl(var(--theme-textMuted))] text-center mb-4 font-medium">By Career Origin Decade</p>
+          {stats?.rappers.decadeBreakdown && stats.rappers.decadeBreakdown.length > 0 && (
+            <div className="flex-1 min-h-0">
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie
+                    data={stats.rappers.decadeBreakdown}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={40}
+                    outerRadius={70}
+                    paddingAngle={3}
+                    dataKey="value"
+                    stroke="none"
+                  >
+                    {stats.rappers.decadeBreakdown.map((entry) => (
+                      <Cell key={entry.name} fill={DECADE_COLORS[entry.name] || '#6B7280'} />
+                    ))}
+                  </Pie>
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: '#000',
+                      border: '1px solid hsl(var(--theme-primary))',
+                      borderRadius: '8px',
+                      color: '#fff',
+                      fontSize: '12px',
+                    }}
+                    formatter={(value: number, name: string) => [`${value} rappers`, name]}
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 mt-2">
+                {stats.rappers.decadeBreakdown.map((entry) => (
+                  <div key={entry.name} className="flex items-center gap-1.5">
+                    <div
+                      className="w-2.5 h-2.5 rounded-sm shrink-0"
+                      style={{ backgroundColor: DECADE_COLORS[entry.name] || '#6B7280' }}
                     />
-                  ) : (
-                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
-                      <Music2 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
-                    </div>
-                  )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
-                    {topOverallRapper.name}
-                  </p>
-                  <div className="flex items-center gap-1 mt-1 justify-center">
-                    <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
-                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {topOverallRapper.average_rating.toFixed(1)}
+                    <span className="text-xs text-[hsl(var(--theme-text))]">
+                      {entry.name} ({entry.value})
                     </span>
                   </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 text-center">Top Overall</p>
-                </div>
-              </Link>
-            )}
-
-            {topTaggedRapper && (
-              <Link to={`/rapper/${topTaggedRapper.slug}`} className="group">
-                <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-3 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                  {topTaggedRapper.image_url ? (
-                    <img
-                      src={topTaggedRapper.image_url}
-                      alt={topTaggedRapper.name}
-                      className="w-16 h-16 rounded-lg object-cover mb-2 border-2 border-[hsl(var(--theme-primary))]/40 mx-auto"
-                    />
-                  ) : (
-                    <div className="w-16 h-16 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))]/20 to-[hsl(var(--theme-primaryLight))]/20 mb-2 flex items-center justify-center border-2 border-[hsl(var(--theme-primary))]/40 mx-auto">
-                      <Music2 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
-                    </div>
-                  )}
-                  <p className="text-xs text-[hsl(var(--theme-text))] font-bold truncate group-hover:text-[hsl(var(--theme-primary))] transition-colors text-center">
-                    {topTaggedRapper.name}
-                  </p>
-                  <div className="flex items-center gap-1 mt-1 justify-center">
-                    <Star className="w-3 h-3 text-[hsl(var(--theme-primary))]" fill="currentColor" />
-                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                      {topTaggedRapper.average_rating.toFixed(1)}
-                    </span>
-                  </div>
-                  <p className="text-xs text-[hsl(var(--theme-textMuted))] mt-1 truncate text-center">
-                    Top {topTaggedRapper.tag_name}
-                  </p>
-                </div>
-              </Link>
-            )}
-          </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Rankings Card */}
