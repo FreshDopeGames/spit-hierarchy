@@ -15,6 +15,24 @@ import { CookieConsentProvider } from "@/contexts/CookieConsentContext";
 import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
+import { registerSW } from "virtual:pwa-register";
+
+// Auto-activate new service workers and reload once so users always see the latest deploy
+if (typeof window !== "undefined") {
+  const updateSW = registerSW({
+    immediate: true,
+    onNeedRefresh() {
+      updateSW(true);
+    },
+    onRegisteredSW(_swUrl, registration) {
+      if (registration) {
+        setInterval(() => {
+          registration.update().catch(() => {});
+        }, 60 * 60 * 1000);
+      }
+    },
+  });
+}
 
 // Optimized QueryClient configuration with better performance settings
 const queryClient = new QueryClient({
