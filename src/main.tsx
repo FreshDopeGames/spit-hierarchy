@@ -17,21 +17,44 @@ import "./index.css";
 import "./utils/performanceCleanup";
 import { registerSW } from "virtual:pwa-register";
 
+const isPreviewHost =
+  typeof window !== "undefined" &&
+  (window.location.hostname.includes("id-preview--") ||
+    window.location.hostname.includes("lovableproject.com"));
+
+const isInIframe = (() => {
+  if (typeof window === "undefined") return false;
+
+  try {
+    return window.self !== window.top;
+  } catch {
+    return true;
+  }
+})();
+
 // Auto-activate new service workers and reload once so users always see the latest deploy
 if (typeof window !== "undefined") {
-  const updateSW = registerSW({
-    immediate: true,
-    onNeedRefresh() {
-      updateSW(true);
-    },
-    onRegisteredSW(_swUrl, registration) {
-      if (registration) {
-        setInterval(() => {
-          registration.update().catch(() => {});
-        }, 60 * 60 * 1000);
-      }
-    },
-  });
+  if (isPreviewHost || isInIframe) {
+    window.navigator.serviceWorker?.getRegistrations().then((registrations) => {
+      registrations.forEach((registration) => {
+        registration.unregister().catch(() => {});
+      });
+    });
+  } else {
+    const updateSW = registerSW({
+      immediate: true,
+      onNeedRefresh() {
+        updateSW(true);
+      },
+      onRegisteredSW(_swUrl, registration) {
+        if (registration) {
+          setInterval(() => {
+            registration.update().catch(() => {});
+          }, 60 * 60 * 1000);
+        }
+      },
+    });
+  }
 }
 
 // Optimized QueryClient configuration with better performance settings
