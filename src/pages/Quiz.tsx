@@ -82,7 +82,7 @@ const Quiz: React.FC = () => {
 
           {/* Quiz Container */}
           <div className="mb-8">
-            <QuizContainer />
+            {user ? <QuizContainer /> : <QuizGuestCTA />}
           </div>
 
           {/* Badge Progress Display */}
