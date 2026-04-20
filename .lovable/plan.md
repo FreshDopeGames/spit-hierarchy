@@ -1,50 +1,30 @@
 
 
-## Root Cause
+## Goal
+Add a single-row, 5-tile auto-rotating rapper avatar mosaic beneath the subtitle on the Rapper Quiz page (`/quiz`).
 
-Both issues share one root cause: **the PWA service worker is stuck in "waiting" state** on the live site / installed PWA.
+## Approach
 
-- `vite.config.ts` uses `registerType: 'autoUpdate'`
-- No in-app prompt calls `skipWaiting()`, so a new SW downloads in the background but **only activates after every tab/PWA window closes**
-- On an installed PWA (home screen), the window rarely fully closes → old `index.html` + old JS bundle keep serving → fixes appear "reverted"
-- The previous `cacheId: 'spit-hierarchy-v2'` bump *will* eventually clear caches, but only **after** the new SW activates — which is the same blocked step
+**1. Create new component `src/components/quiz/RotatingRapperMosaic.tsx`**
+- Fetch a pool of rappers with `image_url` from Supabase (e.g., top 30-40 by ranking or random sample where `image_url IS NOT NULL`)
+- Display 5 tiles in a single horizontal row (`grid-cols-5`)
+- Every ~3 seconds, swap one tile (rotating index) with a new random rapper from the pool
+- Use Framer Motion `AnimatePresence` for a smooth fade/scale transition per tile swap
+- Lazy-load images, fall back to placeholder on error (mirrors `RapperMosaic.tsx` pattern)
+- Tile styling: square aspect, rounded, thin border in `--theme-background` to match existing mosaic look
 
-The Skill Ratings count being 0 was a separate RLS issue (already fixed via migration) but is part of the same backend story that the user can't see until the SW updates.
+**2. Wire into `src/pages/Quiz.tsx`**
+- Import and render `<RotatingRapperMosaic />` directly under the `<p>` subtitle, inside the centered header block
+- Constrain width (e.g., `max-w-md mx-auto`) so tiles stay reasonably sized on desktop while filling nicely on mobile (384px viewport → ~5 small square tiles fit comfortably)
 
-## Fix: Force the New Service Worker to Activate Immediately
+## Technical Notes
+- Data source: `rappers` table, select `id, name, image_url`, filter `image_url not null`, limit ~40, optional order by `total_votes desc` for recognizable faces
+- Cache via React Query (`['quiz-mosaic-rappers']`, long staleTime) so it doesn't refetch on every mount
+- Rotation: `useEffect` interval, increment a tile index (0→4→0), pick a random rapper not currently shown to avoid duplicates
+- Cleanup interval on unmount; pause when tab hidden via `document.visibilityState` check (cheap perf win)
+- No new dependencies — `framer-motion` already used in `QuizContainer.tsx`
 
-Two coordinated changes in `vite.config.ts` plus a tiny SW registration hook:
-
-**1. `vite.config.ts` — workbox options**
-- Add `skipWaiting: true` and `clientsClaim: true` so the new SW takes control of all open clients on install instead of waiting
-
-**2. `src/main.tsx` — explicit registration with auto-reload**
-- Import `registerSW` from `virtual:pwa-register`
-- On `onNeedRefresh`, immediately call the update function and reload the page once
-- This guarantees that even if a cached client is open, it picks up the new bundle on next reload (no manual "close all tabs" required)
-
-**3. Add a TypeScript declaration for `virtual:pwa-register`**
-- Create `src/vite-env.d.ts` reference (or extend existing) so the import compiles
-
-## What This Gives Users
-
-- Next publish → next visit → new SW activates immediately and reloads
-- After this fix is deployed once, all future updates propagate automatically with no stale-content "reverts"
-- Existing cached image entries (Supabase `CacheFirst`) will be naturally re-fetched as the new SW takes over
-
-## Files to Change
-
-- `vite.config.ts` — add `skipWaiting: true`, `clientsClaim: true` to `workbox`; bump `cacheId` to `spit-hierarchy-v3`
-- `src/main.tsx` — register SW with auto-reload on update
-- `src/vite-env.d.ts` — add `/// <reference types="vite-plugin-pwa/client" />` if missing
-
-## After Deploy
-
-1. User publishes the update
-2. Next time they (or any user) opens the site or PWA, the new SW installs, immediately claims the page, and reloads — they see the fixes right away
-3. No manual cache clear, no "close the PWA" dance needed
-
-## Note on the Top 5 Mosaic
-
-The mosaic code in `RankingPreviewCard.tsx` is correct — it always renders 5 cells (real images + placeholders for missing ones). If after the SW fix the user still sees gaps on specific rankings, that means those `ranking_items` rows have fewer than 5 entries in the DB, which is a content/data question we can investigate separately.
+## Files
+- **New**: `src/components/quiz/RotatingRapperMosaic.tsx`
+- **Edit**: `src/pages/Quiz.tsx` (add import + render below subtitle)
 
