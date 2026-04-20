@@ -473,8 +473,8 @@ const StatsOverviewRedesigned = () => {
           </div>
         </div>
 
-        {/* Slick Talk (Blog) Card */}
-        <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
+        {/* Slick Talk (Blog) Card - Centered on Desktop */}
+        <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col md:col-span-2 md:max-w-xl md:mx-auto">
           <div className="flex items-center gap-3 mb-6">
             <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-secondary))] flex items-center justify-center shadow-lg">
               <FileText className="w-6 h-6 text-black" />
