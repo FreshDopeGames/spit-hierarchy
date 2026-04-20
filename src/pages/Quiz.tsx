@@ -4,6 +4,7 @@ import HeaderNavigation from '@/components/HeaderNavigation';
 import Footer from '@/components/Footer';
 import QuizContainer from '@/components/quiz/QuizContainer';
 import QuizBadgeDisplay from '@/components/quiz/QuizBadgeDisplay';
+import RotatingRapperMosaic from '@/components/quiz/RotatingRapperMosaic';
 import { useAuth } from '@/hooks/useAuth';
 const Quiz: React.FC = () => {
   const {
@@ -24,10 +25,11 @@ const Quiz: React.FC = () => {
             <h1 className="font-[var(--theme-font-heading)] mb-2 text-primary md:text-5xl text-5xl">
               🎤 Rapper Knowledge Quiz
             </h1>
-            <p className="text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-muted-foreground max-w-2xl mx-auto mb-6">
               Put your hip-hop knowledge to the test. Answer questions about your favorite rappers, 
               their albums, origins, and career milestones. Earn badges and climb the ranks!
             </p>
+            <RotatingRapperMosaic />
           </div>
 
           {/* Quiz Container */}
