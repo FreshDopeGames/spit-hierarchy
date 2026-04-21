@@ -250,7 +250,7 @@ const StatsOverviewRedesigned = () => {
           {stats?.rappers.decadeBreakdown && stats.rappers.decadeBreakdown.length > 0 && (
             <div className="flex-1 min-h-0">
               <ResponsiveContainer width="100%" height={200}>
-                <PieChart>
+                <PieChart style={{ pointerEvents: 'none' }}>
                   <Pie
                     data={stats.rappers.decadeBreakdown}
                     cx="50%"
