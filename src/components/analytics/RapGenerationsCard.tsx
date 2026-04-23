@@ -60,7 +60,7 @@ const RapGenerationsCard = () => {
       <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-2 text-center">
         {data?.total || 0}
       </div>
-      <p className="text-sm text-[hsl(var(--theme-textMuted))] text-center mb-4 font-medium">By Career Origin Decade</p>
+      <p className="text-sm text-[hsl(var(--theme-textMuted))] text-center mb-4 font-medium">Rappers By Career Start</p>
       {data?.decadeBreakdown && data.decadeBreakdown.length > 0 && (
         <div className="flex-1 min-h-0">
           <ResponsiveContainer width="100%" height={200}>
