@@ -48,7 +48,7 @@ const RapGenerationsCard = () => {
   }
 
   return (
-    <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 min-h-[300px] flex flex-col">
+    <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 flex flex-col">
       <div className="flex items-center gap-3 mb-4">
         <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryLight))] flex items-center justify-center shadow-lg">
           <Music2 className="w-6 h-6 text-black" />
@@ -57,12 +57,12 @@ const RapGenerationsCard = () => {
           Rap Generations
         </h3>
       </div>
-      <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-2 text-center">
+      <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)] mb-1 text-center">
         {data?.total || 0}
       </div>
-      <p className="text-sm text-[hsl(var(--theme-textMuted))] text-center mb-4 font-medium">Rappers By Career Start</p>
+      <p className="text-sm text-[hsl(var(--theme-textMuted))] text-center mb-2 font-medium">Rappers By Career Start</p>
       {data?.decadeBreakdown && data.decadeBreakdown.length > 0 && (
-        <div className="flex-1 min-h-0">
+        <div>
           <ResponsiveContainer width="100%" height={200}>
             <PieChart style={{ pointerEvents: 'none' }}>
               <Pie
