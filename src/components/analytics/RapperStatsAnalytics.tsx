@@ -7,6 +7,7 @@ import TopTagsCard from "./TopTagsCard";
 import TopRappersByCategoryCard from "./TopRappersByCategoryCard";
 import ZodiacDistributionCard from "./ZodiacDistributionCard";
 import MostViewedCard from "./MostViewedCard";
+import RapGenerationsCard from "./RapGenerationsCard";
 import GeographicFilter, { GeoFilter } from "./GeographicFilter";
 
 const RapperStatsAnalytics = () => {
@@ -22,6 +23,8 @@ const RapperStatsAnalytics = () => {
       </div>
 
       <MostViewedCard />
+
+      <RapGenerationsCard />
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         <AlbumStatsCard />
