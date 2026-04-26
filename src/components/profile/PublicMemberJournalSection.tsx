@@ -67,6 +67,9 @@ const JournalPreview = ({ entry, username }: { entry: PublicJournalEntry; userna
       <h4 className="font-bold text-foreground font-[var(--theme-font-heading)] truncate mb-1">
         {entry.title}
       </h4>
+      <span className="block text-xs text-[hsl(var(--theme-primary))] font-bold mb-2">
+        {format(new Date(entry.created_at), "MMM d, yyyy")}
+      </span>
       {embedUrl && (
         <div
           className="relative w-full mb-2 overflow-hidden rounded-md bg-black max-w-[640px]"
@@ -90,9 +93,6 @@ const JournalPreview = ({ entry, username }: { entry: PublicJournalEntry; userna
           dangerouslySetInnerHTML={{ __html: sanitizedExcerpt }}
         />
       )}
-      <span className="text-xs text-[hsl(var(--theme-primary))] font-bold">
-        {format(new Date(entry.created_at), "MMM d, yyyy")}
-      </span>
     </Link>
   );
 };
