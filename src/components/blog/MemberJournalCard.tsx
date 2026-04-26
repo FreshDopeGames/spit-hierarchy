@@ -65,10 +65,12 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
 
   const previewText = useMemo(() => {
     const raw = entry.excerpt || entry.content || entry.title || "";
-    // Strip HTML tags (iframes, embeds, etc.) and collapse whitespace
+    // Strip embed/script/style blocks (closed or unclosed), then any remaining tags,
+    // then any dangling tag-like fragments, and collapse whitespace.
     const stripped = raw
-      .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
-      .replace(/<[^>]+>/g, "")
+      .replace(/<(iframe|script|style|embed|object)\b[\s\S]*?(<\/\1>|$)/gi, "")
+      .replace(/<[^>]*>/g, "")
+      .replace(/<[^\s<]*$/g, "")
       .replace(/\s+/g, " ")
       .trim();
     return stripped || entry.title;
@@ -78,7 +80,7 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
       <CardContent className="p-6">
         {/* Meta */}
-        <div className="flex items-center gap-2 text-[var(--theme-primary)] font-[var(--theme-fontSecondary)] text-sm mb-3">
+        <div className="flex items-center gap-2 text-[hsl(var(--theme-primary))] font-[var(--theme-fontSecondary)] text-sm mb-3">
           <User className="w-3 h-3" />
           <Link to={`/user/${username}`} className="hover:opacity-80 transition-opacity">
             {displayName}
