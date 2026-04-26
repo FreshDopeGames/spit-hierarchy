@@ -70,7 +70,7 @@ const JournalPreview = ({ entry, username }: { entry: PublicJournalEntry; userna
       {embedUrl && (
         <div
           className="relative w-full mb-2 overflow-hidden rounded-md bg-black max-w-[640px]"
-          style={{ paddingBottom: "min(56.25%, 360px)" }}
+          style={{ paddingBottom: "56.25%" }}
           onClick={(e) => e.stopPropagation()}
         >
           <iframe
