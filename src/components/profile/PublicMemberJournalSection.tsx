@@ -72,8 +72,7 @@ const JournalPreview = ({ entry, username }: { entry: PublicJournalEntry; userna
       </span>
       {embedUrl && (
         <div
-          className="relative w-full mb-2 overflow-hidden rounded-md bg-black max-w-[640px]"
-          style={{ paddingBottom: "56.25%" }}
+          className="relative w-full mb-2 overflow-hidden rounded-md bg-black max-w-[640px] aspect-video"
           onClick={(e) => e.stopPropagation()}
         >
           <iframe
