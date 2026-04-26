@@ -69,7 +69,7 @@ const BlogDetailContent = ({
   const { likesCount, isLiked, toggleLike, isLoading } = useBlogPostLikes(blogPost.id);
 
   return (
-    <main className="max-w-4xl mx-auto p-6 pt-24">
+    <main className="max-w-4xl mx-auto px-[2.5vw] py-6 sm:p-6 pt-24 sm:pt-24">
       <BlogArticleHeader blogPost={transformedBlogPost} />
 
       {/* Full-width main content */}
