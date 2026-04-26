@@ -47,6 +47,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Clean up excessive line breaks
         .replace(/(<br>\s*){4,}/g, "<br><br><br>")
 
+        // Remove <br> tags inserted between consecutive list items (keeps spacing after the whole list)
+        .replace(/(<\/span>)(\s*<br>\s*)+(?=<span class="list-item">)/g, "$1")
+
         // No post-list indentation wrapping — content after lists returns to normal indentation
 
         // Clean up any remaining whitespace issues
