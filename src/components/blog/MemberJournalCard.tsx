@@ -63,6 +63,17 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
     return url && isAllowedEmbedUrl(url) ? url : null;
   }, [entry.content]);
 
+  const previewText = useMemo(() => {
+    const raw = entry.excerpt || entry.content || entry.title || "";
+    // Strip HTML tags (iframes, embeds, etc.) and collapse whitespace
+    const stripped = raw
+      .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
+      .replace(/<[^>]+>/g, "")
+      .replace(/\s+/g, " ")
+      .trim();
+    return stripped || entry.title;
+  }, [entry.excerpt, entry.content, entry.title]);
+
   return (
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
       <CardContent className="p-6">
@@ -112,7 +123,7 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
 
         {/* Excerpt */}
         <p className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] leading-relaxed mb-4 line-clamp-3">
-          {entry.excerpt || entry.title}
+          {previewText}
         </p>
 
         {/* Read More */}
