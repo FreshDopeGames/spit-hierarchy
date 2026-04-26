@@ -69,7 +69,7 @@ const JournalPreview = ({ entry, username }: { entry: PublicJournalEntry; userna
       </h4>
       {embedUrl && (
         <div
-          className="relative w-full mb-2 overflow-hidden rounded-md bg-black"
+          className="relative w-full mb-2 overflow-hidden rounded-md bg-black max-w-[640px]"
           style={{ paddingBottom: "56.25%" }}
           onClick={(e) => e.stopPropagation()}
         >
