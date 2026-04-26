@@ -58,6 +58,11 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
   const username = entry.profiles?.username || "unknown";
   const displayName = entry.profiles?.full_name || username;
 
+  const embedUrl = useMemo(() => {
+    const url = extractFirstEmbedUrl(entry.content || "");
+    return url && isAllowedEmbedUrl(url) ? url : null;
+  }, [entry.content]);
+
   return (
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
       <CardContent className="p-6">
@@ -86,6 +91,24 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
             {entry.title}
           </h3>
         </Link>
+
+        {/* Embed preview */}
+        {embedUrl && (
+          <div
+            className="relative w-full mb-4 overflow-hidden rounded-md bg-black"
+            style={{ paddingBottom: "56.25%" }}
+          >
+            <iframe
+              src={embedUrl}
+              title={entry.title}
+              className="absolute inset-0 w-full h-full"
+              frameBorder={0}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+              loading="lazy"
+            />
+          </div>
+        )}
 
         {/* Excerpt */}
         <p className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] leading-relaxed mb-4 line-clamp-3">
