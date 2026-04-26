@@ -4,12 +4,38 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar, User, ArrowRight, BookOpen } from "lucide-react";
 import { format } from "date-fns";
+import { useMemo } from "react";
+
+const extractFirstEmbedUrl = (content: string): string | null => {
+  if (!content) return null;
+  const match = content.match(/<iframe[^>]*\ssrc=["']([^"']+)["'][^>]*>/i);
+  return match ? match[1] : null;
+};
+
+const isAllowedEmbedUrl = (url: string): boolean => {
+  try {
+    const u = new URL(url, window.location.origin);
+    const allowed = [
+      "youtube.com",
+      "www.youtube.com",
+      "youtube-nocookie.com",
+      "www.youtube-nocookie.com",
+      "player.vimeo.com",
+      "w.soundcloud.com",
+      "open.spotify.com",
+    ];
+    return allowed.includes(u.hostname);
+  } catch {
+    return false;
+  }
+};
 
 interface MemberJournalCardProps {
   entry: {
     id: string;
     title: string;
     excerpt: string | null;
+    content?: string | null;
     slug: string;
     created_at: string;
     profiles: {
