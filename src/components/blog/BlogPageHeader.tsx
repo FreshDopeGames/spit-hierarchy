@@ -11,7 +11,9 @@ const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
   e.preventDefault();
   const el = document.getElementById('member-journals');
   if (el) {
-    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    const headerOffset = 80; // global fixed header (h-16 = 64px) + small gap
+    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top, behavior: 'smooth' });
   }
 };
 
