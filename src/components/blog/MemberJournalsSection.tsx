@@ -15,6 +15,7 @@ const MemberJournalsSection = () => {
           id,
           title,
           excerpt,
+          content,
           slug,
           created_at,
           user_id
@@ -44,7 +45,7 @@ const MemberJournalsSection = () => {
   if (isLoading || !entries || entries.length === 0) return null;
 
   return (
-    <section className="mt-16 mb-8">
+    <section id="member-journals" className="mt-16 mb-8 scroll-mt-24">
       <div className="flex items-center gap-3 mb-6">
         <BookOpen className="w-6 h-6 text-[var(--theme-primary)]" />
         <h2 className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)] text-3xl">
