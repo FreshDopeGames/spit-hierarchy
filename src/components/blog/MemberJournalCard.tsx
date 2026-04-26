@@ -77,31 +77,25 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
   return (
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
       <CardContent className="p-6">
-        {/* Badge */}
-        <div className="flex items-center gap-2 mb-3">
-          <Badge className="bg-[var(--theme-primary)]/20 text-[var(--theme-primary)] border border-[var(--theme-primary)]/30 font-[var(--theme-fontSecondary)]">
-            <BookOpen className="w-3 h-3 mr-1" />
-            Member Journal
-          </Badge>
-        </div>
-
         {/* Meta */}
         <div className="flex items-center gap-2 text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] text-sm mb-3">
           <User className="w-3 h-3" />
           <Link to={`/user/${username}`} className="hover:text-[var(--theme-primary)] transition-colors">
             {displayName}
           </Link>
-          <span>•</span>
-          <Calendar className="w-3 h-3" />
-          <span>{formatDate(entry.created_at)}</span>
         </div>
 
         {/* Title */}
         <Link to={`/journal/${username}/${entry.slug}`}>
-          <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors cursor-pointer mb-3 leading-tight text-2xl">
+          <h3 className="font-[var(--theme-fontPrimary)] text-[var(--theme-text)] hover:text-[var(--theme-primary)] transition-colors cursor-pointer mb-1 leading-tight text-2xl">
             {entry.title}
           </h3>
         </Link>
+
+        {/* Publish date */}
+        <div className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] text-sm mb-3">
+          {formatDate(entry.created_at)}
+        </div>
 
         {/* Embed preview */}
         {embedUrl && (
