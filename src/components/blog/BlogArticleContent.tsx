@@ -50,6 +50,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Remove <br> tags inserted between consecutive list items (keeps spacing after the whole list)
         .replace(/(<\/span>)(\s*<br>\s*)+(?=<span class="list-item">)/g, "$1")
 
+        // Collapse <br> tags that follow the final list item in a list (keep one for spacing)
+        .replace(/(<span class="list-item">[\s\S]*?<\/span>)(\s*<br>\s*){2,}/g, "$1<br>")
+
         // No post-list indentation wrapping — content after lists returns to normal indentation
 
         // Clean up any remaining whitespace issues
