@@ -71,7 +71,7 @@ const PublicMemberJournalSection = ({ userId, username }: PublicMemberJournalSec
         {entries.map((entry) => (
           <Link
             key={entry.id}
-            to={`/journal/${entry.slug}`}
+            to={`/journal/${username}/${entry.slug}`}
             className="block bg-[hsl(var(--theme-surface))] border-2 border-[hsl(var(--theme-primary))]/30 rounded-lg p-4 hover:border-[hsl(var(--theme-primary))]/50 transition-colors"
           >
             <h4 className="font-bold text-foreground font-[var(--theme-font-heading)] truncate mb-1">
