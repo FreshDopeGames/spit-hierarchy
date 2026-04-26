@@ -179,7 +179,7 @@ const Blog = () => {
       <HeaderNavigation isScrolled={false} />
       
       <main className="flex-1 max-w-6xl mx-auto p-6 pt-24">
-        <BlogPageHeader title="SLICK TALK" />
+        <BlogPageHeader title="SLICK TALK" showMemberJournalsLink />
 
         <BlogFilters
           categories={categories}
