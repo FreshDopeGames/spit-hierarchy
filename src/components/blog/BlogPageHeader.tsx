@@ -4,6 +4,7 @@ import { useEnhancedTheme } from '@/hooks/useEnhancedTheme';
 
 interface BlogPageHeaderProps {
   title: string;
+  showMemberJournalsLink?: boolean;
 }
 
 const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -14,7 +15,7 @@ const handleAnchorClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
   }
 };
 
-const BlogPageHeader = ({ title }: BlogPageHeaderProps) => {
+const BlogPageHeader = ({ title, showMemberJournalsLink = false }: BlogPageHeaderProps) => {
   const { theme } = useEnhancedTheme();
 
   return (
@@ -22,13 +23,15 @@ const BlogPageHeader = ({ title }: BlogPageHeaderProps) => {
       <h1 className="text-4xl sm:text-6xl font-ceviche text-[hsl(var(--theme-primary))]">
         {title}
       </h1>
-      <a
-        href="#member-journals"
-        onClick={handleAnchorClick}
-        className="mt-2 inline-block text-lg sm:text-2xl font-ceviche text-[hsl(var(--theme-primary))]/80 hover:text-[hsl(var(--theme-primary))] underline underline-offset-4 transition-colors"
-      >
-        And Member Journals
-      </a>
+      {showMemberJournalsLink && (
+        <a
+          href="#member-journals"
+          onClick={handleAnchorClick}
+          className="mt-2 inline-block text-lg sm:text-2xl font-ceviche text-[hsl(var(--theme-primary))]/80 hover:text-[hsl(var(--theme-primary))] underline underline-offset-4 transition-colors"
+        >
+          And Member Journals
+        </a>
+      )}
     </header>
   );
 };
