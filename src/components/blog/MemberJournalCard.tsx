@@ -65,10 +65,12 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
 
   const previewText = useMemo(() => {
     const raw = entry.excerpt || entry.content || entry.title || "";
-    // Strip HTML tags (iframes, embeds, etc.) and collapse whitespace
+    // Strip embed/script/style blocks (closed or unclosed), then any remaining tags,
+    // then any dangling tag-like fragments, and collapse whitespace.
     const stripped = raw
-      .replace(/<iframe[\s\S]*?<\/iframe>/gi, "")
-      .replace(/<[^>]+>/g, "")
+      .replace(/<(iframe|script|style|embed|object)\b[\s\S]*?(<\/\1>|$)/gi, "")
+      .replace(/<[^>]*>/g, "")
+      .replace(/<[^\s<]*$/g, "")
       .replace(/\s+/g, " ")
       .trim();
     return stripped || entry.title;
