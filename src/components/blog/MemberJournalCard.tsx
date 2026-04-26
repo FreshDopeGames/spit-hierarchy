@@ -123,7 +123,7 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
 
         {/* Excerpt */}
         <p className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] leading-relaxed mb-4 line-clamp-3">
-          {entry.excerpt || entry.title}
+          {previewText}
         </p>
 
         {/* Read More */}
