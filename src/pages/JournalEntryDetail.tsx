@@ -132,7 +132,7 @@ const JournalEntryDetail = () => {
         </Link>
 
         <Card className="bg-card border-border">
-          <CardContent className="p-6 md:p-10 border-4">
+          <CardContent className="p-6 md:p-10 border-4 bg-black">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
               <Badge variant="secondary" className="bg-primary/20 text-primary border-primary/30">
