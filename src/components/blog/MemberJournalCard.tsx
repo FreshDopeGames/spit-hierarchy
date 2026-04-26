@@ -78,9 +78,9 @@ const MemberJournalCard = ({ entry }: MemberJournalCardProps) => {
     <Card className="bg-black border-4 border-[hsl(var(--theme-primary))] overflow-hidden shadow-xl shadow-[var(--theme-primary)]/20 hover:shadow-[var(--theme-primary)]/40 transition-all duration-300 group">
       <CardContent className="p-6">
         {/* Meta */}
-        <div className="flex items-center gap-2 text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] text-sm mb-3">
+        <div className="flex items-center gap-2 text-[var(--theme-primary)] font-[var(--theme-fontSecondary)] text-sm mb-3">
           <User className="w-3 h-3" />
-          <Link to={`/user/${username}`} className="hover:text-[var(--theme-primary)] transition-colors">
+          <Link to={`/user/${username}`} className="hover:opacity-80 transition-opacity">
             {displayName}
           </Link>
         </div>
