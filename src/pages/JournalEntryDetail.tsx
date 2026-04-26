@@ -105,9 +105,9 @@ const JournalEntryDetail = () => {
         <HeaderNavigation isScrolled={false} />
         <main className="flex-1 max-w-4xl mx-auto p-6 pt-24 text-center">
           <h1 className="text-2xl font-bold text-foreground mb-4">Journal Entry Not Found</h1>
-          <Link to="/blog">
+          <Link to={username ? `/user/${username}` : "/blog"}>
             <Button variant="outline">
-              <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
+              <ArrowLeft className="w-4 h-4 mr-2" /> {username ? `Back to ${username}'s Profile` : "Back to Blog"}
             </Button>
           </Link>
         </main>
@@ -127,8 +127,8 @@ const JournalEntryDetail = () => {
 
       <main className="flex-1 max-w-4xl mx-auto p-6 pt-24">
         {/* Back link */}
-        <Link to="/blog" className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6 transition-colors">
-          <ArrowLeft className="w-4 h-4 mr-2" /> Back to Blog
+        <Link to={username ? `/user/${username}` : "/blog"} className="inline-flex items-center text-muted-foreground hover:text-foreground mb-6 transition-colors">
+          <ArrowLeft className="w-4 h-4 mr-2" /> {username ? `Back to ${username}'s Profile` : "Back to Blog"}
         </Link>
 
         <Card className="bg-card border-border">
