@@ -6,6 +6,8 @@ import PublicProfileHeader from "@/components/profile/PublicProfileHeader";
 import PublicTopFiveSection from "@/components/profile/PublicTopFiveSection";
 import PublicProfileLoading from "@/components/profile/PublicProfileLoading";
 import PublicProfileNotFound from "@/components/profile/PublicProfileNotFound";
+import PublicMemberJournalSection from "@/components/profile/PublicMemberJournalSection";
+import CypherJournalSection from "@/components/profile/CypherJournalSection";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/hooks/useAuth";
 import { PublicProfile } from "@/types/publicProfile";
