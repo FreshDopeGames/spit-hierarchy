@@ -147,6 +147,8 @@ const PublicUserProfileByUsername = () => {
           )}
           
           <PublicTopFiveSection userId={profile.id} username={profile.username} />
+          <PublicMemberJournalSection userId={profile.id} username={profile.username} />
+          <CypherJournalSection userId={profile.id} />
         </div>
 
         <Footer />
