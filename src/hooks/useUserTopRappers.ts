@@ -45,65 +45,19 @@ export const useUserTopRappers = () => {
     }) => {
       if (!user) throw new Error("User not authenticated");
 
-      // Check if this rapper is already in the user's top 5 at a different position.
-      // Because of the unique (user_id, rapper_id) constraint, we must remove it
-      // from any existing slot first or the insert will silently fail.
-      const { data: existingForRapper, error: existingErr } = await supabase
-        .from("user_top_rappers")
-        .select("id, position")
-        .eq("user_id", user.id)
-        .eq("rapper_id", rapperId)
-        .maybeSingle();
-
-      if (existingErr) {
-        console.error("[updateTopRapper] lookup error:", existingErr);
-        throw existingErr;
-      }
-
-      // Delete the slot we are about to fill
-      const { error: deletePosErr } = await supabase
-        .from("user_top_rappers")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("position", position);
-
-      if (deletePosErr) {
-        console.error("[updateTopRapper] delete position error:", deletePosErr);
-        throw deletePosErr;
-      }
-
-      // If the rapper exists at another slot, remove that too
-      if (existingForRapper && existingForRapper.position !== position) {
-        const { error: deleteRapperErr } = await supabase
-          .from("user_top_rappers")
-          .delete()
-          .eq("id", existingForRapper.id)
-          .eq("user_id", user.id);
-
-        if (deleteRapperErr) {
-          console.error("[updateTopRapper] delete duplicate rapper error:", deleteRapperErr);
-          throw deleteRapperErr;
-        }
-      }
-
-      const { data, error } = await supabase
-        .from("user_top_rappers")
-        .insert({
-          user_id: user.id,
-          position,
-          rapper_id: rapperId,
-        })
-        .select("id, position, rapper_id")
-        .single();
+      const { data, error } = await supabase.rpc("set_user_top_rapper", {
+        _position: position,
+        _rapper_id: rapperId,
+      });
 
       if (error) {
-        console.error("[updateTopRapper] insert error:", error);
+        console.error("[updateTopRapper] rpc error:", error);
         throw error;
       }
       if (!data) {
-        throw new Error("Insert succeeded but returned no row (likely blocked by RLS)");
+        throw new Error("Top 5 update returned no row");
       }
-      return data;
+      return data as { id: string; position: number; rapper_id: string };
     },
     onMutate: async ({ position, rapperId, rapperData }) => {
       await queryClient.cancelQueries({ queryKey: ["user-top-rappers", user?.id] });
