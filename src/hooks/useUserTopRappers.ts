@@ -86,7 +86,14 @@ export const useUserTopRappers = () => {
         queryClient.setQueryData(["user-top-rappers", user?.id], context.previous);
       }
       console.error("Error updating top rapper:", error);
-      toast.error("Failed to update your top 5");
+      const parts = [
+        error?.message,
+        error?.details,
+        error?.hint,
+        error?.code ? `code ${error.code}` : null,
+      ].filter(Boolean);
+      const description = parts.length ? parts.join(" • ") : "Unknown error";
+      toast.error("Failed to update your Top 5", { description });
     },
   });
 
