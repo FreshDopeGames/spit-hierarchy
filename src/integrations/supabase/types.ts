@@ -4257,6 +4257,22 @@ export type Database = {
         Args: { new_role: string; target_user_id: string }
         Returns: boolean
       }
+      set_user_top_rapper: {
+        Args: { _position: number; _rapper_id: string }
+        Returns: {
+          created_at: string | null
+          id: string
+          position: number | null
+          rapper_id: string | null
+          user_id: string | null
+        }
+        SetofOptions: {
+          from: "*"
+          to: "user_top_rappers"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       submit_quiz_answer: {
         Args: {
           p_question_id: string
