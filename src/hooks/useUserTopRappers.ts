@@ -65,7 +65,9 @@ export const useUserTopRappers = () => {
 
       if (rapperData) {
         queryClient.setQueryData(["user-top-rappers", user?.id], (old: any[] | undefined) => {
-          const filtered = (old || []).filter((item: any) => item.position !== position);
+          const filtered = (old || []).filter(
+            (item: any) => item.position !== position && item.rapper_id !== rapperId
+          );
           return [...filtered, { position, rapper_id: rapperId, rappers: rapperData }];
         });
       }
