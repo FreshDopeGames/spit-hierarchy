@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ThemedTabs, ThemedTabsContent, ThemedTabsList, ThemedTabsTrigger } from "@/components/ui/themed-tabs";
 import { PenTool } from "lucide-react";
 import BlogPostsTab from "./blog/BlogPostsTab";
 import BlogCategoriesTab from "./blog/BlogCategoriesTab";
