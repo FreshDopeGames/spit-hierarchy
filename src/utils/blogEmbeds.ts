@@ -33,7 +33,7 @@ export const buildEmbed = (kind: string, rawUrl: string): string => {
   }
 
   if (kind === "instagram") {
-    const cleaned = url.replace(/\/$/, "").replace(/\?.*$/, "");
+    const cleaned = url.replace(/\?.*$/, "").replace(/#.*$/, "").replace(/\/$/, "");
     return `<span class="embed-block embed-portrait"><iframe src="${escapeAttr(cleaned + "/embed")}" title="Instagram post" allowtransparency="true" allowfullscreen loading="lazy" scrolling="no"></iframe></span>`;
   }
 
