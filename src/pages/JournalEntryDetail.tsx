@@ -79,7 +79,7 @@ const JournalEntryDetail = () => {
   };
 
   const renderContent = (content: string) => {
-    const html = marked.parse(content, { async: false }) as string;
+    const html = marked.parse(content, { async: false, breaks: true, gfm: true }) as string;
     return { __html: html };
   };
 
