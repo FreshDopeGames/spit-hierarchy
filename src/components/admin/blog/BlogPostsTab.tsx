@@ -17,40 +17,15 @@ const BlogPostsTab = ({ onEditPost, onNewPost }: BlogPostsTabProps) => {
   const queryClient = useQueryClient();
   const [searchTerm, setSearchTerm] = useState("");
 
-  // Fetch blog posts with author information
+  // Fetch all admin-visible blog posts, including drafts, with author information
   const { data: posts, isLoading: postsLoading } = useQuery({
     queryKey: ['admin-blog-posts'],
     queryFn: async () => {
-      // First get the blog posts with category info
-      const { data: postsData, error: postsError } = await supabase
-        .from('blog_posts')
-        .select(`
-          *,
-          blog_categories(name)
-        `)
-        .order('created_at', { ascending: false });
-      
-      if (postsError) throw postsError;
+      const { data, error } = await supabase
+        .rpc('get_admin_blog_posts');
 
-      // Then get profiles for authors
-      const authorIds = postsData?.map(post => post.author_id).filter(Boolean) || [];
-      let profilesData = [];
-      
-      if (authorIds.length > 0) {
-        const { data: profiles, error: profilesError } = await supabase
-          .rpc('search_profiles_admin', { search_term: '' });
-        
-        if (profilesError) throw profilesError;
-        profilesData = profiles || [];
-      }
-
-      // Combine the data
-      const postsWithAuthors = postsData?.map(post => ({
-        ...post,
-        author_profile: profilesData.find(profile => profile.id === post.author_id)
-      }));
-      
-      return postsWithAuthors;
+      if (error) throw error;
+      return data || [];
     }
   });
 

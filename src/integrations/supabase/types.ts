@@ -3700,6 +3700,31 @@ export type Database = {
           source: string
         }[]
       }
+      get_admin_blog_posts: {
+        Args: never
+        Returns: {
+          author_id: string
+          author_profile: Json
+          blog_categories: Json
+          category_id: string
+          content: string
+          created_at: string
+          excerpt: string
+          featured: boolean
+          featured_image_url: string
+          id: string
+          likes_count: number
+          meta_description: string
+          meta_title: string
+          published_at: string
+          slug: string
+          status: string
+          title: string
+          updated_at: string
+          video_url: string
+          view_count: number
+        }[]
+      }
       get_album_by_slugs: {
         Args: { p_album_slug: string; p_rapper_slug: string }
         Returns: Json
