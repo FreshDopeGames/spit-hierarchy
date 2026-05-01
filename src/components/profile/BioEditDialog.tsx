@@ -5,7 +5,7 @@ import { ThemedButton } from '@/components/ui/themed-button';
 import { ThemedLabel } from '@/components/ui/themed-label';
 import { Loader2, AlertCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
-import { useToast } from '@/hooks/use-toast';
+import { toast } from 'sonner';
 import { useQueryClient } from '@tanstack/react-query';
 import DOMPurify from 'dompurify';
 
