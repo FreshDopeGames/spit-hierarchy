@@ -20,6 +20,7 @@ const ProfileHeader = ({
 }: ProfileHeaderProps) => {
   const [avatarUrl, setAvatarUrl] = useState(profile?.avatar_url);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isBioDialogOpen, setIsBioDialogOpen] = useState(false);
 
   // Sync avatarUrl with profile data when it loads
   useEffect(() => {
