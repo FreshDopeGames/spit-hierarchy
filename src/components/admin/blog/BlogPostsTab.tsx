@@ -21,7 +21,7 @@ const BlogPostsTab = ({ onEditPost, onNewPost }: BlogPostsTabProps) => {
   const { data: posts, isLoading: postsLoading } = useQuery({
     queryKey: ['admin-blog-posts'],
     queryFn: async () => {
-      const { data, error } = await (supabase as any)
+      const { data, error } = await supabase
         .rpc('get_admin_blog_posts');
 
       if (error) throw error;
