@@ -60,11 +60,27 @@ export interface DetectedEmbed {
   index: number; // position in source
 }
 
-// Detect all images and @[kind](url) embeds in raw markdown content.
+// Auto-detect embed kind from a bare URL (used for raw-pasted links).
+export const detectKindFromUrl = (url: string): EmbedKind | null => {
+  const u = url.toLowerCase();
+  if (/youtube\.com\/(watch|embed|shorts)|youtu\.be\//.test(u)) return "youtube";
+  if (/instagram\.com\/(p|reel|tv)\//.test(u)) return "instagram";
+  if (/tiktok\.com\/.+\/video\/\d+/.test(u)) return "tiktok";
+  if (/(twitter\.com|x\.com)\/[^/]+\/status\/\d+/.test(u)) return "twitter";
+  if (/\.(mp4|webm|ogg)(\?|$)/.test(u)) return "video";
+  if (/\.(png|jpe?g|gif|webp|avif|svg)(\?|$)/.test(u)) return "image";
+  return null;
+};
+
+// Detect all images, @[kind](url) embeds, and bare URLs to known platforms.
 export const detectEmbeds = (content: string): DetectedEmbed[] => {
   const results: DetectedEmbed[] = [];
   const embedRe = /@\[(youtube|video|instagram|tiktok|twitter)\]\(([^)]+)\)/gi;
   const imageRe = /!\[[^\]]*\]\(([^)]+)\)/g;
+  // Bare URLs not already inside a markdown image or @[..](..) token.
+  const urlRe = /(?<![\(\[])\bhttps?:\/\/[^\s<>"')]+/gi;
+
+  const claimedRanges: Array<[number, number]> = [];
 
   let m: RegExpExecArray | null;
   while ((m = embedRe.exec(content)) !== null) {
@@ -73,9 +89,19 @@ export const detectEmbeds = (content: string): DetectedEmbed[] => {
       url: m[2].trim(),
       index: m.index,
     });
+    claimedRanges.push([m.index, m.index + m[0].length]);
   }
   while ((m = imageRe.exec(content)) !== null) {
     results.push({ kind: "image", url: m[1].trim(), index: m.index });
+    claimedRanges.push([m.index, m.index + m[0].length]);
+  }
+  while ((m = urlRe.exec(content)) !== null) {
+    const idx = m.index;
+    const inClaimed = claimedRanges.some(([s, e]) => idx >= s && idx < e);
+    if (inClaimed) continue;
+    const kind = detectKindFromUrl(m[0]);
+    if (!kind) continue;
+    results.push({ kind, url: m[0].trim(), index: idx });
   }
   return results.sort((a, b) => a.index - b.index);
 };
