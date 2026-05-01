@@ -65,24 +65,24 @@ const BlogManagement = () => {
         <BlogRapperTagger />
       </div>
 
-      <Tabs defaultValue="posts" className="space-y-4 py-4">
-        <TabsList className="bg-[var(--theme-surface)] border border-[var(--theme-border)] w-full grid grid-cols-2 p-2 gap-1 rounded-lg py-[6px] my-0">
-          <TabsTrigger value="posts" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-4 py-2 rounded-md">
+      <ThemedTabs defaultValue="posts" className="space-y-4 py-4">
+        <ThemedTabsList className="w-full grid grid-cols-2 gap-1 h-auto p-2">
+          <ThemedTabsTrigger value="posts" className="text-sm py-3 font-bold">
             Posts
-          </TabsTrigger>
-          <TabsTrigger value="categories" className="text-[var(--theme-text)] data-[state=active]:bg-[var(--theme-primary)] data-[state=active]:text-[var(--theme-background)] text-sm px-4 py-2 rounded-md">
+          </ThemedTabsTrigger>
+          <ThemedTabsTrigger value="categories" className="text-sm py-3 font-bold">
             Categories
-          </TabsTrigger>
-        </TabsList>
+          </ThemedTabsTrigger>
+        </ThemedTabsList>
 
-        <TabsContent value="posts">
+        <ThemedTabsContent value="posts">
           <BlogPostsTab onEditPost={handleEditPost} onNewPost={handleNewPost} />
-        </TabsContent>
+        </ThemedTabsContent>
 
-        <TabsContent value="categories">
+        <ThemedTabsContent value="categories">
           <BlogCategoriesTab onEditCategory={handleEditCategory} onNewCategory={handleNewCategory} />
-        </TabsContent>
-      </Tabs>
+        </ThemedTabsContent>
+      </ThemedTabs>
 
       {/* Blog Post Dialog */}
       <BlogPostDialog open={showPostDialog} onOpenChange={setShowPostDialog} post={selectedPost} onSuccess={handlePostSuccess} />
