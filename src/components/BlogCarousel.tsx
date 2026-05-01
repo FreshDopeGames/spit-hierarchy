@@ -170,7 +170,7 @@ const BlogCarousel = () => {
                       </div>
                       
                       {/* Metadata in lower third */}
-                      <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
+                      <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                         <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
                           <div className="flex items-center">
                             <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[color:var(--theme-textMuted)] drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]" />
