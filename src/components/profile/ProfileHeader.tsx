@@ -79,9 +79,42 @@ const ProfileHeader = ({
                 </TooltipProvider>
               </div>
               
-              {profile?.bio && <p className="text-[var(--theme-text)] mb-4 font-[var(--theme-fontSecondary)] text-sm sm:text-base">
-                  {profile.bio}
-                </p>}
+              {profile?.bio ? (
+                <div className="flex items-start justify-center lg:justify-start gap-2 mb-4 group">
+                  <p className="text-[var(--theme-text)] font-[var(--theme-fontSecondary)] text-sm sm:text-base">
+                    {profile.bio}
+                  </p>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <ThemedButton
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setIsBioDialogOpen(true)}
+                          className="h-7 w-7 p-0 flex-shrink-0 opacity-70 hover:opacity-100"
+                        >
+                          <Pencil className="h-3.5 w-3.5" />
+                        </ThemedButton>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Edit tagline</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              ) : (
+                <div className="mb-4">
+                  <ThemedButton
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsBioDialogOpen(true)}
+                    className="text-xs sm:text-sm"
+                  >
+                    <Pencil className="h-3.5 w-3.5 mr-1" />
+                    Add a tagline
+                  </ThemedButton>
+                </div>
+              )}
               
               <div className="flex flex-col gap-2 text-xs sm:text-sm text-[var(--theme-textMuted)] justify-center lg:justify-start items-center lg:items-start">
                 {profile?.location && <div className="flex items-center justify-center lg:justify-start gap-1">
