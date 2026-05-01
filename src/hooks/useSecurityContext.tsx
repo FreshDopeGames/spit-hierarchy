@@ -34,7 +34,7 @@ interface SecurityProviderProps {
 }
 
 export const SecurityProvider = ({ children }: SecurityProviderProps) => {
-  const { user, isAuthenticated } = useSecureAuth();
+  const { user, isAuthenticated, loading: authLoading } = useSecureAuth();
   const [isAdmin, setIsAdmin] = useState(false);
   const [isModerator, setIsModerator] = useState(false);
   const [isStaffWriter, setIsStaffWriter] = useState(false);
@@ -43,6 +43,13 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
 
   useEffect(() => {
     const checkPermissions = async () => {
+      // Keep isLoading true while auth itself is still resolving so consumers
+      // (e.g. blog draft visibility) don't briefly assume "no permissions".
+      if (authLoading) {
+        setIsLoading(true);
+        return;
+      }
+
       setIsLoading(true);
       if (!isAuthenticated || !user) {
         setIsAdmin(false);
@@ -76,7 +83,7 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
     };
 
     checkPermissions();
-  }, [user, isAuthenticated]);
+  }, [user, isAuthenticated, authLoading]);
 
   const checkRateLimit = async (
     actionType: string, 
