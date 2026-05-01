@@ -12,12 +12,16 @@ interface BlogPostListProps {
 
 const BlogPostList = ({ posts, isLoading, onEditPost, onDeletePost }: BlogPostListProps) => {
   const getStatusBadge = (status: string) => {
-    const variants = {
-      draft: "secondary",
-      published: "default", 
-      archived: "outline"
-    };
-    return <Badge variant={variants[status] || "secondary"}>{status}</Badge>;
+    if (status === 'draft') {
+      return <Badge className="bg-amber-500 text-black hover:bg-amber-500 uppercase tracking-wide">Draft</Badge>;
+    }
+    if (status === 'published') {
+      return <Badge className="bg-emerald-600 text-white hover:bg-emerald-600 uppercase tracking-wide">Published</Badge>;
+    }
+    if (status === 'scheduled') {
+      return <Badge className="bg-blue-500 text-white hover:bg-blue-500 uppercase tracking-wide">Scheduled</Badge>;
+    }
+    return <Badge variant="outline" className="uppercase tracking-wide">{status}</Badge>;
   };
 
   if (isLoading) {
