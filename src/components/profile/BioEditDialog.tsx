@@ -65,7 +65,7 @@ export const BioEditDialog = ({
       await queryClient.invalidateQueries({ queryKey: ['user-profile', userId] });
       await queryClient.invalidateQueries({ queryKey: ['own-profile'] });
 
-      toast({ title: 'Tagline updated', description: 'Your tagline has been saved.' });
+      toast.success('Tagline updated', { description: 'Your tagline has been saved.' });
       onOpenChange(false);
     } catch (err: any) {
       setError(err.message || 'Failed to update tagline');
