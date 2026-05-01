@@ -27,7 +27,6 @@ export const BioEditDialog = ({
   const [bio, setBio] = useState(currentBio || '');
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const { toast } = useToast();
   const queryClient = useQueryClient();
 
   useEffect(() => {
