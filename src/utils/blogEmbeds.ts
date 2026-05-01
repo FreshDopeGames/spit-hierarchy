@@ -1,0 +1,81 @@
+// Shared embed helpers for blog content (used by editor preview and renderer).
+
+export const escapeAttr = (s: string) =>
+  s.replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+export const youTubeId = (url: string): string | null => {
+  const patterns = [
+    /(?:youtube\.com\/watch\?[^"]*v=)([\w-]{11})/,
+    /(?:youtu\.be\/)([\w-]{11})/,
+    /(?:youtube\.com\/(?:embed|shorts)\/)([\w-]{11})/,
+  ];
+  for (const p of patterns) {
+    const m = url.match(p);
+    if (m) return m[1];
+  }
+  return null;
+};
+
+export type EmbedKind = "youtube" | "video" | "instagram" | "tiktok" | "twitter" | "image";
+
+export const buildEmbed = (kind: string, rawUrl: string): string => {
+  const url = rawUrl.trim();
+  const safe = escapeAttr(url);
+
+  if (kind === "youtube") {
+    const id = youTubeId(url);
+    if (!id) return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${safe}</a>`;
+    return `<span class="embed-block"><iframe src="https://www.youtube-nocookie.com/embed/${id}" title="YouTube video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen loading="lazy"></iframe></span>`;
+  }
+
+  if (kind === "video") {
+    return `<span class="embed-block"><video src="${safe}" controls preload="metadata" playsinline></video></span>`;
+  }
+
+  if (kind === "instagram") {
+    const cleaned = url.replace(/\/$/, "").replace(/\?.*$/, "");
+    return `<span class="embed-block embed-portrait"><iframe src="${escapeAttr(cleaned + "/embed")}" title="Instagram post" allowtransparency="true" allowfullscreen loading="lazy" scrolling="no"></iframe></span>`;
+  }
+
+  if (kind === "tiktok") {
+    const m = url.match(/\/video\/(\d+)/);
+    if (!m) return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${safe}</a>`;
+    return `<span class="embed-block embed-portrait"><iframe src="https://www.tiktok.com/embed/v2/${m[1]}" title="TikTok video" allow="autoplay; clipboard-write; encrypted-media; picture-in-picture" allowfullscreen loading="lazy"></iframe></span>`;
+  }
+
+  if (kind === "twitter") {
+    return `<span class="embed-block"><blockquote class="twitter-tweet"><a href="${safe}">${safe}</a></blockquote></span>`;
+  }
+
+  if (kind === "image") {
+    return `<img src="${safe}" alt="" loading="lazy" />`;
+  }
+
+  return `<a href="${safe}" target="_blank" rel="noopener noreferrer">${safe}</a>`;
+};
+
+export interface DetectedEmbed {
+  kind: EmbedKind;
+  url: string;
+  index: number; // position in source
+}
+
+// Detect all images and @[kind](url) embeds in raw markdown content.
+export const detectEmbeds = (content: string): DetectedEmbed[] => {
+  const results: DetectedEmbed[] = [];
+  const embedRe = /@\[(youtube|video|instagram|tiktok|twitter)\]\(([^)]+)\)/gi;
+  const imageRe = /!\[[^\]]*\]\(([^)]+)\)/g;
+
+  let m: RegExpExecArray | null;
+  while ((m = embedRe.exec(content)) !== null) {
+    results.push({
+      kind: m[1].toLowerCase() as EmbedKind,
+      url: m[2].trim(),
+      index: m.index,
+    });
+  }
+  while ((m = imageRe.exec(content)) !== null) {
+    results.push({ kind: "image", url: m[1].trim(), index: m.index });
+  }
+  return results.sort((a, b) => a.index - b.index);
+};
