@@ -191,6 +191,13 @@ const ProfileHeader = ({
         currentUsername={profile?.username || profile?.full_name || user.email || ""}
         userId={user.id}
       />
+
+      <BioEditDialog
+        open={isBioDialogOpen}
+        onOpenChange={setIsBioDialogOpen}
+        currentBio={profile?.bio || ""}
+        userId={user.id}
+      />
     </div>;
 };
 export default ProfileHeader;
