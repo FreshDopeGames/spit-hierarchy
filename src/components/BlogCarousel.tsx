@@ -210,11 +210,13 @@ const BlogCarousel = () => {
             <div className="flex gap-2 sm:gap-3">
               {featuredPosts.map((_, index) => <button key={index} className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)] ${currentIndex === index ? "bg-[hsl(var(--theme-primary))] scale-110" : "bg-white/80 hover:bg-white/90"}`} onClick={() => scrollTo(index)} />)}
             </div>
-            <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
-              <Button variant="link" className="text-[color:var(--theme-primary)] hover:text-[color:var(--theme-primaryLight)] p-0 text-xs sm:text-sm h-auto">
-                Read More
-              </Button>
-            </Link>
+            <div className="flex-1 min-w-0 flex justify-end">
+              <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
+                <Button variant="link" className="text-[color:var(--theme-primary)] hover:text-[color:var(--theme-primaryLight)] p-0 text-xs sm:text-sm h-auto">
+                  Read More
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
