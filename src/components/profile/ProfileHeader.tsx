@@ -5,6 +5,7 @@ import AvatarUpload from "../AvatarUpload";
 import { Progress } from "@/components/ui/progress";
 import { useMemberStatus } from "@/hooks/useMemberStatus";
 import { UsernameEditDialog } from "./UsernameEditDialog";
+import { BioEditDialog } from "./BioEditDialog";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 interface ProfileHeaderProps {
