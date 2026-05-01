@@ -23,10 +23,10 @@ import AdminUserManagement from "@/components/admin/AdminUserManagement";
 
 const ALL_TABS = [
 { value: "rappers", label: "Rappers", roles: ["admin"] },
-{ value: "rankings", label: "Rankings", roles: ["admin", "staff_writer"] },
-{ value: "blog", label: "Blog", roles: ["admin", "staff_writer"] },
-{ value: "polls", label: "Polls", roles: ["admin", "staff_writer"] },
-{ value: "quizzes", label: "Quizzes", roles: ["admin", "staff_writer"] },
+{ value: "rankings", label: "Rankings", roles: ["admin", "staff_writer", "moderator"] },
+{ value: "blog", label: "Blog", roles: ["admin", "staff_writer", "moderator"] },
+{ value: "polls", label: "Polls", roles: ["admin", "staff_writer", "moderator"] },
+{ value: "quizzes", label: "Quizzes", roles: ["admin", "staff_writer", "moderator"] },
 { value: "vs-matches", label: "VS Matches", roles: ["admin"] },
 { value: "achievements", label: "Achievements", roles: ["admin"] },
 { value: "suggestions", label: "Suggestions", roles: ["admin"] },
