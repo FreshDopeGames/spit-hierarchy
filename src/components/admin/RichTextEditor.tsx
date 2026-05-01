@@ -2,6 +2,7 @@
 import React from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import EmbedPreviewPanel from './EmbedPreviewPanel';
 import {
   Bold,
   Italic,
@@ -139,8 +140,11 @@ const RichTextEditor = ({ value, onChange, placeholder, className }: RichTextEdi
         rows={15}
       />
 
+      {/* Live embed preview */}
+      <EmbedPreviewPanel content={value} />
+
       {/* Help text */}
-      <div className="text-xs text-gray-700 p-2 bg-white border border-gray-300 rounded-b-md border-t-0">
+      <div className="text-xs text-gray-700 p-2 bg-white border border-gray-300 rounded-md">
         <p className="mb-1"><strong>Markdown & embed formatting:</strong></p>
         <div className="grid grid-cols-2 gap-2 text-xs">
           <span>**bold** or *italic*</span>
