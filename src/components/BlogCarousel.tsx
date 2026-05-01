@@ -171,17 +171,8 @@ const BlogCarousel = () => {
                       
                       {/* Metadata in lower third */}
                       <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                        <div className="flex items-center text-sm sm:text-base mb-3 sm:mb-4 gap-3">
-                          <div className="flex items-center">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-[color:var(--theme-textMuted)] drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]" />
-                            <span className="text-[color:var(--theme-textMuted)] drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
-                              {format(new Date(post.published_at), "MMMM d, yyyy")}
-                            </span>
-                          </div>
-                          {post.blog_categories?.name && <Badge className="bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
-                              {post.blog_categories.name}
-                            </Badge>}
-                        </div>
+                        <div className="hidden" />
+
                         <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
                           {post.excerpt}
                         </p>
@@ -209,15 +200,23 @@ const BlogCarousel = () => {
           </div>
 
           <div className="absolute bottom-5 sm:bottom-6 md:bottom-8 left-0 w-full flex justify-between items-center px-4 sm:px-6 md:px-8 lg:px-10 z-10">
-            <div></div> {/* Spacer */}
+            <div className="flex-1 min-w-0">
+              {featuredPosts[currentIndex]?.blog_categories?.name && (
+                <Badge className="bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
+                  {featuredPosts[currentIndex].blog_categories.name}
+                </Badge>
+              )}
+            </div>
             <div className="flex gap-2 sm:gap-3">
               {featuredPosts.map((_, index) => <button key={index} className={`h-2 w-2 sm:h-2.5 sm:w-2.5 md:h-3 md:w-3 rounded-full transition-all duration-300 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)] ${currentIndex === index ? "bg-[hsl(var(--theme-primary))] scale-110" : "bg-white/80 hover:bg-white/90"}`} onClick={() => scrollTo(index)} />)}
             </div>
-            <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
-              <Button variant="link" className="text-[color:var(--theme-primary)] hover:text-[color:var(--theme-primaryLight)] p-0 text-xs sm:text-sm h-auto">
-                Read More
-              </Button>
-            </Link>
+            <div className="flex-1 min-w-0 flex justify-end">
+              <Link to={`/blog/${featuredPosts[currentIndex]?.slug}`}>
+                <Button variant="link" className="text-[color:var(--theme-primary)] hover:text-[color:var(--theme-primaryLight)] p-0 text-xs sm:text-sm h-auto">
+                  Read More
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>
