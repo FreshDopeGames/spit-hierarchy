@@ -83,7 +83,7 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
     };
 
     checkPermissions();
-  }, [user, isAuthenticated]);
+  }, [user, isAuthenticated, authLoading]);
 
   const checkRateLimit = async (
     actionType: string, 
