@@ -173,7 +173,7 @@ const BlogCarousel = () => {
                       <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
                         <div className="hidden" />
 
-                        <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
+                        <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 [text-shadow:_0_2px_6px_rgba(0,0,0,0.95),_0_0_3px_rgba(0,0,0,1)]">
                           {post.excerpt}
                         </p>
                       </div>
