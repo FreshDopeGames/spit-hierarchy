@@ -148,6 +148,15 @@ const ZodiacDistributionCard = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rappers, rappersBySign, shuffleKey]);
 
+  // Collect all displayed rapper IDs and load optimized thumb images
+  const displayedRapperIds = useMemo(() => {
+    const ids: string[] = [];
+    randomRappersPerSign.forEach((list) => list.forEach((r) => ids.push(r.id)));
+    return ids;
+  }, [randomRappersPerSign]);
+
+  const { data: optimizedImages } = useRapperImages(displayedRapperIds, 'thumb');
+
   const handleBarClick = (data: ZodiacCount) => {
     setSelectedSign(selectedSign === data.name ? null : data.name);
   };
