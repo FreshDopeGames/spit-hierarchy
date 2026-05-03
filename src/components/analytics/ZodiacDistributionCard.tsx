@@ -7,6 +7,7 @@ import { Star, Shuffle } from "lucide-react";
 import { getZodiacName, getAllZodiacSigns } from "@/utils/zodiacUtils";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useRapperImages } from "@/hooks/useImageStyle";
 
 interface RapperWithZodiac {
   id: string;
