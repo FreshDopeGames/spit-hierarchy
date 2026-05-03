@@ -199,16 +199,6 @@ const NavigationSidebar = ({
                 </ThemedButton>
               </Link>
 
-              <Link to="/about" onClick={() => handleNavClick("/about")}>
-                <ThemedButton
-                  variant="ghost"
-                  className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
-                >
-                  <Info className="w-4 h-4 mr-3" />
-                  About
-                </ThemedButton>
-              </Link>
-
               <Link to="/analytics" onClick={() => handleNavClick("/analytics")}>
                 <ThemedButton
                   variant="ghost"
@@ -216,6 +206,16 @@ const NavigationSidebar = ({
                 >
                   <BarChart3 className="w-4 h-4 mr-3" />
                   Analytics
+                </ThemedButton>
+              </Link>
+
+              <Link to="/about" onClick={() => handleNavClick("/about")}>
+                <ThemedButton
+                  variant="ghost"
+                  className="w-full justify-start text-[hsl(var(--theme-primary))] font-[var(--theme-font-body)] bg-transparent hover:bg-white hover:text-black transition-colors"
+                >
+                  <Info className="w-4 h-4 mr-3" />
+                  About
                 </ThemedButton>
               </Link>
 

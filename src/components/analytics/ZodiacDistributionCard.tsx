@@ -7,6 +7,7 @@ import { Star, Shuffle } from "lucide-react";
 import { getZodiacName, getAllZodiacSigns } from "@/utils/zodiacUtils";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
+import { useRapperImages } from "@/hooks/useImageStyle";
 
 interface RapperWithZodiac {
   id: string;
@@ -146,6 +147,15 @@ const ZodiacDistributionCard = () => {
     return result;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [rappers, rappersBySign, shuffleKey]);
+
+  // Collect all displayed rapper IDs and load optimized thumb images
+  const displayedRapperIds = useMemo(() => {
+    const ids: string[] = [];
+    randomRappersPerSign.forEach((list) => list.forEach((r) => ids.push(r.id)));
+    return ids;
+  }, [randomRappersPerSign]);
+
+  const { data: optimizedImages } = useRapperImages(displayedRapperIds, 'thumb');
 
   const handleBarClick = (data: ZodiacCount) => {
     setSelectedSign(selectedSign === data.name ? null : data.name);
@@ -332,17 +342,19 @@ const ZodiacDistributionCard = () => {
                 
                 {/* Rapper Grid - Responsive */}
                 {signRappers.length > 0 ? (
-                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3">
-                    {signRappers.map(rapper => (
+                  <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-2 sm:gap-3">
+                    {signRappers.map(rapper => {
+                      const optimizedSrc = optimizedImages?.[rapper.id] || rapper.image_url;
+                      return (
                       <Link
                         key={rapper.id}
                         to={`/rappers/${rapper.slug}`}
                         className="group text-center"
                       >
                         <div className="aspect-square rounded-lg overflow-hidden bg-rap-smoke/20 mb-1.5">
-                          {rapper.image_url ? (
+                          {optimizedSrc ? (
                             <img
-                              src={rapper.image_url}
+                              src={optimizedSrc}
                               alt={rapper.name}
                               className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                               loading="lazy"
@@ -353,14 +365,15 @@ const ZodiacDistributionCard = () => {
                             </div>
                           )}
                         </div>
-                        <span className="text-rap-platinum font-kaushan text-sm leading-tight line-clamp-2 group-hover:text-rap-gold transition-colors">
+                        <span className="text-rap-platinum font-kaushan text-xs sm:text-sm leading-tight line-clamp-2 group-hover:text-rap-gold transition-colors block">
                           {rapper.name}
                         </span>
-                        <span className="text-rap-smoke text-xs">
+                        <span className="text-rap-smoke text-[10px] sm:text-xs">
                           {formatShortBirthdate(rapper.birth_month, rapper.birth_day)}
                         </span>
                       </Link>
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="text-center text-rap-smoke text-xs py-2">
