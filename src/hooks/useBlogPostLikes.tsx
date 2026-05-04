@@ -5,19 +5,10 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { toast } from "sonner";
-import { useSecureRateLimiting } from "@/hooks/useSecureRateLimiting";
 
 export const useBlogPostLikes = (postId: string) => {
   const { user, isAuthenticated } = useSecureAuth();
   const queryClient = useQueryClient();
-  
-  // Rate limiting for likes
-  const { checkRateLimit } = useSecureRateLimiting({
-    actionType: 'blog_like',
-    maxRequests: 10,
-    windowMinutes: 5,
-    userSpecific: true
-  });
 
   // Get like count and user's like status with optimized query
   const { data: likeData } = useOptimizedQuery({
@@ -56,8 +47,7 @@ export const useBlogPostLikes = (postId: string) => {
         return;
       }
 
-      // Check rate limit
-      await checkRateLimit();
+
 
       if (likeData?.isLiked) {
         // Unlike
