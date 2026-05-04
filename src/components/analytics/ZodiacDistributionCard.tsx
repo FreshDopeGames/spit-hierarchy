@@ -155,7 +155,7 @@ const ZodiacDistributionCard = () => {
     return ids;
   }, [randomRappersPerSign]);
 
-  const { data: optimizedImages } = useRapperImages(displayedRapperIds, 'thumb');
+  const { data: optimizedImages } = useRapperImages(displayedRapperIds, 'medium');
 
   const handleBarClick = (data: ZodiacCount) => {
     setSelectedSign(selectedSign === data.name ? null : data.name);
