@@ -53,7 +53,7 @@ const WeeklyBlogGenerator = ({ onSuccess }: WeeklyBlogGeneratorProps) => {
           Weekly Hip-Hop Roundup
         </CardTitle>
         <CardDescription>
-          Generate an automated weekly blog post from hip-hop news feeds (XXL, The Source, 2DOPEBOYZ, AllHipHop, Complex).
+          Generate an automated weekly blog post from hip-hop news feeds (XXL, The Source, 2DOPEBOYZ, AllHipHop, Complex, Billboard, Spin).
           Only includes articles mentioning artists in the database.
         </CardDescription>
       </CardHeader>
