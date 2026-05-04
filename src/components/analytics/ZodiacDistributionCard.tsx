@@ -342,7 +342,7 @@ const ZodiacDistributionCard = () => {
                 
                 {/* Rapper Grid - Responsive */}
                 {signRappers.length > 0 ? (
-                  <div className="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-10 gap-2 sm:gap-3">
+                  <div className="grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-3">
                     {signRappers.map(rapper => {
                       const optimizedSrc = optimizedImages?.[rapper.id] || rapper.image_url;
                       return (
