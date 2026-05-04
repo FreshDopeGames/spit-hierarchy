@@ -17,7 +17,9 @@ const RSS_FEEDS = [
   { name: "The Source", url: "https://thesource.com/feed" },
   { name: "2DOPEBOYZ", url: "https://www.2dopeboyz.com/feed" },
   { name: "AllHipHop", url: "https://allhiphop.com/feed/" },
-  { name: "Complex", url: "http://cdnl.complex.com/feeds/channels/all.xml" }
+  { name: "Complex", url: "http://cdnl.complex.com/feeds/channels/all.xml" },
+  { name: "Billboard", url: "https://www.billboard.com/c/hip-hop/feed/" },
+  { name: "Spin", url: "https://www.spin.com/category/rap/feed/" }
 ];
 
 interface RSSItem {
