@@ -47,8 +47,7 @@ export const useBlogPostLikes = (postId: string) => {
         return;
       }
 
-      // Check rate limit
-      await checkRateLimit();
+
 
       if (likeData?.isLiked) {
         // Unlike
