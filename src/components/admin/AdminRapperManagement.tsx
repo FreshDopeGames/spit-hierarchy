@@ -219,6 +219,22 @@ const AdminRapperManagement = () => {
                 </SelectContent>
               </Select>
             </div>
+
+            <div>
+              <Label className="text-theme-text font-bold">
+                Status:
+              </Label>
+              <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v as any); setCurrentPage(1); }}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="published">Published</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           {isLoading ? <div className="text-center py-8">
