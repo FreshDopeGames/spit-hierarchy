@@ -57,7 +57,7 @@ const StatsOverviewRedesigned = () => {
       membersCount,
       blogCount
     ] = await Promise.all([
-      supabase.from("rappers").select("*", { count: "exact", head: true }),
+      supabase.from("rappers").select("*", { count: "exact", head: true }).eq("publish_status", "published"),
       supabase.from("votes").select("*", { count: "exact", head: true }),
       supabase.from("ranking_votes").select("*", { count: "exact", head: true }),
       supabase.rpc("get_total_member_count"),
