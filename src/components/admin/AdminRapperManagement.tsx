@@ -74,6 +74,10 @@ const AdminRapperManagement = () => {
       if (searchTerm) {
         query = query.ilike("name", `%${searchTerm}%`);
       }
+
+      if (statusFilter !== "all") {
+        query = query.eq("publish_status", statusFilter);
+      }
       
       // Only apply server-side pagination for non-ranking_votes sorts
       if (sortBy !== "ranking_votes") {
