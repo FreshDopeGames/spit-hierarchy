@@ -33,7 +33,7 @@ const AdminRapperDeleteDialog = ({
 
   return (
     <AlertDialog open={open} onOpenChange={onOpenChange}>
-      <AlertDialogContent className="bg-[var(--theme-surface)] border border-[var(--theme-border)]">
+      <AlertDialogContent className="bg-theme-background border border-[var(--theme-border)]">
         <AlertDialogHeader>
           <div className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5 text-[var(--theme-error)]" />
