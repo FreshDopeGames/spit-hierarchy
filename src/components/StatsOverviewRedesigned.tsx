@@ -57,7 +57,7 @@ const StatsOverviewRedesigned = () => {
       membersCount,
       blogCount
     ] = await Promise.all([
-      supabase.from("rappers").select("*", { count: "exact", head: true }),
+      supabase.from("rappers").select("*", { count: "exact", head: true }).eq("publish_status", "published"),
       supabase.from("votes").select("*", { count: "exact", head: true }),
       supabase.from("ranking_votes").select("*", { count: "exact", head: true }),
       supabase.rpc("get_total_member_count"),
@@ -75,6 +75,7 @@ const StatsOverviewRedesigned = () => {
     ] = await Promise.all([
       supabase.from("rappers")
         .select("career_start_year")
+        .eq("publish_status", "published")
         .not("career_start_year", "is", null),
       supabase.from("blog_posts")
         .select("id, title, slug, likes_count")
@@ -91,6 +92,7 @@ const StatsOverviewRedesigned = () => {
       supabase.rpc('get_member_with_most_achievements').maybeSingle(),
       supabase.from("rappers")
         .select("id, name, slug, image_url, total_votes")
+        .eq("publish_status", "published")
         .gt("total_votes", 0)
         .order("total_votes", { ascending: false })
         .limit(1)
