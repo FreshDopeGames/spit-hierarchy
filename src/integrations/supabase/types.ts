@@ -2232,6 +2232,8 @@ export type Database = {
           name: string
           origin: string | null
           origins_description: string | null
+          publish_status: string
+          published_at: string | null
           real_name: string | null
           slug: string
           spotify_id: string | null
@@ -2264,6 +2266,8 @@ export type Database = {
           name: string
           origin?: string | null
           origins_description?: string | null
+          publish_status?: string
+          published_at?: string | null
           real_name?: string | null
           slug: string
           spotify_id?: string | null
@@ -2296,6 +2300,8 @@ export type Database = {
           name?: string
           origin?: string | null
           origins_description?: string | null
+          publish_status?: string
+          published_at?: string | null
           real_name?: string | null
           slug?: string
           spotify_id?: string | null

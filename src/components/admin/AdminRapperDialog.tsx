@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RapperForm from "./forms/RapperForm";
 import RapperAvatarUpload from "./RapperAvatarUpload";
+import AIPortraitGenerator from "./rapper-avatar/AIPortraitGenerator";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
@@ -37,27 +38,37 @@ const AdminRapperDialog = ({
         
         {rapper ? (
           <Tabs defaultValue="details" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6 bg-transparent">
-              <TabsTrigger 
-                value="details" 
+            <TabsList className="grid w-full grid-cols-3 mb-6 bg-transparent">
+              <TabsTrigger
+                value="details"
                 className="bg-[var(--theme-primary)] text-[var(--theme-background)] data-[state=active]:bg-[var(--theme-background)] data-[state=active]:text-[var(--theme-primary)]"
               >
                 Rapper Details
               </TabsTrigger>
-              <TabsTrigger 
-                value="avatar" 
+              <TabsTrigger
+                value="avatar"
                 className="bg-[var(--theme-primary)] text-[var(--theme-background)] data-[state=active]:bg-[var(--theme-background)] data-[state=active]:text-[var(--theme-primary)]"
               >
                 Avatar Upload
               </TabsTrigger>
+              <TabsTrigger
+                value="ai-portrait"
+                className="bg-[var(--theme-primary)] text-[var(--theme-background)] data-[state=active]:bg-[var(--theme-background)] data-[state=active]:text-[var(--theme-primary)]"
+              >
+                AI Portrait
+              </TabsTrigger>
             </TabsList>
-            
+
             <TabsContent value="details">
               <RapperForm rapper={rapper} onSuccess={handleClose} onCancel={() => onOpenChange(false)} />
             </TabsContent>
-            
+
             <TabsContent value="avatar">
               <RapperAvatarUpload rapper={rapper} />
+            </TabsContent>
+
+            <TabsContent value="ai-portrait">
+              <AIPortraitGenerator rapper={rapper} />
             </TabsContent>
           </Tabs>
         ) : (

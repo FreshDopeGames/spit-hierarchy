@@ -80,6 +80,7 @@ Deno.serve(async (req) => {
     const { data: rappers, error: rappersError } = await supabase
       .from('rappers')
       .select('slug, updated_at')
+      .eq('publish_status', 'published')
       .order('activity_score', { ascending: false })
       .limit(5000)
 

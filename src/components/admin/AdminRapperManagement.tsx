@@ -22,6 +22,7 @@ const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"alphabetical" | "rating" | "ranking_votes">("alphabetical");
+  const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -54,7 +55,7 @@ const AdminRapperManagement = () => {
     refetch,
     isFetching
   } = useQuery({
-    queryKey: ["rappers", currentPage, searchTerm, sortBy],
+    queryKey: ["rappers", currentPage, searchTerm, sortBy, statusFilter],
     queryFn: async () => {
       let query = supabase
         .from("rappers")
@@ -72,6 +73,10 @@ const AdminRapperManagement = () => {
       
       if (searchTerm) {
         query = query.ilike("name", `%${searchTerm}%`);
+      }
+
+      if (statusFilter !== "all") {
+        query = query.eq("publish_status", statusFilter);
       }
       
       // Only apply server-side pagination for non-ranking_votes sorts
@@ -113,7 +118,7 @@ const AdminRapperManagement = () => {
 
   useEffect(() => {
     refetch();
-  }, [currentPage, searchTerm, sortBy, refetch]);
+  }, [currentPage, searchTerm, sortBy, statusFilter, refetch]);
 
   const totalItems = rappers?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
@@ -211,6 +216,22 @@ const AdminRapperManagement = () => {
                   <SelectItem value="alphabetical">Alphabetical (A-Z)</SelectItem>
                   <SelectItem value="rating">Rating (Highest First)</SelectItem>
                   <SelectItem value="ranking_votes">Ranking Votes (Most First)</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div>
+              <Label className="text-theme-text font-bold">
+                Status:
+              </Label>
+              <Select value={statusFilter} onValueChange={(v) => { setStatusFilter(v as any); setCurrentPage(1); }}>
+                <SelectTrigger className="mt-1">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All</SelectItem>
+                  <SelectItem value="published">Published</SelectItem>
+                  <SelectItem value="draft">Draft</SelectItem>
                 </SelectContent>
               </Select>
             </div>
