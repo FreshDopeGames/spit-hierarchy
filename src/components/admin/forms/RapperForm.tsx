@@ -187,6 +187,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         top_quote: formData.top_quote.trim() || null,
         top_quote_song: formData.top_quote_song.trim() || null,
         slug,
+        publish_status: formData.publish_status,
       };
 
       let rapperId: string;
