@@ -30,7 +30,8 @@ serve(async (req) => {
     console.log('Fetching rappers and aliases...');
     const { data: rappers, error: rappersError } = await supabase
       .from('rappers')
-      .select('name, aliases, slug');
+      .select('name, aliases, slug')
+      .eq('publish_status', 'published');
     
     if (rappersError) throw rappersError;
 
