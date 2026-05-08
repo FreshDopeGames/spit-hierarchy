@@ -55,7 +55,7 @@ const AdminRapperManagement = () => {
     refetch,
     isFetching
   } = useQuery({
-    queryKey: ["rappers", currentPage, searchTerm, sortBy],
+    queryKey: ["rappers", currentPage, searchTerm, sortBy, statusFilter],
     queryFn: async () => {
       let query = supabase
         .from("rappers")
