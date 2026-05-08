@@ -92,6 +92,7 @@ const StatsOverviewRedesigned = () => {
       supabase.rpc('get_member_with_most_achievements').maybeSingle(),
       supabase.from("rappers")
         .select("id, name, slug, image_url, total_votes")
+        .eq("publish_status", "published")
         .gt("total_votes", 0)
         .order("total_votes", { ascending: false })
         .limit(1)
