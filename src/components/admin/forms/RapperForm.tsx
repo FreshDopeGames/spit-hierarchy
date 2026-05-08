@@ -113,6 +113,7 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         musicbrainz_id: "",
         top_quote: "",
         top_quote_song: "",
+        publish_status: "draft",
       });
     }
   }, [rapper]);
