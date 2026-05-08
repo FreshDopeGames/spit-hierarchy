@@ -84,8 +84,13 @@ const RapperCardWithImage = ({ rapper, onEdit, onDelete, rankingVoteCount }: { r
 
         {/* Rapper Info */}
         <div className="space-y-2">
-          <div className="flex items-start justify-between">
+          <div className="flex items-start justify-between gap-2">
             <h3 className="text-[var(--theme-primary)] font-bold text-sm leading-tight">{rapper.name}</h3>
+            {(rapper as any).publish_status === 'draft' && (
+              <ThemedBadge variant="ghost" className="text-[10px] uppercase tracking-wider bg-yellow-500/20 text-yellow-300 border border-yellow-500/40">
+                Draft
+              </ThemedBadge>
+            )}
           </div>
 
           {rapper.real_name && (
