@@ -20,4 +20,5 @@ export interface RapperFormData {
   musicbrainz_id: string;
   top_quote: string;
   top_quote_song: string;
+  publish_status: "draft" | "published";
 }
