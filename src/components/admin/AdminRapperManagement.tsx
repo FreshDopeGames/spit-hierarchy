@@ -22,6 +22,7 @@ const AdminRapperManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortBy, setSortBy] = useState<"alphabetical" | "rating" | "ranking_votes">("alphabetical");
+  const [statusFilter, setStatusFilter] = useState<"all" | "draft" | "published">("all");
   const [selectedRapper, setSelectedRapper] = useState<Rapper | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
