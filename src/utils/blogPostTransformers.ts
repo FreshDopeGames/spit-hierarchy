@@ -56,6 +56,20 @@ const parseFeaturedImage = (imageUrl: string | null | undefined) => {
   }
 };
 
+const calculateReadTime = (content: string): string => {
+  if (!content) return "1 min read";
+  // Strip HTML tags and markdown syntax, then count words
+  const text = content
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/[#*_`~>\-]/g, ' ')
+    .replace(/!?\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim();
+  const words = text ? text.split(' ').length : 0;
+  const minutes = Math.max(1, Math.round(words / 225));
+  return `${minutes} min read`;
+};
+
 export const transformBlogPost = (blogPost: BlogPost) => {
   const authorName = blogPost.profiles?.username || 
                      blogPost.profiles?.full_name || 
@@ -68,7 +82,7 @@ export const transformBlogPost = (blogPost: BlogPost) => {
     authorId: blogPost.author_id,
     authorUsername: blogPost.profiles?.username || '',
     timeAgo: formatDate(blogPost.published_at),
-    readTime: "5 min read",
+    readTime: calculateReadTime(blogPost.content),
     featured_image_url: blogPost.featured_image_url,
     video_url: blogPost.video_url
   };
