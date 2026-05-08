@@ -118,7 +118,7 @@ const AdminRapperManagement = () => {
 
   useEffect(() => {
     refetch();
-  }, [currentPage, searchTerm, sortBy, refetch]);
+  }, [currentPage, searchTerm, sortBy, statusFilter, refetch]);
 
   const totalItems = rappers?.count || 0;
   const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
