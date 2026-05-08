@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import RapperForm from "./forms/RapperForm";
 import RapperAvatarUpload from "./RapperAvatarUpload";
+import AIPortraitGenerator from "./rapper-avatar/AIPortraitGenerator";
 import { Tables } from "@/integrations/supabase/types";
 
 type Rapper = Tables<"rappers">;
