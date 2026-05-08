@@ -268,6 +268,39 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         </div>
       )}
 
+      <div className="bg-[var(--theme-surface)] border border-[var(--theme-primary)]/30 rounded-md p-4 flex items-center justify-between gap-4">
+        <div>
+          <Label className="text-[var(--theme-primary)] font-bold">Publish Status</Label>
+          <p className="text-xs text-[var(--theme-text)] opacity-70 mt-1">
+            Drafts are hidden from the public site (admins/mods can still view).
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => handleInputChange("publish_status", "draft")}
+            className={`px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors ${
+              formData.publish_status === "draft"
+                ? "bg-yellow-500 text-black"
+                : "bg-[var(--theme-background)] text-[var(--theme-text)] border border-[var(--theme-primary)]/30"
+            }`}
+          >
+            Draft
+          </button>
+          <button
+            type="button"
+            onClick={() => handleInputChange("publish_status", "published")}
+            className={`px-4 py-2 rounded-md text-sm font-bold uppercase tracking-wider transition-colors ${
+              formData.publish_status === "published"
+                ? "bg-[var(--theme-primary)] text-[var(--theme-background)]"
+                : "bg-[var(--theme-background)] text-[var(--theme-text)] border border-[var(--theme-primary)]/30"
+            }`}
+          >
+            Published
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div>
           <Label htmlFor="name" className="text-[var(--theme-primary)]">Name *</Label>
