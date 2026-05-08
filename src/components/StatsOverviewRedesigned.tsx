@@ -75,6 +75,7 @@ const StatsOverviewRedesigned = () => {
     ] = await Promise.all([
       supabase.from("rappers")
         .select("career_start_year")
+        .eq("publish_status", "published")
         .not("career_start_year", "is", null),
       supabase.from("blog_posts")
         .select("id, title, slug, likes_count")
