@@ -1,76 +1,48 @@
-## 1. Draft / Published status for rappers
+## Polls audit findings
 
-### Database
-- Add `publish_status` column to `rappers`: `text NOT NULL DEFAULT 'published'` with a CHECK in `('draft','published')`.
-  - Default `'published'` so all existing rappers stay live.
-  - New rappers created from the admin form default to `'draft'` (set in form UI, not column default — keeps backfill safe).
-- Add `published_at timestamptz` (nullable) — set automatically by a trigger when `publish_status` flips to `'published'` for the first time. Useful for sorting/audit.
-- Index: `CREATE INDEX rappers_publish_status_idx ON rappers (publish_status);`
+**Database state (live):**
+- 2 active polls exist:
+  1. Homepage (featured): "Who should be the 300th Rap GOAT on Spit Hierarchy?" — 4 votes captured
+  2. All-blogs placement: "What kinds of blog posts do you want to see more of?" — 1 vote captured
+- The `poll_results` view returns correct tallies for both. **Blog polls are capturing and aggregating votes correctly** at the data layer.
 
-### Visibility model: "Preserve everything, just hide"
-Votes, ratings, comments, ranking_items, daily_vote_tracking, etc. are **never deleted or modified** when a rapper is moved to draft. They remain in the DB exactly as-is so flipping back to published instantly restores the rapper with full history.
+**Display path for blog polls:**
+- `BlogPoll.tsx` queries `usePolls('specific_blog', blogPostId)` + `usePolls('all_blogs')` and renders `PollWidget` for each.
+- `PollWidget` shows results when `userHasVoted` is true (via `useUserPollVotes`) or after a fresh vote.
+- A logged-out user on a blog post will see the "Members Only / Sign up" locked state instead of results — this is the most likely reason it *looked* broken. Code is functioning as designed.
 
-The hiding is done at the read layer:
+**Likely past issue (already resolved):** earlier fix to `usePollResults` switched to the `poll_results` aggregated view, which fixed empty results. No code bug remains.
 
-**Public-facing queries** must filter `publish_status = 'published'`. Files that need updating:
-- `src/hooks/useAllRappers.ts`, `useHotRappers.tsx`, `useMostViewedRappers.ts`, `useTopRappersByCategory.ts`, `useSimilarRappers.ts`, `useRapperSearch.ts`, `useRapperAutocomplete.ts`, `useRapperStats.ts`, `useRapperAgeStats.ts`, `useCareerLengthStats.ts`, `useTopCitiesStats.ts`, `useTopTagsStats.ts`, `useAllRapperTags.ts`, `useRankingData.tsx`, `useRankingsData.ts`, `useOptimizedUserRankings.ts`, `useUserTopRappers.ts`, `useVSMatches.tsx`, `useAdminVSMatches.tsx` (admin: no filter), `useTrackArtists.ts`, `useMentionedRappers.ts`.
-- `src/services/userRankingService.ts`, `src/services/optimizedUserRankingService.ts`.
-- `src/components/GlobalSearch.tsx` (rapper results).
-- `src/pages/RapperDetail.tsx` — if `publish_status='draft'` and viewer is not admin/staff, return 404.
-- Edge functions that emit public data: `generate-sitemap` (exclude drafts), `og-redirect` (404 for drafts), `tag-rappers-in-blog-posts` (skip drafts).
-- Aggregates such as Zodiac distribution, analytics top lists, ranking previews — all flow through the hooks above, so once filtered there they're hidden in aggregates too.
-
-**Admin queries keep showing everything**: `AdminRapperManagement.tsx` (and its table) must be untouched re: filter, but should display a Draft / Published badge and let staff filter by status.
-
-### Admin UI
-- Add a `Status` toggle (Draft / Published) at the top of `RapperFormFields.tsx`, styled with the existing themed select.
-- New rappers default to **Draft** so the editor can prepare avatar/bio before going live.
-- In `AdminRapperTable`, add a small Draft badge on the row when applicable, plus a status filter in `AdminRapperManagement.tsx` (alongside the existing sort dropdown).
-
-### RLS
-Public read RLS on `rappers` already allows all rows (frontend filters). To harden: replace the existing public SELECT policy with one that allows `publish_status = 'published' OR is_admin() OR is_moderator_or_admin()`. This guarantees drafts cannot leak even if a hook forgets to filter.
+I'll do one more pass during implementation to confirm nothing is regressed (vote → result transition, percentage rendering, "Change Vote" path).
 
 ---
 
-## 2. AI portrait generator in the Edit Rapper dialog
+## New feature: session-start homepage poll popup
 
-### Where it lives
-Add a new tab "AI Portrait" in `AdminRapperDialog` (alongside Details and Avatar Upload). On the Avatar Upload tab itself, also add a "Generate with AI" button as a shortcut.
+Trigger the featured homepage poll as a modal once per browser session for logged-in members who haven't voted yet.
 
-### UI flow
-1. Editor uploads **1–3 reference photos** via drag-drop zone (validated 5MB each, jpg/png/webp, using existing `useEnhancedFileValidation` patterns).
-2. Optional "extra prompt notes" textarea (e.g. "wearing a fitted cap", "early-2000s era").
-3. "Generate Portrait" button calls a new Supabase edge function `generate-rapper-portrait`.
-4. On success, four candidate previews are shown (4 generations per click). Editor clicks one → it's uploaded to the existing rapper-images storage bucket via the same path used in `useRapperAvatarUpload`, then `rappers.image_url` is updated. Other candidates are discarded.
+### Behavior
+- Show only if: user is authenticated, a featured active homepage poll exists, user has no row in `poll_votes` for it, and the modal hasn't already been shown this session.
+- Fire ~1.5s after first authenticated page load (any route) to avoid clobbering initial render.
+- Dismissible via close button or "Maybe later"; submitting a vote also closes it.
+- Once dismissed or voted, do not reopen until a new browser session (uses `sessionStorage` key `poll-modal-shown-{pollId}`).
+- Skip on `/auth` and during onboarding flow to avoid stacking modals.
 
-### Edge function: `generate-rapper-portrait`
-- Input: `{ rapperId, referenceImages: string[] (data URLs), extraNotes?: string }`. Validates admin via JWT and `has_role('admin')`.
-- Calls Lovable AI Gateway with `google/gemini-3-pro-image-preview` (Nano Banana Pro) for higher fidelity. Uses **multi-image edit** input shape: one user message containing the fixed style text + the reference image_urls.
-- Fixed style prompt (single source of truth, stored as a constant in the function):
-  > "Studio portrait of {rapperName}, photorealistic, 3/4 angle, head and upper shoulders, neutral charcoal seamless backdrop, soft key light from upper left, subtle rim light, sharp focus on eyes, 50mm lens look, color-graded warm shadows / cool highlights. Match the likeness of the reference photos faithfully — same face, hairstyle, and signature style cues. No text, no watermark, no logos."
-- Generates 4 candidates (4 sequential calls so we get variation).
-- Returns the 4 base64 image URLs to the client (NOT stored server-side until editor picks one — keeps storage clean).
+### Technical details
+- New component `src/components/polls/SessionPollModal.tsx` wrapping `PollWidget` inside a shadcn `Dialog`.
+  - Reuses existing `useFeaturedPolls()` (limit 1) and `useUserPollVotes(pollId)`.
+  - Shows nothing while loading; opens dialog only when all conditions pass.
+- Mount once globally in `src/App.tsx` (inside auth + router providers, alongside existing global modals).
+- Respect existing memory rule: no nested Radix Dialogs — guard with a check for any open dialog (`document.querySelector('[role="dialog"]')`) or simply suppress when onboarding/username modals are active by checking the same hooks they use (`useOnboardingStatus`, username enforcement).
+- Styling: match `PollWidget`'s existing themed card; modal uses standard dark overlay (the recently-fixed solid background pattern from `AdminRapperDeleteDialog`).
 
-### Secrets
-Uses `LOVABLE_API_KEY` (already available in the project — confirm with `fetch_secrets`). No external search API needed since reference comes from upload.
+### Files
+- Add: `src/components/polls/SessionPollModal.tsx`
+- Edit: `src/App.tsx` (mount the modal)
 
-### Storage / privacy
-- Reference uploads are sent as data URLs in-memory only; not persisted.
-- Final chosen portrait goes into the existing rapper avatar bucket using current upload pipeline so caching, sizing, and the `useRapperImage` hook continue to work without changes.
-
----
-
-## 3. Out of scope for this pass
-- Bulk regeneration of existing rapper portraits.
-- Web-search-based reference fetching (deferred per your answer).
-- Per-rapper override of the style prompt.
+No DB changes required — existing `poll_votes` + `useUserPollVotes` already tell us if the user has voted.
 
 ---
 
-## Technical summary
-- **Migration**: add `publish_status`, `published_at`, index, trigger, updated SELECT RLS.
-- **Frontend filters**: ~20 hooks/services + RapperDetail 404 path.
-- **Admin UI**: Status field + table badge + status filter.
-- **New edge function**: `generate-rapper-portrait` (Gemini 3 Pro Image, fixed style, 1–3 refs, 4 candidates).
-- **New components**: `AIPortraitGenerator.tsx` inside `src/components/admin/rapper-avatar/`, plus a new tab in `AdminRapperDialog`.
-- **Sitemap/OG**: exclude drafts.
+## Open question
+Should the popup also appear for non-featured homepage polls if the featured one is exhausted/voted, or strictly the single featured poll? Default in plan: strictly the featured one (matches current homepage section).
