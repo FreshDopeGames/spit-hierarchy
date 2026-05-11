@@ -46,11 +46,14 @@ if (typeof window !== "undefined") {
       onNeedRefresh() {
         updateSW(true);
       },
+      onOfflineReady() {
+        updateSW(true);
+      },
       onRegisteredSW(_swUrl, registration) {
         if (registration) {
           setInterval(() => {
             registration.update().catch(() => {});
-          }, 60 * 60 * 1000);
+          }, 5 * 60 * 1000);
         }
       },
     });
