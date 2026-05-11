@@ -16,6 +16,9 @@ export default defineConfig(({ mode }) => ({
     VitePWA({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'lovable-uploads/**/*'],
+      devOptions: {
+        enabled: false
+      },
       manifest: {
         name: 'Spit Hierarchy - The Ultimate Rap Rankings',
         short_name: 'Spit Hierarchy',
@@ -52,20 +55,34 @@ export default defineConfig(({ mode }) => ({
         ]
       },
       workbox: {
-        // Bump suffix to invalidate all user caches (v3 = 2026-04-17)
-        cacheId: 'spit-hierarchy-v3',
+        // Bump suffix to invalidate old precaches and force users onto the newest published shell.
+        cacheId: 'spit-hierarchy-v4',
         skipWaiting: true,
         clientsClaim: true,
-        globPatterns: ['**/*.{js,css,html,ico,svg,woff2}'],
+        importScripts: ['/sw-update-handler-v4.js'],
+        navigateFallback: null,
+        navigateFallbackDenylist: [/^\/~oauth/],
+        globPatterns: ['**/*.{js,css,ico,svg,woff2,png,webp}'],
         globIgnores: ['lovable-uploads/**/*'],
         cleanupOutdatedCaches: true,
         maximumFileSizeToCacheInBytes: 10 * 1024 * 1024,
         runtimeCaching: [
           {
-            urlPattern: /^https:\/\/xzcmkssadekswmiqfbff\.supabase\.co\/.*/i,
+            urlPattern: ({ request }) => request.mode === 'navigate',
+            handler: 'NetworkFirst',
+            options: {
+              cacheName: 'app-html-v4',
+              networkTimeoutSeconds: 3,
+              cacheableResponse: {
+                statuses: [0, 200]
+              }
+            }
+          },
+          {
+            urlPattern: /^https:\/\/xzcmkssadekswmiqfbff\.supabase\.co\/storage\/v1\/object\/public\/.*/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'supabase-images',
+              cacheName: 'supabase-storage-images-v4',
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
