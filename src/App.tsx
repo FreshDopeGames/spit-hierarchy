@@ -78,6 +78,7 @@ function App() {
           {user && (
             <Suspense fallback={null}>
               <DeferredAuthComponents />
+              <SessionPollModal />
             </Suspense>
           )}
 
