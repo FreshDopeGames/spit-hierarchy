@@ -43,6 +43,7 @@ const JournalEntryDetail = lazy(() => import("./pages/JournalEntryDetail"));
 // Lazy-loaded deferred components (only needed for authenticated users)
 const DeferredAuthComponents = lazy(() => import("@/components/DeferredAuthComponents"));
 const EmailConfirmationHandler = lazy(() => import("@/components/auth/EmailConfirmationHandler"));
+const SessionPollModal = lazy(() => import("@/components/polls/SessionPollModal"));
 
 // Minimal loading fallback
 const PageFallback = () => (
