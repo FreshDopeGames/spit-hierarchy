@@ -62,6 +62,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
   const processedContent = useMemo(() => {
     const processContentAsSingleParagraph = (rawContent: string) => {
       let processed = rawContent
+        // Protect escaped asterisks so \\* renders as literal *
+        .replace(/\\\*/g, "\uE000")
+
         // Normalize line breaks
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
@@ -115,6 +118,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         // Remove stray <br> tags directly adjacent to embed blocks for cleaner spacing
         .replace(/(<br>\s*)+(<span class="embed-block")/g, "$2")
         .replace(/(<\/span>)(\s*<br>\s*)+(?=<span class="embed-block")/g, "$1")
+
+        // Restore escaped asterisks
+        .replace(/\uE000/g, "*")
 
         .trim();
 
