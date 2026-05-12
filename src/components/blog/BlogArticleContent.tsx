@@ -62,6 +62,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
   const processedContent = useMemo(() => {
     const processContentAsSingleParagraph = (rawContent: string) => {
       let processed = rawContent
+        // Protect escaped asterisks so \\* renders as literal *
+        .replace(/\\\*/g, "\uE000")
+
         // Normalize line breaks
         .replace(/\r\n/g, "\n")
         .replace(/\r/g, "\n")
