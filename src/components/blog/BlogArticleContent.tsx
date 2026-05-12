@@ -119,6 +119,9 @@ const BlogArticleContent = ({ content }: BlogArticleContentProps) => {
         .replace(/(<br>\s*)+(<span class="embed-block")/g, "$2")
         .replace(/(<\/span>)(\s*<br>\s*)+(?=<span class="embed-block")/g, "$1")
 
+        // Restore escaped asterisks
+        .replace(/\uE000/g, "*")
+
         .trim();
 
       return processed;
