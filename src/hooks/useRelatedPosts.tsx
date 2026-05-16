@@ -7,51 +7,69 @@ export const useRelatedPosts = (categoryId: string | undefined, currentPostId: s
     queryKey: ['related-posts', categoryId, currentPostId],
     queryFn: async () => {
       if (!currentPostId) return [];
-      
-      // First try to get posts from the same category
+
+      const LIMIT = 3;
+      const selectFields = `
+        id,
+        title,
+        excerpt,
+        featured_image_url,
+        published_at,
+        slug,
+        category_id
+      `;
+
+      const collected: any[] = [];
+      const seenIds = new Set<string>([currentPostId]);
+
+      // 1) Prioritize same-category posts (most recent first)
       if (categoryId) {
         const { data: sameCategoryPosts, error: sameCategoryError } = await supabase
           .from('blog_posts')
-          .select(`
-            id,
-            title,
-            excerpt,
-            featured_image_url,
-            published_at,
-            slug
-          `)
+          .select(selectFields)
           .eq('status', 'published')
           .eq('category_id', categoryId)
           .neq('id', currentPostId)
           .order('published_at', { ascending: false })
-          .limit(3);
-        
+          .limit(LIMIT);
+
         if (sameCategoryError) throw sameCategoryError;
-        
-        // If we found posts in the same category, return them
-        if (sameCategoryPosts && sameCategoryPosts.length > 0) {
-          return sameCategoryPosts;
+
+        for (const post of sameCategoryPosts || []) {
+          if (!seenIds.has(post.id)) {
+            collected.push(post);
+            seenIds.add(post.id);
+          }
         }
       }
-      
-      // Fallback: get recent posts from any category
-      const { data: fallbackPosts, error: fallbackError } = await supabase
-        .from('blog_posts')
-        .select(`
-          id,
-          title,
-          excerpt,
-          featured_image_url,
-          published_at,
-          slug
-        `)
-        .eq('status', 'published')
-        .neq('id', currentPostId)
-        .order('published_at', { ascending: false })
-        .limit(3);
-      
-      if (fallbackError) throw fallbackError;
-      return fallbackPosts || [];
+
+      // 2) Top up with recent posts from other categories if we have fewer than LIMIT
+      if (collected.length < LIMIT) {
+        let fallbackQuery = supabase
+          .from('blog_posts')
+          .select(selectFields)
+          .eq('status', 'published')
+          .neq('id', currentPostId)
+          .order('published_at', { ascending: false })
+          .limit(LIMIT);
+
+        if (categoryId) {
+          fallbackQuery = fallbackQuery.neq('category_id', categoryId);
+        }
+
+        const { data: fallbackPosts, error: fallbackError } = await fallbackQuery;
+        if (fallbackError) throw fallbackError;
+
+        for (const post of fallbackPosts || []) {
+          if (collected.length >= LIMIT) break;
+          if (!seenIds.has(post.id)) {
+            collected.push(post);
+            seenIds.add(post.id);
+          }
+        }
+      }
+
+      return collected;
     },
     enabled: !!currentPostId
   });
