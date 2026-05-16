@@ -37,6 +37,11 @@ const HeaderNavigation = ({
             <img 
               src="/lovable-uploads/logo-header.png" 
               alt="Spit Hierarchy - Hip Hop Rankings Logo" 
+              width="240"
+              height="48"
+              fetchPriority="high"
+              loading="eager"
+              decoding="sync"
               className="h-10 sm:h-12 w-auto" 
             />
           </Link>
