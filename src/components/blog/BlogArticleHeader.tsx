@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { Clock, Calendar, User } from "lucide-react";
+import { Clock, Calendar, User, Folder } from "lucide-react";
 import ResponsiveImage from "@/components/ui/ResponsiveImage";
 import VideoPlayer from "@/components/ui/VideoPlayer";
 import { UsernameLink } from "@/components/profile/UsernameLink";
@@ -11,6 +11,7 @@ interface BlogPost {
   authorId: string;
   authorUsername: string;
   timeAgo: string;
+  category?: string;
   readTime: string;
   featured_image_url?: string;
   video_url?: string;
