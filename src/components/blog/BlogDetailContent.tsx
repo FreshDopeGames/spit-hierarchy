@@ -74,6 +74,16 @@ const BlogDetailContent = ({
 
       {/* Full-width main content */}
       <div className="space-y-8">
+        <BlogEngagementActions
+          likes={likesCount}
+          isLiked={isLiked}
+          commentCount={totalComments}
+          onLike={toggleLike}
+          onShare={onShare}
+          onCommentsClick={onCommentsClick}
+          isLikeLoading={isLoading}
+        />
+
         <BlogArticleContent content={blogPost.content} />
 
         {/* Rappers mentioned in this post */}
