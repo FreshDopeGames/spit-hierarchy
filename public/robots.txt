@@ -14,3 +14,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://spithierarchy.com/sitemap.xml
+Sitemap: https://xzcmkssadekswmiqfbff.supabase.co/functions/v1/generate-sitemap
