@@ -73,8 +73,8 @@ const SEOHead = ({
       ))}
       
       {/* Open Graph */}
-      <meta property="og:title" content={title} />
-      <meta property="og:description" content={description} />
+      <meta property="og:title" content={ogTitle} />
+      <meta property="og:description" content={ogDescription} />
       <meta property="og:image" content={ogImage} />
       <meta property="og:image:alt" content={ogImageAlt} />
       <meta property="og:image:width" content={String(ogImageWidth)} />
@@ -99,9 +99,10 @@ const SEOHead = ({
       
       {/* Twitter Card */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content={title} />
-      <meta name="twitter:description" content={description} />
+      <meta name="twitter:title" content={ogTitle} />
+      <meta name="twitter:description" content={ogDescription} />
       <meta name="twitter:image" content={ogImage} />
+      {absoluteCanonicalUrl && <meta name="twitter:url" content={absoluteCanonicalUrl} />}
       
       {/* Canonical URL */}
       {absoluteCanonicalUrl && <link rel="canonical" href={absoluteCanonicalUrl} />}
