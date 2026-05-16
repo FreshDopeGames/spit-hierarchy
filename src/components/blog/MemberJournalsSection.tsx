@@ -53,7 +53,7 @@ const MemberJournalsSection = () => {
         </h2>
       </div>
       <p className="text-[var(--theme-textMuted)] font-[var(--theme-fontSecondary)] mb-6">
-        Personal hip-hop listening journeys from our community members.
+        Personal hip-hop journeys from our community members.
       </p>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {entries.map(entry => (
