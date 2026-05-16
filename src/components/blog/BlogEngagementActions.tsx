@@ -23,6 +23,22 @@ const BlogEngagementActions = ({
   isLikeLoading = false,
 }: BlogEngagementActionsProps) => {
   const handleShare = async () => {
+    const shareData = {
+      title: document.title,
+      text: document.title,
+      url: window.location.href,
+    };
+
+    if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
+      try {
+        await navigator.share(shareData);
+        return;
+      } catch (error: any) {
+        if (error?.name === "AbortError") return;
+        console.warn("Native share failed, falling back to clipboard:", error);
+      }
+    }
+
     try {
       await navigator.clipboard.writeText(window.location.href);
       toast.success("The article link has been copied to your clipboard.");
