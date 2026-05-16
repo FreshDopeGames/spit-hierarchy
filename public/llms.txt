@@ -1,0 +1,25 @@
+# Spit Hierarchy
+
+> Community-driven hip-hop ranking platform where fans vote on rappers, build their own Top 5 lists, debate VS matches, and explore deep artist profiles, discographies, and culture coverage.
+
+Spit Hierarchy combines official editorial rankings with user-generated lists, real-time voting, rapper-versus-rapper matchups, a hip-hop culture blog ("Slick Talk"), polls, quizzes, and member journals. Members earn XP and member status tiers (Bronze through Diamond) through participation.
+
+## Pages
+
+- [Home](/): Featured rankings, blog carousel, polls, and community highlights.
+- [Rappers](/rappers): Browse every rapper profile in the database.
+- [Rankings](/rankings): Official editorial rankings and community lists.
+- [VS Matches](/vs-matches): Head-to-head rapper matchups with community voting.
+- [Slick Talk Blog](/blog): Hip-hop news, interviews, album reviews, and culture coverage.
+- [Community Cypher](/community-cypher): Member verses and the hip-hop journal feed.
+- [Quiz](/quiz): Hip-hop knowledge quizzes with badges and achievements.
+- [Analytics](/analytics): Community voting stats, geographic data, and top rappers by category.
+- [About](/about): What Spit Hierarchy is and how the platform works.
+
+## Optional
+
+- [Sign in / Join](/auth): Member sign-up and login.
+- [Contact](/contact): Get in touch.
+- [Privacy Policy](/privacy-policy)
+- [Terms of Use](/terms-of-use)
+- [Cookie Policy](/cookie-policy)
