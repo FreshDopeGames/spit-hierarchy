@@ -130,8 +130,21 @@ const BlogDetail = () => {
             "@type": "Person",
             "name": transformedBlogPost.author
           },
+          "publisher": {
+            "@type": "Organization",
+            "name": "Spit Hierarchy",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Logo_Rect_02.png"
+            }
+          },
           "datePublished": blogPost.published_at,
+          "dateModified": blogPost.updated_at || blogPost.published_at,
           "image": getOgImageUrl(blogPost.featured_image_url),
+          "mainEntityOfPage": {
+            "@type": "WebPage",
+            "@id": `https://spithierarchy.com/blog/${blogPost.slug}`
+          },
           "url": `https://spithierarchy.com/blog/${blogPost.slug}`
         }}
       />
