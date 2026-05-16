@@ -88,9 +88,21 @@ const BlogDetail = () => {
   console.log('BlogDetail - Original blog post:', blogPost);
   console.log('BlogDetail - Transformed blog post:', transformedBlogPost);
 
-  // Generate SEO data for blog post
-  const seoTitle = `${transformedBlogPost.title} | Spit Hierarchy Blog`;
-  const seoDescription = blogPost.excerpt || `Read about ${transformedBlogPost.title} on Spit Hierarchy, your ultimate hip-hop community.`;
+  // Generate SEO data for blog post - keep title <=60 chars
+  const blogTitleSuffix = " | Spit Hierarchy";
+  const blogTitleBudget = 60 - blogTitleSuffix.length;
+  const truncatedBlogTitle = transformedBlogPost.title.length > blogTitleBudget
+    ? transformedBlogPost.title.substring(0, blogTitleBudget - 1).trimEnd() + '…'
+    : transformedBlogPost.title;
+  const seoTitle = `${truncatedBlogTitle}${blogTitleSuffix}`;
+  const rawDescription = blogPost.excerpt || `Read about ${transformedBlogPost.title} on Spit Hierarchy, your ultimate hip-hop community blog covering rap culture, rankings, and reviews.`;
+  let seoDescription = rawDescription;
+  if (seoDescription.length < 50) {
+    seoDescription = `${rawDescription} Read more on Spit Hierarchy, the ultimate hip-hop community for rap rankings and culture.`;
+  }
+  if (seoDescription.length > 160) {
+    seoDescription = seoDescription.substring(0, 157).trimEnd() + '...';
+  }
   const seoKeywords = [
     'hip hop blog',
     'rap culture',

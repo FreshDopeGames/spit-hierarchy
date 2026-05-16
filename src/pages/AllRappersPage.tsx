@@ -96,7 +96,7 @@ const AllRappersPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col overflow-x-hidden">
       <SEOHead
-        title="All Rappers Directory - Complete Hip-Hop Artist Database | Spit Hierarchy"
+        title="All Rappers Directory | Spit Hierarchy"
         description="Explore our comprehensive database of rap artists from all eras and regions. Search, filter by location, discover new talent, and vote on your favorite MCs."
         keywords={['rapper directory', 'hip hop artists', 'rap database', 'all rappers', 'mc list', 'hip hop encyclopedia']}
         canonicalUrl="/all-rappers"

@@ -219,8 +219,17 @@ const RapperDetail = () => {
   }
 
   // Generate SEO data
-  const seoTitle = `${rapper.name} - Rapper Profile & Rankings | Spit Hierarchy`;
-  const seoDescription = `Explore ${rapper.name}'s profile, vote on their skills, and see their rankings in our hip-hop community. ${rapper.bio ? rapper.bio.substring(0, 120) + '...' : `Learn about ${rapper.name}'s place in rap culture.`}`;
+  // Keep title <=60 chars: budget 60 - " | Spit Hierarchy" (17) = 43 for name + suffix
+  const titleSuffix = " | Spit Hierarchy";
+  const rapperTitleBase = `${rapper.name} - Rapper Profile`;
+  const seoTitle = (rapperTitleBase.length + titleSuffix.length <= 60)
+    ? `${rapperTitleBase}${titleSuffix}`
+    : `${rapper.name.substring(0, 43 - " - Profile".length)} - Profile${titleSuffix}`;
+  const baseDesc = `Explore ${rapper.name}'s profile, vote on their skills, and see their rankings in our hip-hop community.`;
+  const bioSnippet = rapper.bio ? ` ${rapper.bio.substring(0, 120).trim()}${rapper.bio.length > 120 ? '...' : ''}` : ` Learn about ${rapper.name}'s place in rap culture and rankings.`;
+  let seoDescription = `${baseDesc}${bioSnippet}`;
+  if (seoDescription.length < 50) seoDescription = `${baseDesc} ${bioSnippet} Discover stats, top tracks, and community ratings.`;
+  if (seoDescription.length > 160) seoDescription = seoDescription.substring(0, 157).trimEnd() + '...';
   const seoKeywords = [
     rapper.name,
     'rapper profile',
