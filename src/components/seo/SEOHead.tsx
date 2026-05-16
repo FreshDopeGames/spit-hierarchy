@@ -48,6 +48,12 @@ const SEOHead = ({
     ? (canonicalUrl.startsWith('http') ? canonicalUrl : `${SITE_URL}${canonicalUrl}`)
     : undefined;
 
+  // Clamp lengths so social previews aren't truncated awkwardly
+  const clamp = (text: string, max: number) =>
+    text.length > max ? text.substring(0, max - 1).trimEnd() + '…' : text;
+  const ogTitle = clamp(title, 60);
+  const ogDescription = clamp(description, 160);
+
   return (
     <Helmet>
       <title>{title}</title>
