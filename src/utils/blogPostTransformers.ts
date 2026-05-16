@@ -82,6 +82,7 @@ export const transformBlogPost = (blogPost: BlogPost) => {
     authorId: blogPost.author_id,
     authorUsername: blogPost.profiles?.username || '',
     timeAgo: formatDate(blogPost.published_at),
+    category: blogPost.blog_categories?.name || '',
     readTime: calculateReadTime(blogPost.content),
     featured_image_url: blogPost.featured_image_url,
     video_url: blogPost.video_url
