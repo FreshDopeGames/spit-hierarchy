@@ -100,6 +100,29 @@ const AllRappersPage = () => {
         description="Explore our comprehensive database of rap artists from all eras and regions. Search, filter by location, discover new talent, and vote on your favorite MCs."
         keywords={['rapper directory', 'hip hop artists', 'rap database', 'all rappers', 'mc list', 'hip hop encyclopedia']}
         canonicalUrl="/all-rappers"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "All Rappers Directory",
+          "description": "Comprehensive directory of rappers across eras and regions on Spit Hierarchy.",
+          "url": "https://spithierarchy.com/all-rappers",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "Spit Hierarchy",
+            "url": "https://spithierarchy.com/"
+          },
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Rappers",
+            "numberOfItems": total,
+            "itemListElement": allRappers.slice(0, 20).map((r: any, i: number) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "url": `https://spithierarchy.com/rapper/${r.slug}`,
+              "name": r.name
+            }))
+          }
+        }}
       />
       <HeaderNavigation isScrolled={false} />
       <main className="flex-1 max-w-7xl mx-auto px-2 sm:px-4 md:px-6 lg:px-8 py-6 pt-20 overflow-x-hidden min-w-0">

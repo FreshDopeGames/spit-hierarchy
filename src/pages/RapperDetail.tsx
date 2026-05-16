@@ -248,12 +248,12 @@ const RapperDetail = () => {
         ogImage={rapper.image_url || undefined}
         structuredData={{
           "@context": "https://schema.org",
-          "@type": "Person",
+          "@type": "MusicGroup",
           "name": rapper.name,
           "alternateName": rapper.real_name || undefined,
           "description": rapper.bio || `${rapper.name} is a rapper featured on Spit Hierarchy`,
-          "birthPlace": rapper.origin || undefined,
-          "birthDate": rapper.birth_year ? `${rapper.birth_year}` : undefined,
+          "genre": "Hip Hop",
+          "foundingLocation": rapper.origin || undefined,
           "image": rapper.image_url || undefined,
           "url": `https://spithierarchy.com/rapper/${rapper.slug}`
         }}

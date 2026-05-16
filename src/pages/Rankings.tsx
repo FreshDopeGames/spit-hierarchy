@@ -26,6 +26,29 @@ const Rankings = () => {
         description="Browse official editorial rankings and community lists of the best rappers across all eras. Vote, create your own rankings, and join in."
         keywords={['rapper rankings', 'hip hop lists', 'top rappers', 'community rankings', 'official rankings', 'rap voting']}
         canonicalUrl="/rankings"
+        structuredData={{
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Rap Rankings - Official & Community Lists",
+          "description": "Editorial and community rankings of the best rappers across all eras.",
+          "url": "https://spithierarchy.com/rankings",
+          "isPartOf": {
+            "@type": "WebSite",
+            "name": "Spit Hierarchy",
+            "url": "https://spithierarchy.com/"
+          },
+          "mainEntity": {
+            "@type": "ItemList",
+            "name": "Official Rankings",
+            "numberOfItems": (officialRankings || []).length,
+            "itemListElement": (officialRankings || []).slice(0, 20).map((r: any, i: number) => ({
+              "@type": "ListItem",
+              "position": i + 1,
+              "url": `https://spithierarchy.com/rankings/${r.slug}`,
+              "name": r.title
+            }))
+          }
+        }}
       />
       <HeaderNavigation isScrolled={false} />
       
