@@ -32,7 +32,7 @@ const About = () => {
     <div className="min-h-screen bg-[var(--theme-element-page-background-bg,var(--theme-background))] relative">
       <SEOHead
         title="About Spit Hierarchy - The Ultimate Hip-Hop Ranking Platform"
-        description="Discover the story behind Spit Hierarchy, the community-driven platform where hip-hop fans vote, rank, and celebrate the greatest rappers of all time. Join our vibrant community today."
+        description="The story behind Spit Hierarchy, the community-driven platform where hip-hop fans vote, rank, and celebrate the greatest rappers of all time."
         keywords={['about us', 'hip hop community', 'rap culture', 'music platform', 'rapper rankings', 'hip hop voting']}
         canonicalUrl="/about"
       />
