@@ -4220,6 +4220,7 @@ export type Database = {
         Args: { aliases: string[]; search_term: string }
         Returns: boolean
       }
+      notify_indexnow: { Args: { _url: string }; Returns: undefined }
       populate_all_rankings_with_missing_rappers: {
         Args: never
         Returns: undefined
