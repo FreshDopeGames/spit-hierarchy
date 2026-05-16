@@ -27,17 +27,17 @@ const BlogSidebar = ({
               More Writtens
             </CardTitle>
           </CardHeader>
-          <CardContent className="space-y-4 pt-0">
+          <CardContent className="space-y-4 lg:space-y-0 lg:grid lg:grid-cols-3 lg:gap-4 pt-0">
             {relatedPosts.map(post => <Link key={post.id} to={`/blog/${post.slug}`} className="block group">
-                <div className="flex lg:flex-col gap-4 lg:gap-3 p-3 rounded-lg hover:bg-[var(--theme-backgroundLight)]/30 transition-colors">
+                <div className="flex lg:flex-col gap-4 lg:gap-3 p-3 rounded-lg hover:bg-[var(--theme-backgroundLight)]/30 transition-colors lg:text-center lg:items-center h-full">
                   <div className="flex-shrink-0 lg:w-full">
-                    <ResponsiveImage src={post.imageUrl} alt={post.title} className="w-20 h-16 lg:w-full lg:h-32 object-cover rounded-md group-hover:opacity-80 transition-opacity" context="thumbnail" />
+                    <ResponsiveImage src={post.imageUrl} alt={post.title} className="w-20 h-16 lg:w-full lg:h-48 object-cover rounded-md group-hover:opacity-80 transition-opacity" context="card" />
                   </div>
-                  <div className="flex-1 lg:w-full min-w-0 space-y-2">
-                    <h4 className="font-[var(--theme-fontSecondary)] text-sm text-[var(--theme-text)] group-hover:text-[var(--theme-primary)] transition-colors line-clamp-3 leading-snug">
+                  <div className="flex-1 lg:w-full min-w-0 space-y-2 lg:flex lg:flex-col lg:items-center">
+                    <h4 className="font-[var(--theme-fontSecondary)] text-sm lg:text-base text-[var(--theme-text)] group-hover:text-[var(--theme-primary)] transition-colors line-clamp-3 leading-snug lg:text-center">
                       {post.title}
                     </h4>
-                    <div className="flex items-center gap-1 text-xs text-[var(--theme-textMuted)]">
+                    <div className="flex items-center gap-1 text-xs text-[var(--theme-textMuted)] lg:justify-center">
                       <Clock className="w-3 h-3" />
                       <span>{post.timeAgo}</span>
                     </div>
