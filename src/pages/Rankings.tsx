@@ -22,8 +22,8 @@ const Rankings = () => {
   } = useRankingsData();
   return <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon">
       <SEOHead
-        title="Hip-Hop Rankings - Official & Community Rapper Lists | Spit Hierarchy"
-        description="Browse official editorial rankings and community-created lists featuring the best rappers across all eras. Vote, create your own rankings, and join the conversation."
+        title="Rap Rankings - Official & Community Lists | Spit Hierarchy"
+        description="Browse official editorial rankings and community lists of the best rappers across all eras. Vote, create your own rankings, and join in."
         keywords={['rapper rankings', 'hip hop lists', 'top rappers', 'community rankings', 'official rankings', 'rap voting']}
         canonicalUrl="/rankings"
       />
