@@ -171,8 +171,8 @@ const Blog = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-rap-carbon via-rap-carbon-light to-rap-carbon flex flex-col">
       <SEOHead
-        title="Slick Talk Blog - Hip-Hop News, Rankings & Culture | Spit Hierarchy"
-        description="Explore the latest in hip-hop culture, rapper spotlights, album reviews, and industry insights. Stay updated with Slick Talk, Spit Hierarchy's official blog."
+        title="Slick Talk Blog - Hip-Hop News & Culture | Spit Hierarchy"
+        description="Explore hip-hop culture, rapper spotlights, album reviews, and industry insights on Slick Talk, Spit Hierarchy's official blog."
         keywords={['hip hop blog', 'rap news', 'music reviews', 'rapper interviews', 'album reviews', 'hip hop culture']}
         canonicalUrl="/blog"
       />
