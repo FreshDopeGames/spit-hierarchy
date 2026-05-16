@@ -65,6 +65,12 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
           <Calendar className="w-4 h-4" />
           <span className="font-merienda">{blogPost.timeAgo}</span>
         </div>
+        {blogPost.category && (
+          <div className="flex items-center gap-2">
+            <Folder className="w-4 h-4" />
+            <span className="font-merienda">{blogPost.category}</span>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <Clock className="w-4 h-4" />
           <span className="font-merienda">{blogPost.readTime}</span>
