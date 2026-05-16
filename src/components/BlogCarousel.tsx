@@ -188,12 +188,12 @@ const BlogCarousel = () => {
             </div>
           </div>
           
-          <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-3 sm:px-4 drop-shadow z-10">
-            <Button variant="ghost" size="icon" className="rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={goToPrevious}>
+          <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-3 sm:px-4 drop-shadow z-10 pointer-events-none">
+            <Button variant="ghost" size="icon" className="pointer-events-auto rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={goToPrevious}>
               <ChevronLeft className="h-5 w-5 sm:h-8 sm:w-8 relative z-10" />
               <span className="sr-only">Previous</span>
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={goToNext}>
+            <Button variant="ghost" size="icon" className="pointer-events-auto rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={goToNext}>
               <ChevronRight className="h-5 w-5 sm:h-8 sm:w-8 relative z-10" />
               <span className="sr-only">Next</span>
             </Button>
