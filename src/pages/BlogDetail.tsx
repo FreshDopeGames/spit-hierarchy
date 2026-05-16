@@ -139,7 +139,7 @@ const BlogDetail = () => {
             }
           },
           "datePublished": blogPost.published_at,
-          "dateModified": blogPost.updated_at || blogPost.published_at,
+          "dateModified": (blogPost as any).updated_at || blogPost.published_at,
           "image": getOgImageUrl(blogPost.featured_image_url),
           "mainEntityOfPage": {
             "@type": "WebPage",
