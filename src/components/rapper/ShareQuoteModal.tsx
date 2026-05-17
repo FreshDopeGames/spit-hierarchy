@@ -280,9 +280,9 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
           <ThemedButton
             variant="default"
             onClick={() => generateImage("download")}
-            disabled={isGenerating}
+            disabled={isGenerating || (!!avatarUrl && !avatarDataUrl)}
           >
-            {isGenerating ? (
+            {isGenerating || (!!avatarUrl && !avatarDataUrl) ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : (
               <Download className="w-4 h-4 mr-2" />
@@ -292,9 +292,9 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
           <ThemedButton
             variant="outline"
             onClick={() => generateImage("copy")}
-            disabled={isGenerating}
+            disabled={isGenerating || (!!avatarUrl && !avatarDataUrl)}
           >
-            {isGenerating ? (
+            {isGenerating || (!!avatarUrl && !avatarDataUrl) ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : (
               <Copy className="w-4 h-4 mr-2" />
