@@ -9,9 +9,10 @@ import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
 // Extracted to file scope to prevent hook remount on every render
-const RapperAvatarItem = ({ rapperId, rapperName }: { rapperId: string; rapperName: string }) => {
-  const { data: imageUrl } = useRapperImage(rapperId, 'thumb');
-  const placeholderImage = getOptimizedPlaceholder('thumb');
+type AvatarSize = 'thumb' | 'medium' | 'large' | 'xlarge' | 'original';
+const RapperAvatarItem = ({ rapperId, rapperName, size = 'thumb' }: { rapperId: string; rapperName: string; size?: AvatarSize }) => {
+  const { data: imageUrl } = useRapperImage(rapperId, size);
+  const placeholderImage = getOptimizedPlaceholder(size);
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
 
   return (
@@ -38,7 +39,7 @@ const FeaturedRapperCard = ({ rapper }: { rapper: any }) => (
   >
     <div className="flex flex-col items-center text-center gap-3">
       <div className="h-32 w-32 sm:h-36 sm:w-36 lg:h-40 lg:w-40 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
-        <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} />
+        <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} size="medium" />
       </div>
       <div className="flex items-center justify-center gap-2">
         <Trophy className="w-4 h-4 text-rap-gold" />
