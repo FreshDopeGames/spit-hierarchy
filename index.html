@@ -52,12 +52,14 @@
     <!-- Preload header logo (LCP element on most pages) -->
     <link rel="preload" as="image" href="/lovable-uploads/logo-header.png" fetchpriority="high">
     
+    <!-- Preload self-hosted Ceviche One (LCP hero font) -->
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/ceviche-one-latin.woff2" crossorigin>
     <!-- Font Preconnects -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Non-blocking Google Fonts with display=swap so hero H1 paints with fallback immediately -->
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap" onload="this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Ceviche+One&family=Merienda:wght@300;400;700;900&display=swap"></noscript>
+    <!-- Non-blocking Google Fonts (Ceviche One self-hosted above) -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Merienda:wght@300;400;700;900&display=swap" onload="this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Mogra&family=Merienda:wght@300;400;700;900&display=swap"></noscript>
   </head>
   <body>
     <div id="root"></div>
