@@ -44,11 +44,20 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
       return;
     }
     let cancelled = false;
+    const tryFetch = async (url: string) => {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.blob();
+    };
     (async () => {
       try {
-        const res = await fetch(avatarUrl, { mode: "cors", cache: "reload" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const blob = await res.blob();
+        let blob: Blob;
+        try {
+          blob = await tryFetch(avatarUrl);
+        } catch {
+          // Cache-bust retry (some mobile browsers serve cached opaque responses)
+          blob = await tryFetch(`${avatarUrl}${avatarUrl.includes("?") ? "&" : "?"}cb=${Date.now()}`);
+        }
         const reader = new FileReader();
         reader.onloadend = () => {
           if (!cancelled) setAvatarDataUrl(reader.result as string);
@@ -76,6 +85,19 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
     setIsGenerating(true);
     try {
       if (document.fonts?.ready) await document.fonts.ready;
+
+      // Ensure all <img> inside export node are fully loaded/decoded
+      const imgs = Array.from(exportRef.current.querySelectorAll("img"));
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete && img.naturalWidth > 0
+            ? Promise.resolve()
+            : new Promise<void>((resolve) => {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+              })
+        )
+      );
 
       const canvas = await html2canvas(exportRef.current, {
         backgroundColor: null,
@@ -258,9 +280,9 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
           <ThemedButton
             variant="default"
             onClick={() => generateImage("download")}
-            disabled={isGenerating}
+            disabled={isGenerating || (!!avatarUrl && !avatarDataUrl)}
           >
-            {isGenerating ? (
+            {isGenerating || (!!avatarUrl && !avatarDataUrl) ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : (
               <Download className="w-4 h-4 mr-2" />
@@ -270,9 +292,9 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
           <ThemedButton
             variant="outline"
             onClick={() => generateImage("copy")}
-            disabled={isGenerating}
+            disabled={isGenerating || (!!avatarUrl && !avatarDataUrl)}
           >
-            {isGenerating ? (
+            {isGenerating || (!!avatarUrl && !avatarDataUrl) ? (
               <Loader2 className="w-4 h-4 animate-spin mr-2" />
             ) : (
               <Copy className="w-4 h-4 mr-2" />
