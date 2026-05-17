@@ -153,7 +153,7 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
           {topRappers && Object.keys(topRappers).length > 0 ? (
             Object.entries(topRappers).map(([category, rappers]: [string, any]) => (
               <div key={category} className="space-y-3">
-                <h4 className="text-white font-mogra text-lg capitalize">
+                <h4 className="text-white font-mogra capitalize text-center text-2xl">
                   {category.replace(/_/g, ' ').replace('on beats', 'On Beats')}
                 </h4>
                 {(() => {
