@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from "react";
+import React, { useState, useRef, useMemo, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Badge } from "@/components/ui/badge";
@@ -33,8 +33,36 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
 }) => {
   const [format, setFormat] = useState<FormatKey>("square");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [avatarDataUrl, setAvatarDataUrl] = useState<string | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
   const { data: avatarUrl } = useRapperImage(rapperId, "xlarge");
+
+  // Pre-convert avatar to base64 to avoid CORS-tainted canvas during export (esp. mobile)
+  useEffect(() => {
+    if (!avatarUrl) {
+      setAvatarDataUrl(null);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(avatarUrl, { mode: "cors", cache: "reload" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const blob = await res.blob();
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (!cancelled) setAvatarDataUrl(reader.result as string);
+        };
+        reader.readAsDataURL(blob);
+      } catch (err) {
+        console.error("Avatar base64 conversion failed:", err);
+        if (!cancelled) setAvatarDataUrl(null);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [avatarUrl]);
 
   const { w, h, avatar, font, nameFont } = FORMATS[format];
 
@@ -112,11 +140,10 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         boxSizing: "border-box",
       }}
     >
-      {avatarUrl && (
+      {(forExport ? avatarDataUrl : avatarUrl) && (
         <img
-          src={avatarUrl}
+          src={(forExport ? avatarDataUrl : avatarUrl) as string}
           alt={rapperName}
-          {...(forExport ? { crossOrigin: "anonymous" as const } : {})}
           style={{
             width: avatar,
             height: avatar,
