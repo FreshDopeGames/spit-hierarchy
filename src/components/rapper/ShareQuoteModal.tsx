@@ -44,11 +44,20 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
       return;
     }
     let cancelled = false;
+    const tryFetch = async (url: string) => {
+      const res = await fetch(url, { mode: "cors" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.blob();
+    };
     (async () => {
       try {
-        const res = await fetch(avatarUrl, { mode: "cors", cache: "reload" });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const blob = await res.blob();
+        let blob: Blob;
+        try {
+          blob = await tryFetch(avatarUrl);
+        } catch {
+          // Cache-bust retry (some mobile browsers serve cached opaque responses)
+          blob = await tryFetch(`${avatarUrl}${avatarUrl.includes("?") ? "&" : "?"}cb=${Date.now()}`);
+        }
         const reader = new FileReader();
         reader.onloadend = () => {
           if (!cancelled) setAvatarDataUrl(reader.result as string);
