@@ -1,5 +1,6 @@
 import { useState } from "react";
 import TopMembersCards from "./TopMembersCards";
+import VoterActivityMapCard from "./VoterActivityMapCard";
 import { ThemedButton } from "@/components/ui/themed-button";
 
 const MemberAnalytics = () => {
@@ -9,7 +10,7 @@ const MemberAnalytics = () => {
     <div className="space-y-4 sm:space-y-6">
       <div className="flex flex-col gap-4">
         <h3 className="font-ceviche text-primary text-4xl sm:text-6xl break-words max-w-full leading-tight">
-          Community Members
+          Community Stats
         </h3>
         
         <div className="flex flex-wrap items-center gap-2">
@@ -33,6 +34,8 @@ const MemberAnalytics = () => {
           </div>
         </div>
       </div>
+
+      <VoterActivityMapCard />
 
       <TopMembersCards timeRange={timeRange} />
     </div>

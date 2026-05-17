@@ -4,7 +4,6 @@ import CategoryPerformanceCard from "./CategoryPerformanceCard";
 import TopVotedRappersCard from "./TopVotedRappersCard";
 import MostRatedRappersCard from "./MostRatedRappersCard";
 import GeographicFilter, { GeoFilter } from "./GeographicFilter";
-import VoterActivityMapCard from "./VoterActivityMapCard";
 
 const VotingAnalytics = () => {
   const [geoFilter, setGeoFilter] = useState<GeoFilter>({ countryCode: null, region: null });
@@ -18,7 +17,6 @@ const VotingAnalytics = () => {
         <GeographicFilter value={geoFilter} onChange={setGeoFilter} />
       </div>
 
-      <VoterActivityMapCard />
       <GlobalStatsCards countryCode={geoFilter.countryCode} region={geoFilter.region} />
       <CategoryPerformanceCard countryCode={geoFilter.countryCode} region={geoFilter.region} />
       <TopVotedRappersCard countryCode={geoFilter.countryCode} region={geoFilter.region} />
