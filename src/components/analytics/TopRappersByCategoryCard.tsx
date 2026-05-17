@@ -109,24 +109,27 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
             {[...Array(5)].map((_, i) => (
               <div key={i} className="space-y-3">
                 <div className="h-6 bg-rap-smoke/20 rounded w-1/3"></div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {[...Array(5)].map((_, j) => (
-                    <div
-                      key={j}
-                      className="block bg-gray-800 border border-rap-gold/20 rounded-lg p-3"
-                    >
-                      <div className="flex items-center gap-3">
-                        <AvatarSkeleton size="lg" className="rounded-lg" />
-                        <div className="flex-1 space-y-2">
-                          <TextSkeleton width="w-24" height="h-4" />
-                          <div className="flex items-center justify-between">
+                <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
+                  <div className="sm:w-1/2 lg:w-full lg:max-w-sm lg:mx-auto border border-rap-gold/20 rounded-lg p-4">
+                    <div className="flex flex-col items-center gap-3">
+                      <AvatarSkeleton size="lg" className="h-32 w-32 rounded-lg" />
+                      <TextSkeleton width="w-24" height="h-4" />
+                      <TextSkeleton width="w-16" height="h-5" />
+                    </div>
+                  </div>
+                  <div className="sm:w-1/2 lg:w-full flex flex-col gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+                    {[...Array(4)].map((_, j) => (
+                      <div key={j} className="block bg-gray-800 border border-rap-gold/20 rounded-lg p-3">
+                        <div className="flex items-center gap-3">
+                          <AvatarSkeleton size="lg" className="rounded-lg" />
+                          <div className="flex-1 space-y-2">
+                            <TextSkeleton width="w-24" height="h-4" />
                             <TextSkeleton width="w-16" height="h-5" />
-                            <TextSkeleton width="w-16" height="h-3" />
                           </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               </div>
             ))}
