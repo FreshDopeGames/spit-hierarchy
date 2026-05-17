@@ -9,9 +9,10 @@ import { getOptimizedPlaceholder } from "@/utils/placeholderImageUtils";
 import { AvatarSkeleton, TextSkeleton } from "@/components/ui/skeleton";
 
 // Extracted to file scope to prevent hook remount on every render
-const RapperAvatarItem = ({ rapperId, rapperName }: { rapperId: string; rapperName: string }) => {
-  const { data: imageUrl } = useRapperImage(rapperId, 'thumb');
-  const placeholderImage = getOptimizedPlaceholder('thumb');
+type AvatarSize = 'thumb' | 'medium' | 'large' | 'xlarge' | 'original';
+const RapperAvatarItem = ({ rapperId, rapperName, size = 'thumb' }: { rapperId: string; rapperName: string; size?: AvatarSize }) => {
+  const { data: imageUrl } = useRapperImage(rapperId, size);
+  const placeholderImage = getOptimizedPlaceholder(size);
   const imageToDisplay = imageUrl && imageUrl.trim() !== "" ? imageUrl : placeholderImage;
 
   return (
