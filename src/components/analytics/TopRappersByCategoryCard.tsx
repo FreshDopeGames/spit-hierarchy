@@ -111,8 +111,8 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
                 <div className="h-6 bg-rap-smoke/20 rounded w-1/3"></div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                   {[...Array(5)].map((_, j) => (
-                    <div 
-                      key={j} 
+                    <div
+                      key={j}
                       className="block bg-gray-800 border border-rap-gold/20 rounded-lg p-3"
                     >
                       <div className="flex items-center gap-3">
@@ -155,8 +155,8 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                   {(rappers || []).slice(0, 5).map((rapper: any, index: number) => {
                     return (
-                      <Link 
-                        key={rapper.rapper_id} 
+                      <Link
+                        key={rapper.rapper_id}
                         to={`/rapper/${rapper.slug || rapper.rapper_id}`}
                         className="block border border-rap-gold/20 rounded-lg p-3 hover:border-rap-gold/50 transition-all duration-200 cursor-pointer group bg-[sidebar-accent-foreground] bg-primary-foreground"
                         onClick={() => window.scrollTo(0, 0)}
@@ -165,7 +165,7 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
                           <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
                              <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} />
                           </div>
-                          
+
                           <div className="flex-1">
                             <div className="flex items-center gap-2 mb-1">
                               {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
