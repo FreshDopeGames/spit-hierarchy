@@ -86,6 +86,19 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
     try {
       if (document.fonts?.ready) await document.fonts.ready;
 
+      // Ensure all <img> inside export node are fully loaded/decoded
+      const imgs = Array.from(exportRef.current.querySelectorAll("img"));
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete && img.naturalWidth > 0
+            ? Promise.resolve()
+            : new Promise<void>((resolve) => {
+                img.onload = () => resolve();
+                img.onerror = () => resolve();
+              })
+        )
+      );
+
       const canvas = await html2canvas(exportRef.current, {
         backgroundColor: null,
         scale: 2,
