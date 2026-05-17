@@ -8,34 +8,30 @@ const MemberAnalytics = () => {
 
   return (
     <div className="space-y-4 sm:space-y-6">
-      <div className="flex flex-col gap-4">
-        <h3 className="font-ceviche text-primary text-4xl sm:text-6xl break-words max-w-full leading-tight">
-          Community Stats
-        </h3>
-        
-        <div className="flex flex-wrap items-center gap-2">
-          <div className="flex gap-2">
-            <ThemedButton
-              variant="outline"
-              size="sm"
-              onClick={() => setTimeRange('all')}
-              className={timeRange === 'all' ? 'bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90' : ''}
-            >
-              All Time
-            </ThemedButton>
-            <ThemedButton
-              variant="outline"
-              size="sm"
-              onClick={() => setTimeRange('week')}
-              className={timeRange === 'week' ? 'bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90' : ''}
-            >
-              This Week
-            </ThemedButton>
-          </div>
-        </div>
-      </div>
+      <h3 className="font-ceviche text-primary text-4xl sm:text-6xl break-words max-w-full leading-tight">
+        Community Stats
+      </h3>
 
       <VoterActivityMapCard />
+
+      <div className="flex flex-wrap items-center gap-2">
+        <ThemedButton
+          variant="outline"
+          size="sm"
+          onClick={() => setTimeRange('all')}
+          className={timeRange === 'all' ? 'bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90' : ''}
+        >
+          All Time
+        </ThemedButton>
+        <ThemedButton
+          variant="outline"
+          size="sm"
+          onClick={() => setTimeRange('week')}
+          className={timeRange === 'week' ? 'bg-[hsl(var(--theme-primary))] text-black hover:bg-[hsl(var(--theme-primary))]/90' : ''}
+        >
+          This Week
+        </ThemedButton>
+      </div>
 
       <TopMembersCards timeRange={timeRange} />
     </div>
