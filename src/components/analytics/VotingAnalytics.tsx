@@ -17,7 +17,6 @@ const VotingAnalytics = () => {
         <GeographicFilter value={geoFilter} onChange={setGeoFilter} />
       </div>
 
-      <VoterActivityMapCard />
       <GlobalStatsCards countryCode={geoFilter.countryCode} region={geoFilter.region} />
       <CategoryPerformanceCard countryCode={geoFilter.countryCode} region={geoFilter.region} />
       <TopVotedRappersCard countryCode={geoFilter.countryCode} region={geoFilter.region} />
