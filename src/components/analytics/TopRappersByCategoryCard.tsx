@@ -155,41 +155,25 @@ const TopRappersByCategoryCard = ({ countryCode, region }: TopRappersByCategoryC
                 <h4 className="text-white font-mogra text-lg capitalize">
                   {category.replace(/_/g, ' ').replace('on beats', 'On Beats')}
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-                  {(rappers || []).slice(0, 5).map((rapper: any, index: number) => {
-                    return (
-                      <Link
-                        key={rapper.rapper_id}
-                        to={`/rapper/${rapper.slug || rapper.rapper_id}`}
-                        className="block border border-rap-gold/20 rounded-lg p-3 hover:border-rap-gold/50 transition-all duration-200 cursor-pointer group bg-[sidebar-accent-foreground] bg-primary-foreground"
-                        onClick={() => window.scrollTo(0, 0)}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
-                             <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} />
-                          </div>
-
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2 mb-1">
-                              {index === 0 && <Trophy className="w-4 h-4 text-rap-gold" />}
-                              <span className="text-rap-platinum font-kaushan text-sm group-hover:text-rap-gold transition-colors">
-                                {rapper.rapper_name}
-                              </span>
-                            </div>
-                            <div className="flex items-center justify-between">
-                              <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
-                                {rapper.average_rating?.toFixed(1)} avg
-                              </Badge>
-                              <span className="text-rap-platinum text-xs font-kaushan">
-                                {rapper.vote_count} ratings
-                              </span>
-                            </div>
-                          </div>
+                {(() => {
+                  const list = (rappers || []).slice(0, 5);
+                  const featured = list[0];
+                  const rest = list.slice(1);
+                  return (
+                    <div className="flex flex-col sm:flex-row lg:flex-col gap-3">
+                      {featured && (
+                        <div className="sm:w-1/2 lg:w-full lg:max-w-sm lg:mx-auto">
+                          <FeaturedRapperCard rapper={featured} />
                         </div>
-                      </Link>
-                    );
-                  })}
-                </div>
+                      )}
+                      <div className="sm:w-1/2 lg:w-full flex flex-col gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-4">
+                        {rest.map((rapper: any) => (
+                          <CompactRapperCard key={rapper.rapper_id} rapper={rapper} />
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             ))
           ) : (
