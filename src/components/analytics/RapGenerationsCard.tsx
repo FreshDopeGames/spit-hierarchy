@@ -17,9 +17,10 @@ const RapGenerationsCard = () => {
     queryKey: ["rap-generations-stats"],
     queryFn: async () => {
       const [rappersCount, careerData] = await Promise.all([
-        supabase.from("rappers").select("*", { count: "exact", head: true }),
+        supabase.from("rappers").select("*", { count: "exact", head: true }).eq("publish_status", "published"),
         supabase.from("rappers")
           .select("career_start_year")
+          .eq("publish_status", "published")
           .not("career_start_year", "is", null),
       ]);
 
