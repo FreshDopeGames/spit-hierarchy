@@ -30,6 +30,63 @@ const RapperAvatarItem = ({ rapperId, rapperName }: { rapperId: string; rapperNa
   );
 };
 
+const FeaturedRapperCard = ({ rapper }: { rapper: any }) => (
+  <Link
+    to={`/rapper/${rapper.slug || rapper.rapper_id}`}
+    className="block border border-rap-gold/20 rounded-lg p-4 hover:border-rap-gold/50 transition-all duration-200 cursor-pointer group bg-primary-foreground w-full"
+    onClick={() => window.scrollTo(0, 0)}
+  >
+    <div className="flex flex-col items-center text-center gap-3">
+      <div className="h-32 w-32 sm:h-36 sm:w-36 lg:h-40 lg:w-40 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
+        <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} />
+      </div>
+      <div className="flex items-center justify-center gap-2">
+        <Trophy className="w-4 h-4 text-rap-gold" />
+        <span className="text-rap-platinum font-kaushan text-base group-hover:text-rap-gold transition-colors">
+          {rapper.rapper_name}
+        </span>
+      </div>
+      <div className="flex flex-col items-center gap-1">
+        <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
+          {rapper.average_rating?.toFixed(1)} avg
+        </Badge>
+        <span className="text-rap-platinum text-xs font-kaushan">
+          {rapper.vote_count} ratings
+        </span>
+      </div>
+    </div>
+  </Link>
+);
+
+const CompactRapperCard = ({ rapper }: { rapper: any }) => (
+  <Link
+    to={`/rapper/${rapper.slug || rapper.rapper_id}`}
+    className="block border border-rap-gold/20 rounded-lg p-3 hover:border-rap-gold/50 transition-all duration-200 cursor-pointer group bg-primary-foreground"
+    onClick={() => window.scrollTo(0, 0)}
+  >
+    <div className="flex items-center gap-3">
+      <div className="w-12 h-12 rounded-lg overflow-hidden flex-shrink-0 bg-gradient-to-br from-rap-carbon to-rap-carbon-light border border-rap-gold/30 group-hover:border-rap-gold/50 transition-colors">
+        <RapperAvatarItem rapperId={rapper.rapper_id} rapperName={rapper.rapper_name} />
+      </div>
+      <div className="flex-1 min-w-0">
+        <div className="flex items-center gap-2 mb-1">
+          <span className="text-rap-platinum font-kaushan text-sm group-hover:text-rap-gold transition-colors truncate">
+            {rapper.rapper_name}
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <Badge variant="outline" className="border-rap-gold/30 text-rap-gold text-xs">
+            {rapper.average_rating?.toFixed(1)} avg
+          </Badge>
+          <span className="text-rap-platinum text-xs font-kaushan">
+            {rapper.vote_count} ratings
+          </span>
+        </div>
+      </div>
+    </div>
+  </Link>
+);
+
 interface TopRappersByCategoryCardProps {
   countryCode?: string | null;
   region?: string | null;
