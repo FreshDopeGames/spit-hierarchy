@@ -1,48 +1,37 @@
-## Polls audit findings
+# Top Rappers By Category — Featured #1 Layout
 
-**Database state (live):**
-- 2 active polls exist:
-  1. Homepage (featured): "Who should be the 300th Rap GOAT on Spit Hierarchy?" — 4 votes captured
-  2. All-blogs placement: "What kinds of blog posts do you want to see more of?" — 1 vote captured
-- The `poll_results` view returns correct tallies for both. **Blog polls are capturing and aggregating votes correctly** at the data layer.
+Give the #1 rapper in each category visual prominence inside the "Top Rappers by Category" card on the Analytics page, with a different layout per breakpoint while rappers #2–#5 keep the existing compact card look.
 
-**Display path for blog polls:**
-- `BlogPoll.tsx` queries `usePolls('specific_blog', blogPostId)` + `usePolls('all_blogs')` and renders `PollWidget` for each.
-- `PollWidget` shows results when `userHasVoted` is true (via `useUserPollVotes`) or after a fresh vote.
-- A logged-out user on a blog post will see the "Members Only / Sign up" locked state instead of results — this is the most likely reason it *looked* broken. Code is functioning as designed.
+## Per-breakpoint layout
 
-**Likely past issue (already resolved):** earlier fix to `usePollResults` switched to the `poll_results` aggregated view, which fixed empty results. No code bug remains.
+Mobile (`< sm`, < 640px)
+- #1 rendered as a full-width featured card spanning the column.
+  - Large square avatar (e.g. `h-40`) centered with name, Trophy icon, avg-rating badge, and ratings count centered beneath.
+- #2–#5 stacked in four separate full-width rows, each using the current small card look (12×12 avatar on the left, name + badge on the right).
 
-I'll do one more pass during implementation to confirm nothing is regressed (vote → result transition, percentage rendering, "Change Vote" path).
+Tablet (`sm` to `< lg`, 640–1023px)
+- Two-column row: #1 on the left as a larger featured card (bigger avatar, centered text), #2–#5 on the right as a 2×2 grid of the existing compact cards.
 
----
+Desktop (`lg+`, ≥ 1024px)
+- #1 as a centered featured card on its own row (constrained max width so it doesn't stretch awkwardly, e.g. `max-w-sm mx-auto`), with a larger avatar and centered text.
+- #2–#5 below as a single row of 4 compact cards.
 
-## New feature: session-start homepage poll popup
+## Technical notes
 
-Trigger the featured homepage poll as a modal once per browser session for logged-in members who haven't voted yet.
+- Edit only `src/components/analytics/TopRappersByCategoryCard.tsx`.
+- Split the existing `<Link>` map into two presentational sub-components inside the same file (file-scoped, per project rule against remounts): `FeaturedRapperCard` for #1 and `CompactRapperCard` for #2–#5. Both reuse the existing `RapperAvatarItem` for the image.
+- Use static Tailwind classes only (project rule: no dynamic grid classes). Structure per category:
+  - Outer wrapper: `<div className="space-y-3">` with the existing `<h4>` heading.
+  - Layout container uses `flex flex-col sm:flex-row lg:flex-col gap-3`:
+    - On mobile: column → featured on top, then compact list.
+    - On tablet: row → featured left, 2×2 grid right (`sm:w-1/2 lg:w-full` for each half).
+    - On desktop: column → featured row, then 4-up row.
+  - Compact list container: `flex flex-col gap-3 sm:grid sm:grid-cols-2 lg:grid-cols-4`.
+- Featured card styling: same border/hover treatment as compact card but larger padding, centered content, larger avatar (`h-32 w-32 sm:h-36 sm:w-36 lg:h-40 lg:w-40`), Trophy + name on one centered line, badge and ratings count centered below.
+- Update the loading skeleton to mirror the new structure (one featured skeleton + four compact skeletons per category).
+- No data, hook, or query changes — pure presentational refactor.
 
-### Behavior
-- Show only if: user is authenticated, a featured active homepage poll exists, user has no row in `poll_votes` for it, and the modal hasn't already been shown this session.
-- Fire ~1.5s after first authenticated page load (any route) to avoid clobbering initial render.
-- Dismissible via close button or "Maybe later"; submitting a vote also closes it.
-- Once dismissed or voted, do not reopen until a new browser session (uses `sessionStorage` key `poll-modal-shown-{pollId}`).
-- Skip on `/auth` and during onboarding flow to avoid stacking modals.
+## Out of scope
 
-### Technical details
-- New component `src/components/polls/SessionPollModal.tsx` wrapping `PollWidget` inside a shadcn `Dialog`.
-  - Reuses existing `useFeaturedPolls()` (limit 1) and `useUserPollVotes(pollId)`.
-  - Shows nothing while loading; opens dialog only when all conditions pass.
-- Mount once globally in `src/App.tsx` (inside auth + router providers, alongside existing global modals).
-- Respect existing memory rule: no nested Radix Dialogs — guard with a check for any open dialog (`document.querySelector('[role="dialog"]')`) or simply suppress when onboarding/username modals are active by checking the same hooks they use (`useOnboardingStatus`, username enforcement).
-- Styling: match `PollWidget`'s existing themed card; modal uses standard dark overlay (the recently-fixed solid background pattern from `AdminRapperDeleteDialog`).
-
-### Files
-- Add: `src/components/polls/SessionPollModal.tsx`
-- Edit: `src/App.tsx` (mount the modal)
-
-No DB changes required — existing `poll_votes` + `useUserPollVotes` already tell us if the user has voted.
-
----
-
-## Open question
-Should the popup also appear for non-featured homepage polls if the featured one is exhausted/voted, or strictly the single featured poll? Default in plan: strictly the featured one (matches current homepage section).
+- No changes to `useTopRappersByCategory`, ranking logic, or any other analytics card.
+- No new colors or design tokens.
