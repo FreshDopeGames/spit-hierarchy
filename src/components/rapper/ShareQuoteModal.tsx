@@ -140,11 +140,10 @@ const ShareQuoteModal: React.FC<ShareQuoteModalProps> = ({
         boxSizing: "border-box",
       }}
     >
-      {avatarUrl && (
+      {(forExport ? avatarDataUrl : avatarUrl) && (
         <img
-          src={avatarUrl}
+          src={(forExport ? avatarDataUrl : avatarUrl) as string}
           alt={rapperName}
-          {...(forExport ? { crossOrigin: "anonymous" as const } : {})}
           style={{
             width: avatar,
             height: avatar,
