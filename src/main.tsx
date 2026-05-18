@@ -41,13 +41,32 @@ if (typeof window !== "undefined") {
       });
     });
   } else {
-    const updateSW = registerSW({
+    // Defer auto-reload while the user is reading a blog article so their
+    // scroll position and reading flow are never interrupted by SW updates.
+    const isOnBlogArticle = () => {
+      const path = window.location.pathname;
+      return path.startsWith("/blog/") && path.length > "/blog/".length;
+    };
+
+    let pendingUpdate = false;
+    let updateSW: ((reloadPage?: boolean) => Promise<void>) | undefined;
+
+    const applyUpdateIfSafe = () => {
+      if (pendingUpdate && updateSW && !isOnBlogArticle()) {
+        pendingUpdate = false;
+        updateSW(true);
+      }
+    };
+
+    updateSW = registerSW({
       immediate: true,
       onNeedRefresh() {
-        updateSW(true);
+        pendingUpdate = true;
+        applyUpdateIfSafe();
       },
       onOfflineReady() {
-        updateSW(true);
+        pendingUpdate = true;
+        applyUpdateIfSafe();
       },
       onRegisteredSW(_swUrl, registration) {
         if (registration) {
@@ -57,6 +76,21 @@ if (typeof window !== "undefined") {
         }
       },
     });
+
+    // Re-check when the user navigates away from the blog article (SPA or full nav).
+    window.addEventListener("popstate", applyUpdateIfSafe);
+    const origPush = history.pushState;
+    const origReplace = history.replaceState;
+    history.pushState = function (...args) {
+      const result = origPush.apply(this, args as any);
+      applyUpdateIfSafe();
+      return result;
+    };
+    history.replaceState = function (...args) {
+      const result = origReplace.apply(this, args as any);
+      applyUpdateIfSafe();
+      return result;
+    };
   }
 }
 
