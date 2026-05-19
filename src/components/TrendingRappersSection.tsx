@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { TrendingUp, Flame } from "lucide-react";
+import { TrendingUp } from "lucide-react";
 import { useTrendingRappers } from "@/hooks/useTrendingRappers";
 import RapperAvatar from "@/components/RapperAvatar";
 import { formatDistanceToNow } from "date-fns";
