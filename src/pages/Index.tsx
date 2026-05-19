@@ -77,11 +77,11 @@ const Index = () => {
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
 
-            {/* Featured Rankings Section */}
-            <HomepageRankingSection />
-
             {/* Featured Blog Posts Carousel */}
             <BlogCarousel />
+
+            {/* Featured Rankings Section */}
+            <HomepageRankingSection />
 
             {/* Trending Rappers (daily) — under Slick Talk */}
             <TrendingRappersSection />
