@@ -22,23 +22,14 @@ const TrendingRappersSection = () => {
   });
 
   return (
-    <section className="mb-8">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <Flame className="w-7 h-7 text-[hsl(var(--theme-primary))]" />
-          <div>
-            <h2 className="text-2xl sm:text-3xl font-mogra text-white uppercase tracking-wide">
-              Trending Rappers
-            </h2>
-            <p className="text-sm text-rap-smoke">
-              Most talked about in hip-hop media — past 3 days
-            </p>
-          </div>
-        </div>
-        <span className="hidden sm:inline text-xs text-rap-smoke">
-          Updated {updatedLabel}
-        </span>
-      </div>
+    <section className="mb-16">
+      <h2 className="font-ceviche text-primary mb-2 sm:mb-3 tracking-wider text-4xl sm:text-6xl text-center leading-tight">
+        TRENDING RAPPERS
+      </h2>
+      <p className="text-sm text-rap-smoke text-center mb-6 sm:mb-8">
+        Most talked about in hip-hop media — past 3 days · Updated {updatedLabel}
+      </p>
+
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         {trending.map((r) => (
