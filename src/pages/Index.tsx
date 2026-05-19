@@ -77,6 +77,9 @@ const Index = () => {
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
 
+            {/* Trending Rappers (daily) */}
+            <TrendingRappersSection />
+
             {/* Featured Rankings Section */}
             <HomepageRankingSection />
 
