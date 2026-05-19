@@ -186,14 +186,26 @@ serve(async (req) => {
 
     console.log(`Top 5 trending:`, ranked.map((r) => `${r.displayName} (${r.score.toFixed(1)}, ${r.mentions}m, ${r.sources.size}s)`));
 
+    // Fallback: fill remaining slots from recent blog posts mentioning rappers
     if (ranked.length < 5) {
-      console.warn(`Only ${ranked.length} rappers matched — keeping previous snapshot`);
+      console.log(`Only ${ranked.length} from RSS/Reddit — attempting blog fallback`);
+      const existingIds = new Set(ranked.map((r) => r.id));
+      const fallback = await fetchBlogFallback(supabase, existingIds, 5 - ranked.length);
+      for (const f of fallback) {
+        ranked.push({
+          id: f.id,
+          displayName: f.displayName,
+          mentions: 0,
+          score: 0.1,
+          sources: new Set([f.source]),
+        });
+      }
+      console.log(`After blog fallback: ${ranked.length} rappers`);
+    }
+
+    if (ranked.length === 0) {
       return new Response(
-        JSON.stringify({
-          success: false,
-          reason: "insufficient_matches",
-          matched: ranked.length,
-        }),
+        JSON.stringify({ success: false, reason: "no_matches", matched: 0 }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
@@ -285,3 +297,80 @@ function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
   }
   return items;
 }
+
+// Extracts /rapper/<slug> links from blog markdown content
+function extractRapperSlugsFromContent(content: string): string[] {
+  const regex = /\[([^\]]+)\]\((?:https:\/\/spithierarchy\.com)?\/rapper\/([^)#?\s]+)/g;
+  const slugs: string[] = [];
+  let m;
+  while ((m = regex.exec(content)) !== null) {
+    const slug = m[2];
+    if (slug && !slugs.includes(slug)) slugs.push(slug);
+  }
+  return slugs;
+}
+
+// Fetch recent published blog posts and pull rappers mentioned via /rapper/<slug> links.
+// Walks posts newest first until 2 posts WITH mentions have been consumed, then returns
+// up to `needed` rappers (excluding any already in `existingIds`) in mention order.
+async function fetchBlogFallback(
+  supabase: ReturnType<typeof createClient>,
+  existingIds: Set<string>,
+  needed: number
+): Promise<Array<{ id: string; displayName: string; source: string }>> {
+  if (needed <= 0) return [];
+
+  const { data: posts, error } = await supabase
+    .from("blog_posts")
+    .select("slug, content, published_at")
+    .eq("status", "published")
+    .order("published_at", { ascending: false })
+    .limit(10);
+
+  if (error || !posts?.length) {
+    console.error("Blog fallback query error:", error);
+    return [];
+  }
+
+  const collected: Array<{ slug: string; postSlug: string }> = [];
+  const seenSlugs = new Set<string>();
+  let postsWithMentions = 0;
+
+  for (const post of posts as Array<{ slug: string; content: string }>) {
+    const slugs = extractRapperSlugsFromContent(post.content || "");
+    if (slugs.length === 0) continue;
+    for (const s of slugs) {
+      if (!seenSlugs.has(s)) {
+        seenSlugs.add(s);
+        collected.push({ slug: s, postSlug: post.slug });
+      }
+    }
+    postsWithMentions += 1;
+    if (postsWithMentions >= 2) break;
+  }
+
+  if (collected.length === 0) return [];
+
+  const { data: rappers } = await supabase
+    .from("rappers")
+    .select("id, name, slug")
+    .in("slug", collected.map((c) => c.slug));
+
+  if (!rappers?.length) return [];
+
+  const bySlug = new Map<string, { id: string; name: string }>();
+  for (const r of rappers as Array<{ id: string; name: string; slug: string }>) {
+    bySlug.set(r.slug, { id: r.id, name: r.name });
+  }
+
+  const result: Array<{ id: string; displayName: string; source: string }> = [];
+  for (const c of collected) {
+    const r = bySlug.get(c.slug);
+    if (!r || existingIds.has(r.id)) continue;
+    if (result.find((x) => x.id === r.id)) continue;
+    result.push({ id: r.id, displayName: r.name, source: `blog:${c.postSlug}` });
+    if (result.length >= needed) break;
+  }
+  return result;
+}
+
