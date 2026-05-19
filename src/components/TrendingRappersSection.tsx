@@ -62,12 +62,9 @@ const TrendingRappersSection = () => {
           </Link>
         ))}
       </div>
-
-      <div className="sm:hidden mt-3 text-xs text-rap-smoke text-center">
-        Updated {updatedLabel}
-      </div>
     </section>
   );
 };
 
 export default TrendingRappersSection;
+
