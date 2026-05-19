@@ -6,6 +6,7 @@ import HomepageRankingSection from "@/components/HomepageRankingSection";
 import Footer from "@/components/Footer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import SEOHead from "@/components/seo/SEOHead";
+import TrendingRappersSection from "@/components/TrendingRappersSection";
 
 import LazySection from "@/components/LazySection";
 
@@ -75,6 +76,9 @@ const Index = () => {
           <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-6">
             {/* Rankings Section with Prominent Header */}
             <RankingsSectionHeader />
+
+            {/* Trending Rappers (daily) */}
+            <TrendingRappersSection />
 
             {/* Featured Rankings Section */}
             <HomepageRankingSection />

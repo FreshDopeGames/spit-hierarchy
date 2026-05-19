@@ -2588,6 +2588,61 @@ export type Database = {
           },
         ]
       }
+      trending_rappers: {
+        Row: {
+          created_at: string
+          generated_at: string
+          id: string
+          mention_count: number
+          rank: number
+          rapper_id: string
+          score: number
+          sources: string[]
+        }
+        Insert: {
+          created_at?: string
+          generated_at?: string
+          id?: string
+          mention_count?: number
+          rank: number
+          rapper_id: string
+          score?: number
+          sources?: string[]
+        }
+        Update: {
+          created_at?: string
+          generated_at?: string
+          id?: string
+          mention_count?: number
+          rank?: number
+          rapper_id?: string
+          score?: number
+          sources?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "trending_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trending_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "trending_rappers_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       user_achievements: {
         Row: {
           achievement_id: string

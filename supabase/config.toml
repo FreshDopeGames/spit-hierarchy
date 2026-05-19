@@ -3,6 +3,9 @@ project_id = "xzcmkssadekswmiqfbff"
 [functions.generate-weekly-hip-hop-roundup]
 verify_jwt = false
 
+[functions.generate-trending-rappers]
+verify_jwt = false
+
 [functions.fetch-rapper-discography]
 verify_jwt = false
 
