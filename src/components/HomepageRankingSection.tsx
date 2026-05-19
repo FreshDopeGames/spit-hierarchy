@@ -72,13 +72,13 @@ const HomepageRankingSection = () => {
           count: "exact"
         }).eq("ranking_id", ranking.id);
 
-        // Get total rapper count for this ranking
+        // Get total rapper count for this ranking (published rappers only)
         const {
           count: totalRappers
-        } = await supabase.from("ranking_items").select("*", {
+        } = await supabase.from("ranking_items").select("*, rapper:rappers!inner(publish_status)", {
           count: "exact",
           head: true
-        }).eq("ranking_id", ranking.id);
+        }).eq("ranking_id", ranking.id).eq("rapper.publish_status", "published");
 
         const processedItems = (itemsData || []).map(item => ({
           rapper: item.rapper,
