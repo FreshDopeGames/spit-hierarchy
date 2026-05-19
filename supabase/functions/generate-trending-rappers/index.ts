@@ -186,14 +186,26 @@ serve(async (req) => {
 
     console.log(`Top 5 trending:`, ranked.map((r) => `${r.displayName} (${r.score.toFixed(1)}, ${r.mentions}m, ${r.sources.size}s)`));
 
+    // Fallback: fill remaining slots from recent blog posts mentioning rappers
     if (ranked.length < 5) {
-      console.warn(`Only ${ranked.length} rappers matched — keeping previous snapshot`);
+      console.log(`Only ${ranked.length} from RSS/Reddit — attempting blog fallback`);
+      const existingIds = new Set(ranked.map((r) => r.id));
+      const fallback = await fetchBlogFallback(supabase, existingIds, 5 - ranked.length);
+      for (const f of fallback) {
+        ranked.push({
+          id: f.id,
+          displayName: f.displayName,
+          mentions: 0,
+          score: 0.1,
+          sources: new Set([f.source]),
+        });
+      }
+      console.log(`After blog fallback: ${ranked.length} rappers`);
+    }
+
+    if (ranked.length === 0) {
       return new Response(
-        JSON.stringify({
-          success: false,
-          reason: "insufficient_matches",
-          matched: ranked.length,
-        }),
+        JSON.stringify({ success: false, reason: "no_matches", matched: 0 }),
         { headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
