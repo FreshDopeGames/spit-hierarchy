@@ -373,6 +373,4 @@ async function fetchBlogFallback(
   }
   return result;
 }
-  }
-  return items;
-}
+
