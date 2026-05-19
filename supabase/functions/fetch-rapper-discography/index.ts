@@ -460,8 +460,18 @@ serve(async (req) => {
     const artistRels = (artistData.relations || []).filter(r => r['target-type'] === 'artist');
     
     for (const rel of artistRels) {
-      // "member of band" relationship indicates group membership
-      if (rel.type === 'member of band' && rel.artist?.id && rel.artist?.name) {
+      // "member of band" relationship indicates group membership.
+      // Only include when direction === 'forward' — that means THIS artist is a member
+      // of the related band. When direction === 'backward', THIS artist IS the band and
+      // the related artist is one of its members; pulling that artist's discography in
+      // would incorrectly attribute solo albums (e.g. 2Pac's solo work) to the group
+      // (e.g. Digital Underground).
+      if (
+        rel.type === 'member of band' &&
+        (rel as any).direction === 'forward' &&
+        rel.artist?.id &&
+        rel.artist?.name
+      ) {
         console.log(`🎤 Found group membership: ${rel.artist.name} (${rel.artist.id})`);
         groupMemberships.push({ id: rel.artist.id, name: rel.artist.name });
       }
