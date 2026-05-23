@@ -56,10 +56,10 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         // Bump suffix to invalidate old precaches and force users onto the newest published shell.
-        cacheId: 'spit-hierarchy-v5',
+        cacheId: 'spit-hierarchy-v6',
         skipWaiting: true,
         clientsClaim: true,
-        importScripts: ['/sw-update-handler-v5.js'],
+        importScripts: ['/sw-update-handler-v6.js'],
         navigateFallback: null,
         navigateFallbackDenylist: [/^\/~oauth/],
         globPatterns: ['**/*.{js,css,ico,svg,woff2,png,webp}'],
@@ -71,7 +71,7 @@ export default defineConfig(({ mode }) => ({
             urlPattern: ({ request }) => request.mode === 'navigate',
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'app-html-v5',
+              cacheName: 'app-html-v6',
               networkTimeoutSeconds: 3,
               cacheableResponse: {
                 statuses: [0, 200]
@@ -82,7 +82,7 @@ export default defineConfig(({ mode }) => ({
             urlPattern: /^https:\/\/xzcmkssadekswmiqfbff\.supabase\.co\/storage\/v1\/object\/public\/.*/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'supabase-storage-images-v5',
+              cacheName: 'supabase-storage-images-v6',
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
