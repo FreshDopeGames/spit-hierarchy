@@ -293,6 +293,9 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
             <div className="grid grid-cols-2 gap-3">
               {slots.map((slot, i) => (
                 <div key={i} className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[var(--theme-primary)]">
+                    {STYLES[i].label}
+                  </p>
                   <div className="relative aspect-square rounded-md overflow-hidden border border-[var(--theme-primary)]/30 bg-[var(--theme-background)]/50">
                     {slot.url ? (
                       <img src={slot.url} className="w-full h-full object-cover" alt={`candidate-${i + 1}`} />
