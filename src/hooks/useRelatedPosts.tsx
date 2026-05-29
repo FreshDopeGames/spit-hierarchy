@@ -50,6 +50,7 @@ export const useRelatedPosts = (categoryId: string | undefined, currentPostId: s
           .from('blog_posts')
           .select(selectFields)
           .eq('status', 'published')
+          .lte('published_at', new Date().toISOString())
           .neq('id', currentPostId)
           .order('published_at', { ascending: false })
           .limit(LIMIT);
