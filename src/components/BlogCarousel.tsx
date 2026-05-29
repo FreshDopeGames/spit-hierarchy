@@ -37,7 +37,7 @@ const BlogCarousel = () => {
           featured_image_url,
           published_at,
           blog_categories(name)
-        `).eq("status", "published").eq("featured", true).order("published_at", {
+        `).eq("status", "published").eq("featured", true).lte("published_at", new Date().toISOString()).order("published_at", {
         ascending: false
       }).limit(5);
       if (error) throw error;
