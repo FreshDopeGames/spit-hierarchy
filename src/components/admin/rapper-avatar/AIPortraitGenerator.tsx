@@ -28,14 +28,30 @@ const fileToDataUrl = (file: File) =>
 
 const dataUrlToBlob = async (url: string) => (await fetch(url)).blob();
 
+type SlotStatus = "idle" | "queued" | "generating" | "done" | "failed";
+interface Slot {
+  status: SlotStatus;
+  url: string | null;
+  error?: string;
+}
+
+const NUM_CANDIDATES = 4;
+
 const AIPortraitGenerator = ({ rapper }: Props) => {
   const [refs, setRefs] = useState<string[]>([]);
   const [extraNotes, setExtraNotes] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [candidates, setCandidates] = useState<string[]>([]);
+  const [slots, setSlots] = useState<Slot[]>(
+    Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null }))
+  );
   const [savingIdx, setSavingIdx] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+
+  const candidates = slots.map((s) => s.url);
+  const completedCount = slots.filter((s) => s.status === "done" || s.status === "failed").length;
+  const successCount = slots.filter((s) => s.status === "done").length;
+  const showResults = slots.some((s) => s.status !== "idle");
 
   const handleFiles = async (files: FileList | null) => {
     if (!files) return;
@@ -57,27 +73,44 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
 
   const removeRef = (i: number) => setRefs((cur) => cur.filter((_, idx) => idx !== i));
 
+  const updateSlot = (idx: number, patch: Partial<Slot>) =>
+    setSlots((cur) => cur.map((s, i) => (i === idx ? { ...s, ...patch } : s)));
+
   const generate = async () => {
     if (refs.length === 0) {
       toast.error("Upload at least 1 reference photo");
       return;
     }
     setGenerating(true);
-    setCandidates([]);
-    try {
-      const { data, error } = await supabase.functions.invoke("generate-rapper-portrait", {
-        body: { rapperId: rapper.id, referenceImages: refs, extraNotes },
-      });
-      if (error) throw error;
-      if (!data?.candidates?.length) throw new Error("No candidates returned");
-      setCandidates(data.candidates);
-      toast.success(`Generated ${data.candidates.length} portrait(s)`);
-    } catch (e: any) {
-      console.error(e);
-      toast.error(`Generation failed: ${e.message}`);
-    } finally {
-      setGenerating(false);
-    }
+    setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "queued", url: null })));
+
+    const runOne = async (idx: number) => {
+      updateSlot(idx, { status: "generating" });
+      try {
+        const { data, error } = await supabase.functions.invoke("generate-rapper-portrait", {
+          body: { rapperId: rapper.id, referenceImages: refs, extraNotes, candidates: 1 },
+        });
+        if (error) throw error;
+        const url = data?.candidates?.[0];
+        if (!url) throw new Error(data?.error || "No image returned");
+        updateSlot(idx, { status: "done", url });
+      } catch (e: any) {
+        console.error(`Candidate ${idx + 1} failed`, e);
+        updateSlot(idx, { status: "failed", error: e.message });
+      }
+    };
+
+    await Promise.all(Array.from({ length: NUM_CANDIDATES }, (_, i) => runOne(i)));
+
+    const ok = await new Promise<number>((resolve) =>
+      setSlots((cur) => {
+        resolve(cur.filter((s) => s.status === "done").length);
+        return cur;
+      })
+    );
+    if (ok === 0) toast.error("All portrait generations failed");
+    else toast.success(`Generated ${ok} of ${NUM_CANDIDATES} portrait(s)`);
+    setGenerating(false);
   };
 
   const saveCandidate = async (idx: number) => {
@@ -135,7 +168,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       toast.success("Portrait saved as rapper avatar");
-      setCandidates([]);
+      setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null })));
       setRefs([]);
     } catch (e: any) {
       console.error(e);
@@ -218,7 +251,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
           {generating ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Generating 4 candidates…
+              Generating {completedCount}/{NUM_CANDIDATES}…
             </>
           ) : (
             <>
@@ -228,22 +261,53 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
           )}
         </ThemedButton>
 
-        {candidates.length > 0 && (
+        {showResults && (
           <div>
+            {generating && (
+              <div className="mb-3">
+                <div className="flex justify-between text-xs text-[var(--theme-text)] opacity-80 mb-1">
+                  <span>Generating portraits in parallel…</span>
+                  <span>{completedCount} / {NUM_CANDIDATES}</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-[var(--theme-primary)]/15 overflow-hidden">
+                  <div
+                    className="h-full bg-[var(--theme-primary)] transition-all duration-500"
+                    style={{ width: `${(completedCount / NUM_CANDIDATES) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             <p className="text-sm text-[var(--theme-text)] mb-2 font-bold">
-              Pick a portrait to save as the rapper's avatar
+              {generating
+                ? `Previews appear as each candidate finishes (${successCount} ready so far)`
+                : "Pick a portrait to save as the rapper's avatar"}
             </p>
             <div className="grid grid-cols-2 gap-3">
-              {candidates.map((src, i) => (
+              {slots.map((slot, i) => (
                 <div key={i} className="space-y-2">
-                  <div className="aspect-square rounded-md overflow-hidden border border-[var(--theme-primary)]/30">
-                    <img src={src} className="w-full h-full object-cover" alt={`candidate-${i}`} />
+                  <div className="relative aspect-square rounded-md overflow-hidden border border-[var(--theme-primary)]/30 bg-[var(--theme-background)]/50">
+                    {slot.url ? (
+                      <img src={slot.url} className="w-full h-full object-cover" alt={`candidate-${i + 1}`} />
+                    ) : slot.status === "failed" ? (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-red-400 text-xs p-2 text-center">
+                        <X className="w-6 h-6 mb-1" />
+                        Failed
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-[var(--theme-primary)] opacity-80">
+                        <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                        <span className="text-xs">
+                          {slot.status === "generating" ? `Generating #${i + 1}` : `Queued #${i + 1}`}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <ThemedButton
                     size="sm"
                     onClick={() => saveCandidate(i)}
-                    disabled={savingIdx !== null}
-                    className="w-full bg-[var(--theme-primary)] text-[var(--theme-background)]"
+                    disabled={savingIdx !== null || slot.status !== "done"}
+                    className="w-full bg-[var(--theme-primary)] text-[var(--theme-background)] disabled:opacity-40"
                   >
                     {savingIdx === i ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
