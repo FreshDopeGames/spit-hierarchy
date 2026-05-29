@@ -57,7 +57,7 @@ Deno.serve(async (req) => {
     }
 
     const body = await req.json();
-    const { rapperId, referenceImages, extraNotes, candidates = 4 } = body || {};
+    const { rapperId, referenceImages, extraNotes, candidates = 1, style = 'comic' } = body || {};
 
     if (!rapperId || !Array.isArray(referenceImages) || referenceImages.length < 1 || referenceImages.length > 3) {
       return new Response(JSON.stringify({ error: 'Provide rapperId and 1-3 referenceImages (data URLs)' }), {
