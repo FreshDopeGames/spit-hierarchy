@@ -89,10 +89,9 @@ Deno.serve(async (req) => {
     }
 
     const numCandidates = Math.min(Math.max(parseInt(String(candidates)) || 4, 1), 4);
-    const results: string[] = [];
     const errors: string[] = [];
 
-    for (let i = 0; i < numCandidates; i++) {
+    const generateOne = async (i: number): Promise<string | null> => {
       try {
         const resp = await fetch('https://ai.gateway.lovable.dev/v1/chat/completions', {
           method: 'POST',
@@ -110,18 +109,25 @@ Deno.serve(async (req) => {
         if (!resp.ok) {
           const txt = await resp.text();
           errors.push(`Candidate ${i + 1}: ${resp.status} ${txt.slice(0, 200)}`);
-          if (resp.status === 429 || resp.status === 402) break;
-          continue;
+          return null;
         }
 
         const json = await resp.json();
         const url = json?.choices?.[0]?.message?.images?.[0]?.image_url?.url;
-        if (url) results.push(url);
-        else errors.push(`Candidate ${i + 1}: no image returned`);
+        if (url) return url;
+        errors.push(`Candidate ${i + 1}: no image returned`);
+        return null;
       } catch (e) {
         errors.push(`Candidate ${i + 1}: ${(e as Error).message}`);
+        return null;
       }
-    }
+    };
+
+    const settled = await Promise.all(
+      Array.from({ length: numCandidates }, (_, i) => generateOne(i))
+    );
+    const results = settled.filter((r): r is string => !!r);
+
 
     if (results.length === 0) {
       return new Response(JSON.stringify({ error: 'Generation failed', details: errors }), {
