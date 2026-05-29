@@ -100,6 +100,7 @@ const Blog = () => {
           )
         `)
         .eq('status', 'published')
+        .lte('published_at', new Date().toISOString())
         .order('published_at', { ascending: false })
         .range(pageParam * POSTS_PER_PAGE, (pageParam + 1) * POSTS_PER_PAGE - 1);
 
