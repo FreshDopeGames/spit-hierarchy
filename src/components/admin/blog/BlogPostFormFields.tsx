@@ -134,38 +134,63 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
       </div>
 
       <div className="space-y-2">
-        <Label className="text-[var(--theme-text)] text-sm sm:text-base font-[var(--theme-font-body)]">Published Date</Label>
-        <Popover>
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              className={cn(
-                "w-full justify-start text-left font-normal bg-[var(--theme-background)] border-[var(--theme-border)] h-11 sm:h-10",
-                !formData.published_at && "text-muted-foreground"
-              )}
-            >
-              <CalendarIcon className="mr-2 h-4 w-4" />
-              {formData.published_at
-                ? format(new Date(formData.published_at), "PPP")
-                : <span>Defaults to today when published</span>}
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent className="w-auto p-0 bg-black border-[var(--theme-border)]" align="start">
-            <Calendar
-              mode="single"
-              selected={formData.published_at ? new Date(formData.published_at) : undefined}
-              onSelect={(date) =>
-                setFormData(prev => ({
-                  ...prev,
-                  published_at: date ? date.toISOString() : ''
-                }))
-              }
-              initialFocus
-              className={cn("p-3 pointer-events-auto")}
-            />
-          </PopoverContent>
-        </Popover>
+        <Label className="text-[var(--theme-text)] text-sm sm:text-base font-[var(--theme-font-body)]">Published Date & Time</Label>
+        <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto] gap-2">
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                className={cn(
+                  "w-full justify-start text-left font-normal bg-[var(--theme-background)] border-[var(--theme-border)] h-11 sm:h-10",
+                  !formData.published_at && "text-muted-foreground"
+                )}
+              >
+                <CalendarIcon className="mr-2 h-4 w-4" />
+                {formData.published_at
+                  ? format(new Date(formData.published_at), "PPP")
+                  : <span>Defaults to today when published</span>}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent className="w-auto p-0 bg-black border-[var(--theme-border)]" align="start">
+              <Calendar
+                mode="single"
+                selected={formData.published_at ? new Date(formData.published_at) : undefined}
+                onSelect={(date) => {
+                  if (!date) {
+                    setFormData(prev => ({ ...prev, published_at: '' }));
+                    return;
+                  }
+                  // Preserve existing time-of-day if any, else use current time
+                  const existing = formData.published_at ? new Date(formData.published_at) : new Date();
+                  const merged = new Date(date);
+                  merged.setHours(existing.getHours(), existing.getMinutes(), 0, 0);
+                  setFormData(prev => ({ ...prev, published_at: merged.toISOString() }));
+                }}
+                initialFocus
+                className={cn("p-3 pointer-events-auto")}
+              />
+            </PopoverContent>
+          </Popover>
+          <Input
+            type="time"
+            value={formData.published_at ? format(new Date(formData.published_at), "HH:mm") : ''}
+            onChange={(e) => {
+              const time = e.target.value;
+              if (!time) return;
+              const [h, m] = time.split(':').map(Number);
+              const base = formData.published_at ? new Date(formData.published_at) : new Date();
+              base.setHours(h, m, 0, 0);
+              setFormData(prev => ({ ...prev, published_at: base.toISOString() }));
+            }}
+            disabled={!formData.published_at}
+            className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10 w-full sm:w-32"
+          />
+        </div>
+        <p className="text-xs text-[var(--theme-text-secondary)] font-[var(--theme-font-body)]">
+          Set a future date/time to schedule the post — it will stay hidden from the public until then (status must be Published).
+        </p>
       </div>
+
 
       <BlogPostImageUpload
         imageUrl={formData.featured_image_url}

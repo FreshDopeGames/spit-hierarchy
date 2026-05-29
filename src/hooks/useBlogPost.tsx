@@ -58,7 +58,7 @@ export const useBlogPost = (id: string | undefined, canViewDrafts: boolean = fal
       
       // Only filter by published status if user cannot view drafts
       if (!canViewDrafts) {
-        query = query.eq('status', 'published');
+        query = query.eq('status', 'published').lte('published_at', new Date().toISOString());
       }
       
       const { data, error } = await query.maybeSingle();

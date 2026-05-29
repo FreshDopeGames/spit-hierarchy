@@ -28,6 +28,7 @@ export const useRelatedPosts = (categoryId: string | undefined, currentPostId: s
           .from('blog_posts')
           .select(selectFields)
           .eq('status', 'published')
+          .lte('published_at', new Date().toISOString())
           .eq('category_id', categoryId)
           .neq('id', currentPostId)
           .order('published_at', { ascending: false })
@@ -49,6 +50,7 @@ export const useRelatedPosts = (categoryId: string | undefined, currentPostId: s
           .from('blog_posts')
           .select(selectFields)
           .eq('status', 'published')
+          .lte('published_at', new Date().toISOString())
           .neq('id', currentPostId)
           .order('published_at', { ascending: false })
           .limit(LIMIT);
