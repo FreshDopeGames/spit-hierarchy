@@ -91,10 +91,11 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
     setSlots(STYLES.map((s) => ({ status: "queued", url: null, style: s.key })));
 
     const runOne = async (idx: number) => {
+      const styleKey = STYLES[idx].key;
       updateSlot(idx, { status: "generating" });
       try {
         const { data, error } = await supabase.functions.invoke("generate-rapper-portrait", {
-          body: { rapperId: rapper.id, referenceImages: refs, extraNotes, candidates: 1 },
+          body: { rapperId: rapper.id, referenceImages: refs, extraNotes, candidates: 1, style: styleKey },
         });
         if (error) throw error;
         const url = data?.candidates?.[0];
