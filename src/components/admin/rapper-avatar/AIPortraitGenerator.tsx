@@ -28,14 +28,30 @@ const fileToDataUrl = (file: File) =>
 
 const dataUrlToBlob = async (url: string) => (await fetch(url)).blob();
 
+type SlotStatus = "idle" | "queued" | "generating" | "done" | "failed";
+interface Slot {
+  status: SlotStatus;
+  url: string | null;
+  error?: string;
+}
+
+const NUM_CANDIDATES = 4;
+
 const AIPortraitGenerator = ({ rapper }: Props) => {
   const [refs, setRefs] = useState<string[]>([]);
   const [extraNotes, setExtraNotes] = useState("");
   const [generating, setGenerating] = useState(false);
-  const [candidates, setCandidates] = useState<string[]>([]);
+  const [slots, setSlots] = useState<Slot[]>(
+    Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null }))
+  );
   const [savingIdx, setSavingIdx] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const queryClient = useQueryClient();
+
+  const candidates = slots.map((s) => s.url);
+  const completedCount = slots.filter((s) => s.status === "done" || s.status === "failed").length;
+  const successCount = slots.filter((s) => s.status === "done").length;
+  const showResults = slots.some((s) => s.status !== "idle");
 
   const handleFiles = async (files: FileList | null) => {
     if (!files) return;
@@ -57,27 +73,44 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
 
   const removeRef = (i: number) => setRefs((cur) => cur.filter((_, idx) => idx !== i));
 
+  const updateSlot = (idx: number, patch: Partial<Slot>) =>
+    setSlots((cur) => cur.map((s, i) => (i === idx ? { ...s, ...patch } : s)));
+
   const generate = async () => {
     if (refs.length === 0) {
       toast.error("Upload at least 1 reference photo");
       return;
     }
     setGenerating(true);
-    setCandidates([]);
-    try {
-      const { data, error } = await supabase.functions.invoke("generate-rapper-portrait", {
-        body: { rapperId: rapper.id, referenceImages: refs, extraNotes },
-      });
-      if (error) throw error;
-      if (!data?.candidates?.length) throw new Error("No candidates returned");
-      setCandidates(data.candidates);
-      toast.success(`Generated ${data.candidates.length} portrait(s)`);
-    } catch (e: any) {
-      console.error(e);
-      toast.error(`Generation failed: ${e.message}`);
-    } finally {
-      setGenerating(false);
-    }
+    setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "queued", url: null })));
+
+    const runOne = async (idx: number) => {
+      updateSlot(idx, { status: "generating" });
+      try {
+        const { data, error } = await supabase.functions.invoke("generate-rapper-portrait", {
+          body: { rapperId: rapper.id, referenceImages: refs, extraNotes, candidates: 1 },
+        });
+        if (error) throw error;
+        const url = data?.candidates?.[0];
+        if (!url) throw new Error(data?.error || "No image returned");
+        updateSlot(idx, { status: "done", url });
+      } catch (e: any) {
+        console.error(`Candidate ${idx + 1} failed`, e);
+        updateSlot(idx, { status: "failed", error: e.message });
+      }
+    };
+
+    await Promise.all(Array.from({ length: NUM_CANDIDATES }, (_, i) => runOne(i)));
+
+    const ok = await new Promise<number>((resolve) =>
+      setSlots((cur) => {
+        resolve(cur.filter((s) => s.status === "done").length);
+        return cur;
+      })
+    );
+    if (ok === 0) toast.error("All portrait generations failed");
+    else toast.success(`Generated ${ok} of ${NUM_CANDIDATES} portrait(s)`);
+    setGenerating(false);
   };
 
   const saveCandidate = async (idx: number) => {
