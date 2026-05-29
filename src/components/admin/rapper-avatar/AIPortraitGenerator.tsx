@@ -88,7 +88,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
       return;
     }
     setGenerating(true);
-    setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "queued", url: null })));
+    setSlots(STYLES.map((s) => ({ status: "queued", url: null, style: s.key })));
 
     const runOne = async (idx: number) => {
       updateSlot(idx, { status: "generating" });
