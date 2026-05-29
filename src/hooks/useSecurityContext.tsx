@@ -40,27 +40,39 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
   const [isStaffWriter, setIsStaffWriter] = useState(false);
   const [canManageBlog, setCanManageBlog] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  // Track which user id we've already resolved permissions for. Supabase fires
+  // TOKEN_REFRESHED on tab refocus, which produces a new user object reference
+  // (same id). Without this guard, isLoading flips back to true and unmounts
+  // consumer trees (e.g. the admin rapper edit dialog mid-generation).
+  const [resolvedUserId, setResolvedUserId] = useState<string | null>(null);
+  const userId = user?.id ?? null;
 
   useEffect(() => {
     const checkPermissions = async () => {
-      // Keep isLoading true while auth itself is still resolving so consumers
-      // (e.g. blog draft visibility) don't briefly assume "no permissions".
       if (authLoading) {
         setIsLoading(true);
         return;
       }
 
-      setIsLoading(true);
+      const isSameUser = userId !== null && userId === resolvedUserId;
+
+      // Only show the global loading state on the first resolve for this user.
+      // Subsequent re-runs (token refresh) silently refresh permissions while
+      // keeping the existing values to avoid unmounting consumers.
+      if (!isSameUser) {
+        setIsLoading(true);
+      }
+
       if (!isAuthenticated || !user) {
         setIsAdmin(false);
         setIsModerator(false);
         setIsStaffWriter(false);
         setCanManageBlog(false);
+        setResolvedUserId(null);
         setIsLoading(false);
         return;
       }
 
-      // Run all RPC checks in parallel so one failure doesn't wipe others
       const [adminResult, moderatorResult, blogResult] = await Promise.allSettled([
         supabase.rpc('is_admin'),
         supabase.rpc('is_moderator_or_admin'),
@@ -79,11 +91,14 @@ export const SecurityProvider = ({ children }: SecurityProviderProps) => {
       setIsModerator(moderatorCheck);
       setCanManageBlog(blogCheck);
       setIsStaffWriter(blogCheck && !adminCheck);
+      setResolvedUserId(userId);
       setIsLoading(false);
     };
 
     checkPermissions();
-  }, [user, isAuthenticated, authLoading]);
+    // Depend on userId (stable) instead of the user object reference, so a
+    // token refresh that yields a new reference but same id doesn't re-trigger.
+  }, [userId, isAuthenticated, authLoading]);
 
   const checkRateLimit = async (
     actionType: string, 
