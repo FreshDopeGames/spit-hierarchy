@@ -165,7 +165,7 @@ export const useAllRappers = ({ itemsPerPage = 20 }: UseAllRappersOptions = {}) 
       }
 
       // Standard query for "all" rappers
-      let query = supabase.from("rappers").select("*", { count: "exact" });
+      let query = supabase.from("rappers").select("*", { count: "exact" }).eq("publish_status", "published");
 
       // Apply tag filter - get rapper IDs with this tag first
       if (tagFilter && tagFilter !== "all") {
