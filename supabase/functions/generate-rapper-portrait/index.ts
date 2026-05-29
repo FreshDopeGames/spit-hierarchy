@@ -87,7 +87,7 @@ Deno.serve(async (req) => {
       });
     }
 
-    const prompt = STYLE_PROMPT(rapper.name, extraNotes);
+    const prompt = STYLE_PROMPT(style, rapper.name, extraNotes);
     const userContent: any[] = [{ type: 'text', text: prompt }];
     for (const img of referenceImages) {
       userContent.push({ type: 'image_url', image_url: { url: img } });
