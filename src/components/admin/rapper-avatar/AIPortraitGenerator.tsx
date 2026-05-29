@@ -29,13 +29,19 @@ const fileToDataUrl = (file: File) =>
 const dataUrlToBlob = async (url: string) => (await fetch(url)).blob();
 
 type SlotStatus = "idle" | "queued" | "generating" | "done" | "failed";
+type StyleKey = "comic" | "photoreal";
 interface Slot {
   status: SlotStatus;
   url: string | null;
+  style: StyleKey;
   error?: string;
 }
 
-const NUM_CANDIDATES = 4;
+const STYLES: { key: StyleKey; label: string }[] = [
+  { key: "comic", label: "Comic Book" },
+  { key: "photoreal", label: "Photoreal" },
+];
+const NUM_CANDIDATES = STYLES.length;
 
 const AIPortraitGenerator = ({ rapper }: Props) => {
   const [refs, setRefs] = useState<string[]>([]);
