@@ -175,7 +175,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       toast.success("Portrait saved as rapper avatar");
-      setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null })));
+      setSlots(STYLES.map((s) => ({ status: "idle", url: null, style: s.key })));
       setRefs([]);
     } catch (e: any) {
       console.error(e);
