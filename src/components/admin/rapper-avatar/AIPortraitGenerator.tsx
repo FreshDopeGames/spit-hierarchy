@@ -251,7 +251,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
           {generating ? (
             <>
               <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              Generating 4 candidates…
+              Generating {completedCount}/{NUM_CANDIDATES}…
             </>
           ) : (
             <>
@@ -261,22 +261,53 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
           )}
         </ThemedButton>
 
-        {candidates.length > 0 && (
+        {showResults && (
           <div>
+            {generating && (
+              <div className="mb-3">
+                <div className="flex justify-between text-xs text-[var(--theme-text)] opacity-80 mb-1">
+                  <span>Generating portraits in parallel…</span>
+                  <span>{completedCount} / {NUM_CANDIDATES}</span>
+                </div>
+                <div className="h-2 w-full rounded-full bg-[var(--theme-primary)]/15 overflow-hidden">
+                  <div
+                    className="h-full bg-[var(--theme-primary)] transition-all duration-500"
+                    style={{ width: `${(completedCount / NUM_CANDIDATES) * 100}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             <p className="text-sm text-[var(--theme-text)] mb-2 font-bold">
-              Pick a portrait to save as the rapper's avatar
+              {generating
+                ? `Previews appear as each candidate finishes (${successCount} ready so far)`
+                : "Pick a portrait to save as the rapper's avatar"}
             </p>
             <div className="grid grid-cols-2 gap-3">
-              {candidates.map((src, i) => (
+              {slots.map((slot, i) => (
                 <div key={i} className="space-y-2">
-                  <div className="aspect-square rounded-md overflow-hidden border border-[var(--theme-primary)]/30">
-                    <img src={src} className="w-full h-full object-cover" alt={`candidate-${i}`} />
+                  <div className="relative aspect-square rounded-md overflow-hidden border border-[var(--theme-primary)]/30 bg-[var(--theme-background)]/50">
+                    {slot.url ? (
+                      <img src={slot.url} className="w-full h-full object-cover" alt={`candidate-${i + 1}`} />
+                    ) : slot.status === "failed" ? (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-red-400 text-xs p-2 text-center">
+                        <X className="w-6 h-6 mb-1" />
+                        Failed
+                      </div>
+                    ) : (
+                      <div className="absolute inset-0 flex flex-col items-center justify-center text-[var(--theme-primary)] opacity-80">
+                        <Loader2 className="w-8 h-8 animate-spin mb-2" />
+                        <span className="text-xs">
+                          {slot.status === "generating" ? `Generating #${i + 1}` : `Queued #${i + 1}`}
+                        </span>
+                      </div>
+                    )}
                   </div>
                   <ThemedButton
                     size="sm"
                     onClick={() => saveCandidate(i)}
-                    disabled={savingIdx !== null}
-                    className="w-full bg-[var(--theme-primary)] text-[var(--theme-background)]"
+                    disabled={savingIdx !== null || slot.status !== "done"}
+                    className="w-full bg-[var(--theme-primary)] text-[var(--theme-background)] disabled:opacity-40"
                   >
                     {savingIdx === i ? (
                       <Loader2 className="w-3 h-3 animate-spin" />
