@@ -29,20 +29,26 @@ const fileToDataUrl = (file: File) =>
 const dataUrlToBlob = async (url: string) => (await fetch(url)).blob();
 
 type SlotStatus = "idle" | "queued" | "generating" | "done" | "failed";
+type StyleKey = "comic" | "photoreal";
 interface Slot {
   status: SlotStatus;
   url: string | null;
+  style: StyleKey;
   error?: string;
 }
 
-const NUM_CANDIDATES = 4;
+const STYLES: { key: StyleKey; label: string }[] = [
+  { key: "comic", label: "Comic Book" },
+  { key: "photoreal", label: "Photoreal" },
+];
+const NUM_CANDIDATES = STYLES.length;
 
 const AIPortraitGenerator = ({ rapper }: Props) => {
   const [refs, setRefs] = useState<string[]>([]);
   const [extraNotes, setExtraNotes] = useState("");
   const [generating, setGenerating] = useState(false);
   const [slots, setSlots] = useState<Slot[]>(
-    Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null }))
+    STYLES.map((s) => ({ status: "idle", url: null, style: s.key }))
   );
   const [savingIdx, setSavingIdx] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -82,13 +88,14 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
       return;
     }
     setGenerating(true);
-    setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "queued", url: null })));
+    setSlots(STYLES.map((s) => ({ status: "queued", url: null, style: s.key })));
 
     const runOne = async (idx: number) => {
+      const styleKey = STYLES[idx].key;
       updateSlot(idx, { status: "generating" });
       try {
         const { data, error } = await supabase.functions.invoke("generate-rapper-portrait", {
-          body: { rapperId: rapper.id, referenceImages: refs, extraNotes, candidates: 1 },
+          body: { rapperId: rapper.id, referenceImages: refs, extraNotes, candidates: 1, style: styleKey },
         });
         if (error) throw error;
         const url = data?.candidates?.[0];
@@ -168,7 +175,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
       queryClient.invalidateQueries({ queryKey: ["rapper-image", rapper.id] });
       queryClient.invalidateQueries({ queryKey: ["rappers"] });
       toast.success("Portrait saved as rapper avatar");
-      setSlots(Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null })));
+      setSlots(STYLES.map((s) => ({ status: "idle", url: null, style: s.key })));
       setRefs([]);
     } catch (e: any) {
       console.error(e);
@@ -286,6 +293,9 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
             <div className="grid grid-cols-2 gap-3">
               {slots.map((slot, i) => (
                 <div key={i} className="space-y-2">
+                  <p className="text-xs font-bold uppercase tracking-wide text-[var(--theme-primary)]">
+                    {STYLES[i].label}
+                  </p>
                   <div className="relative aspect-square rounded-md overflow-hidden border border-[var(--theme-primary)]/30 bg-[var(--theme-background)]/50">
                     {slot.url ? (
                       <img src={slot.url} className="w-full h-full object-cover" alt={`candidate-${i + 1}`} />
