@@ -48,7 +48,7 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
   const [extraNotes, setExtraNotes] = useState("");
   const [generating, setGenerating] = useState(false);
   const [slots, setSlots] = useState<Slot[]>(
-    Array.from({ length: NUM_CANDIDATES }, () => ({ status: "idle", url: null }))
+    STYLES.map((s) => ({ status: "idle", url: null, style: s.key }))
   );
   const [savingIdx, setSavingIdx] = useState<number | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
