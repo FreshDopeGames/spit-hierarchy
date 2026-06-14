@@ -3,8 +3,10 @@ import { Badge } from "@/components/ui/badge";
 import { ThemedButton } from "@/components/ui/themed-button";
 import { Music } from "lucide-react";
 import RapperAvatar from "@/components/RapperAvatar";
+import AlbumRatingButton from "./AlbumRatingButton";
 
 interface AlbumHeaderProps {
+  albumId: string;
   rapperId: string;
   albumTitle: string;
   rapperName: string;
@@ -20,6 +22,7 @@ interface AlbumHeaderProps {
 }
 
 export const AlbumHeader = ({
+  albumId,
   rapperId,
   albumTitle,
   rapperName,
@@ -120,6 +123,9 @@ export const AlbumHeader = ({
           </span>
         )}
       </div>
+
+      {/* Album Rating */}
+      <AlbumRatingButton albumId={albumId} albumTitle={albumTitle} />
     </div>
   );
 };

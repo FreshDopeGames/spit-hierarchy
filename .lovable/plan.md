@@ -1,24 +1,68 @@
-# Trending Rappers — Blog-Mention Fallback
+## Album Rating System
 
-## Goal
+Mirror the existing rapper rating UX for albums: multi-category 1-10 ratings, with the average overall score shown right on the album page near the cover art.
 
-When the daily `generate-trending-rappers` job finds fewer than 5 rappers from RSS + Reddit scanning, fill the remaining slots with rappers mentioned in the **2 most recent published blog posts** that contain rapper links — instead of keeping the previous day's snapshot.
+### Data model
 
-## How it works
+Add a new `album_votes` table (parallel to `votes`):
 
-1. After scoring RSS/Reddit mentions, check if fewer than 5 rappers qualify.
-2. If short, query the latest published `blog_posts` ordered by `published_at desc`.
-3. For each post, extract rapper slugs from markdown links using the same regex pattern as `useMentionedRappers` — `[Name](/rapper/slug)` and `[Name](https://spithierarchy.com/rapper/slug)`.
-4. Walk posts one at a time until we've collected mentions from **2 posts that actually contain rapper links** (skip posts with zero mentions).
-5. Look up those slugs in the `rappers` table, filter out any already in the trending list, and append them in mention order until we have 5 total (or run out).
-6. Fallback entries get `mention_count = 0`, `sources = ['blog:<post-slug>']`, and a small synthetic score so they sort below real trending hits but above nothing.
-7. If we still have fewer than 5 after blog fallback, keep what we have (no previous-snapshot reuse).
+- `album_id` → albums(id)
+- `user_id` → auth.users(id)
+- `category_id` → `album_voting_categories(id)`
+- `rating` smallint (1-10)
+- timestamps
+- UNIQUE (user_id, album_id, category_id)
 
-## Files touched
+Add `album_voting_categories` table (parallel to `voting_categories`) so album skills can differ from rapper skills. Seeded with:
 
-- `supabase/functions/generate-trending-rappers/index.ts` — add `fetchBlogFallback()` helper and call it before the insert when `results.length < 5`. No schema or frontend changes.
+- Production
+- Lyricism
+- Cohesion / Flow
+- Replay Value
+- Cultural Impact
 
-## Out of scope
+Add aggregate columns to `albums`:
 
-- Changing the frontend `TrendingRappersSection` (it already renders whatever rows the snapshot contains).
-- Changing the cron schedule or scoring formula for primary results.
+- `average_rating` numeric (mean across all category votes, scale 1-10)
+- `total_ratings` integer (unique rater count)
+
+A trigger on `album_votes` insert/update/delete recomputes these for the affected album (same pattern as the rapper votes aggregator).
+
+RLS:
+
+- `album_votes`: anyone can `SELECT` aggregate-friendly rows; authenticated users can insert/update/delete their own rows only.
+- `album_voting_categories`: public `SELECT`, admin-only write.
+- Standard `GRANT`s for `anon`, `authenticated`, `service_role`.
+
+### Hooks
+
+New under `src/hooks/`:
+
+- `useAlbumVotingCategories.ts` — fetches active categories.
+- `useAlbumVoting.ts` — fetches existing user votes for an album, submit/update mutation, optimistic update + 500ms refetch delay (matches the voting race-condition memory).
+- `useAlbumRatingStats.ts` — returns `{ averageRating, totalRatings }` from the `albums` row.
+
+### UI
+
+- New `src/components/album/AlbumRatingButton.tsx`: a compact "Rate this album" button that shows the current average (e.g. `8.4` with a star) and rater count, or `N/A` when there are zero ratings (consistent with the rapper N/A memory). Placed inside `AlbumHeader` directly under the artist row / streaming buttons.
+- New `src/components/album/AlbumVoteModal.tsx`: modeled on `VoteModal.tsx` — lists all album categories with a 1-10 slider per category, allows partial submission, "Update" vs "Submit" labeling based on existing votes. Single overall slider per category, no /100 conversion.
+- Reuses `RatingSlider` styling (1-10 only — drop the `/100` helper text for the album variant).
+- Guests see the button but clicking prompts sign-in (same pattern as `TrackVoteButton`).
+
+### AlbumDetail wiring
+
+- `useAlbumDetail` already returns `album_id`; pass it plus the new average/total fields (extend the RPC `get_album_by_slugs` to also return `average_rating` and `total_ratings`).
+- Mount `<AlbumRatingButton />` inside `AlbumHeader`.
+
+### Out of scope
+
+- Rapper-style percentile / ranking across all albums.
+- Track-level ratings (existing track upvotes stay as-is).
+- Surfacing album ratings in discography grids or search results (can be a follow-up).
+
+### Technical notes
+
+- Aggregate trigger is `VOLATILE SECURITY DEFINER` per DB function constraints memory.
+- Mutations use `.select('id')` and verify length > 0 (silent-RLS memory).
+- New components are file-scoped (no inline child components).
+- Theme colors via `cn()` only; no inline styles.
