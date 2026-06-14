@@ -159,8 +159,84 @@ export type Database = {
           },
         ]
       }
+      album_votes: {
+        Row: {
+          album_id: string
+          category_id: string
+          created_at: string
+          id: string
+          rating: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          album_id: string
+          category_id: string
+          created_at?: string
+          id?: string
+          rating: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          album_id?: string
+          category_id?: string
+          created_at?: string
+          id?: string
+          rating?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_votes_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: false
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "album_votes_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "album_voting_categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      album_voting_categories: {
+        Row: {
+          active: boolean
+          created_at: string
+          description: string | null
+          display_order: number
+          id: string
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          description?: string | null
+          display_order?: number
+          id?: string
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       albums: {
         Row: {
+          average_rating: number | null
           cached_cover_url: string | null
           cover_art_colors: Json | null
           cover_art_url: string | null
@@ -175,11 +251,13 @@ export type Database = {
           release_type: string
           slug: string
           title: string
+          total_ratings: number
           track_count: number | null
           unofficial_flag_reason: string | null
           updated_at: string
         }
         Insert: {
+          average_rating?: number | null
           cached_cover_url?: string | null
           cover_art_colors?: Json | null
           cover_art_url?: string | null
@@ -194,11 +272,13 @@ export type Database = {
           release_type?: string
           slug: string
           title: string
+          total_ratings?: number
           track_count?: number | null
           unofficial_flag_reason?: string | null
           updated_at?: string
         }
         Update: {
+          average_rating?: number | null
           cached_cover_url?: string | null
           cover_art_colors?: Json | null
           cover_art_url?: string | null
@@ -213,6 +293,7 @@ export type Database = {
           release_type?: string
           slug?: string
           title?: string
+          total_ratings?: number
           track_count?: number | null
           unofficial_flag_reason?: string | null
           updated_at?: string
