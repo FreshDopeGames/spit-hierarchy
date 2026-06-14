@@ -45,16 +45,16 @@ const HomepageRankingSection = () => {
         return [];
       }
 
-      // For each ranking, fetch the top 5 items with vote data
+      // For each ranking, fetch the top 5 items ordered by live votes via RPC
       const rankingsWithItems = await Promise.all(rankingsData.map(async ranking => {
-        // Get ranking items with rapper data
+        // Get ranking items sorted by actual votes using RPC
         const {
           data: itemsData,
           error: itemsError
-        } = await supabase.from("ranking_items").select(`
-              position,
-              rapper:rappers(*)
-            `).eq("ranking_id", ranking.id).order("position").limit(5);
+        } = await supabase.rpc('get_official_ranking_preview_items', {
+          ranking_uuid: ranking.id,
+          item_limit: 5
+        });
         if (itemsError) {
           console.error(`❌ Error fetching items for ranking ${ranking.id}:`, itemsError);
           return {
@@ -65,12 +65,9 @@ const HomepageRankingSection = () => {
           };
         }
 
-        // Get total vote count for this ranking
-        const {
-          count: totalVotes
-        } = await supabase.from("ranking_votes").select("*", {
-          count: "exact"
-        }).eq("ranking_id", ranking.id);
+        // Get total vote count for this ranking via RPC
+        const { data: voteCount } = await supabase
+          .rpc('get_official_ranking_vote_count', { ranking_uuid: ranking.id });
 
         // Get total rapper count for this ranking (published rappers only)
         const {
@@ -80,18 +77,24 @@ const HomepageRankingSection = () => {
           head: true
         }).eq("ranking_id", ranking.id).eq("rapper.publish_status", "published");
 
-        const processedItems = (itemsData || []).map(item => ({
-          rapper: item.rapper,
-          position: item.position,
-          votes: 0 // We could add individual vote counts here if needed
+        const processedItems = (itemsData || []).map((item: any) => ({
+          rapper: {
+            id: item.rapper_id,
+            name: item.rapper_name,
+            image_url: item.rapper_image_url,
+            slug: item.rapper_slug,
+          } as any,
+          position: item.item_position,
+          votes: item.ranking_votes || 0
         }));
         return {
           ...ranking,
           items: processedItems,
-          totalVotes: totalVotes || 0,
+          totalVotes: voteCount || 0,
           totalRappers: totalRappers || 0
         };
       }));
+
       return rankingsWithItems;
     },
     staleTime: 5 * 60 * 1000,
