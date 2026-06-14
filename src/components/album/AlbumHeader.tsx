@@ -22,6 +22,7 @@ interface AlbumHeaderProps {
 }
 
 export const AlbumHeader = ({
+  albumId,
   rapperId,
   albumTitle,
   rapperName,
