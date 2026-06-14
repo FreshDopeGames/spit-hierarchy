@@ -215,6 +215,7 @@ const AlbumDetail = () => {
             
             return (
               <AlbumHeader
+                albumId={album.album_id}
                 rapperId={album.rapper_id}
                 albumTitle={album.album_title}
                 rapperName={album.rapper_name}
