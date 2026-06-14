@@ -123,6 +123,9 @@ export const AlbumHeader = ({
           </span>
         )}
       </div>
+
+      {/* Album Rating */}
+      <AlbumRatingButton albumId={albumId} albumTitle={albumTitle} />
     </div>
   );
 };
