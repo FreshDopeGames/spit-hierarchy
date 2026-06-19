@@ -2,7 +2,7 @@
 import React, { useState, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { RankingItemWithDelta } from "@/hooks/useRankingData";
+import { RankingItemWithDelta, calculateVisualRanks, sortItemsByVotes } from "@/hooks/useRankingData";
 import { useRapperImages } from "@/hooks/useImageStyle";
 import RankingItemCard from "./RankingItemCard";
 import RankingLoadMore from "./RankingLoadMore";
@@ -34,16 +34,26 @@ const OfficialRankingItems = ({
 }: OfficialRankingItemsProps) => {
   const [searchKeyword, setSearchKeyword] = useState("");
 
+  const liveOrderedItems = useMemo(() => {
+    const sortedItems = sortItemsByVotes(items);
+    return calculateVisualRanks(sortedItems).map((item, index) => ({
+      ...item,
+      display_index: index + 1,
+      dynamic_position: index + 1,
+      position_delta: item.position - (index + 1),
+    }));
+  }, [items]);
+
   // Filter items based on search keyword
   const filteredItems = useMemo(() => {
     if (!searchKeyword.trim()) {
-      return items;
+      return liveOrderedItems;
     }
     
-    return items.filter(item => 
+    return liveOrderedItems.filter(item => 
       item.rapper?.name.toLowerCase().includes(searchKeyword.toLowerCase())
     );
-  }, [items, searchKeyword]);
+  }, [liveOrderedItems, searchKeyword]);
 
   const displayedItems = filteredItems.slice(0, displayCount);
 
