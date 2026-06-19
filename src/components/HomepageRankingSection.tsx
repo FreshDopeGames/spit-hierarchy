@@ -86,7 +86,11 @@ const HomepageRankingSection = () => {
           } as any,
           position: item.item_position,
           votes: item.ranking_votes || 0
-        }));
+        })).sort((a, b) => {
+          if (b.votes !== a.votes) return b.votes - a.votes;
+          if (a.position !== b.position) return a.position - b.position;
+          return (a.rapper?.name || '').localeCompare(b.rapper?.name || '');
+        });
         return {
           ...ranking,
           items: processedItems,
@@ -97,10 +101,9 @@ const HomepageRankingSection = () => {
 
       return rankingsWithItems;
     },
-    staleTime: 5 * 60 * 1000,
-    // 5 minutes (optimized cache)
+    staleTime: 30 * 1000,
     refetchInterval,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: true
   });
 
   // Preload all ranking card rapper images for faster rendering
