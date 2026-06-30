@@ -5,6 +5,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { validateContent } from "@/utils/contentModeration";
 
+interface VerifiedRapper {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface Comment {
   id: string;
   user_id: string;
@@ -18,12 +24,14 @@ interface Comment {
     username: string;
     avatar_url: string | null;
   };
+  verified_rapper?: VerifiedRapper | null;
   comment_likes: Array<{
     id: string;
     user_id: string;
   }>;
   replies?: Comment[];
 }
+
 
 interface UseCommentsProps {
   contentType: "rapper" | "blog" | "ranking" | "vs_match" | "album";
