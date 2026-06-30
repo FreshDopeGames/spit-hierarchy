@@ -5,6 +5,8 @@ import { useRankingVotes } from "@/hooks/useRankingVotes";
 import { useUserRankingVotes } from "@/hooks/useUserRankingVotes";
 import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
+import { useVerifiedArtist } from "@/hooks/useVerifiedArtist";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { useState } from "react";
