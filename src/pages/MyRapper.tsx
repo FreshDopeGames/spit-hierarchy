@@ -27,7 +27,7 @@ const MyRapper = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("rappers")
-        .select("id, name, slug, bio, instagram_handle, twitter_handle, homepage_url, spotify_id")
+        .select("id, name, slug, bio, instagram_handle, homepage_url, spotify_id")
         .eq("id", ownedRapperId!)
         .single();
       if (error) throw error;
@@ -36,7 +36,7 @@ const MyRapper = () => {
   });
 
   const [form, setForm] = useState<Record<EditableField, string>>({
-    bio: "", instagram_handle: "", twitter_handle: "", homepage_url: "", spotify_id: "",
+    bio: "", instagram_handle: "", homepage_url: "", spotify_id: "",
   });
 
   useEffect(() => {
@@ -44,7 +44,6 @@ const MyRapper = () => {
       setForm({
         bio: rapper.bio ?? "",
         instagram_handle: rapper.instagram_handle ?? "",
-        twitter_handle: rapper.twitter_handle ?? "",
         homepage_url: rapper.homepage_url ?? "",
         spotify_id: rapper.spotify_id ?? "",
       });
@@ -59,10 +58,10 @@ const MyRapper = () => {
         .update({
           bio: form.bio || null,
           instagram_handle: form.instagram_handle || null,
-          twitter_handle: form.twitter_handle || null,
           homepage_url: form.homepage_url || null,
           spotify_id: form.spotify_id || null,
         })
+
         .eq("id", ownedRapperId)
         .select("id");
       if (error) throw error;
