@@ -8,8 +8,10 @@ import {
   ThemedDropdownMenuSeparator, 
   ThemedDropdownMenuTrigger 
 } from "@/components/ui/themed-dropdown-menu";
-import { User, Settings, LogOut, Trophy } from "lucide-react";
+import { User, Settings, LogOut, Trophy, BadgeCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useVerifiedArtist } from "@/hooks/useVerifiedArtist";
+
 
 interface UserProfileDropdownProps {
   userProfile: any;
