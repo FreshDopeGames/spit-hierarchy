@@ -143,6 +143,7 @@ const NavigationSidebar = ({
                 >
                   <Home className="w-4 h-4 mr-3" />
                   Home
+                  {!isVisited("/") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -153,6 +154,7 @@ const NavigationSidebar = ({
                 >
                   <Trophy className="w-4 h-4 mr-3" />
                   Rankings
+                  {!isVisited("/rankings") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -163,6 +165,7 @@ const NavigationSidebar = ({
                 >
                   <Music className="w-4 h-4 mr-3" />
                   All Rappers
+                  {!isVisited("/all-rappers") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -173,6 +176,7 @@ const NavigationSidebar = ({
                 >
                   <Swords className="w-4 h-4 mr-3" />
                   VS Matches
+                  {!isVisited("/vs") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -183,6 +187,7 @@ const NavigationSidebar = ({
                 >
                   <BookOpen className="w-4 h-4 mr-3" />
                   Slick Talk Blog
+                  {!isVisited("/blog") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -193,6 +198,7 @@ const NavigationSidebar = ({
                 >
                   <PenTool className="w-4 h-4 mr-3" />
                   Community Cypher
+                  {!isVisited("/community-cypher") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -203,6 +209,7 @@ const NavigationSidebar = ({
                 >
                   <Brain className="w-4 h-4 mr-3" />
                   Rapper Quiz
+                  {!isVisited("/quiz") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -213,6 +220,7 @@ const NavigationSidebar = ({
                 >
                   <BarChart3 className="w-4 h-4 mr-3" />
                   Analytics
+                  {!isVisited("/analytics") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -223,8 +231,10 @@ const NavigationSidebar = ({
                 >
                   <Info className="w-4 h-4 mr-3" />
                   About
+                  {!isVisited("/about") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
+
 
               <ThemedSeparator className="my-4" />
 
