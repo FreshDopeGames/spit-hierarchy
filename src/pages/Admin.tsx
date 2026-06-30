@@ -90,6 +90,8 @@ const Admin = () => {
       case "acquisition":return <AcquisitionAnalytics />;
       case "bios":return <BioBulkPopulation />;
       case "users":return <AdminUserManagement />;
+      case "verifications":return <VerificationQueue />;
+
       default:return <AdminRapperManagement />;
     }
   };
