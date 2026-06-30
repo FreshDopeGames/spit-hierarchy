@@ -1,68 +1,106 @@
-## Album Rating System
+## Verified Artist Profiles
 
-Mirror the existing rapper rating UX for albums: multi-category 1-10 ratings, with the average overall score shown right on the album page near the cover art.
+Give real rappers / their social media managers a way to claim and operate their own profile, with distinctive comment styling and limited site permissions.
 
-### Data model
+---
 
-Add a new `album_votes` table (parallel to `votes`):
+### 1. Data model (migration)
 
-- `album_id` → albums(id)
-- `user_id` → auth.users(id)
-- `category_id` → `album_voting_categories(id)`
-- `rating` smallint (1-10)
-- timestamps
-- UNIQUE (user_id, album_id, category_id)
+New table `public.rapper_claims`:
+- `rapper_id` (FK rappers, unique — enforces 1:1)
+- `user_id` (FK auth.users, unique — a user can only own one rapper)
+- `status` enum: `pending`, `approved`, `rejected`
+- `claim_method` enum: `self_request`, `admin_assigned`
+- `proof_url` text (optional, e.g. link to Instagram post confirming identity)
+- `reviewed_by`, `reviewed_at`, `notes`
+- Standard timestamps
 
-Add `album_voting_categories` table (parallel to `voting_categories`) so album skills can differ from rapper skills. Seeded with:
+New enum value on `app_role`: `verified_artist`. Inserted into `user_roles` automatically when a claim is approved (via trigger).
 
-- Production
-- Lyricism
-- Cohesion / Flow
-- Replay Value
-- Cultural Impact
+Helper functions:
+- `is_verified_artist(_user_id uuid) returns boolean`
+- `get_verified_rapper_id(_user_id uuid) returns uuid` — returns the rapper they own, or null
+- `is_verified_for_rapper(_user_id uuid, _rapper_id uuid) returns boolean`
 
-Add aggregate columns to `albums`:
+All `SECURITY DEFINER`, used in RLS to avoid recursion.
 
-- `average_rating` numeric (mean across all category votes, scale 1-10)
-- `total_ratings` integer (unique rater count)
+RLS additions:
+- `ranking_votes` INSERT policy: block when `is_verified_artist(auth.uid())` is true.
+- `rappers` UPDATE policy: allow when `is_verified_for_rapper(auth.uid(), id)` — but restrict updatable columns via a trigger to only `bio`, `instagram_handle`, `twitter_handle`, `homepage_url`, `spotify_id` (everything else reverts to OLD value). Updates by verified artists also flip a `pending_review` flag for moderator approval (reuses existing moderation patterns).
+- `comments` already lets users post; no policy change needed — styling is presentation-only.
 
-A trigger on `album_votes` insert/update/delete recomputes these for the affected album (same pattern as the rapper votes aggregator).
+### 2. Claim flows
 
-RLS:
+**Self-claim** (rapper detail page, logged in, not already verified):
+- "Claim this profile" button → modal asking for proof URL + short note → inserts `rapper_claims` row with `status='pending'`, `claim_method='self_request'`.
+- Triggers a notification to all admins.
 
-- `album_votes`: anyone can `SELECT` aggregate-friendly rows; authenticated users can insert/update/delete their own rows only.
-- `album_voting_categories`: public `SELECT`, admin-only write.
-- Standard `GRANT`s for `anon`, `authenticated`, `service_role`.
+**Admin assignment** (admin panel → rapper edit dialog → new "Verification" tab):
+- Search user → assign → inserts approved claim, grants `verified_artist` role.
 
-### Hooks
+**Admin review queue** (new admin page `/admin/verifications` or new tab in existing admin):
+- Lists pending claims with rapper, requesting user, proof link.
+- Approve → sets `status='approved'`, grants role via trigger.
+- Reject → sets `status='rejected'` with reason, notifies user.
 
-New under `src/hooks/`:
+### 3. Comment styling — "Full highlighted card"
 
-- `useAlbumVotingCategories.ts` — fetches active categories.
-- `useAlbumVoting.ts` — fetches existing user votes for an album, submit/update mutation, optimistic update + 500ms refetch delay (matches the voting race-condition memory).
-- `useAlbumRatingStats.ts` — returns `{ averageRating, totalRatings }` from the `albums` row.
+Update `CommentItem.tsx` (and `CypherComments`, `VSMatchComments`, blog comments — anywhere the same component renders):
+- Detect verified author via a new field returned by the comments query: join `rapper_claims` (approved) on `comments.user_id` to get `verified_rapper: { id, name, slug, image_url }`.
+- When present:
+  - Outer card: 2px gold border (`border-[hsl(var(--theme-primary))]`), subtle gold-to-transparent gradient background, faint inner glow.
+  - Avatar: swap user avatar for the rapper's `xlarge` image, with a small gold check badge in the bottom-right corner.
+  - Display name: rapper name (links to `/rapper/{slug}`) with "Verified Artist" pill underneath in gold.
+  - Small "official" tag inline next to the timestamp.
+- Add a "Pin to top" affordance only on comments authored by the verified owner on their own rapper page — out of scope for this pass per your selection; we'll leave room for it but not build it.
 
-### UI
+Site-wide highlighting (your selection): the verified styling applies on **every** comment they post (blog, VS matches, cypher, other rapper pages), since `verified_rapper` is resolved from the author, not the page context.
 
-- New `src/components/album/AlbumRatingButton.tsx`: a compact "Rate this album" button that shows the current average (e.g. `8.4` with a star) and rater count, or `N/A` when there are zero ratings (consistent with the rapper N/A memory). Placed inside `AlbumHeader` directly under the artist row / streaming buttons.
-- New `src/components/album/AlbumVoteModal.tsx`: modeled on `VoteModal.tsx` — lists all album categories with a 1-10 slider per category, allows partial submission, "Update" vs "Submit" labeling based on existing votes. Single overall slider per category, no /100 conversion.
-- Reuses `RatingSlider` styling (1-10 only — drop the `/100` helper text for the album variant).
-- Guests see the button but clicking prompts sign-in (same pattern as `TrackVoteButton`).
+### 4. Voting / quiz permission changes
 
-### AlbumDetail wiring
+- `useRankingVotes` / `useDailyVoteStatus`: surface `isVerifiedArtist` from a new `useVerifiedArtist()` hook and disable vote buttons with tooltip "Verified artists can't vote on rankings."
+- Server-side enforcement still happens via the RLS policy above.
+- VS match votes (`vs_match_votes`) and quiz attempts (`user_quiz_attempts`) — no changes; verified artists keep access.
 
-- `useAlbumDetail` already returns `album_id`; pass it plus the new average/total fields (extend the RPC `get_album_by_slugs` to also return `average_rating` and `total_ratings`).
-- Mount `<AlbumRatingButton />` inside `AlbumHeader`.
+### 5. Profile editing for verified artists
 
-### Out of scope
+- New page `/my-rapper` (or new tab inside existing `UserProfile`): if the logged-in user owns a rapper, show an edit form scoped to allowed fields (bio, IG, Twitter, homepage, Spotify ID).
+- On save, write to `rappers`; trigger flips moderation flag; admin sees the pending edit in the existing moderation surface.
+- Public rapper page continues to show the last approved values until moderation clears the new ones.
 
-- Rapper-style percentile / ranking across all albums.
-- Track-level ratings (existing track upvotes stay as-is).
-- Surfacing album ratings in discography grids or search results (can be a follow-up).
+### 6. New hooks / components
 
-### Technical notes
+- `src/hooks/useVerifiedArtist.tsx` — returns `{ isVerifiedArtist, ownedRapperId, ownedRapper }` for current user.
+- `src/hooks/useRapperClaim.tsx` — submit/cancel claim, read current claim status for a rapper.
+- `src/components/rapper/ClaimProfileButton.tsx` — on `RapperHeader`.
+- `src/components/comments/VerifiedArtistBadge.tsx` — reusable pill.
+- `src/components/admin/verifications/VerificationQueue.tsx` — admin review UI.
+- `src/components/admin/rapper-edit/VerificationTab.tsx` — admin-side direct assignment.
+- `src/pages/MyRapper.tsx` — verified-artist edit form.
 
-- Aggregate trigger is `VOLATILE SECURITY DEFINER` per DB function constraints memory.
-- Mutations use `.select('id')` and verify length > 0 (silent-RLS memory).
-- New components are file-scoped (no inline child components).
-- Theme colors via `cn()` only; no inline styles.
+### 7. Notifications
+
+Reuse existing `notifications` table:
+- On self-claim submission → notify admins.
+- On approval/rejection → notify the requesting user.
+- On verified-artist edit submission → notify moderators.
+
+### 8. Out of scope (call out for later)
+
+- Pinning comments on own profile.
+- Verified-artist analytics (who's viewing my profile, etc.).
+- Multi-manager support (currently strict 1:1).
+- Verified artists posting blog/journal entries as the rapper persona.
+
+---
+
+### Implementation order
+
+1. Migration: `rapper_claims` table, enum, helper functions, RLS updates, trigger to grant role.
+2. Hooks: `useVerifiedArtist`, `useRapperClaim`; update comment queries to join verified info.
+3. Comment styling pass across `CommentItem`, `CypherComments`, `VSMatchComments`, blog comments.
+4. `ClaimProfileButton` on rapper page + claim modal.
+5. Admin verification queue + admin-assign tab.
+6. Voting gates (UI + RLS already in step 1).
+7. `/my-rapper` edit page + moderation hookup.
+8. Notifications wiring.
