@@ -23,6 +23,30 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  // Auth: require admin user OR service role
+  const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) {
+    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+  }
+  const __token = authHeader.replace('Bearer ', '');
+  const __serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  if (__token !== __serviceKey) {
+    const __authClient = createClient(
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
+      { global: { headers: { Authorization: `Bearer ${__token}` } } }
+    );
+    const { data: __claims, error: __claimsErr } = await __authClient.auth.getClaims(__token);
+    if (__claimsErr || !__claims?.claims) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const { data: __isAdmin } = await __authClient.rpc('is_admin');
+    if (!__isAdmin) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+  }
+
+
   try {
     const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
