@@ -20,6 +20,8 @@ import QuizManagement from "@/components/admin/QuizManagement";
 import AcquisitionAnalytics from "@/components/admin/AcquisitionAnalytics";
 import BioBulkPopulation from "@/components/admin/BioBulkPopulation";
 import AdminUserManagement from "@/components/admin/AdminUserManagement";
+import VerificationQueue from "@/components/admin/verifications/VerificationQueue";
+
 
 const ALL_TABS = [
 { value: "rappers", label: "Rappers", roles: ["admin"] },
