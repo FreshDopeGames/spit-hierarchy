@@ -67,6 +67,8 @@ const VoteButton = ({
 
       if (!user) {
         toast.error("Please sign in to vote for rappers.");
+      } else if (isVerifiedArtist) {
+        toast.error("Verified artists can't vote on rankings.");
       } else if (hasVoted) {
         toast.error("You've already voted for this rapper today. Come back tomorrow!");
       } else if (!isValidRapperId || !isValidRankingId) {
@@ -74,6 +76,7 @@ const VoteButton = ({
       }
       return;
     }
+
 
     if (showWeightedVoting && user) {
       // Security check
