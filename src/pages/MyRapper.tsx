@@ -12,8 +12,9 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 
-const EDITABLE_FIELDS = ["bio", "instagram_handle", "twitter_handle", "homepage_url", "spotify_id"] as const;
+const EDITABLE_FIELDS = ["bio", "instagram_handle", "homepage_url", "spotify_id"] as const;
 type EditableField = (typeof EDITABLE_FIELDS)[number];
+
 
 const MyRapper = () => {
   const { isAuthenticated, loading } = useSecureAuth();
