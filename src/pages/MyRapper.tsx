@@ -135,16 +135,7 @@ const MyRapper = () => {
               />
             </div>
             <div className="space-y-1">
-              <Label htmlFor="tw" className="text-[hsl(var(--theme-text))]">Twitter / X handle</Label>
-              <Input
-                id="tw"
-                value={form.twitter_handle}
-                onChange={(e) => setForm((f) => ({ ...f, twitter_handle: e.target.value }))}
-                placeholder="@yourhandle"
-                className="bg-[hsl(var(--theme-background))] text-white border-[hsl(var(--theme-primary))]/40"
-              />
-            </div>
-            <div className="space-y-1">
+
               <Label htmlFor="hp" className="text-[hsl(var(--theme-text))]">Homepage URL</Label>
               <Input
                 id="hp"
