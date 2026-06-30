@@ -14,17 +14,14 @@ export const useVoterActivityMap = () => {
   return useQuery({
     queryKey: ["voter-activity-map"],
     queryFn: async (): Promise<ActivityLocation[]> => {
-      const { data, error } = await supabase
-        .from("voter_locations")
-        .select("country, country_code, region");
+      const { data, error } = await supabase.rpc("get_voter_activity_map");
 
       if (error) throw error;
       if (!data) return [];
 
-      // Aggregate: US users by state, others by country
       const counts: Record<string, { count: number; countryCode: string | null; region: string | null }> = {};
 
-      data.forEach((row: any) => {
+      (data as Array<{ country: string | null; country_code: string | null; region: string | null; voter_count: number }>).forEach((row) => {
         const cc = row.country_code;
         let key: string;
         let region: string | null = null;
@@ -39,7 +36,7 @@ export const useVoterActivityMap = () => {
         if (!counts[key]) {
           counts[key] = { count: 0, countryCode: cc, region };
         }
-        counts[key].count++;
+        counts[key].count += Number(row.voter_count) || 0;
       });
 
       return Object.entries(counts)
