@@ -44,6 +44,7 @@ const VoteButton = ({
   const trackingRankingId = rankingId || userRankingId;
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(trackingRankingId);
   const isMobile = useIsMobile();
+  const { isVerifiedArtist } = useVerifiedArtist();
 
   // Strict UUID validation
   const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -52,7 +53,8 @@ const VoteButton = ({
 
   const hasVoted = isValidRapperId ? hasVotedToday(rapperId) : false;
   const isPendingVote = submitRankingVote.isPending || submitUserRankingVote.isPending;
-  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing;
+  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing || isVerifiedArtist;
+
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
   const handleClick = async () => {
