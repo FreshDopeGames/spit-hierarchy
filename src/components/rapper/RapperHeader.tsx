@@ -131,6 +131,7 @@ const RapperHeader = ({
               {/* Quick Rate Button & Stats */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               {/* Rate Skills Button - Mobile only */}
+              {!isVerifiedArtist && (
               <button
                 onClick={onVoteClick}
                 className="md:hidden w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-base animate-pulse hover:animate-none transition-opacity inline-flex items-center justify-center gap-2"
@@ -138,6 +139,8 @@ const RapperHeader = ({
                 <Star className="w-5 h-5 mr-2" />
                 Rate Skills
               </button>
+              )}
+
               <button
                 onClick={handleShare}
                 className="md:hidden w-full sm:w-auto h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors inline-flex items-center justify-center gap-2"
