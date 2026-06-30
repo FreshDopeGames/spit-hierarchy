@@ -5,6 +5,12 @@ import { useAuth } from "@/hooks/useAuth";
 import { toast } from "sonner";
 import { validateContent } from "@/utils/contentModeration";
 
+interface VerifiedRapper {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface Comment {
   id: string;
   user_id: string;
@@ -18,12 +24,14 @@ interface Comment {
     username: string;
     avatar_url: string | null;
   };
+  verified_rapper?: VerifiedRapper | null;
   comment_likes: Array<{
     id: string;
     user_id: string;
   }>;
   replies?: Comment[];
 }
+
 
 interface UseCommentsProps {
   contentType: "rapper" | "blog" | "ranking" | "vs_match" | "album";
@@ -78,40 +86,51 @@ export const useComments = ({ contentType, contentId }: UseCommentsProps) => {
       const allComments = commentsWithReplies.flatMap(comment => [comment, ...(comment.replies || [])]);
       const uniqueUserIds = [...new Set(allComments.map(comment => comment.user_id))];
 
-      // Fetch profiles in batch using our secure function
+      // Fetch profiles + verified-artist mapping in batch
+      let profileMap = new Map<string, { username: string; avatar_url: string | null }>();
+      let verifiedMap = new Map<string, VerifiedRapper>();
+
       if (uniqueUserIds.length > 0) {
-        const { data: profilesData, error: profilesError } = await supabase
-          .rpc('get_public_profiles_batch', { profile_user_ids: uniqueUserIds });
+        const [profilesRes, verifiedRes] = await Promise.all([
+          supabase.rpc('get_public_profiles_batch', { profile_user_ids: uniqueUserIds }),
+          supabase.rpc('get_verified_rappers_for_users', { _user_ids: uniqueUserIds }),
+        ]);
 
-        if (profilesError) {
-          console.error("Error fetching profiles:", profilesError);
+        if (profilesRes.error) {
+          console.error("Error fetching profiles:", profilesRes.error);
         } else {
-          // Create a map of user_id to profile for quick lookup
-          const profileMap = new Map(profilesData?.map(profile => [profile.id, profile]) || []);
+          profileMap = new Map(
+            (profilesRes.data ?? []).map((p: any) => [p.id, { username: p.username, avatar_url: p.avatar_url }])
+          );
+        }
 
-          // Add profile data to comments and replies
-          const enrichedComments = commentsWithReplies.map(comment => ({
-            ...comment,
-            profiles: profileMap.get(comment.user_id) ? {
-              username: profileMap.get(comment.user_id)!.username,
-              avatar_url: profileMap.get(comment.user_id)!.avatar_url
-            } : undefined,
-            replies: comment.replies?.map(reply => ({
-              ...reply,
-              profiles: profileMap.get(reply.user_id) ? {
-                username: profileMap.get(reply.user_id)!.username,
-                avatar_url: profileMap.get(reply.user_id)!.avatar_url
-              } : undefined
-            }))
-          }));
-
-          return enrichedComments as Comment[];
+        if (verifiedRes.error) {
+          console.error("Error fetching verified artists:", verifiedRes.error);
+        } else {
+          verifiedMap = new Map(
+            (verifiedRes.data ?? []).map((v: any) => [
+              v.user_id,
+              { id: v.rapper_id, name: v.rapper_name, slug: v.rapper_slug },
+            ])
+          );
         }
       }
 
-      return commentsWithReplies as Comment[];
+      const enrich = (c: any) => ({
+        ...c,
+        profiles: profileMap.get(c.user_id),
+        verified_rapper: verifiedMap.get(c.user_id) ?? null,
+      });
+
+      const enrichedComments = commentsWithReplies.map((comment) => ({
+        ...enrich(comment),
+        replies: comment.replies?.map(enrich),
+      }));
+
+      return enrichedComments as Comment[];
     }
   });
+
 
   // Create comment mutation with content validation
   const createCommentMutation = useMutation({

@@ -8,8 +8,10 @@ import {
   ThemedDropdownMenuSeparator, 
   ThemedDropdownMenuTrigger 
 } from "@/components/ui/themed-dropdown-menu";
-import { User, Settings, LogOut, Trophy } from "lucide-react";
+import { User, Settings, LogOut, Trophy, BadgeCheck } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
+import { useVerifiedArtist } from "@/hooks/useVerifiedArtist";
+
 
 interface UserProfileDropdownProps {
   userProfile: any;
@@ -25,6 +27,8 @@ const UserProfileDropdown = ({
   isScrolled
 }: UserProfileDropdownProps) => {
   const { user, signOut } = useAuth();
+  const { isVerifiedArtist, ownedRapper } = useVerifiedArtist();
+
 
   const getAvatarUrl = (baseUrl?: string) => {
     if (!baseUrl) return undefined;
@@ -72,8 +76,19 @@ const UserProfileDropdown = ({
             View Profile
           </ThemedDropdownMenuItem>
         </Link>
-        
+
+        {isVerifiedArtist && (
+          <Link to="/my-rapper">
+            <ThemedDropdownMenuItem>
+              <BadgeCheck className="w-4 h-4 mr-3" />
+              Manage {ownedRapper?.name ?? "My Rapper"}
+            </ThemedDropdownMenuItem>
+          </Link>
+        )}
+
         <ThemedDropdownMenuSeparator />
+
+
         
         <Link to="/analytics">
           <ThemedDropdownMenuItem>

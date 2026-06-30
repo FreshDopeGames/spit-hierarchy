@@ -9,7 +9,11 @@ import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, getZodiacName, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { useRapperTags } from "@/hooks/useRapperTags";
+import { useVerifiedArtist } from "@/hooks/useVerifiedArtist";
 import { getContrastTextColor } from "@/lib/utils";
+import ClaimProfileButton from "./ClaimProfileButton";
+
+
 
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
@@ -30,6 +34,8 @@ const RapperHeader = ({
   const deathdate = formatDeathdate(rapper.death_year, rapper.death_month, rapper.death_day);
   const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge for profile detail
   const { data: tags = [] } = useRapperTags(rapper.id);
+  const { isVerifiedArtist } = useVerifiedArtist();
+
 
   // Placeholder image from Supabase Storage
   const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
@@ -92,6 +98,7 @@ const RapperHeader = ({
               </div>
               
               {/* Rate Skills Button - Desktop/Tablet (under avatar) */}
+              {!isVerifiedArtist && (
               <button
                 onClick={onVoteClick}
                 className="hidden md:flex w-full h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-base animate-pulse hover:animate-none transition-opacity items-center justify-center gap-2 mt-4"
@@ -99,6 +106,8 @@ const RapperHeader = ({
                 <Star className="w-5 h-5 mr-2" />
                 Rate Skills
               </button>
+              )}
+
               <button
                 onClick={handleShare}
                 className="hidden md:flex w-full h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors items-center justify-center gap-2 mt-4"
@@ -122,6 +131,7 @@ const RapperHeader = ({
               {/* Quick Rate Button & Stats */}
               <div className="flex flex-col sm:flex-row sm:items-center gap-4">
               {/* Rate Skills Button - Mobile only */}
+              {!isVerifiedArtist && (
               <button
                 onClick={onVoteClick}
                 className="md:hidden w-full sm:w-auto h-11 px-8 rounded-md bg-gradient-to-r from-[hsl(var(--theme-primary))] via-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-primary))] hover:opacity-90 text-black font-bold text-base animate-pulse hover:animate-none transition-opacity inline-flex items-center justify-center gap-2"
@@ -129,6 +139,8 @@ const RapperHeader = ({
                 <Star className="w-5 h-5 mr-2" />
                 Rate Skills
               </button>
+              )}
+
               <button
                 onClick={handleShare}
                 className="md:hidden w-full sm:w-auto h-11 px-8 rounded-md border-2 border-[hsl(var(--theme-primary))] bg-transparent hover:bg-[hsl(var(--theme-primary))]/10 text-[hsl(var(--theme-primary))] font-bold text-base transition-colors inline-flex items-center justify-center gap-2"
@@ -265,7 +277,11 @@ const RapperHeader = ({
                 )}
               </div>
 
+              <div className="pt-2">
+                <ClaimProfileButton rapperId={rapper.id} rapperName={rapper.name} />
+              </div>
             </div>
+
           </div>
         </CardContent>
       </Card>

@@ -39,6 +39,8 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const Contact = lazy(() => import("./pages/Contact"));
 const JournalEntryDetail = lazy(() => import("./pages/JournalEntryDetail"));
+const MyRapper = lazy(() => import("./pages/MyRapper"));
+
 
 // Lazy-loaded deferred components (only needed for authenticated users)
 const DeferredAuthComponents = lazy(() => import("@/components/DeferredAuthComponents"));
@@ -124,6 +126,15 @@ function App() {
                 } 
               />
               <Route path="/analytics" element={<Analytics />} />
+              <Route
+                path="/my-rapper"
+                element={
+                  <AuthGuard requireAuth>
+                    <MyRapper />
+                  </AuthGuard>
+                }
+              />
+
               <Route 
                 path="/notifications" 
                 element={

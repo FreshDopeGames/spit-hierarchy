@@ -5,6 +5,8 @@ import { useRankingVotes } from "@/hooks/useRankingVotes";
 import { useUserRankingVotes } from "@/hooks/useUserRankingVotes";
 import { useAuth } from "@/hooks/useAuth";
 import { useDailyVoteStatus } from "@/hooks/useDailyVoteStatus";
+import { useVerifiedArtist } from "@/hooks/useVerifiedArtist";
+
 import { useIsMobile } from "@/hooks/use-mobile";
 import { toast } from "sonner";
 import { useState } from "react";
@@ -42,6 +44,7 @@ const VoteButton = ({
   const trackingRankingId = rankingId || userRankingId;
   const { hasVotedToday, addVoteToTracking } = useDailyVoteStatus(trackingRankingId);
   const isMobile = useIsMobile();
+  const { isVerifiedArtist } = useVerifiedArtist();
 
   // Strict UUID validation
   const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
@@ -50,7 +53,8 @@ const VoteButton = ({
 
   const hasVoted = isValidRapperId ? hasVotedToday(rapperId) : false;
   const isPendingVote = submitRankingVote.isPending || submitUserRankingVote.isPending;
-  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing;
+  const isDisabled = disabled || isPendingVote || !user || hasVoted || !isValidRapperId || !isValidRankingId || isProcessing || isVerifiedArtist;
+
   const voteMultiplier = userRankingId ? getUserMultiplier() : getOfficialMultiplier();
 
   const handleClick = async () => {
@@ -63,6 +67,8 @@ const VoteButton = ({
 
       if (!user) {
         toast.error("Please sign in to vote for rappers.");
+      } else if (isVerifiedArtist) {
+        toast.error("Verified artists can't vote on rankings.");
       } else if (hasVoted) {
         toast.error("You've already voted for this rapper today. Come back tomorrow!");
       } else if (!isValidRapperId || !isValidRankingId) {
@@ -70,6 +76,7 @@ const VoteButton = ({
       }
       return;
     }
+
 
     if (showWeightedVoting && user) {
       // Security check

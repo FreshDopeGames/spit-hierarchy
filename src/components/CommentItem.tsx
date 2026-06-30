@@ -1,12 +1,15 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Mic, Reply, Trash2 } from "lucide-react";
+import { Mic, Reply, Trash2, BadgeCheck } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import SmallAvatar from "./avatar/SmallAvatar";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { UsernameLink } from "./profile/UsernameLink";
+import { useRapperImage } from "@/hooks/useImageStyle";
+import VerifiedArtistBadge from "./comments/VerifiedArtistBadge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +22,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+interface VerifiedRapper {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface Comment {
   id: string;
   user_id: string;
@@ -28,12 +37,14 @@ interface Comment {
     username: string;
     avatar_url: string | null;
   };
+  verified_rapper?: VerifiedRapper | null;
   comment_likes: Array<{
     id: string;
     user_id: string;
   }>;
   replies?: Comment[];
 }
+
 
 interface CommentItemProps {
   comment: Comment;
@@ -86,27 +97,60 @@ const CommentItem = ({
     }
   };
 
+  const verified = comment.verified_rapper ?? null;
+  const { data: verifiedRapperImage } = useRapperImage(verified?.id ?? "", "medium");
+
+  const cardClasses = verified
+    ? "border-2 border-[hsl(var(--theme-primary))] bg-gradient-to-br from-[hsl(var(--theme-primary))]/15 via-[hsl(var(--theme-background))]/40 to-[hsl(var(--theme-background))]/30 shadow-[0_0_24px_-8px_hsl(var(--theme-primary)/0.55)]"
+    : "bg-[var(--theme-background)]/30 border border-[var(--theme-border)]/20";
+
   return (
     <div className={`${depth > 0 ? 'ml-8 border-l border-[var(--theme-border)]/30 pl-4' : ''}`}>
-      <div className="bg-[var(--theme-background)]/30 border border-[var(--theme-border)]/20 rounded-lg p-4 mb-4">
+      <div className={`${cardClasses} rounded-lg p-4 mb-4`}>
         <div className={`${isMobile ? 'flex flex-col gap-2' : 'flex items-start gap-3'}`}>
           <div className="flex items-start gap-3">
-            <SmallAvatar 
-              avatarUrl={comment.profiles?.avatar_url || null} 
-              username={comment.profiles?.username || "Anonymous User"}
-              size="sm"
-            />
-            <div className="flex flex-col gap-0.5">
-              <UsernameLink
-                userId={comment.user_id}
+            {verified ? (
+              <Link to={`/rapper/${verified.slug}`} className="relative shrink-0">
+                <SmallAvatar
+                  avatarUrl={verifiedRapperImage || undefined}
+                  username={verified.name}
+                  size="md"
+                />
+                <span className="absolute -bottom-1 -right-1 rounded-full bg-[hsl(var(--theme-background))] p-0.5">
+                  <BadgeCheck className="w-4 h-4 text-[hsl(var(--theme-primary))] fill-[hsl(var(--theme-primary))]/20" />
+                </span>
+              </Link>
+            ) : (
+              <SmallAvatar
+                avatarUrl={comment.profiles?.avatar_url || null}
                 username={comment.profiles?.username || "Anonymous User"}
-                className="font-[var(--theme-font-heading)]"
+                size="sm"
               />
+            )}
+            <div className="flex flex-col gap-0.5">
+              {verified ? (
+                <>
+                  <Link
+                    to={`/rapper/${verified.slug}`}
+                    className="font-[var(--theme-font-heading)] text-[hsl(var(--theme-primary))] font-bold hover:underline"
+                  >
+                    {verified.name}
+                  </Link>
+                  <VerifiedArtistBadge />
+                </>
+              ) : (
+                <UsernameLink
+                  userId={comment.user_id}
+                  username={comment.profiles?.username || "Anonymous User"}
+                  className="font-[var(--theme-font-heading)]"
+                />
+              )}
               <span className="text-[hsl(var(--theme-textMuted))] text-xs font-[var(--theme-font-body)]">
                 {formatTimeAgo(comment.created_at)}
               </span>
             </div>
           </div>
+
           <div className={`${isMobile ? 'w-full' : 'flex-1'}`}>
             <p className={`text-[var(--theme-text)] font-[var(--theme-font-body)] mb-3 whitespace-pre-wrap ${isMobile ? 'text-sm' : ''}`}>
               {comment.comment_text}

@@ -20,6 +20,8 @@ import QuizManagement from "@/components/admin/QuizManagement";
 import AcquisitionAnalytics from "@/components/admin/AcquisitionAnalytics";
 import BioBulkPopulation from "@/components/admin/BioBulkPopulation";
 import AdminUserManagement from "@/components/admin/AdminUserManagement";
+import VerificationQueue from "@/components/admin/verifications/VerificationQueue";
+
 
 const ALL_TABS = [
 { value: "rappers", label: "Rappers", roles: ["admin"] },
@@ -36,7 +38,9 @@ const ALL_TABS = [
 { value: "announcements", label: "Announcements", roles: ["admin"] },
 { value: "acquisition", label: "Acquisition", roles: ["admin"] },
 { value: "bios", label: "Bios", roles: ["admin"] },
-{ value: "users", label: "Users", roles: ["admin"] }];
+{ value: "users", label: "Users", roles: ["admin"] },
+{ value: "verifications", label: "Verifications", roles: ["admin"] }];
+
 
 
 const Admin = () => {
@@ -86,6 +90,8 @@ const Admin = () => {
       case "acquisition":return <AcquisitionAnalytics />;
       case "bios":return <BioBulkPopulation />;
       case "users":return <AdminUserManagement />;
+      case "verifications":return <VerificationQueue />;
+
       default:return <AdminRapperManagement />;
     }
   };
