@@ -39,6 +39,8 @@ const Notifications = lazy(() => import("./pages/Notifications"));
 const Quiz = lazy(() => import("./pages/Quiz"));
 const Contact = lazy(() => import("./pages/Contact"));
 const JournalEntryDetail = lazy(() => import("./pages/JournalEntryDetail"));
+const MyRapper = lazy(() => import("./pages/MyRapper"));
+
 
 // Lazy-loaded deferred components (only needed for authenticated users)
 const DeferredAuthComponents = lazy(() => import("@/components/DeferredAuthComponents"));
