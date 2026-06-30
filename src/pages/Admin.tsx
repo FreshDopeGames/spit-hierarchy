@@ -38,7 +38,9 @@ const ALL_TABS = [
 { value: "announcements", label: "Announcements", roles: ["admin"] },
 { value: "acquisition", label: "Acquisition", roles: ["admin"] },
 { value: "bios", label: "Bios", roles: ["admin"] },
-{ value: "users", label: "Users", roles: ["admin"] }];
+{ value: "users", label: "Users", roles: ["admin"] },
+{ value: "verifications", label: "Verifications", roles: ["admin"] }];
+
 
 
 const Admin = () => {
