@@ -1,12 +1,15 @@
 
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Mic, Reply, Trash2 } from "lucide-react";
+import { Mic, Reply, Trash2, BadgeCheck } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import SmallAvatar from "./avatar/SmallAvatar";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { UsernameLink } from "./profile/UsernameLink";
+import { useRapperImage } from "@/hooks/useImageStyle";
+import VerifiedArtistBadge from "./comments/VerifiedArtistBadge";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -19,6 +22,12 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 
+interface VerifiedRapper {
+  id: string;
+  name: string;
+  slug: string;
+}
+
 interface Comment {
   id: string;
   user_id: string;
@@ -28,12 +37,14 @@ interface Comment {
     username: string;
     avatar_url: string | null;
   };
+  verified_rapper?: VerifiedRapper | null;
   comment_likes: Array<{
     id: string;
     user_id: string;
   }>;
   replies?: Comment[];
 }
+
 
 interface CommentItemProps {
   comment: Comment;
