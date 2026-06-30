@@ -126,6 +126,15 @@ function App() {
                 } 
               />
               <Route path="/analytics" element={<Analytics />} />
+              <Route
+                path="/my-rapper"
+                element={
+                  <AuthGuard requireAuth>
+                    <MyRapper />
+                  </AuthGuard>
+                }
+              />
+
               <Route 
                 path="/notifications" 
                 element={
