@@ -4278,6 +4278,13 @@ export type Database = {
           vote_count: number
         }[]
       }
+      get_top_voters_weekly: {
+        Args: { _limit?: number }
+        Returns: {
+          total_votes: number
+          user_id: string
+        }[]
+      }
       get_total_member_count: { Args: never; Returns: number }
       get_trending_rappers: {
         Args: { days_back?: number }
