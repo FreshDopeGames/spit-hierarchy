@@ -27,6 +27,8 @@ const UserProfileDropdown = ({
   isScrolled
 }: UserProfileDropdownProps) => {
   const { user, signOut } = useAuth();
+  const { isVerifiedArtist, ownedRapper } = useVerifiedArtist();
+
 
   const getAvatarUrl = (baseUrl?: string) => {
     if (!baseUrl) return undefined;
