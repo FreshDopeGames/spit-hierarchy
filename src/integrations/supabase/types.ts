@@ -4124,6 +4124,22 @@ export type Database = {
           unique_voters: number
         }[]
       }
+      get_public_member_stats: {
+        Args: { _user_ids?: string[] }
+        Returns: {
+          badges: Json
+          consecutive_voting_days: number
+          id: string
+          ranking_lists_created: number
+          rappers_voted_count: number
+          status: string
+          top_five_created: number
+          total_comments: number
+          total_upvotes: number
+          total_votes: number
+          votes_with_notes_count: number
+        }[]
+      }
       get_public_profile_full: {
         Args: { profile_user_id: string }
         Returns: {
@@ -4410,6 +4426,15 @@ export type Database = {
       get_vote_weight: {
         Args: { status: Database["public"]["Enums"]["member_status"] }
         Returns: number
+      }
+      get_voter_activity_map: {
+        Args: never
+        Returns: {
+          country: string
+          country_code: string
+          region: string
+          voter_count: number
+        }[]
       }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }
       increment_page_visit_stat: {
