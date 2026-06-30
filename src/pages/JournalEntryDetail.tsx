@@ -16,6 +16,7 @@ import { Label } from "@/components/ui/label";
 import { ArrowLeft, Calendar, User, Flag, AlertTriangle } from "lucide-react";
 import { format } from "date-fns";
 import { marked } from "marked";
+import DOMPurify from "dompurify";
 import { useState } from "react";
 
 const JournalEntryDetail = () => {
@@ -79,8 +80,13 @@ const JournalEntryDetail = () => {
   };
 
   const renderContent = (content: string) => {
-    const html = marked.parse(content, { async: false, breaks: true, gfm: true }) as string;
-    return { __html: html };
+    const raw = marked.parse(content, { async: false, breaks: true, gfm: true }) as string;
+    const clean = DOMPurify.sanitize(raw, {
+      ALLOWED_TAGS: ['p','br','strong','em','u','s','code','pre','blockquote','ul','ol','li','h1','h2','h3','h4','h5','h6','a','img','hr','table','thead','tbody','tr','th','td','span','div'],
+      ALLOWED_ATTR: ['href','title','target','rel','src','alt','class'],
+      ALLOWED_URI_REGEXP: /^(?:https?:|mailto:|tel:|\/)/i,
+    });
+    return { __html: clean };
   };
 
   if (isLoading) {

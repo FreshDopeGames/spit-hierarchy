@@ -54,12 +54,13 @@ const StatsOverview = () => {
       });
       const newestMember = adminProfiles?.[0];
 
-      // Get top commenter
-      const {
-        data: topCommenter
-      } = await supabase.from("member_stats").select("id, total_comments").gt("total_comments", 0).order("total_comments", {
-        ascending: false
-      }).limit(1).single();
+      // Get top commenter & voter via secure RPC (raw member_stats is owner/admin scoped)
+      const { data: publicStats } = await supabase.rpc("get_public_member_stats", { _user_ids: null });
+      const stats = (publicStats || []) as Array<{ id: string; total_comments: number; total_votes: number }>;
+
+      const topCommenter = [...stats]
+        .filter(s => (s.total_comments || 0) > 0)
+        .sort((a, b) => (b.total_comments || 0) - (a.total_comments || 0))[0];
       let topCommenterName = "N/A";
       if (topCommenter) {
         const {
@@ -70,12 +71,9 @@ const StatsOverview = () => {
         topCommenterName = commenterProfile?.[0]?.username || "N/A";
       }
 
-      // Get top voter
-      const {
-        data: topVoter
-      } = await supabase.from("member_stats").select("id, total_votes").gt("total_votes", 0).order("total_votes", {
-        ascending: false
-      }).limit(1).single();
+      const topVoter = [...stats]
+        .filter(s => (s.total_votes || 0) > 0)
+        .sort((a, b) => (b.total_votes || 0) - (a.total_votes || 0))[0];
       let topVoterName = "N/A";
       if (topVoter) {
         const {
@@ -85,6 +83,7 @@ const StatsOverview = () => {
         });
         topVoterName = voterProfile?.[0]?.username || "N/A";
       }
+
       return {
         totalMembers: totalMembers || 0,
         totalVotes: totalVotes || 0,
