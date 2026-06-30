@@ -267,7 +267,11 @@ const RapperHeader = ({
                 )}
               </div>
 
+              <div className="pt-2">
+                <ClaimProfileButton rapperId={rapper.id} rapperName={rapper.name} />
+              </div>
             </div>
+
           </div>
         </CardContent>
       </Card>
