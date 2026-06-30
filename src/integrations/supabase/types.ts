@@ -1881,6 +1881,73 @@ export type Database = {
           },
         ]
       }
+      rapper_claims: {
+        Row: {
+          claim_method: Database["public"]["Enums"]["rapper_claim_method"]
+          created_at: string
+          id: string
+          notes: string | null
+          proof_url: string | null
+          rapper_id: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          reviewed_by: string | null
+          status: Database["public"]["Enums"]["rapper_claim_status"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          claim_method?: Database["public"]["Enums"]["rapper_claim_method"]
+          created_at?: string
+          id?: string
+          notes?: string | null
+          proof_url?: string | null
+          rapper_id: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["rapper_claim_status"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          claim_method?: Database["public"]["Enums"]["rapper_claim_method"]
+          created_at?: string
+          id?: string
+          notes?: string | null
+          proof_url?: string | null
+          rapper_id?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by?: string | null
+          status?: Database["public"]["Enums"]["rapper_claim_status"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_claims_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_claims_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_claims_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_collaborations: {
         Row: {
           album_ids: string[] | null
@@ -4330,6 +4397,16 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_verified_rapper_id: { Args: { _user_id: string }; Returns: string }
+      get_verified_rappers_for_users: {
+        Args: { _user_ids: string[] }
+        Returns: {
+          rapper_id: string
+          rapper_name: string
+          rapper_slug: string
+          user_id: string
+        }[]
+      }
       get_vote_weight: {
         Args: { status: Database["public"]["Enums"]["member_status"] }
         Returns: number
@@ -4343,6 +4420,11 @@ export type Database = {
       is_admin: { Args: never; Returns: boolean }
       is_admin_user: { Args: never; Returns: boolean }
       is_moderator_or_admin: { Args: never; Returns: boolean }
+      is_verified_artist: { Args: { _user_id: string }; Returns: boolean }
+      is_verified_for_rapper: {
+        Args: { _rapper_id: string; _user_id: string }
+        Returns: boolean
+      }
       log_profile_access: {
         Args: { access_type?: string; accessed_id: string }
         Returns: undefined
@@ -4480,7 +4562,13 @@ export type Database = {
         | "community"
         | "time_based"
         | "special"
-      app_role: "admin" | "moderator" | "blog_editor" | "user" | "author"
+      app_role:
+        | "admin"
+        | "moderator"
+        | "blog_editor"
+        | "user"
+        | "author"
+        | "verified_artist"
       image_style:
         | "photo_real"
         | "comic_book"
@@ -4490,6 +4578,8 @@ export type Database = {
         | "minimalist"
         | "retro"
       member_status: "bronze" | "silver" | "gold" | "platinum" | "diamond"
+      rapper_claim_method: "self_request" | "admin_assigned"
+      rapper_claim_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -4626,7 +4716,14 @@ export const Constants = {
         "time_based",
         "special",
       ],
-      app_role: ["admin", "moderator", "blog_editor", "user", "author"],
+      app_role: [
+        "admin",
+        "moderator",
+        "blog_editor",
+        "user",
+        "author",
+        "verified_artist",
+      ],
       image_style: [
         "photo_real",
         "comic_book",
@@ -4637,6 +4734,8 @@ export const Constants = {
         "retro",
       ],
       member_status: ["bronze", "silver", "gold", "platinum", "diamond"],
+      rapper_claim_method: ["self_request", "admin_assigned"],
+      rapper_claim_status: ["pending", "approved", "rejected"],
     },
   },
 } as const
