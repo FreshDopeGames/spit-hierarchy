@@ -38,6 +38,8 @@ import { ThemedAvatar, ThemedAvatarImage, ThemedAvatarFallback } from "@/compone
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
+import { useVisitedPages } from "@/hooks/useVisitedPages";
+import NewPageBadge from "@/components/NewPageBadge";
 
 const NavigationSidebar = ({
   trigger,
