@@ -56,18 +56,17 @@ const TopMembersCards = ({ timeRange = "all", countryCode, region }: TopMembersC
         }));
       }
 
-      // All-time stats from member_stats
-      const { data: memberStats, error: statsError } = await supabase
-        .from("member_stats")
-        .select("id, total_comments")
-        .gt("total_comments", 0)
-        .order("total_comments", { ascending: false })
-        .limit(5);
-
+      // All-time stats via secure RPC
+      const { data: publicStats, error: statsError } = await supabase.rpc("get_public_member_stats", { _user_ids: null });
       if (statsError) {
         console.error("Error fetching member stats:", statsError);
         throw statsError;
       }
+      const memberStats = ((publicStats || []) as Array<{ id: string; total_comments: number }>)
+        .filter(s => (s.total_comments || 0) > 0)
+        .sort((a, b) => (b.total_comments || 0) - (a.total_comments || 0))
+        .slice(0, 5);
+
 
       if (!memberStats || memberStats.length === 0) {
         console.log("No member stats found");
