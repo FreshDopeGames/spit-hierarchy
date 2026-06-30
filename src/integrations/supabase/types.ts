@@ -4130,6 +4130,9 @@ export type Database = {
           badges: Json
           consecutive_voting_days: number
           id: string
+          quiz_best_streak: number
+          quiz_correct_answers: number
+          quiz_questions_answered: number
           ranking_lists_created: number
           rappers_voted_count: number
           status: string
