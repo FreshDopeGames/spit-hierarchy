@@ -116,80 +116,46 @@ const TopMembersCards = ({ timeRange = "all", countryCode, region }: TopMembersC
       console.log("Fetching top voters for timeRange:", timeRange);
 
       if (timeRange === "week") {
-        // For weekly, count from ranking_votes table directly
-        const { data: votes, error: votesError } = await supabase
-          .from("ranking_votes")
-          .select("user_id, vote_weight")
-          .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+        // For weekly, use secure RPC that aggregates by user without exposing other voters' ids
+        const { data: weekly, error: weeklyErr } = await supabase.rpc("get_top_voters_weekly", { _limit: 5 });
+        if (weeklyErr) throw weeklyErr;
+        if (!weekly || weekly.length === 0) return [];
 
-        if (votesError) throw votesError;
-        if (!votes || votes.length === 0) return [];
-
-        // Group by user and sum vote weights
-        const userVoteCounts = votes.reduce((acc: any, vote: any) => {
-          const userId = vote.user_id;
-          if (!acc[userId]) acc[userId] = { id: userId, total_votes: 0 };
-          acc[userId].total_votes += vote.vote_weight || 1;
-          return acc;
-        }, {});
-
-        const memberStats = Object.values(userVoteCounts)
-          .sort((a: any, b: any) => b.total_votes - a.total_votes)
-          .slice(0, 5);
-
-        const userIds = memberStats.map((stat: any) => stat.id);
+        const userIds = (weekly as Array<{ user_id: string; total_votes: number }>).map(w => w.user_id);
         const { data: profiles } = await supabase.rpc("get_profiles_for_analytics", { profile_user_ids: userIds });
 
-        return memberStats.map((stat: any) => ({
-          id: stat.id,
-          total_votes: stat.total_votes,
-          profiles: profiles?.find((p) => p.id === stat.id) || null,
+        return (weekly as Array<{ user_id: string; total_votes: number }>).map((w) => ({
+          id: w.user_id,
+          total_votes: Number(w.total_votes) || 0,
+          profiles: profiles?.find((p) => p.id === w.user_id) || null,
         }));
       }
 
-      // All-time stats from member_stats
-      const { data: memberStats, error: statsError } = await supabase
-        .from("member_stats")
-        .select("id, total_votes")
-        .gt("total_votes", 0)
-        .order("total_votes", { ascending: false })
-        .limit(5);
-
+      // All-time stats via secure RPC
+      const { data: publicStats, error: statsError } = await supabase.rpc("get_public_member_stats", { _user_ids: null });
       if (statsError) {
         console.error("Error fetching member stats for voters:", statsError);
         throw statsError;
       }
+      const memberStats = ((publicStats || []) as Array<{ id: string; total_votes: number }>)
+        .filter(s => (s.total_votes || 0) > 0)
+        .sort((a, b) => (b.total_votes || 0) - (a.total_votes || 0))
+        .slice(0, 5);
 
-      if (!memberStats || memberStats.length === 0) {
-        console.log("No member stats found for voters");
-        return [];
-      }
+      if (memberStats.length === 0) return [];
 
-      // Get user IDs
       const userIds = memberStats.map((stat) => stat.id);
-      console.log("User IDs for voters:", userIds);
-
-      // Fetch profiles for these users using the secure batch function
       const { data: profiles, error: profilesError } = await supabase.rpc("get_profiles_for_analytics", {
         profile_user_ids: userIds,
       });
+      if (profilesError) throw profilesError;
 
-      if (profilesError) {
-        console.error("Error fetching profiles for voters:", profilesError);
-        throw profilesError;
-      }
-
-      console.log("Profiles found for voters:", profiles);
-
-      // Merge the data
-      const merged = memberStats.map((stat) => ({
+      return memberStats.map((stat) => ({
         id: stat.id,
         total_votes: stat.total_votes,
         profiles: profiles?.find((p) => p.id === stat.id) || null,
       }));
 
-      console.log("Merged voters data:", merged);
-      return merged;
     },
     staleTime: 30000,
     gcTime: 60000,
