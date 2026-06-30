@@ -9,8 +9,10 @@ import { Tables } from "@/integrations/supabase/types";
 import { getZodiacSign, getZodiacName, formatBirthdate, formatDeathdate } from "@/utils/zodiacUtils";
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { useRapperTags } from "@/hooks/useRapperTags";
+import { useVerifiedArtist } from "@/hooks/useVerifiedArtist";
 import { getContrastTextColor } from "@/lib/utils";
 import ClaimProfileButton from "./ClaimProfileButton";
+
 
 
 type Rapper = Tables<"rappers"> & {
