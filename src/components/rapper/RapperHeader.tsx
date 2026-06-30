@@ -10,6 +10,8 @@ import { getZodiacSign, getZodiacName, formatBirthdate, formatDeathdate } from "
 import { useRapperImage } from "@/hooks/useImageStyle";
 import { useRapperTags } from "@/hooks/useRapperTags";
 import { getContrastTextColor } from "@/lib/utils";
+import ClaimProfileButton from "./ClaimProfileButton";
+
 
 type Rapper = Tables<"rappers"> & {
   top5_count?: number;
