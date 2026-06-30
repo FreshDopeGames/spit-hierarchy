@@ -76,8 +76,19 @@ const UserProfileDropdown = ({
             View Profile
           </ThemedDropdownMenuItem>
         </Link>
-        
+
+        {isVerifiedArtist && (
+          <Link to="/my-rapper">
+            <ThemedDropdownMenuItem>
+              <BadgeCheck className="w-4 h-4 mr-3" />
+              Manage {ownedRapper?.name ?? "My Rapper"}
+            </ThemedDropdownMenuItem>
+          </Link>
+        )}
+
         <ThemedDropdownMenuSeparator />
+
+
         
         <Link to="/analytics">
           <ThemedDropdownMenuItem>
