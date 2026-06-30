@@ -38,6 +38,8 @@ import { ThemedAvatar, ThemedAvatarImage, ThemedAvatarFallback } from "@/compone
 import { useAuth } from "@/hooks/useAuth";
 import { useUserProfile } from "@/hooks/useUserProfile";
 import { useSecurityContext } from "@/hooks/useSecurityContext";
+import { useVisitedPages } from "@/hooks/useVisitedPages";
+import NewPageBadge from "@/components/NewPageBadge";
 
 const NavigationSidebar = ({
   trigger,
@@ -55,6 +57,8 @@ const NavigationSidebar = ({
   const { user, signOut } = useAuth();
   const { userProfile } = useUserProfile();
   const { isAdmin } = useSecurityContext();
+  const { isVisited, hasUnvisited, trackedPaths } = useVisitedPages();
+  const anyUnvisited = hasUnvisited(trackedPaths);
   const isOpen = open !== undefined ? open : internalOpen;
   const handleOpenChange = onOpenChange || setInternalOpen;
 
@@ -85,9 +89,12 @@ const NavigationSidebar = ({
         backgroundColor: theme.colors.primary,
         borderColor: "hsl(var(--theme-border))",
       }}
-      className="border-2 hover:bg-white hover:opacity-100 shadow-lg bg-theme-primary"
+      className="relative border-2 hover:bg-white hover:opacity-100 shadow-lg bg-theme-primary"
     >
       <Menu className="h-4 w-4 text-black" />
+      {anyUnvisited && (
+        <NewPageBadge className="absolute -top-1 -right-1" ariaLabel="New sections to explore" />
+      )}
     </ThemedButton>
   );
   return (
@@ -136,6 +143,7 @@ const NavigationSidebar = ({
                 >
                   <Home className="w-4 h-4 mr-3" />
                   Home
+                  {!isVisited("/") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -146,6 +154,7 @@ const NavigationSidebar = ({
                 >
                   <Trophy className="w-4 h-4 mr-3" />
                   Rankings
+                  {!isVisited("/rankings") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -156,6 +165,7 @@ const NavigationSidebar = ({
                 >
                   <Music className="w-4 h-4 mr-3" />
                   All Rappers
+                  {!isVisited("/all-rappers") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -166,6 +176,7 @@ const NavigationSidebar = ({
                 >
                   <Swords className="w-4 h-4 mr-3" />
                   VS Matches
+                  {!isVisited("/vs") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -176,6 +187,7 @@ const NavigationSidebar = ({
                 >
                   <BookOpen className="w-4 h-4 mr-3" />
                   Slick Talk Blog
+                  {!isVisited("/blog") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -186,6 +198,7 @@ const NavigationSidebar = ({
                 >
                   <PenTool className="w-4 h-4 mr-3" />
                   Community Cypher
+                  {!isVisited("/community-cypher") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -196,6 +209,7 @@ const NavigationSidebar = ({
                 >
                   <Brain className="w-4 h-4 mr-3" />
                   Rapper Quiz
+                  {!isVisited("/quiz") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -206,6 +220,7 @@ const NavigationSidebar = ({
                 >
                   <BarChart3 className="w-4 h-4 mr-3" />
                   Analytics
+                  {!isVisited("/analytics") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
 
@@ -216,8 +231,10 @@ const NavigationSidebar = ({
                 >
                   <Info className="w-4 h-4 mr-3" />
                   About
+                  {!isVisited("/about") && <NewPageBadge className="ml-auto" />}
                 </ThemedButton>
               </Link>
+
 
               <ThemedSeparator className="my-4" />
 
