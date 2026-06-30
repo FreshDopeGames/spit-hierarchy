@@ -57,6 +57,8 @@ const NavigationSidebar = ({
   const { user, signOut } = useAuth();
   const { userProfile } = useUserProfile();
   const { isAdmin } = useSecurityContext();
+  const { isVisited, hasUnvisited, trackedPaths } = useVisitedPages();
+  const anyUnvisited = hasUnvisited(trackedPaths);
   const isOpen = open !== undefined ? open : internalOpen;
   const handleOpenChange = onOpenChange || setInternalOpen;
 
