@@ -89,9 +89,12 @@ const NavigationSidebar = ({
         backgroundColor: theme.colors.primary,
         borderColor: "hsl(var(--theme-border))",
       }}
-      className="border-2 hover:bg-white hover:opacity-100 shadow-lg bg-theme-primary"
+      className="relative border-2 hover:bg-white hover:opacity-100 shadow-lg bg-theme-primary"
     >
       <Menu className="h-4 w-4 text-black" />
+      {anyUnvisited && (
+        <NewPageBadge className="absolute -top-1 -right-1" ariaLabel="New sections to explore" />
+      )}
     </ThemedButton>
   );
   return (
