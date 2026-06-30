@@ -34,6 +34,8 @@ const RapperHeader = ({
   const deathdate = formatDeathdate(rapper.death_year, rapper.death_month, rapper.death_day);
   const { data: imageUrl } = useRapperImage(rapper.id, 'xlarge'); // Use xlarge for profile detail
   const { data: tags = [] } = useRapperTags(rapper.id);
+  const { isVerifiedArtist } = useVerifiedArtist();
+
 
   // Placeholder image from Supabase Storage
   const PLACEHOLDER_IMAGE = "https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/Rapper_Placeholder_01.png";
