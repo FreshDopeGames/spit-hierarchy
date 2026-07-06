@@ -198,28 +198,47 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
       <div style={{
         flex: 1,
         display: 'flex',
-        flexDirection: 'column',
+        flexDirection: isLandscape ? 'row' : 'column',
         gap: cellGap,
         padding: `0 ${cellGap}px`,
         minHeight: 0,
       }}>
-        {/* Row 1: #1 featured */}
-        <div style={{ flex: isLandscape ? 1.8 : 2, display: 'flex', minHeight: 0 }}>
-          {slots[0] && renderMosaicCell(slots[0], { tl: true, tr: true })}
-        </div>
-
-        {/* Row 2: #2 and #3 */}
-        <div style={{ flex: isLandscape ? 1.2 : 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
-          {slots[1] && renderMosaicCell(slots[1])}
-          {slots[2] && renderMosaicCell(slots[2])}
-        </div>
-
-        {/* Row 3: #4 and #5 */}
-        <div style={{ flex: isLandscape ? 1.2 : 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
-          {slots[3] && renderMosaicCell(slots[3], { bl: true })}
-          {slots[4] && renderMosaicCell(slots[4], { br: true })}
-        </div>
-      </div>
+        {isLandscape ? (
+          <>
+            {/* Left: #1 featured, full-height portrait cell */}
+            <div style={{ flex: 1.1, display: 'flex', minWidth: 0 }}>
+              {slots[0] && renderMosaicCell(slots[0], { tl: true, bl: true })}
+            </div>
+            {/* Right: #2-5 in a 2x2 grid */}
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: cellGap, minWidth: 0 }}>
+              <div style={{ flex: 1, display: 'flex', gap: cellGap, minHeight: 0 }}>
+                {slots[1] && renderMosaicCell(slots[1], { tr: false })}
+                {slots[2] && renderMosaicCell(slots[2], { tr: true })}
+              </div>
+              <div style={{ flex: 1, display: 'flex', gap: cellGap, minHeight: 0 }}>
+                {slots[3] && renderMosaicCell(slots[3])}
+                {slots[4] && renderMosaicCell(slots[4], { br: true })}
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Row 1: #1 featured */}
+            <div style={{ flex: 2, display: 'flex', minHeight: 0 }}>
+              {slots[0] && renderMosaicCell(slots[0], { tl: true, tr: true })}
+            </div>
+            {/* Row 2: #2 and #3 */}
+            <div style={{ flex: 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
+              {slots[1] && renderMosaicCell(slots[1])}
+              {slots[2] && renderMosaicCell(slots[2])}
+            </div>
+            {/* Row 3: #4 and #5 */}
+            <div style={{ flex: 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
+              {slots[3] && renderMosaicCell(slots[3], { bl: true })}
+              {slots[4] && renderMosaicCell(slots[4], { br: true })}
+            </div>
+          </>
+        )}
 
       {/* Footer */}
       <div style={{
