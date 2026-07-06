@@ -13,17 +13,22 @@ interface ShareableTopFiveProps {
   format?: 'square' | 'landscape' | 'portrait';
 }
 
-const HEADING_FONT = "sans-serif";
-const BODY_FONT = "sans-serif";
+// Match the site's active theme fonts (see src/config/enhancedTheme.ts).
+// html2canvas rasterises with whatever font-family the DOM resolves, so we
+// reference the same CSS variables the rest of the app uses and fall back to
+// the concrete family names so exports stay on-brand even before web fonts
+// finish hydrating.
+const HEADING_FONT = "var(--theme-font-heading), 'Mogra', cursive";
+const BODY_FONT = "var(--theme-font-body), 'Merienda', serif";
 
-const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({ 
-  slots, 
-  username, 
-  format = 'square' 
+const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
+  slots,
+  username,
+  format = 'square'
 }) => {
   const isPortrait = format === 'portrait';
   const isLandscape = format === 'landscape';
-  
+
   const getDimensions = () => {
     if (isPortrait) return { width: 1080, height: 1920 };
     if (isLandscape) return { width: 1200, height: 630 };
@@ -41,12 +46,15 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
   const headerFont = isLandscape ? 26 : isPortrait ? 48 : 36;
   const footerFont = isLandscape ? 14 : isPortrait ? 22 : 18;
 
-  const renderMosaicCell = (slot: typeof slots[0], isTopLeft = false, isTopRight = false, isBottomLeft = false, isBottomRight = false, isFullWidth = false) => {
+  const renderMosaicCell = (
+    slot: typeof slots[0],
+    corners: { tl?: boolean; tr?: boolean; bl?: boolean; br?: boolean } = {}
+  ) => {
     const borderRadius = [
-      isTopLeft || (isFullWidth && true) ? 8 : 0,
-      isTopRight || (isFullWidth && true) ? 8 : 0,
-      isBottomRight ? 8 : 0,
-      isBottomLeft ? 8 : 0,
+      corners.tl ? 8 : 0,
+      corners.tr ? 8 : 0,
+      corners.br ? 8 : 0,
+      corners.bl ? 8 : 0,
     ].map(r => `${r}px`).join(' ');
 
     return (
@@ -60,16 +68,21 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           background: '#141414',
         }}
       >
-        {/* Image */}
+        {/* Image — use <img crossOrigin> so html2canvas can rasterise it
+            without tainting the canvas (background-image ignores crossOrigin). */}
         {slot.rapper?.image_url ? (
-          <div
+          <img
+            src={slot.rapper.image_url}
+            alt={slot.rapper.name}
+            crossOrigin="anonymous"
             style={{
+              position: 'absolute',
+              inset: 0,
               width: '100%',
               height: '100%',
-              backgroundImage: `url(${slot.rapper.image_url})`,
-              backgroundSize: 'cover',
-              backgroundPosition: isLandscape ? 'center 35%' : 'center center',
-              backgroundRepeat: 'no-repeat',
+              objectFit: 'cover',
+              objectPosition: isLandscape ? 'center 35%' : 'center center',
+              display: 'block',
             }}
           />
         ) : (
@@ -91,12 +104,11 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           bottom: 0,
           left: 0,
           right: 0,
-          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 1.5}px`,
-          background: 'linear-gradient(to top, #000000CC 0%, #00000066 60%, #00000000 100%)',
+          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 0.5}px`,
+          background: 'linear-gradient(to top, #000000E6 0%, #00000080 60%, #00000000 100%)',
           display: 'flex',
-          alignItems: 'flex-end',
+          alignItems: 'center',
           gap: badgeSize * 0.4,
-          overflow: 'visible',
         }}>
           {/* Position badge */}
           <div style={{
@@ -111,6 +123,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             fontWeight: 'bold',
             fontSize: badgeFont,
             fontFamily: HEADING_FONT,
+            lineHeight: 1,
             flexShrink: 0,
           }}>
             {slot.position}
@@ -123,15 +136,12 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             fontWeight: 'bold',
             fontFamily: HEADING_FONT,
             margin: 0,
-            lineHeight: 1.18,
+            lineHeight: 1.1,
             textTransform: 'uppercase' as const,
             letterSpacing: '0.01em',
-            overflow: 'visible',
+            overflow: 'hidden',
             textOverflow: 'ellipsis',
             whiteSpace: 'nowrap' as const,
-            display: 'block',
-            paddingTop: badgeSize * 0.04,
-            paddingBottom: badgeSize * 0.14,
             flex: 1,
             minWidth: 0,
           }}>
@@ -178,6 +188,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           fontWeight: 'bold',
           fontFamily: HEADING_FONT,
           margin: 0,
+          lineHeight: 1,
         }}>
           {username}'s Top 5
         </h1>
@@ -194,19 +205,19 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
       }}>
         {/* Row 1: #1 featured */}
         <div style={{ flex: isLandscape ? 1.8 : 2, display: 'flex', minHeight: 0 }}>
-          {slots[0] && renderMosaicCell(slots[0], true, true, false, false, true)}
+          {slots[0] && renderMosaicCell(slots[0], { tl: true, tr: true })}
         </div>
 
         {/* Row 2: #2 and #3 */}
         <div style={{ flex: isLandscape ? 1.2 : 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
-          {slots[1] && renderMosaicCell(slots[1], false, false, false, false)}
-          {slots[2] && renderMosaicCell(slots[2], false, false, false, false)}
+          {slots[1] && renderMosaicCell(slots[1])}
+          {slots[2] && renderMosaicCell(slots[2])}
         </div>
 
         {/* Row 3: #4 and #5 */}
         <div style={{ flex: isLandscape ? 1.2 : 1.5, display: 'flex', gap: cellGap, minHeight: 0 }}>
-          {slots[3] && renderMosaicCell(slots[3], false, false, true, false)}
-          {slots[4] && renderMosaicCell(slots[4], false, false, false, true)}
+          {slots[3] && renderMosaicCell(slots[3], { bl: true })}
+          {slots[4] && renderMosaicCell(slots[4], { br: true })}
         </div>
       </div>
 
