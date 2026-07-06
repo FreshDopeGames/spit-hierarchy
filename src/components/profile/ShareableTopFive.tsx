@@ -81,7 +81,7 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
               width: '100%',
               height: '100%',
               objectFit: 'cover',
-              objectPosition: isLandscape ? 'center 35%' : 'center center',
+              objectPosition: isLandscape ? 'center 20%' : 'center center',
               display: 'block',
             }}
           />
