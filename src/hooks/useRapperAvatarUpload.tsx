@@ -29,6 +29,23 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
     mutationFn: async (file: File) => {
       console.log('=== STARTING RAPPER AVATAR UPLOAD ===');
       console.log('File info:', { name: file.name, size: file.size, type: file.type });
+
+      // Admin preflight: confirm the current session is recognized as admin
+      // by the same check the storage RLS policy uses. Fail fast with a clear
+      // error instead of surfacing "row-level security policy" from storage.
+      const { data: sessionData } = await supabase.auth.getSession();
+      if (!sessionData?.session?.user) {
+        throw new Error('You are signed out. Please sign back in and try again.');
+      }
+      const { data: adminCheck, error: adminError } = await supabase.rpc('is_admin');
+      if (adminError) {
+        console.error('Admin preflight failed:', adminError);
+        throw new Error(`Could not verify admin permissions: ${adminError.message}`);
+      }
+      if (!adminCheck) {
+        throw new Error('Admin permissions could not be confirmed. Please sign out and back in, then try again.');
+      }
+      
       
       const validationResult = await validateFile(file, `admin-${rapper.id}`);
       
