@@ -129,12 +129,13 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
 
       const sizes = await generateRapperImageSizes(blob);
       // Upload original
-      await supabase.storage
+      const { error: originalUploadError } = await supabase.storage
         .from("rapper-images")
         .upload(`${sanitizedName}/original.jpg`, new File([blob], "original.jpg", { type: "image/jpeg" }), {
           cacheControl: "3600",
           upsert: true,
         });
+      if (originalUploadError) throw originalUploadError;
       // Upload sizes
       for (const { name, blob: b } of sizes) {
         const f = new File([b], `${name}.jpg`, { type: "image/jpeg" });
@@ -152,14 +153,20 @@ const AIPortraitGenerator = ({ rapper }: Props) => {
         .eq("style", "comic_book")
         .maybeSingle();
       if (existing) {
-        await supabase
+        const { data: imageRows, error: imageUpdateError } = await supabase
           .from("rapper_images")
           .update({ image_url: sanitizedName, updated_at: new Date().toISOString() })
-          .eq("id", existing.id);
+          .eq("id", existing.id)
+          .select("id");
+        if (imageUpdateError) throw imageUpdateError;
+        if (!imageRows || imageRows.length === 0) throw new Error("Image record update failed — admin session may have expired");
       } else {
-        await supabase
+        const { data: imageRows, error: imageInsertError } = await supabase
           .from("rapper_images")
-          .insert({ rapper_id: rapper.id, style: "comic_book", image_url: sanitizedName });
+          .insert({ rapper_id: rapper.id, style: "comic_book", image_url: sanitizedName })
+          .select("id");
+        if (imageInsertError) throw imageInsertError;
+        if (!imageRows || imageRows.length === 0) throw new Error("Image record insert failed — admin session may have expired");
       }
 
       const xlargeUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${sanitizedName}/xlarge.jpg`;
