@@ -116,55 +116,72 @@ export const useRapperAvatarUpload = (rapper: Rapper) => {
 
       const basePath = sanitizedName;
 
-      const { data: existingImage } = await supabase
+      const { data: existingImage, error: existingImageError } = await supabase
         .from("rapper_images")
         .select("id")
         .eq("rapper_id", rapper.id)
         .eq("style", "comic_book")
-        .single();
+        .maybeSingle();
+
+      if (existingImageError) {
+        console.error('Database lookup failed:', existingImageError);
+        throw new Error(`Database lookup failed: ${existingImageError.message}`);
+      }
 
       if (existingImage) {
-        const { error: updateError } = await supabase
+        const { data: updatedImageRows, error: updateError } = await supabase
           .from("rapper_images")
           .update({ 
             image_url: basePath,
             updated_at: new Date().toISOString()
           })
-          .eq("id", existingImage.id);
+          .eq("id", existingImage.id)
+          .select("id");
 
         if (updateError) {
           console.error('Database update failed:', updateError);
           throw new Error(`Database update failed: ${updateError.message}`);
         }
+        if (!updatedImageRows || updatedImageRows.length === 0) {
+          throw new Error('Database update failed: admin permissions were not confirmed');
+        }
         console.log('Updated existing rapper_images record');
       } else {
-        const { error: insertError } = await supabase
+        const { data: insertedImageRows, error: insertError } = await supabase
           .from("rapper_images")
           .insert({
             rapper_id: rapper.id,
             style: "comic_book",
             image_url: basePath
-          });
+          })
+          .select("id");
 
         if (insertError) {
           console.error('Database insert failed:', insertError);
           throw new Error(`Database insert failed: ${insertError.message}`);
         }
+        if (!insertedImageRows || insertedImageRows.length === 0) {
+          throw new Error('Database insert failed: admin permissions were not confirmed');
+        }
         console.log('Inserted new rapper_images record');
       }
 
       const fullXlargeUrl = `https://xzcmkssadekswmiqfbff.supabase.co/storage/v1/object/public/rapper-images/${sanitizedName}/xlarge.jpg`;
-      const { error: updateError } = await supabase
+      const { data: updatedRapperRows, error: updateError } = await supabase
         .from("rappers")
         .update({ 
           image_url: fullXlargeUrl,
           updated_at: new Date().toISOString()
         })
-        .eq("id", rapper.id);
+        .eq("id", rapper.id)
+        .select("id");
 
       if (updateError) {
         console.error('Rapper table update failed:', updateError);
         throw new Error(`Rapper table update failed: ${updateError.message}`);
+      }
+      if (!updatedRapperRows || updatedRapperRows.length === 0) {
+        throw new Error('Rapper table update failed: admin permissions were not confirmed');
       }
 
       console.log('=== UPLOAD PROCESS COMPLETED SUCCESSFULLY ===');

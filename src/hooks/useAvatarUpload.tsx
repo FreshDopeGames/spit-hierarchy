@@ -108,17 +108,21 @@ export const useAvatarUpload = (userId: string, onAvatarUpdate: (url: string) =>
       const avatarBasePath = userId;
       console.log('Updating profile with avatar base path:', avatarBasePath);
       
-      const { error: updateError } = await supabase
+      const { data: updatedProfileRows, error: updateError } = await supabase
         .from('profiles')
         .update({ 
           avatar_url: avatarBasePath,
           updated_at: new Date().toISOString()
         })
-        .eq('id', userId);
+        .eq('id', userId)
+        .select('id');
 
       if (updateError) {
         console.error('Profile update failed:', updateError);
         throw updateError;
+      }
+      if (!updatedProfileRows || updatedProfileRows.length === 0) {
+        throw new Error('Profile update failed: your session does not match this profile');
       }
 
       console.log('Avatar upload completed successfully with enhanced security validation');
