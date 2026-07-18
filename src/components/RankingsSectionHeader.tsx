@@ -32,7 +32,7 @@ const RankingsSectionHeader = () => {
   const backgroundImage = headerData?.background_image_url;
 
   return (
-    <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl">
+    <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl h-[10vh] sm:h-[12vh] lg:h-[15vh]">
       {/* Background gradient/image */}
       <div
         className="absolute inset-0 bg-gradient-to-br from-rap-carbon to-rap-burgundy/30"
@@ -48,7 +48,7 @@ const RankingsSectionHeader = () => {
       />
 
       {/* Content: official logo */}
-      <div className="relative z-10 flex items-center justify-center px-6 py-8 sm:py-10 lg:py-12">
+      <div className="relative z-10 w-full h-full flex items-center justify-center">
         <img
           src="/lovable-uploads/logo-header.png"
           alt="Spit Hierarchy: Goat Rapper Rankings"
@@ -57,7 +57,7 @@ const RankingsSectionHeader = () => {
           fetchPriority="high"
           loading="eager"
           decoding="sync"
-          className="h-[10vh] sm:h-[12vh] lg:h-[15vh] w-auto max-w-full object-contain"
+          className="w-full h-full object-contain mix-blend-screen"
         />
       </div>
 
