@@ -52,8 +52,8 @@ const RankingsSectionHeader = () => {
         <img
           src="/lovable-uploads/logo-header.png"
           alt="Spit Hierarchy: Goat Rapper Rankings"
-          width="480"
-          height="96"
+          width="163"
+          height="163"
           fetchPriority="high"
           loading="eager"
           decoding="sync"
