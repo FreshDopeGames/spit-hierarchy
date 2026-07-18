@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Crown, TrendingUp } from "lucide-react";
 import { useEnhancedTheme } from "@/hooks/useEnhancedTheme";
+
 interface SectionHeader {
   id: string;
   section: string;
@@ -10,71 +10,61 @@ interface SectionHeader {
   background_image_url: string | null;
   is_active: boolean;
 }
+
 const RankingsSectionHeader = () => {
-  const {
-    theme
-  } = useEnhancedTheme();
-  const {
-    data: headerData
-  } = useQuery({
+  const { theme } = useEnhancedTheme();
+  const { data: headerData } = useQuery({
     queryKey: ["section-header", "rankings"],
     queryFn: async () => {
-      const {
-        data,
-        error
-      } = await supabase.from("section_headers").select("*").eq("section", "rankings").eq("is_active", true).single();
+      const { data, error } = await supabase
+        .from("section_headers")
+        .select("*")
+        .eq("section", "rankings")
+        .eq("is_active", true)
+        .single();
       if (error) {
         return null;
       }
       return data as SectionHeader;
     }
   });
-  const title = headerData?.title || "Spit Hierarchy: GOAT Rapper Rankings";
-  const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
+
   const backgroundImage = headerData?.background_image_url;
-  return <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl">
-      {/* Background Image Container */}
-      <div className="absolute inset-0 bg-gradient-to-br from-rap-carbon to-rap-burgundy/30" style={{
-      backgroundImage: backgroundImage ? `url(${backgroundImage})` : undefined,
-      backgroundSize: 'cover',
-      backgroundPosition: 'center',
-      backgroundBlendMode: 'overlay',
-      background: `linear-gradient(135deg, ${theme.colors.primary}20, ${theme.colors.background} 50%, ${theme.colors.secondary}30)`
-    }} />
-      
-      {/* Overlay for text readability */}
-      <div className="absolute inset-0 bg-gradient-to-r from-[var(--theme-surface)]/80 via-[var(--theme-surface)]/60 to-[var(--theme-surface)]/80" />
-      
-      {/* Content */}
-      <div className="relative z-10 px-6 text-center sm:py-6 lg:py-4 py-[10px]">
-        <div className="max-w-4xl mx-auto">
-          {/* Icon and Title */}
-          <div className="flex items-center justify-center gap-4 mb-6 sm:gap-2 sm:mb-3 lg:mb-2">
-            <Crown className="hidden sm:block w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5" style={{
-            color: theme.colors.primary
-          }} />
-            <h1 style={{
-            color: theme.colors.primary
-          }} className="text-4xl sm:text-3xl lg:text-4xl font-ceviche animate-text-glow tracking-wider font-normal text-primary">
-              {title}
-            </h1>
-            <TrendingUp className="hidden sm:block w-10 h-10 sm:w-6 sm:h-6 lg:w-5 lg:h-5" style={{
-            color: theme.colors.primary
-          }} />
-          </div>
-          
-          {/* Subtitle */}
-          <p className="text-lg sm:text-base lg:text-lg text-[var(--theme-text)] font-[var(--theme-font-body)] max-w-3xl mx-auto leading-relaxed">
-            {subtitle}
-          </p>
-          
-          {/* Decorative Elements */}
-          
-        </div>
+
+  return (
+    <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl">
+      {/* Background gradient/image */}
+      <div
+        className="absolute inset-0 bg-gradient-to-br from-rap-carbon to-rap-burgundy/30"
+        style={{
+          backgroundImage: backgroundImage
+            ? `url(${backgroundImage})`
+            : undefined,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundBlendMode: "overlay",
+          background: `linear-gradient(135deg, ${theme.colors.primary}20, ${theme.colors.background} 50%, ${theme.colors.secondary}30)`
+        }}
+      />
+
+      {/* Content: official logo */}
+      <div className="relative z-10 flex items-center justify-center px-6 py-8 sm:py-10 lg:py-12">
+        <img
+          src="/lovable-uploads/logo-header.png"
+          alt="Spit Hierarchy: Goat Rapper Rankings"
+          width="480"
+          height="96"
+          fetchPriority="high"
+          loading="eager"
+          decoding="sync"
+          className="h-[10vh] sm:h-[12vh] lg:h-[15vh] w-auto max-w-full object-contain"
+        />
       </div>
-      
+
       {/* Bottom fade effect */}
       <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[var(--theme-surface)] to-transparent" />
-    </div>;
+    </div>
+  );
 };
+
 export default RankingsSectionHeader;
