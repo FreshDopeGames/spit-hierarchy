@@ -169,7 +169,7 @@ const BlogCarousel = () => {
                       className="absolute inset-y-0 left-20 right-20 sm:left-32 sm:right-32 z-[5] cursor-pointer"
                     />
                     {/* Title at TOP */}
-                    <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent backdrop-blur-[2px] pointer-events-none">
+                    <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent backdrop-blur-[0px] pointer-events-none">
                       <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] text-white leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
                         {post.title}
                       </h3>
