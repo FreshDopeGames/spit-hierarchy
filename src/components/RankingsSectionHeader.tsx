@@ -29,7 +29,7 @@ const RankingsSectionHeader = () => {
       return data as SectionHeader;
     }
   });
-  const title = headerData?.title || "Spit Hierarchy: GOAT Rapper Rankings";
+  const title = headerData?.title || "SPIT\u00a0HIERARCHY: GOAT RAPPER RANKINGS";
   const subtitle = headerData?.subtitle || "Discover the greatest rappers of all time, rising legends, and lyrical masters";
   const backgroundImage = headerData?.background_image_url;
   return <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl">
