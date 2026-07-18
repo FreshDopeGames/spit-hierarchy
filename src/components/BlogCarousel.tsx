@@ -150,50 +150,55 @@ const BlogCarousel = () => {
           <div className="overflow-hidden" ref={emblaRef}>
             <div className="flex">
               {featuredPosts.map((post, index) => <div key={post.id} className="flex-[0_0_100%] min-w-0">
-                  <Link to={`/blog/${post.slug}`} className="block">
-                    <div className="relative aspect-[3/2] sm:aspect-[16/9] md:aspect-[16/10] overflow-hidden cursor-pointer">
-                      <ResponsiveImage 
-                        src={getImageData(post)} 
-                        alt={post.title} 
-                        className="w-full h-full" 
-                        context="carousel" 
-                        objectFit="cover" 
-                        sizes="(max-width: 768px) 100vw, 100vw"
-                        priority={index === 0}
-                        showBlurPlaceholder={true}
-                      />
-                      {/* Title at TOP */}
-                      <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent">
-                        <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] text-white leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
-                          {post.title}
-                        </h3>
-                      </div>
-                      
-                      {/* Metadata in lower third */}
-                      <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent">
-                        <div className="hidden" />
-
-                        <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 [text-shadow:_0_2px_6px_rgba(0,0,0,0.95),_0_0_3px_rgba(0,0,0,1)]">
-                          {post.excerpt}
-                        </p>
-                      </div>
-                      
-                      {/* Progress Bar */}
-                      <div className="absolute bottom-0 left-0 w-full h-1 bg-black/30">
-                        <div key={progressKeyRef.current} className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${isProgressActive && !isPaused ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'}`} />
-                      </div>
+                  <div className="relative aspect-[3/4] sm:aspect-[16/9] md:aspect-[16/10] overflow-hidden">
+                    <ResponsiveImage 
+                      src={getImageData(post)} 
+                      alt={post.title} 
+                      className="w-full h-full" 
+                      context="carousel" 
+                      objectFit="cover" 
+                      objectPosition="center"
+                      sizes="(max-width: 768px) 100vw, 100vw"
+                      priority={index === 0}
+                      showBlurPlaceholder={true}
+                    />
+                    {/* Invisible center tappable column — deeplink to post, sits between arrow tap zones */}
+                    <Link
+                      to={`/blog/${post.slug}`}
+                      aria-label={post.title}
+                      className="absolute inset-y-0 left-20 right-20 sm:left-32 sm:right-32 z-[5] cursor-pointer"
+                    />
+                    {/* Title at TOP */}
+                    <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
+                      <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] text-white leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
+                        {post.title}
+                      </h3>
                     </div>
-                  </Link>
+                    
+                    {/* Metadata in lower third */}
+                    <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none">
+                      <div className="hidden" />
+
+                      <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 [text-shadow:_0_2px_6px_rgba(0,0,0,0.95),_0_0_3px_rgba(0,0,0,1)]">
+                        {post.excerpt}
+                      </p>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="absolute bottom-0 left-0 w-full h-1 bg-black/30 pointer-events-none">
+                      <div key={progressKeyRef.current} className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${isProgressActive && !isPaused ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'}`} />
+                    </div>
+                  </div>
                 </div>)}
             </div>
           </div>
           
           <div className="absolute top-1/2 w-full flex justify-between items-center transform -translate-y-1/2 px-3 sm:px-4 drop-shadow z-10 pointer-events-none">
-            <Button variant="ghost" size="icon" className="pointer-events-auto rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={goToPrevious}>
+            <Button variant="ghost" size="icon" className="pointer-events-auto rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={(e) => { e.preventDefault(); e.stopPropagation(); goToPrevious(); }}>
               <ChevronLeft className="h-5 w-5 sm:h-8 sm:w-8 relative z-10" />
               <span className="sr-only">Previous</span>
             </Button>
-            <Button variant="ghost" size="icon" className="pointer-events-auto rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={goToNext}>
+            <Button variant="ghost" size="icon" className="pointer-events-auto rounded-full bg-black/60 hover:bg-black hover:backdrop-blur-sm text-white hover:text-white h-10 w-10 sm:h-24 sm:w-24" onClick={(e) => { e.preventDefault(); e.stopPropagation(); goToNext(); }}>
               <ChevronRight className="h-5 w-5 sm:h-8 sm:w-8 relative z-10" />
               <span className="sr-only">Next</span>
             </Button>
