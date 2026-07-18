@@ -136,8 +136,14 @@ const RapperDetail = () => {
   if (!rapper) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-background))] relative">
+        <SEOHead
+          title="Rapper Not Found | Spit Hierarchy"
+          description="This rapper profile could not be found. Search our database or suggest a new rapper to the admins."
+          robots="noindex, nofollow"
+        />
         <HeaderNavigation isScrolled={false} />
         <div className="absolute inset-0 bg-gradient-to-br from-[hsl(var(--theme-background))]/80 via-[hsl(var(--theme-backgroundLight))]/80 to-[hsl(var(--theme-background))]/80 z-0"></div>
+
         <div className="relative z-10 max-w-4xl mx-auto p-6 pt-28">
           <ThemedButton 
             variant="outline" 
