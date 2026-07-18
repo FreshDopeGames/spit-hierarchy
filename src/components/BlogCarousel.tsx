@@ -176,10 +176,14 @@ const BlogCarousel = () => {
                     </div>
                     
                     {/* Metadata in lower third */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none">
-                      <div className="hidden" />
+                    <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/95 via-black/55 to-transparent pointer-events-none">
+                      {post.blog_categories?.name && (
+                        <Badge className="mb-2 sm:mb-3 bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
+                          {post.blog_categories.name}
+                        </Badge>
+                      )}
 
-                      <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 mb-4 sm:mb-5 md:mb-6 [text-shadow:_0_2px_6px_rgba(0,0,0,0.95),_0_0_3px_rgba(0,0,0,1)]">
+                      <p className="text-[color:var(--theme-textMuted)] text-sm sm:text-base md:text-lg line-clamp-1 sm:line-clamp-2 md:line-clamp-3 [text-shadow:_0_2px_6px_rgba(0,0,0,0.95),_0_0_3px_rgba(0,0,0,1)]">
                         {post.excerpt}
                       </p>
                     </div>
