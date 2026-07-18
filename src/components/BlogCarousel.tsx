@@ -156,8 +156,8 @@ const BlogCarousel = () => {
                       alt={post.title} 
                       className="w-full h-full" 
                       context="carousel" 
-                      objectFit="cover" 
-                      objectPosition="center"
+                      objectFit="cover"
+
                       sizes="(max-width: 768px) 100vw, 100vw"
                       priority={index === 0}
                       showBlurPlaceholder={true}
