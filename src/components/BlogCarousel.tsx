@@ -168,7 +168,15 @@ const BlogCarousel = () => {
                       aria-label={post.title}
                       className="absolute inset-y-0 left-20 right-20 sm:left-32 sm:right-32 z-[15] cursor-pointer"
                     />
-                    {/* Unified blur/darkness gradient vignette */}
+                    {/* Top blur/darkness gradient vignette for headline legibility */}
+                    <div
+                      className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-b from-black/95 via-black/70 to-transparent backdrop-blur-[4px]"
+                      style={{
+                        maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)',
+                        WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 0%, rgba(0,0,0,0) 100%)'
+                      }}
+                    />
+                    {/* Bottom blur/darkness gradient vignette for metadata legibility */}
                     <div
                       className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-black/95 via-black/70 to-transparent backdrop-blur-[4px]"
                       style={{
