@@ -169,14 +169,14 @@ const BlogCarousel = () => {
                       className="absolute inset-y-0 left-20 right-20 sm:left-32 sm:right-32 z-[5] cursor-pointer"
                     />
                     {/* Title at TOP */}
-                    <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent pointer-events-none">
+                    <div className="absolute top-0 left-0 right-0 p-4 sm:p-6 md:p-8 lg:p-10 z-20 bg-gradient-to-b from-black/80 via-black/40 to-transparent backdrop-blur-[2px] pointer-events-none">
                       <h3 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-[var(--theme-font-heading)] text-white leading-tight drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
                         {post.title}
                       </h3>
                     </div>
                     
                     {/* Metadata in lower third */}
-                    <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/95 via-black/55 to-transparent pointer-events-none">
+                    <div className="absolute bottom-0 left-0 right-0 p-4 pb-12 sm:p-6 sm:pb-6 md:p-8 lg:p-10 text-white w-full bg-gradient-to-t from-black/95 via-black/55 to-transparent backdrop-blur-[4px] pointer-events-none">
                       {post.blog_categories?.name && (
                         <Badge className="mb-2 sm:mb-3 bg-[color:var(--theme-accent)]/20 text-[color:var(--theme-accent)] border-[color:var(--theme-accent)]/30 text-xs sm:text-sm drop-shadow-[2px_2px_2px_rgba(0,0,0,0.8)]">
                           {post.blog_categories.name}
