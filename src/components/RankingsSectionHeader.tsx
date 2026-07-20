@@ -50,14 +50,14 @@ const RankingsSectionHeader = () => {
       {/* Content: official logo */}
       <div className="relative z-10 w-full h-full flex items-center justify-center">
         <img
-          src="/lovable-uploads/logo-header.png"
+          src="/lovable-uploads/logo-header-hd.png"
           alt="Spit Hierarchy: Goat Rapper Rankings"
-          width="326"
-          height="326"
+          width="680"
+          height="680"
           fetchPriority="high"
           loading="eager"
           decoding="sync"
-          className="h-full w-auto max-w-full object-contain scale-[1.85] sm:scale-[1.85] lg:scale-[1.85]"
+          className="h-[160px] sm:h-[220px] lg:h-[300px] w-auto object-contain"
         />
       </div>
     </div>
