@@ -57,7 +57,7 @@ const RankingsSectionHeader = () => {
           fetchPriority="high"
           loading="eager"
           decoding="sync"
-          className="h-full w-auto max-w-full object-contain scale-[1.85] sm:scale-[1.85] lg:scale-[1.85]"
+          className="h-full w-auto max-w-full object-contain origin-top scale-[1.6]"
         />
       </div>
     </div>
