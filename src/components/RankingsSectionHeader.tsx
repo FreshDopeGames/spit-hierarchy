@@ -32,7 +32,7 @@ const RankingsSectionHeader = () => {
   const backgroundImage = headerData?.background_image_url;
 
   return (
-    <div className="relative mb-8 sm:mb-4 lg:mb-4 overflow-hidden rounded-2xl h-[10vh] sm:h-[12vh] lg:h-[15vh]">
+    <div className="relative mb-4 overflow-hidden rounded-2xl h-[20vh] sm:h-[24vh] lg:h-[30vh] min-h-[160px]">
       {/* Background gradient/image */}
       <div
         className="absolute inset-0 bg-gradient-to-br from-rap-carbon to-rap-burgundy/30"
@@ -57,12 +57,9 @@ const RankingsSectionHeader = () => {
           fetchPriority="high"
           loading="eager"
           decoding="sync"
-          className="w-full h-full object-contain"
+          className="h-full w-auto max-w-full object-contain"
         />
       </div>
-
-      {/* Bottom fade effect */}
-      <div className="absolute bottom-0 left-0 right-0 h-4 bg-gradient-to-t from-[var(--theme-surface)] to-transparent" />
     </div>
   );
 };
