@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { ThemedThemedARRAY(0x55ea7730f610) as ARRAY(0x55ea7730f610) as ThemedARRAY(0x55ea7730f610) as ARRAY(0x55ea7730f610) } from "@/components/ui/themed-select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { VSMatch, CreateVSMatchData, UpdateVSMatchData } from "@/types/vsMatches";
 import { Loader2 } from "lucide-react";
 import RapperSelector from "./RapperSelector";

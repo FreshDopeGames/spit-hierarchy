@@ -2,7 +2,7 @@
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { ThemedThemedARRAY(0x55715f52f6a0) as ARRAY(0x55715f52f6a0) as ThemedARRAY(0x55715f52f6a0) as ARRAY(0x55715f52f6a0) } from "@/components/ui/themed-select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { UseFormReturn } from "react-hook-form";
 import { RankingFormData } from "./rankingFormSchema";
 import RankingTagSelector from "../RankingTagSelector";

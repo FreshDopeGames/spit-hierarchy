@@ -1,4 +1,4 @@
-import { ThemedThemedARRAY(0x564057967410) as ARRAY(0x564057967410) as ThemedARRAY(0x564057967410) as ARRAY(0x564057967410) } from "@/components/ui/themed-select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { Badge } from "@/components/ui/badge";
 import { Palette } from "lucide-react";
 import { Database } from "@/integrations/supabase/types";
