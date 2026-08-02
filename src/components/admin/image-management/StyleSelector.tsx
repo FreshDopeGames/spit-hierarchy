@@ -36,7 +36,7 @@ const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRap
           <SelectTrigger className="w-full sm:w-48 bg-[var(--theme-surface)] border-[var(--theme-border)] text-[var(--theme-text)]">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+          <SelectContent>
             {sortedStyles.map(([style, label]) => (
               <SelectItem key={style} value={style} className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20">
                 {label}

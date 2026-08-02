@@ -140,7 +140,7 @@ const AdminVSMatchDialog = ({
               <SelectTrigger className="admin-themed bg-[hsl(var(--input))] text-[hsl(var(--foreground))] border-[hsl(var(--border))]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[hsl(var(--input))] border-[hsl(var(--border))] z-50">
+              <SelectContent className="z-50">
                 <SelectItem value="draft" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Draft</SelectItem>
                 <SelectItem value="published" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Published</SelectItem>
                 <SelectItem value="archived" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Archived</SelectItem>
