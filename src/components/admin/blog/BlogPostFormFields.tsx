@@ -8,7 +8,7 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { Switch } from "@/components/ui/switch";
 import RichTextEditor from "../RichTextEditor";
 import BlogPostImageUpload from "./BlogPostImageUpload";
@@ -105,9 +105,9 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
             <SelectTrigger className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10">
               <SelectValue placeholder="Select category" />
             </SelectTrigger>
-            <SelectContent className="bg-black border-white max-h-[200px]">
+            <SelectContent className="max-h-[200px]">
               {categories?.map((category) => (
-                <SelectItem key={category.id} value={category.id} className="text-white">
+                <SelectItem key={category.id} value={category.id}>
                   {category.name}
                 </SelectItem>
               ))}
@@ -124,10 +124,10 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
             <SelectTrigger className="bg-[var(--theme-background)] border-[var(--theme-border)] text-[var(--theme-text)] h-11 sm:h-10">
               <SelectValue />
             </SelectTrigger>
-            <SelectContent className="bg-black border-white">
-              <SelectItem value="draft" className="text-white">Draft</SelectItem>
-              <SelectItem value="published" className="text-white">Published</SelectItem>
-              <SelectItem value="archived" className="text-white">Archived</SelectItem>
+            <SelectContent>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+              <SelectItem value="archived">Archived</SelectItem>
             </SelectContent>
           </Select>
         </div>

@@ -22,13 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { Plus, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSecureAuth } from "@/hooks/useSecureAuth";

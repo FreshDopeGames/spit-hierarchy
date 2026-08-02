@@ -1,4 +1,4 @@
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { Badge } from "@/components/ui/badge";
 import { Palette } from "lucide-react";
 import { Database } from "@/integrations/supabase/types";
@@ -36,9 +36,9 @@ const StyleSelector = ({ selectedStyle, onStyleChange, completionStats, totalRap
           <SelectTrigger className="w-full sm:w-48 bg-[var(--theme-surface)] border-[var(--theme-border)] text-[var(--theme-text)]">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="bg-[var(--theme-surface)] border-[var(--theme-border)]">
+          <SelectContent>
             {sortedStyles.map(([style, label]) => (
-              <SelectItem key={style} value={style} className="text-[var(--theme-text)] hover:bg-[var(--theme-primary)]/20">
+              <SelectItem key={style} value={style}>
                 {label}
               </SelectItem>
             ))}

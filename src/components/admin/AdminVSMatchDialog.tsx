@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ThemedInput } from "@/components/ui/themed-input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { ThemedSelect as Select, ThemedSelectContent as SelectContent, ThemedSelectItem as SelectItem, ThemedSelectTrigger as SelectTrigger, ThemedSelectValue as SelectValue } from "@/components/ui/themed-select";
 import { VSMatch, CreateVSMatchData, UpdateVSMatchData } from "@/types/vsMatches";
 import { Loader2 } from "lucide-react";
 import RapperSelector from "./RapperSelector";
@@ -140,10 +140,10 @@ const AdminVSMatchDialog = ({
               <SelectTrigger className="admin-themed bg-[hsl(var(--input))] text-[hsl(var(--foreground))] border-[hsl(var(--border))]">
                 <SelectValue />
               </SelectTrigger>
-              <SelectContent className="bg-[hsl(var(--input))] border-[hsl(var(--border))] z-50">
-                <SelectItem value="draft" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Draft</SelectItem>
-                <SelectItem value="published" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Published</SelectItem>
-                <SelectItem value="archived" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Archived</SelectItem>
+              <SelectContent className="z-50">
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>
