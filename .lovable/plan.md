@@ -1,16 +1,10 @@
-Verify ads.txt is present and correct
+# Save the album-review plan to NEXT_FEATURES.md
 
-Current state: `public/ads.txt` already exists with the exact AdSense snippet you provided:
+Append a new "Planned: Official Album Reviews in Blog Posts" section to `docs/NEXT_FEATURES.md` (under the Low Priority / Future block, before the Recently Completed section) capturing the full album-review feature plan:
 
-```
-google.com, pub-2518650700414992, DIRECT, f08c47fec0942fa0
-```
+- **Data model**: new `album_reviews` table (links blog post + album, manual `overall_score` 0.5–5.0, `verdict`, `reviewer_id`, unique on post and album) and `album_review_scores` table (one row per metric reusing `album_voting_categories`, scored 1–10). Access rules: public read on published posts, admin/blog-editor write.
+- **Album lookup in the blog post overlay**: DB search first, then MusicBrainz release-group search/import (creates `albums` + `rapper_albums`, caches cover art, pulls tracklist), then five 1–10 metric sliders plus the manual /5 score; saves with drafts.
+- **Display**: score card on the blog post page (cover, title link, /5 stars, verdict, metric breakdown) with rating structured data; editorial score next to community rating on the album detail page linking to the review.
+- **Technical notes**: two admin-gated edge functions (MB search + import) honoring existing 1100ms delay and audit logging; `useAlbumReview` read hook + admin mutation hook with `.select('id')` verification; metrics sourced from `album_voting_categories`; editorial scores kept separate from `album_votes` and `recompute_album_rating_aggregates`; themed dark-overlay styling.
 
-This file is in the correct location (`public/ads.txt`) so it will be served at `https://spit-hierarchy.com/ads.txt`, which is what AdSense crawlers expect.
-
-Plan:
-1. Confirm the file content matches your snippet (already verified above).
-2. Optionally verify the live/preview URL serves the file with `text/plain` content.
-3. No code changes are required unless the content differs or the file is missing at runtime.
-
-If you want, I can also add a trailing newline or check that the file is not being blocked by any route/service worker.
+No code changes beyond writing to this docs file.
