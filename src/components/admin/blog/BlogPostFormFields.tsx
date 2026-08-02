@@ -107,7 +107,7 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
             </SelectTrigger>
             <SelectContent className="max-h-[200px]">
               {categories?.map((category) => (
-                <SelectItem key={category.id} value={category.id} className="text-white">
+                <SelectItem key={category.id} value={category.id}>
                   {category.name}
                 </SelectItem>
               ))}
@@ -125,9 +125,9 @@ const BlogPostFormFields = ({ formData, setFormData, categories }: BlogPostFormF
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="draft" className="text-white">Draft</SelectItem>
-              <SelectItem value="published" className="text-white">Published</SelectItem>
-              <SelectItem value="archived" className="text-white">Archived</SelectItem>
+              <SelectItem value="draft">Draft</SelectItem>
+              <SelectItem value="published">Published</SelectItem>
+              <SelectItem value="archived">Archived</SelectItem>
             </SelectContent>
           </Select>
         </div>

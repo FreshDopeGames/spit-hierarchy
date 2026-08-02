@@ -141,9 +141,9 @@ const AdminVSMatchDialog = ({
                 <SelectValue />
               </SelectTrigger>
               <SelectContent className="z-50">
-                <SelectItem value="draft" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Draft</SelectItem>
-                <SelectItem value="published" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Published</SelectItem>
-                <SelectItem value="archived" className="text-[hsl(var(--foreground))] hover:bg-[hsl(var(--muted))]">Archived</SelectItem>
+                <SelectItem value="draft">Draft</SelectItem>
+                <SelectItem value="published">Published</SelectItem>
+                <SelectItem value="archived">Archived</SelectItem>
               </SelectContent>
             </Select>
           </div>
