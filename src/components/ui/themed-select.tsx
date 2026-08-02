@@ -112,7 +112,7 @@ const ThemedSelectItem = React.forwardRef<
   <SelectPrimitive.Item
     ref={ref}
     className={cn(
-      "relative flex w-full cursor-default select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm text-[hsl(var(--theme-element-select-color,var(--theme-text)))] outline-none focus:bg-[hsl(var(--theme-primary))] focus:text-[hsl(var(--theme-background))] data-[disabled]:pointer-events-none data-[disabled]:opacity-50 font-[var(--theme-element-select-fontFamily,var(--theme-font-body))]",
+      "relative flex w-full cursor-pointer select-none items-center rounded-sm py-1.5 pl-8 pr-2 text-sm text-white outline-none hover:bg-[hsl(var(--theme-primary))] hover:text-black focus:bg-[hsl(var(--theme-primary))] focus:text-black data-[highlighted]:bg-[hsl(var(--theme-primary))] data-[highlighted]:text-black data-[state=checked]:text-[hsl(var(--theme-primary))] data-[state=checked]:data-[highlighted]:text-black data-[disabled]:pointer-events-none data-[disabled]:opacity-50 font-[var(--theme-element-select-fontFamily,var(--theme-font-body))]",
       className
     )}
     {...props}
