@@ -22,7 +22,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import { ThemedARRAY(0x55f2548ea3b0) as ARRAY(0x55f2548ea3b0) } from "@/components/ui/themed-select";
+import { ThemedThemedARRAY(0x55f2548ea3b0) as ARRAY(0x55f2548ea3b0) as ThemedARRAY(0x55f2548ea3b0) as ARRAY(0x55f2548ea3b0) } from "@/components/ui/themed-select";
 import { Plus, X } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSecureAuth } from "@/hooks/useSecureAuth";
