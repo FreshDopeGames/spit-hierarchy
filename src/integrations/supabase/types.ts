@@ -118,6 +118,96 @@ export type Database = {
         }
         Relationships: []
       }
+      album_review_scores: {
+        Row: {
+          category_id: string
+          created_at: string
+          id: string
+          review_id: string
+          score: number
+          updated_at: string
+        }
+        Insert: {
+          category_id: string
+          created_at?: string
+          id?: string
+          review_id: string
+          score: number
+          updated_at?: string
+        }
+        Update: {
+          category_id?: string
+          created_at?: string
+          id?: string
+          review_id?: string
+          score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_review_scores_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "album_voting_categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "album_review_scores_review_id_fkey"
+            columns: ["review_id"]
+            isOneToOne: false
+            referencedRelation: "album_reviews"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      album_reviews: {
+        Row: {
+          album_id: string
+          blog_post_id: string
+          created_at: string
+          id: string
+          overall_score: number
+          reviewer_id: string | null
+          updated_at: string
+          verdict: string | null
+        }
+        Insert: {
+          album_id: string
+          blog_post_id: string
+          created_at?: string
+          id?: string
+          overall_score: number
+          reviewer_id?: string | null
+          updated_at?: string
+          verdict?: string | null
+        }
+        Update: {
+          album_id?: string
+          blog_post_id?: string
+          created_at?: string
+          id?: string
+          overall_score?: number
+          reviewer_id?: string | null
+          updated_at?: string
+          verdict?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_reviews_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: true
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "album_reviews_blog_post_id_fkey"
+            columns: ["blog_post_id"]
+            isOneToOne: true
+            referencedRelation: "blog_posts"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       album_tracks: {
         Row: {
           album_id: string

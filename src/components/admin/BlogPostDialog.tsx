@@ -8,6 +8,11 @@ import { toast } from "sonner";
 import BlogPostFormFields from "./blog/BlogPostFormFields";
 import BlogPostMetaFields from "./blog/BlogPostMetaFields";
 import BlogPostActions from "./blog/BlogPostActions";
+import BlogPostAlbumReview, {
+  AlbumReviewFormState,
+  createEmptyAlbumReviewState,
+} from "./blog/BlogPostAlbumReview";
+import { useAlbumReviewByPost, useSaveAlbumReview, useDeleteAlbumReview } from "@/hooks/useAlbumReview";
 import { 
   BlogPostFormData, 
   createEmptyFormData, 
@@ -30,6 +35,7 @@ const BlogPostDialog = ({
 }: BlogPostDialogProps) => {
   const { user } = useAuth();
   const [formData, setFormData] = useState<BlogPostFormData>(createEmptyFormData());
+  const [reviewState, setReviewState] = useState<AlbumReviewFormState>(createEmptyAlbumReviewState());
 
   // Fetch categories for dropdown
   const { data: categories } = useQuery({
@@ -44,6 +50,11 @@ const BlogPostDialog = ({
     }
   });
 
+  // Existing album review for this post (if any)
+  const { data: existingReview } = useAlbumReviewByPost(post?.id);
+  const saveReview = useSaveAlbumReview();
+  const deleteReview = useDeleteAlbumReview();
+
   // Reset form when dialog opens/closes or post changes
   useEffect(() => {
     if (post) {
@@ -51,7 +62,24 @@ const BlogPostDialog = ({
     } else {
       setFormData(createEmptyFormData());
     }
+    setReviewState(createEmptyAlbumReviewState());
   }, [post, open]);
+
+  // Hydrate the review section once the existing review loads
+  useEffect(() => {
+    if (!open) return;
+    if (!existingReview) return;
+    setReviewState({
+      enabled: true,
+      albumId: existingReview.album_id,
+      albumTitle: existingReview.album?.title || '',
+      albumArtist: existingReview.album?.rapper_name || '',
+      albumCover: existingReview.album?.cached_cover_url || existingReview.album?.cover_art_url || null,
+      overallScore: String(existingReview.overall_score),
+      verdict: existingReview.verdict || '',
+      scores: Object.fromEntries(existingReview.scores.map((s) => [s.category_id, s.score])),
+    });
+  }, [existingReview, open]);
 
   // Save/Update post mutation
   const savePostMutation = useMutation({
@@ -66,6 +94,8 @@ const BlogPostDialog = ({
         published_at: publishedAt
       };
 
+      let saved: any;
+
       if (post) {
         const { data: result, error } = await supabase
           .from('blog_posts')
@@ -75,7 +105,7 @@ const BlogPostDialog = ({
           .single();
         
         if (error) throw error;
-        return result;
+        saved = result;
       } else {
         const { data: result, error } = await supabase
           .from('blog_posts')
@@ -84,8 +114,31 @@ const BlogPostDialog = ({
           .single();
         
         if (error) throw error;
-        return result;
+        saved = result;
       }
+
+      // Album review is saved alongside the post so drafts keep their scores
+      if (reviewState.enabled && reviewState.albumId) {
+        const score = parseFloat(reviewState.overallScore);
+        if (!Number.isFinite(score) || score < 0.5 || score > 5 || (score * 2) % 1 !== 0) {
+          throw new Error('Official score must be between 0.5 and 5.0 in half-star steps');
+        }
+        await saveReview.mutateAsync({
+          blogPostId: saved.id,
+          albumId: reviewState.albumId,
+          overallScore: score,
+          verdict: reviewState.verdict,
+          reviewerId: user?.id ?? null,
+          scores: Object.entries(reviewState.scores).map(([categoryId, s]) => ({
+            categoryId,
+            score: s,
+          })),
+        });
+      } else if (existingReview) {
+        await deleteReview.mutateAsync(saved.id);
+      }
+
+      return saved;
     },
     onSuccess: () => {
       toast.success(post ? 'Post updated successfully' : 'Post created successfully');
@@ -101,6 +154,11 @@ const BlogPostDialog = ({
     
     if (!formData.title || !formData.content) {
       toast.error('Title and content are required');
+      return;
+    }
+
+    if (reviewState.enabled && !reviewState.albumId) {
+      toast.error('Attach an album or turn off the album review toggle');
       return;
     }
 
@@ -127,6 +185,11 @@ const BlogPostDialog = ({
             formData={formData}
             setFormData={setFormData}
             categories={categories}
+          />
+
+          <BlogPostAlbumReview
+            value={reviewState}
+            onChange={setReviewState}
           />
 
           <BlogPostMetaFields 

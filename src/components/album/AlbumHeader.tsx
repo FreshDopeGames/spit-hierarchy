@@ -4,6 +4,8 @@ import { ThemedButton } from "@/components/ui/themed-button";
 import { Music } from "lucide-react";
 import RapperAvatar from "@/components/RapperAvatar";
 import AlbumRatingButton from "./AlbumRatingButton";
+import EditorialReviewScore from "./EditorialReviewScore";
+
 
 interface AlbumHeaderProps {
   albumId: string;
@@ -124,8 +126,12 @@ export const AlbumHeader = ({
         )}
       </div>
 
-      {/* Album Rating */}
-      <AlbumRatingButton albumId={albumId} albumTitle={albumTitle} />
+      {/* Ratings: community average + editorial review (kept separate) */}
+      <div className="flex flex-col sm:flex-row items-center justify-center gap-6">
+        <AlbumRatingButton albumId={albumId} albumTitle={albumTitle} />
+        <EditorialReviewScore albumId={albumId} />
+      </div>
+
     </div>
   );
 };

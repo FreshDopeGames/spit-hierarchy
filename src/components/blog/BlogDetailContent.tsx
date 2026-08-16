@@ -5,7 +5,10 @@ import BlogSidebar from "@/components/blog/BlogSidebar";
 import BlogPoll from "@/components/polls/BlogPoll";
 
 import MentionedRappersCarousel from "@/components/blog/MentionedRappersCarousel";
+import AlbumReviewCard from "@/components/album/AlbumReviewCard";
+import { useAlbumReviewByPost } from "@/hooks/useAlbumReview";
 import { useBlogPostLikes } from "@/hooks/useBlogPostLikes";
+
 
 interface BlogPost {
   id: string;
@@ -67,6 +70,7 @@ const BlogDetailContent = ({
   onCommentsClick,
 }: BlogDetailContentProps) => {
   const { likesCount, isLiked, toggleLike, isLoading } = useBlogPostLikes(blogPost.id);
+  const { data: albumReview } = useAlbumReviewByPost(blogPost.id);
 
   return (
     <main className="max-w-4xl mx-auto px-[2.5vw] py-6 sm:p-6 pt-24 sm:pt-24">
@@ -74,6 +78,8 @@ const BlogDetailContent = ({
 
       {/* Full-width main content */}
       <div className="space-y-8">
+        {albumReview && <AlbumReviewCard review={albumReview} />}
+
         <BlogEngagementActions
           likes={likesCount}
           isLiked={isLiked}
@@ -85,6 +91,7 @@ const BlogDetailContent = ({
         />
 
         <BlogArticleContent content={blogPost.content} />
+
 
         {/* Rappers mentioned in this post */}
         <MentionedRappersCarousel content={blogPost.content} />
