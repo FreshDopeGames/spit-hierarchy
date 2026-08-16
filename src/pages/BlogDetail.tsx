@@ -15,6 +15,8 @@ import { useBlogPostBySlug } from "@/hooks/useBlogPostBySlug";
 import { useRelatedPosts } from "@/hooks/useRelatedPosts";
 import { transformBlogPost, transformRelatedPosts } from "@/utils/blogPostTransformers";
 import { usePageVisitTracking } from "@/hooks/usePageVisitTracking";
+import { useAlbumReviewByPost } from "@/hooks/useAlbumReview";
+
 // Helper to extract og:image URL from featured_image_url (may be JSON or plain URL)
 const getOgImageUrl = (featuredImageUrl: string | null | undefined): string | undefined => {
   if (!featuredImageUrl) return undefined;
@@ -48,6 +50,10 @@ const BlogDetail = () => {
 
   // Fetch related posts
   const { data: relatedPosts } = useRelatedPosts(blogPost?.category_id, blogPost?.id);
+
+  // Official album review attached to this post (if any)
+  const { data: albumReview } = useAlbumReviewByPost(blogPost?.id);
+
 
   const handleShare = (platform: string) => {
     const url = window.location.href;
@@ -141,6 +147,29 @@ const BlogDetail = () => {
           "datePublished": blogPost.published_at,
           "dateModified": (blogPost as any).updated_at || blogPost.published_at,
           "image": getOgImageUrl(blogPost.featured_image_url),
+          ...(albumReview
+            ? {
+                "review": {
+                  "@type": "Review",
+                  "itemReviewed": {
+                    "@type": "MusicAlbum",
+                    "name": albumReview.album?.title,
+                    ...(albumReview.album?.rapper_name
+                      ? { "byArtist": { "@type": "MusicGroup", "name": albumReview.album.rapper_name } }
+                      : {}),
+                  },
+                  "reviewRating": {
+                    "@type": "Rating",
+                    "ratingValue": albumReview.overall_score,
+                    "bestRating": 5,
+                    "worstRating": 0.5,
+                  },
+                  "author": { "@type": "Person", "name": transformedBlogPost.author },
+                  ...(albumReview.verdict ? { "reviewBody": albumReview.verdict } : {}),
+                },
+              }
+            : {}),
+
           "mainEntityOfPage": {
             "@type": "WebPage",
             "@id": `https://spithierarchy.com/blog/${blogPost.slug}`

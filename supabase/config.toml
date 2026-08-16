@@ -53,3 +53,9 @@ verify_jwt = false
 
 [functions.bulk-fetch-bios]
 verify_jwt = false
+
+[functions.search-musicbrainz-releases]
+verify_jwt = false
+
+[functions.import-musicbrainz-album]
+verify_jwt = false
