@@ -35,7 +35,7 @@ const AlbumReviewCard = ({ review }: Props) => {
   if (!album) return null;
 
   const cover = album.cached_cover_url || album.cover_art_url;
-  const albumUrl = album.rapper_slug ? `/rapper/${album.rapper_slug}/album/${album.slug}` : null;
+  const albumUrl = album.rapper_slug ? `/rapper/${album.rapper_slug}/${album.slug}` : null;
 
   return (
     <section className="rounded-lg border-4 border-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-surface))] p-4 sm:p-6">
