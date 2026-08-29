@@ -59,8 +59,8 @@ export const AlbumHeader = ({
         {albumTitle}
       </h1>
 
-      {/* Artist Row: Avatar + Name (left) and Streaming Buttons (right) */}
-      <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full max-w-xl mx-auto">
+      {/* Artist Row: Avatar + Name on first line, Streaming Buttons below */}
+      <div className="flex flex-col items-center justify-center gap-4 w-full max-w-xl mx-auto">
         {/* Left: Avatar + Name */}
         <div className="flex items-center gap-3">
           <RapperAvatar
