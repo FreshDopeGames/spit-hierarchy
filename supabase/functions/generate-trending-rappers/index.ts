@@ -116,24 +116,43 @@ serve(async (req) => {
     // Load rappers + aliases
     const { data: rappers, error: rappersError } = await supabase
       .from("rappers")
-      .select("id, name, aliases");
+      .select("id, name, aliases, requires_context_match");
     if (rappersError) throw rappersError;
 
-    // Build matcher: lowercased name/alias -> rapper id
-    type RapperRef = { id: string; displayName: string };
-    const nameToRapper = new Map<string, RapperRef>();
+    // Build matcher: lowercased name/alias -> rapper entry
+    const nameToRapper = new Map<string, MatchEntry>();
     for (const r of rappers ?? []) {
-      const ref = { id: r.id as string, displayName: r.name as string };
-      const lname = (r.name as string).toLowerCase();
-      if (!BLOCKLIST.has(lname)) nameToRapper.set(lname, ref);
+      const flagged = r.requires_context_match === true;
+      const name = r.name as string;
+      const lname = name.toLowerCase();
+      if (!HARD_BLOCKLIST.has(lname)) {
+        nameToRapper.set(lname, {
+          id: r.id as string,
+          displayName: name,
+          matchText: name,
+          needsContext: flagged || isCommonWord(lname),
+        });
+      }
       for (const alias of (r.aliases as string[] | null) ?? []) {
         const la = alias.toLowerCase();
-        if (!BLOCKLIST.has(la) && la.length >= 3) {
-          if (!nameToRapper.has(la)) nameToRapper.set(la, ref);
-        }
+        if (HARD_BLOCKLIST.has(la) || la.length < 3) continue;
+        if (nameToRapper.has(la)) continue;
+        nameToRapper.set(la, {
+          id: r.id as string,
+          displayName: name,
+          matchText: alias,
+          // Aliases are riskier: gate them whenever the artist is flagged,
+          // the alias is a common word, or the alias is a single short word.
+          needsContext:
+            flagged || isCommonWord(la) || (!la.includes(" ") && la.length <= 5),
+        });
       }
     }
-    console.log(`Loaded ${nameToRapper.size} rapper name/alias entries`);
+    const ambiguousCount = Array.from(nameToRapper.values()).filter((e) => e.needsContext).length;
+    console.log(
+      `Loaded ${nameToRapper.size} rapper name/alias entries (${ambiguousCount} context-gated)`
+    );
+
 
     const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
 
