@@ -344,7 +344,7 @@ const RapperDetail = () => {
 
           {/* In The News — media mentions */}
           <Suspense fallback={null}>
-            <div className="mb-8">
+            <div id="in-the-news" className="mb-8">
               <RapperMediaMentions rapperId={rapper.id} rapperName={rapper.name} />
             </div>
           </Suspense>
