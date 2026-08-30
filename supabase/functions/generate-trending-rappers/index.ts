@@ -426,7 +426,59 @@ serve(async (req) => {
   }
 });
 
+type MatchEntry = {
+  id: string;
+  displayName: string;
+  /** The exact text (name or alias) this entry matches on */
+  matchText: string;
+  /** Everyday-word name: needs exact casing + hip-hop context to count */
+  needsContext: boolean;
+};
+
+function isCommonWord(lowered: string): boolean {
+  if (COMMON_WORDS.has(lowered)) return true;
+  // Multi-word names count as common only if every token is a common word
+  const parts = lowered.split(/\s+/).filter((p) => p && p !== "the");
+  return parts.length > 1 && parts.every((p) => COMMON_WORDS.has(p));
+}
+
+/** Index of an exact-case, word-bounded occurrence of `needle`, or -1 */
+function findExactCaseIndex(haystack: string, needle: string): number {
+  const re = new RegExp(`(^|[^\\p{L}\\p{N}])(${escapeRegex(needle)})(?![\\p{L}\\p{N}])`, "u");
+  const m = re.exec(haystack);
+  return m ? m.index + m[1].length : -1;
+}
+
+/**
+ * Confirms an ambiguous name really refers to the artist.
+ * Returns the reason it was accepted, or null when there is no supporting signal.
+ */
+function confirmContext(
+  haystack: string,
+  matchIndex: number,
+  matchLength: number,
+  source: string,
+  hasOtherRapperInItem: boolean
+): string | null {
+  const start = Math.max(0, matchIndex - CONTEXT_WINDOW);
+  const end = Math.min(haystack.length, matchIndex + matchLength + CONTEXT_WINDOW);
+  const window = haystack.slice(start, end).toLowerCase();
+
+  if (CONTEXT_KEYWORDS.some((k) => window.includes(k))) return "keyword";
+
+  // Quoted or possessive usage — "Evidence" / Evidence's
+  const before = haystack[matchIndex - 1] ?? "";
+  const after = haystack.slice(matchIndex + matchLength, matchIndex + matchLength + 2);
+  if (/["'“‘]/.test(before) || /^['’]s\b/.test(after)) return "quoted_or_possessive";
+
+  if (hasOtherRapperInItem) return "co_mention";
+  if (RAP_ONLY_SOURCES.has(source)) return "rap_only_source";
+
+  return null;
+}
+
 function escapeRegex(s: string): string {
+
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
