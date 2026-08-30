@@ -515,17 +515,27 @@ function parseRSSFeed(xml: string, source: string, cutoff: Date): NewsItem[] {
 }
 
 function decodeEntities(s: string): string {
-  return s
-    .replace(/&amp;/g, "&")
-    .replace(/&quot;/g, '"')
-    .replace(/&#0?39;/g, "'")
-    .replace(/&apos;/g, "'")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&#8217;/g, "'")
-    .replace(/&#8216;/g, "'")
-    .replace(/&#8220;/g, '"')
-    .replace(/&#8221;/g, '"');
+  const named: Record<string, string> = {
+    amp: "&", quot: '"', apos: "'", lt: "<", gt: ">",
+    nbsp: " ", mdash: "—", ndash: "–", hellip: "…",
+    lsquo: "'", rsquo: "'", ldquo: '"', rdquo: '"',
+  };
+  return s.replace(/&(#x?[0-9a-fA-F]+|[a-zA-Z]+);/g, (match, body) => {
+    if (body[0] === "#") {
+      const code = body[1]?.toLowerCase() === "x"
+        ? parseInt(body.slice(2), 16)
+        : parseInt(body.slice(1), 10);
+      if (Number.isFinite(code)) {
+        try {
+          return String.fromCodePoint(code);
+        } catch {
+          return match;
+        }
+      }
+      return match;
+    }
+    return named[body] ?? match;
+  });
 }
 
 function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
@@ -537,7 +547,7 @@ function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
     const created = new Date((d.created_utc ?? 0) * 1000);
     if (created < cutoff) continue;
     items.push({
-      title: d.title ?? "",
+      title: decodeEntities(d.title ?? ""),
       description: d.selftext ?? "",
       pubDate: created.toISOString(),
       source,
