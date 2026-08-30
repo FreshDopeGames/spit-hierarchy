@@ -4,6 +4,8 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
+
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { Tables } from "@/integrations/supabase/types";
@@ -536,6 +538,29 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
           onChange={(aliases) => handleInputChange("aliases", aliases)}
         />
       </div>
+
+      <div className="flex items-start gap-3">
+        <Checkbox
+          id="requires_context_match"
+          checked={formData.requires_context_match}
+          onCheckedChange={(checked) =>
+            handleInputChange("requires_context_match", checked === true)
+          }
+        />
+        <div className="space-y-1">
+          <Label
+            htmlFor="requires_context_match"
+            className="text-[var(--theme-primary)] cursor-pointer"
+          >
+            Require hip-hop context for news matching
+          </Label>
+          <p className="text-xs text-rap-smoke">
+            Turn on for everyday-word names (Evidence, Common, Future). News mentions
+            only count when the article clearly refers to the artist.
+          </p>
+        </div>
+      </div>
+
 
       <div className="flex justify-end space-x-4">
         <Button type="button" variant="outline" onClick={onCancel}>
