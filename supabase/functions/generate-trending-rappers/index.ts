@@ -354,19 +354,44 @@ function parseRSSFeed(xml: string, source: string, cutoff: Date): NewsItem[] {
   const titleRegex = /<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/;
   const descRegex = /<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/;
   const dateRegex = /<pubDate>(.*?)<\/pubDate>/;
+  const linkRegex = /<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/;
 
   let m;
   while ((m = itemRegex.exec(xml)) !== null) {
     const inner = m[1];
-    const title = (inner.match(titleRegex)?.[1] ?? "").trim();
+    const title = decodeEntities((inner.match(titleRegex)?.[1] ?? "").trim());
     const desc = (inner.match(descRegex)?.[1] ?? "").replace(/<[^>]*>/g, "").trim();
     const date = (inner.match(dateRegex)?.[1] ?? "").trim();
+    let url = (inner.match(linkRegex)?.[1] ?? "").trim();
+    if (!url) {
+      url = (inner.match(/<guid[^>]*>(https?:\/\/[^<]+)<\/guid>/)?.[1] ?? "").trim();
+    }
     if (!title || !date) continue;
     const d = new Date(date);
     if (isNaN(d.getTime()) || d < cutoff) continue;
-    items.push({ title, description: desc, pubDate: date, source });
+    items.push({
+      title,
+      description: desc,
+      pubDate: date,
+      source,
+      url: url.startsWith("http") ? decodeEntities(url) : undefined,
+    });
   }
   return items;
+}
+
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"');
 }
 
 function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
@@ -382,10 +407,12 @@ function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
       description: d.selftext ?? "",
       pubDate: created.toISOString(),
       source,
+      url: d.permalink ? `https://www.reddit.com${d.permalink}` : (d.url ?? undefined),
     });
   }
   return items;
 }
+
 
 // Extracts /rapper/<slug> links from blog markdown content
 function extractRapperSlugsFromContent(content: string): string[] {
