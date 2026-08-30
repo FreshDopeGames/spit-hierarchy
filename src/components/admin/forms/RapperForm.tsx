@@ -87,6 +87,8 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         instagram_handle: rapper.instagram_handle || "",
         homepage_url: rapper.homepage_url || "",
         aliases: rapper.aliases || [],
+        requires_context_match: (rapper as any).requires_context_match || false,
+
         tags: [],
         musicbrainz_id: rapper.musicbrainz_id || "",
         top_quote: (rapper as any).top_quote || "",
@@ -111,6 +113,8 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         instagram_handle: "",
         homepage_url: "",
         aliases: [],
+        requires_context_match: false,
+
         tags: [],
         musicbrainz_id: "",
         top_quote: "",
@@ -185,6 +189,8 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
         instagram_handle: formData.instagram_handle.trim() || null,
         homepage_url: formData.homepage_url.trim() || null,
         aliases: formData.aliases,
+        requires_context_match: formData.requires_context_match,
+
         musicbrainz_id: formData.musicbrainz_id.trim() || null,
         top_quote: formData.top_quote.trim() || null,
         top_quote_song: formData.top_quote_song.trim() || null,
