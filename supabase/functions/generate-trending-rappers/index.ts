@@ -400,6 +400,8 @@ serve(async (req) => {
         success: true,
         generated_at: generatedAt,
         items_processed: allItems.length,
+        rejected_count: rejectedCount,
+
         top: ranked.map((r, i) => ({
           rank: i + 1,
           name: r.displayName,
