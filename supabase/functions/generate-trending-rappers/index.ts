@@ -40,33 +40,49 @@ interface NewsItem {
   description: string;
   pubDate: string;
   source: string;
+  url?: string;
 }
 
 serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
-  // Auth: require admin user OR service role (cron uses service role)
-  const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
-  if (!authHeader?.startsWith('Bearer ')) {
-    return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
-  }
-  const __token = authHeader.replace('Bearer ', '');
   const __serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
-  if (__token !== __serviceKey) {
-    const __authClient = createClient(
-      Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_ANON_KEY')!,
-      { global: { headers: { Authorization: `Bearer ${__token}` } } }
-    );
-    const { data: __claims, error: __claimsErr } = await __authClient.auth.getClaims(__token);
-    if (__claimsErr || !__claims?.claims) {
+
+  // Auth: cron shared secret OR service role OR admin user
+  const __cronSecret = req.headers.get('x-cron-secret');
+  let __authorized = false;
+
+  if (__cronSecret) {
+    const __svc = createClient(Deno.env.get('SUPABASE_URL')!, __serviceKey);
+    const { data: __ok, error: __okErr } = await __svc.rpc('verify_cron_secret', { _secret: __cronSecret });
+    if (__okErr) console.error('verify_cron_secret error:', __okErr);
+    if (__ok === true) __authorized = true;
+  }
+
+
+  if (!__authorized) {
+    const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
+    if (!authHeader?.startsWith('Bearer ')) {
       return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
-    const { data: __isAdmin } = await __authClient.rpc('is_admin');
-    if (!__isAdmin) {
-      return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    const __token = authHeader.replace('Bearer ', '');
+    if (__token !== __serviceKey) {
+      const __authClient = createClient(
+        Deno.env.get('SUPABASE_URL')!,
+        Deno.env.get('SUPABASE_ANON_KEY')!,
+        { global: { headers: { Authorization: `Bearer ${__token}` } } }
+      );
+      const { data: __claims, error: __claimsErr } = await __authClient.auth.getClaims(__token);
+      if (__claimsErr || !__claims?.claims) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+      const { data: __isAdmin } = await __authClient.rpc('is_admin');
+      if (!__isAdmin) {
+        return new Response(JSON.stringify({ error: 'Forbidden' }), { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
     }
   }
+
 
 
   try {
@@ -153,6 +169,17 @@ serve(async (req) => {
     };
     const agg = new Map<string, Agg>();
 
+    // Collected article links per matched rapper (for the "In The News" card)
+    type MentionRow = {
+      rapper_id: string;
+      title: string;
+      url: string;
+      source: string;
+      published_at: string;
+    };
+    const mentionRows: MentionRow[] = [];
+    const seenMentionKeys = new Set<string>();
+
     // Sort entries by name length desc to avoid partial-match issues
     const sortedEntries = Array.from(nameToRapper.entries()).sort(
       (a, b) => b[0].length - a[0].length
@@ -190,14 +217,54 @@ serve(async (req) => {
           entry.mentions += 1;
           entry.score += recencyWeight;
           entry.sources.add(item.source);
+
+          if (item.url && item.title) {
+            const key = `${ref.id}|${item.url}`;
+            if (!seenMentionKeys.has(key)) {
+              seenMentionKeys.add(key);
+              const pub = new Date(item.pubDate);
+              mentionRows.push({
+                rapper_id: ref.id,
+                title: item.title.slice(0, 400),
+                url: item.url,
+                source: item.source,
+                published_at: isNaN(pub.getTime())
+                  ? new Date().toISOString()
+                  : pub.toISOString(),
+              });
+            }
+          }
         }
       }
+    }
+
+    // Persist media mentions (all matched rappers, not just the top 5)
+    if (mentionRows.length > 0) {
+      for (let i = 0; i < mentionRows.length; i += 500) {
+        const chunk = mentionRows.slice(i, i + 500);
+        const { error: mentionErr } = await supabase
+          .from("rapper_media_mentions")
+          .upsert(chunk, { onConflict: "rapper_id,url", ignoreDuplicates: true });
+        if (mentionErr) console.error("Mention upsert error:", mentionErr);
+      }
+      console.log(`Upserted ${mentionRows.length} media mentions`);
+    }
+
+    // Prune mentions older than 30 days
+    {
+      const cutoff = new Date(Date.now() - 30 * dayMs).toISOString();
+      const { error: pruneErr } = await supabase
+        .from("rapper_media_mentions")
+        .delete()
+        .lt("published_at", cutoff);
+      if (pruneErr) console.error("Mention prune error:", pruneErr);
     }
 
     // Add source diversity bonus
     for (const entry of agg.values()) {
       entry.score += entry.sources.size * 0.5;
     }
+
 
     // Sort + take top 5
     const ranked = Array.from(agg.values())
@@ -289,19 +356,44 @@ function parseRSSFeed(xml: string, source: string, cutoff: Date): NewsItem[] {
   const titleRegex = /<title>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/title>/;
   const descRegex = /<description>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/description>/;
   const dateRegex = /<pubDate>(.*?)<\/pubDate>/;
+  const linkRegex = /<link>(?:<!\[CDATA\[)?([\s\S]*?)(?:\]\]>)?<\/link>/;
 
   let m;
   while ((m = itemRegex.exec(xml)) !== null) {
     const inner = m[1];
-    const title = (inner.match(titleRegex)?.[1] ?? "").trim();
+    const title = decodeEntities((inner.match(titleRegex)?.[1] ?? "").trim());
     const desc = (inner.match(descRegex)?.[1] ?? "").replace(/<[^>]*>/g, "").trim();
     const date = (inner.match(dateRegex)?.[1] ?? "").trim();
+    let url = (inner.match(linkRegex)?.[1] ?? "").trim();
+    if (!url) {
+      url = (inner.match(/<guid[^>]*>(https?:\/\/[^<]+)<\/guid>/)?.[1] ?? "").trim();
+    }
     if (!title || !date) continue;
     const d = new Date(date);
     if (isNaN(d.getTime()) || d < cutoff) continue;
-    items.push({ title, description: desc, pubDate: date, source });
+    items.push({
+      title,
+      description: desc,
+      pubDate: date,
+      source,
+      url: url.startsWith("http") ? decodeEntities(url) : undefined,
+    });
   }
   return items;
+}
+
+function decodeEntities(s: string): string {
+  return s
+    .replace(/&amp;/g, "&")
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&apos;/g, "'")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&#8217;/g, "'")
+    .replace(/&#8216;/g, "'")
+    .replace(/&#8220;/g, '"')
+    .replace(/&#8221;/g, '"');
 }
 
 function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
@@ -317,10 +409,12 @@ function parseReddit(json: any, source: string, cutoff: Date): NewsItem[] {
       description: d.selftext ?? "",
       pubDate: created.toISOString(),
       source,
+      url: d.permalink ? `https://www.reddit.com${d.permalink}` : (d.url ?? undefined),
     });
   }
   return items;
 }
+
 
 // Extracts /rapper/<slug> links from blog markdown content
 function extractRapperSlugsFromContent(content: string): string[] {

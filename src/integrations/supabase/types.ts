@@ -2228,6 +2228,58 @@ export type Database = {
           },
         ]
       }
+      rapper_media_mentions: {
+        Row: {
+          created_at: string
+          id: string
+          published_at: string
+          rapper_id: string
+          source: string
+          title: string
+          url: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          published_at?: string
+          rapper_id: string
+          source: string
+          title: string
+          url: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          published_at?: string
+          rapper_id?: string
+          source?: string
+          title?: string
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rapper_media_mentions_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_vote_stats"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_media_mentions_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rapper_voting_analytics"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rapper_media_mentions_rapper_id_fkey"
+            columns: ["rapper_id"]
+            isOneToOne: false
+            referencedRelation: "rappers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       rapper_page_views: {
         Row: {
           created_at: string
@@ -4669,6 +4721,7 @@ export type Database = {
         Args: { ranking_uuid: string }
         Returns: undefined
       }
+      verify_cron_secret: { Args: { _secret: string }; Returns: boolean }
       vote_official: {
         Args: {
           p_member_status: Database["public"]["Enums"]["member_status"]

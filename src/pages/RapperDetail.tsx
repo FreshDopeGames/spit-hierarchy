@@ -29,6 +29,8 @@ import { Tables } from "@/integrations/supabase/types";
 const RapperDiscography = lazy(() => import("@/components/rapper/RapperDiscography"));
 const RapperBestQuote = lazy(() => import("@/components/rapper/RapperBestQuote"));
 const SimilarRappersCard = lazy(() => import("@/components/rapper/SimilarRappersCard"));
+const RapperMediaMentions = lazy(() => import("@/components/rapper/RapperMediaMentions"));
+
 const CommentBubble = lazy(() => import("@/components/CommentBubble"));
 
 type Rapper = Tables<"rappers"> & {
@@ -317,6 +319,14 @@ const RapperDetail = () => {
           <div className="mb-8">
             <RapperStats rapper={rapper} />
           </div>
+
+          {/* In The News — media mentions */}
+          <Suspense fallback={null}>
+            <div className="mb-8">
+              <RapperMediaMentions rapperId={rapper.id} rapperName={rapper.name} />
+            </div>
+          </Suspense>
+
 
           {/* Similar Rappers Section */}
           <Suspense fallback={null}>
