@@ -118,14 +118,15 @@ const RapperDetail = () => {
     }
   }, [rapper?.id, rapper?.discography_last_updated]);
 
-  // Anchor-scroll to the "In The News" section when arriving from Trending Rappers
+  // Anchor-scroll to the "In The News" section when arriving from Trending Rappers.
+  // The section mounts asynchronously (mentions query), so poll until it exists.
   useEffect(() => {
     if (!rapper) return;
     if (window.location.hash !== '#in-the-news') return;
 
     const scrollToNews = () => {
       const element = document.getElementById('in-the-news');
-      if (!element) return;
+      if (!element) return false;
 
       const headerOffset = 80;
       const elementPosition = element.getBoundingClientRect().top + window.scrollY;
@@ -133,11 +134,21 @@ const RapperDetail = () => {
         top: elementPosition - headerOffset,
         behavior: 'smooth'
       });
+      return true;
     };
 
-    // Allow lazy-loaded section to mount before scrolling
-    const timer = setTimeout(scrollToNews, 350);
-    return () => clearTimeout(timer);
+    if (scrollToNews()) return;
+
+    // Retry every 250ms for up to 10s while lazy content loads
+    const interval = setInterval(() => {
+      if (scrollToNews()) clearInterval(interval);
+    }, 250);
+    const giveUp = setTimeout(() => clearInterval(interval), 10000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(giveUp);
+    };
   }, [rapper]);
 
   if (isLoading) {
