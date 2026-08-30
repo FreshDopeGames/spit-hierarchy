@@ -29,6 +29,8 @@ import { Tables } from "@/integrations/supabase/types";
 const RapperDiscography = lazy(() => import("@/components/rapper/RapperDiscography"));
 const RapperBestQuote = lazy(() => import("@/components/rapper/RapperBestQuote"));
 const SimilarRappersCard = lazy(() => import("@/components/rapper/SimilarRappersCard"));
+const RapperMediaMentions = lazy(() => import("@/components/rapper/RapperMediaMentions"));
+
 const CommentBubble = lazy(() => import("@/components/CommentBubble"));
 
 type Rapper = Tables<"rappers"> & {
