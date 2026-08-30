@@ -1,5 +1,5 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useParams, Link, useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/useAuth";
@@ -39,6 +39,7 @@ type Rapper = Tables<"rappers"> & {
 
 const RapperDetail = () => {
   const { id } = useParams<{ id: string; }>();
+  const location = useLocation();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { user } = useAuth();
@@ -118,21 +119,17 @@ const RapperDetail = () => {
     }
   }, [rapper?.id, rapper?.discography_last_updated]);
 
-  // Anchor-scroll to the "In The News" section when arriving from Trending Rappers.
-  // The section mounts asynchronously (mentions query), so poll until it exists.
+  // Anchor-scroll only after the actual news card mounts with its async data.
   useEffect(() => {
     if (!rapper) return;
-    if (window.location.hash !== '#in-the-news') return;
+    if (location.hash !== '#in-the-news') return;
 
     const scrollToNews = () => {
       const element = document.getElementById('in-the-news');
       if (!element) return false;
 
-      const headerOffset = 80;
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({
-        top: elementPosition - headerOffset,
-        behavior: 'smooth'
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => element.scrollIntoView({ behavior: 'smooth', block: 'start' }));
       });
       return true;
     };
@@ -149,7 +146,7 @@ const RapperDetail = () => {
       clearInterval(interval);
       clearTimeout(giveUp);
     };
-  }, [rapper]);
+  }, [rapper, location.hash]);
 
   if (isLoading) {
     return (
@@ -355,7 +352,7 @@ const RapperDetail = () => {
 
           {/* In The News — media mentions */}
           <Suspense fallback={null}>
-            <div id="in-the-news" className="mb-8">
+            <div className="mb-8">
               <RapperMediaMentions rapperId={rapper.id} rapperName={rapper.name} />
             </div>
           </Suspense>
