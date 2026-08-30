@@ -6,17 +6,38 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Words to never match as a rapper name/alias
-const BLOCKLIST = new Set([
-  "big", "ice", "young", "lil", "old", "baby", "king", "queen",
-  "mr", "ms", "dj", "mc", "the", "a", "an", "future", "common",
-  "game", "boss", "fat", "rich", "money", "love",
+// Pure-noise tokens: never match these as a name/alias (no artist is named exactly this)
+const HARD_BLOCKLIST = new Set([
+  "lil", "mr", "ms", "dj", "mc", "the", "a", "an", "old", "big", "young", "baby",
 ]);
-// Re-allow Nas
-BLOCKLIST.delete("nas");
 
-// Names needing exact-case match (common phrases when lowercased)
-const CASE_SENSITIVE_NAMES = new Set(["the game", "future", "common", "game"]);
+// Everyday English words: any rapper name/alias equal to one of these is
+// automatically context-gated even if the DB flag isn't set.
+const COMMON_WORDS = new Set([
+  "evidence", "common", "future", "game", "eve", "logic", "buddy", "juvenile",
+  "papoose", "onyx", "scarface", "conway", "shad", "freeway", "boss", "king",
+  "queen", "fat", "rich", "money", "love", "ice", "blu", "clipse", "trina",
+  "mase", "saigon", "noname", "drake", "nas", "cash", "gold", "hustle", "trap",
+  "flow", "bars", "wave", "vision", "prince", "legend", "sauce", "smoke",
+]);
+
+// Hip-hop context keywords that confirm an ambiguous name really means the artist
+const CONTEXT_KEYWORDS = [
+  "rapper", "rap ", "hip-hop", "hip hop", "mc ", "emcee", "album", "mixtape",
+  "single", "track", "song", "verse", "bars", "feat.", "featuring", "ft.",
+  "dropped", "drops", "drop ", "released", "release", "lp", "ep ", "tour",
+  "music video", "freestyle", "collab", "producer", "beat", "billboard",
+  "grammy", "diss", "cypher", "studio", "streaming", "spotify", "tracklist",
+];
+
+// Feeds that are rap-only: context keyword requirement relaxes (exact case still required)
+const RAP_ONLY_SOURCES = new Set([
+  "2DOPEBOYZ", "HipHopDX", "The Source", "AllHipHop", "XXL Mag", "Rap-Up",
+  "HotNewHipHop", "Reddit r/hiphopheads", "Reddit r/rap", "Reddit r/hiphop101",
+]);
+
+const CONTEXT_WINDOW = 120;
+
 
 const RSS_FEEDS = [
   { name: "XXL Mag", url: "https://www.xxlmag.com/feed" },
@@ -95,24 +116,43 @@ serve(async (req) => {
     // Load rappers + aliases
     const { data: rappers, error: rappersError } = await supabase
       .from("rappers")
-      .select("id, name, aliases");
+      .select("id, name, aliases, requires_context_match");
     if (rappersError) throw rappersError;
 
-    // Build matcher: lowercased name/alias -> rapper id
-    type RapperRef = { id: string; displayName: string };
-    const nameToRapper = new Map<string, RapperRef>();
+    // Build matcher: lowercased name/alias -> rapper entry
+    const nameToRapper = new Map<string, MatchEntry>();
     for (const r of rappers ?? []) {
-      const ref = { id: r.id as string, displayName: r.name as string };
-      const lname = (r.name as string).toLowerCase();
-      if (!BLOCKLIST.has(lname)) nameToRapper.set(lname, ref);
+      const flagged = r.requires_context_match === true;
+      const name = r.name as string;
+      const lname = name.toLowerCase();
+      if (!HARD_BLOCKLIST.has(lname)) {
+        nameToRapper.set(lname, {
+          id: r.id as string,
+          displayName: name,
+          matchText: name,
+          needsContext: flagged || isCommonWord(lname),
+        });
+      }
       for (const alias of (r.aliases as string[] | null) ?? []) {
         const la = alias.toLowerCase();
-        if (!BLOCKLIST.has(la) && la.length >= 3) {
-          if (!nameToRapper.has(la)) nameToRapper.set(la, ref);
-        }
+        if (HARD_BLOCKLIST.has(la) || la.length < 3) continue;
+        if (nameToRapper.has(la)) continue;
+        nameToRapper.set(la, {
+          id: r.id as string,
+          displayName: name,
+          matchText: alias,
+          // Aliases are riskier: gate them whenever the artist is flagged,
+          // the alias is a common word, or the alias is a single short word.
+          needsContext:
+            flagged || isCommonWord(la) || (!la.includes(" ") && la.length <= 5),
+        });
       }
     }
-    console.log(`Loaded ${nameToRapper.size} rapper name/alias entries`);
+    const ambiguousCount = Array.from(nameToRapper.values()).filter((e) => e.needsContext).length;
+    console.log(
+      `Loaded ${nameToRapper.size} rapper name/alias entries (${ambiguousCount} context-gated)`
+    );
+
 
     const threeDaysAgo = new Date(Date.now() - 3 * 24 * 60 * 60 * 1000);
 
@@ -184,6 +224,11 @@ serve(async (req) => {
     const sortedEntries = Array.from(nameToRapper.entries()).sort(
       (a, b) => b[0].length - a[0].length
     );
+    // Two passes: unambiguous names first so they can vouch for ambiguous ones
+    const unambiguousEntries = sortedEntries.filter(([, e]) => !e.needsContext);
+    const ambiguousEntries = sortedEntries.filter(([, e]) => e.needsContext);
+
+    let rejectedCount = 0;
 
     for (const item of allItems) {
       const haystackOriginal = `${item.title} ${item.description}`;
@@ -193,50 +238,83 @@ serve(async (req) => {
         recencyAge < 1 ? 1.0 : recencyAge < 2 ? 0.7 : 0.4;
 
       const matchedInThisItem = new Set<string>();
-      for (const [lname, ref] of sortedEntries) {
-        if (matchedInThisItem.has(ref.id)) continue;
-        const caseSensitive = CASE_SENSITIVE_NAMES.has(lname);
-        const pattern = new RegExp(
-          `\\b${escapeRegex(caseSensitive ? ref.displayName : lname)}\\b`,
-          caseSensitive ? "" : "i"
-        );
-        const target = caseSensitive ? haystackOriginal : haystackLower;
-        if (pattern.test(target)) {
-          matchedInThisItem.add(ref.id);
-          let entry = agg.get(ref.id);
-          if (!entry) {
-            entry = {
-              id: ref.id,
-              displayName: ref.displayName,
-              mentions: 0,
-              score: 0,
-              sources: new Set(),
-            };
-            agg.set(ref.id, entry);
-          }
-          entry.mentions += 1;
-          entry.score += recencyWeight;
-          entry.sources.add(item.source);
 
-          if (item.url && item.title) {
-            const key = `${ref.id}|${item.url}`;
-            if (!seenMentionKeys.has(key)) {
-              seenMentionKeys.add(key);
-              const pub = new Date(item.pubDate);
-              mentionRows.push({
-                rapper_id: ref.id,
-                title: item.title.slice(0, 400),
-                url: item.url,
-                source: item.source,
-                published_at: isNaN(pub.getTime())
-                  ? new Date().toISOString()
-                  : pub.toISOString(),
-              });
-            }
+      const record = (entry: MatchEntry) => {
+        matchedInThisItem.add(entry.id);
+        let a = agg.get(entry.id);
+        if (!a) {
+          a = {
+            id: entry.id,
+            displayName: entry.displayName,
+            mentions: 0,
+            score: 0,
+            sources: new Set(),
+          };
+          agg.set(entry.id, a);
+        }
+        a.mentions += 1;
+        a.score += recencyWeight;
+        a.sources.add(item.source);
+
+        if (item.url && item.title) {
+          const key = `${entry.id}|${item.url}`;
+          if (!seenMentionKeys.has(key)) {
+            seenMentionKeys.add(key);
+            const pub = new Date(item.pubDate);
+            mentionRows.push({
+              rapper_id: entry.id,
+              title: item.title.slice(0, 400),
+              url: item.url,
+              source: item.source,
+              published_at: isNaN(pub.getTime())
+                ? new Date().toISOString()
+                : pub.toISOString(),
+            });
           }
+        }
+      };
+
+      // Pass 1: names that are not everyday words
+      for (const [lname, entry] of unambiguousEntries) {
+        if (matchedInThisItem.has(entry.id)) continue;
+        const pattern = new RegExp(`\\b${escapeRegex(lname)}\\b`, "i");
+        if (pattern.test(haystackLower)) record(entry);
+      }
+
+      // Pass 2: everyday-word names — require exact casing + hip-hop context
+      for (const [lname, entry] of ambiguousEntries) {
+        if (matchedInThisItem.has(entry.id)) continue;
+        const idx = findExactCaseIndex(haystackOriginal, entry.matchText);
+        if (idx < 0) {
+          // The word may still be present in lowercase form — that's a rejection worth logging
+          if (new RegExp(`\\b${escapeRegex(lname)}\\b`, "i").test(haystackLower)) {
+            rejectedCount += 1;
+            console.log(
+              `Rejected "${entry.displayName}" (casing) — [${item.source}] ${item.title.slice(0, 90)}`
+            );
+          }
+          continue;
+        }
+        const reason = confirmContext(
+          haystackOriginal,
+          idx,
+          entry.matchText.length,
+          item.source,
+          matchedInThisItem.size > 0
+        );
+        if (reason) {
+          record(entry);
+        } else {
+          rejectedCount += 1;
+          console.log(
+            `Rejected "${entry.displayName}" (no hip-hop context) — [${item.source}] ${item.title.slice(0, 90)}`
+          );
         }
       }
     }
+
+    console.log(`Rejected ${rejectedCount} ambiguous candidate matches`);
+
 
     // Persist media mentions (all matched rappers, not just the top 5)
     if (mentionRows.length > 0) {
@@ -322,6 +400,8 @@ serve(async (req) => {
         success: true,
         generated_at: generatedAt,
         items_processed: allItems.length,
+        rejected_count: rejectedCount,
+
         top: ranked.map((r, i) => ({
           rank: i + 1,
           name: r.displayName,
@@ -346,7 +426,59 @@ serve(async (req) => {
   }
 });
 
+type MatchEntry = {
+  id: string;
+  displayName: string;
+  /** The exact text (name or alias) this entry matches on */
+  matchText: string;
+  /** Everyday-word name: needs exact casing + hip-hop context to count */
+  needsContext: boolean;
+};
+
+function isCommonWord(lowered: string): boolean {
+  if (COMMON_WORDS.has(lowered)) return true;
+  // Multi-word names count as common only if every token is a common word
+  const parts = lowered.split(/\s+/).filter((p) => p && p !== "the");
+  return parts.length > 1 && parts.every((p) => COMMON_WORDS.has(p));
+}
+
+/** Index of an exact-case, word-bounded occurrence of `needle`, or -1 */
+function findExactCaseIndex(haystack: string, needle: string): number {
+  const re = new RegExp(`(^|[^\\p{L}\\p{N}])(${escapeRegex(needle)})(?![\\p{L}\\p{N}])`, "u");
+  const m = re.exec(haystack);
+  return m ? m.index + m[1].length : -1;
+}
+
+/**
+ * Confirms an ambiguous name really refers to the artist.
+ * Returns the reason it was accepted, or null when there is no supporting signal.
+ */
+function confirmContext(
+  haystack: string,
+  matchIndex: number,
+  matchLength: number,
+  source: string,
+  hasOtherRapperInItem: boolean
+): string | null {
+  const start = Math.max(0, matchIndex - CONTEXT_WINDOW);
+  const end = Math.min(haystack.length, matchIndex + matchLength + CONTEXT_WINDOW);
+  const window = haystack.slice(start, end).toLowerCase();
+
+  if (CONTEXT_KEYWORDS.some((k) => window.includes(k))) return "keyword";
+
+  // Quoted or possessive usage — "Evidence" / Evidence's
+  const before = haystack[matchIndex - 1] ?? "";
+  const after = haystack.slice(matchIndex + matchLength, matchIndex + matchLength + 2);
+  if (/["'“‘]/.test(before) || /^['’]s\b/.test(after)) return "quoted_or_possessive";
+
+  if (hasOtherRapperInItem) return "co_mention";
+  if (RAP_ONLY_SOURCES.has(source)) return "rap_only_source";
+
+  return null;
+}
+
 function escapeRegex(s: string): string {
+
   return s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 

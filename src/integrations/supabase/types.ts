@@ -2525,6 +2525,7 @@ export type Database = {
           publish_status: string
           published_at: string | null
           real_name: string | null
+          requires_context_match: boolean
           slug: string
           spotify_id: string | null
           top_quote: string | null
@@ -2559,6 +2560,7 @@ export type Database = {
           publish_status?: string
           published_at?: string | null
           real_name?: string | null
+          requires_context_match?: boolean
           slug: string
           spotify_id?: string | null
           top_quote?: string | null
@@ -2593,6 +2595,7 @@ export type Database = {
           publish_status?: string
           published_at?: string | null
           real_name?: string | null
+          requires_context_match?: boolean
           slug?: string
           spotify_id?: string | null
           top_quote?: string | null
