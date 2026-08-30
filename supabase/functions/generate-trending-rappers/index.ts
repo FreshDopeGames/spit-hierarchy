@@ -167,6 +167,17 @@ serve(async (req) => {
     };
     const agg = new Map<string, Agg>();
 
+    // Collected article links per matched rapper (for the "In The News" card)
+    type MentionRow = {
+      rapper_id: string;
+      title: string;
+      url: string;
+      source: string;
+      published_at: string;
+    };
+    const mentionRows: MentionRow[] = [];
+    const seenMentionKeys = new Set<string>();
+
     // Sort entries by name length desc to avoid partial-match issues
     const sortedEntries = Array.from(nameToRapper.entries()).sort(
       (a, b) => b[0].length - a[0].length
@@ -204,14 +215,54 @@ serve(async (req) => {
           entry.mentions += 1;
           entry.score += recencyWeight;
           entry.sources.add(item.source);
+
+          if (item.url && item.title) {
+            const key = `${ref.id}|${item.url}`;
+            if (!seenMentionKeys.has(key)) {
+              seenMentionKeys.add(key);
+              const pub = new Date(item.pubDate);
+              mentionRows.push({
+                rapper_id: ref.id,
+                title: item.title.slice(0, 400),
+                url: item.url,
+                source: item.source,
+                published_at: isNaN(pub.getTime())
+                  ? new Date().toISOString()
+                  : pub.toISOString(),
+              });
+            }
+          }
         }
       }
+    }
+
+    // Persist media mentions (all matched rappers, not just the top 5)
+    if (mentionRows.length > 0) {
+      for (let i = 0; i < mentionRows.length; i += 500) {
+        const chunk = mentionRows.slice(i, i + 500);
+        const { error: mentionErr } = await supabase
+          .from("rapper_media_mentions")
+          .upsert(chunk, { onConflict: "rapper_id,url", ignoreDuplicates: true });
+        if (mentionErr) console.error("Mention upsert error:", mentionErr);
+      }
+      console.log(`Upserted ${mentionRows.length} media mentions`);
+    }
+
+    // Prune mentions older than 30 days
+    {
+      const cutoff = new Date(Date.now() - 30 * dayMs).toISOString();
+      const { error: pruneErr } = await supabase
+        .from("rapper_media_mentions")
+        .delete()
+        .lt("published_at", cutoff);
+      if (pruneErr) console.error("Mention prune error:", pruneErr);
     }
 
     // Add source diversity bonus
     for (const entry of agg.values()) {
       entry.score += entry.sources.size * 0.5;
     }
+
 
     // Sort + take top 5
     const ranked = Array.from(agg.values())
