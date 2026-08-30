@@ -224,6 +224,11 @@ serve(async (req) => {
     const sortedEntries = Array.from(nameToRapper.entries()).sort(
       (a, b) => b[0].length - a[0].length
     );
+    // Two passes: unambiguous names first so they can vouch for ambiguous ones
+    const unambiguousEntries = sortedEntries.filter(([, e]) => !e.needsContext);
+    const ambiguousEntries = sortedEntries.filter(([, e]) => e.needsContext);
+
+    let rejectedCount = 0;
 
     for (const item of allItems) {
       const haystackOriginal = `${item.title} ${item.description}`;
@@ -233,50 +238,83 @@ serve(async (req) => {
         recencyAge < 1 ? 1.0 : recencyAge < 2 ? 0.7 : 0.4;
 
       const matchedInThisItem = new Set<string>();
-      for (const [lname, ref] of sortedEntries) {
-        if (matchedInThisItem.has(ref.id)) continue;
-        const caseSensitive = CASE_SENSITIVE_NAMES.has(lname);
-        const pattern = new RegExp(
-          `\\b${escapeRegex(caseSensitive ? ref.displayName : lname)}\\b`,
-          caseSensitive ? "" : "i"
-        );
-        const target = caseSensitive ? haystackOriginal : haystackLower;
-        if (pattern.test(target)) {
-          matchedInThisItem.add(ref.id);
-          let entry = agg.get(ref.id);
-          if (!entry) {
-            entry = {
-              id: ref.id,
-              displayName: ref.displayName,
-              mentions: 0,
-              score: 0,
-              sources: new Set(),
-            };
-            agg.set(ref.id, entry);
-          }
-          entry.mentions += 1;
-          entry.score += recencyWeight;
-          entry.sources.add(item.source);
 
-          if (item.url && item.title) {
-            const key = `${ref.id}|${item.url}`;
-            if (!seenMentionKeys.has(key)) {
-              seenMentionKeys.add(key);
-              const pub = new Date(item.pubDate);
-              mentionRows.push({
-                rapper_id: ref.id,
-                title: item.title.slice(0, 400),
-                url: item.url,
-                source: item.source,
-                published_at: isNaN(pub.getTime())
-                  ? new Date().toISOString()
-                  : pub.toISOString(),
-              });
-            }
+      const record = (entry: MatchEntry) => {
+        matchedInThisItem.add(entry.id);
+        let a = agg.get(entry.id);
+        if (!a) {
+          a = {
+            id: entry.id,
+            displayName: entry.displayName,
+            mentions: 0,
+            score: 0,
+            sources: new Set(),
+          };
+          agg.set(entry.id, a);
+        }
+        a.mentions += 1;
+        a.score += recencyWeight;
+        a.sources.add(item.source);
+
+        if (item.url && item.title) {
+          const key = `${entry.id}|${item.url}`;
+          if (!seenMentionKeys.has(key)) {
+            seenMentionKeys.add(key);
+            const pub = new Date(item.pubDate);
+            mentionRows.push({
+              rapper_id: entry.id,
+              title: item.title.slice(0, 400),
+              url: item.url,
+              source: item.source,
+              published_at: isNaN(pub.getTime())
+                ? new Date().toISOString()
+                : pub.toISOString(),
+            });
           }
+        }
+      };
+
+      // Pass 1: names that are not everyday words
+      for (const [lname, entry] of unambiguousEntries) {
+        if (matchedInThisItem.has(entry.id)) continue;
+        const pattern = new RegExp(`\\b${escapeRegex(lname)}\\b`, "i");
+        if (pattern.test(haystackLower)) record(entry);
+      }
+
+      // Pass 2: everyday-word names — require exact casing + hip-hop context
+      for (const [lname, entry] of ambiguousEntries) {
+        if (matchedInThisItem.has(entry.id)) continue;
+        const idx = findExactCaseIndex(haystackOriginal, entry.matchText);
+        if (idx < 0) {
+          // The word may still be present in lowercase form — that's a rejection worth logging
+          if (new RegExp(`\\b${escapeRegex(lname)}\\b`, "i").test(haystackLower)) {
+            rejectedCount += 1;
+            console.log(
+              `Rejected "${entry.displayName}" (casing) — [${item.source}] ${item.title.slice(0, 90)}`
+            );
+          }
+          continue;
+        }
+        const reason = confirmContext(
+          haystackOriginal,
+          idx,
+          entry.matchText.length,
+          item.source,
+          matchedInThisItem.size > 0
+        );
+        if (reason) {
+          record(entry);
+        } else {
+          rejectedCount += 1;
+          console.log(
+            `Rejected "${entry.displayName}" (no hip-hop context) — [${item.source}] ${item.title.slice(0, 90)}`
+          );
         }
       }
     }
+
+    console.log(`Rejected ${rejectedCount} ambiguous candidate matches`);
+
 
     // Persist media mentions (all matched rappers, not just the top 5)
     if (mentionRows.length > 0) {
