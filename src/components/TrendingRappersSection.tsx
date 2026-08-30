@@ -35,7 +35,7 @@ const TrendingRappersSection = () => {
         {trending.map((r) => (
           <Link
             key={r.id}
-            to={`/rapper/${r.slug}`}
+            to={`/rapper/${r.slug}#in-the-news`}
             className="group relative rounded-lg overflow-hidden bg-rap-carbon-light/50 border-2 border-[hsl(var(--theme-primary))]/40 hover:border-[hsl(var(--theme-primary))] transition-colors p-3 flex flex-row sm:flex-col items-center sm:text-center gap-4 sm:gap-0"
           >
             <div className="absolute top-2 left-2 z-10 w-9 h-9 sm:w-7 sm:h-7 rounded-full bg-[hsl(var(--theme-primary))] text-rap-carbon font-bold text-base sm:text-sm flex items-center justify-center">
