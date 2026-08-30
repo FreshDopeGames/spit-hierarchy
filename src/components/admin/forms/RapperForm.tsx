@@ -41,6 +41,8 @@ const RapperForm = ({ rapper, onSuccess, onCancel }: RapperFormProps) => {
     instagram_handle: "",
     homepage_url: "",
     aliases: [],
+    requires_context_match: false,
+
     tags: [],
     musicbrainz_id: "",
     top_quote: "",
