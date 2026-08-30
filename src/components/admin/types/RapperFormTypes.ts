@@ -16,6 +16,8 @@ export interface RapperFormData {
   instagram_handle: string;
   homepage_url: string;
   aliases: string[];
+  requires_context_match: boolean;
+
   tags: string[];
   musicbrainz_id: string;
   top_quote: string;
