@@ -18,6 +18,7 @@ interface RapperAvatarProps {
   imageUrl?: string | null; // Allow passing image URL directly for batch loading
   variant?: "circular" | "square";
   borderColor?: "default" | "black"; // Add border color option
+  linked?: boolean;
 }
 
 const RapperAvatar = ({
@@ -26,6 +27,7 @@ const RapperAvatar = ({
   imageUrl: providedImageUrl,
   variant = "square",
   borderColor = "default",
+  linked = true,
 }: RapperAvatarProps) => {
   // Map avatar sizes to image sizes
   const imageSizeMap = {
@@ -69,29 +71,35 @@ const RapperAvatar = ({
 
   // Debug info removed for production
 
+  const avatar = (
+    <div
+      className={`${sizeClasses[size]} ${variant === "square" ? "rounded-lg" : "rounded-full"} overflow-hidden bg-gradient-to-br from-[var(--theme-surface)] to-[var(--theme-primary)]/20 flex items-center justify-center border-4 ${borderColorClass} transition-colors`}
+    >
+      <EnhancedImage
+        src={imageToDisplay}
+        alt={rapper.name}
+        className="group-hover:scale-110 transition-transform duration-300"
+        size={imageSizeMap[size]}
+        priority={size === "xl" || size === "2xl"}
+        onLoad={() => {
+          /* Image loaded */
+        }}
+        onError={(e) => {
+          console.error("Image failed to load:", imageToDisplay);
+          const target = e.target as HTMLImageElement;
+          if (!target.src.includes(placeholderImage)) {
+            target.src = placeholderImage;
+          }
+        }}
+      />
+    </div>
+  );
+
+  if (!linked) return avatar;
+
   return (
     <Link to={`/rapper/${rapper.slug || rapper.id}`} className="group" onClick={() => window.scrollTo(0, 0)}>
-      <div
-        className={`${sizeClasses[size]} ${variant === "square" ? "rounded-lg" : "rounded-full"} overflow-hidden bg-gradient-to-br from-[var(--theme-surface)] to-[var(--theme-primary)]/20 flex items-center justify-center border-4 ${borderColorClass} transition-colors`}
-      >
-        <EnhancedImage
-          src={imageToDisplay}
-          alt={rapper.name}
-          className="group-hover:scale-110 transition-transform duration-300"
-          size={imageSizeMap[size]}
-          priority={size === "xl" || size === "2xl"}
-          onLoad={() => {
-            /* Image loaded */
-          }}
-          onError={(e) => {
-            console.error("Image failed to load:", imageToDisplay);
-            const target = e.target as HTMLImageElement;
-            if (!target.src.includes(placeholderImage)) {
-              target.src = placeholderImage;
-            }
-          }}
-        />
-      </div>
+      {avatar}
     </Link>
   );
 };

@@ -48,6 +48,7 @@ const TrendingRappersSection = () => {
                   size="lg"
                   imageUrl={r.image_url}
                   variant="square"
+                  linked={false}
                 />
               </div>
               <div className="hidden sm:block">
@@ -56,6 +57,7 @@ const TrendingRappersSection = () => {
                   size="sm"
                   imageUrl={r.image_url}
                   variant="square"
+                  linked={false}
                 />
               </div>
             </div>
