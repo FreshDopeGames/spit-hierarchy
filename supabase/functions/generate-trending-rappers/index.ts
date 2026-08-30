@@ -54,9 +54,11 @@ serve(async (req) => {
 
   if (__cronSecret) {
     const __svc = createClient(Deno.env.get('SUPABASE_URL')!, __serviceKey);
-    const { data: __ok } = await __svc.rpc('verify_cron_secret', { _secret: __cronSecret });
+    const { data: __ok, error: __okErr } = await __svc.rpc('verify_cron_secret', { _secret: __cronSecret });
+    if (__okErr) console.error('verify_cron_secret error:', __okErr);
     if (__ok === true) __authorized = true;
   }
+
 
   if (!__authorized) {
     const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
