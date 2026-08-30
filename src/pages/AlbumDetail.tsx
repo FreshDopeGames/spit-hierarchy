@@ -183,7 +183,7 @@ const AlbumDetail = () => {
       <HeaderNavigation isScrolled={false} />
 
       <div className="min-h-screen bg-gradient-to-b from-[hsl(var(--theme-black))] via-[hsl(var(--theme-background))] to-[hsl(var(--theme-black))] relative">
-        <div className="container mx-auto px-4 pt-20 pb-16 space-y-4">
+        <div className="container mx-auto px-4 pt-20 pb-4 space-y-4">
           {/* Back Button - Left Aligned */}
           <div className="max-w-4xl mx-auto">
             <ThemedButton
