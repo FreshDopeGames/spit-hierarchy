@@ -6,17 +6,38 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Words to never match as a rapper name/alias
-const BLOCKLIST = new Set([
-  "big", "ice", "young", "lil", "old", "baby", "king", "queen",
-  "mr", "ms", "dj", "mc", "the", "a", "an", "future", "common",
-  "game", "boss", "fat", "rich", "money", "love",
+// Pure-noise tokens: never match these as a name/alias (no artist is named exactly this)
+const HARD_BLOCKLIST = new Set([
+  "lil", "mr", "ms", "dj", "mc", "the", "a", "an", "old", "big", "young", "baby",
 ]);
-// Re-allow Nas
-BLOCKLIST.delete("nas");
 
-// Names needing exact-case match (common phrases when lowercased)
-const CASE_SENSITIVE_NAMES = new Set(["the game", "future", "common", "game"]);
+// Everyday English words: any rapper name/alias equal to one of these is
+// automatically context-gated even if the DB flag isn't set.
+const COMMON_WORDS = new Set([
+  "evidence", "common", "future", "game", "eve", "logic", "buddy", "juvenile",
+  "papoose", "onyx", "scarface", "conway", "shad", "freeway", "boss", "king",
+  "queen", "fat", "rich", "money", "love", "ice", "blu", "clipse", "trina",
+  "mase", "saigon", "noname", "drake", "nas", "cash", "gold", "hustle", "trap",
+  "flow", "bars", "wave", "vision", "prince", "legend", "sauce", "smoke",
+]);
+
+// Hip-hop context keywords that confirm an ambiguous name really means the artist
+const CONTEXT_KEYWORDS = [
+  "rapper", "rap ", "hip-hop", "hip hop", "mc ", "emcee", "album", "mixtape",
+  "single", "track", "song", "verse", "bars", "feat.", "featuring", "ft.",
+  "dropped", "drops", "drop ", "released", "release", "lp", "ep ", "tour",
+  "music video", "freestyle", "collab", "producer", "beat", "billboard",
+  "grammy", "diss", "cypher", "studio", "streaming", "spotify", "tracklist",
+];
+
+// Feeds that are rap-only: context keyword requirement relaxes (exact case still required)
+const RAP_ONLY_SOURCES = new Set([
+  "2DOPEBOYZ", "HipHopDX", "The Source", "AllHipHop", "XXL Mag", "Rap-Up",
+  "HotNewHipHop", "Reddit r/hiphopheads", "Reddit r/rap", "Reddit r/hiphop101",
+]);
+
+const CONTEXT_WINDOW = 120;
+
 
 const RSS_FEEDS = [
   { name: "XXL Mag", url: "https://www.xxlmag.com/feed" },
