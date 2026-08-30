@@ -118,6 +118,28 @@ const RapperDetail = () => {
     }
   }, [rapper?.id, rapper?.discography_last_updated]);
 
+  // Anchor-scroll to the "In The News" section when arriving from Trending Rappers
+  useEffect(() => {
+    if (!rapper) return;
+    if (window.location.hash !== '#in-the-news') return;
+
+    const scrollToNews = () => {
+      const element = document.getElementById('in-the-news');
+      if (!element) return;
+
+      const headerOffset = 80;
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({
+        top: elementPosition - headerOffset,
+        behavior: 'smooth'
+      });
+    };
+
+    // Allow lazy-loaded section to mount before scrolling
+    const timer = setTimeout(scrollToNews, 350);
+    return () => clearTimeout(timer);
+  }, [rapper]);
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[hsl(var(--theme-background))] via-[hsl(var(--theme-backgroundLight))] to-[hsl(var(--theme-background))] relative">
@@ -322,7 +344,7 @@ const RapperDetail = () => {
 
           {/* In The News — media mentions */}
           <Suspense fallback={null}>
-            <div className="mb-8">
+            <div id="in-the-news" className="mb-8">
               <RapperMediaMentions rapperId={rapper.id} rapperName={rapper.name} />
             </div>
           </Suspense>
