@@ -14,7 +14,7 @@ const RapperMediaMentions = ({ rapperId, rapperName }: RapperMediaMentionsProps)
   if (isLoading || !mentions || mentions.length === 0) return null;
 
   return (
-    <Card className="bg-black border-4 border-[hsl(var(--theme-primary))]">
+    <Card id="in-the-news" className="scroll-mt-20 bg-black border-4 border-[hsl(var(--theme-primary))]">
       <CardContent className="p-6 sm:p-8">
         <div className="flex items-center gap-3 mb-4">
           <Newspaper className="w-6 h-6 text-[hsl(var(--theme-primary))]" />
