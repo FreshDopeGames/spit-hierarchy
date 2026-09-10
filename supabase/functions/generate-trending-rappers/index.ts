@@ -52,6 +52,11 @@ const RSS_FEEDS = [
   { name: "Rap-Up", url: "https://www.rap-up.com/feed/" },
   { name: "Pitchfork Rap", url: "https://pitchfork.com/rss/reviews/albums/" },
   { name: "Hypebeast Music", url: "https://hypebeast.com/music/feed" },
+  { name: "GQ", url: "https://www.gq.com/feed/rss" },
+  { name: "Us Weekly", url: "https://www.usmagazine.com/feed/" },
+  { name: "The Hollywood Reporter", url: "https://www.hollywoodreporter.com/feed/" },
+  { name: "Forbes", url: "https://www.forbes.com/most-popular/feed/" },
+  { name: "TIME", url: "https://time.com/feed/" },
 ];
 
 const REDDIT_SUBS = ["hiphopheads", "rap", "hiphop101"];
