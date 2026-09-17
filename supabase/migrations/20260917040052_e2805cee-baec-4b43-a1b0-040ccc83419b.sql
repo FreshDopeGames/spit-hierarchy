@@ -1,0 +1,2 @@
+REVOKE EXECUTE ON FUNCTION public.resort_ranking_unranked_alphabetically(uuid) FROM anon, authenticated;
+REVOKE EXECUTE ON FUNCTION public.resort_user_ranking_unranked_alphabetically(uuid) FROM anon, authenticated;
