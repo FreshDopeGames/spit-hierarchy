@@ -4652,6 +4652,14 @@ export type Database = {
       }
       refresh_rapper_collaborations: { Args: never; Returns: number }
       reset_all_voting_data: { Args: never; Returns: Json }
+      resort_ranking_unranked_alphabetically: {
+        Args: { p_ranking_id: string }
+        Returns: undefined
+      }
+      resort_user_ranking_unranked_alphabetically: {
+        Args: { p_ranking_id: string }
+        Returns: undefined
+      }
       save_onboarding_username: {
         Args: { p_username: string }
         Returns: undefined
