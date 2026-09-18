@@ -85,12 +85,7 @@ const StatsOverviewRedesigned = () => {
         .order("likes_count", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase.from("profiles")
-        .select("id, username, avatar_url, created_at")
-        .not("username", "like", "%@%")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
+      supabase.rpc("get_newest_member").maybeSingle(),
       supabase.rpc('get_member_with_most_achievements').maybeSingle(),
       supabase.from("rappers")
         .select("id, name, slug, image_url, total_votes")
