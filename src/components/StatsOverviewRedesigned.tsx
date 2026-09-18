@@ -109,29 +109,9 @@ const StatsOverviewRedesigned = () => {
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    // Process ranking votes for most active ranking
-    const rankingCounts: Record<string, { ranking: any; count: number }> = {};
-    const rapperRankingCounts: Record<string, { rapper: any; count: number }> = {};
-    rankingVotesResult.data?.forEach((vote) => {
-      const ranking = vote.official_rankings;
-      if (ranking && ranking.id) {
-        if (!rankingCounts[ranking.id]) {
-          rankingCounts[ranking.id] = { ranking, count: 0 };
-        }
-        rankingCounts[ranking.id].count++;
-      }
-      const rapper = vote.rappers;
-      if (rapper && rapper.id) {
-        if (!rapperRankingCounts[rapper.id]) {
-          rapperRankingCounts[rapper.id] = { rapper, count: 0 };
-        }
-        rapperRankingCounts[rapper.id].count++;
-      }
-    });
-    const mostActiveRanking = Object.values(rankingCounts)
-      .sort((a, b) => b.count - a.count)[0] as { ranking: RankingData; count: number } | undefined;
-    const mostVotedInRankings = Object.values(rapperRankingCounts)
-      .sort((a, b) => b.count - a.count)[0] as { rapper: any; count: number } | undefined;
+    // Most active ranking / most voted rapper come from aggregate-only functions
+    const mostActiveRanking = (mostActiveRankingResult.data as any) || null;
+    const mostVotedInRankings = (mostVotedRapperResult.data as any) || null;
 
     // Process most achievements profile
     let mostAchievementsProfile: MemberData | null = null;
