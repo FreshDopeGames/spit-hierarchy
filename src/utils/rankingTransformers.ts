@@ -6,17 +6,15 @@ import { supabase } from "@/integrations/supabase/client";
 const getRankingVoteCount = async (rankingId: string, isOfficial: boolean): Promise<number> => {
   try {
     if (isOfficial) {
-      // For official rankings, count votes from ranking_votes table
-      const { count, error } = await supabase
-        .from("ranking_votes")
-        .select("*", { count: 'exact', head: true })
-        .in("ranking_id", [rankingId]);
+      // For official rankings, use the aggregate-only vote count function
+      const { data, error } = await supabase
+        .rpc("get_official_ranking_vote_count", { ranking_uuid: rankingId });
       
       if (error) {
         console.error("Error fetching official ranking votes:", error);
         return 0;
       }
-      return count || 0;
+      return Number(data) || 0;
     } else {
       // For user rankings, we don't have vote tracking yet
       return 0;
