@@ -46,12 +46,10 @@ const JournalEntryDetail = () => {
     queryKey: ["profile-by-username", username],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, username, avatar_url, full_name")
-        .eq("username", username!)
-        .single();
+        .rpc("get_public_profile_by_username", { p_username: username! })
+        .maybeSingle();
       if (error) throw error;
-      return data;
+      return data as { id: string; username: string; avatar_url: string | null } | null;
     },
     enabled: !!username,
   });
