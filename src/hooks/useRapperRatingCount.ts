@@ -6,16 +6,11 @@ export const useRapperRatingCount = (rapperId: string) => {
     queryKey: ["rapper-rating-count", rapperId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("votes")
-        .select("user_id")
-        .eq("rapper_id", rapperId)
-        .not("user_id", "is", null);
+        .rpc("get_rapper_rating_count", { p_rapper_id: rapperId });
 
       if (error) throw error;
 
-      // Count unique users who rated this rapper
-      const uniqueUsers = new Set(data?.map((v) => v.user_id) || []);
-      return uniqueUsers.size;
+      return Number(data) || 0;
     },
     enabled: !!rapperId,
     staleTime: 5 * 60 * 1000, // 5 minutes
