@@ -125,20 +125,30 @@ export const useVSMatchBySlug = (slug: string) => {
 
       if (error) throw error;
 
-      // Get vote counts and user vote
-      const { data: votes, error: votesError } = await supabase
-        .from("vs_match_votes")
-        .select("rapper_choice_id, user_id")
-        .eq("vs_match_id", data.id);
+      // Get aggregated vote counts and the current user's own vote
+      const [countsResult, ownVoteResult] = await Promise.all([
+        supabase.rpc("get_vs_match_vote_counts", { p_match_id: data.id }),
+        user
+          ? supabase
+              .from("vs_match_votes")
+              .select("rapper_choice_id")
+              .eq("vs_match_id", data.id)
+              .eq("user_id", user.id)
+              .maybeSingle()
+          : Promise.resolve({ data: null, error: null } as any),
+      ]);
 
-      if (votesError) throw votesError;
+      if (countsResult.error) throw countsResult.error;
 
-      const rapper_1_votes = votes.filter(v => v.rapper_choice_id === data.rapper_1_id).length;
-      const rapper_2_votes = votes.filter(v => v.rapper_choice_id === data.rapper_2_id).length;
-      const total_votes = votes.length;
+      const counts = (countsResult.data || []) as any[];
+      const countFor = (rapperId: string) =>
+        Number(counts.find(c => c.rapper_choice_id === rapperId)?.vote_count || 0);
 
-      // Check if current user has voted
-      const user_vote = user ? votes.find(v => v.user_id === user.id)?.rapper_choice_id : undefined;
+      const rapper_1_votes = countFor(data.rapper_1_id);
+      const rapper_2_votes = countFor(data.rapper_2_id);
+      const total_votes = counts.reduce((sum, c) => sum + Number(c.vote_count), 0);
+
+      const user_vote = ownVoteResult?.data?.rapper_choice_id ?? undefined;
 
       // Get additional metadata for both rappers
       const [rapper1Metadata, rapper2Metadata] = await Promise.all([
