@@ -64,10 +64,8 @@ const JournalContentScanner = () => {
       // Fetch profiles for usernames
       const userIds = [...new Set(entries.map(e => e.user_id))];
       const { data: profiles } = await supabase
-        .from("profiles")
-        .select("id, username")
-        .in("id", userIds);
-      const profileMap = new Map(profiles?.map(p => [p.id, p.username]) || []);
+        .rpc("get_public_profiles_batch", { profile_user_ids: userIds });
+      const profileMap = new Map(((profiles || []) as any[]).map(p => [p.id, p.username]));
 
       // Scan each entry
       const results: ScanResult[] = [];
