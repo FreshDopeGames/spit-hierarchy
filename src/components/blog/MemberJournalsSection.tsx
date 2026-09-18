@@ -30,11 +30,11 @@ const MemberJournalsSection = () => {
       if (!data || data.length === 0) return [];
       const userIds = [...new Set(data.map(e => e.user_id))];
       const { data: profiles } = await supabase
-        .from("profiles")
-        .select("id, username, full_name, avatar_url")
-        .in("id", userIds);
+        .rpc("get_public_profiles_batch", { profile_user_ids: userIds });
 
-      const profileMap = new Map(profiles?.map(p => [p.id, p]) || []);
+      const profileMap = new Map(
+        ((profiles || []) as any[]).map(p => [p.id, { ...p, full_name: null }])
+      );
       return data.map(entry => ({
         ...entry,
         profiles: profileMap.get(entry.user_id) || { username: "unknown", full_name: null, avatar_url: null },

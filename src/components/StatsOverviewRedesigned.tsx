@@ -52,17 +52,18 @@ const StatsOverviewRedesigned = () => {
     // PHASE 1: Critical counts (parallel)
     const [
       rappersCount,
-      votesCount,
-      rankingVotesCount,
+      voteTotalsResult,
       membersCount,
       blogCount
     ] = await Promise.all([
       supabase.from("rappers").select("*", { count: "exact", head: true }).eq("publish_status", "published"),
-      supabase.from("votes").select("*", { count: "exact", head: true }),
-      supabase.from("ranking_votes").select("*", { count: "exact", head: true }),
+      supabase.rpc("get_platform_vote_totals"),
       supabase.rpc("get_total_member_count"),
       supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("status", "published")
     ]);
+
+    const votesTotal = Number((voteTotalsResult.data as any)?.[0]?.total_ratings ?? 0);
+    const rankingVotesTotal = Number((voteTotalsResult.data as any)?.[0]?.total_ranking_votes ?? 0);
 
     // PHASE 2: Secondary data (parallel)
     const [
@@ -71,7 +72,8 @@ const StatsOverviewRedesigned = () => {
       newestMemberResult,
       topAchieverResult,
       mostRatedRapperResult,
-      rankingVotesResult
+      mostActiveRankingResult,
+      mostVotedRapperResult
     ] = await Promise.all([
       supabase.from("rappers")
         .select("career_start_year")
@@ -83,12 +85,7 @@ const StatsOverviewRedesigned = () => {
         .order("likes_count", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase.from("profiles")
-        .select("id, username, avatar_url, created_at")
-        .not("username", "like", "%@%")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
+      supabase.rpc("get_newest_member").maybeSingle(),
       supabase.rpc('get_member_with_most_achievements').maybeSingle(),
       supabase.from("rappers")
         .select("id, name, slug, image_url, total_votes")
@@ -97,8 +94,8 @@ const StatsOverviewRedesigned = () => {
         .order("total_votes", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase.from("ranking_votes")
-        .select("ranking_id, rapper_id, official_rankings(id, title, slug), rappers(id, name, slug, image_url)")
+      supabase.rpc("get_most_active_ranking").maybeSingle(),
+      supabase.rpc("get_most_voted_rapper_in_rankings").maybeSingle()
     ]);
 
     // Process decade breakdown
@@ -112,29 +109,9 @@ const StatsOverviewRedesigned = () => {
       .map(([name, value]) => ({ name, value }))
       .sort((a, b) => a.name.localeCompare(b.name));
 
-    // Process ranking votes for most active ranking
-    const rankingCounts: Record<string, { ranking: any; count: number }> = {};
-    const rapperRankingCounts: Record<string, { rapper: any; count: number }> = {};
-    rankingVotesResult.data?.forEach((vote) => {
-      const ranking = vote.official_rankings;
-      if (ranking && ranking.id) {
-        if (!rankingCounts[ranking.id]) {
-          rankingCounts[ranking.id] = { ranking, count: 0 };
-        }
-        rankingCounts[ranking.id].count++;
-      }
-      const rapper = vote.rappers;
-      if (rapper && rapper.id) {
-        if (!rapperRankingCounts[rapper.id]) {
-          rapperRankingCounts[rapper.id] = { rapper, count: 0 };
-        }
-        rapperRankingCounts[rapper.id].count++;
-      }
-    });
-    const mostActiveRanking = Object.values(rankingCounts)
-      .sort((a, b) => b.count - a.count)[0] as { ranking: RankingData; count: number } | undefined;
-    const mostVotedInRankings = Object.values(rapperRankingCounts)
-      .sort((a, b) => b.count - a.count)[0] as { rapper: any; count: number } | undefined;
+    // Most active ranking / most voted rapper come from aggregate-only functions
+    const mostActiveRanking = (mostActiveRankingResult.data as any) || null;
+    const mostVotedInRankings = (mostVotedRapperResult.data as any) || null;
 
     // Process most achievements profile
     let mostAchievementsProfile: MemberData | null = null;
@@ -153,18 +130,18 @@ const StatsOverviewRedesigned = () => {
         decadeBreakdown,
       },
       rankings: {
-        total: rankingVotesCount.count || 0,
+        total: rankingVotesTotal,
         mostActiveRanking: mostActiveRanking ? {
-          ...mostActiveRanking.ranking,
-          vote_count: mostActiveRanking.count,
+          ...(mostActiveRanking as RankingData),
+          vote_count: Number(mostActiveRanking.vote_count),
         } : null,
         mostVotedRapper: mostVotedInRankings ? {
-          ...mostVotedInRankings.rapper,
-          vote_count: mostVotedInRankings.count,
+          ...mostVotedInRankings,
+          vote_count: Number(mostVotedInRankings.vote_count),
         } : null,
       },
       ratings: {
-        total: votesCount.count || 0,
+        total: votesTotal,
         mostRatedRapper: mostRatedRapperResult.data,
       },
       members: {

@@ -46,12 +46,10 @@ const JournalEntryDetail = () => {
     queryKey: ["profile-by-username", username],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("profiles")
-        .select("id, username, avatar_url, full_name")
-        .eq("username", username!)
-        .single();
+        .rpc("get_public_profile_by_username", { p_username: username! })
+        .maybeSingle();
       if (error) throw error;
-      return data;
+      return data as { id: string; username: string; avatar_url: string | null } | null;
     },
     enabled: !!username,
   });
@@ -169,7 +167,7 @@ const JournalEntryDetail = () => {
             <div className="flex items-center gap-3 text-muted-foreground mb-8 pb-6 border-b border-border">
               <User className="w-4 h-4" />
               <Link to={`/user/${username}`} className="hover:text-foreground transition-colors font-medium">
-                {profile?.full_name || username}
+                {profile?.username || username}
               </Link>
               <span>•</span>
               <Calendar className="w-4 h-4" />

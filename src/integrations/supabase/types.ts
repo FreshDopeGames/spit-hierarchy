@@ -4113,6 +4113,16 @@ export type Database = {
           source: string
         }[]
       }
+      get_category_rapper_ratings: {
+        Args: { p_category_id: string }
+        Returns: {
+          average_rating: number
+          rapper_id: string
+          rapper_name: string
+          slug: string
+          vote_count: number
+        }[]
+      }
       get_category_voting_analytics:
         | {
             Args: never
@@ -4155,6 +4165,13 @@ export type Database = {
           total_votes: number
         }[]
       }
+      get_hot_rapper_vote_counts: {
+        Args: { p_days?: number }
+        Returns: {
+          rapper_id: string
+          vote_count: number
+        }[]
+      }
       get_member_with_most_achievements: {
         Args: never
         Returns: {
@@ -4162,6 +4179,15 @@ export type Database = {
           avatar_url: string
           id: string
           username: string
+        }[]
+      }
+      get_most_active_ranking: {
+        Args: never
+        Returns: {
+          id: string
+          slug: string
+          title: string
+          vote_count: number
         }[]
       }
       get_most_rated_rappers: {
@@ -4172,6 +4198,25 @@ export type Database = {
           name: string
           rating_count: number
           slug: string
+        }[]
+      }
+      get_most_voted_rapper_in_rankings: {
+        Args: never
+        Returns: {
+          id: string
+          image_url: string
+          name: string
+          slug: string
+          vote_count: number
+        }[]
+      }
+      get_newest_member: {
+        Args: never
+        Returns: {
+          avatar_url: string
+          created_at: string
+          id: string
+          username: string
         }[]
       }
       get_official_ranking_preview_items: {
@@ -4224,6 +4269,13 @@ export type Database = {
           updated_at: string
           username: string
           username_last_changed_at: string
+        }[]
+      }
+      get_platform_vote_totals: {
+        Args: never
+        Returns: {
+          total_ranking_votes: number
+          total_ratings: number
         }[]
       }
       get_position_delta: {
@@ -4286,6 +4338,14 @@ export type Database = {
           total_upvotes: number
           total_votes: number
           votes_with_notes_count: number
+        }[]
+      }
+      get_public_profile_by_username: {
+        Args: { p_username: string }
+        Returns: {
+          avatar_url: string
+          id: string
+          username: string
         }[]
       }
       get_public_profile_full: {
@@ -4364,6 +4424,39 @@ export type Database = {
               votes_last_7_days: number
             }[]
           }
+      get_ranking_vote_counts_by_rapper: {
+        Args: never
+        Returns: {
+          rapper_id: string
+          vote_count: number
+        }[]
+      }
+      get_ranking_vote_weights: {
+        Args: { p_ranking_id: string }
+        Returns: {
+          rapper_id: string
+          total_weight: number
+        }[]
+      }
+      get_ranking_vote_weights_for_rappers: {
+        Args: { p_rapper_ids: string[] }
+        Returns: {
+          rapper_id: string
+          total_weight: number
+        }[]
+      }
+      get_rapper_category_rating_stats: {
+        Args: { p_rapper_id: string }
+        Returns: {
+          average_rating: number
+          category_id: string
+          vote_count: number
+        }[]
+      }
+      get_rapper_rating_count: {
+        Args: { p_rapper_id: string }
+        Returns: number
+      }
       get_rapper_top5_count: { Args: { rapper_uuid: string }; Returns: number }
       get_rapper_top5_counts: {
         Args: never
@@ -4589,6 +4682,13 @@ export type Database = {
           country_code: string
           region: string
           voter_count: number
+        }[]
+      }
+      get_vs_match_vote_counts: {
+        Args: { p_match_id: string }
+        Returns: {
+          rapper_choice_id: string
+          vote_count: number
         }[]
       }
       has_role: { Args: { _role: string; _user_id: string }; Returns: boolean }

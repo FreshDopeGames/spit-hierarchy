@@ -28,17 +28,14 @@ export const useRapperStats = (rapperIds: string[]) => {
         return acc;
       }, {});
 
-      // Fetch ranking votes with vote weights for all rappers
+      // Fetch aggregated ranking vote weights (no voter identities exposed)
       const { data: votesData, error: votesError } = await supabase
-        .from("ranking_votes")
-        .select("rapper_id, vote_weight")
-        .in("rapper_id", rapperIds);
+        .rpc("get_ranking_vote_weights_for_rappers", { p_rapper_ids: rapperIds });
 
       if (votesError) throw votesError;
 
-      // Sum weighted votes per rapper
-      const rankingVotes = votesData.reduce((acc: Record<string, number>, item) => {
-        acc[item.rapper_id] = (acc[item.rapper_id] || 0) + item.vote_weight;
+      const rankingVotes = (votesData || []).reduce((acc: Record<string, number>, item: any) => {
+        acc[item.rapper_id] = Number(item.total_weight);
         return acc;
       }, {});
 
