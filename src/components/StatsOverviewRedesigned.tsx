@@ -94,8 +94,8 @@ const StatsOverviewRedesigned = () => {
         .order("total_votes", { ascending: false })
         .limit(1)
         .maybeSingle(),
-      supabase.from("ranking_votes")
-        .select("ranking_id, rapper_id, official_rankings(id, title, slug), rappers(id, name, slug, image_url)")
+      supabase.rpc("get_most_active_ranking").maybeSingle(),
+      supabase.rpc("get_most_voted_rapper_in_rankings").maybeSingle()
     ]);
 
     // Process decade breakdown
