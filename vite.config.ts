@@ -3,8 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
-
-const PWA_CACHE_VERSION = 'v7';
+import { PWA_CACHE_VERSION } from './src/config/pwaCache';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({

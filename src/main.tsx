@@ -16,6 +16,7 @@ import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
 import { registerSW } from "virtual:pwa-register";
+import { PWA_CACHE_VERSION } from "@/config/pwaCache";
 
 const isPreviewHost =
   typeof window !== "undefined" &&
@@ -53,7 +54,7 @@ if (typeof window !== "undefined") {
         ...staleCacheNames.map((name) => window.caches.delete(name).catch(() => false)),
       ]);
 
-      const refreshKey = "preview-app-shell-cleared-v7";
+      const refreshKey = `preview-app-shell-cleared-${PWA_CACHE_VERSION}`;
       if ((hadController || registrations.length > 0 || staleCacheNames.length > 0) &&
           !window.sessionStorage.getItem(refreshKey)) {
         window.sessionStorage.setItem(refreshKey, "true");
