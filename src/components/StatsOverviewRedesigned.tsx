@@ -52,17 +52,18 @@ const StatsOverviewRedesigned = () => {
     // PHASE 1: Critical counts (parallel)
     const [
       rappersCount,
-      votesCount,
-      rankingVotesCount,
+      voteTotalsResult,
       membersCount,
       blogCount
     ] = await Promise.all([
       supabase.from("rappers").select("*", { count: "exact", head: true }).eq("publish_status", "published"),
-      supabase.from("votes").select("*", { count: "exact", head: true }),
-      supabase.from("ranking_votes").select("*", { count: "exact", head: true }),
+      supabase.rpc("get_platform_vote_totals"),
       supabase.rpc("get_total_member_count"),
       supabase.from("blog_posts").select("*", { count: "exact", head: true }).eq("status", "published")
     ]);
+
+    const votesTotal = Number((voteTotalsResult.data as any)?.[0]?.total_ratings ?? 0);
+    const rankingVotesTotal = Number((voteTotalsResult.data as any)?.[0]?.total_ranking_votes ?? 0);
 
     // PHASE 2: Secondary data (parallel)
     const [
