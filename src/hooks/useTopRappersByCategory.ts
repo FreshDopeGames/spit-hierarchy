@@ -36,14 +36,8 @@ export const useTopRappersByCategory = () => {
           try {
             console.log(`Fetching votes for category: ${category.name} (${category.id})`);
             
-            const { data: votes, error: votesError } = await supabase
-              .from('votes')
-              .select(`
-                rapper_id,
-                rating,
-                rappers!inner(id, name, slug)
-              `)
-              .eq('category_id', category.id);
+            const { data: categoryStats, error: votesError } = await supabase
+              .rpc('get_category_rapper_ratings', { p_category_id: category.id });
 
             if (votesError) {
               console.error(`Error fetching votes for ${category.name}:`, votesError);
