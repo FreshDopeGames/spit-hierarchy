@@ -34,15 +34,13 @@ const AdminRapperManagement = () => {
     queryKey: ["all-ranking-vote-counts"],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("ranking_votes")
-        .select("rapper_id");
+        .rpc("get_ranking_vote_counts_by_rapper");
       
       if (error) throw error;
       
-      // Count votes per rapper
       const counts: Record<string, number> = {};
-      data?.forEach(vote => {
-        counts[vote.rapper_id] = (counts[vote.rapper_id] || 0) + 1;
+      (data || []).forEach((row: any) => {
+        counts[row.rapper_id] = Number(row.vote_count);
       });
       return counts;
     },

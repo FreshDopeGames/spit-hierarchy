@@ -64,16 +64,13 @@ const TopRappersGrid = ({
       if (!rankingId) return {};
       
       const { data, error } = await supabase
-        .from("ranking_votes")
-        .select("rapper_id, vote_weight")
-        .eq("ranking_id", rankingId);
+        .rpc("get_ranking_vote_weights", { p_ranking_id: rankingId });
       
       if (error) throw error;
       
-      // Aggregate vote counts by rapper
       const counts: Record<string, number> = {};
-      data.forEach(vote => {
-        counts[vote.rapper_id] = (counts[vote.rapper_id] || 0) + vote.vote_weight;
+      (data || []).forEach((row: any) => {
+        counts[row.rapper_id] = Number(row.total_weight);
       });
       
       return counts;
