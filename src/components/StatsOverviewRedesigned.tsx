@@ -130,18 +130,18 @@ const StatsOverviewRedesigned = () => {
         decadeBreakdown,
       },
       rankings: {
-        total: rankingVotesCount.count || 0,
+        total: rankingVotesTotal,
         mostActiveRanking: mostActiveRanking ? {
-          ...mostActiveRanking.ranking,
-          vote_count: mostActiveRanking.count,
+          ...(mostActiveRanking as RankingData),
+          vote_count: Number(mostActiveRanking.vote_count),
         } : null,
         mostVotedRapper: mostVotedInRankings ? {
-          ...mostVotedInRankings.rapper,
-          vote_count: mostVotedInRankings.count,
+          ...mostVotedInRankings,
+          vote_count: Number(mostVotedInRankings.vote_count),
         } : null,
       },
       ratings: {
-        total: votesCount.count || 0,
+        total: votesTotal,
         mostRatedRapper: mostRatedRapperResult.data,
       },
       members: {
