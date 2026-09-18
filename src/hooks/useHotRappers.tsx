@@ -6,19 +6,16 @@ export const useHotRappers = () => {
   return useQuery({
     queryKey: ["hot-rappers"],
     queryFn: async () => {
-      // Get vote counts for the last 7 days for all rappers
+      // Get aggregated vote counts for the last 7 days (no voter identities exposed)
       const { data: recentVotes, error } = await supabase
-        .from("votes")
-        .select("rapper_id")
-        .gte("created_at", new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString());
+        .rpc("get_hot_rapper_vote_counts", { p_days: 7 });
 
       if (error) throw error;
 
-      // Count votes per rapper
-      const votesByRapper = recentVotes?.reduce((acc, vote) => {
-        acc[vote.rapper_id] = (acc[vote.rapper_id] || 0) + 1;
+      const votesByRapper = (recentVotes || []).reduce((acc, row: any) => {
+        acc[row.rapper_id] = Number(row.vote_count);
         return acc;
-      }, {} as Record<string, number>) || {};
+      }, {} as Record<string, number>);
 
       // Get all vote counts and calculate 85th percentile
       const voteCounts = Object.values(votesByRapper);
