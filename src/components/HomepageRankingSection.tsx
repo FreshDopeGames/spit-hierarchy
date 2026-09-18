@@ -28,7 +28,7 @@ const HomepageRankingSection = () => {
     data: rankingsData = [],
     isLoading
   } = useQuery({
-    queryKey: ["homepage-rankings-preview"],
+    queryKey: ["homepage-rankings-preview", "published-vote-order-v2"],
     queryFn: async () => {
       // Fetch top 3 official rankings by display order
       const {
