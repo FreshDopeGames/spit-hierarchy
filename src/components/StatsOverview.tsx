@@ -15,13 +15,9 @@ const StatsOverview = () => {
         data: totalMembers
       } = await supabase.rpc("get_total_member_count");
 
-      // Get total votes
-      const {
-        count: totalVotes
-      } = await supabase.from("votes").select("*", {
-        count: "exact",
-        head: true
-      });
+      // Get total votes via aggregate-only function
+      const { data: voteTotals } = await supabase.rpc("get_platform_vote_totals");
+      const totalVotes = Number((voteTotals as any)?.[0]?.total_ratings ?? 0);
 
       // Get total comments
       const {
