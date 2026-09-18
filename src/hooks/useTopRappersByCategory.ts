@@ -46,43 +46,17 @@ export const useTopRappersByCategory = () => {
               continue;
             }
 
-            console.log(`Found ${votes?.length || 0} votes for ${category.name}`);
+            const rows = (categoryStats || []) as any[];
+            console.log(`Found ${rows.length} rated rappers for ${category.name}`);
 
-            // Group by rapper and calculate averages
-            const rapperStats: Record<string, { 
-              rapper_id: string; 
-              rapper_name: string; 
-              slug: string; 
-              total_rating: number; 
-              vote_count: number 
-            }> = {};
-
-            votes?.forEach(vote => {
-              const rapperId = vote.rapper_id;
-              const rapperName = (vote.rappers as any)?.name;
-              const rapperSlug = (vote.rappers as any)?.slug;
-              
-              if (!rapperStats[rapperId]) {
-                rapperStats[rapperId] = {
-                  rapper_id: rapperId,
-                  rapper_name: rapperName,
-                  slug: rapperSlug,
-                  total_rating: 0,
-                  vote_count: 0
-                };
-              }
-              rapperStats[rapperId].total_rating += vote.rating;
-              rapperStats[rapperId].vote_count += 1;
-            });
-
-            // Calculate averages and sort with progressive minimum threshold (3, then 2, then 1)
-            const allRappers = Object.values(rapperStats)
-              .map(rapper => ({
-                rapper_id: rapper.rapper_id,
-                rapper_name: rapper.rapper_name,
-                slug: rapper.slug,
-                average_rating: rapper.total_rating / rapper.vote_count,
-                vote_count: rapper.vote_count
+            // Sort with progressive minimum threshold (3, then 2, then 1)
+            const allRappers = rows
+              .map(row => ({
+                rapper_id: row.rapper_id,
+                rapper_name: row.rapper_name,
+                slug: row.slug,
+                average_rating: Number(row.average_rating),
+                vote_count: Number(row.vote_count)
               }))
               .sort((a, b) => b.average_rating - a.average_rating);
 
