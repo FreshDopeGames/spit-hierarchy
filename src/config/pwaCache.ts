@@ -1,0 +1,1 @@
+export const PWA_CACHE_VERSION = "v7";

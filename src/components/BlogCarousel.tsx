@@ -142,7 +142,7 @@ const BlogCarousel = () => {
   
   return <section className="mb-16">
       <h2 className="font-ceviche text-primary mb-6 sm:mb-8 tracking-wider text-4xl sm:text-6xl text-center leading-tight">
-        FEATURED SLICK TALK
+        LATEST SLICK TALK
       </h2>
       {/* Embla carousel container */}
       <div className="flex justify-center">

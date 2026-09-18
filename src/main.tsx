@@ -16,6 +16,7 @@ import App from "./App.tsx";
 import "./index.css";
 import "./utils/performanceCleanup";
 import { registerSW } from "virtual:pwa-register";
+import { PWA_CACHE_VERSION } from "@/config/pwaCache";
 
 const isPreviewHost =
   typeof window !== "undefined" &&
@@ -35,11 +36,33 @@ const isInIframe = (() => {
 // Auto-activate new service workers and reload once so users always see the latest deploy
 if (typeof window !== "undefined") {
   if (isPreviewHost || isInIframe) {
-    window.navigator.serviceWorker?.getRegistrations().then((registrations) => {
-      registrations.forEach((registration) => {
-        registration.unregister().catch(() => {});
-      });
-    });
+    // Preview must never remain controlled by a previously published app shell.
+    // Unregistering alone does not stop the current tab or remove its old caches,
+    // so clean both and reload once when stale browser-held state is detected.
+    const clearPreviewAppShell = async () => {
+      const hadController = Boolean(window.navigator.serviceWorker?.controller);
+      const registrations = await window.navigator.serviceWorker?.getRegistrations() ?? [];
+      const cacheNames = await window.caches?.keys() ?? [];
+      const staleCacheNames = cacheNames.filter((name) =>
+        name.includes("spit-hierarchy-") ||
+        name.includes("app-html") ||
+        name.includes("supabase-storage-images")
+      );
+
+      await Promise.all([
+        ...registrations.map((registration) => registration.unregister().catch(() => false)),
+        ...staleCacheNames.map((name) => window.caches.delete(name).catch(() => false)),
+      ]);
+
+      const refreshKey = `preview-app-shell-cleared-${PWA_CACHE_VERSION}`;
+      if ((hadController || registrations.length > 0 || staleCacheNames.length > 0) &&
+          !window.sessionStorage.getItem(refreshKey)) {
+        window.sessionStorage.setItem(refreshKey, "true");
+        window.location.reload();
+      }
+    };
+
+    clearPreviewAppShell().catch(() => {});
   } else {
     // Defer auto-reload while the user is reading a blog article so their
     // scroll position and reading flow are never interrupted by SW updates.

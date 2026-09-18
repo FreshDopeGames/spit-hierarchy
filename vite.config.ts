@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { VitePWA } from 'vite-plugin-pwa';
+import { PWA_CACHE_VERSION } from './src/config/pwaCache';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -56,10 +57,10 @@ export default defineConfig(({ mode }) => ({
       },
       workbox: {
         // Bump suffix to invalidate old precaches and force users onto the newest published shell.
-        cacheId: 'spit-hierarchy-v6',
+        cacheId: `spit-hierarchy-${PWA_CACHE_VERSION}`,
         skipWaiting: true,
         clientsClaim: true,
-        importScripts: ['/sw-update-handler-v6.js'],
+        importScripts: [`/sw-update-handler-${PWA_CACHE_VERSION}.js`],
         navigateFallback: null,
         navigateFallbackDenylist: [/^\/~oauth/],
         globPatterns: ['**/*.{js,css,ico,svg,woff2,png,webp}'],
@@ -71,7 +72,7 @@ export default defineConfig(({ mode }) => ({
             urlPattern: ({ request }) => request.mode === 'navigate',
             handler: 'NetworkFirst',
             options: {
-              cacheName: 'app-html-v6',
+              cacheName: `app-html-${PWA_CACHE_VERSION}`,
               networkTimeoutSeconds: 3,
               cacheableResponse: {
                 statuses: [0, 200]
@@ -82,7 +83,7 @@ export default defineConfig(({ mode }) => ({
             urlPattern: /^https:\/\/xzcmkssadekswmiqfbff\.supabase\.co\/storage\/v1\/object\/public\/.*/i,
             handler: 'CacheFirst',
             options: {
-              cacheName: 'supabase-storage-images-v6',
+              cacheName: `supabase-storage-images-${PWA_CACHE_VERSION}`,
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 60 * 24 * 7 // 7 days
