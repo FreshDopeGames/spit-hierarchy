@@ -72,7 +72,8 @@ const StatsOverviewRedesigned = () => {
       newestMemberResult,
       topAchieverResult,
       mostRatedRapperResult,
-      rankingVotesResult
+      mostActiveRankingResult,
+      mostVotedRapperResult
     ] = await Promise.all([
       supabase.from("rappers")
         .select("career_start_year")
