@@ -167,7 +167,7 @@ const JournalEntryDetail = () => {
             <div className="flex items-center gap-3 text-muted-foreground mb-8 pb-6 border-b border-border">
               <User className="w-4 h-4" />
               <Link to={`/user/${username}`} className="hover:text-foreground transition-colors font-medium">
-                {profile?.full_name || username}
+                {profile?.username || username}
               </Link>
               <span>•</span>
               <Calendar className="w-4 h-4" />
