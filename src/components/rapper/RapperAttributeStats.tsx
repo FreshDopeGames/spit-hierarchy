@@ -39,34 +39,27 @@ const RapperAttributeStats = ({ rapper, onVoteClick }: RapperAttributeStatsProps
           .select("*")
           .eq("active", true)
           .order("name"),
-        supabase
-          .from("votes")
-          .select("category_id, rating")
-          .eq("rapper_id", rapper.id)
+        supabase.rpc("get_rapper_category_rating_stats", { p_rapper_id: rapper.id })
       ]);
 
       const categories = categoriesResult.data || [];
-      const votes = votesResult.data || [];
+      const stats = (votesResult.data || []) as any[];
 
-      // Aggregate votes by category in JavaScript
-      const votesByCategory = votes.reduce((acc, vote) => {
-        if (!acc[vote.category_id]) {
-          acc[vote.category_id] = [];
-        }
-        acc[vote.category_id].push(vote.rating);
+      const statsByCategory = stats.reduce((acc, row) => {
+        acc[row.category_id] = {
+          averageRating: Number(row.average_rating) || 0,
+          totalVotes: Number(row.vote_count) || 0,
+        };
         return acc;
-      }, {} as Record<string, number[]>);
+      }, {} as Record<string, { averageRating: number; totalVotes: number }>);
 
       // Map categories with their aggregated ratings
       return categories.map((category) => {
-        const categoryVotes = votesByCategory[category.id] || [];
-        const avgRating = categoryVotes.length > 0
-          ? categoryVotes.reduce((sum, rating) => sum + rating, 0) / categoryVotes.length
-          : 0;
+        const stat = statsByCategory[category.id];
         return {
           ...category,
-          averageRating: avgRating,
-          totalVotes: categoryVotes.length,
+          averageRating: stat?.averageRating || 0,
+          totalVotes: stat?.totalVotes || 0,
         } as any;
       });
     },
