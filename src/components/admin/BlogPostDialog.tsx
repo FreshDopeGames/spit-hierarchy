@@ -90,7 +90,7 @@ const BlogPostDialog = ({
 
       const postData = {
         ...data,
-        author_id: user?.id,
+        author_id: post?.author_id || user?.id,
         published_at: publishedAt
       };
 

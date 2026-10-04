@@ -15,7 +15,7 @@ interface BlogPost {
   status: string;
   profiles?: {
     username: string;
-    full_name: string | null;
+    first_name: string | null;
   };
   blog_categories?: {
     name: string;
@@ -45,7 +45,6 @@ export const useBlogPost = (id: string | undefined, canViewDrafts: boolean = fal
           author_id,
           category_id,
           status,
-          profiles!fk_blog_posts_author(username, full_name),
           blog_categories(name),
           blog_post_tags(
             blog_tags(
@@ -64,7 +63,13 @@ export const useBlogPost = (id: string | undefined, canViewDrafts: boolean = fal
       const { data, error } = await query.maybeSingle();
       
       if (error) throw error;
-      return data as BlogPost;
+      if (!data) return null;
+
+      const { data: author, error: authorError } = data.author_id
+        ? await supabase.rpc('get_public_profile_safe', { profile_user_id: data.author_id }).maybeSingle()
+        : { data: null, error: null };
+      if (authorError) console.error('Could not load blog author', authorError);
+      return { ...data, profiles: author ? { username: author.username, first_name: author.first_name } : undefined } as BlogPost;
     },
     enabled: !!id
   });
