@@ -13,7 +13,7 @@ interface BlogPost {
   category_id: string;
   profiles?: {
     username: string;
-    full_name: string | null;
+    first_name: string | null;
   };
   blog_categories?: {
     name: string;
@@ -72,7 +72,7 @@ const calculateReadTime = (content: string): string => {
 
 export const transformBlogPost = (blogPost: BlogPost) => {
   const authorName = blogPost.profiles?.username || 
-                     blogPost.profiles?.full_name || 
+                     blogPost.profiles?.first_name || 
                      "Temple Scribe";
   
   return {
