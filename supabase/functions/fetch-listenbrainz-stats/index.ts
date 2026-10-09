@@ -12,11 +12,13 @@ interface TopTrack {
   listen_count: number
 }
 
-async function lbFetch(path: string): Promise<Response | null> {
+async function lbFetch(path: string, token?: string): Promise<Response | null> {
   try {
-    const res = await fetch(`${LB_BASE}${path}`, {
-      headers: { 'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)' },
-    })
+    const headers: Record<string, string> = {
+      'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)',
+    }
+    if (token) headers['Authorization'] = `Token ${token}`
+    const res = await fetch(`${LB_BASE}${path}`, { headers })
     if (res.status === 404 || res.status === 204) return null
     if (!res.ok) {
       console.warn(`ListenBrainz ${path} -> ${res.status}`)
@@ -76,9 +78,11 @@ Deno.serve(async (req) => {
       }
 
       // 2) Top tracks: artist popularity recordings filtered to this release group
+      // (popularity endpoints require a ListenBrainz user token)
+      const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
-      if (artistMbid) {
-        const popRes = await lbFetch(`/1/popularity/top-recordings-for-artist/${artistMbid}`)
+      if (artistMbid && lbToken) {
+        const popRes = await lbFetch(`/1/popularity/top-recordings-for-artist/${artistMbid}`, lbToken)
         await sleep(REQUEST_DELAY_MS)
         if (popRes) {
           const recordings = await popRes.json()
