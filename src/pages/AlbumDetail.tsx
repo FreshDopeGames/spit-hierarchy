@@ -4,6 +4,7 @@ import { useAlbumDetail } from "@/hooks/useAlbumDetail";
 import { useTrackVoting } from "@/hooks/useTrackVoting";
 import { AlbumHeader } from "@/components/album/AlbumHeader";
 import { AlbumTrackList } from "@/components/album/AlbumTrackList";
+import AlbumListenStats from "@/components/album/AlbumListenStats";
 import { Skeleton } from "@/components/ui/skeleton";
 import SEOHead from "@/components/seo/SEOHead";
 import HeaderNavigation from "@/components/HeaderNavigation";
@@ -259,6 +260,11 @@ const AlbumDetail = () => {
               onVote={toggleVote} 
               isVoting={isSubmitting} 
             />
+          </div>
+
+          {/* Listening Stats Section */}
+          <div className="max-w-4xl mx-auto">
+            <AlbumListenStats albumId={album.album_id} albumTitle={album.album_title} />
           </div>
         </div>
 
