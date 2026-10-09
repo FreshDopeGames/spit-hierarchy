@@ -87,6 +87,9 @@ Deno.serve(async (req) => {
         if (popRes) {
           const recordings = await popRes.json()
           if (Array.isArray(recordings)) {
+            if (recordings.length > 0 && topTracks.length === 0) {
+              console.log(`DEBUG popularity sample keys for ${album.title}:`, JSON.stringify(Object.keys(recordings[0])), 'rg:', recordings[0].release_group_mbid, 'target:', rgMbid)
+            }
             for (const rec of recordings) {
               if (rec?.release_group_mbid === rgMbid && rec?.recording_name) {
                 topTracks.push({
