@@ -43,14 +43,40 @@ Deno.serve(async (req) => {
     )
 
     // Albums with a MusicBrainz release-group ID, least-recently-fetched first
-    const { data: albums, error } = await supabase
-      .from('albums')
-      .select('id, title, musicbrainz_id, rapper_albums(rappers(musicbrainz_id))')
-      .not('musicbrainz_id', 'is', null)
-      .order('updated_at', { ascending: true })
-      .limit(BATCH_SIZE)
+    let body: { album_id?: string } = {}
+    try { body = await req.json() } catch { /* no body */ }
 
-    if (error) throw error
+    // PostgREST caps responses at 1000 rows, so page through all albums
+    const allAlbums: any[] = []
+    for (let from = 0; ; from += 1000) {
+      let q = supabase
+        .from('albums')
+        .select('id, title, musicbrainz_id, rapper_albums(rappers(musicbrainz_id))')
+        .not('musicbrainz_id', 'is', null)
+        .order('id')
+        .range(from, from + 999)
+      if (body.album_id) q = q.eq('id', body.album_id)
+      const { data, error } = await q
+      if (error) throw error
+      allAlbums.push(...(data ?? []))
+      if (!data || data.length < 1000) break
+    }
+
+    const statRows: any[] = []
+    for (let from = 0; ; from += 1000) {
+      const { data } = await supabase
+        .from('album_listen_stats')
+        .select('album_id, fetched_at')
+        .order('album_id')
+        .range(from, from + 999)
+      statRows.push(...(data ?? []))
+      if (!data || data.length < 1000) break
+    }
+    const fetchedAt = new Map((statRows ?? []).map((r: any) => [r.album_id, r.fetched_at as string]))
+    const albums = allAlbums
+      .filter((a: any) => !body.album_id || a.id === body.album_id)
+      .sort((a: any, b: any) => (fetchedAt.get(a.id) ?? '').localeCompare(fetchedAt.get(b.id) ?? ''))
+      .slice(0, BATCH_SIZE)
     if (!albums?.length) {
       return new Response(JSON.stringify({ processed: 0 }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -59,7 +85,6 @@ Deno.serve(async (req) => {
 
     let processed = 0
     let withData = 0
-    const debug: Record<string, unknown>[] = []
 
     for (const album of albums) {
       const rgMbid = album.musicbrainz_id as string
@@ -83,26 +108,6 @@ Deno.serve(async (req) => {
       // return release MBIDs, not release-group MBIDs, so we match by track name)
       const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
-      if (debug.length < 3 && album.title === 'Jesus Is King') {
-        const entry: Record<string, unknown> = { album: album.title, artist_mbid: artistMbid, has_token: !!lbToken }
-        if (artistMbid && lbToken) {
-          try {
-            const r = await fetch(`https://api.listenbrainz.org/1/popularity/top-recordings-for-artist/${artistMbid}`, {
-              headers: { 'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)', Authorization: `Token ${lbToken}` },
-            })
-            const body = await r.text()
-            entry.pop_status = r.status
-            const recs = JSON.parse(body)
-            entry.recording_count = Array.isArray(recs) ? recs.length : -1
-            entry.recording_names = Array.isArray(recs) ? recs.map((x: any) => x.recording_name) : []
-            const { data: trks } = await supabase.from('album_tracks').select('title').eq('album_id', album.id)
-            entry.our_tracks = (trks ?? []).map((t: { title: string }) => t.title)
-          } catch (err) {
-            entry.pop_error = String(err)
-          }
-        }
-        debug.push(entry)
-      }
       if (artistMbid && lbToken) {
         const { data: albumTracks } = await supabase
           .from('album_tracks')
@@ -110,7 +115,10 @@ Deno.serve(async (req) => {
           .eq('album_id', album.id)
 
         const normalize = (s: string) =>
-          s.toLowerCase().replace(/[^a-z0-9]/g, '')
+          s.toLowerCase()
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/\s*[\(\[](feat|ft|with|prod)[^\)\]]*[\)\]]/g, '')
+            .replace(/[^a-z0-9]/g, '')
         const trackTitles = new Set(
           (albumTracks ?? []).map((t: { title: string }) => normalize(t.title)),
         )
@@ -158,7 +166,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ processed, with_data: withData, batch_size: albums.length, has_token: !!Deno.env.get('LISTENBRAINZ_TOKEN'), debug }),
+      JSON.stringify({ processed, with_data: withData, batch_size: albums.length }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (e) {
