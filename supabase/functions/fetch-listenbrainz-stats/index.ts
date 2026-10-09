@@ -84,7 +84,20 @@ Deno.serve(async (req) => {
       const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
       if (debug.length < 3 && album.title === 'Jesus Is King') {
-        debug.push({ album: album.title, artist_mbid: artistMbid, has_token: !!lbToken })
+        const entry: Record<string, unknown> = { album: album.title, artist_mbid: artistMbid, has_token: !!lbToken }
+        if (artistMbid && lbToken) {
+          try {
+            const r = await fetch(`https://api.listenbrainz.org/1/popularity/top-recordings-for-artist/${artistMbid}`, {
+              headers: { 'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)', Authorization: `Token ${lbToken}` },
+            })
+            const body = await r.text()
+            entry.pop_status = r.status
+            entry.pop_body = body.slice(0, 400)
+          } catch (err) {
+            entry.pop_error = String(err)
+          }
+        }
+        debug.push(entry)
       }
       if (artistMbid && lbToken) {
         const { data: albumTracks } = await supabase
