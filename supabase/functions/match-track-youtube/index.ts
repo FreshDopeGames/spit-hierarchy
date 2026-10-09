@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
   try {
     let query = supabase
       .from('album_tracks')
-      .select('id, title, duration_ms, album_id, track_youtube_matches(id), albums!inner(title, publish_status:rapper_albums(rappers(name)))')
+      .select('id, title, duration_ms, album_id, track_youtube_matches(id), albums!inner(title, rapper_albums(rappers(name)))')
       .order('track_number', { ascending: true })
       .limit(album_id ? 100 : 400)
     if (album_id) query = query.eq('album_id', album_id)
@@ -58,7 +58,7 @@ Deno.serve(async (req) => {
     let matched = 0
     let notFound = 0
     for (const t of pending as any[]) {
-      const rapperName = t.albums?.publish_status?.[0]?.rappers?.name ?? ''
+      const rapperName = t.albums?.rapper_albums?.[0]?.rappers?.name ?? ''
       const q = `${rapperName} ${t.title} official audio`
       const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&videoCategoryId=10&maxResults=5&videoEmbeddable=true&q=${encodeURIComponent(q)}&key=${apiKey}`
       const sRes = await fetch(searchUrl)
