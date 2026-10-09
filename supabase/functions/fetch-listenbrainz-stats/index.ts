@@ -77,27 +77,38 @@ Deno.serve(async (req) => {
         totalUserCount = stats?.payload?.total_user_count ?? 0
       }
 
-      // 2) Top tracks: artist popularity recordings filtered to this release group
-      // (popularity endpoints require a ListenBrainz user token)
+      // 2) Top tracks: artist popularity recordings matched against this album's
+      // track titles (popularity endpoints require a ListenBrainz user token and
+      // return release MBIDs, not release-group MBIDs, so we match by track name)
       const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
       if (artistMbid && lbToken) {
-        const popRes = await lbFetch(`/1/popularity/top-recordings-for-artist/${artistMbid}`, lbToken)
-        await sleep(REQUEST_DELAY_MS)
-        if (popRes) {
-          const recordings = await popRes.json()
-          if (Array.isArray(recordings)) {
-            if (recordings.length > 0 && topTracks.length === 0) {
-              console.log(`DEBUG popularity sample keys for ${album.title}:`, JSON.stringify(Object.keys(recordings[0])), 'rg:', recordings[0].release_group_mbid, 'target:', rgMbid)
-            }
-            for (const rec of recordings) {
-              if (rec?.release_group_mbid === rgMbid && rec?.recording_name) {
-                topTracks.push({
-                  name: rec.recording_name,
-                  listen_count: rec.total_listen_count ?? 0,
-                })
+        const { data: albumTracks } = await supabase
+          .from('album_tracks')
+          .select('title')
+          .eq('album_id', album.id)
+
+        const normalize = (s: string) =>
+          s.toLowerCase().replace(/[^a-z0-9]/g, '')
+        const trackTitles = new Set(
+          (albumTracks ?? []).map((t: { title: string }) => normalize(t.title)),
+        )
+
+        if (trackTitles.size > 0) {
+          const popRes = await lbFetch(`/1/popularity/top-recordings-for-artist/${artistMbid}`, lbToken)
+          await sleep(REQUEST_DELAY_MS)
+          if (popRes) {
+            const recordings = await popRes.json()
+            if (Array.isArray(recordings)) {
+              for (const rec of recordings) {
+                if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name))) {
+                  topTracks.push({
+                    name: rec.recording_name,
+                    listen_count: rec.total_listen_count ?? 0,
+                  })
+                }
+                if (topTracks.length >= 10) break
               }
-              if (topTracks.length >= 10) break
             }
           }
         }
