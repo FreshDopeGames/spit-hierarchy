@@ -118,6 +118,47 @@ export type Database = {
         }
         Relationships: []
       }
+      album_listen_stats: {
+        Row: {
+          album_id: string
+          created_at: string
+          fetched_at: string
+          id: string
+          top_tracks: Json
+          total_listen_count: number
+          total_user_count: number
+          updated_at: string
+        }
+        Insert: {
+          album_id: string
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          top_tracks?: Json
+          total_listen_count?: number
+          total_user_count?: number
+          updated_at?: string
+        }
+        Update: {
+          album_id?: string
+          created_at?: string
+          fetched_at?: string
+          id?: string
+          top_tracks?: Json
+          total_listen_count?: number
+          total_user_count?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "album_listen_stats_album_id_fkey"
+            columns: ["album_id"]
+            isOneToOne: true
+            referencedRelation: "albums"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       album_review_scores: {
         Row: {
           category_id: string
