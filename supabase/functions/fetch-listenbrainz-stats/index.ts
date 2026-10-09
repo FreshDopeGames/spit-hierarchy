@@ -59,6 +59,7 @@ Deno.serve(async (req) => {
 
     let processed = 0
     let withData = 0
+    const debug: Record<string, unknown>[] = []
 
     for (const album of albums) {
       const rgMbid = album.musicbrainz_id as string
@@ -77,24 +78,58 @@ Deno.serve(async (req) => {
         totalUserCount = stats?.payload?.total_user_count ?? 0
       }
 
-      // 2) Top tracks: artist popularity recordings filtered to this release group
-      // (popularity endpoints require a ListenBrainz user token)
+      // 2) Top tracks: artist popularity recordings matched against this album's
+      // track titles (popularity endpoints require a ListenBrainz user token and
+      // return release MBIDs, not release-group MBIDs, so we match by track name)
       const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
+      if (debug.length < 3 && album.title === 'Jesus Is King') {
+        const entry: Record<string, unknown> = { album: album.title, artist_mbid: artistMbid, has_token: !!lbToken }
+        if (artistMbid && lbToken) {
+          try {
+            const r = await fetch(`https://api.listenbrainz.org/1/popularity/top-recordings-for-artist/${artistMbid}`, {
+              headers: { 'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)', Authorization: `Token ${lbToken}` },
+            })
+            const body = await r.text()
+            entry.pop_status = r.status
+            const recs = JSON.parse(body)
+            entry.recording_count = Array.isArray(recs) ? recs.length : -1
+            entry.recording_names = Array.isArray(recs) ? recs.map((x: any) => x.recording_name) : []
+            const { data: trks } = await supabase.from('album_tracks').select('title').eq('album_id', album.id)
+            entry.our_tracks = (trks ?? []).map((t: { title: string }) => t.title)
+          } catch (err) {
+            entry.pop_error = String(err)
+          }
+        }
+        debug.push(entry)
+      }
       if (artistMbid && lbToken) {
-        const popRes = await lbFetch(`/1/popularity/top-recordings-for-artist/${artistMbid}`, lbToken)
-        await sleep(REQUEST_DELAY_MS)
-        if (popRes) {
-          const recordings = await popRes.json()
-          if (Array.isArray(recordings)) {
-            for (const rec of recordings) {
-              if (rec?.release_group_mbid === rgMbid && rec?.recording_name) {
-                topTracks.push({
-                  name: rec.recording_name,
-                  listen_count: rec.total_listen_count ?? 0,
-                })
+        const { data: albumTracks } = await supabase
+          .from('album_tracks')
+          .select('title')
+          .eq('album_id', album.id)
+
+        const normalize = (s: string) =>
+          s.toLowerCase().replace(/[^a-z0-9]/g, '')
+        const trackTitles = new Set(
+          (albumTracks ?? []).map((t: { title: string }) => normalize(t.title)),
+        )
+
+        if (trackTitles.size > 0) {
+          const popRes = await lbFetch(`/1/popularity/top-recordings-for-artist/${artistMbid}`, lbToken)
+          await sleep(REQUEST_DELAY_MS)
+          if (popRes) {
+            const recordings = await popRes.json()
+            if (Array.isArray(recordings)) {
+              for (const rec of recordings) {
+                if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name))) {
+                  topTracks.push({
+                    name: rec.recording_name,
+                    listen_count: rec.total_listen_count ?? 0,
+                  })
+                }
+                if (topTracks.length >= 10) break
               }
-              if (topTracks.length >= 10) break
             }
           }
         }
@@ -123,7 +158,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ processed, with_data: withData, batch_size: albums.length }),
+      JSON.stringify({ processed, with_data: withData, batch_size: albums.length, has_token: !!Deno.env.get('LISTENBRAINZ_TOKEN'), debug }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (e) {
