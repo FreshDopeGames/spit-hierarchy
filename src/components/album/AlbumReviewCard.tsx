@@ -37,6 +37,18 @@ const AlbumReviewCard = ({ review }: Props) => {
   const cover = album.cached_cover_url || album.cover_art_url;
   const albumUrl = album.rapper_slug ? `/rapper/${album.rapper_slug}/${album.slug}` : null;
 
+  const coverArt = cover ? (
+    <img
+      src={cover}
+      alt={`${album.title} album cover`}
+      className="w-full h-full rounded object-cover"
+      loading="lazy"
+    />
+  ) : (
+    <div className="w-full h-full rounded bg-black/40" />
+  );
+
+
   return (
     <section className="rounded-lg border-4 border-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-surface))] p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row gap-5">
