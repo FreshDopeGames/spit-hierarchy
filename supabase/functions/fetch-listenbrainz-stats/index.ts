@@ -83,26 +83,6 @@ Deno.serve(async (req) => {
       // return release MBIDs, not release-group MBIDs, so we match by track name)
       const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
-      if (debug.length < 3 && album.title === 'Jesus Is King') {
-        const entry: Record<string, unknown> = { album: album.title, artist_mbid: artistMbid, has_token: !!lbToken }
-        if (artistMbid && lbToken) {
-          try {
-            const r = await fetch(`https://api.listenbrainz.org/1/popularity/top-recordings-for-artist/${artistMbid}`, {
-              headers: { 'User-Agent': 'SpitHierarchy/1.0 (https://spithierarchy.com)', Authorization: `Token ${lbToken}` },
-            })
-            const body = await r.text()
-            entry.pop_status = r.status
-            const recs = JSON.parse(body)
-            entry.recording_count = Array.isArray(recs) ? recs.length : -1
-            entry.recording_names = Array.isArray(recs) ? recs.map((x: any) => x.recording_name) : []
-            const { data: trks } = await supabase.from('album_tracks').select('title').eq('album_id', album.id)
-            entry.our_tracks = (trks ?? []).map((t: { title: string }) => t.title)
-          } catch (err) {
-            entry.pop_error = String(err)
-          }
-        }
-        debug.push(entry)
-      }
       if (artistMbid && lbToken) {
         const { data: albumTracks } = await supabase
           .from('album_tracks')
@@ -110,7 +90,10 @@ Deno.serve(async (req) => {
           .eq('album_id', album.id)
 
         const normalize = (s: string) =>
-          s.toLowerCase().replace(/[^a-z0-9]/g, '')
+          s.toLowerCase()
+            .replace(/[\u2018\u2019]/g, "'")
+            .replace(/\s*[\(\[](feat|ft|with|prod)[^\)\]]*[\)\]]/g, '')
+            .replace(/[^a-z0-9]/g, '')
         const trackTitles = new Set(
           (albumTracks ?? []).map((t: { title: string }) => normalize(t.title)),
         )
