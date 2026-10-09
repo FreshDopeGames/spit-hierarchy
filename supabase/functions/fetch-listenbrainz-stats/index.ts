@@ -83,6 +83,9 @@ Deno.serve(async (req) => {
       // return release MBIDs, not release-group MBIDs, so we match by track name)
       const lbToken = Deno.env.get('LISTENBRAINZ_TOKEN')
       const topTracks: TopTrack[] = []
+      if (debug.length < 3 && album.title === 'Jesus Is King') {
+        debug.push({ album: album.title, artist_mbid: artistMbid, has_token: !!lbToken })
+      }
       if (artistMbid && lbToken) {
         const { data: albumTracks } = await supabase
           .from('album_tracks')
@@ -101,16 +104,6 @@ Deno.serve(async (req) => {
           if (popRes) {
             const recordings = await popRes.json()
             if (Array.isArray(recordings)) {
-              if (debug.length < 3) {
-                debug.push({
-                  album: album.title,
-                  has_token: !!lbToken,
-                  artist_mbid: artistMbid,
-                  recording_count: recordings.length,
-                  sample_recordings: recordings.slice(0, 5).map((r: any) => r.recording_name),
-                  our_tracks: [...trackTitles].slice(0, 5),
-                })
-              }
               for (const rec of recordings) {
                 if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name))) {
                   topTracks.push({
