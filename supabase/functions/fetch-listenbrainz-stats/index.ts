@@ -100,6 +100,7 @@ Deno.serve(async (req) => {
           if (popRes) {
             const recordings = await popRes.json()
             if (Array.isArray(recordings)) {
+              console.log(`DEBUG ${album.title}: ${recordings.length} recordings, sample names:`, recordings.slice(0, 5).map((r: any) => r.recording_name).join(' | '), '| our tracks:', [...trackTitles].slice(0, 5).join(' | '))
               for (const rec of recordings) {
                 if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name))) {
                   topTracks.push({
