@@ -59,6 +59,7 @@ Deno.serve(async (req) => {
 
     let processed = 0
     let withData = 0
+    const debug: Record<string, unknown>[] = []
 
     for (const album of albums) {
       const rgMbid = album.musicbrainz_id as string
@@ -100,7 +101,16 @@ Deno.serve(async (req) => {
           if (popRes) {
             const recordings = await popRes.json()
             if (Array.isArray(recordings)) {
-              console.log(`DEBUG ${album.title}: ${recordings.length} recordings, sample names:`, recordings.slice(0, 5).map((r: any) => r.recording_name).join(' | '), '| our tracks:', [...trackTitles].slice(0, 5).join(' | '))
+              if (debug.length < 3) {
+                debug.push({
+                  album: album.title,
+                  has_token: !!lbToken,
+                  artist_mbid: artistMbid,
+                  recording_count: recordings.length,
+                  sample_recordings: recordings.slice(0, 5).map((r: any) => r.recording_name),
+                  our_tracks: [...trackTitles].slice(0, 5),
+                })
+              }
               for (const rec of recordings) {
                 if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name))) {
                   topTracks.push({
@@ -138,7 +148,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ processed, with_data: withData, batch_size: albums.length }),
+      JSON.stringify({ processed, with_data: withData, batch_size: albums.length, debug }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (e) {
