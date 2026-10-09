@@ -43,14 +43,25 @@ Deno.serve(async (req) => {
     )
 
     // Albums with a MusicBrainz release-group ID, least-recently-fetched first
-    const { data: albums, error } = await supabase
+    let body: { album_id?: string } = {}
+    try { body = await req.json() } catch { /* no body */ }
+
+    const { data: allAlbums, error } = await supabase
       .from('albums')
       .select('id, title, musicbrainz_id, rapper_albums(rappers(musicbrainz_id))')
       .not('musicbrainz_id', 'is', null)
-      .order('updated_at', { ascending: true })
-      .limit(BATCH_SIZE)
-
+      .limit(5000)
     if (error) throw error
+
+    const { data: statRows } = await supabase
+      .from('album_listen_stats')
+      .select('album_id, fetched_at')
+      .limit(5000)
+    const fetchedAt = new Map((statRows ?? []).map((r: any) => [r.album_id, r.fetched_at as string]))
+    const albums = (allAlbums ?? [])
+      .filter((a: any) => !body.album_id || a.id === body.album_id)
+      .sort((a: any, b: any) => (fetchedAt.get(a.id) ?? '').localeCompare(fetchedAt.get(b.id) ?? ''))
+      .slice(0, BATCH_SIZE)
     if (!albums?.length) {
       return new Response(JSON.stringify({ processed: 0 }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -59,7 +70,6 @@ Deno.serve(async (req) => {
 
     let processed = 0
     let withData = 0
-    const debug: Record<string, unknown>[] = []
 
     for (const album of albums) {
       const rgMbid = album.musicbrainz_id as string
@@ -141,7 +151,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ processed, with_data: withData, batch_size: albums.length, has_token: !!Deno.env.get('LISTENBRAINZ_TOKEN'), debug }),
+      JSON.stringify({ processed, with_data: withData, batch_size: albums.length }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (e) {
