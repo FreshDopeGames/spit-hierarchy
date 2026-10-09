@@ -37,21 +37,37 @@ const AlbumReviewCard = ({ review }: Props) => {
   const cover = album.cached_cover_url || album.cover_art_url;
   const albumUrl = album.rapper_slug ? `/rapper/${album.rapper_slug}/${album.slug}` : null;
 
+  const coverArt = cover ? (
+    <img
+      src={cover}
+      alt={`${album.title} album cover`}
+      className="w-full h-full rounded object-cover"
+      loading="lazy"
+    />
+  ) : (
+    <div className="w-full h-full rounded bg-black/40" />
+  );
+
+
   return (
     <section className="rounded-lg border-4 border-[hsl(var(--theme-primary))] bg-[hsl(var(--theme-surface))] p-4 sm:p-6">
       <div className="flex flex-col sm:flex-row gap-5">
-        {cover ? (
-          <img
-            src={cover}
-            alt={`${album.title} album cover`}
-            className="w-32 h-32 sm:w-40 sm:h-40 rounded object-cover mx-auto sm:mx-0"
-            loading="lazy"
-          />
+        {albumUrl ? (
+          <Link
+            to={albumUrl}
+            aria-label={`View ${album.title} album page`}
+            className="block w-32 h-32 sm:w-40 sm:h-40 rounded mx-auto sm:mx-0 shrink-0 overflow-hidden transition-transform duration-200 hover:scale-[1.03] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[hsl(var(--theme-primary))]"
+          >
+            {coverArt}
+          </Link>
         ) : (
-          <div className="w-32 h-32 sm:w-40 sm:h-40 rounded bg-black/40 mx-auto sm:mx-0" />
+          <div className="w-32 h-32 sm:w-40 sm:h-40 rounded mx-auto sm:mx-0 shrink-0 overflow-hidden">
+            {coverArt}
+          </div>
         )}
 
         <div className="flex-1 space-y-3 text-center sm:text-left">
+
           <p className="text-xs uppercase tracking-widest text-[hsl(var(--theme-primary))] font-semibold">
             Official Spit Hierarchy Review
           </p>
