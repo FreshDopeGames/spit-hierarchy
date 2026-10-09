@@ -148,7 +148,7 @@ Deno.serve(async (req) => {
     }
 
     return new Response(
-      JSON.stringify({ processed, with_data: withData, batch_size: albums.length, debug }),
+      JSON.stringify({ processed, with_data: withData, batch_size: albums.length, has_token: !!Deno.env.get('LISTENBRAINZ_TOKEN'), debug }),
       { headers: { ...corsHeaders, 'Content-Type': 'application/json' } },
     )
   } catch (e) {
