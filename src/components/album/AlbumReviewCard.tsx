@@ -66,8 +66,8 @@ const AlbumReviewCard = ({ review }: Props) => {
           </div>
         )}
 
-
         <div className="flex-1 space-y-3 text-center sm:text-left">
+
           <p className="text-xs uppercase tracking-widest text-[hsl(var(--theme-primary))] font-semibold">
             Official Spit Hierarchy Review
           </p>
