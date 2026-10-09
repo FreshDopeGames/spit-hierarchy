@@ -1,4 +1,4 @@
-import { RefObject, useContext } from "react";
+import { RefObject } from "react";
 import { Pause, Play, SkipBack, SkipForward, X } from "lucide-react";
 import { useMusicPlayer } from "@/contexts/MusicPlayerContext";
 import { cn } from "@/lib/utils";
@@ -33,9 +33,9 @@ const StickyPlayerBar = ({ videoHostRef }: StickyPlayerBarProps) => {
     <div
       className={cn(
         "fixed inset-x-0 bottom-0 z-50 border-t-4 border-[hsl(var(--theme-primary))] bg-black",
+        "pb-[env(safe-area-inset-bottom)]",
         !current && "pointer-events-none opacity-0 translate-y-full",
       )}
-      style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
       aria-hidden={!current}
     >
       <div className="mx-auto flex max-w-4xl items-center gap-3 px-3 py-2">
