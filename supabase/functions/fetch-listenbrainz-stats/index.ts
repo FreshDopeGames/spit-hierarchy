@@ -46,19 +46,34 @@ Deno.serve(async (req) => {
     let body: { album_id?: string } = {}
     try { body = await req.json() } catch { /* no body */ }
 
-    const { data: allAlbums, error } = await supabase
-      .from('albums')
-      .select('id, title, musicbrainz_id, rapper_albums(rappers(musicbrainz_id))')
-      .not('musicbrainz_id', 'is', null)
-      .limit(5000)
-    if (error) throw error
+    // PostgREST caps responses at 1000 rows, so page through all albums
+    const allAlbums: any[] = []
+    for (let from = 0; ; from += 1000) {
+      let q = supabase
+        .from('albums')
+        .select('id, title, musicbrainz_id, rapper_albums(rappers(musicbrainz_id))')
+        .not('musicbrainz_id', 'is', null)
+        .order('id')
+        .range(from, from + 999)
+      if (body.album_id) q = q.eq('id', body.album_id)
+      const { data, error } = await q
+      if (error) throw error
+      allAlbums.push(...(data ?? []))
+      if (!data || data.length < 1000) break
+    }
 
-    const { data: statRows } = await supabase
-      .from('album_listen_stats')
-      .select('album_id, fetched_at')
-      .limit(5000)
+    const statRows: any[] = []
+    for (let from = 0; ; from += 1000) {
+      const { data } = await supabase
+        .from('album_listen_stats')
+        .select('album_id, fetched_at')
+        .order('album_id')
+        .range(from, from + 999)
+      statRows.push(...(data ?? []))
+      if (!data || data.length < 1000) break
+    }
     const fetchedAt = new Map((statRows ?? []).map((r: any) => [r.album_id, r.fetched_at as string]))
-    const albums = (allAlbums ?? [])
+    const albums = allAlbums
       .filter((a: any) => !body.album_id || a.id === body.album_id)
       .sort((a: any, b: any) => (fetchedAt.get(a.id) ?? '').localeCompare(fetchedAt.get(b.id) ?? ''))
       .slice(0, BATCH_SIZE)
