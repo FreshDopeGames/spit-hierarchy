@@ -230,6 +230,23 @@ const AlbumDetail = () => {
             );
           })()}
 
+          {/* Spotify mini player when a direct album link exists */}
+          {(() => {
+            const m = (album.external_cover_links?.spotify || "").match(/open\.spotify\.com\/album\/([A-Za-z0-9]+)/);
+            if (!m) return null;
+            return (
+              <div className="max-w-4xl mx-auto">
+                <iframe
+                  title={`${album.album_title} on Spotify`}
+                  src={`https://open.spotify.com/embed/album/${m[1]}?theme=0`}
+                  className="w-full h-[152px] rounded-xl border-0"
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                />
+              </div>
+            );
+          })()}
+
           {/* Track Listing Section */}
           <div className="max-w-4xl mx-auto">
             <div className="flex items-center justify-between mb-6">
@@ -259,6 +276,8 @@ const AlbumDetail = () => {
               rapperName={album.rapper_name}
               onVote={toggleVote} 
               isVoting={isSubmitting} 
+              albumId={album.album_id}
+              coverUrl={album.cover_art_url}
             />
           </div>
 

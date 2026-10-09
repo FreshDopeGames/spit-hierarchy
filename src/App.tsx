@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { MusicPlayerProvider } from "@/contexts/MusicPlayerContext";
 import AuthGuard from "@/components/AuthGuard";
 import ScrollToTop from "@/components/ScrollToTop";
 import { OnboardingProvider } from "@/components/onboarding/OnboardingProvider";
@@ -67,6 +68,7 @@ function App() {
   return (
     <BrowserRouter>
       <OnboardingProvider>
+      <MusicPlayerProvider>
         <AppHooksWrapper>
           <ScrollToTop />
           <Suspense fallback={null}>
@@ -159,6 +161,7 @@ function App() {
             </Routes>
           </Suspense>
         </AppHooksWrapper>
+      </MusicPlayerProvider>
       </OnboardingProvider>
     </BrowserRouter>
   );
