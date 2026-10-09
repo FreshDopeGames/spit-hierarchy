@@ -92,7 +92,11 @@ Deno.serve(async (req) => {
             })
             const body = await r.text()
             entry.pop_status = r.status
-            entry.pop_body = body.slice(0, 400)
+            const recs = JSON.parse(body)
+            entry.recording_count = Array.isArray(recs) ? recs.length : -1
+            entry.recording_names = Array.isArray(recs) ? recs.map((x: any) => x.recording_name) : []
+            const { data: trks } = await supabase.from('album_tracks').select('title').eq('album_id', album.id)
+            entry.our_tracks = (trks ?? []).map((t: { title: string }) => t.title)
           } catch (err) {
             entry.pop_error = String(err)
           }
