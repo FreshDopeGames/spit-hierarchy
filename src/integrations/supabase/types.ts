@@ -2922,6 +2922,38 @@ export type Database = {
           },
         ]
       }
+      track_youtube_matches: {
+        Row: {
+          checked_at: string
+          id: string
+          status: string
+          track_id: string
+          youtube_video_id: string | null
+        }
+        Insert: {
+          checked_at?: string
+          id?: string
+          status?: string
+          track_id: string
+          youtube_video_id?: string | null
+        }
+        Update: {
+          checked_at?: string
+          id?: string
+          status?: string
+          track_id?: string
+          youtube_video_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "track_youtube_matches_track_id_fkey"
+            columns: ["track_id"]
+            isOneToOne: true
+            referencedRelation: "album_tracks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       trending_rappers: {
         Row: {
           created_at: string
