@@ -56,7 +56,9 @@ const BlogDetail = () => {
 
 
   const handleShare = (platform: string) => {
-    const url = window.location.href;
+    // Share via the blog subdomain so social crawlers get article-specific
+    // preview metadata (og-proxy worker); readers are redirected to the main site.
+    const url = `https://blog.spithierarchy.com/${blogPost?.slug}`;
     const text = `Check out this article: ${blogPost?.title}`;
     
     switch (platform) {
