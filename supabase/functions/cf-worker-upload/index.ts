@@ -2,38 +2,38 @@
 // via the connector gateway (multipart upload is not possible from the gateway tool).
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 
-const WORKER_SCRIPT = `addEventListener('fetch', function(event) { event.respondWith(handleRequest(event.request)); });
+const WORKER_SCRIPT = `const CRAWLERS = /facebookexternalhit|facebot|twitterbot|whatsapp|linkedinbot|slackbot|telegrambot|discordbot|applebot|imessage|googlebot|bingbot|pinterest|redditbot|skypeuripreview|mastodon|bluesky|threads/i;
+const OG_FUNCTION = 'https://xzcmkssadekswmiqfbff.supabase.co/functions/v1/og-redirect';
+const MAIN_SITE = 'https://spithierarchy.com';
 
-var CRAWLERS = /facebookexternalhit|facebot|twitterbot|whatsapp|linkedinbot|slackbot|telegrambot|discordbot|applebot|imessage|googlebot|bingbot|pinterest|redditbot|skypeuripreview|mastodon|bluesky|threads/i;
-var OG_FUNCTION = 'https://xzcmkssadekswmiqfbff.supabase.co/functions/v1/og-redirect';
-var MAIN_SITE = 'https://spithierarchy.com';
+export default {
+  async fetch(request) {
+    const url = new URL(request.url);
+    const path = url.pathname;
 
-async function handleRequest(request) {
-  var url = new URL(request.url);
-  var path = url.pathname;
+    if (path === '/' || path === '') {
+      return Response.redirect(MAIN_SITE + '/blog', 301);
+    }
 
-  if (path === '/' || path === '') {
-    return Response.redirect(MAIN_SITE + '/blog', 301);
+    const ua = request.headers.get('user-agent') || '';
+
+    if (CRAWLERS.test(ua)) {
+      const target = OG_FUNCTION + '?path=' + encodeURIComponent('/blog' + path);
+      const resp = await fetch(target, { headers: { 'user-agent': ua }, cf: { cacheTtl: 3600, cacheEverything: true } });
+      const html = await resp.text();
+      return new Response(html, {
+        status: 200,
+        headers: {
+          'content-type': 'text/html; charset=utf-8',
+          'cache-control': 'public, max-age=3600',
+          'x-robots-tag': 'index, follow'
+        }
+      });
+    }
+
+    return Response.redirect(MAIN_SITE + '/blog' + path + url.search, 301);
   }
-
-  var ua = request.headers.get('user-agent') || '';
-
-  if (CRAWLERS.test(ua)) {
-    var target = OG_FUNCTION + '?path=' + encodeURIComponent('/blog' + path);
-    var resp = await fetch(target, { headers: { 'user-agent': ua }, cf: { cacheTtl: 3600, cacheEverything: true } });
-    var html = await resp.text();
-    return new Response(html, {
-      status: 200,
-      headers: {
-        'content-type': 'text/html; charset=utf-8',
-        'cache-control': 'public, max-age=3600',
-        'x-robots-tag': 'index, follow'
-      }
-    });
-  }
-
-  return Response.redirect(MAIN_SITE + '/blog' + path + url.search, 301);
-}
+};
 `;
 
 serve(async (req) => {
