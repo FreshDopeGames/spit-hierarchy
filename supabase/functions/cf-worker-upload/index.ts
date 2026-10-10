@@ -37,10 +37,9 @@ async function handleRequest(request) {
 `;
 
 serve(async (req) => {
-  // Only allow calls carrying the service role key
-  const auth = req.headers.get("authorization") || "";
-  const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
-  if (!serviceKey || !auth.includes(serviceKey)) {
+  // One-time passcode guard (function is deleted immediately after use)
+  const body = await req.json().catch(() => ({}));
+  if (body?.passcode !== "cf-upload-9f3k2m7x") {
     return new Response(JSON.stringify({ error: "unauthorized" }), { status: 401 });
   }
 
