@@ -71,6 +71,8 @@ const BlogDetailContent = ({
 }: BlogDetailContentProps) => {
   const { likesCount, isLiked, toggleLike, isLoading } = useBlogPostLikes(blogPost.id);
   const { data: albumReview } = useAlbumReviewByPost(blogPost.id);
+  const shareUrl = `https://blog.spithierarchy.com/${(blogPost as any).slug}`;
+  const shareTitle = transformedBlogPost.title;
 
   return (
     <main className="max-w-4xl mx-auto px-[2.5vw] py-6 sm:p-6 pt-24 sm:pt-24">
