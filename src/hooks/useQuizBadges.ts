@@ -56,15 +56,7 @@ export const useQuizBadges = (userId?: string) => {
       if (!targetUserId) return [];
       
       const { data, error } = await supabase
-        .from('user_quiz_badges')
-        .select(`
-          id,
-          badge_id,
-          earned_at,
-          badge:quiz_badges(*)
-        `)
-        .eq('user_id', targetUserId)
-        .order('earned_at', { ascending: false });
+        .rpc('get_public_quiz_badges' as any, { p_user_id: targetUserId });
       
       if (error) throw error;
       return data as UserQuizBadge[];

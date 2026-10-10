@@ -16,15 +16,13 @@ export const useRapperStats = (rapperIds: string[]) => {
 
       // Fetch Top 5 counts for all rappers
       const { data: top5Data, error: top5Error } = await supabase
-        .from("user_top_rappers")
-        .select("rapper_id")
-        .in("rapper_id", rapperIds);
+        .rpc("get_top5_counts_for_rappers" as any, { p_rapper_ids: rapperIds });
 
       if (top5Error) throw top5Error;
 
       // Count Top 5 occurrences per rapper
-      const top5Counts = top5Data.reduce((acc: Record<string, number>, item) => {
-        acc[item.rapper_id] = (acc[item.rapper_id] || 0) + 1;
+      const top5Counts = ((top5Data as any[]) || []).reduce((acc: Record<string, number>, item: any) => {
+        acc[item.rapper_id] = item.top5_count;
         return acc;
       }, {});
 
