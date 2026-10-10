@@ -27,22 +27,13 @@ const PublicTopFiveSection = ({ userId, username }: PublicTopFiveSectionProps) =
     queryKey: ["public-top-rappers", userId],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from("user_top_rappers")
-        .select(`
-          position,
-          rapper_id,
-          rappers (
-            id,
-            name,
-            slug,
-            image_url
-          )
-        `)
-        .eq("user_id", userId)
-        .order("position");
-      
+        .rpc("get_public_top_five" as any, { p_user_id: userId });
       if (error) throw error;
-      return (data || []) as TopRapperData[];
+      return ((data as any[]) || []).map((r) => ({
+        position: r.position,
+        rapper_id: r.rapper_id,
+        rappers: { id: r.rapper_id, name: r.rapper_name, slug: r.rapper_slug, image_url: r.rapper_image_url },
+      })) as TopRapperData[];
     },
     enabled: !!userId
   });

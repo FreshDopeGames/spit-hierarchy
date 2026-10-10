@@ -77,13 +77,11 @@ export const useSimilarRappers = (
       const rapperIds = filteredRappers.map(r => r.id);
       if (rapperIds.length > 0) {
         const { data: top5Data } = await supabase
-          .from("user_top_rappers")
-          .select("rapper_id")
-          .in("rapper_id", rapperIds);
+          .rpc("get_top5_counts_for_rappers" as any, { p_rapper_ids: rapperIds });
 
         const top5Counts = new Map<string, number>();
-        top5Data?.forEach(item => {
-          top5Counts.set(item.rapper_id, (top5Counts.get(item.rapper_id) || 0) + 1);
+        (top5Data as any[] | null)?.forEach(item => {
+          top5Counts.set(item.rapper_id, item.top5_count);
         });
 
         return filteredRappers.map(rapper => ({

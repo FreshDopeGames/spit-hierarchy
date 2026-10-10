@@ -14,13 +14,11 @@ const getRapperMetadata = async (rapperId: string) => {
 
   // Get top 5 count
   const { data: topFives } = await supabase
-    .from("user_top_rappers")
-    .select("id")
-    .eq("rapper_id", rapperId);
+    .rpc("get_top5_counts_for_rappers" as any, { p_rapper_ids: [rapperId] });
 
   return {
     album_count: albums?.length || 0,
-    top_five_count: topFives?.length || 0
+    top_five_count: (topFives as any)?.[0]?.top5_count || 0
   };
 };
 
