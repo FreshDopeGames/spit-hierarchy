@@ -4472,6 +4472,15 @@ export type Database = {
           username: string
         }[]
       }
+      get_public_quiz_badges: {
+        Args: { p_user_id: string }
+        Returns: {
+          badge: Json
+          badge_id: string
+          earned_at: string
+          id: string
+        }[]
+      }
       get_public_rapper_voting_stats:
         | {
             Args: never
@@ -4497,6 +4506,16 @@ export type Database = {
               votes_last_7_days: number
             }[]
           }
+      get_public_top_five: {
+        Args: { p_user_id: string }
+        Returns: {
+          position: number
+          rapper_id: string
+          rapper_image_url: string
+          rapper_name: string
+          rapper_slug: string
+        }[]
+      }
       get_ranking_vote_counts_by_rapper: {
         Args: never
         Returns: {
@@ -4597,6 +4616,13 @@ export type Database = {
         Returns: {
           total_votes: number
           user_id: string
+        }[]
+      }
+      get_top5_counts_for_rappers: {
+        Args: { p_rapper_ids: string[] }
+        Returns: {
+          rapper_id: string
+          top5_count: number
         }[]
       }
       get_total_member_count: { Args: never; Returns: number }
