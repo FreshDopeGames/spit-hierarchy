@@ -20,6 +20,7 @@ interface BlogPost {
   published_at: string;
   author_id: string;
   category_id: string;
+  slug: string;
   blog_categories?: {
     name: string;
   };
@@ -71,6 +72,8 @@ const BlogDetailContent = ({
 }: BlogDetailContentProps) => {
   const { likesCount, isLiked, toggleLike, isLoading } = useBlogPostLikes(blogPost.id);
   const { data: albumReview } = useAlbumReviewByPost(blogPost.id);
+  const shareUrl = `https://blog.spithierarchy.com/${blogPost.slug}`;
+  const shareTitle = transformedBlogPost.title;
 
   return (
     <main className="max-w-4xl mx-auto px-[2.5vw] py-6 sm:p-6 pt-24 sm:pt-24">
@@ -88,6 +91,8 @@ const BlogDetailContent = ({
           onShare={onShare}
           onCommentsClick={onCommentsClick}
           isLikeLoading={isLoading}
+          shareUrl={shareUrl}
+          shareTitle={shareTitle}
         />
 
         <BlogArticleContent content={blogPost.content} />
@@ -105,6 +110,8 @@ const BlogDetailContent = ({
           onShare={onShare}
           onCommentsClick={onCommentsClick}
           isLikeLoading={isLoading}
+          shareUrl={shareUrl}
+          shareTitle={shareTitle}
         />
 
         {/* Polls section */}
