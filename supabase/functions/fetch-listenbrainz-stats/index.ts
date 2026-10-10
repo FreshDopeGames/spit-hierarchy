@@ -130,7 +130,7 @@ Deno.serve(async (req) => {
             const recordings = await popRes.json()
             if (Array.isArray(recordings)) {
               for (const rec of recordings) {
-                if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name))) {
+                if (rec?.recording_name && trackTitles.has(normalize(rec.recording_name)) && !topTracks.some((t) => normalize(t.name) === normalize(rec.recording_name))) {
                   topTracks.push({
                     name: rec.recording_name,
                     listen_count: rec.total_listen_count ?? 0,
