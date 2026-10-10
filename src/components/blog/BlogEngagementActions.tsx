@@ -11,6 +11,8 @@ interface BlogEngagementActionsProps {
   onShare: (platform: string) => void;
   onCommentsClick?: () => void;
   isLikeLoading?: boolean;
+  shareUrl?: string;
+  shareTitle?: string;
 }
 
 const BlogEngagementActions = ({
@@ -21,12 +23,15 @@ const BlogEngagementActions = ({
   onShare,
   onCommentsClick,
   isLikeLoading = false,
+  shareUrl,
+  shareTitle,
 }: BlogEngagementActionsProps) => {
   const handleShare = async () => {
+    const url = shareUrl || window.location.href;
     const shareData = {
-      title: document.title,
-      text: document.title,
-      url: window.location.href,
+      title: shareTitle || document.title,
+      text: shareTitle || document.title,
+      url,
     };
 
     if (typeof navigator !== "undefined" && typeof navigator.share === "function") {
@@ -40,7 +45,7 @@ const BlogEngagementActions = ({
     }
 
     try {
-      await navigator.clipboard.writeText(window.location.href);
+      await navigator.clipboard.writeText(url);
       toast.success("The article link has been copied to your clipboard.");
     } catch (error) {
       console.error("Failed to copy link:", error);
