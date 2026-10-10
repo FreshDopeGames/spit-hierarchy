@@ -18,7 +18,8 @@ export default {
     const ua = request.headers.get('user-agent') || '';
 
     if (CRAWLERS.test(ua)) {
-      const target = OG_FUNCTION + '?path=' + encodeURIComponent('/blog' + path);
+      const slug = path.replace(/^\\/+/, '');
+      const target = OG_FUNCTION + '?slug=' + encodeURIComponent(slug);
       const resp = await fetch(target, { headers: { 'user-agent': ua }, cf: { cacheTtl: 3600, cacheEverything: true } });
       const html = await resp.text();
       return new Response(html, {
