@@ -28,7 +28,7 @@ const AstrologicalRankings = () => {
     queryFn: async () => {
       const { data: rappers, error } = await supabase
         .from("rappers")
-        .select("id, name, average_rating, total_votes, birth_month, birth_day, image_url")
+        .select("id, name, average_rating, total_votes, birth_month, birth_day, image_url").eq("publish_status", "published")
         .order("average_rating", { ascending: false });
       
       if (error) throw error;

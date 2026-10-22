@@ -39,7 +39,7 @@ export const useMostViewedRappers = (limit = 5) => {
 
       const { data: rappers, error: rappersError } = await supabase
         .from("rappers")
-        .select("id, name, slug, image_url")
+        .select("id, name, slug, image_url").eq("publish_status", "published")
         .in("id", topIds);
 
       if (rappersError) throw rappersError;

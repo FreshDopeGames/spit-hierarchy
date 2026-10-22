@@ -42,7 +42,7 @@ export const useTrendingRappers = () => {
       const ids = rows.map((r) => r.rapper_id);
       const { data: rappers, error: rappersErr } = await supabase
         .from("rappers")
-        .select("id, name, slug, image_url")
+        .select("id, name, slug, image_url").eq("publish_status", "published")
         .in("id", ids);
 
       if (rappersErr) throw rappersErr;

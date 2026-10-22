@@ -15,9 +15,10 @@ export const useUserRankingItems = (rankingId: string) => {
         .from("user_ranking_items")
         .select(`
           *,
-          rapper:rappers(*)
+          rapper:rappers!inner(*)
         `)
         .eq("ranking_id", rankingId)
+        .eq("rapper.publish_status", "published")
         .order("position", { ascending: true });
 
       if (error) throw error;

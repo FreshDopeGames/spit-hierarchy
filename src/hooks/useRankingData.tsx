@@ -93,15 +93,17 @@ export const useRankingData = (rankingId: string) => {
           is_ranked,
           vote_velocity_7_days,
           vote_velocity_24_hours,
-          rapper:rappers (
+          rapper:rappers!inner (
             id,
             name,
             origin,
             total_votes,
-            slug
+            slug,
+            publish_status
           )
         `)
         .eq("ranking_id", rankingId)
+        .eq("rapper.publish_status", "published")
         .order("position", { ascending: true }); // Use database position which is now properly sorted
 
       if (error) throw error;

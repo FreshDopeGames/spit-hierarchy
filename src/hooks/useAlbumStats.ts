@@ -33,7 +33,7 @@ export const useAlbumStats = () => {
           rapper_albums!inner(
             album:albums!inner(release_type)
           )
-        `);
+        `).eq("publish_status", "published");
 
       if (error) throw error;
 
