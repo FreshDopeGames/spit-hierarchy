@@ -148,11 +148,11 @@ const VSMatchDetail = () => {
         }}>
           <div className="container mx-auto px-4 py-8">
             <div className="max-w-4xl mx-auto">
-              <Skeleton className="h-8 w-3/4 bg-black/20 mb-4" />
-              <Skeleton className="h-4 w-full bg-black/20 mb-8" />
+              <Skeleton className="h-8 w-3/4 bg-[hsl(var(--theme-primary))]/15 mb-4" />
+              <Skeleton className="h-4 w-full bg-[hsl(var(--theme-primary))]/15 mb-8" />
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-12">
-                <Skeleton className="h-96 bg-black/20 rounded-lg" />
-                <Skeleton className="h-96 bg-black/20 rounded-lg" />
+                <Skeleton className="h-96 bg-[hsl(var(--theme-primary))]/15 rounded-lg" />
+                <Skeleton className="h-96 bg-[hsl(var(--theme-primary))]/15 rounded-lg" />
               </div>
             </div>
           </div>
@@ -182,7 +182,7 @@ const VSMatchDetail = () => {
               <Link to="/vs">
                 <ThemedButton
                   variant="outline"
-                  className="bg-black/40 backdrop-blur-sm border-2 border-black text-black hover:bg-black/60 hover:text-white transition-all duration-200 font-bold"
+                  className="bg-black/40 backdrop-blur-sm border-2 border-[hsl(var(--theme-primary))] text-[hsl(var(--theme-primary))] hover:bg-[hsl(var(--theme-primary))] hover:text-black transition-all duration-200 font-bold"
                 >
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Back to VS
@@ -192,19 +192,19 @@ const VSMatchDetail = () => {
 
             {/* Header */}
             <div className="text-center mb-8">
-              <h1 className="text-black text-3xl md:text-4xl font-bold mb-4 font-mogra drop-shadow-lg">
+              <h1 className="text-[hsl(var(--theme-primary))] text-3xl md:text-4xl font-bold mb-4 font-mogra drop-shadow-lg">
                 {vsMatch!.title}
               </h1>
               {vsMatch!.description && (
-                <p className="text-black/80 text-lg max-w-2xl mx-auto drop-shadow-md">
+                <p className="text-[hsl(var(--theme-primary))]/80 text-lg max-w-2xl mx-auto drop-shadow-md">
                   {vsMatch!.description}
                 </p>
               )}
               <div className="flex items-center justify-center gap-4 mt-4">
-                <Badge variant="outline" className="text-black border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
+                <Badge variant="outline" className="text-[hsl(var(--theme-primary))] border-[hsl(var(--theme-primary))] bg-black/40 backdrop-blur-sm">
                   {vsMatch!.total_votes} total votes
                 </Badge>
-                <Badge variant="outline" className="text-black border-[var(--theme-primary)] bg-black/20 backdrop-blur-sm">
+                <Badge variant="outline" className="text-[hsl(var(--theme-primary))] border-[hsl(var(--theme-primary))] bg-black/40 backdrop-blur-sm">
                   {new Date(vsMatch!.created_at).toLocaleDateString()}
                 </Badge>
               </div>
