@@ -28,7 +28,7 @@ html {
   padding-bottom: env(safe-area-inset-bottom);
   padding-left: env(safe-area-inset-left);
   padding-right: env(safe-area-inset-right);
-  background-color: hsl(0 0% 5%);
+  background-color: #000;
 }
 
 @media all and (display-mode: fullscreen), all and (display-mode: standalone) {
@@ -166,7 +166,8 @@ html {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    /* Transparent so the fixed SiteBackground (html is black) shows through */
+    @apply bg-transparent text-foreground;
     font-family: var(--theme-font-body);
   }
   h1 {
@@ -481,4 +482,16 @@ input:not([class*="themed"])::placeholder {
 
 .leaflet-control-attribution a {
   color: rgba(227, 149, 22, 0.7) !important;
+}
+
+/* ------------------------------------------------------------------
+   Site-wide gutter background (see src/components/SiteBackground.tsx)
+   Page shells and their full-page tint overlays are made transparent so
+   the fixed gutter art shows on every route without editing each page.
+   ------------------------------------------------------------------ */
+[data-page-root] > .min-h-screen {
+  background: transparent !important;
+}
+[data-page-root] > .min-h-screen > .absolute.inset-0.z-0:empty {
+  display: none;
 }
