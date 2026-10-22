@@ -93,7 +93,7 @@ const ActivityToastProvider = () => {
               'ranking_vote',
               toastTitle,
               `${username} voted for ${rapperName}`,
-              ranking?.slug ? `/rankings/${ranking.slug}` : undefined
+              ranking?.slug ? `/rankings/official/${ranking.slug}` : undefined
             );
           } catch (error) {
             console.error('Error showing ranking vote toast:', error);

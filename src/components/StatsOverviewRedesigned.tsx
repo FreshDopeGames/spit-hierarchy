@@ -288,7 +288,7 @@ const StatsOverviewRedesigned = () => {
 
           <div className="space-y-4 mt-auto">
             {stats?.rankings.mostActiveRanking && (
-              <Link to={`/rankings/${stats.rankings.mostActiveRanking.slug}`} className="block group">
+              <Link to={`/rankings/official/${stats.rankings.mostActiveRanking.slug}`} className="block group">
                 <div className="bg-[hsl(var(--theme-surface))]/30 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
                   <div className="flex items-center gap-3 mb-2">
                     <Flame className="w-5 h-5 text-[hsl(var(--theme-primary))]" />
