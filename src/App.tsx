@@ -10,6 +10,7 @@ import { useSecureAuth } from "@/hooks/useSecureAuth";
 import { CookieConsentBanner } from "@/components/CookieConsentBanner";
 import { CookieSettingsLink } from "@/components/CookieSettingsLink";
 import { InstallPrompt } from "@/components/pwa/InstallPrompt";
+import { SiteBackground } from "@/components/SiteBackground";
 import Index from "./pages/Index";
 
 // Lazy-loaded pages
@@ -50,7 +51,7 @@ const SessionPollModal = lazy(() => import("@/components/polls/SessionPollModal"
 
 // Minimal loading fallback
 const PageFallback = () => (
-  <div className="min-h-screen flex items-center justify-center bg-background">
+  <div className="min-h-screen flex items-center justify-center">
     <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
   </div>
 );
@@ -70,6 +71,7 @@ function App() {
       <OnboardingProvider>
       <MusicPlayerProvider>
         <AppHooksWrapper>
+          <SiteBackground />
           <ScrollToTop />
           <Suspense fallback={null}>
             <EmailConfirmationHandler />
@@ -86,6 +88,8 @@ function App() {
             </Suspense>
           )}
 
+          {/* data-page-root: page shells inside are made transparent (see index.css) so SiteBackground shows through */}
+          <div data-page-root className="contents">
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
@@ -160,6 +164,7 @@ function App() {
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
+          </div>
         </AppHooksWrapper>
       </MusicPlayerProvider>
       </OnboardingProvider>
