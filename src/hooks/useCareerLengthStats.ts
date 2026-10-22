@@ -25,7 +25,7 @@ export const useCareerLengthStats = () => {
               release_date
             )
           )
-        `);
+        `).eq("publish_status", "published");
 
       if (error) throw error;
 

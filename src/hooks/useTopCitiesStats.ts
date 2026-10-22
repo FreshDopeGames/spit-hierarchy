@@ -14,7 +14,7 @@ export const useTopCitiesStats = () => {
     queryFn: async (): Promise<CityStats[]> => {
       const { data, error } = await supabase
         .from("rappers")
-        .select("origin")
+        .select("origin").eq("publish_status", "published")
         .not("origin", "is", null);
 
       if (error) throw error;

@@ -40,7 +40,7 @@ export const useMentionedRappers = (content: string | undefined) => {
       
       const { data, error } = await supabase
         .from("rappers")
-        .select("id, name, slug")
+        .select("id, name, slug").eq("publish_status", "published")
         .in("slug", slugs);
       
       if (error) throw error;

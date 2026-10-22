@@ -21,7 +21,7 @@ const RapperGrid = ({ selectedCategory }: RapperGridProps) => {
     queryFn: async () => {
       let query = supabase
         .from("rappers")
-        .select("*");
+        .select("*").eq("publish_status", "published");
 
       switch (sortBy) {
         case "rating":

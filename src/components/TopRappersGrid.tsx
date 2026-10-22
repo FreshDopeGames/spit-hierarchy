@@ -44,7 +44,7 @@ const TopRappersGrid = ({
         error
       } = await supabase
         .from("rappers")
-        .select("*")
+        .select("*").eq("publish_status", "published")
         .order("total_votes", { ascending: false })
         .order("average_rating", { ascending: false })
         .limit(5);

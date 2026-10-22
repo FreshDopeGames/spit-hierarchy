@@ -33,12 +33,12 @@ const StatsOverview = () => {
       } = await supabase.from("rappers").select("*", {
         count: "exact",
         head: true
-      });
+      }).eq("publish_status", "published");
 
       // Get top rated rapper
       const {
         data: topRapper
-      } = await supabase.from("rappers").select("name, average_rating").gt("total_votes", 0).order("average_rating", {
+      } = await supabase.from("rappers").select("name, average_rating").eq("publish_status", "published").gt("total_votes", 0).order("average_rating", {
         ascending: false
       }).limit(1).single();
 

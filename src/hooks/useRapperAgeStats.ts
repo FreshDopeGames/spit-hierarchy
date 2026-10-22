@@ -20,7 +20,7 @@ export const useRapperAgeStats = () => {
     queryFn: async (): Promise<RapperAgeStats> => {
       const { data, error } = await supabase
         .from("rappers")
-        .select("birth_year")
+        .select("birth_year").eq("publish_status", "published")
         .not("birth_year", "is", null);
 
       if (error) throw error;

@@ -72,7 +72,7 @@ const ZodiacDistributionCard = () => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from("rappers")
-        .select("id, name, slug, image_url, average_rating, birth_month, birth_day")
+        .select("id, name, slug, image_url, average_rating, birth_month, birth_day").eq("publish_status", "published")
         .not("birth_month", "is", null)
         .not("birth_day", "is", null);
 

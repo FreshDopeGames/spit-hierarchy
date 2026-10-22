@@ -19,7 +19,7 @@ const RotatingRapperMosaic: React.FC = () => {
     queryFn: async (): Promise<RapperTile[]> => {
       const { data, error } = await supabase
         .from("rappers")
-        .select("id, name, image_url")
+        .select("id, name, image_url").eq("publish_status", "published")
         .not("image_url", "is", null)
         .order("total_votes", { ascending: false })
         .limit(40);
