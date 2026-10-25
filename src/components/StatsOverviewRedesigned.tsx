@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/integrations/supabase/client";
-import { Music2, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp } from "lucide-react";
+import { Music2, Users, FileText, Star, Trophy, Flame, Heart, TrendingUp, Disc3 } from "lucide-react";
 import { Link } from "react-router-dom";
 
 import AnalyticsButton from "@/components/AnalyticsButton";
@@ -73,7 +73,8 @@ const StatsOverviewRedesigned = () => {
       topAchieverResult,
       mostRatedRapperResult,
       mostActiveRankingResult,
-      mostVotedRapperResult
+      mostVotedRapperResult,
+      albumReviewsResult
     ] = await Promise.all([
       supabase.from("rappers")
         .select("career_start_year")
@@ -95,8 +96,22 @@ const StatsOverviewRedesigned = () => {
         .limit(1)
         .maybeSingle(),
       supabase.rpc("get_most_active_ranking").maybeSingle(),
-      supabase.rpc("get_most_voted_rapper_in_rankings").maybeSingle()
+      supabase.rpc("get_most_voted_rapper_in_rankings").maybeSingle(),
+      supabase.from("album_reviews")
+        .select("overall_score, blog_posts!inner(slug, status, published_at), albums(title, cover_art_url, cached_cover_url, rapper_albums(rappers(name)))")
+        .eq("blog_posts.status", "published")
+        .lte("blog_posts.published_at", new Date().toISOString())
     ]);
+    const reviewRows = ((albumReviewsResult.data as any[]) || [])
+      .sort((a, b) => new Date(b.blog_posts?.published_at || 0).getTime() - new Date(a.blog_posts?.published_at || 0).getTime());
+    const lr = reviewRows[0];
+    const latestReview = lr ? {
+      slug: lr.blog_posts.slug as string,
+      score: Number(lr.overall_score),
+      albumTitle: lr.albums?.title as string,
+      cover: (lr.albums?.cached_cover_url || lr.albums?.cover_art_url || null) as string | null,
+      rapperName: lr.albums?.rapper_albums?.[0]?.rappers?.name as string | undefined,
+    } : null;
 
     // Process decade breakdown
     const decadeCounts: Record<string, number> = {};
@@ -153,6 +168,10 @@ const StatsOverviewRedesigned = () => {
         total: blogCount.count || 0,
         mostLiked: mostLikedPostResult.data,
       },
+      reviews: {
+        total: reviewRows.length,
+        latest: latestReview,
+      },
     };
   };
 
@@ -175,7 +194,7 @@ const StatsOverviewRedesigned = () => {
           </p>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {Array.from({ length: 5 }).map((_, i) => (
+          {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
               className="min-h-[300px] bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl animate-pulse"
@@ -382,6 +401,97 @@ const StatsOverviewRedesigned = () => {
           )}
         </div>
 
+        {/* Slick Talk (Blog) Card */}
+        <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-secondary))] flex items-center justify-center shadow-lg">
+              <FileText className="w-6 h-6 text-black" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              Slick Talk
+            </h3>
+          </div>
+
+          <div className="text-center mb-6">
+            <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              {stats?.blog.total || 0}
+            </div>
+            <div className="text-sm text-[hsl(var(--theme-textMuted))] mt-2 font-medium">
+              Blog Posts
+            </div>
+          </div>
+
+          {stats?.blog.mostLiked && (
+            <Link to={`/blog/${stats.blog.mostLiked.slug}`} className="mt-auto block group">
+              <div className="bg-gradient-to-br from-[hsl(var(--theme-surface))]/40 to-[hsl(var(--theme-surface))]/20 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
+                <div className="flex items-start gap-3 mb-3">
+                  <TrendingUp className="w-5 h-5 text-[hsl(var(--theme-primary))] flex-shrink-0 mt-1" />
+                  <p className="text-sm font-bold text-[hsl(var(--theme-text))] group-hover:text-[hsl(var(--theme-primary))] transition-colors line-clamp-2">
+                    {stats.blog.mostLiked.title}
+                  </p>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Heart className="w-4 h-4 text-[hsl(var(--theme-primary))]" fill="currentColor" />
+                  <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
+                    {stats.blog.mostLiked.likes_count} likes
+                  </span>
+                  <span className="text-xs text-[hsl(var(--theme-textMuted))]">• Most Liked Post</span>
+                </div>
+              </div>
+            </Link>
+          )}
+        </div>
+        
+        {/* Album Reviews Card */}
+        <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-primaryLight))] flex items-center justify-center shadow-lg">
+              <Disc3 className="w-6 h-6 text-black" />
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              Album Reviews
+            </h3>
+          </div>
+
+          <div className="text-center mb-6">
+            <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
+              {stats?.reviews.total || 0}
+            </div>
+            <div className="text-sm text-[hsl(var(--theme-textMuted))] mt-2 font-medium">
+              Official Reviews
+            </div>
+          </div>
+
+          {stats?.reviews.latest ? (
+            <Link to={`/blog/${stats.reviews.latest.slug}`} className="mt-auto block group">
+              <div className="bg-gradient-to-br from-[hsl(var(--theme-surface))]/40 to-[hsl(var(--theme-surface))]/20 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all flex items-center gap-4">
+                {stats.reviews.latest.cover ? (
+                  <img src={stats.reviews.latest.cover} alt={stats.reviews.latest.albumTitle} className="w-16 h-16 rounded object-cover flex-shrink-0 border border-[hsl(var(--theme-primary))]/40" />
+                ) : (
+                  <div className="w-16 h-16 rounded flex-shrink-0 flex items-center justify-center border border-[hsl(var(--theme-primary))]/40">
+                    <Disc3 className="w-8 h-8 text-[hsl(var(--theme-primary))]" />
+                  </div>
+                )}
+                <div className="min-w-0 flex-1">
+                  <p className="text-sm font-bold text-[hsl(var(--theme-text))] group-hover:text-[hsl(var(--theme-primary))] transition-colors line-clamp-2">
+                    {stats.reviews.latest.albumTitle}
+                  </p>
+                  {stats.reviews.latest.rapperName && (
+                    <p className="text-xs text-[hsl(var(--theme-textMuted))] truncate">{stats.reviews.latest.rapperName}</p>
+                  )}
+                  <div className="flex items-center gap-2 mt-1">
+                    <Star className="w-4 h-4 text-[hsl(var(--theme-primary))]" fill="currentColor" />
+                    <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">{stats.reviews.latest.score.toFixed(1)}/5</span>
+                    <span className="text-xs text-[hsl(var(--theme-textMuted))]">• Latest Review</span>
+                  </div>
+                </div>
+              </div>
+            </Link>
+          ) : (
+            <p className="mt-auto text-center text-sm text-[hsl(var(--theme-textMuted))]">No reviews yet</p>
+          )}
+        </div>
+
         {/* Members Card */}
         <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col">
           <div className="flex items-center gap-3 mb-6">
@@ -452,47 +562,6 @@ const StatsOverviewRedesigned = () => {
           </div>
         </div>
 
-        {/* Slick Talk (Blog) Card - Centered on Desktop */}
-        <div className="bg-black border-4 border-[hsl(var(--theme-primary))] rounded-xl p-6 sm:p-8 shadow-2xl shadow-[hsl(var(--theme-primary))]/30 hover:shadow-[hsl(var(--theme-primary))]/50 transition-all duration-300 hover:scale-[1.02] min-h-[300px] flex flex-col md:col-span-2 md:max-w-xl md:mx-auto">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-[hsl(var(--theme-primaryLight))] to-[hsl(var(--theme-secondary))] flex items-center justify-center shadow-lg">
-              <FileText className="w-6 h-6 text-black" />
-            </div>
-            <h3 className="text-2xl sm:text-3xl font-bold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
-              Slick Talk
-            </h3>
-          </div>
-
-          <div className="text-center mb-6">
-            <div className="text-5xl sm:text-6xl font-extrabold text-[hsl(var(--theme-primary))] font-[var(--theme-font-heading)]">
-              {stats?.blog.total || 0}
-            </div>
-            <div className="text-sm text-[hsl(var(--theme-textMuted))] mt-2 font-medium">
-              Blog Posts
-            </div>
-          </div>
-
-          {stats?.blog.mostLiked && (
-            <Link to={`/blog/${stats.blog.mostLiked.slug}`} className="mt-auto block group">
-              <div className="bg-gradient-to-br from-[hsl(var(--theme-surface))]/40 to-[hsl(var(--theme-surface))]/20 rounded-lg p-4 border border-[hsl(var(--theme-primary))]/20 hover:border-[hsl(var(--theme-primary))]/60 transition-all">
-                <div className="flex items-start gap-3 mb-3">
-                  <TrendingUp className="w-5 h-5 text-[hsl(var(--theme-primary))] flex-shrink-0 mt-1" />
-                  <p className="text-sm font-bold text-[hsl(var(--theme-text))] group-hover:text-[hsl(var(--theme-primary))] transition-colors line-clamp-2">
-                    {stats.blog.mostLiked.title}
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Heart className="w-4 h-4 text-[hsl(var(--theme-primary))]" fill="currentColor" />
-                  <span className="text-sm font-bold text-[hsl(var(--theme-primary))]">
-                    {stats.blog.mostLiked.likes_count} likes
-                  </span>
-                  <span className="text-xs text-[hsl(var(--theme-textMuted))]">• Most Liked Post</span>
-                </div>
-              </div>
-            </Link>
-          )}
-        </div>
-        
         {/* Analytics Button - Part of Stats Section */}
         <div className="col-span-1 md:col-span-2 flex justify-center w-full">
           <AnalyticsButton />
