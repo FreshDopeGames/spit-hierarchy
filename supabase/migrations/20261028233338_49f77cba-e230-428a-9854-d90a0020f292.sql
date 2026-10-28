@@ -1,0 +1,1 @@
+DELETE FROM public.rapper_albums ra USING public.albums a, public.rappers r WHERE ra.album_id = a.id AND ra.rapper_id = r.id AND r.slug = 'rapsody' AND a.title ILIKE 'all infinite%';
