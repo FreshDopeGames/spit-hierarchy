@@ -21,6 +21,55 @@ interface ShareableTopFiveProps {
 const HEADING_FONT = "var(--theme-font-heading), 'Mogra', cursive";
 const BODY_FONT = "var(--theme-font-body), 'Merienda', serif";
 
+const fitName = (name: string, max: number) =>
+  name.length > max ? `${name.slice(0, max - 1).trimEnd()}…` : name;
+
+// html2canvas ignores object-fit and stretches <img> to its box, so we emulate
+// "cover" by measuring the cell + image and sizing/positioning the img manually.
+const CoverImage: React.FC<{ src: string; alt: string; focusY: number }> = ({ src, alt, focusY }) => {
+  const boxRef = React.useRef<HTMLDivElement>(null);
+  const [nat, setNat] = React.useState<{ w: number; h: number } | null>(null);
+  const [box, setBox] = React.useState<{ w: number; h: number } | null>(null);
+
+  React.useLayoutEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const measure = () => setBox({ w: el.offsetWidth, h: el.offsetHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  let imgStyle: React.CSSProperties = { position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0 };
+  if (nat && box && box.w && box.h) {
+    const s = Math.max(box.w / nat.w, box.h / nat.h) * 1.01;
+    const w = nat.w * s;
+    const h = nat.h * s;
+    imgStyle = {
+      position: 'absolute',
+      width: w,
+      height: h,
+      maxWidth: 'none',
+      left: (box.w - w) / 2,
+      top: (box.h - h) * focusY,
+      display: 'block',
+    };
+  }
+
+  return (
+    <div ref={boxRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+      <img
+        src={src}
+        alt={alt}
+        crossOrigin="anonymous"
+        onLoad={(e) => setNat({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+        style={imgStyle}
+      />
+    </div>
+  );
+};
+
 const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
   slots,
   username,
@@ -65,25 +114,14 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           flex: 1,
           overflow: 'hidden',
           borderRadius,
-          background: '#141414',
+          background: '#000000',
         }}
       >
-        {/* Image — use <img crossOrigin> so html2canvas can rasterise it
-            without tainting the canvas (background-image ignores crossOrigin). */}
         {slot.rapper?.image_url ? (
-          <img
+          <CoverImage
             src={slot.rapper.image_url}
             alt={slot.rapper.name}
-            crossOrigin="anonymous"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: isLandscape ? 'center 20%' : 'center center',
-              display: 'block',
-            }}
+            focusY={isLandscape ? 0.2 : 0.3}
           />
         ) : (
           <div style={{
@@ -98,55 +136,58 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           </div>
         )}
 
-        {/* Bottom gradient overlay with name */}
+        {/* Bottom gradient overlay — extends past the cell edge so no sliver shows */}
         <div style={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 0.5}px`,
-          background: 'linear-gradient(to top, #000000E6 0%, #00000080 60%, #00000000 100%)',
+          bottom: -2,
+          left: -2,
+          right: -2,
+          height: badgeSize * 3.2,
+          background: 'linear-gradient(to top, #000000F2 0%, #000000B3 35%, #00000000 100%)',
+        }} />
+
+        {/* Badge + name row */}
+        <div style={{
+          position: 'absolute',
+          bottom: badgeSize * 0.45,
+          left: badgeSize * 0.5,
+          right: badgeSize * 0.5,
           display: 'flex',
           alignItems: 'center',
           gap: badgeSize * 0.4,
         }}>
-          {/* Position badge */}
           <div style={{
             width: badgeSize,
             height: badgeSize,
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #D4A520, #B8860B)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            background: '#D4A520',
             color: '#000000',
             fontWeight: 'bold',
             fontSize: badgeFont,
             fontFamily: HEADING_FONT,
-            lineHeight: 1,
+            lineHeight: `${badgeSize}px`,
+            textAlign: 'center',
             flexShrink: 0,
           }}>
             {slot.position}
           </div>
 
-          {/* Name */}
-          <p style={{
+          <div style={{
             color: '#ffffff',
             fontSize: nameFont,
             fontWeight: 'bold',
             fontFamily: HEADING_FONT,
-            margin: 0,
-            lineHeight: 1.1,
+            lineHeight: 1.4,
+            paddingBottom: Math.round(nameFont * 0.12),
             textTransform: 'uppercase' as const,
             letterSpacing: '0.01em',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
             whiteSpace: 'nowrap' as const,
             flex: 1,
             minWidth: 0,
+            textShadow: '0 2px 6px #000000',
           }}>
-            {slot.rapper?.name || 'Empty'}
-          </p>
+            {fitName(slot.rapper?.name || 'Empty', isLandscape ? 16 : 20)}
+          </div>
         </div>
       </div>
     );
@@ -188,7 +229,8 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           fontWeight: 'bold',
           fontFamily: HEADING_FONT,
           margin: 0,
-          lineHeight: 1,
+          lineHeight: 1.35,
+          paddingBottom: 4,
         }}>
           {username}'s Top 5
         </h1>
