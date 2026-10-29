@@ -15,7 +15,6 @@ import Index from "./pages/Index";
 
 // Lazy-loaded pages
 const Auth = lazy(() => import("./pages/Auth"));
-const DevTop5Preview = lazy(() => import("./pages/DevTop5Preview"));
 const UserProfile = lazy(() => import("./pages/UserProfile"));
 const Analytics = lazy(() => import("./pages/Analytics"));
 const AllRappersPage = lazy(() => import("./pages/AllRappersPage"));
@@ -94,7 +93,6 @@ function App() {
           <Suspense fallback={<PageFallback />}>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/dev/top5-preview" element={<DevTop5Preview />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/about" element={<About />} />
               <Route path="/privacy" element={<PrivacyPolicy />} />
