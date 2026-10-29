@@ -21,6 +21,55 @@ interface ShareableTopFiveProps {
 const HEADING_FONT = "var(--theme-font-heading), 'Mogra', cursive";
 const BODY_FONT = "var(--theme-font-body), 'Merienda', serif";
 
+const fitName = (name: string, max: number) =>
+  name.length > max ? `${name.slice(0, max - 1).trimEnd()}…` : name;
+
+// html2canvas ignores object-fit and stretches <img> to its box, so we emulate
+// "cover" by measuring the cell + image and sizing/positioning the img manually.
+const CoverImage: React.FC<{ src: string; alt: string; focusY: number }> = ({ src, alt, focusY }) => {
+  const boxRef = React.useRef<HTMLDivElement>(null);
+  const [nat, setNat] = React.useState<{ w: number; h: number } | null>(null);
+  const [box, setBox] = React.useState<{ w: number; h: number } | null>(null);
+
+  React.useLayoutEffect(() => {
+    const el = boxRef.current;
+    if (!el) return;
+    const measure = () => setBox({ w: el.offsetWidth, h: el.offsetHeight });
+    measure();
+    const ro = new ResizeObserver(measure);
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+
+  let imgStyle: React.CSSProperties = { position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0 };
+  if (nat && box && box.w && box.h) {
+    const s = Math.max(box.w / nat.w, box.h / nat.h) * 1.01;
+    const w = nat.w * s;
+    const h = nat.h * s;
+    imgStyle = {
+      position: 'absolute',
+      width: w,
+      height: h,
+      maxWidth: 'none',
+      left: (box.w - w) / 2,
+      top: (box.h - h) * focusY,
+      display: 'block',
+    };
+  }
+
+  return (
+    <div ref={boxRef} style={{ position: 'absolute', inset: 0, overflow: 'hidden' }}>
+      <img
+        src={src}
+        alt={alt}
+        crossOrigin="anonymous"
+        onLoad={(e) => setNat({ w: e.currentTarget.naturalWidth, h: e.currentTarget.naturalHeight })}
+        style={imgStyle}
+      />
+    </div>
+  );
+};
+
 const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
   slots,
   username,
