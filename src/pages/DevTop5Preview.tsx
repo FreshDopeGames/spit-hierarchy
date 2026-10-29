@@ -10,9 +10,9 @@ const mockSlots = [
 
 const DevTop5Preview = () => (
   <div style={{ background: "#111", padding: 24, display: "flex", flexDirection: "column", gap: 24, alignItems: "flex-start" }}>
-    <ShareableTopFive slots={mockSlots} username="S2BKAS" format="square" />
-    <ShareableTopFive slots={mockSlots} username="S2BKAS" format="landscape" />
-    <ShareableTopFive slots={mockSlots} username="S2BKAS" format="portrait" />
+    <div data-shot="square"><ShareableTopFive slots={mockSlots} username="S2BKAS" format="square" /></div>
+    <div data-shot="landscape"><ShareableTopFive slots={mockSlots} username="S2BKAS" format="landscape" /></div>
+    <div data-shot="portrait"><ShareableTopFive slots={mockSlots} username="S2BKAS" format="portrait" /></div>
   </div>
 );
 
