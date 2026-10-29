@@ -65,25 +65,14 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           flex: 1,
           overflow: 'hidden',
           borderRadius,
-          background: '#141414',
+          background: '#000000',
         }}
       >
-        {/* Image — use <img crossOrigin> so html2canvas can rasterise it
-            without tainting the canvas (background-image ignores crossOrigin). */}
         {slot.rapper?.image_url ? (
-          <img
+          <CoverImage
             src={slot.rapper.image_url}
             alt={slot.rapper.name}
-            crossOrigin="anonymous"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              objectPosition: isLandscape ? 'center 20%' : 'center center',
-              display: 'block',
-            }}
+            focusY={isLandscape ? 0.2 : 0.3}
           />
         ) : (
           <div style={{
@@ -98,55 +87,58 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           </div>
         )}
 
-        {/* Bottom gradient overlay with name */}
+        {/* Bottom gradient overlay — extends past the cell edge so no sliver shows */}
         <div style={{
           position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          padding: `${badgeSize * 1.2}px ${badgeSize * 0.5}px ${badgeSize * 0.5}px`,
-          background: 'linear-gradient(to top, #000000E6 0%, #00000080 60%, #00000000 100%)',
+          bottom: -2,
+          left: -2,
+          right: -2,
+          height: badgeSize * 3.2,
+          background: 'linear-gradient(to top, #000000F2 0%, #000000B3 35%, #00000000 100%)',
+        }} />
+
+        {/* Badge + name row */}
+        <div style={{
+          position: 'absolute',
+          bottom: badgeSize * 0.45,
+          left: badgeSize * 0.5,
+          right: badgeSize * 0.5,
           display: 'flex',
           alignItems: 'center',
           gap: badgeSize * 0.4,
         }}>
-          {/* Position badge */}
           <div style={{
             width: badgeSize,
             height: badgeSize,
             borderRadius: '50%',
-            background: 'linear-gradient(135deg, #D4A520, #B8860B)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
+            background: '#D4A520',
             color: '#000000',
             fontWeight: 'bold',
             fontSize: badgeFont,
             fontFamily: HEADING_FONT,
-            lineHeight: 1,
+            lineHeight: `${badgeSize}px`,
+            textAlign: 'center',
             flexShrink: 0,
           }}>
             {slot.position}
           </div>
 
-          {/* Name */}
-          <p style={{
+          <div style={{
             color: '#ffffff',
             fontSize: nameFont,
             fontWeight: 'bold',
             fontFamily: HEADING_FONT,
-            margin: 0,
-            lineHeight: 1.1,
+            lineHeight: 1.4,
+            paddingBottom: Math.round(nameFont * 0.12),
             textTransform: 'uppercase' as const,
             letterSpacing: '0.01em',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
             whiteSpace: 'nowrap' as const,
             flex: 1,
             minWidth: 0,
+            textShadow: '0 2px 6px #000000',
           }}>
-            {slot.rapper?.name || 'Empty'}
-          </p>
+            {fitName(slot.rapper?.name || 'Empty', isLandscape ? 16 : 20)}
+          </div>
         </div>
       </div>
     );
