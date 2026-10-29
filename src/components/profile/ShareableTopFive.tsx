@@ -229,7 +229,8 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
           fontWeight: 'bold',
           fontFamily: HEADING_FONT,
           margin: 0,
-          lineHeight: 1,
+          lineHeight: 1.35,
+          paddingBottom: 4,
         }}>
           {username}'s Top 5
         </h1>
