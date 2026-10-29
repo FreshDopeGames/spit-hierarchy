@@ -88,8 +88,8 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
   const cellGap = 4;
   const headerH = isLandscape ? 60 : isPortrait ? 140 : 100;
   const footerH = isLandscape ? 35 : isPortrait ? 70 : 50;
-  const badgeSize = isLandscape ? 28 : isPortrait ? 48 : 38;
-  const badgeFont = isLandscape ? 14 : isPortrait ? 22 : 18;
+  const badgeSize = isLandscape ? 34 : isPortrait ? 56 : 44;
+  const badgeFont = isLandscape ? 20 : isPortrait ? 32 : 26;
   const nameFont = isLandscape ? 22 : isPortrait ? 36 : 28;
   const logoSize = isLandscape ? 36 : isPortrait ? 70 : 55;
   const headerFont = isLandscape ? 26 : isPortrait ? 48 : 36;
@@ -165,8 +165,10 @@ const ShareableTopFive: React.FC<ShareableTopFiveProps> = ({
             fontWeight: 'bold',
             fontSize: badgeFont,
             fontFamily: HEADING_FONT,
-            lineHeight: `${badgeSize}px`,
-            textAlign: 'center',
+            lineHeight: 1,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
             flexShrink: 0,
           }}>
             {slot.position}
