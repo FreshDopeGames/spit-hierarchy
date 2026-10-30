@@ -4,6 +4,7 @@ import { useUserProfile } from "@/hooks/useUserProfile";
 import TopFiveSlot from "./TopFiveSlot";
 import RapperSearchOverlay from "./RapperSearchOverlay";
 import ShareTopFiveModal from "./ShareTopFiveModal";
+import TopFiveInsights from "./TopFiveInsights";
 import { Button } from "@/components/ui/button";
 import { Share2 } from "lucide-react";
 import {
@@ -199,6 +200,8 @@ const MyTopFiveSection = () => {
             ) : null}
           </DragOverlay>
         </DndContext>
+
+        <TopFiveInsights rapperIds={selectedRapperIds} />
       </div>
 
       <RapperSearchOverlay
