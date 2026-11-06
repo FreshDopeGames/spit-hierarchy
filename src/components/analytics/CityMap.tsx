@@ -54,11 +54,13 @@ const CityMap = ({ cities }: CityMapProps) => {
         style={{ height: "100%", width: "100%", background: "#0a0a0a" }}
         scrollWheelZoom={true}
         className="z-0"
+        maxZoom={16}
       >
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png"
+          attribution='Tiles &copy; <a href="https://www.esri.com/en-us/arcgis/products/arcgis-online/overview">Esri</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          url="https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
           className="map-tiles"
+          maxZoom={16}
         />
         {citiesWithCoords.map((city, index) => (
           <CircleMarker
