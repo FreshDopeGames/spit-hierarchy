@@ -1,5 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.49.8';
+import { createClient } from 'npm:@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -9,6 +9,40 @@ const corsHeaders = {
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 const LOVABLE_API_KEY = Deno.env.get('LOVABLE_API_KEY');
+
+// Allows: scheduled jobs (x-cron-secret checked against the vault), the server key, or a signed-in admin.
+async function authorizeRequest(req: Request): Promise<Response | null> {
+  const url = Deno.env.get('SUPABASE_URL')!;
+  const serviceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
+  const anonKey = Deno.env.get('SUPABASE_ANON_KEY')!;
+  const deny = (status: number, error: string) =>
+    new Response(JSON.stringify({ success: false, error }), {
+      status,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+
+  const cronSecret = req.headers.get('x-cron-secret');
+  if (cronSecret) {
+    const svc = createClient(url, serviceKey);
+    const { data: ok } = await svc.rpc('verify_cron_secret', { _secret: cronSecret });
+    if (ok === true) return null;
+  }
+
+  const authHeader = req.headers.get('Authorization') || req.headers.get('authorization');
+  if (!authHeader?.startsWith('Bearer ')) return deny(401, 'Unauthorized');
+  const token = authHeader.slice(7);
+  if (token === serviceKey) return null;
+
+  const authClient = createClient(url, anonKey, {
+    auth: { autoRefreshToken: false, persistSession: false },
+    global: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const { data: claims, error: claimsErr } = await authClient.auth.getClaims(token);
+  if (claimsErr || !claims?.claims?.sub) return deny(401, 'Unauthorized');
+  const { data: isAdmin } = await authClient.rpc('is_admin');
+  if (isAdmin !== true) return deny(403, 'Admin access required');
+  return null;
+}
 
 interface WikipediaRelation {
   type: string;
@@ -31,6 +65,9 @@ serve(async (req) => {
   }
 
   const startTime = Date.now();
+
+  const denied = await authorizeRequest(req);
+  if (denied) return denied;
 
   try {
     const supabaseService = createClient(supabaseUrl, supabaseServiceKey);
