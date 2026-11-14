@@ -584,6 +584,13 @@ serve(async (req) => {
         }
       }
       
+      // Release lookup failed: undo the freshness stamp set above so this artist
+      // is not treated as cached (bulk fetch / 7-day cache would otherwise skip it).
+      await supabaseService
+        .from('rappers')
+        .update({ discography_last_updated: rapper.discography_last_updated })
+        .eq('id', rapperId);
+
       await logAuditEvent(supabaseService, {
         rapper_id: requestedRapperId,
         action: 'FETCH_DISCOGRAPHY',
