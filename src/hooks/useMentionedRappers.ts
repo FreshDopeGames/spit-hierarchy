@@ -8,22 +8,24 @@ interface MentionedRapper {
 }
 
 /**
- * Extracts rapper slugs from markdown links in blog content
- * Matches patterns like [Rapper Name](/rapper/rapper-slug)
+ * Extracts rapper slugs from markdown links in blog content.
+ * Tolerates sloppy links: surrounding whitespace, http/www variants,
+ * trailing slashes, album sub-paths, query strings and #anchors.
+ * e.g. [Name](https://spithierarchy.com/rapper/slug ) -> "slug"
  */
-const extractRapperSlugsFromContent = (content: string): string[] => {
-  // Matches both full URLs (https://spithierarchy.com/rapper/slug) and relative paths (/rapper/slug)
-  const rapperLinkRegex = /\[([^\]]+)\]\((?:https:\/\/spithierarchy\.com)?\/rapper\/([^)]+)\)/g;
+export const extractRapperSlugsFromContent = (content: string): string[] => {
+  const rapperLinkRegex =
+    /\[[^\]]+\]\(\s*(?:https?:\/\/(?:www\.)?spithierarchy\.com)?\/rapper\/([^)\s/?#]+)[^)]*\)/gi;
   const slugs: string[] = [];
   let match;
-  
+
   while ((match = rapperLinkRegex.exec(content)) !== null) {
-    const slug = match[2];
+    const slug = match[1].trim().toLowerCase();
     if (slug && !slugs.includes(slug)) {
       slugs.push(slug);
     }
   }
-  
+
   return slugs;
 };
 
