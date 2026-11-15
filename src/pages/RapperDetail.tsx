@@ -320,6 +320,13 @@ const RapperDetail = () => {
             <RapperBestQuote topQuote={(rapper as any).top_quote} rapperName={rapper.name} rapperId={rapper.id} songTitle={(rapper as any).top_quote_song} />
           </Suspense>
 
+          {/* Slick Talk Blog — articles mentioning this rapper */}
+          <Suspense fallback={null}>
+            <div className="mb-8 empty:hidden">
+              <RapperBlogMentions rapperId={rapper.id} rapperSlug={rapper.slug} rapperName={rapper.name} />
+            </div>
+          </Suspense>
+
           {/* Enhanced Bio Section with more content */}
           <RapperBio rapper={rapper} />
 
@@ -350,13 +357,6 @@ const RapperDetail = () => {
           <div className="mb-8">
             <RapperStats rapper={rapper} />
           </div>
-
-          {/* Slick Talk Blog — articles mentioning this rapper */}
-          <Suspense fallback={null}>
-            <div className="mb-8 empty:hidden">
-              <RapperBlogMentions rapperId={rapper.id} rapperSlug={rapper.slug} rapperName={rapper.name} />
-            </div>
-          </Suspense>
 
           {/* In The News — media mentions */}
           <Suspense fallback={null}>
