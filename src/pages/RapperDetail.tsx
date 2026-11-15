@@ -30,6 +30,7 @@ const RapperDiscography = lazy(() => import("@/components/rapper/RapperDiscograp
 const RapperBestQuote = lazy(() => import("@/components/rapper/RapperBestQuote"));
 const SimilarRappersCard = lazy(() => import("@/components/rapper/SimilarRappersCard"));
 const RapperMediaMentions = lazy(() => import("@/components/rapper/RapperMediaMentions"));
+const RapperBlogMentions = lazy(() => import("@/components/rapper/RapperBlogMentions"));
 
 const CommentBubble = lazy(() => import("@/components/CommentBubble"));
 
@@ -349,6 +350,13 @@ const RapperDetail = () => {
           <div className="mb-8">
             <RapperStats rapper={rapper} />
           </div>
+
+          {/* Slick Talk Blog — articles mentioning this rapper */}
+          <Suspense fallback={null}>
+            <div className="mb-8 empty:hidden">
+              <RapperBlogMentions rapperId={rapper.id} rapperSlug={rapper.slug} rapperName={rapper.name} />
+            </div>
+          </Suspense>
 
           {/* In The News — media mentions */}
           <Suspense fallback={null}>
