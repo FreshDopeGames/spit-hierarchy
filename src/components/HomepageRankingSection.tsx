@@ -106,25 +106,6 @@ const HomepageRankingSection = () => {
     refetchOnWindowFocus: true
   });
 
-  // Preload all ranking card rapper images for faster rendering
-  useEffect(() => {
-    if (rankingsData.length > 0) {
-      const imageUrls = rankingsData
-        .flatMap(r => r.items?.slice(0, 5) || [])
-        .map(item => item?.rapper?.image_url)
-        .filter(Boolean) as string[];
-      
-      imageUrls.forEach(url => {
-        if (!document.querySelector(`link[rel="preload"][href="${url}"]`)) {
-          const link = document.createElement('link');
-          link.rel = 'preload';
-          link.as = 'image';
-          link.href = url;
-          document.head.appendChild(link);
-        }
-      });
-    }
-  }, [rankingsData]);
 
   if (isLoading) {
     return <section className="mb-16">

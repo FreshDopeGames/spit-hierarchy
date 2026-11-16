@@ -80,6 +80,11 @@ const RapperHeader = ({
                 <img 
                   src={imageToDisplay} 
                   alt={rapper.name} 
+                  width={600}
+                  height={600}
+                  loading="eager"
+                  fetchPriority="high"
+                  decoding="async"
                   className="w-full h-full object-cover" 
                   onLoad={(e) => {
                     // Hide spinner by removing the overlay

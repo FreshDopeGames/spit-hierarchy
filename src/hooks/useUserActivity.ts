@@ -1,4 +1,3 @@
-
 import { useState, useEffect, useRef } from 'react';
 
 interface UserActivityConfig {
@@ -6,60 +5,64 @@ interface UserActivityConfig {
   onActivityChange?: (isActive: boolean) => void;
 }
 
-export const useUserActivity = ({ 
-  idleThreshold = 30000, // 30 seconds
-  onActivityChange 
+// Discrete events only; high-frequency events (mousemove/scroll) are throttled.
+const ACTIVITY_EVENTS = ['pointerdown', 'keydown', 'touchstart', 'scroll', 'mousemove'] as const;
+const THROTTLE_MS = 1000;
+
+/**
+ * Tracks whether the user is active. Listeners are passive and throttled, and React
+ * state only changes on active/idle transitions, so taps and scrolls never trigger
+ * re-renders (keeps Interaction to Next Paint low).
+ */
+export const useUserActivity = ({
+  idleThreshold = 30000,
+  onActivityChange
 }: UserActivityConfig = {}) => {
   const [isActive, setIsActive] = useState(true);
-  const [lastActivity, setLastActivity] = useState(Date.now());
-  const timerRef = useRef<NodeJS.Timeout>();
-
-  const updateActivity = () => {
-    const now = Date.now();
-    setLastActivity(now);
-    
-    if (!isActive) {
-      setIsActive(true);
-      onActivityChange?.(true);
-    }
-
-    // Clear existing timer
-    if (timerRef.current) {
-      clearTimeout(timerRef.current);
-    }
-
-    // Set new timer
-    timerRef.current = setTimeout(() => {
-      setIsActive(false);
-      onActivityChange?.(false);
-    }, idleThreshold);
-  };
+  const isActiveRef = useRef(true);
+  const lastActivityRef = useRef(Date.now());
+  const lastHandledRef = useRef(0);
+  const timerRef = useRef<ReturnType<typeof setTimeout>>();
+  const callbackRef = useRef(onActivityChange);
+  callbackRef.current = onActivityChange;
 
   useEffect(() => {
-    const events = ['mousedown', 'mousemove', 'keypress', 'scroll', 'touchstart', 'click'];
-    
-    // Add event listeners
-    events.forEach(event => {
-      document.addEventListener(event, updateActivity, true);
-    });
+    const scheduleIdle = () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+      timerRef.current = setTimeout(() => {
+        isActiveRef.current = false;
+        setIsActive(false);
+        callbackRef.current?.(false);
+      }, idleThreshold);
+    };
 
-    // Initialize timer
-    updateActivity();
+    const handleActivity = () => {
+      const now = Date.now();
+      lastActivityRef.current = now;
+      if (isActiveRef.current && now - lastHandledRef.current < THROTTLE_MS) return;
+      lastHandledRef.current = now;
 
-    // Cleanup
-    return () => {
-      events.forEach(event => {
-        document.removeEventListener(event, updateActivity, true);
-      });
-      if (timerRef.current) {
-        clearTimeout(timerRef.current);
+      if (!isActiveRef.current) {
+        isActiveRef.current = true;
+        setIsActive(true);
+        callbackRef.current?.(true);
       }
+      scheduleIdle();
+    };
+
+    const options: AddEventListenerOptions = { passive: true, capture: true };
+    ACTIVITY_EVENTS.forEach(event => document.addEventListener(event, handleActivity, options));
+    scheduleIdle();
+
+    return () => {
+      ACTIVITY_EVENTS.forEach(event => document.removeEventListener(event, handleActivity, options));
+      if (timerRef.current) clearTimeout(timerRef.current);
     };
   }, [idleThreshold]);
 
   return {
     isActive,
-    lastActivity,
-    timeSinceLastActivity: Date.now() - lastActivity
+    lastActivity: lastActivityRef.current,
+    timeSinceLastActivity: Date.now() - lastActivityRef.current
   };
 };

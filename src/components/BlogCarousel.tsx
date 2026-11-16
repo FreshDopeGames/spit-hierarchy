@@ -13,6 +13,11 @@ const BlogCarousel = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isProgressActive, setIsProgressActive] = useState(true);
   const [isPaused, setIsPaused] = useState(false);
+  // Auto-rotation waits for the visitor's first tap/scroll/keypress and stops while the tab
+  // is hidden. Otherwise each new slide can be logged as a late "largest paint", which is
+  // what produced the multi-minute LCP readings in Clarity.
+  const [hasInteracted, setHasInteracted] = useState(false);
+  const [isTabVisible, setIsTabVisible] = useState(() => typeof document === 'undefined' || document.visibilityState === 'visible');
   const autoRotateIntervalRef = useRef<NodeJS.Timeout>();
   const progressKeyRef = useRef(0);
   const [emblaRef, emblaApi] = useEmblaCarousel({
@@ -67,10 +72,25 @@ const BlogCarousel = () => {
     progressKeyRef.current += 1; // Force progress bar restart
     setIsProgressActive(false);
     setTimeout(() => setIsProgressActive(true), 50);
-    if (!isPaused && featuredPosts.length > 1) {
+    if (!isPaused && hasInteracted && isTabVisible && featuredPosts.length > 1) {
       autoRotateIntervalRef.current = setInterval(autoRotateToNext, 8000);
     }
-  }, [isPaused, featuredPosts.length, autoRotateToNext]);
+  }, [isPaused, hasInteracted, isTabVisible, featuredPosts.length, autoRotateToNext]);
+
+  useEffect(() => {
+    if (hasInteracted) return;
+    const events = ['pointerdown', 'keydown', 'scroll', 'touchstart'] as const;
+    const options: AddEventListenerOptions = { passive: true, capture: true };
+    const onFirstInput = () => setHasInteracted(true);
+    events.forEach(e => window.addEventListener(e, onFirstInput, options));
+    return () => events.forEach(e => window.removeEventListener(e, onFirstInput, options));
+  }, [hasInteracted]);
+
+  useEffect(() => {
+    const onVisibility = () => setIsTabVisible(document.visibilityState === 'visible');
+    document.addEventListener('visibilitychange', onVisibility);
+    return () => document.removeEventListener('visibilitychange', onVisibility);
+  }, []);
   const goToPrevious = useCallback(() => {
     if (emblaApi) {
       emblaApi.scrollPrev();
@@ -206,7 +226,7 @@ const BlogCarousel = () => {
                     
                     {/* Progress Bar */}
                     <div className="absolute bottom-0 left-0 w-full h-1 bg-black/30 pointer-events-none">
-                      <div key={progressKeyRef.current} className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${isProgressActive && !isPaused ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'}`} />
+                      <div key={progressKeyRef.current} className={`h-full bg-gradient-to-r from-[hsl(var(--theme-primary))] to-[hsl(var(--theme-accent))] transition-all ${isProgressActive && !isPaused && hasInteracted && isTabVisible ? 'animate-[progress_8000ms_linear_forwards]' : 'w-0'}`} />
                     </div>
                   </div>
                 </div>)}

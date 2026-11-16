@@ -22,8 +22,6 @@ interface BlogArticleHeaderProps {
 }
 
 const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
-  console.log('BlogArticleHeader - Featured image URL:', blogPost.featured_image_url);
-
   // Parse featured image data
   const getFeaturedImageData = () => {
     if (!blogPost.featured_image_url) return null;
@@ -77,8 +75,9 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
         </div>
       </div>
 
-      {/* Featured Video or Image - show full aspect ratio with optimized sizing */}
-      {(blogPost.video_url || featuredImageData) && (
+      {/* Featured media. Space is reserved up front (16:9) so the article text never jumps when it loads;
+          images keep their full frame (contain) inside that space. */}
+      {blogPost.video_url ? (
         <div className="relative rounded-xl overflow-hidden mb-8">
           <VideoPlayer
             videoUrl={blogPost.video_url}
@@ -87,7 +86,18 @@ const BlogArticleHeader = ({ blogPost }: BlogArticleHeaderProps) => {
             className="w-full h-auto rounded-xl"
           />
         </div>
-      )}
+      ) : featuredImageData ? (
+        <div className="relative aspect-video rounded-xl overflow-hidden mb-8 bg-[hsl(var(--theme-surface))]">
+          <ResponsiveImage
+            src={featuredImageData}
+            alt={blogPost.title}
+            className="w-full h-full rounded-xl"
+            context="hero"
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
+          />
+        </div>
+      ) : null}
     </div>
   );
 };

@@ -52,6 +52,7 @@ const VideoPlayer = ({ videoUrl, fallbackImageUrl, alt, className }: VideoPlayer
         alt={alt}
         className={className}
         context="hero"
+        priority
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 100vw, 1200px"
       />
     ) : null;
